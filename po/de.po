@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gutenprint 5.2.10-pre2\n"
 "Report-Msgid-Bugs-To: gimp-print-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2016-01-13 22:11-0500\n"
+"POT-Creation-Date: 2016-01-13 22:34-0500\n"
 "PO-Revision-Date: 2014-03-20 13:37+0100\n"
 "Last-Translator: Mario Blättermann <mario.blaettermann@gmail.com>\n"
 "Language-Team: German <translation-team-de@lists.sourceforge.net>\n"
@@ -145,37 +145,37 @@ msgid "Dither algorithm"
 msgstr "Rasteralgorithmus"
 
 #: src/main/print-canon.c:283 src/main/print-escp2.c:176
-#: src/main/print-lexmark.c:266 src/main/print-olympus.c:5289
+#: src/main/print-lexmark.c:266 src/main/print-olympus.c:5234
 #: src/main/print-pcl.c:1456 src/main/print-ps.c:74 src/main/print-raw.c:103
 msgid "Page Size"
 msgstr "Seitengröße"
 
 #: src/main/print-canon.c:284 src/main/print-escp2.c:177
-#: src/main/print-lexmark.c:267 src/main/print-olympus.c:5290
+#: src/main/print-lexmark.c:267 src/main/print-olympus.c:5235
 #: src/main/print-pcl.c:1457 src/main/print-ps.c:75 src/main/print-raw.c:104
 msgid "Size of the paper being printed to"
 msgstr "Größe des zu bedruckenden Mediums"
 
 #: src/main/print-canon.c:289 src/main/print-escp2.c:182
-#: src/main/print-lexmark.c:272 src/main/print-olympus.c:5295
+#: src/main/print-lexmark.c:272 src/main/print-olympus.c:5240
 #: src/main/print-pcl.c:1462 src/cups/genppd.c:2067 src/cups/genppd.c:2562
 msgid "Media Type"
 msgstr "Medienart"
 
 #: src/main/print-canon.c:290 src/main/print-escp2.c:183
-#: src/main/print-lexmark.c:273 src/main/print-olympus.c:5296
+#: src/main/print-lexmark.c:273 src/main/print-olympus.c:5241
 #: src/main/print-pcl.c:1463
 msgid "Type of media (plain paper, photo paper, etc.)"
 msgstr "Medienart (Papier, Fotopapier, usw.)"
 
 #: src/main/print-canon.c:295 src/main/print-escp2.c:188
-#: src/main/print-lexmark.c:278 src/main/print-olympus.c:5301
+#: src/main/print-lexmark.c:278 src/main/print-olympus.c:5246
 #: src/main/print-pcl.c:1468 src/cups/genppd.c:2103 src/cups/genppd.c:2582
 msgid "Media Source"
 msgstr "Medienquelle"
 
 #: src/main/print-canon.c:296 src/main/print-escp2.c:189
-#: src/main/print-lexmark.c:279 src/main/print-olympus.c:5302
+#: src/main/print-lexmark.c:279 src/main/print-olympus.c:5247
 #: src/main/print-pcl.c:1469
 msgid "Source (input slot) of the media"
 msgstr "Quelle (Eingabeschacht) des Mediums"
@@ -226,25 +226,25 @@ msgid "CD Vertical Fine Adjustment"
 msgstr "vertikale CD-Feinanpassung"
 
 #: src/main/print-canon.c:337 src/main/print-escp2.c:236
-#: src/main/print-lexmark.c:284 src/main/print-olympus.c:5307
+#: src/main/print-lexmark.c:284 src/main/print-olympus.c:5252
 #: src/main/print-pcl.c:1480 src/cups/genppd.c:2195 src/cups/genppd.c:2617
 msgid "Resolution"
 msgstr "Auflösung"
 
 #: src/main/print-canon.c:338 src/main/print-lexmark.c:285
-#: src/main/print-olympus.c:5308
+#: src/main/print-olympus.c:5253
 msgid "Resolution and quality of the print"
 msgstr "Auflösung und Druckqualität"
 
 #: src/main/print-canon.c:348 src/main/print-escp2.c:247
-#: src/main/print-lexmark.c:290 src/main/print-olympus.c:5313
+#: src/main/print-lexmark.c:290 src/main/print-olympus.c:5258
 #: src/main/print-pcl.c:1486 src/main/print-raw.c:91
 msgid "Ink Type"
 msgstr "Tintenart"
 
 #: src/main/print-canon.c:349 src/main/print-escp2.c:248
 #: src/main/print-escp2.c:260 src/main/print-lexmark.c:291
-#: src/main/print-olympus.c:5314 src/main/print-pcl.c:1487
+#: src/main/print-olympus.c:5259 src/main/print-pcl.c:1487
 #: src/main/print-raw.c:92
 msgid "Type of ink in the printer"
 msgstr "Tintenart im Drucker"
@@ -257,13 +257,13 @@ msgid "Ink Channels"
 msgstr "Tinten-Kanäle"
 
 #: src/main/print-canon.c:365 src/main/print-escp2.c:349
-#: src/main/print-lexmark.c:302 src/main/print-olympus.c:5335
+#: src/main/print-lexmark.c:302 src/main/print-olympus.c:5280
 #: src/main/print-pcl.c:1498 src/main/print-ps.c:86 src/main/print-raw.c:97
 msgid "Printing Mode"
 msgstr "Druckmodus"
 
 #: src/main/print-canon.c:366 src/main/print-escp2.c:350
-#: src/main/print-lexmark.c:303 src/main/print-olympus.c:5336
+#: src/main/print-lexmark.c:303 src/main/print-olympus.c:5281
 #: src/main/print-pcl.c:1499 src/main/print-ps.c:87 src/main/print-raw.c:98
 msgid "Printing Output Mode"
 msgstr "Druckausgabe-Modus"
@@ -277,22 +277,22 @@ msgid "Type of inkset in the printer"
 msgstr "Art des Tintensatzes im Drucker"
 
 #: src/main/print-canon.c:382 src/main/print-escp2.c:271
-#: src/main/print-olympus.c:5329
+#: src/main/print-olympus.c:5274
 msgid "Borderless"
 msgstr "Randlos"
 
 #: src/main/print-canon.c:383 src/main/print-escp2.c:272
-#: src/main/print-olympus.c:5330
+#: src/main/print-olympus.c:5275
 msgid "Print without borders"
 msgstr "Ausdruck ohne Ränder"
 
 #: src/main/print-canon.c:388 src/main/print-escp2.c:194
-#: src/main/print-olympus.c:5347 src/main/print-pcl.c:1504
+#: src/main/print-olympus.c:5292 src/main/print-pcl.c:1504
 msgid "Double-Sided Printing"
 msgstr "Doppelseitiges Drucken"
 
 #: src/main/print-canon.c:389 src/main/print-escp2.c:195
-#: src/main/print-olympus.c:5348 src/main/print-pcl.c:1505
+#: src/main/print-olympus.c:5293 src/main/print-pcl.c:1505
 msgid "Duplex/Tumble Setting"
 msgstr "Duplex/Drehungs-Einstellungen"
 
@@ -362,19 +362,18 @@ msgid "Light Yellow Transition"
 msgstr "Heller Gelb-Übergang"
 
 #: src/main/print-canon.c:484 src/main/print-escp2.c:2547
-#: src/main/print-olympus.c:3604 src/main/print-olympus.c:5419
-#: src/main/print-pcl.c:1830 src/xml/xmli18n-tmp.h:3295
-#: src/xml/xmli18n-tmp.h:3300 src/xml/xmli18n-tmp.h:3306
-#: src/xml/xmli18n-tmp.h:3313
+#: src/main/print-olympus.c:5364 src/main/print-pcl.c:1830
+#: src/xml/xmli18n-tmp.h:3295 src/xml/xmli18n-tmp.h:3300
+#: src/xml/xmli18n-tmp.h:3306 src/xml/xmli18n-tmp.h:3313
 msgid "Off"
 msgstr "Aus"
 
 #: src/main/print-canon.c:485 src/main/print-escp2.c:2549
-#: src/main/print-olympus.c:5420 src/main/print-pcl.c:1831
+#: src/main/print-olympus.c:5365 src/main/print-pcl.c:1831
 msgid "Long Edge (Standard)"
 msgstr "Lange Seite (Vorgabe)"
 
-#: src/main/print-canon.c:486 src/main/print-olympus.c:5421
+#: src/main/print-canon.c:486 src/main/print-olympus.c:5366
 #: src/main/print-pcl.c:1832
 msgid "Short Edge (Flip)"
 msgstr "Kurze Seite (Umdrehen)"
@@ -422,7 +421,7 @@ msgstr "Hinteres Fach"
 #: src/main/print-canon.c:2983 src/main/print-canon.c:3011
 #: src/main/print-canon.c:3043 src/main/print-canon.c:3047
 #: src/main/print-canon.c:3123 src/main/print-escp2.c:2715
-#: src/main/print-lexmark.c:1296 src/main/print-olympus.c:5651
+#: src/main/print-lexmark.c:1296 src/main/print-olympus.c:5596
 #: src/main/print-pcl.c:2264 src/main/print-ps.c:329 src/main/print-raw.c:152
 #: src/gutenprintui2/panel.c:291
 msgid "Color"
@@ -1015,7 +1014,7 @@ msgstr "Gammawert für Blau anpassen"
 msgid "Adjust the black gamma"
 msgstr "Gammawert für Schwarz anpassen"
 
-#: src/main/print-color.c:354 src/main/print-olympus.c:5376
+#: src/main/print-color.c:354 src/main/print-olympus.c:5321
 msgid "Cyan Balance"
 msgstr "Cyan-Balance"
 
@@ -1023,7 +1022,7 @@ msgstr "Cyan-Balance"
 msgid "Adjust the cyan gray balance"
 msgstr "Cyan-Grau-Verhältnis anpassen"
 
-#: src/main/print-color.c:362 src/main/print-olympus.c:5384
+#: src/main/print-color.c:362 src/main/print-olympus.c:5329
 msgid "Magenta Balance"
 msgstr "Magenta-Balance"
 
@@ -1031,7 +1030,7 @@ msgstr "Magenta-Balance"
 msgid "Adjust the magenta gray balance"
 msgstr "Mangenta/Grau-Verhältnis anpassen"
 
-#: src/main/print-color.c:370 src/main/print-olympus.c:5392
+#: src/main/print-color.c:370 src/main/print-olympus.c:5337
 msgid "Yellow Balance"
 msgstr "Gelb-Balance"
 
@@ -1827,7 +1826,7 @@ msgid "This printer does not support raw printer output at depth %d\n"
 msgstr ""
 "Dieser Drucker unterstützt keine Rohdatenausgabe bei einer Farbtiefe von %d\n"
 
-#: src/main/print-escp2.c:4426 src/main/print-olympus.c:6228
+#: src/main/print-escp2.c:4426 src/main/print-olympus.c:6173
 #: src/main/print-raw.c:243
 msgid "Print options not verified; cannot print.\n"
 msgstr "Ungeprüfte Druckoptionen; Drucken nicht möglich.\n"
@@ -2286,8 +2285,7 @@ msgstr "Bedeckt"
 #: src/main/print-olympus.c:2191 src/main/print-olympus.c:2253
 #: src/main/print-olympus.c:2803 src/main/print-olympus.c:3134
 #: src/main/print-olympus.c:3257 src/main/print-olympus.c:3371
-#: src/main/print-olympus.c:3489 src/main/print-olympus.c:3605
-#: src/main/print-olympus.c:3708
+#: src/main/print-olympus.c:3489 src/main/print-olympus.c:3653
 msgid "Glossy"
 msgstr "Hochglanz"
 
@@ -2301,8 +2299,7 @@ msgstr "Textur"
 #: src/main/print-olympus.c:2259 src/main/print-olympus.c:2659
 #: src/main/print-olympus.c:2804 src/main/print-olympus.c:3136
 #: src/main/print-olympus.c:3259 src/main/print-olympus.c:3372
-#: src/main/print-olympus.c:3490 src/main/print-olympus.c:3606
-#: src/main/print-olympus.c:3709
+#: src/main/print-olympus.c:3490 src/main/print-olympus.c:3654
 msgid "Matte"
 msgstr "Matt"
 
@@ -2381,12 +2378,12 @@ msgstr "Extra Glänzend"
 msgid "Extra Glossy Fine"
 msgstr "Extra Glänzend Fein"
 
-#: src/main/print-olympus.c:3919
+#: src/main/print-olympus.c:3864
 #, fuzzy
 msgid "Roll"
 msgstr "Rollenzufuhr"
 
-#: src/main/print-olympus.c:3920
+#: src/main/print-olympus.c:3865
 msgid "Sheet"
 msgstr ""
 
@@ -2394,49 +2391,49 @@ msgstr ""
 #. better durability of output by covering it with transparent
 #. laminate surface. This surface can be of different patterns:
 #. common are matte, glossy or texture.
-#: src/main/print-olympus.c:5323 src/main/print-olympus.c:5324
+#: src/main/print-olympus.c:5268 src/main/print-olympus.c:5269
 msgid "Laminate Pattern"
 msgstr "Laminatstruktur"
 
-#: src/main/print-olympus.c:5341
+#: src/main/print-olympus.c:5286
 msgid "Printer Generates Copies Natively"
 msgstr ""
 
-#: src/main/print-olympus.c:5342
+#: src/main/print-olympus.c:5287
 #, fuzzy
 msgid "Printer Generates Copies"
 msgstr "Druckerfeatures"
 
-#: src/main/print-olympus.c:5353
+#: src/main/print-olympus.c:5298
 msgid "PPD User Interface Constraints"
 msgstr ""
 
-#: src/main/print-olympus.c:5354
+#: src/main/print-olympus.c:5299
 msgid "PPD UIConstraints List"
 msgstr ""
 
-#: src/main/print-olympus.c:5376 src/main/print-olympus.c:5384
-#: src/main/print-olympus.c:5392 src/main/print-olympus.c:5400
+#: src/main/print-olympus.c:5321 src/main/print-olympus.c:5329
+#: src/main/print-olympus.c:5337 src/main/print-olympus.c:5345
 msgid "Output Level Adjustment"
 msgstr "Angleichung des Ausgabelevels"
 
-#: src/main/print-olympus.c:5377
+#: src/main/print-olympus.c:5322
 msgid "Adjust the cyan balance"
 msgstr "Cyan-Abgleich anpassen"
 
-#: src/main/print-olympus.c:5385
+#: src/main/print-olympus.c:5330
 msgid "Adjust the magenta balance"
 msgstr "Magenta-Abgleich anpassen"
 
-#: src/main/print-olympus.c:5393
+#: src/main/print-olympus.c:5338
 msgid "Adjust the yellow balance"
 msgstr "Gelb-Abgleich anpassen"
 
-#: src/main/print-olympus.c:5400
+#: src/main/print-olympus.c:5345
 msgid "Black Balance"
 msgstr "Schwarz-Abgleich"
 
-#: src/main/print-olympus.c:5401
+#: src/main/print-olympus.c:5346
 msgid "Adjust the black balance"
 msgstr "Schwarz-Abgleich anpassen"
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gutenprint-5.2.10-pre2\n"
 "Report-Msgid-Bugs-To: gimp-print-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2016-01-13 22:11-0500\n"
+"POT-Creation-Date: 2016-01-13 22:34-0500\n"
 "PO-Revision-Date: 2014-01-26 08:53+0700\n"
 "Last-Translator: Trần Ngọc Quân <vnwildman@gmail.com>\n"
 "Language-Team: Vietnamese <translation-team-vi@lists.sourceforge.net>\n"
@@ -133,37 +133,37 @@ msgid "Dither algorithm"
 msgstr "Thuật toán pha màu"
 
 #: src/main/print-canon.c:283 src/main/print-escp2.c:176
-#: src/main/print-lexmark.c:266 src/main/print-olympus.c:5289
+#: src/main/print-lexmark.c:266 src/main/print-olympus.c:5234
 #: src/main/print-pcl.c:1456 src/main/print-ps.c:74 src/main/print-raw.c:103
 msgid "Page Size"
 msgstr "Cỡ giấy"
 
 #: src/main/print-canon.c:284 src/main/print-escp2.c:177
-#: src/main/print-lexmark.c:267 src/main/print-olympus.c:5290
+#: src/main/print-lexmark.c:267 src/main/print-olympus.c:5235
 #: src/main/print-pcl.c:1457 src/main/print-ps.c:75 src/main/print-raw.c:104
 msgid "Size of the paper being printed to"
 msgstr "Cỡ của giấy được in ra"
 
 #: src/main/print-canon.c:289 src/main/print-escp2.c:182
-#: src/main/print-lexmark.c:272 src/main/print-olympus.c:5295
+#: src/main/print-lexmark.c:272 src/main/print-olympus.c:5240
 #: src/main/print-pcl.c:1462 src/cups/genppd.c:2067 src/cups/genppd.c:2562
 msgid "Media Type"
 msgstr "Kiểu đa phương tiện"
 
 #: src/main/print-canon.c:290 src/main/print-escp2.c:183
-#: src/main/print-lexmark.c:273 src/main/print-olympus.c:5296
+#: src/main/print-lexmark.c:273 src/main/print-olympus.c:5241
 #: src/main/print-pcl.c:1463
 msgid "Type of media (plain paper, photo paper, etc.)"
 msgstr "Kiểu đa phương tiện (giấy thường, giấy ảnh,...)"
 
 #: src/main/print-canon.c:295 src/main/print-escp2.c:188
-#: src/main/print-lexmark.c:278 src/main/print-olympus.c:5301
+#: src/main/print-lexmark.c:278 src/main/print-olympus.c:5246
 #: src/main/print-pcl.c:1468 src/cups/genppd.c:2103 src/cups/genppd.c:2582
 msgid "Media Source"
 msgstr "Nguồn Đa phương tiện"
 
 #: src/main/print-canon.c:296 src/main/print-escp2.c:189
-#: src/main/print-lexmark.c:279 src/main/print-olympus.c:5302
+#: src/main/print-lexmark.c:279 src/main/print-olympus.c:5247
 #: src/main/print-pcl.c:1469
 msgid "Source (input slot) of the media"
 msgstr ""
@@ -214,25 +214,25 @@ msgid "CD Vertical Fine Adjustment"
 msgstr ""
 
 #: src/main/print-canon.c:337 src/main/print-escp2.c:236
-#: src/main/print-lexmark.c:284 src/main/print-olympus.c:5307
+#: src/main/print-lexmark.c:284 src/main/print-olympus.c:5252
 #: src/main/print-pcl.c:1480 src/cups/genppd.c:2195 src/cups/genppd.c:2617
 msgid "Resolution"
 msgstr "Độ phân giải"
 
 #: src/main/print-canon.c:338 src/main/print-lexmark.c:285
-#: src/main/print-olympus.c:5308
+#: src/main/print-olympus.c:5253
 msgid "Resolution and quality of the print"
 msgstr "Độ phân giải và chất lượng in"
 
 #: src/main/print-canon.c:348 src/main/print-escp2.c:247
-#: src/main/print-lexmark.c:290 src/main/print-olympus.c:5313
+#: src/main/print-lexmark.c:290 src/main/print-olympus.c:5258
 #: src/main/print-pcl.c:1486 src/main/print-raw.c:91
 msgid "Ink Type"
 msgstr "Kiểu mực"
 
 #: src/main/print-canon.c:349 src/main/print-escp2.c:248
 #: src/main/print-escp2.c:260 src/main/print-lexmark.c:291
-#: src/main/print-olympus.c:5314 src/main/print-pcl.c:1487
+#: src/main/print-olympus.c:5259 src/main/print-pcl.c:1487
 #: src/main/print-raw.c:92
 msgid "Type of ink in the printer"
 msgstr "Kiểu của mực máy in"
@@ -245,13 +245,13 @@ msgid "Ink Channels"
 msgstr "Các kênh mực"
 
 #: src/main/print-canon.c:365 src/main/print-escp2.c:349
-#: src/main/print-lexmark.c:302 src/main/print-olympus.c:5335
+#: src/main/print-lexmark.c:302 src/main/print-olympus.c:5280
 #: src/main/print-pcl.c:1498 src/main/print-ps.c:86 src/main/print-raw.c:97
 msgid "Printing Mode"
 msgstr "Chế độ In"
 
 #: src/main/print-canon.c:366 src/main/print-escp2.c:350
-#: src/main/print-lexmark.c:303 src/main/print-olympus.c:5336
+#: src/main/print-lexmark.c:303 src/main/print-olympus.c:5281
 #: src/main/print-pcl.c:1499 src/main/print-ps.c:87 src/main/print-raw.c:98
 msgid "Printing Output Mode"
 msgstr "Chế độ xuất khi in"
@@ -265,22 +265,22 @@ msgid "Type of inkset in the printer"
 msgstr "Kiểu của bộ mực trong máy in"
 
 #: src/main/print-canon.c:382 src/main/print-escp2.c:271
-#: src/main/print-olympus.c:5329
+#: src/main/print-olympus.c:5274
 msgid "Borderless"
 msgstr "Không có viền"
 
 #: src/main/print-canon.c:383 src/main/print-escp2.c:272
-#: src/main/print-olympus.c:5330
+#: src/main/print-olympus.c:5275
 msgid "Print without borders"
 msgstr "Không in viền"
 
 #: src/main/print-canon.c:388 src/main/print-escp2.c:194
-#: src/main/print-olympus.c:5347 src/main/print-pcl.c:1504
+#: src/main/print-olympus.c:5292 src/main/print-pcl.c:1504
 msgid "Double-Sided Printing"
 msgstr "In hai mặt"
 
 #: src/main/print-canon.c:389 src/main/print-escp2.c:195
-#: src/main/print-olympus.c:5348 src/main/print-pcl.c:1505
+#: src/main/print-olympus.c:5293 src/main/print-pcl.c:1505
 msgid "Duplex/Tumble Setting"
 msgstr ""
 
@@ -350,19 +350,18 @@ msgid "Light Yellow Transition"
 msgstr ""
 
 #: src/main/print-canon.c:484 src/main/print-escp2.c:2547
-#: src/main/print-olympus.c:3604 src/main/print-olympus.c:5419
-#: src/main/print-pcl.c:1830 src/xml/xmli18n-tmp.h:3295
-#: src/xml/xmli18n-tmp.h:3300 src/xml/xmli18n-tmp.h:3306
-#: src/xml/xmli18n-tmp.h:3313
+#: src/main/print-olympus.c:5364 src/main/print-pcl.c:1830
+#: src/xml/xmli18n-tmp.h:3295 src/xml/xmli18n-tmp.h:3300
+#: src/xml/xmli18n-tmp.h:3306 src/xml/xmli18n-tmp.h:3313
 msgid "Off"
 msgstr "Tắt"
 
 #: src/main/print-canon.c:485 src/main/print-escp2.c:2549
-#: src/main/print-olympus.c:5420 src/main/print-pcl.c:1831
+#: src/main/print-olympus.c:5365 src/main/print-pcl.c:1831
 msgid "Long Edge (Standard)"
 msgstr "Cạnh dài (Tiêu chuẩn)"
 
-#: src/main/print-canon.c:486 src/main/print-olympus.c:5421
+#: src/main/print-canon.c:486 src/main/print-olympus.c:5366
 #: src/main/print-pcl.c:1832
 msgid "Short Edge (Flip)"
 msgstr "Cạnh ngắn (Lật)"
@@ -410,7 +409,7 @@ msgstr "Khay hậu"
 #: src/main/print-canon.c:2983 src/main/print-canon.c:3011
 #: src/main/print-canon.c:3043 src/main/print-canon.c:3047
 #: src/main/print-canon.c:3123 src/main/print-escp2.c:2715
-#: src/main/print-lexmark.c:1296 src/main/print-olympus.c:5651
+#: src/main/print-lexmark.c:1296 src/main/print-olympus.c:5596
 #: src/main/print-pcl.c:2264 src/main/print-ps.c:329 src/main/print-raw.c:152
 #: src/gutenprintui2/panel.c:291
 msgid "Color"
@@ -1001,7 +1000,7 @@ msgstr ""
 msgid "Adjust the black gamma"
 msgstr ""
 
-#: src/main/print-color.c:354 src/main/print-olympus.c:5376
+#: src/main/print-color.c:354 src/main/print-olympus.c:5321
 msgid "Cyan Balance"
 msgstr ""
 
@@ -1009,7 +1008,7 @@ msgstr ""
 msgid "Adjust the cyan gray balance"
 msgstr ""
 
-#: src/main/print-color.c:362 src/main/print-olympus.c:5384
+#: src/main/print-color.c:362 src/main/print-olympus.c:5329
 msgid "Magenta Balance"
 msgstr ""
 
@@ -1017,7 +1016,7 @@ msgstr ""
 msgid "Adjust the magenta gray balance"
 msgstr ""
 
-#: src/main/print-color.c:370 src/main/print-olympus.c:5392
+#: src/main/print-color.c:370 src/main/print-olympus.c:5337
 msgid "Yellow Balance"
 msgstr ""
 
@@ -1804,7 +1803,7 @@ msgstr ""
 msgid "This printer does not support raw printer output at depth %d\n"
 msgstr ""
 
-#: src/main/print-escp2.c:4426 src/main/print-olympus.c:6228
+#: src/main/print-escp2.c:4426 src/main/print-olympus.c:6173
 #: src/main/print-raw.c:243
 msgid "Print options not verified; cannot print.\n"
 msgstr ""
@@ -2263,8 +2262,7 @@ msgstr ""
 #: src/main/print-olympus.c:2191 src/main/print-olympus.c:2253
 #: src/main/print-olympus.c:2803 src/main/print-olympus.c:3134
 #: src/main/print-olympus.c:3257 src/main/print-olympus.c:3371
-#: src/main/print-olympus.c:3489 src/main/print-olympus.c:3605
-#: src/main/print-olympus.c:3708
+#: src/main/print-olympus.c:3489 src/main/print-olympus.c:3653
 msgid "Glossy"
 msgstr "Bóng"
 
@@ -2278,8 +2276,7 @@ msgstr "Họa tiết"
 #: src/main/print-olympus.c:2259 src/main/print-olympus.c:2659
 #: src/main/print-olympus.c:2804 src/main/print-olympus.c:3136
 #: src/main/print-olympus.c:3259 src/main/print-olympus.c:3372
-#: src/main/print-olympus.c:3490 src/main/print-olympus.c:3606
-#: src/main/print-olympus.c:3709
+#: src/main/print-olympus.c:3490 src/main/print-olympus.c:3654
 msgid "Matte"
 msgstr "Kênh xỉn"
 
@@ -2357,11 +2354,11 @@ msgstr "Cực Bóng"
 msgid "Extra Glossy Fine"
 msgstr ""
 
-#: src/main/print-olympus.c:3919
+#: src/main/print-olympus.c:3864
 msgid "Roll"
 msgstr ""
 
-#: src/main/print-olympus.c:3920
+#: src/main/print-olympus.c:3865
 msgid "Sheet"
 msgstr ""
 
@@ -2369,49 +2366,49 @@ msgstr ""
 #. better durability of output by covering it with transparent
 #. laminate surface. This surface can be of different patterns:
 #. common are matte, glossy or texture.
-#: src/main/print-olympus.c:5323 src/main/print-olympus.c:5324
+#: src/main/print-olympus.c:5268 src/main/print-olympus.c:5269
 msgid "Laminate Pattern"
 msgstr ""
 
-#: src/main/print-olympus.c:5341
+#: src/main/print-olympus.c:5286
 msgid "Printer Generates Copies Natively"
 msgstr ""
 
-#: src/main/print-olympus.c:5342
+#: src/main/print-olympus.c:5287
 #, fuzzy
 msgid "Printer Generates Copies"
 msgstr "Tính năng máy in"
 
-#: src/main/print-olympus.c:5353
+#: src/main/print-olympus.c:5298
 msgid "PPD User Interface Constraints"
 msgstr ""
 
-#: src/main/print-olympus.c:5354
+#: src/main/print-olympus.c:5299
 msgid "PPD UIConstraints List"
 msgstr ""
 
-#: src/main/print-olympus.c:5376 src/main/print-olympus.c:5384
-#: src/main/print-olympus.c:5392 src/main/print-olympus.c:5400
+#: src/main/print-olympus.c:5321 src/main/print-olympus.c:5329
+#: src/main/print-olympus.c:5337 src/main/print-olympus.c:5345
 msgid "Output Level Adjustment"
 msgstr ""
 
-#: src/main/print-olympus.c:5377
+#: src/main/print-olympus.c:5322
 msgid "Adjust the cyan balance"
 msgstr "Chỉnh mức cân bằng xanh nhạt"
 
-#: src/main/print-olympus.c:5385
+#: src/main/print-olympus.c:5330
 msgid "Adjust the magenta balance"
 msgstr "Chỉnh mức cân bằng đỏ sẫm"
 
-#: src/main/print-olympus.c:5393
+#: src/main/print-olympus.c:5338
 msgid "Adjust the yellow balance"
 msgstr "Chỉnh mức cân bằng vàng"
 
-#: src/main/print-olympus.c:5400
+#: src/main/print-olympus.c:5345
 msgid "Black Balance"
 msgstr "Cân bằng đen"
 
-#: src/main/print-olympus.c:5401
+#: src/main/print-olympus.c:5346
 msgid "Adjust the black balance"
 msgstr "Chỉnh mức cân bằng đen"
 

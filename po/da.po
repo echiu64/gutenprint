@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gutenprint 5.2.10-pre2\n"
 "Report-Msgid-Bugs-To: gimp-print-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2016-01-13 22:11-0500\n"
+"POT-Creation-Date: 2016-01-13 22:34-0500\n"
 "PO-Revision-Date: 2014-01-26 12:32+0100\n"
 "Last-Translator: Mogens Jaeger <mogensjaeger@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
@@ -147,37 +147,37 @@ msgid "Dither algorithm"
 msgstr "Dither-algoritme"
 
 #: src/main/print-canon.c:283 src/main/print-escp2.c:176
-#: src/main/print-lexmark.c:266 src/main/print-olympus.c:5289
+#: src/main/print-lexmark.c:266 src/main/print-olympus.c:5234
 #: src/main/print-pcl.c:1456 src/main/print-ps.c:74 src/main/print-raw.c:103
 msgid "Page Size"
 msgstr "Papirstørrelse"
 
 #: src/main/print-canon.c:284 src/main/print-escp2.c:177
-#: src/main/print-lexmark.c:267 src/main/print-olympus.c:5290
+#: src/main/print-lexmark.c:267 src/main/print-olympus.c:5235
 #: src/main/print-pcl.c:1457 src/main/print-ps.c:75 src/main/print-raw.c:104
 msgid "Size of the paper being printed to"
 msgstr "Størrelse på det papir der skal udskrives på"
 
 #: src/main/print-canon.c:289 src/main/print-escp2.c:182
-#: src/main/print-lexmark.c:272 src/main/print-olympus.c:5295
+#: src/main/print-lexmark.c:272 src/main/print-olympus.c:5240
 #: src/main/print-pcl.c:1462 src/cups/genppd.c:2067 src/cups/genppd.c:2562
 msgid "Media Type"
 msgstr "Medietype"
 
 #: src/main/print-canon.c:290 src/main/print-escp2.c:183
-#: src/main/print-lexmark.c:273 src/main/print-olympus.c:5296
+#: src/main/print-lexmark.c:273 src/main/print-olympus.c:5241
 #: src/main/print-pcl.c:1463
 msgid "Type of media (plain paper, photo paper, etc.)"
 msgstr "Medietype (almindeligt papir, fotopapir, o.s.v.)"
 
 #: src/main/print-canon.c:295 src/main/print-escp2.c:188
-#: src/main/print-lexmark.c:278 src/main/print-olympus.c:5301
+#: src/main/print-lexmark.c:278 src/main/print-olympus.c:5246
 #: src/main/print-pcl.c:1468 src/cups/genppd.c:2103 src/cups/genppd.c:2582
 msgid "Media Source"
 msgstr "Mediekilde"
 
 #: src/main/print-canon.c:296 src/main/print-escp2.c:189
-#: src/main/print-lexmark.c:279 src/main/print-olympus.c:5302
+#: src/main/print-lexmark.c:279 src/main/print-olympus.c:5247
 #: src/main/print-pcl.c:1469
 msgid "Source (input slot) of the media"
 msgstr "I hvilken bakke er mediet"
@@ -228,25 +228,25 @@ msgid "CD Vertical Fine Adjustment"
 msgstr "Cd lodret finjustering"
 
 #: src/main/print-canon.c:337 src/main/print-escp2.c:236
-#: src/main/print-lexmark.c:284 src/main/print-olympus.c:5307
+#: src/main/print-lexmark.c:284 src/main/print-olympus.c:5252
 #: src/main/print-pcl.c:1480 src/cups/genppd.c:2195 src/cups/genppd.c:2617
 msgid "Resolution"
 msgstr "Opløsning"
 
 #: src/main/print-canon.c:338 src/main/print-lexmark.c:285
-#: src/main/print-olympus.c:5308
+#: src/main/print-olympus.c:5253
 msgid "Resolution and quality of the print"
 msgstr "Opløsning og kvalitet af udskriften"
 
 #: src/main/print-canon.c:348 src/main/print-escp2.c:247
-#: src/main/print-lexmark.c:290 src/main/print-olympus.c:5313
+#: src/main/print-lexmark.c:290 src/main/print-olympus.c:5258
 #: src/main/print-pcl.c:1486 src/main/print-raw.c:91
 msgid "Ink Type"
 msgstr "Blæktype"
 
 #: src/main/print-canon.c:349 src/main/print-escp2.c:248
 #: src/main/print-escp2.c:260 src/main/print-lexmark.c:291
-#: src/main/print-olympus.c:5314 src/main/print-pcl.c:1487
+#: src/main/print-olympus.c:5259 src/main/print-pcl.c:1487
 #: src/main/print-raw.c:92
 msgid "Type of ink in the printer"
 msgstr "Blæktype i printeren"
@@ -259,13 +259,13 @@ msgid "Ink Channels"
 msgstr "Blækkanaler"
 
 #: src/main/print-canon.c:365 src/main/print-escp2.c:349
-#: src/main/print-lexmark.c:302 src/main/print-olympus.c:5335
+#: src/main/print-lexmark.c:302 src/main/print-olympus.c:5280
 #: src/main/print-pcl.c:1498 src/main/print-ps.c:86 src/main/print-raw.c:97
 msgid "Printing Mode"
 msgstr "Udskriftstilstand"
 
 #: src/main/print-canon.c:366 src/main/print-escp2.c:350
-#: src/main/print-lexmark.c:303 src/main/print-olympus.c:5336
+#: src/main/print-lexmark.c:303 src/main/print-olympus.c:5281
 #: src/main/print-pcl.c:1499 src/main/print-ps.c:87 src/main/print-raw.c:98
 msgid "Printing Output Mode"
 msgstr "Udskriftstilstand"
@@ -279,22 +279,22 @@ msgid "Type of inkset in the printer"
 msgstr "Blæksættype i printeren"
 
 #: src/main/print-canon.c:382 src/main/print-escp2.c:271
-#: src/main/print-olympus.c:5329
+#: src/main/print-olympus.c:5274
 msgid "Borderless"
 msgstr "Med/uden margin"
 
 #: src/main/print-canon.c:383 src/main/print-escp2.c:272
-#: src/main/print-olympus.c:5330
+#: src/main/print-olympus.c:5275
 msgid "Print without borders"
 msgstr "Udskriv uden margin"
 
 #: src/main/print-canon.c:388 src/main/print-escp2.c:194
-#: src/main/print-olympus.c:5347 src/main/print-pcl.c:1504
+#: src/main/print-olympus.c:5292 src/main/print-pcl.c:1504
 msgid "Double-Sided Printing"
 msgstr "Tosidet udskrift"
 
 #: src/main/print-canon.c:389 src/main/print-escp2.c:195
-#: src/main/print-olympus.c:5348 src/main/print-pcl.c:1505
+#: src/main/print-olympus.c:5293 src/main/print-pcl.c:1505
 msgid "Duplex/Tumble Setting"
 msgstr "Duplex/Tumble indstilling"
 
@@ -364,19 +364,18 @@ msgid "Light Yellow Transition"
 msgstr "Lys gul overgang"
 
 #: src/main/print-canon.c:484 src/main/print-escp2.c:2547
-#: src/main/print-olympus.c:3604 src/main/print-olympus.c:5419
-#: src/main/print-pcl.c:1830 src/xml/xmli18n-tmp.h:3295
-#: src/xml/xmli18n-tmp.h:3300 src/xml/xmli18n-tmp.h:3306
-#: src/xml/xmli18n-tmp.h:3313
+#: src/main/print-olympus.c:5364 src/main/print-pcl.c:1830
+#: src/xml/xmli18n-tmp.h:3295 src/xml/xmli18n-tmp.h:3300
+#: src/xml/xmli18n-tmp.h:3306 src/xml/xmli18n-tmp.h:3313
 msgid "Off"
 msgstr "Afbrudt"
 
 #: src/main/print-canon.c:485 src/main/print-escp2.c:2549
-#: src/main/print-olympus.c:5420 src/main/print-pcl.c:1831
+#: src/main/print-olympus.c:5365 src/main/print-pcl.c:1831
 msgid "Long Edge (Standard)"
 msgstr "Lang kant (standard)"
 
-#: src/main/print-canon.c:486 src/main/print-olympus.c:5421
+#: src/main/print-canon.c:486 src/main/print-olympus.c:5366
 #: src/main/print-pcl.c:1832
 msgid "Short Edge (Flip)"
 msgstr "Kort kant (vend)"
@@ -424,7 +423,7 @@ msgstr "Bagerste bakke"
 #: src/main/print-canon.c:2983 src/main/print-canon.c:3011
 #: src/main/print-canon.c:3043 src/main/print-canon.c:3047
 #: src/main/print-canon.c:3123 src/main/print-escp2.c:2715
-#: src/main/print-lexmark.c:1296 src/main/print-olympus.c:5651
+#: src/main/print-lexmark.c:1296 src/main/print-olympus.c:5596
 #: src/main/print-pcl.c:2264 src/main/print-ps.c:329 src/main/print-raw.c:152
 #: src/gutenprintui2/panel.c:291
 msgid "Color"
@@ -1017,7 +1016,7 @@ msgstr "Justér gamma for blå"
 msgid "Adjust the black gamma"
 msgstr "Justér sort gamma"
 
-#: src/main/print-color.c:354 src/main/print-olympus.c:5376
+#: src/main/print-color.c:354 src/main/print-olympus.c:5321
 msgid "Cyan Balance"
 msgstr "Cyan balance"
 
@@ -1025,7 +1024,7 @@ msgstr "Cyan balance"
 msgid "Adjust the cyan gray balance"
 msgstr "Justér cyans gråbalance"
 
-#: src/main/print-color.c:362 src/main/print-olympus.c:5384
+#: src/main/print-color.c:362 src/main/print-olympus.c:5329
 msgid "Magenta Balance"
 msgstr "Magenta balance"
 
@@ -1033,7 +1032,7 @@ msgstr "Magenta balance"
 msgid "Adjust the magenta gray balance"
 msgstr "Justér magentas gråbalance"
 
-#: src/main/print-color.c:370 src/main/print-olympus.c:5392
+#: src/main/print-color.c:370 src/main/print-olympus.c:5337
 msgid "Yellow Balance"
 msgstr "Gul balance"
 
@@ -1827,7 +1826,7 @@ msgstr "Kort kant (vend)"
 msgid "This printer does not support raw printer output at depth %d\n"
 msgstr "Printeren understøtter ikke en ufiltreret enheds uddata ved dybde %d\n"
 
-#: src/main/print-escp2.c:4426 src/main/print-olympus.c:6228
+#: src/main/print-escp2.c:4426 src/main/print-olympus.c:6173
 #: src/main/print-raw.c:243
 msgid "Print options not verified; cannot print.\n"
 msgstr "Udskriftsindstillinger ikke kontrolleret, kan ikke udskrive.\n"
@@ -2286,8 +2285,7 @@ msgstr "Coated"
 #: src/main/print-olympus.c:2191 src/main/print-olympus.c:2253
 #: src/main/print-olympus.c:2803 src/main/print-olympus.c:3134
 #: src/main/print-olympus.c:3257 src/main/print-olympus.c:3371
-#: src/main/print-olympus.c:3489 src/main/print-olympus.c:3605
-#: src/main/print-olympus.c:3708
+#: src/main/print-olympus.c:3489 src/main/print-olympus.c:3653
 msgid "Glossy"
 msgstr "Glittet"
 
@@ -2301,8 +2299,7 @@ msgstr "Tekstur"
 #: src/main/print-olympus.c:2259 src/main/print-olympus.c:2659
 #: src/main/print-olympus.c:2804 src/main/print-olympus.c:3136
 #: src/main/print-olympus.c:3259 src/main/print-olympus.c:3372
-#: src/main/print-olympus.c:3490 src/main/print-olympus.c:3606
-#: src/main/print-olympus.c:3709
+#: src/main/print-olympus.c:3490 src/main/print-olympus.c:3654
 msgid "Matte"
 msgstr "Mat"
 
@@ -2380,12 +2377,12 @@ msgstr "Glittet ekstra"
 msgid "Extra Glossy Fine"
 msgstr "Glittet ekstra fin"
 
-#: src/main/print-olympus.c:3919
+#: src/main/print-olympus.c:3864
 #, fuzzy
 msgid "Roll"
 msgstr "Rulle fødning"
 
-#: src/main/print-olympus.c:3920
+#: src/main/print-olympus.c:3865
 msgid "Sheet"
 msgstr ""
 
@@ -2393,49 +2390,49 @@ msgstr ""
 #. better durability of output by covering it with transparent
 #. laminate surface. This surface can be of different patterns:
 #. common are matte, glossy or texture.
-#: src/main/print-olympus.c:5323 src/main/print-olympus.c:5324
+#: src/main/print-olympus.c:5268 src/main/print-olympus.c:5269
 msgid "Laminate Pattern"
 msgstr "Lamineret mønster"
 
-#: src/main/print-olympus.c:5341
+#: src/main/print-olympus.c:5286
 msgid "Printer Generates Copies Natively"
 msgstr ""
 
-#: src/main/print-olympus.c:5342
+#: src/main/print-olympus.c:5287
 #, fuzzy
 msgid "Printer Generates Copies"
 msgstr "Printer egenskaber"
 
-#: src/main/print-olympus.c:5353
+#: src/main/print-olympus.c:5298
 msgid "PPD User Interface Constraints"
 msgstr ""
 
-#: src/main/print-olympus.c:5354
+#: src/main/print-olympus.c:5299
 msgid "PPD UIConstraints List"
 msgstr ""
 
-#: src/main/print-olympus.c:5376 src/main/print-olympus.c:5384
-#: src/main/print-olympus.c:5392 src/main/print-olympus.c:5400
+#: src/main/print-olympus.c:5321 src/main/print-olympus.c:5329
+#: src/main/print-olympus.c:5337 src/main/print-olympus.c:5345
 msgid "Output Level Adjustment"
 msgstr "Udskrifts niveaujustering"
 
-#: src/main/print-olympus.c:5377
+#: src/main/print-olympus.c:5322
 msgid "Adjust the cyan balance"
 msgstr "Justér cyanbalance"
 
-#: src/main/print-olympus.c:5385
+#: src/main/print-olympus.c:5330
 msgid "Adjust the magenta balance"
 msgstr "Justér magentabalance"
 
-#: src/main/print-olympus.c:5393
+#: src/main/print-olympus.c:5338
 msgid "Adjust the yellow balance"
 msgstr "Justér gulbalance"
 
-#: src/main/print-olympus.c:5400
+#: src/main/print-olympus.c:5345
 msgid "Black Balance"
 msgstr "Sort balance"
 
-#: src/main/print-olympus.c:5401
+#: src/main/print-olympus.c:5346
 msgid "Adjust the black balance"
 msgstr "Justér sortbalance"
 
