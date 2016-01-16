@@ -17,8 +17,8 @@ of them.  We will fill in this list as we verify successful operation
 of these printers.  You can help by testing this with your own printer
 and reporting the results!</p>
 
-<table summary="Supported printers for Gutenrint 5.2.11-pre2">
-<caption style="font-size:135%;margin-bottom:0.50em;"><b>Gutenprint 5.2.11-pre2</b></caption>
+<table summary="Supported printers for Gutenrint 5.2.11">
+<caption style="font-size:135%;margin-bottom:0.50em;"><b>Gutenprint 5.2.11</b></caption>
 <tr><td><b>Printer Model</b></td><td><b>Driver Name</b></td><td><b>Foomatic Name</b></td><td><b>Notes</b></td></tr>
 <tr><td>Canon BJ-30</td><td>bjc-30</td><td>Canon-BJ-30</td><td></td></tr>
 <tr><td>Canon BJC-50</td><td>bjc-50</td><td>Canon-BJC-50</td><td></td></tr>
