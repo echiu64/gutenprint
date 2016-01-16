@@ -1041,6 +1041,7 @@ and reporting the results!</p>
 <tr><td>Epson B-510DN</td><td>escp2-b510dn</td><td>Epson-B510DN</td><td></td></tr>
 <tr><td>Epson L120</td><td>escp2-l120</td><td>Epson-L120</td><td></td></tr>
 <tr><td>Epson L210</td><td>escp2-l210</td><td>Epson-L210</td><td></td></tr>
+<tr><td>Epson L1800</td><td>escp2-l1800</td><td>Epson-L1800</td><td></td></tr>
 <tr><td>Epson Stylus C20</td><td>escp2-c20</td><td>Epson-Stylus_C20</td><td></td></tr>
 <tr><td>Epson Stylus C20SX</td><td>escp2-c20sx</td><td>Epson-Stylus_C20SX</td><td></td></tr>
 <tr><td>Epson Stylus C20UX</td><td>escp2-c20ux</td><td>Epson-Stylus_C20UX</td><td></td></tr>
@@ -2083,6 +2084,7 @@ and reporting the results!</p>
 <tr><td>Kyocera FS-1030D</td><td>kyocera-fs-1030d</td><td>Kyocera-FS-1030D</td><td></td></tr>
 <tr><td>Kyocera FS-1050</td><td>kyocera-fs-1050</td><td>Kyocera-FS-1050</td><td></td></tr>
 <tr><td>Kyocera FS-1118MFP</td><td>kyocera-fs-1118mfp</td><td>Kyocera-FS-1118MFP</td><td></td></tr>
+<tr><td>Kyocera FS-1135MFP</td><td>kyocera-fs-1135mfp</td><td>Kyocera-FS-1135MFP</td><td></td></tr>
 <tr><td>Kyocera FS-1200</td><td>kyocera-fs-1200</td><td>Kyocera-FS-1200</td><td></td></tr>
 <tr><td>Kyocera FS-1600</td><td>kyocera-fs-1600</td><td>Kyocera-FS-1600</td><td></td></tr>
 <tr><td>Kyocera FS-1600+</td><td>kyocera-fs-1600plus</td><td>Kyocera-FS-1600plus</td><td></td></tr>
