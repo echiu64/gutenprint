@@ -94,13 +94,12 @@ for pkg in ${oldpackages[@]} ; do
 
 	## Remove the receipt
 	sudo /bin/rm -rf "/Library/Receipts/$pkg"
-
+	echo Receipt removed from /Library/Receipts.
 done
 
-test -d /usr/share/gutenprint && /bin/rm -rf /usr/share/gutenprint
-test -d /Library/Printers/Gutenprint.printerDriver && /bin/rm -rf /Library/Printers/Gutenprint.printerDriver
+test -d /usr/share/gutenprint && sudo /bin/rm -rf /usr/share/gutenprint
+test -d /Library/Printers/Gutenprint.printerDriver && sudo /bin/rm -rf /Library/Printers/Gutenprint.printerDriver
 
-echo Done removing receipts from /Library/Receipts.
 
 ## Now look for anything left that can be found with pkgutil
 ## We check so there is no error message that pkgutil was not found.
@@ -169,3 +168,4 @@ do
 done
 
 exit 0
+
