@@ -130,15 +130,9 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 		<h2> Headlines </h2>
 
 		<p>
-			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.11-pre2 is released!</span>
+			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.11 is released!</span>
 			<br>
-			<a href="MacOSX.php#5.2.11-pre2">October 7, 2015</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.11-pre2, a pre-release of 5.2.11. This release provides initial support for OS X 10.11 (El Capitan).  This release adds support for many new printers and other improvements over 5.2.10, but no longer supports OS X 10.5 or below. <b>NOTE: Users of many dye sublimation printers must follow a special installation procedure.  Please read the release notes very carefully!</b>  See the <a href="MacOSX.php#5.2.11-pre2">Release notes</a> for more detail.  See the <b>Downloads</b> section for download links.
-		</p>
-
-		<p>
-			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.11-pre1 is released!</span>
-			<br>
-			<a href="MacOSX.php#5.2.11-pre1">June 26, 2015</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.11-pre1, a pre-release of 5.2.11. This release adds support for many new printers and other improvements over 5.2.10, but no longer supports OS X 10.5 or below. <b>NOTE: Users of many dye sublimation printers must follow a special installation procedure.  Please read the release notes very carefully!</b>  See the <a href="MacOSX.php#5.2.11-pre1">Release notes</a> for more detail.  See the <b>Downloads</b> section for download links.
+			<a href="MacOSX.php#5.2.11">January 22, 2016</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.11, a stable release of Gutenprint 5.2. This release provides full support for OS X 10.11 (El Capitan).  This release adds support for many new printers and other improvements over 5.2.10, but no longer supports OS X 10.5 or below. <b>NOTE: Users of many dye sublimation printers must follow a special installation procedure.  Please read the release notes very carefully!</b>  See the <a href="MacOSX.php#5.2.11">Release notes</a> for more detail.  See the <b>Downloads</b> section for download links.
 		</p>
 
 		<p>
@@ -182,21 +176,12 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Downloads</h2>
 		<p>
-			<b>Gutenprint 5.2.11-pre2</b>
+			<b>Gutenprint 5.2.11</b>
 			<br>
-			<span style="background-color:#d0ffff;"><a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.11-pre2/gutenprint-5.2.11-pre2.dmg/download">gutenprint-5.2.11-pre2.dmg</a></span>&nbsp;&nbsp;(12.4 MB)
+			<span style="background-color:#d0ffff;"><a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.11/gutenprint-5.2.11.dmg/download">gutenprint-5.2.11.dmg</a></span>&nbsp;&nbsp;(12.4 MB)
 		</p>
 		<p>
-The Gutenprint project is pleased to announce Gutenprint 5.2.11-pre2, a pre-release of 5.2.11. Gutenprint 5.2.11-pre2 provides initial support for Macintosh OS X 10.11 (El Capitan).  It no longer supports Macintosh OS X 10.5 or below; it now requires 10.6 (Snow Leopard) or higher.&nbsp;&nbsp;(<a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.11-pre2/gutenprint-5.2.11-pre2.tar.bz2/download">source code</a>)
-</p>
-
-		<p>
-			<b>Gutenprint 5.2.11-pre1</b>
-			<br>
-			<span style="background-color:#d0ffff;"><a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.11-pre1/gutenprint-5.2.11-pre1.dmg/download">gutenprint-5.2.11-pre1.dmg</a></span>&nbsp;&nbsp;(12.4 MB)
-		</p>
-		<p>
-The Gutenprint project is pleased to announce Gutenprint 5.2.11-pre1, a stable release of 5.2. Gutenprint 5.2.11-pre1 no longer supports Macintosh OS X 10.5 or below; it now requires 10.6 (Snow Leopard) or higher.&nbsp;&nbsp;(<a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.11-pre1/gutenprint-5.2.11-pre1.tar.bz2/download">source code</a>)
+The Gutenprint project is pleased to announce Gutenprint 5.2.11, a stable release of 5.2. Gutenprint 5.2.11 provides full support for Macintosh OS X 10.11 (El Capitan).  It no longer supports Macintosh OS X 10.5 or below; it now requires 10.6 (Snow Leopard) or higher.&nbsp;&nbsp;(<a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.11/gutenprint-5.2.11.tar.bz2/download">source code</a>)
 </p>
 
 		<p>
@@ -233,10 +218,10 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.10, a stable releas
 		<p>
 			<b>Gutenprint Uninstaller <br>updated for El Capitan (OS X10.11)</b>
 			<br>
-			<span style="background-color:#d0ffff;"><a href="http://sourceforge.net/projects/gimp-print/files/Uninstaller%20-%20Mac%20OS%20X%20ONLY/uninstall-gutenprint.zip/download">uninstall-gutenprint</a></span>&nbsp;&nbsp;(109 KB)
+			<span style="background-color:#d0ffff;"><a href="http://sourceforge.net/projects/gimp-print/files/Uninstaller%20-%20Mac%20OS%20X%20ONLY/2.0/uninstall-gutenprint-2.0.zip/download">uninstall-gutenprint</a></span>&nbsp;&nbsp;(109 KB)
 		</p>
 		<p>
-			The updated uninstaller will work on any systerm OS X 10.2.x through at least 10.11.</p>
+			The updated uninstaller will work on any system OS X 10.2.x through at least 10.11.</p>
 			<p>The Gutenprint uninstaller will completely remove any version of Gutenprint/Gimp-Print that was installed with an official Mac OS X installer package provided by the Gimp-Print project. It will also remove the version of Gutenprint/Gimp-Print that is included on any Apple OS X install disk.
 		</p>
 		<p>
@@ -280,57 +265,19 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.10, a stable releas
 <hr>
 <h3> News Items </h3>
 <!-- Yuk.  Have to use tables to get news item head formatting as it was before. Gecko browsers will not float text properly. Even IE Mac 5.2.3 does this right -->
-<a name="5.2.11-pre2"></a>
+<a name="5.2.11"></a>
 <table cellpadding="0" bgcolor="#d0d0d0" width="60%">
 	<tr>
 		<td align="left">
-			<b>Gutenprint 5.2.11-pre2</b>
+			<b>Gutenprint 5.2.11</b>
 		</td>
 		<td align="right">
-			<b>2015-10-07</b>
+			<b>2016-01-22</b>
 		</td>
 	</tr>
 </table>
 <p>
-<b>Gutenprint 5.2.11-pre2</b> is the second prerelease of Gutenprint 5.2.11.  This release adds support for many new printers. Please see the release notes included with the release for further details.
-</p>
-<a name="5.2.11-pre1"></a>
-<table cellpadding="0" bgcolor="#d0d0d0" width="60%">
-	<tr>
-		<td align="left">
-			<b>Gutenprint 5.2.11-pre1</b>
-		</td>
-		<td align="right">
-			<b>2015-06-26</b>
-		</td>
-	</tr>
-</table>
-<p>
-<b>Gutenprint 5.2.11-pre1</b> is a prerelease of Gutenprint 5.2.11  This release adds support for many new printers (including the initial introduction of support for Datamax-O'Neil label printers, dye sublimation and Canon inkjet printers and other improvements over 5.2.10. <b>NOTE: Users of many dye sublimation printers must follow a special installation procedure.  Please read the release notes very carefully!</b>
-<ol style="margin-top:0.25em; list-style-type:decimal;">
-	<li> Support Datamax-O'Neil Performance series printers and Workstation printer</li>
-
-	<li> Add support for additional dye sublimation printers</li>
-
-	<li> Add support for many Canon inkjet printers</li>
-
-	<li> Fix problems with certain Canon printers, which in some cases means removing some printing modes</li>
-
-</ol>
-</p>
-<a name="5.2.11-pre2"></a>
-<table cellpadding="0" bgcolor="#d0d0d0" width="60%">
-	<tr>
-		<td align="left">
-			<b>Gutenprint 5.2.11-pre2</b>
-		</td>
-		<td align="right">
-			<b>2015-10-07</b>
-		</td>
-	</tr>
-</table>
-<p>
-<b>Gutenprint 5.2.11-pre2</b> is a prerelease of Gutenprint 5.2.11  This release provides initial support for Macintosh OS X 10.11 (El Capitan).  This release adds support for many new printers (including the initial introduction of support for Datamax-O'Neil label printers, dye sublimation and Canon inkjet printers and other improvements over 5.2.10. <b>NOTE: Users of many dye sublimation printers must follow a special installation procedure.  Please read the release notes very carefully!</b>
+<b>Gutenprint 5.2.11</b> is a stable release of Gutenprint 5.2.  This release adds support for many new printers (including the initial introduction of support for Datamax-O'Neil label printers, dye sublimation and Canon inkjet printers and other improvements over 5.2.10. <b>NOTE: Users of many dye sublimation printers must follow a special installation procedure.  Please read the release notes very carefully!</b>
 <ol style="margin-top:0.25em; list-style-type:decimal;">
 	<li> Support Macintosh OS X 10.11 (El Capitan)</li>
 
