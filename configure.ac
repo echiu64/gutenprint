@@ -371,9 +371,9 @@ if test "$BUILD_FOOMATIC_3" = "yes" ; then
    BUILD_FOOMATIC=yes
 fi
 
-AC_PATH_PROG(IJS_CONFIG, ijs-config)
+PKG_CHECK_MODULES(IJS, ijs, [HAVE_IJS=yes], [HAVE_IJS=no])
 
-if test -z "${IJS_CONFIG}"  ; then
+if test "x${HAVE_IJS}" = "xno" ; then
   BUILD_GHOSTSCRIPT="no"
 else
   BUILD_GHOSTSCRIPT="yes"
@@ -620,11 +620,9 @@ fi
 
 dnl ijs checks
 if test x${BUILD_GHOSTSCRIPT} = xyes ; then
-  if test -z "$IJS_CONFIG" ; then
-    AC_MSG_ERROR(Cannot find ijs-config; please ensure Ghostscript 6.53 or above is installed);
+  if test -z "$HAVE_IJS" ; then
+    AC_MSG_ERROR(Cannot find ijs; please ensure Ghostscript 6.53 or above is installed);
   fi
-  IJS_CFLAGS=`$IJS_CONFIG --cflags`
-  IJS_LIBS=`$IJS_CONFIG --libs`
 fi
 
 GUTENPRINT_RELEASE_VERSION=${GUTENPRINT_MAJOR_VERSION}.${GUTENPRINT_MINOR_VERSION}

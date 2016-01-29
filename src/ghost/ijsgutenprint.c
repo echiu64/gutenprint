@@ -35,8 +35,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <locale.h>
-#include <ijs.h>
-#include <ijs_server.h>
+#include <ijs/ijs.h>
+#include <ijs/ijs_server.h>
 #include <errno.h>
 #include <gutenprint/gutenprint-intl-internal.h>
 
