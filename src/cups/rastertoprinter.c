@@ -1091,7 +1091,6 @@ main(int  argc,				/* I - Number of command-line arguments */
   stp_vars_t		*default_settings;
   int			initialized_job = 0;
   const char            *version_id;
-  const char            *release_version_id;
   struct tms		tms;
   long			clocks_per_sec;
   struct timeval	t1, t2;
@@ -1126,7 +1125,6 @@ main(int  argc,				/* I - Number of command-line arguments */
   (void) gettimeofday(&t1, &tz);
   stp_init();
   version_id = stp_get_version();
-  release_version_id = stp_get_release_version();
   default_settings = stp_vars_create();
 
  /*
@@ -1209,13 +1207,13 @@ main(int  argc,				/* I - Number of command-line arguments */
 		strlen(CUPS_PPD_NICKNAME_STRING)) != ' ')))
   {
     stp_i18n_printf(po, _("ERROR: The PPD version (%s) is not compatible with "
-                          "Gutenprint %s.\n"),
+                          "Gutenprint %s.  Please run `%scups-genppdupdate' as administrator.\n"),
 	            ppd->nickname+strlen(ppd->modelname)+strlen(CUPS_PPD_NICKNAME_STRING),
-	            version_id);
+	            version_id, SBINDIR);
     fprintf(stderr, "DEBUG: Gutenprint: If you have upgraded your version of Gutenprint\n");
     fprintf(stderr, "DEBUG: Gutenprint: recently, you must reinstall all printer queues.\n");
     fprintf(stderr, "DEBUG: Gutenprint: If the previous installed version of Gutenprint\n");
-    fprintf(stderr, "DEBUG: Gutenprint: was 5.0.0 or higher, you can use the `cups-genppdupdate.%s'\n", release_version_id);
+    fprintf(stderr, "DEBUG: Gutenprint: was 5.0.0 or higher, you can use the `cups-genppdupdate'\n");
     fprintf(stderr, "DEBUG: Gutenprint: program to do this; if the previous installed version\n");
     fprintf(stderr, "DEBUG: Gutenprint: was older, you can use the Modify Printer command via\n");
     fprintf(stderr, "DEBUG: Gutenprint: the CUPS web interface: http://localhost:631/printers.\n");
