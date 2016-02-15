@@ -26,7 +26,7 @@ test "$libtool_major" -le 1 && {
 } && {
   echo
   echo "**Warning**: You should have \`libtool' 1.5 or newer installed to"
-  echo "create a gutenprint distribution.  Earlier versions of libtool do"
+  echo "create a Gutenprint distribution.  Earlier versions of libtool do"
   echo "not generate correct code for all platforms."
   echo "Get ftp://ftp.gnu.org/pub/gnu/libtool/libtool-1.5.tar.gz"
   echo "(or a newer version if it is available)"
@@ -35,7 +35,8 @@ test "$libtool_major" -le 1 && {
 
 (autoconf --version) < /dev/null > /dev/null 2>&1 || {
   echo
-  echo "**Error**: You must have \`autoconf' installed to compile gutenprint."
+  echo "**Error**: You must have \`autoconf' installed to"
+  echo "create a Gutenprint distribution."
   echo "Download the appropriate package for your distribution,"
   echo "or get the source tarball at ftp://ftp.gnu.org/pub/gnu/"
   DIE=1
@@ -48,7 +49,8 @@ test -f $srcdir/ChangeLog || echo > $srcdir/ChangeLog
 (grep "^AM_PROG_LIBTOOL" $srcdir/configure.ac >/dev/null) && {
   (libtool --version) < /dev/null > /dev/null 2>&1 || {
     echo
-    echo "**Error**: You must have \`libtool' installed to compile gutenprint."
+    echo "**Error**: You must have \`libtool' installed to"
+    echo "create a Gutenprint distribution."
     echo "Get ftp://ftp.gnu.org/pub/gnu/libtool/libtool-1.5.tar.gz"
     echo "(or a newer version if it is available)"
     DIE=1
@@ -59,7 +61,8 @@ grep "^AM_GNU_GETTEXT" $srcdir/configure.ac >/dev/null && {
   grep "sed.*POTFILES" $srcdir/configure.ac >/dev/null || \
   (gettext --version) < /dev/null > /dev/null 2>&1 || {
     echo
-    echo "**Error**: You must have \`gettext' installed to compile gutenprint."
+    echo "**Error**: You must have \`gettext' installed to"
+    echo "create a Gutenprint distribution."
     echo "Get ftp://ftp.gnu.org/pub/gnu/gettext/gettext-0.16.tar.gz"
     echo "(or a newer version if it is available)"
     DIE=1
@@ -68,7 +71,8 @@ grep "^AM_GNU_GETTEXT" $srcdir/configure.ac >/dev/null && {
 
 (pkg-config --version) < /dev/null > /dev/null 2>&1 || {
   echo
-  echo "**Error**: You must have \`pkg-config' installed to compile gutenprint."
+  echo "**Error**: You must have \`pkg-config' installed to"
+  echo "create a Gutenprint distribution."
   echo "Download the appropriate package for your distribution,"
   echo "or get the source tarball at http://www.freedesktop.org/"
   DIE=1
@@ -89,7 +93,7 @@ test "$gettext_major" -eq 0 && {
 } && {
   echo
   echo "**Warning**: You must have \`gettext' 0.16 or newer installed to"
-  echo "create a gutenprint distribution.  Earlier versions of gettext do"
+  echo "create a Gutenprint distribution.  Earlier versions of gettext do"
   echo "not generate the correct 'make uninstall' code."
   echo "Get ftp://ftp.gnu.org/gnu/gettext/gettext-0.16.tar.gz"
   echo "(or a newer version if it is available)"
@@ -97,7 +101,8 @@ test "$gettext_major" -eq 0 && {
 
 (autopoint --version) < /dev/null > /dev/null 2>&1 || {
   echo
-  echo "**Error**: You must have \`autopoint' installed to compile gutenprint."
+  echo "**Error**: You must have \`autopoint' installed to"
+  echo "create a Gutenprint distribution."
   echo "Get ftp://ftp.gnu.org/pub/gnu/gettext/gettext-0.11.5.tar.gz"
   echo "(or a newer version if it is available)"
   DIE=1
@@ -106,7 +111,8 @@ test "$gettext_major" -eq 0 && {
 
 (automake --version) < /dev/null > /dev/null 2>&1 || {
   echo
-  echo "**Error**: You must have \`automake' installed to compile gutenprint."
+  echo "**Error**: You must have \`automake' installed to"
+  echo "create a Gutenprint distribution."
   echo "Get ftp://ftp.gnu.org/pub/gnu/automake/automake-1.7.tar.gz"
   echo "(or a newer version if it is available)"
   DIE=1
@@ -288,7 +294,7 @@ fi
   test -d "/usr/share/sgml/docbook_4" || test -d "/usr/share/sgml/docbook/dtd/4.0" || test -d "/usr/share/sgml/docbook_4.1" || test -n "$fedora_docbook"
 } || {
   echo " "
-  echo "***Warning***: You must have "Docbook v4" installed to"
+  echo "***Warning***: You must have Docbook v4 installed to"
   echo "build the Gutenprint user's guide."
   echo " "
 }
