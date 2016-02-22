@@ -2147,12 +2147,12 @@
       <printer translate="name" name="HP LaserJet 3D" driver="hp-lj_3d" manufacturer="HP" model="3" parameters="pcl_laser_params" foomaticid="HP-LaserJet_3D" />
       <printer translate="name" name="HP LaserJet 3P w/ PCL5" driver="hp-lj_3p_w_pcl5" manufacturer="HP" model="4" parameters="pcl_laser_params" foomaticid="HP-LaserJet_3P_w_PCL5" />
       <printer translate="name" name="HP LaserJet 3P w/PS" driver="hp-lj_3p_w_ps" manufacturer="HP" model="3" parameters="pcl_laser_params" foomaticid="HP-LaserJet_3P_w_PS" />
-      <printer translate="name" name="HP LaserJet 4 Plus" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 4 Plus;CMD:PJL,PCL,POSTSCRIPT;" driver="hp-lj_4_plus" manufacturer="HP" model="6" parameters="pcl_laser_params" foomaticid="HP-LaserJet_4_Plus" />
-      <printer translate="name" name="HP LaserJet 4" driver="pcl-4" manufacturer="HP" model="6" parameters="pcl_laser_params" foomaticid="HP-LaserJet_4" />
+      <printer translate="name" name="HP LaserJet 4 Plus" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 4 Plus;CMD:PJL,PCL,POSTSCRIPT;" driver="hp-lj_4_plus" manufacturer="HP" model="62" parameters="pcl_laser_params" foomaticid="HP-LaserJet_4_Plus" />
+      <printer translate="name" name="HP LaserJet 4" driver="pcl-4" manufacturer="HP" model="62" parameters="pcl_laser_params" foomaticid="HP-LaserJet_4" />
       <printer translate="name" name="HP LaserJet 4L" deviceid="MFG:Hewlett-Packard;MDL:LaserJet 4L;CMD:HP ENHANCED PCL5,PJL;" driver="pcl-4l" manufacturer="HP" model="4" parameters="pcl_laser_params" foomaticid="HP-LaserJet_4L" />
-      <printer translate="name" name="HP LaserJet 4M" driver="hp-lj_4m" manufacturer="HP" model="6" parameters="pcl_laser_params" foomaticid="HP-LaserJet_4M" />
-      <printer translate="name" name="HP LaserJet 4ML" driver="hp-lj_4ml" manufacturer="HP" model="6" parameters="pcl_laser_params" foomaticid="HP-LaserJet_4ML" />
-      <printer translate="name" name="HP LaserJet 4P" driver="hp-lj_4p" manufacturer="HP" model="6" parameters="pcl_laser_params" foomaticid="HP-LaserJet_4P" />
+      <printer translate="name" name="HP LaserJet 4M" driver="hp-lj_4m" manufacturer="HP" model="62" parameters="pcl_laser_params" foomaticid="HP-LaserJet_4M" />
+      <printer translate="name" name="HP LaserJet 4ML" driver="hp-lj_4ml" manufacturer="HP" model="62" parameters="pcl_laser_params" foomaticid="HP-LaserJet_4ML" />
+      <printer translate="name" name="HP LaserJet 4P" driver="hp-lj_4p" manufacturer="HP" model="62" parameters="pcl_laser_params" foomaticid="HP-LaserJet_4P" />
       <printer translate="name" name="HP LaserJet 4Si" driver="pcl-4si" manufacturer="HP" model="51" parameters="pcl_laser_params" foomaticid="HP-LaserJet_4Si" />
       <printer translate="name" name="HP LaserJet 4V" driver="pcl-4v" manufacturer="HP" model="5" parameters="pcl_laser_params" foomaticid="HP-LaserJet_4V" />
       <printer translate="name" name="HP LaserJet 5" driver="pcl-5" manufacturer="HP" model="6" parameters="pcl_laser_params" foomaticid="HP-LaserJet_5" />
@@ -2502,12 +2502,12 @@
       <printer translate="name" name="Lexmark Optra E321" deviceid="MFG:Lexmark International;MDL:Lexmark E321;DES:Lexmark E321;CMD:PCL 5 Emulation, PostScript Level 3 For Mac Emulation, NPAP, PJL;" driver="lexmark-optra_e321" manufacturer="Lexmark" model="6" parameters="pcl_laser_params" foomaticid="Lexmark-Optra_E321" />
       <printer translate="name" name="Lexmark Optra E323" driver="lexmark-optra_e323" manufacturer="Lexmark" model="6" parameters="pcl_laser_params" foomaticid="Lexmark-Optra_E323" />
       <printer translate="name" name="Lexmark Valuewriter 300" driver="lexmark-vw_300" manufacturer="Lexmark" model="2" parameters="pcl_laser_params" foomaticid="Lexmark-Valuewriter_300" />
-      <printer translate="name" name="Minolta PagePro 6" deviceid="MFG:MINOLTA;MDL:PagePro 6;CMD:HP ENHANCED PCL5;" driver="minolta-pp_6" manufacturer="Minolta" model="6" parameters="pcl_laser_params" foomaticid="Minolta-PagePro_6" />
-      <printer translate="name" name="Minolta PagePro 6e" driver="minolta-pp_6e" manufacturer="Minolta" model="6" parameters="pcl_laser_params" foomaticid="Minolta-PagePro_6e" />
-      <printer translate="name" name="Minolta PagePro 6ex" deviceid="MFG:Minolta;MDL:PagePro   6e;CMD:HP ENHANCED PCL5e,PJL,WinStyler;" driver="minolta-pp_6ex" manufacturer="Minolta" model="6" parameters="pcl_laser_params" foomaticid="Minolta-PagePro_6ex" />
-      <printer translate="name" name="Minolta PagePro 8" deviceid="MFG:MINOLTA;MDL:PagePro 8;CMD:HP ENHANCED PCL6,PJL;" driver="minolta-pp_8" manufacturer="Minolta" model="6" parameters="pcl_laser_params" foomaticid="Minolta-PagePro_8" />
+      <printer translate="name" name="Minolta PagePro 6" deviceid="MFG:MINOLTA;MDL:PagePro 6;CMD:HP ENHANCED PCL5;" driver="minolta-pp_6" manufacturer="Minolta" model="62" parameters="pcl_laser_params" foomaticid="Minolta-PagePro_6" />
+      <printer translate="name" name="Minolta PagePro 6e" driver="minolta-pp_6e" manufacturer="Minolta" model="62" parameters="pcl_laser_params" foomaticid="Minolta-PagePro_6e" />
+      <printer translate="name" name="Minolta PagePro 6ex" deviceid="MFG:Minolta;MDL:PagePro   6e;CMD:HP ENHANCED PCL5e,PJL,WinStyler;" driver="minolta-pp_6ex" manufacturer="Minolta" model="62" parameters="pcl_laser_params" foomaticid="Minolta-PagePro_6ex" />
+      <printer translate="name" name="Minolta PagePro 8" deviceid="MFG:MINOLTA;MDL:PagePro 8;CMD:HP ENHANCED PCL6,PJL;" driver="minolta-pp_8" manufacturer="Minolta" model="62" parameters="pcl_laser_params" foomaticid="Minolta-PagePro_8" />
       <printer translate="name" name="Minolta PagePro 8L" deviceid="MFG:Minolta;MDL:PagePro 8L;CMD:PrintGear;PCL;PLJ;" driver="minolta-pp_8l" manufacturer="Minolta" model="2" parameters="pcl_laser_params" foomaticid="Minolta-PagePro_8L" />
-      <printer translate="name" name="Minolta PagePro 1100" deviceid="MFG:MINOLTA;MDL:PagePro 1100;CMD:HP ENHANCED PCL6,PJL;" driver="minolta-pp_1100" manufacturer="Minolta" model="6" parameters="pcl_laser_params" foomaticid="Minolta-PagePro_1100" />
+      <printer translate="name" name="Minolta PagePro 1100" deviceid="MFG:MINOLTA;MDL:PagePro 1100;CMD:HP ENHANCED PCL6,PJL;" driver="minolta-pp_1100" manufacturer="Minolta" model="62" parameters="pcl_laser_params" foomaticid="Minolta-PagePro_1100" />
       <printer translate="name" name="NEC SuperScript 660i" driver="nec-ssc_660i" manufacturer="NEC" model="6" parameters="pcl_laser_params" foomaticid="NEC-SuperScript_660i" />
       <printer translate="name" name="NEC SuperScript 860" driver="nec-ssc_860" manufacturer="NEC" model="2" parameters="pcl_laser_params" foomaticid="NEC-SuperScript_860" />
       <printer translate="name" name="NEC SuperScript 870" deviceid="MFG:NEC;MDL:SuperScript 870;DES:SuperScript 870;CMD:PrintGear,PCL,PJL;" driver="nec-ssc_870" manufacturer="NEC" model="2" parameters="pcl_laser_params" foomaticid="NEC-SuperScript_870" />
