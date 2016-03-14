@@ -31,3 +31,7 @@ gutenprint*.tar.gz
 gutenprint*.tar.bz2
 Makefile
 Makefile.in
+
+*.o
+*.lo
+*~
