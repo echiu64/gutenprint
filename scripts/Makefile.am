@@ -29,7 +29,7 @@ include $(top_srcdir)/scripts/global.mk
 EXTRA_DIST = \
 	autogen.sh \
 	global.mk \
-	mkchlog
+	mkgitlog
 
 
 ## Clean

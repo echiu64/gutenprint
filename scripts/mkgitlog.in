@@ -1,0 +1,97 @@
+#!@PERL@
+
+use strict;
+
+my ($autline) = "";
+my ($curmsg) = "";
+my ($curtag) = "";
+my (%addlines);
+my (%removelines);
+my (%filechanges);
+my (%files);
+
+my ($state) = 0;
+my ($ostate) = 0;
+my ($firsttime) = 1;
+
+sub print_it {
+    if ($curtag ne "") {
+	print "===============================================================================\n";
+	print "Name: $curtag\n\n"
+    }
+    print "$autline\n";
+    my (@files) = sort keys %files;
+    if ($#files >= 0) {
+	print "	Files:\n";
+	foreach my $fn (@files) {
+	    print "		$fn (";
+	    if ($filechanges{$fn} eq 'D') {
+		print "removed -$removelines{$fn}";
+	    } elsif ($filechanges{$fn} eq 'C') {
+		    print "added +$addlines{$fn}";
+	    } else {
+		print "+$addlines{$fn}, -$removelines{$fn}";
+	    }
+	    print ")\n";
+	}
+	print "\n";
+    }
+    print "$curmsg\n";
+    $autline = "";
+    $curmsg = "";
+    $curtag = "";
+    %addlines = ();
+    %removelines = ();
+    %filechanges = ();
+    %files = ();
+}
+
+open(GITLOG, "git log --diff-algorithm=default --summary --numstat --date=short --pretty=format:'>>>GIT1%n%cd  <%an>	%H%n>>>GIT2%n%B>>>GIT3%n%D%n>>>GIT4'|") or die "Can't run git log: $!\n";
+
+while (<GITLOG>) {
+    if (/>>>GIT([0-9]+)$/) {
+	$state = $1;
+	if ($state == 1) {
+	    if (! $firsttime) {
+		print_it();
+	    }
+	    $firsttime = 0;
+	}
+    } elsif ($state == 1) {
+	$autline = $_;
+    } elsif ($state == 2) {
+	if ($_ ne "\n") {
+	    $curmsg .= "	";
+	}
+	$curmsg .= $_;
+    } elsif ($state == 3) {
+	if (/^tag: ((guten)?print-[0-9]+_.*)/) {
+	    $curtag = $1;
+	}
+    } elsif ($state == 4) {
+	if ($_ ne "\n") {
+	    chomp;
+	    $_ =~ s/^[ 	]+//;
+	    if (/^delete/) {
+		my ($junk, $junk, $junk, $fn) = split(/ /, $_, 4);
+		$filechanges{$fn} = 'D';
+	    } elsif (/^create/) {
+		my ($junk, $junk, $junk, $fn) = split(/ /, $_, 4);
+		$filechanges{$fn} = 'C';
+	    } elsif (/^[-0-9]/) {
+		my ($add, $remove, $fn) = split(/	/, $_, 3);
+		$add = 0 if ($add eq '-');
+		$remove = 0 if ($remove eq '-');
+		$files{$fn} = 1;
+		$addlines{$fn} = $add;
+		$removelines{$fn} = $remove;
+	    }
+	}
+    } else {
+	die "Unknown state $state\n";
+    }
+}
+
+print_it();
+
+exit 0;
