@@ -50,44 +50,12 @@ install-data-local: NEWS AUTHORS COPYING README
 	$(INSTALL_DATA) $(srcdir)/COPYING $(DESTDIR)$(docdir)
 	$(INSTALL_DATA) $(srcdir)/README $(DESTDIR)$(docdir)
 
-# This rather strange-looking code ensures that the change log is only
-# rebuilt if any of the CVS/Entries files have changed since the change log
-# was last built.
+# git log is local, so it's fast enough that we don't need to
+# engage in any subterfuge like we did with CVS.
 
-ChangeLogPhony:
-	@cd $(top_srcdir) ; \
-	for f in `find . -name Entries -print | grep CVS` ; do \
-	  if @TEST@ ! -f ChangeLogStamp -o ChangeLogStamp -ot $$f ; then \
-	    rm -f ChangeLogStamp ; \
-	    touch ChangeLogStamp ; \
-	  fi ; \
-	done
-
-ChangeLogStamp: ChangeLogPhony
-	@@TRUE@
-
-ChangeLog: ChangeLogStamp
-	@cd $(top_srcdir) ; \
-	if test -f $(top_builddir)/.noupdate ; then \
-	  echo "$@: .noupdate found: NOT updating $@ from CVS" ; \
-	elif test -d CVS ; then \
-	  echo "$@: Updating $@ from CVS" ; \
-	  cvs log | $(PERL) scripts/mkchlog -e @sourceforge.net -X src/xml/escp2/resolutions -s '^(guten|gimp-|)print-[0-9]+_' > $@.tmp ; \
-	  if test -s $@.tmp ; then \
-	    mv $@.tmp $@ ; \
-	  else \
-	    echo "$@: Failed to update $@ ['touch .noupdate' to skip]" ; \
-	    $(RM) $@.tmp ; \
-	    exit 1 ; \
-	  fi \
-	elif test -s $@ ; then \
-	  echo "$@: This is not a CVS version of Gutenprint" ; \
-	  echo "$@: Not updating $@ from CVS!" ; \
-	else \
-	  echo "$@: No $@ or $@ of zero size found!" ; \
-	  echo "$@: Failed to update $@ ['touch .noupdate' to skip]" ; \
-	  exit 1 ; \
-	fi
+ChangeLog:
+	cd scripts; $(MAKE) mkgitlog
+	scripts/mkgitlog > ChangeLog
 
 configure.in:
 	$(LN_S) $(srcdir)/configure.ac $(srcdir)/configure.in

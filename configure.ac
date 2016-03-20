@@ -1086,6 +1086,8 @@ AC_CONFIG_FILES([src/gutenprintui2/Makefile])
 AC_CONFIG_FILES([src/gutenprintui2/gutenprintui2.pc])
 AC_CONFIG_FILES([test/Makefile])
 AC_CONFIG_FILES([scripts/Makefile])
+AC_CONFIG_FILES([scripts/mkgitlog],
+		[chmod +x scripts/mkgitlog])
 AC_CONFIG_COMMANDS([default], [
 echo
 ],
