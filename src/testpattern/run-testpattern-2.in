@@ -757,9 +757,11 @@ foreach my $printer (@printer_list) {
 sub restart_testpattern {
     my ($silent) = @_;
     if (! $silent) {
-	$error = 1;
 	close($global_fh);
 	my ($err) = $? & 255;
+	if ($err > 0) {
+	    $error++;
+	}
 	if ($single > 1) {
 	    warn("\n***TESTPATTERN CRASHED*** ($global_case) ($err)!\n");
 	} else {
@@ -900,7 +902,7 @@ if ($list_options) {
 	    if ($single > 1) {
 		print STDERR "$error cases failed\n";
 	    } else {
-		print STDERR "Failures noted.\n";
+		print STDERR "*** $error CRASHES NOTED***\n";
 	    }
 	}
 	exit 1;
