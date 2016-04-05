@@ -3431,6 +3431,7 @@ setup_inks(stp_vars_t *v)
       if (drops->dropsizes[2] > 0 && drops->numdropsizes < 3)
 	drops->numdropsizes = 3;
     }
+  STPI_ASSERT(drops->numdropsizes < (1 << escp2_bits(v)), v);
   for (i = drops->numdropsizes - 1; i >= 0; i--)
     {
       if (drops->dropsizes[i] > 0)
