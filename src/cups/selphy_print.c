@@ -1,7 +1,7 @@
 /*
  *   Canon SELPHY ES/CP series CUPS backend -- libusb-1.0 version
  *
- *   (c) 2007-2015 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2007-2016 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -592,25 +592,46 @@ static void canonselphy_teardown(void *vctx) {
 	free(ctx);
 }
 
-static int canonselphy_early_parse(void *vctx, int data_fd)
+static int canonselphy_read_parse(void *vctx, int data_fd)
 {
 	struct canonselphy_ctx *ctx = vctx;
-	int printer_type, i;
+	int i, remain;
+	int printer_type;
+	int offset = 0;
 
 	if (!ctx)
-		return -1;
+		return CUPS_BACKEND_FAILED;
 
-	/* Figure out printer this file is intended for */
-	i = read(data_fd, ctx->buffer, MAX_HEADER);
-	if (i != MAX_HEADER) {
+	/* The CP900 job *may* have a 4-byte null footer after the
+	   job contents.  Ignore it if it comes through here.. */
+	i = read(data_fd, ctx->buffer, 4);
+	if (i != 4) {
 		if (i == 0)
-			return -1;
-		ERROR("Read failed (%d/%d/%d)\n", 
-		      i, 0, MAX_HEADER);
+			return CUPS_BACKEND_CANCEL;
+		ERROR("Read failed (%d/%d)\n", i, 4);
 		perror("ERROR: Read failed");
-		return -1;
+		return CUPS_BACKEND_FAILED;
+	}
+	/* if it's not the null header.. don't ignore! */
+	if (ctx->buffer[0] != 0 ||
+	    ctx->buffer[1] != 0 ||
+	    ctx->buffer[2] != 0 ||
+	    ctx->buffer[3] != 0) {
+		offset = 4;
 	}
 
+	/* Read the rest of the header.. */
+	i = read(data_fd, ctx->buffer + offset, MAX_HEADER - offset);
+	if (i != MAX_HEADER - offset) {
+		if (i == 0)
+			return CUPS_BACKEND_CANCEL;
+		ERROR("Read failed (%d/%d)\n", 
+		      i, MAX_HEADER - offset);
+		perror("ERROR: Read failed");
+		return CUPS_BACKEND_FAILED;
+	}
+
+	/* Figure out printer this file is intended for */
 	printer_type = parse_printjob(ctx->buffer, &ctx->bw_mode, &ctx->plane_len);
 	/* Special cases for some models */
 	if (printer_type == P_ES40_CP790) {
@@ -628,39 +649,27 @@ static int canonselphy_early_parse(void *vctx, int data_fd)
 		}
 	}
 	if (!ctx->printer) {
-		ERROR("Unrecognized printjob file format!\n");
-		return -1;
+		ERROR("Error mapping printjob to printer type!\n");
+		return CUPS_BACKEND_FAILED;
 	}
 
 	INFO("%sFile intended for a '%s' printer\n",  ctx->bw_mode? "B/W " : "", ctx->printer->model);
 
 	if (ctx->printer->type != ctx->type) {
 		ERROR("Printer/Job mismatch (%d/%d)\n", ctx->type, ctx->printer->type);
-		return -1;
+		return CUPS_BACKEND_CANCEL;
 	}
 
-	ctx->plane_len += 12; /* Add in plane header length! */
+	/* Paper code setup */
 	if (ctx->printer->pgcode_offset != -1)
 		ctx->paper_code = ctx->printer->paper_codes[ctx->buffer[ctx->printer->pgcode_offset]];
 	else
 		ctx->paper_code = -1;
 
-	return printer_type;
-}
+	/* Add in plane header length! */
+	ctx->plane_len += 12;
 
-static int canonselphy_read_parse(void *vctx, int data_fd)
-{
-	struct canonselphy_ctx *ctx = vctx;
-	int i, remain;
-
-	if (!ctx)
-		return CUPS_BACKEND_FAILED;
-
-	/* Perform early parsing */
-	i = canonselphy_early_parse(ctx, data_fd);
-	if (i < 0)
-		return CUPS_BACKEND_FAILED;
-
+	/* Now prep for the job */
 	if (ctx->header) {
 		free(ctx->header);
 		ctx->header = NULL;
@@ -909,7 +918,7 @@ top:
 			if (ctx->cp900)
 				state = S_PRINTER_CP900_FOOTER;
 			else 
-				state = S_PRINTER_DONE;
+				state = S_FINISHED;
 		}
 		break;
 	case S_PRINTER_CP900_FOOTER: {
@@ -960,10 +969,7 @@ static int canonselphy_cmdline_arg(void *vctx, int argc, char **argv)
 
 	if (!ctx)
 		return -1;
-	
-	/* Reset arg parsing */
-	optind = 1;
-	opterr = 0;
+
 	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL)) >= 0) {
 		switch(i) {
 		GETOPT_PROCESS_GLOBAL
@@ -977,7 +983,7 @@ static int canonselphy_cmdline_arg(void *vctx, int argc, char **argv)
 
 struct dyesub_backend canonselphy_backend = {
 	.name = "Canon SELPHY CP/ES",
-	.version = "0.89",
+	.version = "0.90",
 	.uri_prefix = "canonselphy",
 	.cmdline_arg = canonselphy_cmdline_arg,
 	.init = canonselphy_init,
@@ -1285,7 +1291,7 @@ struct dyesub_backend canonselphy_backend = {
 
    Init func:   40 00 00 [pgcode]  00 00 00 00  00 00 00 00
    Plane func:  40 01 00 [plane]  [length, 32-bit LE]  00 00 00 00 
-   End func:    00 00 00 00      # NOTE:  CP900 only, and not necessary!
+   End func:    00 00 00 00       # NOTE: Present (and necessary) on CP900 only.
 
    Error clear: 40 10 00 00  00 00 00 00  00 00 00 00
 
@@ -1331,13 +1337,13 @@ struct dyesub_backend canonselphy_backend = {
       to signify nothing being loaded.
 
  ***************************************************************************
- Selphy CP820/CP910:
+ Selphy CP820/CP910/CP1000/CP1200:
 
   Radically different spool file format!  300dpi, same print sizes, but also
   adding a 50x50mm sticker and 22x17.3mm ministickers, though I think the
   driver treats all of those as 'C' sizes for printing purposes.
 
-  Printer does *not* apparently require use of a spooler!
+  Printer does *not* require use of a spooler!  Huzzah!
 
   32-byte header:
 
