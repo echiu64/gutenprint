@@ -1,7 +1,7 @@
 /*
  *   Kodak 605 Photo Printer CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013-2015 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2016 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -231,7 +231,9 @@ static void kodak605_attach(void *vctx, struct libusb_device_handle *dev,
 					desc.idVendor, desc.idProduct);
 
 	/* Make sure jobid is sane */
-        ctx->jobid = (jobid & 0x7f) + 1;
+	ctx->jobid = jobid & 0x7f;
+	if (!ctx->jobid)
+		ctx->jobid++;
 
 	/* Query media info */
 	if (kodak605_get_media(ctx, ctx->media)) {
@@ -366,9 +368,6 @@ static int kodak605_main_loop(void *vctx, int copies) {
 		return CUPS_BACKEND_HOLD;
 	}
 
-	/* Use specified jobid */
-	ctx->hdr.jobid = ctx->jobid;
-
 	INFO("Waiting for printer idle\n");
 
 	while(1) {
@@ -376,6 +375,16 @@ static int kodak605_main_loop(void *vctx, int copies) {
 			return CUPS_BACKEND_FAILED;
 
 		// XXX check for errors
+
+		/* make sure we're not colliding with an existing
+		   jobid */
+		while (ctx->jobid == sts.b1_id ||
+		       ctx->jobid == sts.b2_id) {
+			ctx->jobid++;
+			ctx->jobid &= 0x7f;
+			if (!ctx->jobid)
+				ctx->jobid++;
+		}
 
 		/* Wait for a free buffer */
 		if (sts.b1_sts == BANK_STATUS_FREE ||
@@ -386,8 +395,11 @@ static int kodak605_main_loop(void *vctx, int copies) {
 		sleep(1);
 	}
 
+	/* Use specified jobid */
+	ctx->hdr.jobid = ctx->jobid;
+
 	{
-		INFO("Sending image header\n");
+		INFO("Sending image header (internal id %d)\n", ctx->jobid);
 		if ((ret = send_data(ctx->dev, ctx->endp_down,
 				     (uint8_t*)&ctx->hdr, sizeof(ctx->hdr))))
 			return CUPS_BACKEND_FAILED;
@@ -567,9 +579,6 @@ static int kodak605_cmdline_arg(void *vctx, int argc, char **argv)
 	if (!ctx)
 		return -1;
 
-	/* Reset arg parsing */
-	optind = 1;
-	opterr = 0;
 	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "C:ms")) >= 0) {
 		switch(i) {
 		GETOPT_PROCESS_GLOBAL
@@ -600,7 +609,7 @@ static int kodak605_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend kodak605_backend = {
 	.name = "Kodak 605",
-	.version = "0.24",
+	.version = "0.25",
 	.uri_prefix = "kodak605",
 	.cmdline_usage = kodak605_cmdline,
 	.cmdline_arg = kodak605_cmdline_arg,
