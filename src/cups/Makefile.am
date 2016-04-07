@@ -115,7 +115,7 @@ commandtoepson_SOURCES = commandtoepson.c
 commandtoepson_LDADD = $(CUPS_LIBS)
 
 if BUILD_LIBUSB_BACKENDS
-backend_gutenprint_SOURCES = selphy_print.c kodak1400_print.c kodak6800_print.c kodak605_print.c shinko_s2145_print.c sony_updr150_print.c dnpds40_print.c mitsu70x_print.c citizencw01_print.c mitsu9550_print.c backend_common.c backend_common.h shinko_s1245_print.c shinko_s6145_print.c shinko_s6245_print.c
+backend_gutenprint_SOURCES = backend_canonselphy.c backend_kodak1400.c backend_kodak6800.c backend_kodak605.c backend_shinkos2145.c backend_sonyupdr150.c backend_dnpds40.c backend_mitsu70x.c backend_citizencw01.c backend_mitsu9550.c backend_common.c backend_common.h backend_shinkos1245.c backend_shinkos6145.c backend_shinkos6245.c
 
 backend_gutenprint_LDADD = $(LIBUSB_LIBS)
 backend_gutenprint_CPPFLAGS = $(LIBUSB_CFLAGS) -DURI_PREFIX=\"gutenprint$(GUTENPRINT_MAJOR_VERSION)$(GUTENPRINT_MINOR_VERSION)+usb\" -DLIBUSB_PRE_1_0_10
