@@ -1,7 +1,7 @@
 /*
  *   Kodak 6800/6850 Photo Printer CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013-2015 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2016 Solomon Peachy <pizza@shaftnet.org>
  *
  *   Development of this backend was sponsored by:
  *
@@ -215,6 +215,7 @@ struct kodak68x0_media_readback {
 
 #define KODAK68x0_MEDIA_6R   0x0b
 #define KODAK68x0_MEDIA_UNK  0x03
+#define KODAK68x0_MEDIA_UNK2 0x2c
 #define KODAK68x0_MEDIA_NONE 0x00
 
 #define CMDBUF_LEN 17
@@ -961,7 +962,9 @@ static void kodak6800_attach(void *vctx, struct libusb_device_handle *dev,
 					desc.idVendor, desc.idProduct);
 
         /* Ensure jobid is sane */
-        ctx->jobid = (jobid & 0x7f) + 1;
+        ctx->jobid = jobid & 0x7f;
+	if (!ctx->jobid)
+		ctx->jobid++;
 
 	/* Query media info */
 	if (kodak6800_get_mediainfo(ctx, ctx->media)) {
@@ -1053,13 +1056,6 @@ static int kodak6800_main_loop(void *vctx, int copies) {
 	/* Printer handles generating copies.. */
 	ctx->hdr.copies = cpu_to_be16(uint16_to_packed_bcd(copies));
 
-	/* Validate media */
-	if (ctx->media->media != KODAK68x0_MEDIA_6R &&
-	    ctx->media->media != KODAK68x0_MEDIA_UNK) {
-		ERROR("Unrecognized media type %02x\n", ctx->media->media);
-		return CUPS_BACKEND_STOP;
-	}
-
 	/* Validate against supported media list */
 	for (num = 0 ; num < ctx->media->count; num++) {
 		if (ctx->media->sizes[num].height == ctx->hdr.rows &&
@@ -1088,6 +1084,16 @@ static int kodak6800_main_loop(void *vctx, int copies) {
 		if (status.status == STATUS_IDLE)
 			break;
 
+		/* make sure we're not colliding with an existing
+		   jobid */
+		while (ctx->jobid == status.b1_jobid ||
+		       ctx->jobid == status.b2_jobid) {
+			ctx->jobid++;
+			ctx->jobid &= 0x7f;
+			if (!ctx->jobid)
+				ctx->jobid++;
+		}
+
 		/* See if we have an open bank */
                 if (!status.b1_remain ||
                     !status.b2_remain)
@@ -1114,7 +1120,7 @@ static int kodak6800_main_loop(void *vctx, int copies) {
 	}
 #endif
 
-	INFO("Initiating Print Job\n");
+	INFO("Sending Print Job (internal id %d)\n", ctx->jobid);
 	if ((ret = kodak6800_do_cmd(ctx, (uint8_t*) &ctx->hdr, sizeof(ctx->hdr),
 				    &status, sizeof(status),
 				    &num)))
@@ -1165,7 +1171,7 @@ static int kodak6800_main_loop(void *vctx, int copies) {
 /* Exported */
 struct dyesub_backend kodak6800_backend = {
 	.name = "Kodak 6800/6850",
-	.version = "0.51",
+	.version = "0.53",
 	.uri_prefix = "kodak6800",
 	.cmdline_usage = kodak6800_cmdline,
 	.cmdline_arg = kodak6800_cmdline_arg,
