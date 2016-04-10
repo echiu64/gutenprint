@@ -102,20 +102,23 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   </resolution>
   <resolution translate="text" name="2880x1440sw" text="2880 x 1440 DPI">
    <physicalResolution>2880 1440</physicalResolution>
-   <parameter type="float" name="escp2_density">0.650000</parameter>
+   <parameter type="float" name="escp2_density">0.422500</parameter>
    <parameter type="integer" name="escp2_ink_type">18</parameter>
    <parameter type="integer" name="escp2_base_res">720</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
-   <parameter type="float" name="DropSize1">0.615000</parameter>
-   <parameter type="float" name="DropSize2">1.000000</parameter>
+   <parameter type="float" name="DropSize1">0.399750</parameter>
+   <parameter type="float" name="DropSize2">0.650000</parameter>
+   <parameter type="float" name="DropSize3">1.000000</parameter>
   </resolution>
   <resolution translate="text" name="5760x1440sw" text="5760 x 1440 DPI">
    <physicalResolution>5760 1440</physicalResolution>
-   <parameter type="float" name="escp2_density">0.530000</parameter>
+   <parameter type="float" name="escp2_density">0.211870</parameter>
    <parameter type="integer" name="escp2_ink_type">18</parameter>
    <parameter type="integer" name="escp2_base_res">720</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
-   <parameter type="float" name="DropSize1">1.000000</parameter>
+   <parameter type="float" name="DropSize1">0.399750</parameter>
+   <parameter type="float" name="DropSize2">0.650000</parameter>
+   <parameter type="float" name="DropSize3">1.000000</parameter>
   </resolution>
  </resolutions>
 </escp2Model>
