@@ -3,6 +3,12 @@
 use strict;
 
 my (%old_modes, %old_printers, %new_modes, %new_printers);
+my ($detail1) = 0;
+
+while ($#ARGV >= 0 && $ARGV[0] eq '-d') {
+    $detail1++;
+    shift @ARGV;
+}
 
 if ($#ARGV != 1) {
     die "Usage: $0 old_checksum_file new_checksum_file\n";
@@ -84,11 +90,15 @@ sub print_changes($$@) {
     my ($tag, $detail, @changes) = @_;
     my ($prev_printer);
     return if ($#changes < 0);
-    print "$tag:\n";
+    if (! $detail1) {
+	print "$tag:\n";
+    }
     foreach my $m (@changes) {
 	my ($printer) = get_printer($m);
 	my ($mode) = get_mode($m);
-	if ($detail) {
+	if ($detail > 1) {
+	    print "${printer}_${mode}\n";
+	} elsif ($detail) {
 	    if ($printer ne $prev_printer) {
 		print "    $printer:\n";
 		$prev_printer = $printer;
@@ -101,9 +111,11 @@ sub print_changes($$@) {
     print "\n";
 }
 
-print "*** Changes from $ARGV[0] to $ARGV[1] ***\n\n";
-print_changes("Printers removed from $ARGV[1]", 0, @only_old_printers);
-print_changes("Printers added to $ARGV[1]", 0, @only_new_printers);
-print_changes("Modes removed from $ARGV[1]", 1, @only_old_modes);
-print_changes("Modes added to $ARGV[1]", 1, @only_new_modes);
-print_changes("Changed printing modes", 1, @changed_modes);
+if (! $detail1) {
+    print "*** Changes from $ARGV[0] to $ARGV[1] ***\n\n";
+    print_changes("Printers removed from $ARGV[1]", 0, @only_old_printers);
+    print_changes("Printers added to $ARGV[1]", 0, @only_new_printers);
+    print_changes("Modes removed from $ARGV[1]", 1, @only_old_modes);
+    print_changes("Modes added to $ARGV[1]", 1, @only_new_modes);
+}
+print_changes("Changed printing modes", 1 + $detail1, @changed_modes);
