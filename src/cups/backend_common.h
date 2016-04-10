@@ -1,7 +1,7 @@
 /*
  *   CUPS Backend common code
  *
- *   (c) 2013-2015 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2016 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -99,23 +99,26 @@ enum {
 	P_KODAK_6850,
 	P_KODAK_1400_805,
 	P_KODAK_605,
+	P_KODAK_305,
 	P_SHINKO_S2145,
 	P_SHINKO_S1245,
 	P_SHINKO_S6245,
-	P_SHINKO_S6145,	
-        P_SHINKO_S6145D,
+	P_SHINKO_S6145,
+	P_SHINKO_S6145D,
 	P_SONY_UPDR150,
 	P_SONY_UPCR10,
 	P_MITSU_D70X,
-	P_MITSU_K60,	
+	P_MITSU_D80,
+	P_MITSU_K60,
 	P_MITSU_9550,
-	P_MITSU_9550S,	
+	P_MITSU_9550S,
 	P_DNP_DS40,
 	P_DNP_DS80,
 	P_DNP_DS80D,
 	P_CITIZEN_CW01,
 	P_DNP_DSRX1,
 	P_DNP_DS620,
+	P_FUJI_ASK300,
 	P_END,
 };
 

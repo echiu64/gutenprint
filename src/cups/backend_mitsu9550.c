@@ -1,7 +1,7 @@
 /*
  *   Mitsubishi CP-9550DW[-S] Photo Printer CUPS backend
  *
- *   (c) 2014-2015 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2014-2016 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -740,12 +740,9 @@ static int mitsu9550_cmdline_arg(void *vctx, int argc, char **argv)
 	if (!ctx)
 		return -1;
 
-	/* Reset arg parsing */
-	optind = 1;
-	opterr = 0;
 	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "ms")) >= 0) {
 		switch(i) {
- 		GETOPT_PROCESS_GLOBAL			
+		GETOPT_PROCESS_GLOBAL
 		case 'm':
 			j = mitsu9550_query_media(ctx);
 			break;

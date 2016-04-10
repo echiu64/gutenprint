@@ -1,7 +1,7 @@
 /*
  *   Shinko/Sinfonia CHC-S2145 CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013-2015 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2016 Solomon Peachy <pizza@shaftnet.org>
  *
  *   Development of this backend was sponsored by:
  *
@@ -1296,9 +1296,6 @@ int shinkos2145_cmdline_arg(void *vctx, int argc, char **argv)
 	if (!ctx)
 		return -1;
 
-	/* Reset arg parsing */
-	optind = 1;
-	opterr = 0;
 	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "b:c:C:eFil:L:mr:R:suU:X:")) >= 0) {
 		switch(i) {
 		GETOPT_PROCESS_GLOBAL
@@ -1368,7 +1365,7 @@ static void *shinkos2145_init(void)
 	if (!ctx) {
 		ERROR("Memory allocation failure! (%d bytes)\n",
 		      (int)sizeof(struct shinkos2145_ctx));
-		
+
 		return NULL;
 	}
 	memset(ctx, 0, sizeof(struct shinkos2145_ctx));
@@ -1394,7 +1391,9 @@ static void shinkos2145_attach(void *vctx, struct libusb_device_handle *dev,
 					desc.idVendor, desc.idProduct);	
 
 	/* Ensure jobid is sane */
-	ctx->jobid = (jobid & 0x7f) + 1;
+	ctx->jobid = (jobid & 0x7f);
+	if (!ctx->jobid)
+		ctx->jobid++;
 }
 
 static void shinkos2145_teardown(void *vctx) {
@@ -1514,7 +1513,7 @@ static int shinkos2145_main_loop(void *vctx, int copies) {
 		ERROR("Failed to execute %s command\n", cmd_names(cmd->cmd));
 		return CUPS_BACKEND_FAILED;
 	}
-	
+
 	if (le16_to_cpu(media->hdr.payload_len) != (sizeof(struct s2145_mediainfo_resp) - sizeof(struct s2145_status_hdr)))
 		return CUPS_BACKEND_FAILED;
 
@@ -1555,10 +1554,10 @@ top:
 	if (memcmp(rdbuf, rdbuf2, READBACK_LEN)) {
 		memcpy(rdbuf2, rdbuf, READBACK_LEN);
 
-		INFO("Printer Status: 0x%02x (%s)\n", 
+		INFO("Printer Status: 0x%02x (%s)\n",
 		     sts->hdr.status, status_str(sts->hdr.status));
 		if (sts->hdr.result != RESULT_SUCCESS)
-			goto printer_error;		
+			goto printer_error;
 		if (sts->hdr.error == ERROR_PRINTER)
 			goto printer_error;
 	} else if (state == last_state) {
@@ -1567,19 +1566,30 @@ top:
 	}
 	last_state = state;
 
-	fflush(stderr);       
+	fflush(stderr);
 
 	switch (state) {
 	case S_IDLE:
 		INFO("Waiting for printer idle\n");
+
+		/* make sure we're not colliding with an existing
+		   jobid */
+		while (ctx->jobid == sts->bank1_printid ||
+		       ctx->jobid == sts->bank2_printid) {
+			ctx->jobid++;
+			ctx->jobid &= 0x7f;
+			if (!ctx->jobid)
+				ctx->jobid++;
+		}
+
 		/* If either bank is free, continue */
-		if (sts->bank1_status == BANK_STATUS_FREE || 
-		    sts->bank2_status == BANK_STATUS_FREE) 
+		if (sts->bank1_status == BANK_STATUS_FREE ||
+		    sts->bank2_status == BANK_STATUS_FREE)
 			state = S_PRINTER_READY_CMD;
 
 		break;
 	case S_PRINTER_READY_CMD:
-		INFO("Initiating print job (internal id %d)\n", ctx->jobid);
+		INFO("Sending print job (internal id %d)\n", ctx->jobid);
 
 		memset(cmdbuf, 0, CMDBUF_LEN);
 		print->hdr.cmd = cpu_to_le16(S2145_CMD_PRINTJOB);
@@ -1636,7 +1646,7 @@ top:
 
 	if (state != S_FINISHED)
 		goto top;
-	
+
 	INFO("Print complete\n");
 
 	return CUPS_BACKEND_OK;
@@ -1692,7 +1702,7 @@ static int shinkos2145_query_serno(struct libusb_device_handle *dev, uint8_t end
 
 struct dyesub_backend shinkos2145_backend = {
 	.name = "Shinko/Sinfonia CHC-S2145",
-	.version = "0.46",
+	.version = "0.47",
 	.uri_prefix = "shinkos2145",
 	.cmdline_usage = shinkos2145_cmdline,
 	.cmdline_arg = shinkos2145_cmdline_arg,
