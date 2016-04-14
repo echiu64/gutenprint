@@ -5977,22 +5977,20 @@ dyesub_print_pixel(stp_vars_t *v,
 		if (dyesub_feature(caps, DYESUB_FEATURE_RGBtoYCBCR)) {
 			/* Convert RGB -> YCbCr (JPEG YCbCr444 coefficients) */
 			double R, G, B;
-			double Y, Cr, Cb;
 			R = out[0];
 			G = out[1];
 			B = out[2];
-			
-			Y  = R *  0.29900 + G *  0.58700 + B *  0.11400;
-			Cb = R * -0.16874 + G * -0.33126 + B *  0.50000 + 32768;
-			Cr = R *  0.50000 + G * -0.41869 + B * -0.08131 + 32768;
-			
-			ink[0] = Y;
-			ink[1] = Cb;
-			ink[2] = Cr;
 
-			/* XXX this is sub-optimal; we compute the full YCbCr
-			   values and throw away 2/3 for each pixel printed
-			   if we are plane or row interleaved */
+			if (i == 0) /* Y */
+			  ink[i] = R * 0.299 + G * 0.587 + B * 0.114;
+			else if (i == 1) /* Cb */
+			  ink[i] = R * -0.168736 + G * -0.331264 + B * 0.5 + 32768;
+			else if (i == 2) /* Cr */
+			  ink[i] = R * 0.5 + G * -0.418688 + B * -0.081312 + 32768;
+
+			/* FIXME:  Natively support YCbCr "inks" in the
+			   Gutenprint core and allow that as an input
+			   into the dyesub driver. */
 		} else {
 			ink[i] = out[i];
 		}
