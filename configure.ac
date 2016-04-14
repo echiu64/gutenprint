@@ -907,6 +907,7 @@ if test -n "$HAVE_DLFCN_H"; then
     DLOPEN_POSSIBLE="true"
   fi
 fi
+
 # define what the user chose to build, if possible.
 # Prefer dlopen over ltdl.
 if test x$WITH_MODULES = xyes; then
@@ -924,21 +925,41 @@ elif test x$WITH_MODULES = xdlopen; then
     USE_DLOPEN="true"
   fi
 fi
+
+# The current backends can use dlopen or libltdl
+if test x$BUILD_LIBUSB_BACKENDS = xyes; then
+  if test x$DLOPEN_POSSIBLE = xtrue; then
+    USE_DLOPEN="true"
+  elif test x$LDTL_POSSIBLE = xtrue; then
+    USE_LTDL="true"
+  fi
+fi
+
 # define what module system is to be used
 AC_MSG_CHECKING([which module system will be used])
 if test x$USE_LTDL = xtrue; then
-  MODULE="true"
-  AC_DEFINE(MODULE, "1", [Build a modular libgutenprint])
+  if test -n "$WITH_MODULES" ; then
+    MODULE="false"
+  else
+    MODULE="true"
+    AC_DEFINE(MODULE, "1", [Build a modular libgutenprint])
+    GUTENPRINT_LIBDEPS="${GUTENPRINT_LIBDEPS} ${LTDL_LIBS}"
+    gutenprint_libdeps="${gutenprint_libdeps} ${LTDL_LIBS}"
+  fi
+  LIBUSB_BACKEND_LIBDEPS="${LIBUSB_BACKEND_LIBDEPS} ${LTDL_LIBS}"  
   AC_DEFINE(USE_LTDL, "1", [Use GNU libltdl as module loader])
-  GUTENPRINT_LIBDEPS="${GUTENPRINT_LIBDEPS} ${LTDL_LIBS}"
-  gutenprint_libdeps="${gutenprint_libdeps} ${LTDL_LIBS}"
   AC_MSG_RESULT([ltdl])
 elif test x$USE_DLOPEN = xtrue; then
-  MODULE="true"
-  AC_DEFINE(MODULE, "1", [Build a modular libgutenprint])
+  if test -n "$WITH_MODULES" ; then
+    MODULE="false"
+  else
+    MODULE="true"
+    AC_DEFINE(MODULE, "1", [Build a modular libgutenprint])
+    GUTENPRINT_LIBDEPS="${GUTENPRINT_LIBDEPS} ${DLOPEN_LIBS}"
+    gutenprint_libdeps="${gutenprint_libdeps} ${DLOPEN_LIBS}"    
+  fi
+  LIBUSB_BACKEND_LIBDEPS="${LIBUSB_BACKEND_LIBDEPS} ${DLOPEN_LIBS}"
   AC_DEFINE(USE_DLOPEN, "1", [Use libdl/dlopen as module loader])
-  GUTENPRINT_LIBDEPS="${GUTENPRINT_LIBDEPS} ${DLOPEN_LIBS}"
-  gutenprint_libdeps="${gutenprint_libdeps} ${DLOPEN_LIBS}"
   AC_MSG_RESULT([dlopen])
 else
   MODULE="false"
@@ -1025,6 +1046,7 @@ AC_SUBST(WHICH_PPDS)
 AC_SUBST(BUILD_CUPS_PPDS)
 AC_SUBST(GUTENPRINT_BASE_VERSION)
 AC_SUBST(GUTENPRINT_RELEASE_VERSION)
+AC_SUBST(LIBUSB_BACKEND_LIBDEPS)
 
 dnl Optional architecture options to be applied after all autoconf tests
 dnl are done...
