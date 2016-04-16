@@ -161,3 +161,6 @@
 
 # DNP DS620
 0x1452 0x8b01 blacklist
+
+# CIAAT Brava 21
+0x10ce 0x001e blacklist
