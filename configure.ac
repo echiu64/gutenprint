@@ -217,7 +217,7 @@ AC_DEFINE_UNQUOTED(OSTYPE, ["${OSTYPE}"], [The operating system to build for])
 
 
 dnl Command line options.
-AC_PATH_PROG(CUPS_CONFIG, cups-config)
+AC_PATH_TOOL(CUPS_CONFIG, cups-config)
 if test -z "${CUPS_CONFIG}" ; then
   BUILD_CUPS="no"
 else
@@ -344,7 +344,7 @@ ENABLE_SHARED="$enable_shared"
 AC_DEFINE_UNQUOTED(ENABLE_SHARED, "${ENABLE_SHARED}", [Shared libraries are built.])
 AC_SUBST(ENABLE_SHARED)
 
-AC_PATH_PROG(FOOMATIC_CONFIGURE, foomatic-configure)
+AC_PATH_TOOL(FOOMATIC_CONFIGURE, foomatic-configure)
 if test -z "${FOOMATIC_CONFIGURE}" ; then
   BUILD_FOOMATIC="no"
 else
@@ -356,7 +356,7 @@ STP_ARG_WITH([foomatic],
              [(automatic)])
 
 
-AC_PATH_PROG(FOOMATIC_PPDFILE, foomatic-ppdfile)
+AC_PATH_TOOL(FOOMATIC_PPDFILE, foomatic-ppdfile)
 if test -z "${FOOMATIC_PPDFILE}" ; then
   BUILD_FOOMATIC_3="no"
 else
@@ -451,7 +451,7 @@ if test "x$BUILD_CUPS" = "xyes" ; then
 	            BUILD_LIBUSB_BACKENDS=no])
 fi
 
-AC_PATH_PROGS([GIMPTOOL2_CHECK], [gimptool-2.0 gimptool])
+AC_PATH_TOOL([GIMPTOOL2_CHECK], [gimptool-2.0 gimptool])
 if test -z "${GIMPTOOL2_CHECK}" ; then
   BUILD_GIMP2="no"
 else
@@ -543,7 +543,7 @@ fi
 dnl aclocal flags.
 dnl AM_ACLOCAL_INCLUDE(m4 m4local)
 
-dnl Checks for programs.
+dnl Checks for programs used in the build process
 AM_ICONV_LINK
 AC_ISC_POSIX
 AC_PROG_AWK
@@ -614,7 +614,7 @@ STP_CUPS_PROGS
 dnl foomatic checks
 if test x${BUILD_FOOMATIC} = xyes ; then
   PATH_SBIN=$PATH:/usr/sbin:/usr/local/sbin
-  AC_PATH_PROG(FOOMATIC_KITLOAD, foomatic-kitload, , [$PATH_SBIN])
+  AC_PATH_TOOL(FOOMATIC_KITLOAD, foomatic-kitload, , [$PATH_SBIN])
   if test -z "$FOOMATIC_KITLOAD" ; then
     AC_MSG_WARN(Cannot find foomatic-kitload; attempt to install foomatic will fail)
   fi
