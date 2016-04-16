@@ -442,12 +442,14 @@ dnl if test -z "${[EXTRA_LIBREADLINE_DEPS]}" ; then
 dnl   [EXTRA_LIBREADLINE_DEPS]=""
 dnl fi
 
-# libusb-1.0 (For CUPS backends)
-PKG_CHECK_MODULES([LIBUSB], [libusb-1.0],
-                  [HAVE_LIBUSB=yes
-                   BUILD_LIBUSB_BACKENDS=yes],
-                  [HAVE_LIBUSB=no
-	           BUILD_LIBUSB_BACKENDS=no])
+# libusb-1.0 (For CUPS backends, but only bother if CUPS is enabled)
+if test "x$BUILD_CUPS" = "xyes" ; then
+ PKG_CHECK_MODULES([LIBUSB], [libusb-1.0],
+                   [HAVE_LIBUSB=yes
+                    BUILD_LIBUSB_BACKENDS=yes],
+                   [HAVE_LIBUSB=no
+	            BUILD_LIBUSB_BACKENDS=no])
+fi
 
 AC_PATH_PROGS([GIMPTOOL2_CHECK], [gimptool-2.0 gimptool])
 if test -z "${GIMPTOOL2_CHECK}" ; then
