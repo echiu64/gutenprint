@@ -28,8 +28,6 @@ SUBDIRS = 					\
 	escputil				\
 	gimp2					\
 	cups					\
-	foomatic				\
-	ghost					\
 	testpattern
 
 

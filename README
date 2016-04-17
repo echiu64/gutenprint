@@ -13,9 +13,8 @@ I) INTRODUCTION
     LPRng, or others.  Gutenprint currently supports over 2500 printer
     models.  These drivers provide high quality printing for UNIX,
     Linux, and Macintosh OS X (10.6 and above) systems.  Gutenprint
-    includes CUPS and Foomatic drivers, and an enhanced Print plug-in
-    for GIMP that replaces the print plug-in packaged with the GIMP
-    distribution.
+    includes a CUPS driver and an enhanced Print plug-in for GIMP that
+    replaces the print plug-in packaged with the GIMP distribution.
 
     This is Gutenprint version 5.2.11, a stable release of Gutenprint
     5.2.  Gutenprint, formerly named Gimp-Print, is a suite of printer
@@ -47,12 +46,7 @@ I) INTRODUCTION
     capabilities).
 
     We recommend that all users who wish to use this package for
-    general purpose printing use either CUPS or, if they use another
-    printing system or no spooler at all, use Foomatic with the
-    Ghostscript driver (both described below), rather than integrating
-    the Ghostscript driver with self-made scripts or even manually
-    typing in Ghostscript command lines.  It is much simpler to manage
-    with CUPS or Foomatic and its PPDs.  CUPS provides an excellent
+    general purpose printing use CUPS.  CUPS provides an excellent
     web-based interface for easy printer administration, and all
     CUPS-enabled applications (OpenOffice.org, all KDE apps, etc.) and
     printing dialogs (kprinter, xpp, etc.) show all the options in
@@ -97,8 +91,6 @@ A) OVERVIEW
         printers
       - An enhanced Print plug-in for GIMP
       - GTK-based UI libraries (used by the enhanced GIMP plug-in)
-      - Support for the Foomatic spooler configuration system
-      - A Ghostscript driver using the IJS plugin facility
 
     This package requires the use of GNU Make to compile.  On systems
     with both GNU make and another make installed, GNU make may be
@@ -143,9 +135,6 @@ A) OVERVIEW
 	    Build enhanced Print plugin for GIMP:       yes
 		GIMP plugin will be named:              gutenprint
 		Install plugin(s) in home directory:    no
-	    Build Ghostscript IJS driver:               no
-	    Build Foomatic data:                        yes
-		Build Foomatic 3.x data:                yes
 	    Build test programs:                        yes
 	    Build testpattern generator:                yes
 
@@ -171,16 +160,15 @@ A) OVERVIEW
 	    uname -a output:                            Linux dsl092-065-009 3.16.7-24-default #1 SMP Mon Aug 3 14:37:06 UTC 2015 (ec183cc) x86_64 x86_64 x86_64 GNU/Linux
 	================================================================
 
-    The CUPS, GIMP, Foomatic, and Ghostscript components require that
-    the appropriate packages be installed on your system.  Many
-    distribution vendors separate packages into runtime and
-    development packages.  The development packages are required in
-    order to successfully compile Gutenprint.  In many cases the
-    configure script cannot detect whether these development packages
-    are installed, in which case you will get an error during
-    compilation.  Also note that it is necessary for the versions of
-    the development packages to match exactly the versions of the
-    runtime packages they are related to.
+    The CUPS and GIMP components require that the appropriate packages
+    be installed on your system.  Many distribution vendors separate
+    packages into runtime and development packages.  The development
+    packages are required in order to successfully compile Gutenprint.
+    In many cases the configure script cannot detect whether these
+    development packages are installed, in which case you will get an
+    error during compilation.  Also note that it is necessary for the
+    versions of the development packages to match exactly the versions
+    of the runtime packages they are related to.
 
     PLEASE INSPECT THE OUTPUT CAREFULLY BEFORE PROCEEDING.  If you
     expect to build a particular component (particularly the CUPS
@@ -711,86 +699,7 @@ E) ESCPUTIL
 
 ----------------
 
-F) FOOMATIC
-
-    Foomatic is a printer meta-driver that can be used with any
-    spooler (CUPS, lpd, LPRng, etc.) or even no spooler at all.  It
-    uses XML data describing printer and driver capabilities in
-    conjunction with Ghostscript to allow printing in any environment.
-    Please visit http://www.openprinting.org/foomatic.html for more
-    information.
-
-    We normally recommend using the native CUPS driver described above
-    if your system uses CUPS as its spooler.  However, some systems
-    (many releases of Fedora Core, for example) use Foomatic as the
-    repository for all printer information; the tools provided on
-    those systems will not recognize the CUPS PPD files.  If your
-    system uses Foomatic in this way, or does not use CUPS, you should
-    use Foomatic to manage your printers.  If you are using CUPS,
-    however, we strongly recommend using the CUPS driver described in
-    the previous section in preference to Foomatic.
-
-    The Gutenprint driver for Foomatic requires Foomatic 2.0 or
-    higher; Foomatic 3.0 or above is highly recommended.  It also
-    requires GNU Ghostscript 6.53 or newer, AFPL Ghostscript 7.04 or
-    newer, or ESP Ghostscript 7.05 or newer for IJS support.  We
-    recommend Ghostscript 8 or above.
-
-    The Foomatic support in Gutenprint consists of a data generator
-    and an IJS-based Ghostscript driver.  It is possible to use the
-    Ghostscript driver without Foomatic, but the Gutenprint options
-    are complex and subject to change without notice.  Older printer
-    configuration tools such as apsfilter and magicfilter do not
-    provide a convenient interface to the driver's capabilities.
-    Therefore, we no longer provide documentation on direct use of the
-    Ghostscript driver without the Foomatic front end.
-
-    The Ghostscript driver in Gutenprint 5.2 is based on the IJS
-    protocol.  IJS is a protocol originally developed by
-    Hewlett-Packard to allow new drivers to be used with Ghostscript
-    without having to be compiled into Ghostscript.
-
-    Gutenprint 5.2 offers two Foomatic drivers, one supporting the
-    full range of options and the other supporting simplified options,
-    as describe above under CUPS.  The full-featured driver is named
-    "gutenprint-ijs.5.2"; the simplified driver is named
-    "gutenprint-ijs-simplified.5.2".
-
-    Gutenprint 5.2 may coexist with Gimp-Print 4.2; both drivers may
-    be installed and used (on separate printer queues, of course) on
-    the same system.
-
-    Normally, the Gutenprint configure script will automatically
-    detect the presence of Foomatic and Ghostscript on your system.
-    In some cases, you may have to install a Ghostscript development
-    package that may be named gs-devel, ghostscript-library, or the
-    like for the IJS capability.
-
-    The Foomatic driver will not allow use of PPD files created from
-    Foomatic data from a different version of Gutenprint.  This
-    ensures that the PPD files accurately match the driver in use.
-    However, there is no automatic upgrade tool provided for the
-    Foomatic driver, unlike the CUPS driver.  Therefore, all queues
-    using a Gutenprint driver must be updated manually, using either
-    tools provided by your distribution or the Foomatic tool
-    "foomatic-ppdfile".
-
-    NOTES TO PACKAGERS:
-
-    * We recommend packaging the IJS driver
-      (/usr/bin/ijsgutenprint.5.2) and its man page
-      (/usr/man/man1/ijsgutenprint.1.gz) together with the Foomatic
-      data.
-
-    * The IJS driver and the Foomatic data kit and PPD files are
-      versioned, and hence you should consider permitting multiple
-      versions to be installed concurrently.  The man page
-      (/usr/man/man1/ijsgutenprint.1.gz) is not versioned.
-
-
-----------------
-
-G) GIMP
+F) GIMP
 
     Gutenprint may be used as an enhanced Print plug-in for GIMP (2.0
     and above), providing the ability to print images.  Please read
@@ -873,9 +782,9 @@ A) PRINTER INSTALLATION
 
     Gutenprint does not normally require the use of non-standard
     procedures (such as starting special programs) to install
-    printers.  Assuming that you are using either CUPS or Foomatic, it
-    integrates with your printing system, so the tools provided by
-    your distribution vendor should work correctly with Gutenprint.
+    printers.  Assuming that you are using CUPS, it integrates with
+    your printing system, so the tools provided by your distribution
+    vendor should work correctly with Gutenprint.
 
     Most printing systems currently use PPD files to describe printer
     capabilities.  Some printers are supported by more than one
@@ -884,23 +793,12 @@ A) PRINTER INSTALLATION
 
     Epson Stylus Photo R300 - CUPS+Gutenprint v5.2.10
     Epson Stylus Photo R300 - CUPS+Gutenprint v5.2.10 Simplified
-    Epson Stylus Photo R300 Foomatic/gutenprint-ijs.5.2
-    Epson Stylus Photo R300 Foomatic/gutenprint-ijs-simplified.5.2
 
     The "simplified" PPD files offer a basic set of options only, for
     selecting printer options, standard paper sizes, and basic quality
     settings.  The PPD files that are not "simplified" offer a much
     broader set of controls, giving the user extensive control over
     quality and color adjustment.
-
-    If you are using CUPS, you may be offered a choice between
-    CUPS+Gutenprint and Foomatic/gutenprint-ijs PPD files.  While
-    either kind of PPD file will work, we recommend using the
-    CUPS+Gutenprint PPD files.  These PPD files can be automatically
-    updated with cups-genppdupdate when you later upgrade your
-    Gutenprint installation.  Some systems mark the Foomatic PPD files
-    as "(recommended)"; we nevertheless recommend using the
-    CUPS+Gutenprint PPD files.
 
     Other PPD files are described differently, such as
 

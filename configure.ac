@@ -344,45 +344,6 @@ ENABLE_SHARED="$enable_shared"
 AC_DEFINE_UNQUOTED(ENABLE_SHARED, "${ENABLE_SHARED}", [Shared libraries are built.])
 AC_SUBST(ENABLE_SHARED)
 
-AC_PATH_TOOL(FOOMATIC_CONFIGURE, foomatic-configure)
-if test -z "${FOOMATIC_CONFIGURE}" ; then
-  BUILD_FOOMATIC="no"
-else
-  BUILD_FOOMATIC="yes"
-fi
-STP_ARG_WITH([foomatic],
-             [build foomatic data files],
-             [BUILD_FOOMATIC],
-             [(automatic)])
-
-
-AC_PATH_TOOL(FOOMATIC_PPDFILE, foomatic-ppdfile)
-if test -z "${FOOMATIC_PPDFILE}" ; then
-  BUILD_FOOMATIC_3="no"
-else
-  BUILD_FOOMATIC_3="yes"
-fi
-STP_ARG_WITH([foomatic3],
-             [make use of foomatic 3 extra features],
-             [BUILD_FOOMATIC_3],
-             [(automatic)])
-
-if test "$BUILD_FOOMATIC_3" = "yes" ; then
-   BUILD_FOOMATIC=yes
-fi
-
-PKG_CHECK_MODULES(IJS, ijs, [HAVE_IJS=yes], [HAVE_IJS=no])
-
-if test "x${HAVE_IJS}" = "xno" ; then
-  BUILD_GHOSTSCRIPT="no"
-else
-  BUILD_GHOSTSCRIPT="yes"
-fi
-STP_ARG_WITH([ghostscript],
-             [build Ghostscript driver],
-             [BUILD_GHOSTSCRIPT],
-             [(automatic)])
-
 STP_ARG_WITH_DETAILED([modules],
                       [],
                       [enable loadable modules],
@@ -611,22 +572,6 @@ fi
 dnl CUPS checks
 STP_CUPS_PROGS
 
-dnl foomatic checks
-if test x${BUILD_FOOMATIC} = xyes ; then
-  PATH_SBIN=$PATH:/usr/sbin:/usr/local/sbin
-  AC_PATH_TOOL(FOOMATIC_KITLOAD, foomatic-kitload, , [$PATH_SBIN])
-  if test -z "$FOOMATIC_KITLOAD" ; then
-    AC_MSG_WARN(Cannot find foomatic-kitload; attempt to install foomatic will fail)
-  fi
-fi
-
-dnl ijs checks
-if test x${BUILD_GHOSTSCRIPT} = xyes ; then
-  if test -z "$HAVE_IJS" ; then
-    AC_MSG_ERROR(Cannot find ijs; please ensure Ghostscript 6.53 or above is installed);
-  fi
-fi
-
 GUTENPRINT_RELEASE_VERSION=${GUTENPRINT_MAJOR_VERSION}.${GUTENPRINT_MINOR_VERSION}
 AH_TEMPLATE(GUTENPRINT_RELEASE_VERSION,, [Gutenprint release version])
 AC_DEFINE_UNQUOTED(GUTENPRINT_RELEASE_VERSION, "${GUTENPRINT_RELEASE_VERSION}")
@@ -847,12 +792,6 @@ dnl which to use...
 AC_SEARCH_LIBS(finite, m, CFLAGS="-Disfinite=finite $CFLAGS")
 
 dnl Define what has to be built
-AM_CONDITIONAL(BUILD_FOOMATIC, test x${BUILD_FOOMATIC} = xyes)
-
-AM_CONDITIONAL(BUILD_FOOMATIC_3, test x${BUILD_FOOMATIC_3} = xyes)
-
-AM_CONDITIONAL(BUILD_GHOSTSCRIPT, test x${BUILD_GHOSTSCRIPT} = xyes)
-
 AM_CONDITIONAL(BUILD_CUPS, test x${BUILD_CUPS} = xyes)
 
 AM_CONDITIONAL(BUILD_CUPS_1_2, test x${BUILD_CUPS_1_2} = xyes)
@@ -1016,10 +955,7 @@ AC_SUBST(cups_conf_serverroot)
 AC_SUBST(CUPS_CFLAGS)
 AC_SUBST(CUPS_LIBS)
 AC_SUBST(CUPS_PPD_PS_LEVEL)
-AC_SUBST(FOOMATIC_KITLOAD)
 AC_SUBST(GENPPD_LIBS)
-AC_SUBST(IJS_CFLAGS)
-AC_SUBST(IJS_LIBS)
 AC_SUBST(RM)
 AC_SUBST(GIMP2_CFLAGS)
 AC_SUBST(GIMP2_LIBS)
@@ -1072,7 +1008,6 @@ AC_CONFIG_FILES([man/cups-calibrate.8])
 AC_CONFIG_FILES([man/cups-genppd.8])
 AC_CONFIG_FILES([man/cups-genppdupdate.8])
 AC_CONFIG_FILES([man/escputil.1])
-AC_CONFIG_FILES([man/ijsgutenprint.1])
 AC_CONFIG_FILES([po/Makefile.in])
 AC_CONFIG_FILES([samples/Makefile])
 AC_CONFIG_FILES([src/Makefile])
@@ -1081,18 +1016,12 @@ AC_CONFIG_FILES([src/cups/Info.plist])
 AC_CONFIG_FILES([src/cups/cups-genppdupdate],
                 [chmod +x src/cups/cups-genppdupdate])
 AC_CONFIG_FILES([src/escputil/Makefile])
-AC_CONFIG_FILES([src/foomatic/Makefile])
-AC_CONFIG_FILES([src/foomatic/foomatic-generator],
-                [chmod +x src/foomatic/foomatic-generator])
-AC_CONFIG_FILES([src/foomatic/mk_printerlist],
-                [chmod +x src/foomatic/mk_printerlist])
 AC_CONFIG_FILES([src/testpattern/run-testpattern-2],
                 [chmod +x src/testpattern/run-testpattern-2])
 AC_CONFIG_FILES([src/testpattern/compare-checksums],
                 [chmod +x src/testpattern/compare-checksums])
 AC_CONFIG_FILES([src/cups/test-rastertogutenprint],
                 [chmod +x src/cups/test-rastertogutenprint])
-AC_CONFIG_FILES([src/ghost/Makefile])
 AC_CONFIG_FILES([src/testpattern/Makefile])
 AC_CONFIG_FILES([src/gimp2/Makefile])
 AC_CONFIG_FILES([src/main/Makefile])
@@ -1171,11 +1100,6 @@ if test "$BUILD_GIMP2" != "no" ; then
     echo "        Install plugin(s) in home directory:    $USER_INSTALL"
 else
     echo "    Build enhanced Print plugin for GIMP:       no"
-fi
-echo "    Build Ghostscript IJS driver:               $BUILD_GHOSTSCRIPT"
-echo "    Build Foomatic data:                        $BUILD_FOOMATIC"
-if test "$BUILD_FOOMATIC" != "no" ; then
-    echo "        Build Foomatic 3.x data:                $BUILD_FOOMATIC_3"
 fi
 echo "    Build test programs:                        $BUILD_TEST"
 echo "    Build testpattern generator:                $BUILD_TESTPATTERN"

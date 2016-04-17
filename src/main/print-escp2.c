@@ -2249,7 +2249,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 				 _("Full Manual Control"));
       stp_string_list_add_string(description->bounds.str, "Auto",
 				 _("Automatic Setting Control"));
-      description->deflt.str = "None"; /* so CUPS and Foomatic don't break */
+      description->deflt.str = "None"; /* so CUPS doesn't break */
     }
   else if (strcmp(name, "PageSize") == 0)
     {

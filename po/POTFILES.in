@@ -71,11 +71,5 @@ src/gimp2/print-gutenprint.c
 src/gimp2/print-image-gimp.c
 src/gimp2/print.c
 
-# Foomatic-related sources
-src/foomatic/printer_options.c
-
-# Ghostscript IJS driver
-src/ghost/ijsgutenprint.c
-
 # Extracted XML translatable strings
 src/xml/xmli18n-tmp.h

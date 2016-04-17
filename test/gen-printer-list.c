@@ -42,10 +42,9 @@ main(int argc, char **argv)
       const stp_printer_t *p = stp_get_printer_by_index(i);
       if (strcmp(stp_printer_get_family(p), "ps") &&
 	  strcmp(stp_printer_get_family(p), "raw"))
-	printf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>\n",
+	printf("<tr><td>%s</td><td>%s</td><td>%s</td></tr>\n",
 	       stp_printer_get_long_name(p),
 	       stp_printer_get_driver(p),
-	       stp_printer_get_foomatic_id(p) ? stp_printer_get_foomatic_id(p) : "",
 	       stp_printer_get_comment(p) ? stp_printer_get_comment(p) : "");
     }
   return 0;

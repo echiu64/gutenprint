@@ -75,7 +75,8 @@ install-data-local: FAQ.html gutenprint-users-manual.odt gutenprint-users-manual
 ## Clean
 
 maintainer-clean-local:
-	$(RM) -r gutenprint
+	$(RM) -rf gutenprint
+	$(RM) -rf gutenprintui2
 
 MAINTAINERCLEANFILES = \
 	Makefile.in \
