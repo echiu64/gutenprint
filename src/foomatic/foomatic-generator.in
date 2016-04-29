@@ -1541,11 +1541,13 @@ sub getprintoutmode {
 		 ($symmetry == $normalbestsymmetry) &&
 		 (($qualstr =~ /uni/) == $normaluni) &&
 		 (qualityorder($qualstr, $normallowestqualstr) < 0))) {
-		unless ((($xres < 300) ||  # Resolution not lower than
+		unless ((($xres < 200) || ($yres < 200)) ||
+			 (($stpprn !~ /^datamax_oneil/) && 
+			(($xres < 300) ||  # Resolution not lower than
 			 ($yres < 300)) || # 300x300, (600x600 on Lexmark)
 			(($stpprn =~ /^lexmark\-z/) &&
 			 (($xres < 600) ||
-			  ($yres < 600)))) {
+			 ($yres < 600))))) {
 		    $normalbestsymmetry = $symmetry;
 		    $normalminres = $respersquareinch;
 		    $normaluni = ($qualstr =~ /uni/);
