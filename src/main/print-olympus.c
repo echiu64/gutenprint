@@ -5169,8 +5169,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cpd90_page_list,
     &mitsu_cpd90_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_PLANE_INTERLACE,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
     &mitsu_cpd90_printer_init, &mitsu_cpd90_printer_end,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
