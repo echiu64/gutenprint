@@ -1,4 +1,3 @@
-/* $Id$ */
 /*
  * Convert BJC-printjobs to xbm files, one for each color channel
  *

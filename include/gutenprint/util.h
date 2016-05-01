@@ -1,6 +1,4 @@
 /*
- * "$Id$"
- *
  *   libgimpprint utility and miscellaneous functions.
  *
  *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
@@ -183,6 +181,3 @@ extern const char *stp_get_release_version(void);
 #endif
 
 #endif /* GUTENPRINT_UTIL_H */
-/*
- * End of "$Id$".
- */

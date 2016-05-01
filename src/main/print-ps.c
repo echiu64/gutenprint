@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   Print plug-in Adobe PostScript driver for the GIMP.
  *

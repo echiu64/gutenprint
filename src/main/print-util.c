@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   Print plug-in driver utility functions for the GIMP.
  *

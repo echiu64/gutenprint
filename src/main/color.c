@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   Gimp-Print color module interface.
  *

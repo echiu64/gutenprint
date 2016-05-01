@@ -11,7 +11,6 @@ elementFormDefault="qualified">
       Requires Gutenprint 5.0 or later
       Based on printers.xml and printdef
       Author: Roger Leigh (rleigh@debian.org)
-      $Id$
     </xsd:documentation>
   </xsd:annotation>
 

@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   Print plug-in CANON BJL driver for the GIMP.
  *

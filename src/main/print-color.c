@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   Gutenprint color management module - traditional Gutenprint algorithm.
  *

@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   Print plug-in HP PCL driver for the GIMP.
  *

@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  * Extract translation strings
  *

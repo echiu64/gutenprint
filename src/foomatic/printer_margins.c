@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   Dump the per-printer margins for the OpenPrinting database
  *

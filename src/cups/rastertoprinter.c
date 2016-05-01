@@ -1,6 +1,4 @@
 /*
- * "$Id$"
- *
  *   Gutenprint based raster filter for the Common UNIX Printing System.
  *
  *   Copyright 1993-2008 by Mike Sweet.
@@ -1705,8 +1703,3 @@ Image_width(stp_image_t *image)	/* I - Image */
     fprintf(stderr, "DEBUG: Gutenprint: Image_width %d\n", cups->adjusted_width);
   return (cups->adjusted_width);
 }
-
-
-/*
- * End of "$Id$".
- */

@@ -1,4 +1,3 @@
-## $Id: Makefile.am,v 1.107 2015/06/24 23:15:13 speachy Exp $
 ## Copyright (C) 2000 Roger Leigh
 ##
 ## This program is free software; you can redistribute it and/or modify

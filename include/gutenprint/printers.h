@@ -1,6 +1,4 @@
 /*
- * "$Id$"
- *
  *   libgimpprint printer functions.
  *
  *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
@@ -291,6 +289,3 @@ const char *stp_describe_output(const stp_vars_t *v);
 #endif
 
 #endif /* GUTENPRINT_PRINTERS_H */
-/*
- * End of "$Id$".
- */

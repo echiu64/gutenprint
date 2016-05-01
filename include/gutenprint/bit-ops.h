@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   Softweave calculator for gimp-print.
  *

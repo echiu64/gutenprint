@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 
 <!--
-   "$Id$"
 
    XML description of printers known to libgutenprint
    You can add additional printers here, but the underlying driver has

@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   I18N header file for the gimp-print.
  *

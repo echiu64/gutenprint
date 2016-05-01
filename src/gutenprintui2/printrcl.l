@@ -1,5 +1,4 @@
 /*		-*-Mode: C-*-
- * "$Id$"
  *
  *   printrc parser
  *

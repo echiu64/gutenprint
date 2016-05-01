@@ -1,6 +1,4 @@
 /*
- * "$Id$"
- *
  *   EPSON ESC/P2 command filter for the Common UNIX Printing System.
  *
  *   Copyright 1993-2000 by Easy Software Products.
@@ -227,8 +225,3 @@ main(int  argc,		/* I - Number of command-line arguments */
 
   return (0);
 }
-
-
-/*
- * End of "$Id$".
- */

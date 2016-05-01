@@ -1,6 +1,4 @@
 /*
- * "$Id$"
- *
  *   libgimpprint string list functions.
  *
  *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
@@ -100,6 +98,3 @@ stp_string_list_is_present(const stp_string_list_t *list,
 #endif
 
 #endif /* GUTENPRINT_STRING_LIST_H */
-/*
- * End of "$Id$".
- */

@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   Very fast dither algorithm
  *

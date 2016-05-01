@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   Print plug-in DyeSub driver (formerly Olympus driver) for the GIMP.
  *

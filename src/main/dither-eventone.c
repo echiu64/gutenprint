@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   EvenTone dither implementation for Gimp-Print
  *

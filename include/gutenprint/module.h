@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   libgimpprint module loader - load modules with libltdl/libdl.
  *

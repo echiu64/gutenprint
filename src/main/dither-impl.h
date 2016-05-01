@@ -1,6 +1,4 @@
 /*
- * "$Id$"
- *
  *   Internal implementation of dither algorithms
  *
  *   Copyright 1997-2003 Michael Sweet (mike@easysw.com) and
@@ -259,6 +257,3 @@ do									\
 #endif
 
 #endif /* GUTENPRINT_INTERNAL_DITHER_IMPL_H */
-/*
- * End of "$Id$".
- */

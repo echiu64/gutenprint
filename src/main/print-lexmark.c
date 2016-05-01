@@ -1,6 +1,5 @@
 
 /*
- * "$Id$"
  *
  *   Print plug-in Lexmark driver for the GIMP.
  *

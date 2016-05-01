@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   Printer maintenance utility for EPSON Stylus (R) printers
  *

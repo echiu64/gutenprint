@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   Test pattern generator for Gimp-Print
  *

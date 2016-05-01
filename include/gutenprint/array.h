@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   Copyright 2003 Roger Leigh (rleigh@debian.org)
  *

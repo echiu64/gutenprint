@@ -1,5 +1,4 @@
 ## Process this file with automake to produce Makefile.in
-## $Id$
 ## Copyright (C) 2000 Roger Leigh
 ##
 ## This program is free software; you can redistribute it and/or modify

@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   Super simple color calibration program for the Common UNIX
  *   Printing System.

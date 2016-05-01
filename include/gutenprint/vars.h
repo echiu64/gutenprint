@@ -1,6 +1,4 @@
 /*
- * "$id: vars.h,v 1.3.4.4 2004/03/09 03:00:25 rlk Exp $"
- *
  *   libgimpprint stp_vars_t core functions.
  *
  *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
@@ -1544,6 +1542,3 @@ stp_fill_parameter_settings(stp_parameter_t *desc,
 #endif
 
 #endif /* GUTENPRINT_VARS_H */
-/*
- * End of "$Id$".
- */

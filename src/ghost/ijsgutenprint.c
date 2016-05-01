@@ -1,5 +1,4 @@
 /*
- *  $Id$
  *
  *   IJS server for Gutenprint.
  *

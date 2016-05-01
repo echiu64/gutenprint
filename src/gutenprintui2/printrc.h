@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   Print plug-in for the GIMP.
  *

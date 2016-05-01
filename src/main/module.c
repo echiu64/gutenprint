@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   Gutenprint module loader - load modules with libltdl/libdl.
  *

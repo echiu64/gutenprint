@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   Dither routine entrypoints
  *

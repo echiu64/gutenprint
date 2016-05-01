@@ -1,6 +1,4 @@
 /*
- * "$Id$"
- *
  *   Print plug-in for the GIMP.
  *
  *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
@@ -124,7 +122,3 @@ Thumbnail_get_appname(stp_image_t *image)
   static char pluginname[] = "Thumbnail V" VERSION " - " RELEASE_DATE;
   return pluginname;
 }
-
-/*
- * End of "$Id$".
- */

@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   Error diffusion and closely related adaptive hybrid dither algorithm
  *

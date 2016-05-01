@@ -1,6 +1,4 @@
 /*
- * "$Id$"
- *
  *   pclunprint.c - convert an HP PCL file into an image file for viewing.
  *
  *   Copyright 2000 Dave Hill (dave@minnie.demon.co.uk)
@@ -32,8 +30,6 @@
 #include<stdlib.h>
 #include<ctype.h>
 #include<string.h>
-
-static const char *id="@(#) $Id$";
 
 /*
  * Size of buffer used to read file
@@ -842,7 +838,6 @@ int main(int argc, char *argv[])
     output_data.active_length = 0;
     output_data.output_depth = 0;
 
-    id = id;				/* Remove compiler warning */
     received_rows = NULL;
 
     if(argc == 1){

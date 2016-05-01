@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   libgimpprint header.
  *

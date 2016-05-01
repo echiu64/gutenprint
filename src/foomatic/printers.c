@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   Dump the per-printer options for the OpenPrinting database
  *

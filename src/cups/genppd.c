@@ -1,6 +1,4 @@
 /*
- * "$Id$"
- *
  *   PPD file generation program for the CUPS drivers.
  *
  *   Copyright 1993-2008 by Mike Sweet and Robert Krawitz.
@@ -2739,8 +2737,3 @@ write_ppd(
 
   return (0);
 }
-
-
-/*
- * End of "$Id$".
- */
