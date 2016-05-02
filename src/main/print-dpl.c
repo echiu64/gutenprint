@@ -277,6 +277,12 @@ static const stp_parameter_t the_parameters[] = {
    N_("Resolution of the print"),
    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0},
+  {
+    "PrintingMode", N_("Printing Mode"), "Color=Yes,Category=Core Parameter",
+    N_("Printing Output Mode"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
 #ifdef FIXME
   {
    "Orientation", N_("Orientation"), "Color=No,Category=Basic Printer Setup",
@@ -301,7 +307,7 @@ static const stp_parameter_t the_parameters[] = {
    "Speed", N_("Print Speed"), "Color=No,Category=Basic Printer Setup",
    N_("Speed Adjust"),
    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-   STP_PARAMETER_LEVEL_BASIC, 0, 1, STP_CHANNEL_NONE, 0, 0},
+   STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 0, 0},
 };
 
 static const int the_parameter_count =
@@ -653,6 +659,14 @@ dpl_parameters (const stp_vars_t * v, const char *name,
 				dpl_resolutions, NUM_RESOLUTIONS));
 	  }
     }
+  else if (strcmp(name, "PrintingMode") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+      stp_string_list_add_string
+        (description->bounds.str, "BW", _("Black and White"));
+      description->deflt.str =
+        stp_string_list_param(description->bounds.str, 0)->name;
+    }
 #ifdef FIXME
   else if (strcmp (name, "Orientation") == 0)
     {
@@ -930,7 +944,7 @@ dpl_do_print (stp_vars_t * v, stp_image_t * image)
   /*
    * Print Offsets
    */
-  privdata.h_offset = (int) (h_offset * xdpi);	/* in dots */
+  privdata.h_offset = (int) (h_offset * 100);	/* in 0.01 of an inch */
   privdata.v_offset = (int) (v_offset * 100);   /* in 0.01 of an inch */
 
   privdata.present = (int) (present * 100.0);   /* in 0.01 of an inch */
@@ -1189,7 +1203,7 @@ dpl_pcx (stp_vars_t * v,	/* I - Print file or command */
   while (in < (height + add_bytes))
     {
       stored = line[in];	/* save the value */
-      for (count = 1; line[in + count] == stored && in + count < (height + add_bytes) && count < 63; count++);	/* count the run */
+      for (count = 1; in + count < (height + add_bytes) && line[in + count] == stored && count < 63; count++);	/* count the run */
 
       /* test to see if we need to make a run of one because the data value
          has the two top bits set and see if we actually have a run */
