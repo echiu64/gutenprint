@@ -1854,6 +1854,7 @@
       <printer translate="name" name="Epson PX G5600" driver="escp2-pxg5600" manufacturer="Epson" model="98" parameters="standard_params" foomaticid="Epson-PX_G5600" />
       <printer translate="name" name="Epson PX 7000" driver="escp2-px7000" manufacturer="Epson" model="48" parameters="standard_params" foomaticid="Epson-PX_7000" />
       <printer translate="name" name="Epson PX 9000" driver="escp2-px9000" manufacturer="Epson" model="49" parameters="standard_params" foomaticid="Epson-PX_9000" />
+      <printer translate="name" name="Epson XP-820" driver="escp2-xp820" manufacturer="Epson" model="91" parameters="standard_params" foomaticid="Epson-XP_820" />
     </family>
     <family name="pcl">
       <parameters name="pcl_inkjet_params">
