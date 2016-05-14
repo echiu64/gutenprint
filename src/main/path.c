@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   Gutenprint path functions - split and search paths.
  *

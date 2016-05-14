@@ -1,6 +1,3 @@
-#
-# "$Id$"
-#
 #   MIME types file for the CUPS drivers.
 #
 #   Copyright 1993-2000 by Easy Software Products.
@@ -22,7 +19,3 @@
 
 # Define the new application/vnd.cups-command filetype...
 application/vnd.cups-command	string(0,'#CUPS-COMMAND')
-
-#
-# End of "$Id$".
-#

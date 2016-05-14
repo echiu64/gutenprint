@@ -1,6 +1,4 @@
 /*
- * "$Id$"
- *
  *   libgimpprint utility and miscellaneous functions.
  *
  *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
@@ -133,6 +131,7 @@ extern void stp_catprintf(char **strp, const char *format, ...)
 #define STP_DBG_PPD		0x200000
 #define STP_DBG_NO_COMPRESSION	0x400000
 #define STP_DBG_ASSERTIONS	0x800000
+#define STP_DBG_DPL		0x1000000
 
 extern unsigned long stp_get_debug_level(void);
 extern void stp_dprintf(unsigned long level, const stp_vars_t *v,
@@ -182,6 +181,3 @@ extern const char *stp_get_release_version(void);
 #endif
 
 #endif /* GUTENPRINT_UTIL_H */
-/*
- * End of "$Id$".
- */

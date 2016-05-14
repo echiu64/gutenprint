@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   Performance-critical functions that should be inlined, based on
  *   measurements.

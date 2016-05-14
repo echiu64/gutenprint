@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   Gimp-Print color management module - traditional Gimp-Print algorithm.
  *

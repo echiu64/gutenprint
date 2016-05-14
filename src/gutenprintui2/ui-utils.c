@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   Main window code for Print plug-in for the GIMP.
  *

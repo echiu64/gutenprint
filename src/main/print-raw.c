@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   Print plug-in RAW driver for the GIMP.
  *

@@ -1,5 +1,4 @@
 #	-*- Mode: Perl -*-
-## $Id$
 ## Copyright (C) 2013 Robert Krawitz
 ##
 ## This program is free software; you can redistribute it and/or modify

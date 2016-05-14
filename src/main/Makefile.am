@@ -1,4 +1,3 @@
-## $Id$
 ## Copyright (C) 2000 Roger Leigh
 ##
 ## This program is free software; you can redistribute it and/or modify
@@ -37,6 +36,7 @@ pkgmodule_LTLIBRARIES = \
 	print-escp2.la \
 	print-lexmark.la \
 	print-pcl.la \
+	print-dpl.la \
 	print-ps.la \
 	print-dyesub.la \
 	print-raw.la
@@ -76,6 +76,9 @@ print_lexmark_la_LDFLAGS = -module -avoid-version
 print_pcl_la_SOURCES = print-pcl.c
 print_pcl_la_LDFLAGS = -module -avoid-version
 
+print_dpl_la_SOURCES = print-dpl.c
+print_dpl_la_LDFLAGS = -module -avoid-version
+
 print_ps_la_SOURCES = print-ps.c xmlppd.c xmlppd.h
 print_ps_la_LDFLAGS = -module -avoid-version
 
@@ -93,6 +96,7 @@ module_SOURCES =				\
 	$(print_escp2_la_SOURCES)		\
 	$(print_lexmark_la_SOURCES)		\
 	$(print_pcl_la_SOURCES)			\
+	$(print_dpl_la_SOURCES)			\
 	$(print_ps_la_SOURCES)			\
 	$(print_dyesub_la_SOURCES)		\
 	$(print_raw_la_SOURCES)

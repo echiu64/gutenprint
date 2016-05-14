@@ -1,4 +1,3 @@
-dnl $Id$
 dnl Copyright (C) 2001-2004 Roger Leigh
 dnl 
 dnl This program is free software; you can redistribute it and/or modify

@@ -1,6 +1,4 @@
 /*
- * "$Id$"
- *
  *   libgimpprint image functions.
  *
  *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
@@ -141,6 +139,3 @@ extern void stp_image_conclude(stp_image_t *image);
 #endif
 
 #endif /* GUTENPRINT_IMAGE_H */
-/*
- * End of "$Id$".
- */

@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   Copyright 2007 by Michael R Sweet and Robert Krawitz
  *

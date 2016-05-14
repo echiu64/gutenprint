@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   Print plug-in EPSON ESC/P2 driver for the GIMP.
  *

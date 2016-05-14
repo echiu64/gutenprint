@@ -1,6 +1,4 @@
 /*
- * "$Id$"
- *
  *   Internationalization definitions for CUPS drivers.
  *
  *   Copyright 2008 Michael Sweet (mike@easysw.com)
@@ -40,8 +38,3 @@ extern const char		*stp_i18n_lookup(const stp_string_list_t *po,
 				                 const char *message);
 extern void			stp_i18n_printf(const stp_string_list_t *po,
 				                const char *message, ...);
-
-
-/*
- * End of "$Id$".
- */

@@ -1,6 +1,4 @@
 /*
- * "$Id$"
- *
  *   Print plug-in header file for the GIMP.
  *
  *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
@@ -94,6 +92,3 @@ stpi_cast_safe(const void *ptr)
 #endif
 
 #endif /* GUTENPRINT_INTERNAL_INTERNAL_H */
-/*
- * End of "$Id$".
- */

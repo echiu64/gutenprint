@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   Sequence data type.  This type is designed to be derived from by
  *   the curve and dither matrix types.

@@ -1,6 +1,4 @@
 /*
- * "$Id$"
- *
  *   Internationalization functions for CUPS drivers.
  *
  *   Copyright 2008 Michael Sweet (mike@easysw.com)
@@ -476,8 +474,3 @@ stpi_unquote(char *s)		/* IO - Original string */
 
   *d = '\0';
 }
-
-
-/*
- * End of "$Id$".
- */

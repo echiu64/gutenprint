@@ -1,6 +1,4 @@
 /*
- * "$Id$"
- *
  *   Print plug-in for the GIMP.
  *
  *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
@@ -441,7 +439,3 @@ Image_get_appname(stp_image_t *image)
     " for GIMP";
   return pluginname;
 }
-
-/*
- * End of "$Id$".
- */

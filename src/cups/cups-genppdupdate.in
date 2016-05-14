@@ -1,5 +1,4 @@
 #! @PERL@ -w
-# $Id$
 # Update CUPS PPDs for Gutenprint queues.
 # Copyright (C) 2002-2003 Roger Leigh (rleigh@debian.org)
 #

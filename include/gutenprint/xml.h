@@ -1,6 +1,4 @@
 /*
- * "$Id$"
- *
  *   Gutenprint module loader header
  *
  *   Copyright 1997-2002 Michael Sweet (mike@easysw.com),
@@ -88,6 +86,3 @@ extern void stp_xml_parse_file_named(const char *name);
 #endif
 
 #endif /* GUTENPRINT_XML_H */
-/*
- * End of "$Id$".
- */

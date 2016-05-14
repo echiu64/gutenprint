@@ -1,6 +1,4 @@
 /*
- * "$Id$"
- *
  *   Print plug-in for the GIMP.
  *
  *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
@@ -1825,7 +1823,3 @@ stpui_print(const stpui_plist_t *printer, stpui_image_t *image)
 
   return 0;
 }
-
-/*
- * End of "$Id$".
- */

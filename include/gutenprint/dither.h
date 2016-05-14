@@ -1,6 +1,4 @@
 /*
- * "$Id$"
- *
  *   libgimpprint dither header.
  *
  *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
@@ -199,6 +197,3 @@ extern void stp_dither_internal(stp_vars_t *v, int row,
 #endif
 
 #endif /* GUTENPRINT_DITHER_H */
-/*
- * End of "$Id$".
- */

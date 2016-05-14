@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   XML parser - process Gutenprint XML data with mxml.
  *

@@ -1,6 +1,4 @@
 /*
- * "$Id$"
- *
  *   libgimpprint header.
  *
  *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
@@ -175,6 +173,3 @@ stp_weave_parameters_by_row(const stp_vars_t *v, int row,
 #endif
 
 #endif /* GUTENPRINT_WEAVE_H */
-/*
- * End of "$Id$".
- */

@@ -1,6 +1,4 @@
 /*
- * "$Id$"
- *
  * File loading code for mini-XML, a small XML-like file parsing library.
  *
  * Copyright 2003 by Michael Sweet.
@@ -1460,8 +1458,3 @@ mxml_write_ws(stp_mxml_node_t *node,	/* I - Current node */
 
   return (col);
 }
-
-
-/*
- * End of "$Id$".
- */

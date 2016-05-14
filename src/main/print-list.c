@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   Gutenprint list functions.  A doubly-linked list implementation,
  *   with callbacks for freeing, sorting, and retrieving nodes by name

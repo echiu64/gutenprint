@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   Copyright 2002 Robert Krawitz (rlk@alum.mit.edu)
  *

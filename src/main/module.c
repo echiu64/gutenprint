@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   Gutenprint module loader - load modules with libltdl/libdl.
  *
@@ -61,6 +60,7 @@ extern stp_module_t print_canon_LTX_stp_module_data;
 extern stp_module_t print_escp2_LTX_stp_module_data;
 extern stp_module_t print_lexmark_LTX_stp_module_data;
 extern stp_module_t print_pcl_LTX_stp_module_data;
+extern stp_module_t print_dpl_LTX_stp_module_data;
 extern stp_module_t print_ps_LTX_stp_module_data;
 extern stp_module_t print_dyesub_LTX_stp_module_data;
 extern stp_module_t print_raw_LTX_stp_module_data;
@@ -75,6 +75,7 @@ static stp_module_t *static_modules[] =
     &print_canon_LTX_stp_module_data,
     &print_escp2_LTX_stp_module_data,
     &print_pcl_LTX_stp_module_data,
+    &print_dpl_LTX_stp_module_data,
     &print_lexmark_LTX_stp_module_data,
     &print_dyesub_LTX_stp_module_data,
     &print_raw_LTX_stp_module_data,

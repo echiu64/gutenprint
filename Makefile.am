@@ -1,5 +1,4 @@
 ## Process this file with automake to produce Makefile.in
-## $Id$
 ## Copyright (C) 2000-2004 Roger Leigh
 ##
 ## This program is free software; you can redistribute it and/or modify
@@ -172,7 +171,7 @@ MAINTAINERCLEANFILES = \
 	$(CLEANMFOUR) \
 	$(CLEANPO)
 
-EXTRA_DIST = autogen.sh ChangeLogStamp README.package
+EXTRA_DIST = autogen.sh README.package
 
 .PHONY: deb html install-cups install-gimp snapshot ChangeLog Phony dist-time-check
 

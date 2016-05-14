@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   Super simple color calibration program for the Common UNIX
  *   Printing System.
@@ -95,14 +94,12 @@ main(int  argc,
   puts("This program allows you to calibrate the color output of printers");
   puts("using the Gutenprint CUPS or ESP Print Pro drivers.");
   puts("");
-  puts("Please note that this program ONLY works with the Gutenprint CUPS or");
-  puts("ESP Print Pro drivers. If you are using the Gimp-Print stp driver of");
-  puts("GhostScript or the drivers of the Print plug-in for the GIMP, this");
-  puts("calibration will not work.");
+  puts("Please note that this program ONLY works with the Gutenprint CUPS");
+  puts("driver.");
   puts("");
-  puts("These drivers by the text \"CUPS+Gutenprint\" or \"ESP Print Pro\" in");
-  puts("the model description displayed by the CUPS web interface, KUPS,");
-  puts("the ESP Print Pro Printer Manager, or printerdrake.");
+  puts("These drivers by the text \"CUPS+Gutenprint\"");
+  puts("the model description displayed by the CUPS web interface or");
+  puts("similar tool.");
   puts("");
   puts("If you are not using the correct driver, press CTRL+C now and");
   puts("reinstall your printer queue with the appropriate driver first.");

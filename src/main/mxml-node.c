@@ -1,6 +1,4 @@
 /*
- * "$Id$"
- *
  * Node support code for mini-XML, a small XML-like file parsing library.
  *
  * Copyright 2003 by Michael Sweet.
@@ -487,8 +485,3 @@ mxml_new(stp_mxml_node_t *parent,		/* I - Parent node */
 
   return (node);
 }
-
-
-/*
- * End of "$Id$".
- */

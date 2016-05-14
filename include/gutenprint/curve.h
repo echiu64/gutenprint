@@ -1,6 +1,4 @@
 /*
- * "$Id$"
- *
  *   libgimpprint curve functions.
  *
  *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
@@ -700,6 +698,3 @@ extern int stp_curve_compose(stp_curve_t **retval,
 #endif
 
 #endif /* GUTENPRINT_CURVE_H */
-/*
- * End of "$Id$".
- */

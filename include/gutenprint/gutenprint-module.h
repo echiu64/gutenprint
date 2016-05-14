@@ -1,5 +1,4 @@
 /*		-*- Mode: C -*-
- *  $Id$
  *
  *   Gimp-Print module header file
  *
@@ -62,6 +61,3 @@ extern "C" {
 #endif
 
 #endif /* GUTENPRINT_MODULE_H */
-/*
- * End of $Id$
- */

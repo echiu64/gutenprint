@@ -1,5 +1,4 @@
 /*
- * "$Id$"
  *
  *   Print plug-in DyeSub driver (formerly Olympus driver) for the GIMP.
  *
@@ -3036,6 +3035,127 @@ static void kodak305_printer_init(stp_vars_t *v)
 	mitsu_cpd70k60_printer_init(v, 0x90);
 }
 
+/* Mitsubishi CP-D90D */
+static const dyesub_pagesize_t mitsu_cpd90_page[] =
+{
+  { "w144h432", "2x6", PT(625,300)+1, PT(1852,300)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE},
+  { "B7", "3.5x5", PT(1076,300)+1, PT(1550,300)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE},
+  { "w288h432", "4x6", PT(1226,300)+1, PT(1852,300)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE},
+  { "w288h432-div2", "2x6*2", PT(1226,300)+1, PT(1852,300)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE},
+  { "w360h504", "5x7", PT(1550,300)+1, PT(2128,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+  { "w360h360", "5x5", PT(1527,300)+1, PT(1550,300)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE},
+  { "w432h432", "6x6", PT(1827,300)+1, PT(1852,300)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE},
+  { "w432h576", "6x8", PT(1852,300)+1, PT(2428,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+  { "w432h576-div2", "4x6*2", PT(1852,300)+1, PT(2488,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+  { "w432h612", "6x8.5", PT(1852,300)+1, PT(2568,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+  { "w432h648", "6x9", PT(1852,300)+1, PT(2729,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+};
+
+LIST(dyesub_pagesize_list_t, mitsu_cpd90_page_list, dyesub_pagesize_t, mitsu_cpd90_page);
+
+static const dyesub_printsize_t mitsu_cpd90_printsize[] =
+{
+  { "300x300", "w144h432", 625, 1852},
+  { "300x300", "B7", 1076, 1550},
+  { "300x300", "w288h432", 1226, 1852},
+  { "300x300", "w288h432-div2", 1226, 1852},
+  { "300x300", "w360h360", 1527, 1550},
+  { "300x300", "w360h504", 1550, 2128},
+  { "300x300", "w432h432", 1827, 1852},
+  { "300x300", "w432h576", 1852, 2428},
+  { "300x300", "w432h576-div2", 1852, 2488},  
+  { "300x300", "w432h612", 1852, 2568},
+  { "300x300", "w432h648", 1852, 2729},
+};
+
+LIST(dyesub_printsize_list_t, mitsu_cpd90_printsize_list, dyesub_printsize_t, mitsu_cpd90_printsize);
+
+static void mitsu_cpd90_printer_init(stp_vars_t *v)
+{
+  /* Start things going */
+  stp_putc(0x1b, v);
+  stp_putc(0x53, v);
+  stp_putc(0x50, v);
+  stp_putc(0x30, v);
+  stp_putc(0x00, v);
+  stp_putc(0x33, v);
+  stp_put16_be(privdata.w_size, v);  /* Columns */
+  stp_put16_be(privdata.h_size, v);  /* Rows */
+  stp_putc(0x64, v);
+  stp_putc(0x00, v);
+  stp_putc(0x00, v);
+  stp_putc(0x01, v);
+  stp_putc(0x00, v);
+  if (strcmp(privdata.pagesize,"w432h576-div2") == 0)
+    stp_putc(0x01, v);  
+  else
+    stp_putc(0x00, v);
+
+  if (strcmp(privdata.pagesize,"w432h576-div2") == 0) {
+    stp_putc(0x04, v);
+    stp_putc(0xbe, v);
+    dyesub_nputc(v, 0x00, 14);
+  } else if (strcmp(privdata.pagesize,"w288h432-div2") == 0) {
+    stp_putc(0x02, v);
+    stp_putc(0x65, v);
+    stp_putc(0x01, v);
+    stp_putc(0x00, v);
+    stp_putc(0x00, v);
+    stp_putc(0x01, v);
+    dyesub_nputc(v, 0x00, 10);
+  } else {
+    dyesub_nputc(v, 0x00, 16);
+  }
+
+  dyesub_nputc(v, 0x00, 16);
+
+  stp_zfwrite((privdata.laminate->seq).data, 1,
+	      (privdata.laminate->seq).bytes, v); /* Lamination mode */  
+  stp_putc(0x00, v);  /* XXX 0x02 = fine, 0x03 = ultrafine, 0x00 = auto */
+  stp_putc(0x00, v);  /* XXX 0x01 = no color correction, 0x00 = on */
+  stp_putc(0x04, v);
+  stp_putc(0x04, v);  
+  dyesub_nputc(v, 0x00, 11);
+  
+  dyesub_nputc(v, 0x00, 512 - 64);
+
+  /* Second header block */
+  stp_putc(0x1b, v);
+  stp_putc(0x5a, v);
+  stp_putc(0x54, v);
+  stp_putc(0x01, v);
+  stp_putc(0x00, v);
+  stp_putc(0x09, v);  
+  dyesub_nputc(v, 0x00, 4);
+  stp_put16_be(privdata.w_size, v);  /* Columns */
+  stp_put16_be(privdata.h_size, v);  /* Rows */
+  dyesub_nputc(v, 0x00, 2);
+  
+  dyesub_nputc(v, 0x00, 512 - 32);
+}
+
+static void mitsu_cpd90_printer_end(stp_vars_t *v)
+{
+  /* Wrap it up */
+  stp_putc(0x1b, v);
+  stp_putc(0x42, v);
+  stp_putc(0x51, v);
+  stp_putc(0x31, v);
+  stp_putc(0x00, v);
+  stp_putc(0x05, v);
+}
+
 /* Shinko CHC-S9045 (experimental) */
 static const dyesub_pagesize_t shinko_chcs9045_page[] =
 {
@@ -5036,6 +5156,21 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
       | DYESUB_FEATURE_BIGENDIAN,
     &kodak305_printer_init, &mitsu_cpk60_printer_end,
     NULL, &mitsu_cpd70x_plane_end,
+    NULL, NULL, /* No block funcs */
+    NULL, NULL, NULL, /* color profile/adjustment is built into printer */
+    &mitsu_cpd70x_laminate_list, NULL, NULL,
+    NULL, NULL,
+  },
+  { /* Mitsubishi CPD90D */
+    4109,
+    &bgr_ink_list,
+    &res_300dpi_list,
+    &mitsu_cpd90_page_list,
+    &mitsu_cpd90_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
+    &mitsu_cpd90_printer_init, &mitsu_cpd90_printer_end,
+    NULL, NULL,
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
     &mitsu_cpd70x_laminate_list, NULL, NULL,
