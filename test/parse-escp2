@@ -225,11 +225,13 @@ sub print_output_data($$$$$$) {
     }
     my $savedots = $dots;
     if ($comptype == 0) {
-	fill_buffer($dots / 8);
-	if ($opt_V) {
-	    printf "%*v02x ", " ", substr($stuff, $curoffset + 0, $dots / 8);
+	foreach $i (0..$rows-1) {
+	    fill_buffer($dots / 8);
+	    if ($opt_V) {
+		printf "%*v02x ", " ", substr($stuff, $curoffset + 0, $dots / 8);
+	    }
+	    increment_curpos($dots / 8);
 	}
-	increment_curpos($dots / 8);
     } elsif ($comptype == 1) {
 	foreach $i (0..$rows-1) {
 	    my ($found_something) = 0;
