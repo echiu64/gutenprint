@@ -74,13 +74,16 @@ struct kodak605_medium {
 struct kodak605_media_list {
 	struct kodak605_sts_hdr hdr;
 	uint8_t  unk;  /* always seen 02 */
-	uint8_t  type; /* KODAK_MEDIA_* */
+	uint8_t  type; /* KODAK68x0_MEDIA_* */
 	uint8_t  count;
 	struct kodak605_medium entries[];
 } __attribute__((packed));
 
-#define KODAK_MEDIA_6R   0x0b
-#define KODAK_MEDIA_NONE 0x00
+#define KODAK68x0_MEDIA_6R   0x0b // 197-4096
+#define KODAK68x0_MEDIA_UNK  0x03
+#define KODAK68x0_MEDIA_6TR2 0x2c // 396-2941
+#define KODAK68x0_MEDIA_NONE 0x00
+/* 6R: Also seen: 101-0867, 141-9597, 659-9054, 169-6418, DNP 900-060 */
 
 #define MAX_MEDIA_LEN 128
 
@@ -453,10 +456,10 @@ static void kodak605_dump_status(struct kodak605_status *sts)
 {
 	INFO("Bank 1: %s Job %03u @ %03u/%03u\n",
 	     bank_statuses(sts->b1_sts), sts->b1_id,
-	     le16_to_cpu(sts->b1_complete), le16_to_cpu(sts->b1_complete));
+	     le16_to_cpu(sts->b1_complete), le16_to_cpu(sts->b1_total));
 	INFO("Bank 2: %s Job %03u @ %03u/%03u\n",
 	     bank_statuses(sts->b2_sts), sts->b2_id,
-	     le16_to_cpu(sts->b2_complete), le16_to_cpu(sts->b2_complete));
+	     le16_to_cpu(sts->b2_complete), le16_to_cpu(sts->b2_total));
 
 	INFO("Lifetime prints   : %d\n", be32_to_cpu(sts->ctr_life));
 	INFO("Cutter actuations : %d\n", be32_to_cpu(sts->ctr_cut));
@@ -469,16 +472,22 @@ static void kodak605_dump_mediainfo(struct kodak605_media_list *media)
 {
 	int i;
 
-        if (media->type == KODAK_MEDIA_NONE) {
+        if (media->type == KODAK68x0_MEDIA_NONE) {
                 DEBUG("No Media Loaded\n");
                 return;
         }
 
-        if (media->type == KODAK_MEDIA_6R) {
-                DEBUG("Media type: 6R (Kodak 197-4096 or equivalent)\n");
-        } else {
-                DEBUG("Media type %02x (unknown, please report!)\n", media->type);
-        }
+	switch (media->type) {
+	case KODAK68x0_MEDIA_6R:
+		INFO("Media type: 6R (Kodak 197-4096 or equivalent)\n");
+		break;
+	case KODAK68x0_MEDIA_6TR2:
+		INFO("Media type: 6R (Kodak 396-2941 or equivalent)\n");
+		break;
+	default:
+		INFO("Media type %02x (unknown, please report!)\n", media->type);
+		break;
+	}
 
 	DEBUG("Legal print sizes:\n");
 	for (i = 0 ; i < media->count ; i++) {
@@ -609,7 +618,7 @@ static int kodak605_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend kodak605_backend = {
 	.name = "Kodak 605",
-	.version = "0.25",
+	.version = "0.26",
 	.uri_prefix = "kodak605",
 	.cmdline_usage = kodak605_cmdline,
 	.cmdline_arg = kodak605_cmdline_arg,

@@ -578,10 +578,6 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
 			ctx->supports_matte = 1;
 		if (FW_VER_CHECK(1,40))
 			ctx->supports_2x6 = 1;
-		if (FW_VER_CHECK(1,50))
-			ctx->supports_3x5x2 = 1;
-		if (FW_VER_CHECK(1,60))
-			ctx->supports_fullcut = ctx->supports_6x6 = 1;
 		break;
 	case P_DNP_DS80:
 	case P_DNP_DS80D:
@@ -1710,7 +1706,7 @@ static int dnpds40_get_status(struct dnpds40_ctx *ctx)
 
 		dnpds40_cleanup_string((char*)resp, len);
 
-		INFO("L/PC Prints Remaining on Media: '%s'\n", (char*)resp + 4);
+		INFO("Half-Size Prints Remaining on Media: '%s'\n", (char*)resp + 4);
 
 		free(resp);
 	}

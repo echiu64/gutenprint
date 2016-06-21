@@ -1370,4 +1370,17 @@ struct dyesub_backend canonselphy_backend = {
   L == 5087264  == 1695744 * 3 + 32 (1536*1104)
   C == 2180384  == 726784 * 3 + 32  (1088*668)
 
+  It is worth mentioning that the image payload is Y'CbCr rather than the
+  traditional YMC (or even BGR) of other dyseubs.  Our best guess is that
+  we need to use the JPEG coefficients, although we realistically have
+  no way of confirming this.
+
+  It is hoped that the printers do support YMC data, but as of yet we
+  have no way of determining if this is possible.
+
+  Also, we have reports of the printer not quite behaving properly
+  in the face of multiple jobs; it's possible this thing may need a
+  backend after all, but more sniffs will need to be performed to determine
+  what the status readbacks (if any) mean.
+
 */

@@ -598,9 +598,8 @@ static void mitsu70x_teardown(void *vctx) {
 
 static int mitsu70x_read_parse(void *vctx, int data_fd) {
 	struct mitsu70x_ctx *ctx = vctx;
-	uint8_t hdr[1024];
 	int i, remain;
-	struct mitsu70x_hdr *mhdr = (struct mitsu70x_hdr*)(hdr + sizeof(struct mitsu70x_hdr));
+	struct mitsu70x_hdr mhdr;
 
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
@@ -611,11 +610,12 @@ static int mitsu70x_read_parse(void *vctx, int data_fd) {
 	}
 
 	ctx->matte = 0;
-	
+
+repeat:
 	/* Read in initial header */
-	remain = sizeof(hdr);
+	remain = sizeof(mhdr);
 	while (remain > 0) {
-		i = read(data_fd, hdr + sizeof(hdr) - remain, remain);
+		i = read(data_fd, ((uint8_t*)&mhdr) + sizeof(mhdr) - remain, remain);
 		if (i == 0)
 			return CUPS_BACKEND_CANCEL;
 		if (i < 0)
@@ -623,16 +623,21 @@ static int mitsu70x_read_parse(void *vctx, int data_fd) {
 		remain -= i;
 	}
 
-	/* Sanity check */
-	if (hdr[0] != 0x1b ||
-	    hdr[1] != 0x45 ||
-	    hdr[2] != 0x57 ||
-	    hdr[3] != 0x55) {
+	/* Skip over wakeup header if it's present. */
+	if (mhdr.hdr[0] == 0x1b &&
+	    mhdr.hdr[1] == 0x45 &&
+	    mhdr.hdr[2] == 0x57 &&
+	    mhdr.hdr[3] == 0x55) {
+		goto repeat;
+	}
+
+	/* Sanity check header */
+	if (mhdr.hdr[0] != 0x1b &&
+	    mhdr.hdr[1] != 0x5a &&
+	    mhdr.hdr[2] != 0x54) {
 		ERROR("Unrecognized data format!\n");
 		return CUPS_BACKEND_CANCEL;
 	}
-
-	// XXX sanity-check second header chunk for destined printer...?
 
 #ifdef ENABLE_CORRTABLES	
 	/* Figure out the correction data table to use */
@@ -702,28 +707,28 @@ static int mitsu70x_read_parse(void *vctx, int data_fd) {
 #endif
 
 	/* Work out printjob size */
-	ctx->cols = be16_to_cpu(mhdr->cols);
-	ctx->rows = be16_to_cpu(mhdr->rows);
+	ctx->cols = be16_to_cpu(mhdr.cols);
+	ctx->rows = be16_to_cpu(mhdr.rows);
 
 	remain = ctx->rows * ctx->cols * 2;
 	remain = (remain + 511) / 512 * 512; /* Round to nearest 512 bytes. */
 	remain *= 3;  /* One for each plane */
 
-	if (!mhdr->laminate && mhdr->laminate_mode) {
-		i = be16_to_cpu(mhdr->lamcols) * be16_to_cpu(mhdr->lamrows) * 2;
+	if (!mhdr.laminate && mhdr.laminate_mode) {
+		i = be16_to_cpu(mhdr.lamcols) * be16_to_cpu(mhdr.lamrows) * 2;
 		i = (i + 511) / 512 * 512; /* Round to nearest 512 bytes. */
 		remain += i;
 		ctx->matte = 1;
 	}
 
-	ctx->databuf = malloc(sizeof(hdr) + remain);
+	ctx->databuf = malloc(sizeof(mhdr) + remain);
 	if (!ctx->databuf) {
 		ERROR("Memory allocation failure!\n");
 		return CUPS_BACKEND_FAILED;
 	}
 
-	memcpy(ctx->databuf, &hdr, sizeof(hdr));
-	ctx->datalen += sizeof(hdr);
+	memcpy(ctx->databuf, &mhdr, sizeof(mhdr));
+	ctx->datalen += sizeof(mhdr);
 
 	/* Read in the spool data */
 	while(remain) {
@@ -945,10 +950,18 @@ top:
 
 	/* Make sure we're awake! */
 	if (jobstatus.power) {
-		// XXX or should we only send the first 4 bytes? */
+		uint8_t buf[512];
+
+		memset(buf, 0, sizeof(buf));
+		buf[0] = 0x1b;
+		buf[1] = 0x45;
+		buf[2] = 0x57;
+		buf[1] = 0x55;
+
 		INFO("Waking up printer...\n");
+		// XXX or should we only send the first 4 bytes?
 		if ((ret = send_data(ctx->dev, ctx->endp_down,
-				     ctx->databuf, sizeof(struct mitsu70x_hdr))))
+				     buf, sizeof(buf))))
 			return CUPS_BACKEND_FAILED;
 		sleep(1);
 		goto top;
@@ -1023,7 +1036,7 @@ top:
 	}
 
 	/* Any other fixups? */
-#if 1 // XXX is this actually needed on the K60 and EK305?
+#if 1 // XXX is this actually needed?
 	if ((ctx->type == P_MITSU_K60 || ctx->type == P_KODAK_305) &&
 	    ctx->cols == 0x0748 &&
 	    ctx->rows == 0x04c2) {
@@ -1035,13 +1048,15 @@ top:
 	INFO("Sending Print Job (internal id %d)\n", ctx->jobid);
 
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
-			     ctx->databuf + sizeof(struct mitsu70x_hdr),
+			     ctx->databuf,
 			     sizeof(struct mitsu70x_hdr))))
 		return CUPS_BACKEND_FAILED;
 
 	{
 		/* K60 and 305 need data sent in 256K chunks, but the first
 		   chunk needs to subtract the length of the 512-byte header */
+
+		// XXX is this special case actually needed?
 		int chunk = 256*1024 - sizeof(struct mitsu70x_hdr);
 		int sent = 1024;
 		while (ctx->datalen > 0) {
@@ -1274,7 +1289,7 @@ static int mitsu70x_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend mitsu70x_backend = {
 	.name = "Mitsubishi CP-D70/D707/K60/D80",
-	.version = "0.38WIP",
+	.version = "0.39WIP",
 	.uri_prefix = "mitsu70x",
 	.cmdline_usage = mitsu70x_cmdline,
 	.cmdline_arg = mitsu70x_cmdline_arg,

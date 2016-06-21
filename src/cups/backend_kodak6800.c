@@ -207,16 +207,17 @@ struct kodak6800_printsize {
 
 struct kodak68x0_media_readback {
 	uint8_t  hdr;      /* Always 0x01 */
-	uint8_t  media;    /* Always 0x00 (none), 0x0b or 0x03 */
+	uint8_t  type;     /* Media code, KODAK68x0_MEDIA_xxx */
 	uint8_t  null[5];
 	uint8_t  count;    /* Always 0x04 (6800) or 0x06 (6850)? */
 	struct kodak6800_printsize sizes[];
 } __attribute__((packed));
 
-#define KODAK68x0_MEDIA_6R   0x0b
+#define KODAK68x0_MEDIA_6R   0x0b // 197-4096
 #define KODAK68x0_MEDIA_UNK  0x03
-#define KODAK68x0_MEDIA_UNK2 0x2c
+#define KODAK68x0_MEDIA_6TR2 0x2c // 396-2941
 #define KODAK68x0_MEDIA_NONE 0x00
+/* 6R: Also seen: 101-0867, 141-9597, 659-9054, 169-6418, DNP 900-060 */
 
 #define CMDBUF_LEN 17
 
@@ -262,15 +263,21 @@ static int kodak6800_do_cmd(struct kodak6800_ctx *ctx,
 static void kodak68x0_dump_mediainfo(struct kodak68x0_media_readback *media)
 {
 	int i;
-	if (media->media == KODAK68x0_MEDIA_NONE) {
+	if (media->type == KODAK68x0_MEDIA_NONE) {
 		INFO("No Media Loaded\n");
 		return;
 	}
 
-	if (media->media == KODAK68x0_MEDIA_6R) {
+	switch (media->type) {
+	case KODAK68x0_MEDIA_6R:
 		INFO("Media type: 6R (Kodak 197-4096 or equivalent)\n");
-	} else {
-		INFO("Media type %02x (unknown, please report!)\n", media->media);
+		break;
+	case KODAK68x0_MEDIA_6TR2:
+		INFO("Media type: 6R (Kodak 396-2941 or equivalent)\n");
+		break;
+	default:
+		INFO("Media type %02x (unknown, please report!)\n", media->type);
+		break;
 	}
 	INFO("Legal print sizes:\n");
 	for (i = 0 ; i < media->count ; i++) {
@@ -546,7 +553,7 @@ static void kodak68x0_dump_status(struct kodak6800_ctx *ctx, struct kodak68x0_st
 
 		INFO("\tMedia        :  %d\n", be32_to_cpu(status->media));
 
-		if (ctx->media->media == KODAK68x0_MEDIA_6R) {
+		if (ctx->media->type == KODAK68x0_MEDIA_6R) {
 			max = 375;
 		} else {
 			max = 0;
@@ -1171,7 +1178,7 @@ static int kodak6800_main_loop(void *vctx, int copies) {
 /* Exported */
 struct dyesub_backend kodak6800_backend = {
 	.name = "Kodak 6800/6850",
-	.version = "0.53",
+	.version = "0.54",
 	.uri_prefix = "kodak6800",
 	.cmdline_usage = kodak6800_cmdline,
 	.cmdline_arg = kodak6800_cmdline_arg,
