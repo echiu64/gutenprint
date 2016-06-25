@@ -159,7 +159,14 @@
 # DNP DS-RX1 + Citizen CY
 0x1343 0x0005 blacklist
 
+# Citizen CW-02
+0x1343 0x0006 blacklist
+
+# DNP DS80D
+0x1343 0x0007 blacklist
+
 # DNP DS620
+0x1343 0x0008 blacklist
 0x1452 0x8b01 blacklist
 
 # CIAAT Brava 21

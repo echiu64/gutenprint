@@ -56,14 +56,12 @@
 #define USB_PID_DNP_DS40  0x0003 // Also Citizen CX
 #define USB_PID_DNP_DS80  0x0004 // Also Citizen CX-W, and Mitsubishi CP-3800DW
 #define USB_PID_DNP_DSRX1 0x0005 // Also Citizen CY
+#define USB_PID_CITIZEN_CW02 0x0006
+#define USB_PID_DNP_DS80D 0x0007
+#define USB_PID_DNP_DS620_OLD 0x0008
 
 #define USB_VID_DNP       0x1452
 #define USB_PID_DNP_DS620 0x8b01
-
-//#define USB_PID_DNP_DS80D XXXX
-
-//#define USB_PID_CITIZEN_CW-02 XXXXX
-//#define USB_PID_CITIZEN_OP900II XXXXX
 
 /* Private data stucture */
 struct dnpds40_ctx {
@@ -1547,7 +1545,8 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 		free(resp);
 	}
 
-	if (ctx->type == P_DNP_DS620) {
+	if (ctx->supports_standby) {
+		int i;
 		/* Get Standby stuff */
 		dnpds40_build_cmd(&cmd, "MNT_RD", "STANDBY_TIME", 0);
 
@@ -1556,8 +1555,9 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 			return CUPS_BACKEND_FAILED;
 
 		dnpds40_cleanup_string((char*)resp, len);
-
-		INFO("Standby Transition time: '%s' minutes\n", (char*)resp);
+		i = atoi((char*)resp);
+			
+		INFO("Standby Transition time: '%d' minutes\n", i);
 
 		free(resp);
 
@@ -1569,13 +1569,15 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 			return CUPS_BACKEND_FAILED;
 
 		dnpds40_cleanup_string((char*)resp, len);
-
-		INFO("Media End kept across power cycles: '%s'\n", (char*)resp);
+		i = atoi((char*)resp);
+		INFO("Media End kept across power cycles: '%s'\n",
+		     i ? "Yes" : "No");		     
 
 		free(resp);
 	}
 
 	if (ctx->supports_iserial) {
+		int i;
 		/* Get USB serial descriptor status */
 		dnpds40_build_cmd(&cmd, "MNT_RD", "USB_ISERI_SET", 0);
 
@@ -1584,8 +1586,10 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 			return CUPS_BACKEND_FAILED;
 
 		dnpds40_cleanup_string((char*)resp, len);
+		i = atoi((char*)resp);
 
-		INFO("Report Serial Number in USB descriptor: '%s'\n", (char*)resp);
+		INFO("Report Serial Number in USB descriptor: '%s'\n",
+		     i ? "Yes" : "No");
 
 		free(resp);
 	}
@@ -1853,6 +1857,34 @@ static int dnpds40_clear_counter(struct dnpds40_ctx *ctx, char counter)
 	return 0;
 }
 
+static int dnpds40_cancel_job(struct dnpds40_ctx *ctx)
+{
+	struct dnpds40_cmd cmd;
+	int ret;
+
+	/* Generate command */
+	dnpds40_build_cmd(&cmd, "CNTRL", "CANCEL", 0);
+
+	if ((ret = dnpds40_do_cmd(ctx, &cmd, NULL, 0)))
+		return ret;
+
+	return 0;
+}
+
+static int dnpds40_reset_printer(struct dnpds40_ctx *ctx)
+{
+	struct dnpds40_cmd cmd;
+	int ret;
+
+	/* Generate command */
+	dnpds40_build_cmd(&cmd, "CNTRL", "PRINTER_RESET", 0);
+
+	if ((ret = dnpds40_do_cmd(ctx, &cmd, NULL, 0)))
+		return ret;
+
+	return 0;
+}
+
 static int dnpds620_standby_mode(struct dnpds40_ctx *ctx, int delay)
 {
 	struct dnpds40_cmd cmd;
@@ -1922,13 +1954,15 @@ static void dnpds40_cmdline(void)
 {
 	DEBUG("\t\t[ -i ]           # Query printer info\n");
 	DEBUG("\t\t[ -I ]           # Query sensor  info\n");
-	DEBUG("\t\t[ -s ]           # Query status\n");
+	DEBUG("\t\t[ -k num ]       # Set standby time (1-99 minutes, 0 disables)\n");
+	DEBUG("\t\t[ -K num ]       # Keep Media Status Across Power Cycles (1 on, 0 off)\n");
 	DEBUG("\t\t[ -n ]           # Query counters\n");
 	DEBUG("\t\t[ -N A|B|M ]     # Clear counter A/B/M\n");
 	DEBUG("\t\t[ -p num ]       # Set counter P\n");
-	DEBUG("\t\t[ -k num ]       # Set standby time (1-99 minutes, 0 disables)\n");
-	DEBUG("\t\t[ -K num ]       # Keep Media Status Across Power Cycles (1 on, 0 off)\n");
+	DEBUG("\t\t[ -R ]           # Reset printer\n");
+	DEBUG("\t\t[ -s ]           # Query status\n");
 	DEBUG("\t\t[ -x num ]       # Set USB iSerialNumber Reporting (1 on, 0 off)\n");
+	DEBUG("\t\t[ -X ]           # Cancel current print job\n");
 }
 
 static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
@@ -1939,7 +1973,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 	if (!ctx)
 		return -1;
 
-	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "iInN:p:sK:k:")) >= 0) {
+	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "iIk:K:nN:p:Rsx:X")) >= 0) {
 		switch(i) {
 		GETOPT_PROCESS_GLOBAL
 		case 'i':
@@ -1947,30 +1981,6 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 			break;
 		case 'I':
 			j = dnpds40_get_sensors(ctx);
-			break;
-		case 'n':
-			j = dnpds40_get_counters(ctx);
-			break;
-		case 'N':
-			if (optarg[0] != 'A' &&
-			    optarg[0] != 'B' &&
-			    optarg[0] != 'M')
-				return CUPS_BACKEND_FAILED;
-			if (!ctx->supports_matte) {
-				ERROR("Printer FW does not support matte functions, please update!\n");
-				return CUPS_BACKEND_FAILED;
-			}
-			j = dnpds40_clear_counter(ctx, optarg[0]);
-			break;
-		case 'p':
-			if (!ctx->supports_counterp) {
-				ERROR("Printer FW dows not support P counter!\n");
-				return CUPS_BACKEND_FAILED;
-			}
-			j = dnpds40_set_counter_p(ctx, optarg);
-			break;
-		case 's':
-			j = dnpds40_get_status(ctx);
 			break;
 		case 'k': {
 			int time = atoi(optarg);
@@ -2002,6 +2012,35 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 			j = dnpds620_media_keep_mode(ctx, keep);
 			break;
 		}
+		case 'n':
+			j = dnpds40_get_counters(ctx);
+			break;
+		case 'N':
+			if (optarg[0] != 'A' &&
+			    optarg[0] != 'B' &&
+			    optarg[0] != 'M')
+				return CUPS_BACKEND_FAILED;
+			if (!ctx->supports_matte) {
+				ERROR("Printer FW does not support matte functions, please update!\n");
+				return CUPS_BACKEND_FAILED;
+			}
+			j = dnpds40_clear_counter(ctx, optarg[0]);
+			break;
+		case 'p':
+			if (!ctx->supports_counterp) {
+				ERROR("Printer FW dows not support P counter!\n");
+				return CUPS_BACKEND_FAILED;
+			}
+			j = dnpds40_set_counter_p(ctx, optarg);
+			break;
+		case 'R': {
+			j = dnpds40_reset_printer(ctx);
+			break;
+		}
+		case 's': {
+			j = dnpds40_get_status(ctx);
+			break;
+		}
 		case 'x': {
 			int enable = atoi(optarg);
 			if (!ctx->supports_iserial) {
@@ -2017,6 +2056,10 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 			j = dnpds620_iserial_mode(ctx, enable);
 			break;
 		}
+		case 'X': {
+			j = dnpds40_cancel_job(ctx);
+			break;
+		}
 		default:
 			break;  /* Ignore completely */
 		}
@@ -2030,7 +2073,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS40/DS80/DSRX1/DS620",
-	.version = "0.75",
+	.version = "0.77",
 	.uri_prefix = "dnpds40",
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
@@ -2044,10 +2087,10 @@ struct dyesub_backend dnpds40_backend = {
 	{ USB_VID_CITIZEN, USB_PID_DNP_DS40, P_DNP_DS40, ""},
 	{ USB_VID_CITIZEN, USB_PID_DNP_DS80, P_DNP_DS80, ""},
 	{ USB_VID_CITIZEN, USB_PID_DNP_DSRX1, P_DNP_DSRX1, ""},
+	{ USB_VID_CITIZEN, USB_PID_DNP_DS620_OLD, P_DNP_DS620, ""},
 	{ USB_VID_DNP, USB_PID_DNP_DS620, P_DNP_DS620, ""},
-//	{ USB_VID_DNP, USB_PID_DNP_DS80D, P_DNP_DS80D, ""},
-//	{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW-02, P_DNP_DS40, ""},
-//	{ USB_VID_CITIZEN, USB_PID_CITIZEN_OP900II, P_DNP_DS40, ""},
+	{ USB_VID_DNP, USB_PID_DNP_DS80D, P_DNP_DS80D, ""},
+	{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW02, P_DNP_DS40, ""},
 	{ 0, 0, 0, ""}
 	}
 };
