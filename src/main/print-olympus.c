@@ -3770,8 +3770,8 @@ LIST(dyesub_printsize_list_t, dnpds40_printsize_list, dyesub_printsize_t, dnpds4
 
 static const laminate_t dnpds40_laminate[] =
 {
-  {"Glossy",  N_("Glossy"),  {2, "00"}},
-  {"Matte", N_("Matte"), {2, "01"}},
+  {"Glossy",  N_("Glossy"),  {3, "000"}},
+  {"Matte", N_("Matte"), {3, "001"}},
 };
 
 LIST(laminate_list_t, dnpds40_laminate_list, laminate_t, dnpds40_laminate);
@@ -3780,7 +3780,7 @@ LIST(laminate_list_t, dnpds40_laminate_list, laminate_t, dnpds40_laminate);
 static void dnp_printer_start_common(stp_vars_t *v)
 {
   /* Configure Lamination */
-  stp_zprintf(v, "\033PCNTRL OVERCOAT        00000008000000");
+  stp_zprintf(v, "\033PCNTRL OVERCOAT        0000000800000");
   stp_zfwrite((privdata.laminate->seq).data, 1,
 	      (privdata.laminate->seq).bytes, v); /* Lamination mode */
 
@@ -4210,6 +4210,15 @@ static void dnpdsrx1_printer_start(stp_vars_t *v)
 }
 
 /* Dai Nippon Printing DS620 */
+static const laminate_t dnpds620_laminate[] =
+{
+  {"Glossy",  N_("Glossy"),  {3, "000"}},
+  {"Matte", N_("Matte"), {3, "001"}},
+  {"MatteLuster", N_("Matte Luster"), {3, "022"}},
+};
+
+LIST(laminate_list_t, dnpds620_laminate_list, laminate_t, dnpds620_laminate);
+
 /* Imaging area is wider than print size, we always must supply the 
    printer with the full imaging width. */
 static const dyesub_pagesize_t dnpds620_page[] =
@@ -5326,7 +5335,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &dnpds40_plane_init, NULL,
     NULL, NULL,
     NULL, NULL, NULL,
-    &dnpds40_laminate_list, NULL, NULL,    
+    &dnpds620_laminate_list, NULL, NULL,    
     NULL, NULL,
   },
   { /* Citizen CW-01 */
