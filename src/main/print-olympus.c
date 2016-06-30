@@ -3374,7 +3374,7 @@ LIST(dyesub_printsize_list_t, shinko_chcs1245_printsize_list, dyesub_printsize_t
 static const laminate_t shinko_chcs1245_laminate[] =
 {
   {"PrinterDefault",  N_("Printer Default"),  {1, "\x01"}},
-  {"Glossy",  N_("Glossy"),  {1, "\x02\0\0\0"}},
+  {"Glossy",  N_("Glossy"),  {1, "\x02"}},
   {"GlossyFine",  N_("Glossy Fine"),  {1, "\x03"}},
   {"Matte",  N_("Matte"),  {1, "\x04"}},
   {"MatteFine",  N_("Matte Fine"),  {1, "\x05"}},
