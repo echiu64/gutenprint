@@ -5071,7 +5071,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Mitsubishi CP9550D */
     4103,
-    &rgb_ink_list,
+    &bgr_ink_list,
     &res_346dpi_list,
     &mitsu_cp9550_page_list,
     &mitsu_cp9550_printsize_list,
