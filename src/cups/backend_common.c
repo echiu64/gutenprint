@@ -27,7 +27,7 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.63G"
+#define BACKEND_VERSION "0.64G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
@@ -692,8 +692,6 @@ void print_help(char *argv0, struct dyesub_backend *backend)
 		DEBUG("Standalone Usage:\n");
 		DEBUG("\t%s\n", URI_PREFIX);
 		DEBUG("  [ -D ] [ -G ] [ -f ]\n");
-		DEBUG("  [ -S serialnum ] \n");
-		DEBUG("  [ -V extra_vid ] [ -P extra_pid ] [ -T extra_type ] \n");
 		DEBUG("  [ backend_specific_args ] \n");
 		DEBUG("  [ -d copies ] \n");
 		DEBUG("  [ - | infile ] \n");
