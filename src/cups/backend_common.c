@@ -27,7 +27,7 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.64G"
+#define BACKEND_VERSION "0.65G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
@@ -461,7 +461,7 @@ static int print_scan_output(struct libusb_device *device,
 	} else if (backend->query_serno) { /* Get from backend hook */
 		int iface = 0;
 
-		struct libusb_config_descriptor *config;
+		struct libusb_config_descriptor *config = NULL;
 
 		if (libusb_kernel_driver_active(dev, iface))
 			libusb_detach_kernel_driver(dev, iface);
@@ -486,6 +486,9 @@ static int print_scan_output(struct libusb_device *device,
 			libusb_release_interface(dev, iface);
 		}
 		serial = url_encode(buf);
+
+		if (config)
+			libusb_free_config_descriptor(config);
 	}
 
 	if (!serial || !strlen(serial)) {  /* Last-ditch */
@@ -731,7 +734,7 @@ int main (int argc, char **argv)
 	struct libusb_context *ctx = NULL;
 	struct libusb_device **list = NULL;
 	struct libusb_device_handle *dev;
-	struct libusb_config_descriptor *config;
+	struct libusb_config_descriptor *config = NULL;
 
 	struct dyesub_backend *backend = NULL;
 	void * backend_ctx = NULL;
@@ -922,6 +925,9 @@ int main (int argc, char **argv)
 				endp_down = config->interface[0].altsetting[0].endpoint[i].bEndpointAddress;				
 		}
 	}
+
+	if (config)
+		libusb_free_config_descriptor(config);
 
 	/* Initialize backend */
 	DEBUG("Initializing '%s' backend (version %s)\n",
