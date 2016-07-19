@@ -89,7 +89,9 @@ struct dnpds40_ctx {
 	int cutter;
 	int can_rewind;
 
+	int mediaoffset;
 	int manual_copies;
+	int correct_count;
 	int supports_6x9;
 	int supports_2x6;
 	int supports_3x5x2;
@@ -105,6 +107,7 @@ struct dnpds40_ctx {
 	int supports_5x5;
 	int supports_counterp;
 	int supports_adv_fullcut;
+	int supports_mediaoffset;
 
 	uint8_t *databuf;
 	int datalen;
@@ -612,6 +615,7 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
 		}
 		break;
 	case P_DNP_DS620:
+		ctx->correct_count = 1;
 		ctx->supports_counterp = 1;
 		ctx->supports_matte = 1;
 		ctx->supports_2x6 = 1;
@@ -651,6 +655,23 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
 		}
 	}
 #endif
+
+	if (ctx->supports_mediaoffset) {
+		/* Get Media Offset */
+		struct dnpds40_cmd cmd;
+		uint8_t *resp;
+		int len = 0;
+
+		dnpds40_build_cmd(&cmd, "INFO", "MEDIA_OFFSET", 0);
+		resp = dnpds40_resp_cmd(ctx, &cmd, &len);
+		if (resp) {
+			ctx->mediaoffset = atoi((char*)resp+4);
+			free(resp);
+		}
+	} else if (!ctx->correct_count) {
+		ctx->mediaoffset = 50;
+	}
+
 }
 
 static void dnpds40_teardown(void *vctx) {
@@ -1082,7 +1103,7 @@ static int dnpds40_main_loop(void *vctx, int copies) {
 	struct dnpds40_ctx *ctx = vctx;
 	int ret;
 	struct dnpds40_cmd cmd;
-	uint8_t *resp = NULL;
+	uint8_t *resp;
 	int len = 0;
 	uint8_t *ptr;
 	char buf[9];
@@ -1102,12 +1123,12 @@ top:
 
 	/* Query status */
 	dnpds40_build_cmd(&cmd, "STATUS", "", 0);
-	if (resp) free(resp);
 	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
 	if (!resp)
 		return CUPS_BACKEND_FAILED;
 	dnpds40_cleanup_string((char*)resp, len);
 	status = atoi((char*)resp);
+	free(resp);
 
 	/* Figure out what's going on */
 	switch(status) {
@@ -1116,7 +1137,6 @@ top:
 	{
 		int bufs;
 
-		if (resp) free(resp);
 		/* Query buffer state */
 		dnpds40_build_cmd(&cmd, "INFO", "FREE_PBUFFER", 0);
 		resp = dnpds40_resp_cmd(ctx, &cmd, &len);
@@ -1127,6 +1147,7 @@ top:
 		dnpds40_cleanup_string((char*)resp, len);
 		/* Check to see if we have sufficient buffers */
 		bufs = atoi(((char*)resp)+3);
+		free(resp);
 		if (bufs < buf_needed) {
 			INFO("Insufficient printer buffers (%d vs %d), retrying...\n", bufs, buf_needed);
 			sleep(1);
@@ -1165,7 +1186,7 @@ top:
 
 	/* Verify we have sufficient media for prints */
 	{
-		int i = 0;
+		int count = 0;
 
 		/* See if we can rewind to save media */
 		if (ctx->can_rewind && ctx->supports_rewind) {
@@ -1175,42 +1196,40 @@ top:
 			/* Get Media remaining */
 			dnpds40_build_cmd(&cmd, "INFO", "RQTY", 0);
 
-			if (resp) free(resp);
 			resp = dnpds40_resp_cmd(ctx, &cmd, &len);
 			if (!resp)
 				return CUPS_BACKEND_FAILED;
 
 			dnpds40_cleanup_string((char*)resp, len);
-			i = atoi((char*)resp+4);
+			count = atoi((char*)resp+4);
+			free(resp);
 		}
 
 		/* If we didn't succeed with RQTY, try MQTY */
-		if (i == 0) {
+		if (count == 0) {
 			dnpds40_build_cmd(&cmd, "INFO", "MQTY", 0);
 
-			if (resp) free(resp);
 			resp = dnpds40_resp_cmd(ctx, &cmd, &len);
 			if (!resp)
 				return CUPS_BACKEND_FAILED;
 
 			dnpds40_cleanup_string((char*)resp, len);
 
-			i = atoi((char*)resp+4);
+			count = atoi((char*)resp+4);
+			free(resp);
 
-			/* For some reason all but the DS620 report 50 too high */
-			if (ctx->type != P_DNP_DS620 && i > 0)
-				i -= 50;
+			count -= ctx->mediaoffset;
 		}
 
 #if 0 // disabled this to allow error to be reported on the printer panel
-		if (i < 1) {
+		if (count < 1) {
 			ERROR("Printer out of media, please correct!\n");
 			return CUPS_BACKEND_STOP;
 		}
 #endif
 
-		if (i < copies) {
-			WARNING("Printer does not have sufficient remaining media (%d) to complete job (%d)\n", copies, i);
+		if (count < copies) {
+			WARNING("Printer does not have sufficient remaining media (%d) to complete job (%d)\n", copies, count);
 		}
 	}
 
@@ -1285,12 +1304,12 @@ top:
 		while (1) {
 			/* Query status */
 			dnpds40_build_cmd(&cmd, "STATUS", "", 0);
-			if (resp) free(resp);
 			resp = dnpds40_resp_cmd(ctx, &cmd, &len);
 			if (!resp)
 				return CUPS_BACKEND_FAILED;
 			dnpds40_cleanup_string((char*)resp, len);
 			status = atoi((char*)resp);
+			free(resp);
 
 			/* If we're idle or there's an error..*/
 			if (status == 0)
@@ -1631,6 +1650,7 @@ static int dnpds40_get_status(struct dnpds40_ctx *ctx)
 	struct dnpds40_cmd cmd;
 	uint8_t *resp;
 	int len = 0;
+	int count;
 
 	/* Generate command */
 	dnpds40_build_cmd(&cmd, "STATUS", "", 0);
@@ -1642,7 +1662,7 @@ static int dnpds40_get_status(struct dnpds40_ctx *ctx)
 	dnpds40_cleanup_string((char*)resp, len);
 	len = atoi((char*)resp);
 
-	INFO("Printer Status: %s\n", dnpds40_statuses(len));
+	INFO("Printer Status: %s (%d)\n", dnpds40_statuses(len), len);
 
 	free(resp);
 
@@ -1705,11 +1725,11 @@ static int dnpds40_get_status(struct dnpds40_ctx *ctx)
 
 		dnpds40_cleanup_string((char*)resp, len);
 
-		len = atoi((char*)resp+4);
-
-		INFO("Native Prints Available on New Media: %d\n", len);
-
+		count = atoi((char*)resp+4);
 		free(resp);
+
+		count -= ctx->mediaoffset;
+		INFO("Native Prints Available on New Media: %d\n", count);
 	}
 
 	/* Get Media remaining */
@@ -1721,13 +1741,11 @@ static int dnpds40_get_status(struct dnpds40_ctx *ctx)
 
 	dnpds40_cleanup_string((char*)resp, len);
 
-	len = atoi((char*)resp+4);
-	if (ctx->type != P_DNP_DS620 && len > 0)
-		len -= 50;
-
+	count = atoi((char*)resp+4);
 	free(resp);
 
-	INFO("Native Prints Remaining on Media: %d\n", len);
+	count -= ctx->mediaoffset;
+	INFO("Native Prints Remaining on Media: %d\n", count);
 
 	if (ctx->supports_rewind) {
 		/* Get Media remaining */
@@ -2102,7 +2120,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS40/DS80/DSRX1/DS620",
-	.version = "0.82",
+	.version = "0.83",
 	.uri_prefix = "dnpds40",
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
