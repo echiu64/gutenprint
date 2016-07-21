@@ -621,7 +621,10 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
 		ctx->supports_2x6 = 1;
 		ctx->supports_fullcut = 1;
 		ctx->supports_mqty_default = 1;
-		ctx->supports_rewind = 1;
+		if (strchr(ctx->version, 'A'))
+			ctx->supports_rewind = 0;
+		else
+			ctx->supports_rewind = 1;
 		ctx->supports_standby = 1;
 		ctx->supports_iserial = 1;
 		ctx->supports_6x6 = 1;
@@ -1757,10 +1760,12 @@ static int dnpds40_get_status(struct dnpds40_ctx *ctx)
 
 		dnpds40_cleanup_string((char*)resp, len);
 
-		len = atoi((char*)resp+4);
-		INFO("Half-Size Prints Remaining on Media: %d\n", len);
+		count = atoi((char*)resp+4);
 		free(resp);
+	} else {
+		// Do nothing, re-use native print count.
 	}
+	INFO("Half-Size Prints Remaining on Media: %d\n", count);
 
 	return 0;
 }
@@ -2120,7 +2125,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS40/DS80/DSRX1/DS620",
-	.version = "0.83",
+	.version = "0.84",
 	.uri_prefix = "dnpds40",
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
