@@ -368,6 +368,7 @@ stpui_printer_initialize(stpui_plist_t *printer)
   stp_set_errdata(printer->v, stderr);
   stpui_plist_set_copy_count(printer, 1);
   stp_set_string_parameter(printer->v, "InputImageType", image_type);
+  stp_set_string_parameter(printer->v, "JobMode", "Page");  
   if (image_raw_channels)
     {
       (void) sprintf(tmp, "%d", image_raw_channels);
