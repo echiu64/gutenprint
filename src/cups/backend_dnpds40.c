@@ -1240,14 +1240,13 @@ top:
 	ctx->last_multicut = ctx->multicut;
 
 	/* Tell printer how many copies to make */
-	if (!ctx->manual_copies && copies > 1) {
-		snprintf(buf, sizeof(buf), "%07d\r", copies);
-		dnpds40_build_cmd(&cmd, "CNTRL", "QTY", 8);
-		if ((ret = dnpds40_do_cmd(ctx, &cmd, (uint8_t*)buf, 8)))
-			return CUPS_BACKEND_FAILED;
+	snprintf(buf, sizeof(buf), "%07d\r", ctx->manual_copies ? 1 : copies);
+	dnpds40_build_cmd(&cmd, "CNTRL", "QTY", 8);
+	if ((ret = dnpds40_do_cmd(ctx, &cmd, (uint8_t*)buf, 8)))
+		return CUPS_BACKEND_FAILED;
 
+	if (!ctx->manual_copies)
 		copies = 1;
-	}
 
 	/* Enable job resumption on correctable errors */
 	if (ctx->supports_matte) {
@@ -2125,7 +2124,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS40/DS80/DSRX1/DS620",
-	.version = "0.84",
+	.version = "0.85",
 	.uri_prefix = "dnpds40",
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
