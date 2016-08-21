@@ -27,7 +27,7 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.65G"
+#define BACKEND_VERSION "0.66G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
@@ -996,6 +996,9 @@ newpage:
 	if (ret)
 		goto done_claimed;
 
+	/* Log the completed page */
+	PAGE("%d %d\n", current_page, copies);
+
 	/* Since we have no way of telling if there's more data remaining
 	   to be read (without actually trying to read it), always assume
 	   multiple print jobs. */
@@ -1004,8 +1007,8 @@ newpage:
 done_multiple:
 	close(data_fd);
 
-	/* Done printing */
-	INFO("All printing done (%d pages * %d copies)\n", current_page, copies);
+	/* Done printing, log the total number of pages */
+	PAGE("total %d\n", current_page * copies);
 	ret = CUPS_BACKEND_OK;
 
 done_claimed:
