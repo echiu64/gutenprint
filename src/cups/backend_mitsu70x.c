@@ -62,14 +62,19 @@ struct mitsu70x_ctx {
 
 	int matte;
 
-	uint16_t jobid;	
+	uint16_t jobid;
 	uint16_t rows;
 	uint16_t cols;
+
+	uint16_t last_donor_l;
+	uint16_t last_donor_u;
+	int num_decks;
+
 #ifdef ENABLE_CORRTABLES
 	struct mitsu70x_corrdata *corrdata;
 	struct mitsu70x_corrdatalens *corrdatalens;
 	char *laminatefname;
-#endif	
+#endif
 };
 
 /* Printer data structures */
@@ -197,7 +202,7 @@ struct mitsu70x_status_deck {
 	uint8_t  temperature;
 	uint8_t  error_status[3];
 	uint8_t  rsvd_a[10];
-	
+
 	uint8_t  media_brand;
 	uint8_t  media_type;
 	uint8_t  rsvd_b[2];
@@ -245,7 +250,7 @@ struct mitsu70x_hdr {
 	uint8_t  speed;
 	uint8_t  zero1[7];
 
-	uint8_t  deck;
+	uint8_t  deck; /* 0 = default, 1 = lower, 2 = upper */
 	uint8_t  zero2[7];
 	uint8_t  laminate; /* 00 == on, 01 == off */
 	uint8_t  laminate_mode;
@@ -548,6 +553,20 @@ static char *mitsu70x_errors(uint8_t *err)
 	return "Unknown error";
 }
 
+static const char *mitsu70x_media_types(uint8_t brand, uint8_t type)
+{
+	if (brand == 0xff && type == 0x02)
+		return "CKD746 (4x6)";
+	else if (brand == 0xff && type == 0x0f)
+		return "CKD768 (6x8)";
+	else if (brand == 0x61 && type == 0x8f)
+		return "CKK76R (6x8)";
+	else if (brand == 0x6c && type == 0x8f)
+		return "CKK76R (6x8)";
+	else
+		return "Unknown";
+}
+
 #define CMDBUF_LEN 512
 #define READBACK_LEN 256
 
@@ -583,7 +602,8 @@ static void mitsu70x_attach(void *vctx, struct libusb_device_handle *dev,
 
 	ctx->type = lookup_printer_type(&mitsu70x_backend,
 					desc.idVendor, desc.idProduct);
-}
+
+	ctx->last_donor_l = ctx->last_donor_u = 65535;}
 
 static void mitsu70x_teardown(void *vctx) {
 	struct mitsu70x_ctx *ctx = vctx;
@@ -639,7 +659,7 @@ repeat:
 		return CUPS_BACKEND_CANCEL;
 	}
 
-#ifdef ENABLE_CORRTABLES	
+#ifdef ENABLE_CORRTABLES
 	/* Figure out the correction data table to use */
 	if (ctx->type == P_MITSU_D70X) {
 		struct mitsu70x_hdr *print = (struct mitsu70x_hdr *) &hdr[512];
@@ -774,7 +794,7 @@ static int mitsu70x_get_jobstatus(struct mitsu70x_ctx *ctx, struct mitsu70x_jobs
 		ERROR("Short Read! (%d/%d)\n", num, (int)sizeof(*resp));
 		return 4;
 	}
-	
+
 	return 0;
 }
 
@@ -807,7 +827,7 @@ static int mitsu70x_get_jobs(struct mitsu70x_ctx *ctx, struct mitsu70x_jobs *res
 		ERROR("Short Read! (%d/%d)\n", num, (int)sizeof(*resp));
 		return 4;
 	}
-	
+
 	return 0;
 }
 
@@ -928,19 +948,18 @@ static int mitsu70x_set_sleeptime(struct mitsu70x_ctx *ctx, uint8_t time)
 static int mitsu70x_main_loop(void *vctx, int copies) {
 	struct mitsu70x_ctx *ctx = vctx;
 	struct mitsu70x_jobstatus jobstatus;
+	struct mitsu70x_printerstatus_resp resp;
 	struct mitsu70x_jobs jobs;
-	struct mitsu70x_hdr *hdr = (struct mitsu70x_hdr*) (ctx->databuf + sizeof(struct mitsu70x_hdr));
-	
+	struct mitsu70x_hdr *hdr;
+
 	int ret;
 
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
 
-	INFO("Waiting for printer idle...\n");
+	hdr = (struct mitsu70x_hdr*) (ctx->databuf + sizeof(struct mitsu70x_hdr));
 
-	ret = mitsu70x_get_jobs(ctx, &jobs);
-	if (ret)
-		return CUPS_BACKEND_FAILED;
+	INFO("Waiting for printer idle...\n");
 
 top:
 	/* Query job status for jobid 0 (global) */
@@ -973,7 +992,7 @@ top:
 		sleep(1);
 		goto top;
 	}
-	
+
 	/* See if we hit a printer error. */
 	if (jobstatus.error_status[0]) {
 		ERROR("%s/%s -> %s:  %02x/%02x/%02x\n",
@@ -986,11 +1005,43 @@ top:
 		return CUPS_BACKEND_STOP;
 	}
 
+	if (ctx->num_decks)
+		goto skip_status;
+
+	/* Tell CUPS about the consumables we report */
+	ret = mitsu70x_get_printerstatus(ctx, &resp);
+	if (ret)
+		return CUPS_BACKEND_FAILED;
+
+	if (resp.upper.mecha_status[0] != MECHA_STATUS_INIT)
+		ctx->num_decks = 2;
+	else
+		ctx->num_decks = 1;
+
+	if (ctx->type == P_MITSU_D70X &&
+	    ctx->num_decks == 2) {
+		ATTR("marker-colors=#00FFFF#FF00FF#FFFF00,#00FFFF#FF00FF#FFFF00\n");
+		ATTR("marker-high-levels=100,100\n");
+		ATTR("marker-low-levels=10,10\n");
+		ATTR("marker-names='\"%s\"','\"%s\"'\n",
+		     mitsu70x_media_types(resp.lower.media_brand, resp.lower.media_type),
+		     mitsu70x_media_types(resp.upper.media_brand, resp.upper.media_type));
+		ATTR("marker-types=ribbonWax,ribbonWax\n");
+	} else {
+		ATTR("marker-colors=#00FFFF#FF00FF#FFFF00\n");
+		ATTR("marker-high-levels=100\n");
+		ATTR("marker-low-levels=10\n");
+		ATTR("marker-names='%s'\n",
+		     mitsu70x_media_types(resp.lower.media_brand, resp.lower.media_type));
+		ATTR("marker-types=ribbonWax\n");
+	}
+
+skip_status:
 	/* Perform memory status query */
 	{
 		struct mitsu70x_memorystatus_resp memory;
 		INFO("Checking Memory availability\n");
-		
+
 		ret = mitsu70x_get_memorystatus(ctx, &memory);
 		if (ret)
 			return CUPS_BACKEND_FAILED;
@@ -1008,6 +1059,10 @@ top:
 	}
 
 	/* Make sure we don't have any jobid collisions */
+	ret = mitsu70x_get_jobs(ctx, &jobs);
+	if (ret)
+		return CUPS_BACKEND_FAILED;
+
 	while (ctx->jobid == be16_to_cpu(jobs.jobid_0) ||
 	       ctx->jobid == be16_to_cpu(jobs.jobid_1)) {
 		ctx->jobid++;
@@ -1021,7 +1076,7 @@ top:
 	/* Set deck */
 	if (ctx->type == P_MITSU_D70X) {
 		hdr->deck = 0;  /* D70 use automatic deck selection */
-		// XXX alternatively route it based on state and media? */
+		/* XXX alternatively route it based on state and media? */
 	} else {
 		hdr->deck = 1;  /* All others only have a "lower" deck. */
 	}
@@ -1045,7 +1100,7 @@ top:
 #endif
 
 	/* We're clear to send data over! */
-	INFO("Sending Print Job (internal id %d)\n", ctx->jobid);
+	INFO("Sending Print Job (internal id %u)\n", ctx->jobid);
 
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
 			     ctx->databuf,
@@ -1074,11 +1129,37 @@ top:
 	INFO("Waiting for printer to acknowledge completion\n");
 
 	do {
+		uint16_t donor_u, donor_l;
+
+		sleep(1);
+
+		ret = mitsu70x_get_printerstatus(ctx, &resp);
+		if (ret)
+			return CUPS_BACKEND_FAILED;
+
+		donor_l = be16_to_cpu(resp.lower.remain) * 100 / be16_to_cpu(resp.lower.capacity);
+
+		if (ctx->type == P_MITSU_D70X &&
+		    ctx->num_decks == 2) {
+			donor_u = be16_to_cpu(resp.upper.remain) * 100 / be16_to_cpu(resp.upper.capacity);
+			if (donor_l != ctx->last_donor_l ||
+			    donor_u != ctx->last_donor_u) {
+				ctx->last_donor_l = donor_l;
+				ctx->last_donor_u = donor_u;
+				ATTR("marker-levels=%d,%d\n", donor_l, donor_u);
+			}
+		} else {
+			if (donor_l != ctx->last_donor_l) {
+				ctx->last_donor_l = donor_l;
+				ATTR("marker-levels=%d\n", donor_l);
+			}
+		}
+
 		/* Query job status for our used jobid */
 		ret = mitsu70x_get_jobstatus(ctx, &jobstatus, ctx->jobid);
 		if (ret)
 			return CUPS_BACKEND_FAILED;
-		
+
 		/* See if we hit a printer error. */
 		if (jobstatus.error_status[0]) {
 			ERROR("%s/%s -> %s:  %02x/%02x/%02x\n",
@@ -1150,51 +1231,40 @@ static void mitsu70x_dump_printerstatus(struct mitsu70x_printerstatus_resp *resp
 			continue;
 		memcpy(buf, resp->vers[i].ver, 6);
 		buf[6] = 0;
-		INFO("Component #%d ID: %s (checksum %04x)\n",
+		INFO("Component #%u ID: %s (checksum %04x)\n",
 		     i, buf, be16_to_cpu(resp->vers[i].checksum));
-	}	
-	if (resp->upper.mecha_status[0] == MECHA_STATUS_INIT) {  /* IOW, Not present */
-		INFO("Mechanical Status: %s\n",
-		     mitsu70x_mechastatus(resp->lower.mecha_status));
-		if (resp->lower.error_status[0]) {
-			INFO("Error Status: %s/%s -> %s\n",
-			     mitsu70x_errorclass(resp->lower.error_status),
-			     mitsu70x_errors(resp->lower.error_status),
-			     mitsu70x_errorrecovery(resp->lower.error_status));
-		}
-		INFO("Media type:  %02x/%02x\n",
-		     resp->lower.media_brand,
-		     resp->lower.media_type);
-		INFO("Prints remaining:  %03d/%03d\n",
-		     be16_to_cpu(resp->lower.remain),
-		     be16_to_cpu(resp->lower.capacity));
-	} else {
-		INFO("Mechanical Status: Upper: %s\n"
-		     "                   Lower: %s\n",
-		     mitsu70x_mechastatus(resp->upper.mecha_status),
-		     mitsu70x_mechastatus(resp->lower.mecha_status));
+	}
+
+	INFO("Lower Mechanical Status: %s\n",
+	     mitsu70x_mechastatus(resp->lower.mecha_status));
+	if (resp->lower.error_status[0]) {
+		INFO("Lower Error Status: %s/%s -> %s\n",
+		     mitsu70x_errorclass(resp->lower.error_status),
+		     mitsu70x_errors(resp->lower.error_status),
+		     mitsu70x_errorrecovery(resp->lower.error_status));
+	}
+	INFO("Lower Media type:  %s (%02x/%02x)\n",
+	     mitsu70x_media_types(resp->lower.media_brand, resp->lower.media_type),
+	     resp->lower.media_brand,
+	     resp->lower.media_type);
+	INFO("Lower Prints remaining:  %03d/%03d\n",
+	     be16_to_cpu(resp->lower.remain),
+	     be16_to_cpu(resp->lower.capacity));
+
+	if (resp->upper.mecha_status[0] != MECHA_STATUS_INIT) {
+		INFO("Upper Mechanical Status: %s\n",
+		     mitsu70x_mechastatus(resp->upper.mecha_status));
 		if (resp->upper.error_status[0]) {
 			INFO("Upper Error Status: %s/%s -> %s\n",
 			     mitsu70x_errorclass(resp->upper.error_status),
 			     mitsu70x_errors(resp->upper.error_status),
 			     mitsu70x_errorrecovery(resp->upper.error_status));
-		}		
-		if (resp->lower.error_status[0]) {
-			INFO("Lower Error Status: %s/%s -> %s\n",
-			     mitsu70x_errorclass(resp->lower.error_status),
-			     mitsu70x_errors(resp->lower.error_status),
-			     mitsu70x_errorrecovery(resp->lower.error_status));
-		}		
-		INFO("Media type:  Lower: %02x/%02x\n"
-		     "             Upper: %02x/%02x\n",
-		     resp->lower.media_brand,
-		     resp->lower.media_type,
+		}
+		INFO("Upper Media type:  %s (%02x/%02x)\n",
+		     mitsu70x_media_types(resp->upper.media_brand, resp->upper.media_type),
 		     resp->upper.media_brand,
 		     resp->upper.media_type);
-		INFO("Prints remaining:  Lower: %03d/%03d\n"
-		     "                   Upper: %03d/%03d\n",
-		     be16_to_cpu(resp->lower.remain),
-		     be16_to_cpu(resp->lower.capacity),
+		INFO("Upper Prints remaining:  %03d/%03d\n",
 		     be16_to_cpu(resp->upper.remain),
 		     be16_to_cpu(resp->upper.capacity));
 	}
@@ -1213,13 +1283,13 @@ static int mitsu70x_query_status(struct mitsu70x_ctx *ctx)
 
 	ret = mitsu70x_get_jobs(ctx, &jobs);
 	if (!ret) {
-		INFO("JOB0 ID     : %06d\n", jobs.jobid_0);
+		INFO("JOB0 ID     : %06u\n", jobs.jobid_0);
 		INFO("JOB0 status : %s\n", mitsu70x_jobstatuses(jobs.job0_status));
-		INFO("JOB1 ID     : %06d\n", jobs.jobid_1);
+		INFO("JOB1 ID     : %06u\n", jobs.jobid_1);
 		INFO("JOB1 status : %s\n", mitsu70x_jobstatuses(jobs.job1_status));
 		// XXX are there more?
 	}
-	
+
 	return ret;
 }
 
@@ -1238,12 +1308,12 @@ static int mitsu70x_query_serno(struct libusb_device_handle *dev, uint8_t endp_u
 
 	if (buf_len > 6)  /* Will we ever have a buffer under 6 bytes? */
 		buf_len = 6;
-		
+
 	for (i = 0 ; i < buf_len ; i++) {
 		*buf++ = le16_to_cpu(resp.serno[i]) & 0x7f;
 	}
 	*buf = 0; /* Null-terminate the returned string */
-	
+
 	return ret;
 }
 
@@ -1289,7 +1359,7 @@ static int mitsu70x_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend mitsu70x_backend = {
 	.name = "Mitsubishi CP-D70/D707/K60/D80",
-	.version = "0.39WIP",
+	.version = "0.40WIP",
 	.uri_prefix = "mitsu70x",
 	.cmdline_usage = mitsu70x_cmdline,
 	.cmdline_arg = mitsu70x_cmdline_arg,

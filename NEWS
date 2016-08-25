@@ -297,7 +297,21 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	  and re-implemented, these models are unsuitable for general
 	  use due to very poor output quality.
 
-  3) Added support for the following Epson inkjet printers:
+  3) Backend now reports media status via standard CUPS marker attributes
+     for the following printers:
+
+        Canon Selphy CP/ES series  (except CP820, CP910, CP1000, CP1200)
+	DNP DS40/DS80/DS80DX/DS620/DS-RX1
+	Citizen CX/CX-W/CY
+	Kodak 305/605/6800/6850
+	Mitsubishi CP-D70DW/CP-D707DW/CP-K60DW-S/CP-D9550DW
+	Sinfonia CHC-S2145/CHC-S6145/CHC-S6245
+	Ciaat Brava 21
+
+	(All printers supported by the backend report status, excecpt for
+	 the Sinfonia CHC-S1245, Kodak 805, and Kodak 1400)
+
+  4) Added support for the following Epson inkjet printers:
 
 	Epson Stylus XP100 	     	   	  [experimental]
 	Epson SureColor P400 	     	   	  [experimental]

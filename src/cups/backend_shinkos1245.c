@@ -271,8 +271,6 @@ enum {
 	CURVE_TABLE_STATUS_CURRENT = 0x02,
 };
 
-// XXX Paper jam has 0x01 -> 0xff as error codes
-
 /* Query media info */
 struct shinkos1245_cmd_getmedia {
 	struct shinkos1245_cmd_hdr hdr;
@@ -608,6 +606,30 @@ static int shinkos1245_canceljob(struct shinkos1245_ctx *ctx,
 	return 0;
 }
 
+static int shinkos1245_reset(struct shinkos1245_ctx *ctx)
+{
+	struct shinkos1245_cmd_reset cmd;
+	struct shinkos1245_resp_status sts;
+
+	int ret, num;
+
+	shinkos1245_fill_hdr(&cmd.hdr);
+	cmd.cmd[0] = 0xc0;
+
+	ret = shinkos1245_do_cmd(ctx, &cmd, sizeof(cmd),
+				 &sts, sizeof(sts), &num);
+	if (ret < 0) {
+		ERROR("Failed to execute RESET command\n");
+		return ret;
+	}
+	if (sts.code != CMD_CODE_OK) {
+		ERROR("Bad return code on RESET command\n");
+		return -99;
+	}
+	return 0;
+}
+
+
 static int shinkos1245_set_matte(struct shinkos1245_ctx *ctx,
 				 int intensity)
 {
@@ -868,26 +890,26 @@ static void shinkos1245_dump_status(struct shinkos1245_resp_status *sts)
 	     shinkos1245_status_str(sts),
 	     sts->state.status1, sts->state.status2, sts->state.error);
 	INFO("Counters:\n");
-	INFO("\tLifetime     :  %d\n", be32_to_cpu(sts->counters.lifetime));
-	INFO("\tThermal Head :  %d\n", be32_to_cpu(sts->counters.maint));
-	INFO("\tMedia        :  %d\n", be32_to_cpu(sts->counters.media));
-	INFO("\tCutter       :  %d\n", be32_to_cpu(sts->counters.cutter));
+	INFO("\tLifetime     :  %u\n", be32_to_cpu(sts->counters.lifetime));
+	INFO("\tThermal Head :  %u\n", be32_to_cpu(sts->counters.maint));
+	INFO("\tMedia        :  %u\n", be32_to_cpu(sts->counters.media));
+	INFO("\tCutter       :  %u\n", be32_to_cpu(sts->counters.cutter));
 
 	INFO("Versions:\n");
-	INFO("\tUSB Boot    : %d\n", sts->counters.ver_boot);
-	INFO("\tUSB Control : %d\n", sts->counters.ver_ctrl);
-	INFO("\tMain Boot   : %d\n", be16_to_cpu(sts->versions.main_boot));
-	INFO("\tMain Control: %d\n", be16_to_cpu(sts->versions.main_control));
-	INFO("\tDSP Boot    : %d\n", be16_to_cpu(sts->versions.dsp_boot));
-	INFO("\tDSP Control : %d\n", be16_to_cpu(sts->versions.dsp_control));
+	INFO("\tUSB Boot    : %u\n", sts->counters.ver_boot);
+	INFO("\tUSB Control : %u\n", sts->counters.ver_ctrl);
+	INFO("\tMain Boot   : %u\n", be16_to_cpu(sts->versions.main_boot));
+	INFO("\tMain Control: %u\n", be16_to_cpu(sts->versions.main_control));
+	INFO("\tDSP Boot    : %u\n", be16_to_cpu(sts->versions.dsp_boot));
+	INFO("\tDSP Control : %u\n", be16_to_cpu(sts->versions.dsp_control));
 
 //	INFO("USB TypeFlag: %02x\n", sts->counters.control_flag);
 
-	INFO("Bank 1 ID: %d\n", sts->counters2.bank1_id);
+	INFO("Bank 1 ID: %u\n", sts->counters2.bank1_id);
 	INFO("\tPrints:  %d/%d complete\n",
 	     be16_to_cpu(sts->counters2.bank1_complete),
 	     be16_to_cpu(sts->counters2.bank1_spec));
-	INFO("Bank 2 ID: %d\n", sts->counters2.bank2_id);
+	INFO("Bank 2 ID: %u\n", sts->counters2.bank2_id);
 	INFO("\tPrints:  %d/%d complete\n",
 	     be16_to_cpu(sts->counters2.bank2_complete),
 	     be16_to_cpu(sts->counters2.bank2_spec));
@@ -917,7 +939,7 @@ static void shinkos1245_dump_media(struct shinkos1245_mediadesc *medias,
 	INFO("Supported print sizes: %d\n", count);
 
 	for (i = 0 ; i < count ; i++) {
-		INFO("\t %02x: %04d*%04d (%02x/%02d)\n",
+		INFO("\t %02x: %04u*%04u (%02x/%02u)\n",
 		     medias[i].print_type,
 		     medias[i].columns,
 		     medias[i].rows,
@@ -1042,7 +1064,7 @@ static int set_tonecurve(struct shinkos1245_ctx *ctx, int type, int table, char 
 	struct shinkos1245_cmd_tone cmd;
 	struct shinkos1245_resp_status resp;
 
-	INFO("Read %d/%d Tone Curve from '%s'\n", type, table, fname); // XXX
+	INFO("Read %d/%d Tone Curve from '%s'\n", type, table, fname);
 
 	/* Allocate space */
 	remaining = TONE_CURVE_SIZE;
@@ -1152,6 +1174,7 @@ static void shinkos1245_cmdline(void)
 	DEBUG("\t\t[ -s ]           # Query status\n");
 	DEBUG("\t\t[ -u ]           # Query user string\n");
 	DEBUG("\t\t[ -U sometext ]  # Set user string\n");
+	DEBUG("\t\t[ -R ]           # Reset printer\n");
 	DEBUG("\t\t[ -X jobid ]     # Abort a printjob\n");
 	DEBUG("\t\t[ -F ]           # Tone curve refers to FINE mode\n");
 	DEBUG("\t\t[ -c filename ]  # Get user/NV tone curve\n");
@@ -1168,7 +1191,7 @@ int shinkos1245_cmdline_arg(void *vctx, int argc, char **argv)
 	if (!ctx)
 		return -1;
 
-	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "c:C:l:L:FmsuU:X:")) >= 0) {
+	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "c:C:l:L:FmRsuU:X:")) >= 0) {
 		switch(i) {
 		GETOPT_PROCESS_GLOBAL
 		case 'F':
@@ -1190,6 +1213,9 @@ int shinkos1245_cmdline_arg(void *vctx, int argc, char **argv)
 			j = shinkos1245_get_media(ctx);
 			if (!j)
 				shinkos1245_dump_media(ctx->medias, ctx->num_medias);
+			break;
+		case 'R':
+			j = shinkos1245_reset(ctx);
 			break;
 		case 's': {
 			struct shinkos1245_resp_status sts;
@@ -1300,7 +1326,7 @@ static int shinkos1245_read_parse(void *vctx, int data_fd) {
 	ctx->hdr.model = le32_to_cpu(ctx->hdr.model);
 
 	if(ctx->hdr.model != 1245) {
-		ERROR("Unrecognized printer (%d)!\n", ctx->hdr.model);
+		ERROR("Unrecognized printer (%u)!\n", ctx->hdr.model);
 		return CUPS_BACKEND_CANCEL;
 	}
 
@@ -1367,8 +1393,6 @@ static int shinkos1245_main_loop(void *vctx, int copies) {
 	int i, num, last_state = -1, state = S_IDLE;
 	struct shinkos1245_resp_status status1, status2;
 
-	// XXX query printer info
-
 	/* Query Media information if necessary */
 	if (!ctx->num_medias)
 		shinkos1245_get_media(ctx);
@@ -1390,7 +1414,7 @@ static int shinkos1245_main_loop(void *vctx, int copies) {
 	}
 
 	/* Fix max print count. */
-	if (copies > 9999) // XXX test against remaining media
+	if (copies > 9999) // XXX test against remaining media?
 		copies = 9999;
 
 top:
@@ -1406,7 +1430,7 @@ top:
 
 	if (memcmp(&status1, &status2, sizeof(status1))) {
 		memcpy(&status2, &status1, sizeof(status1));
-		// status changed, check for errors and whatnot
+		// status changed.
 	} else if (state == last_state) {
 		sleep(1);
 		goto top;
@@ -1422,8 +1446,6 @@ top:
 
 	switch (state) {
 	case S_IDLE:
-		INFO("Waiting for printer idle\n");
-
 		if (status1.state.status1 == STATE_STATUS1_STANDBY) {
 			state = S_PRINTER_READY_CMD;
 			break;
@@ -1433,10 +1455,13 @@ top:
 			state = S_PRINTER_READY_CMD;
 			break;
 		}
-
-		// XXX what about STATUS_WAIT ?
-		// XXX see if printer has an empty bank?
-
+#if 0 // XXX is this necessary
+		if (status1.state.status1 == STATE_STATUS1_WAIT) {
+			INFO("Printer busy: %s\n",
+			     shinkos1245_status_str(&status1));
+			break;
+		}
+#endif
 		/* If the printer is "busy" check to see if there's any
 		   open memory banks so we can queue the next print */
 
@@ -1478,7 +1503,7 @@ top:
 			}
 		}
 
-		INFO("Sending print job (internal id %d)\n", ctx->jobid);
+		INFO("Sending print job (internal id %u)\n", ctx->jobid);
 
 		shinkos1245_fill_hdr(&cmd.hdr);
 		cmd.cmd[0] = 0x0a;
@@ -1595,7 +1620,7 @@ static int shinkos1245_query_serno(struct libusb_device_handle *dev, uint8_t end
 
 struct dyesub_backend shinkos1245_backend = {
 	.name = "Shinko/Sinfonia CHC-S1245",
-	.version = "0.08WIP",
+	.version = "0.09WIP",
 	.uri_prefix = "shinkos1245",
 	.cmdline_usage = shinkos1245_cmdline,
 	.cmdline_arg = shinkos1245_cmdline_arg,
