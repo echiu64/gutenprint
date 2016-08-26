@@ -297,6 +297,27 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	  and re-implemented, these models are unsuitable for general
 	  use due to very poor output quality.
 
+  3) Added support for the following Epson inkjet printers:
+
+	Epson Stylus XP100 	     	   	  [experimental]
+	Epson SureColor P400 	     	   	  [experimental]
+	Epson SureColor P600 	     	   	  [experimental]
+	Epson SureColor P800 	     	   	  [experimental]
+	Epson SureColor P6000 	     	   	  [experimental]
+	Epson SureColor P7000 	     	   	  [experimental]
+	Epson SureColor P7000 Commercial Edition  [experimental] [*1]
+	Epson SureColor P8000 	     	   	  [experimental]
+	Epson SureColor P9000 Commercial Edition  [experimental] [*1]
+	Epson SureColor P10000 	     	   	  [experimental] [*2]
+	Epson SureColor P20000 	     	   	  [experimental] [*2]
+
+     [*1] Violet ink is not supported in the Epson SureColor P7000 and
+     	  P9000 Commercial Editions.
+
+     [*2] Only three levels of gray are supported in the Epson
+     	  SureColor P10000 and P20000.
+
+
 * Changes from 5.2.10
 
   1) Added support for the following dye sublimation printers:

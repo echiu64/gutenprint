@@ -48,8 +48,8 @@ main(int argc, char **argv)
 		 driver, driver);
 	  printf("if (defined($mapfoo{'%s'})) { print STDERR \"\\n*** Duplicate foomatic ID %s\"; $errors++; } ",
 		 foomatic_id, foomatic_id);
-	  printf("$printer_name{'%s'} = '%s';", driver, long_name);
-	  printf("$printer_make{'%s'} = '%s';", driver, manufacturer);
+	  printf("$printer_name{'%s'} = \"%s\";", driver, long_name);
+	  printf("$printer_make{'%s'} = \"%s\";", driver, manufacturer);
 	  printf("$printer_family{'%s'} = '%s';", driver, family);
 	  printf("$foomap{'%s'} = '%s';", driver, foomatic_id);
 	  printf("$mapfoo{'%s'} = '%s';", foomatic_id, driver);
