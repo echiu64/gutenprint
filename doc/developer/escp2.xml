@@ -115,16 +115,18 @@
       </varlistentry>
       <varlistentry>
         <term><literal>ESC (i <varname>BC</varname>=1
-            <varname>MICROWEAVE1</varname></literal></term>
+            <varname>INTERLEAVE1</varname></literal></term>
         <listitem>
           <para>
-            If <varname>MICROWEAVE</varname> is
-            <constant>1</constant>, use microweave mode.  On older
-            printers, this is used to turn on microweave; on newer
+            If <varname>INTERLEAVE</varname> is
+            <constant>1</constant>, use printer interleave mode
+            (referred to by Epson as "MicroWeave".  On older printers,
+            this is used to turn on printer interleave; on newer
             printers, it prints one row at a time.  All printers
             support this mode.  It should only be used at 720 (or
             1440&times;720) DPI.  The Epson Stylus Pro series
-            indicates additional modes:
+            indicates additional modes (with additional optionss on
+            newer ones):
           </para>
           <variablelist>
             <varlistentry>
@@ -452,8 +454,8 @@
           </para>
           <para>
             <varname>LINES</varname> is the number of lines to be
-            printed.  It should be <constant>1</constant> in
-            microweave and 360 DPI.  At 720 DPI softweave, it should
+            printed.  It should be <constant>1</constant> in printer
+            interleave and 360 DPI.  At 720 DPI softweave, it should
             be the number of lines to be actually printed.
           </para>
           <para>
