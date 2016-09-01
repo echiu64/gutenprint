@@ -2827,8 +2827,8 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
     /* Laminate a slightly larger boundary in Matte mode */
     stp_put16_be(privdata.w_size, v);
     stp_put16_be(privdata.h_size + 12, v);
-    if (model == 0x02) {
-      stp_putc(0x04, v); /* Matte Lamination forces UltraFine on K60 */
+    if (model == 0x02 || model == 0x90) {
+      stp_putc(0x04, v); /* Matte Lamination forces UltraFine on K60 or K305 */
     } else {
       stp_putc(0x03, v); /* Matte Lamination forces Superfine (or UltraFine) */
     }
