@@ -27,7 +27,7 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.66G"
+#define BACKEND_VERSION "0.67G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
@@ -478,6 +478,8 @@ static int print_scan_output(struct libusb_device *device,
 					else
 						endp_down = config->interface[0].altsetting[0].endpoint[i].bEndpointAddress;				
 				}
+				if (endp_up && endp_down)
+					break;
 			}
 
 			buf[0] = 0;
@@ -924,6 +926,8 @@ int main (int argc, char **argv)
 			else
 				endp_down = config->interface[0].altsetting[0].endpoint[i].bEndpointAddress;				
 		}
+		if (endp_up && endp_down)
+			break;		
 	}
 
 	if (config)
