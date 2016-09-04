@@ -50,11 +50,15 @@ install-data-local: NEWS AUTHORS COPYING README
 	$(INSTALL_DATA) $(srcdir)/README $(DESTDIR)$(docdir)
 
 # git log is local, so it's fast enough that we don't need to
-# engage in any subterfuge like we did with CVS.
+# engage in any subterfuge like we did with CVS.  It's really fast
+# when we use a static file from the pre-Git era (since there are no
+# live branches from that time) to save a lot of diffs.
 
 ChangeLog:
-	cd scripts; $(MAKE) mkgitlog
-	scripts/mkgitlog -i ChangeLog.pre-5.2.11 -r gutenprint-5_2_11 > ChangeLog
+	if [ -d .git -a -f ChangeLog.pre-5.2.11 ] ; then \
+	  $(MAKE) -C scripts mkgitlog; \
+	  scripts/mkgitlog -i ChangeLog.pre-5.2.11 -r gutenprint-5_2_11 > ChangeLog; \
+	fi
 
 configure.in:
 	$(LN_S) $(srcdir)/configure.ac $(srcdir)/configure.in
@@ -156,10 +160,11 @@ CLEANPO = \
 	po/remove-potcdate.sin \
 	po/Rules-quot
 
-CLEANFILES = .noupdate ChangeLog.tmp
+CLEANFILES = .noupdate
 
 MAINTAINERCLEANFILES = \
 	ABOUT-NLS \
+	ChangeLog \
 	INSTALL \
 	aclocal.m4 \
 	config.h.in \
