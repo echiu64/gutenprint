@@ -54,7 +54,7 @@ install-data-local: NEWS AUTHORS COPYING README
 
 ChangeLog:
 	cd scripts; $(MAKE) mkgitlog
-	scripts/mkgitlog > ChangeLog
+	scripts/mkgitlog -i ChangeLog.pre-5.2.11 -r gutenprint-5_2_11 > ChangeLog
 
 configure.in:
 	$(LN_S) $(srcdir)/configure.ac $(srcdir)/configure.in

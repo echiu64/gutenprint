@@ -1,6 +1,14 @@
 #!@PERL@
 
+use Getopt::Long;
+
 use strict;
+
+my ($base_file);
+my ($base_revision);
+
+GetOptions("i=s" => \$base_file,
+	   "r=s" => \$base_revision);
 
 my ($autline) = "";
 my ($curmsg) = "";
@@ -51,7 +59,11 @@ sub print_it {
     %files = ();
 }
 
-open(GITLOG, "git log --diff-algorithm=default --summary --numstat --date=short --pretty=format:'>>>GIT1%n%cd  <%an>	%H%n>>>GIT2%n%B>>>GIT3%n%D%n>>>GIT4'|") or die "Can't run git log: $!\n";
+if ($base_revision) {
+    $base_revision = "'$base_revision..HEAD'";
+}
+
+open(GITLOG, "git log --diff-algorithm=default --summary --numstat --date=short --pretty=format:'>>>GIT1%n%cd  <%an>	%H%n>>>GIT2%n%B>>>GIT3%n%D%n>>>GIT4' $base_revision|") or die "Can't run git log: $!\n";
 
 while (<GITLOG>) {
     if (/>>>GIT([0-9]+)$/) {
@@ -98,5 +110,12 @@ while (<GITLOG>) {
 }
 
 print_it();
+
+if ($base_file) {
+    open IN, $base_file or die "Can't open baseline file $base_file: $!";
+    while (<IN>) {
+	print;
+    }
+}
 
 exit 0;
