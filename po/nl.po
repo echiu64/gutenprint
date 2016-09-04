@@ -1756,7 +1756,7 @@ msgstr "Deze printer ondersteunt geen 'raw' printuitvoer op de diepte %d\n"
 #: src/main/print-escp2.c:4389 src/main/print-olympus.c:4571
 #: src/main/print-raw.c:237
 msgid "Print options not verified; cannot print.\n"
-msgstr "Print opties niet geverifiëerd; kan niet printen.\n"
+msgstr "Print opties niet geverifiÃ«erd; kan niet printen.\n"
 
 #: src/main/print-lexmark.c:577 src/main/print-lexmark.c:653
 msgid "300 DPI x 600 DPI"
@@ -2590,7 +2590,7 @@ msgstr "Type kromme"
 
 #: src/gutenprintui2/curve.c:129
 msgid "Is this curve linear, spline interpolated, or free-form"
-msgstr "Bij een lineaire kromme, spline geïnterpoleerd of vrije-vorm"
+msgstr "Bij een lineaire kromme, spline geÃ¯nterpoleerd of vrije-vorm"
 
 #: src/gutenprintui2/curve.c:137
 msgid "Minimum X"
@@ -2779,7 +2779,7 @@ msgid ""
 msgstr ""
 "Plaats de afbeelding op de pagina.\n"
 "Klik en sleep met de eerste knop om de afbeelding te plaatsen.\n"
-"Klik en sleep met de tweede knop om de afbeelding met een fijnere nauwkeurigheid te plaatsen; elke eenheid beweging verplaatst deze één punt (1/72\")\n"
+"Klik en sleep met de tweede knop om de afbeelding met een fijnere nauwkeurigheid te plaatsen; elke eenheid beweging verplaatst deze Ã©Ã©n punt (1/72\")\n"
 "Klik en sleep met de derde (middelste) knop om de afbeelding in eenheden van zijn grootte te verplaatsen.\n"
 "Bij het ingedrukt houden van de Shift-toets tijdens klikken en slepen beperkt de beweging tot horizontaal of verticaal.\n"
 "Als u op een andere knop klikt bij het slepen, dan keert de afbeelding terug naar zijn oorspronkelijke plaats."
@@ -2818,11 +2818,11 @@ msgstr "Automatische papierafmetingen"
 
 #: src/gutenprintui2/panel.c:1595
 msgid "Number of Copies"
-msgstr "Aantal kopieën"
+msgstr "Aantal kopieÃ«n"
 
 #: src/gutenprintui2/panel.c:1607
 msgid "Select the number of copies to print; a value between 1 and 100"
-msgstr "Kies het aantal af te drukken kopieën; een waarde tussen 1 en 100"
+msgstr "Kies het aantal af te drukken kopieÃ«n; een waarde tussen 1 en 100"
 
 #: src/gutenprintui2/panel.c:1639
 msgid "Image Position"
@@ -2854,7 +2854,7 @@ msgstr "Kies de orientatie: portret, landschap, ondersteboven of seascape (onder
 
 #: src/gutenprintui2/panel.c:1670
 msgid "Orientation:"
-msgstr "Oriëntatie:"
+msgstr "OriÃ«ntatie:"
 
 #: src/gutenprintui2/panel.c:1681
 msgid "Left:"
@@ -4154,7 +4154,7 @@ msgstr ""
 "tussen de %d en %d.\n"
 "\n"
 "Als u deze paren bekijkt, zult u een paar lijnen vinden die het beste zijn\n"
-"uitgelijnd, hetgeen betekent dat deze lijnen het beste samen één lijn vormen.\n"
+"uitgelijnd, hetgeen betekent dat deze lijnen het beste samen Ã©Ã©n lijn vormen.\n"
 "Bekijk de lijnen zeer zorgvuldig om het beste paar uit te zoeken. Het gebruik\n"
 "van een loupe of vergrootglas is aanbevolen voor de meest kritische\n"
 "inspectie. Het is ook aan te raden om voor deze test een goede kwaliteit papier\n"
