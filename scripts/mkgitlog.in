@@ -22,6 +22,11 @@ sub print_it {
     print "$autline\n";
     my (@files) = sort keys %files;
     if ($#files >= 0) {
+	my ($add) = 0;
+	my ($remove) = 0;
+	map { $add += $addlines{$_} } @files;
+	map { $remove += $removelines{$_} } @files;
+	print "	Lines: +$add, -$remove\n";
 	print "	Files:\n";
 	foreach my $fn (@files) {
 	    print "		$fn (";
