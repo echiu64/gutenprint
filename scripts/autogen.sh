@@ -350,25 +350,52 @@ do
 	  echo 'This file is present only to keep po/Makefile.in.in happy.' >> po/ChangeLog
 	  echo "Running autopoint...  Ignore non-fatal messages."
 	    autopoint --force
+	    if [ $? -ne 0 ] ; then
+		echo 'Autopoint failed!'
+		exit 1
+	    fi
 	  echo "Making $dr/aclocal.m4 writable ..."
 	  test -r $dr/aclocal.m4 && chmod u+w $dr/aclocal.m4
         fi
       fi
       if grep "^AM_PROG_LIBTOOL" configure.ac >/dev/null; then
 	echo "Running libtoolize..."
-	libtoolize --force --copy
+	libtoolize --force --copy || (echo "libtoolize failed!"; exit 1)
+	if [ $? -ne 0 ] ; then
+	    echo 'libtoolize failed!'
+	    exit 1
+	fi
       fi
       echo "Running aclocal $aclocalinclude ..."
       aclocal $aclocalinclude
+      if [ $? -ne 0 ] ; then
+	  echo 'aclocal failed!'
+	  exit 1
+      fi
       if grep "^AM_CONFIG_HEADER" configure.ac >/dev/null; then
 	echo "Running autoheader..."
 	autoheader
+	if [ $? -ne 0 ] ; then
+	    echo 'autoheader failed!'
+	    exit 1
+	fi
       fi
       echo "Running automake --gnu $am_opt ..."
       automake --add-missing --force-missing --copy --gnu $am_opt
+      if [ $? -ne 0 ] ; then
+	  echo 'automake failed!'
+	  exit 1
+      fi
       echo "Running autoconf ..."
       autoconf
+      if [ $? -ne 0 ] ; then
+	  echo 'autoconf failed!'
+	  exit 1
+      fi
     )
+    if [ $? -ne 0 ] ; then
+	exit $?
+    fi
   fi
 done
 
