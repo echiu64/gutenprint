@@ -34,5 +34,5 @@ EXTRA_DIST = \
 ## Clean
 
 MAINTAINERCLEANFILES = \
-	Makefile.in
-
+	Makefile.in \
+	mkgitlog
