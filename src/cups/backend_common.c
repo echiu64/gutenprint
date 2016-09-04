@@ -27,7 +27,7 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.63G"
+#define BACKEND_VERSION "0.67G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
@@ -461,7 +461,7 @@ static int print_scan_output(struct libusb_device *device,
 	} else if (backend->query_serno) { /* Get from backend hook */
 		int iface = 0;
 
-		struct libusb_config_descriptor *config;
+		struct libusb_config_descriptor *config = NULL;
 
 		if (libusb_kernel_driver_active(dev, iface))
 			libusb_detach_kernel_driver(dev, iface);
@@ -478,6 +478,8 @@ static int print_scan_output(struct libusb_device *device,
 					else
 						endp_down = config->interface[0].altsetting[0].endpoint[i].bEndpointAddress;				
 				}
+				if (endp_up && endp_down)
+					break;
 			}
 
 			buf[0] = 0;
@@ -486,6 +488,9 @@ static int print_scan_output(struct libusb_device *device,
 			libusb_release_interface(dev, iface);
 		}
 		serial = url_encode(buf);
+
+		if (config)
+			libusb_free_config_descriptor(config);
 	}
 
 	if (!serial || !strlen(serial)) {  /* Last-ditch */
@@ -692,8 +697,6 @@ void print_help(char *argv0, struct dyesub_backend *backend)
 		DEBUG("Standalone Usage:\n");
 		DEBUG("\t%s\n", URI_PREFIX);
 		DEBUG("  [ -D ] [ -G ] [ -f ]\n");
-		DEBUG("  [ -S serialnum ] \n");
-		DEBUG("  [ -V extra_vid ] [ -P extra_pid ] [ -T extra_type ] \n");
 		DEBUG("  [ backend_specific_args ] \n");
 		DEBUG("  [ -d copies ] \n");
 		DEBUG("  [ - | infile ] \n");
@@ -733,7 +736,7 @@ int main (int argc, char **argv)
 	struct libusb_context *ctx = NULL;
 	struct libusb_device **list = NULL;
 	struct libusb_device_handle *dev;
-	struct libusb_config_descriptor *config;
+	struct libusb_config_descriptor *config = NULL;
 
 	struct dyesub_backend *backend = NULL;
 	void * backend_ctx = NULL;
@@ -923,7 +926,12 @@ int main (int argc, char **argv)
 			else
 				endp_down = config->interface[0].altsetting[0].endpoint[i].bEndpointAddress;				
 		}
+		if (endp_up && endp_down)
+			break;		
 	}
+
+	if (config)
+		libusb_free_config_descriptor(config);
 
 	/* Initialize backend */
 	DEBUG("Initializing '%s' backend (version %s)\n",
@@ -992,6 +1000,9 @@ newpage:
 	if (ret)
 		goto done_claimed;
 
+	/* Log the completed page */
+	PAGE("%d %d\n", current_page, copies);
+
 	/* Since we have no way of telling if there's more data remaining
 	   to be read (without actually trying to read it), always assume
 	   multiple print jobs. */
@@ -1000,8 +1011,8 @@ newpage:
 done_multiple:
 	close(data_fd);
 
-	/* Done printing */
-	INFO("All printing done (%d pages * %d copies)\n", current_page, copies);
+	/* Done printing, log the total number of pages */
+	PAGE("total %d\n", current_page * copies);
 	ret = CUPS_BACKEND_OK;
 
 done_claimed:

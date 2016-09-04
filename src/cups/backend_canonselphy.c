@@ -91,8 +91,21 @@ struct printer_data {
 	int16_t paper_codes[256];
 	int16_t pgcode_offset;  /* Offset into printjob for paper type */
 	int16_t paper_code_offset; /* Offset in readback for paper type */
-	int  (*error_detect)(uint8_t *rdbuf);
+	int   (*error_detect)(uint8_t *rdbuf);
+	char  *(*pgcode_names)(uint8_t pgcode);	
 };
+
+static char *generic_pgcode_names(uint8_t pgcode)
+{
+	switch(pgcode & 0xf) {
+	case 0x01: return "P";
+	case 0x02: return "L";
+	case 0x03: return "C";
+	case 0x04: return "W";
+	case 0x0f: return "None";
+	default: return "Unknown";
+	}
+}
 
 static int es1_error_detect(uint8_t *rdbuf)
 {
@@ -105,9 +118,11 @@ static int es1_error_detect(uint8_t *rdbuf)
 		return 1;
 	} else if (rdbuf[4] == 0x01 && rdbuf[5] == 0xff &&
 		   rdbuf[6] == 0xff && rdbuf[7] == 0xff) {
+		ATTR("marker-levels=%d\n", 0);
 		ERROR("No media loaded!\n");
 		return 1;
 	} else if (rdbuf[0] == 0x0f) {
+		ATTR("marker-levels=%d\n", 0);
 		ERROR("Out of media!\n");
 		return 1;
 	}
@@ -127,11 +142,13 @@ static int es2_error_detect(uint8_t *rdbuf)
 	    rdbuf[4] == 0x05 &&
 	    rdbuf[5] == 0x05 &&
 	    rdbuf[6] == 0x02) {
+		ATTR("marker-levels=%d\n", 0);
 		ERROR("No media loaded!\n");
 		return 1;
 	}
 
 	if (rdbuf[0] == 0x14) {
+		ATTR("marker-levels=%d\n", 0);
 		ERROR("Out of media!\n");
 		return 1;
 	}
@@ -145,6 +162,7 @@ static int es3_error_detect(uint8_t *rdbuf)
 		if (rdbuf[10] == 0x0f) {
 			ERROR("Communications Error\n");
 		} else if (rdbuf[10] == 0x01) {
+			ATTR("marker-levels=%d\n", 0);
 			ERROR("No media loaded!\n");
 		} else {
 			ERROR("Unknown error - %02x + %02x\n", 
@@ -153,6 +171,7 @@ static int es3_error_detect(uint8_t *rdbuf)
 		return 1;
 	} else if (rdbuf[8] == 0x03 &&
 		   rdbuf[10] == 0x02) {
+		ATTR("marker-levels=%d\n", 0);		
 		ERROR("No media loaded!\n");
 		return 1;
 	} else if (rdbuf[8] == 0x08 &&
@@ -182,10 +201,12 @@ static int es40_error_detect(uint8_t *rdbuf)
 	
 	if (rdbuf[3] == 0x01)
 		ERROR("Generic communication error\n");
-	else if (rdbuf[3] == 0x32)
+	else if (rdbuf[3] == 0x32) {
+		ATTR("marker-levels=%d\n", 0);
 		ERROR("Cover open or media empty!\n");
-	else
+	} else
 		ERROR("Unknown error - %02x\n", rdbuf[3]);
+	
 
 	return 1;
 }
@@ -200,15 +221,18 @@ static int cp790_error_detect(uint8_t *rdbuf)
 		ERROR("No paper tray loaded!\n");
 		return 1;
 	} else if (rdbuf[3]) {
-		if ((rdbuf[3] & 0xf) == 0x02)  // 0x12 0x22
+		if ((rdbuf[3] & 0xf) == 0x02) { // 0x12 0x22
+			ATTR("marker-levels=%d\n", 0);
 			ERROR("No paper tray loaded!\n");
-		else if ((rdbuf[3] & 0xf) == 0x03)  // 0x13 0x23
+		} else if ((rdbuf[3] & 0xf) == 0x03) { // 0x13 0x23 
+			ATTR("marker-levels=%d\n", 0);
 			ERROR("Empty paper tray or feed error!\n");
-		else if (rdbuf[3] == 0x11)
+		} else if (rdbuf[3] == 0x11)
 			ERROR("Paper feed error!\n");
-		else if (rdbuf[3] == 0x21)
+		else if (rdbuf[3] == 0x21) {
+			ATTR("marker-levels=%d\n", 0);
 			ERROR("Ribbon depleted!\n");
-		else
+		} else
 			ERROR("Unknown error - %02x\n", rdbuf[3]);
 		return 1;
 	}
@@ -216,19 +240,28 @@ static int cp790_error_detect(uint8_t *rdbuf)
 	return 0;
 }
 
+static char *cp10_pgcode_names(uint8_t pgcode)
+{
+	switch (pgcode) {
+	default: return "C";
+	};
+}
 
 static int cp10_error_detect(uint8_t *rdbuf)
 {
 	if (!rdbuf[2])
 		return 0;
 
-	if (rdbuf[2] == 0x80)
+	if (rdbuf[2] == 0x80) {
+		ATTR("marker-levels=%d\n", 0); 
 		ERROR("No ribbon loaded\n");
-	else if (rdbuf[2] == 0x08)
+	} else if (rdbuf[2] == 0x08) {
+		ATTR("marker-levels=%d\n", 0);
 		ERROR("Ribbon depleted!\n");
-	else if (rdbuf[2] == 0x01)
+	} else if (rdbuf[2] == 0x01) {
+		ATTR("marker-levels=%d\n", 0);
 		ERROR("No paper loaded!\n");
-	else
+	} else
 		ERROR("Unknown error - %02x\n", rdbuf[2]);
 	return 1;
 }
@@ -238,13 +271,15 @@ static int cpxxx_error_detect(uint8_t *rdbuf)
 	if (!rdbuf[2])
 		return 0;
 
-	if (rdbuf[2] == 0x01)
+	if (rdbuf[2] == 0x01) {
+		ATTR("marker-levels=%d\n", 0);		
 		ERROR("Paper feed problem!\n");
-	else if (rdbuf[2] == 0x04)
+	} else if (rdbuf[2] == 0x04)
 		ERROR("Ribbon problem!\n");
-	else if (rdbuf[2] == 0x08)
+	else if (rdbuf[2] == 0x08) {
+		ATTR("marker-levels=%d\n", 0);
 		ERROR("Ribbon depleted!\n");
-	else
+	} else
 		ERROR("Unknown error - %02x\n", rdbuf[2]);
 	return 1;
 }
@@ -264,6 +299,7 @@ static struct printer_data selphy_printers[] = {
 	  .pgcode_offset = 3,
 	  .paper_code_offset = 6,
 	  .error_detect = es1_error_detect,
+	  .pgcode_names = generic_pgcode_names,
 	},
 	{ .type = P_ES2_20,
 	  .model = "SELPHY ES2/ES20",
@@ -279,6 +315,7 @@ static struct printer_data selphy_printers[] = {
 	  .pgcode_offset = 2,
 	  .paper_code_offset = 4,
 	  .error_detect = es2_error_detect,
+	  .pgcode_names = generic_pgcode_names,
 	},
 	{ .type = P_ES3_30,
 	  .model = "SELPHY ES3/ES30",
@@ -294,6 +331,7 @@ static struct printer_data selphy_printers[] = {
 	  .pgcode_offset = 2,
 	  .paper_code_offset = -1,
 	  .error_detect = es3_error_detect,
+	  .pgcode_names = NULL,
 	},
 	{ .type = P_ES40,
 	  .model = "SELPHY ES40",
@@ -309,6 +347,7 @@ static struct printer_data selphy_printers[] = {
 	  .pgcode_offset = 2,
 	  .paper_code_offset = 11,
 	  .error_detect = es40_error_detect,
+	  .pgcode_names = generic_pgcode_names,
 	},
 	{ .type = P_CP790,
 	  .model = "SELPHY CP790",
@@ -321,10 +360,10 @@ static struct printer_data selphy_printers[] = {
 	  .done_c_readback = { 0x00, 0x00, 0x10, 0x00, -1, -1, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02 },
 	  .clear_error = { 0x40, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
 	  .clear_error_len = 12,
-	  // .paper_codes
 	  .pgcode_offset = 2,
 	  .paper_code_offset = -1, /* Uses a different technique */
 	  .error_detect = cp790_error_detect,
+	  .pgcode_names = generic_pgcode_names,	  
 	},
 	{ .type = P_CP_XXX,
 	  .model = "SELPHY CP Series (!CP-10/CP790)",
@@ -337,10 +376,10 @@ static struct printer_data selphy_printers[] = {
 	  .done_c_readback = { 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, -1, 0x00, 0x00, 0x00, 0x00, -1 },
 	  .clear_error = { 0x40, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
 	  .clear_error_len = 12,
-	  // .paper_codes
 	  .pgcode_offset = 3,
 	  .paper_code_offset = 6,
 	  .error_detect = cpxxx_error_detect,
+	  .pgcode_names = generic_pgcode_names,	  
 	},
 	{ .type = P_CP10,
 	  .model = "SELPHY CP-10",
@@ -353,10 +392,10 @@ static struct printer_data selphy_printers[] = {
 	  .done_c_readback = { 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
 	  .clear_error = { 0x40, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
 	  .clear_error_len = 12,
-	  // .paper_codes
-	  .pgcode_offset = -1,
+	  .pgcode_offset = 2,
 	  .paper_code_offset = -1,
 	  .error_detect = cp10_error_detect,
+	  .pgcode_names = cp10_pgcode_names,	  
 	},
 	{ .type = -1 },
 };
@@ -763,6 +802,13 @@ static int canonselphy_main_loop(void *vctx, int copies) {
 	if (ret < 0)
 		return CUPS_BACKEND_FAILED;
 
+	ATTR("marker-colors=#00FFFF#FF00FF#FFFF00\n");
+	ATTR("marker-high-levels=100\n");
+	ATTR("marker-low-levels=10\n");
+	ATTR("marker-names='%s'\n", ctx->printer->pgcode_names? ctx->printer->pgcode_names(rdbuf[ctx->printer->paper_code_offset]) : "Unknown");
+	ATTR("marker-types=ribbonWax\n");
+	ATTR("marker-levels=%d\n", -3); /* ie Unknown but OK */
+
 top:
 
 	if (state != last_state) {
@@ -983,7 +1029,7 @@ static int canonselphy_cmdline_arg(void *vctx, int argc, char **argv)
 
 struct dyesub_backend canonselphy_backend = {
 	.name = "Canon SELPHY CP/ES",
-	.version = "0.90",
+	.version = "0.91",
 	.uri_prefix = "canonselphy",
 	.cmdline_arg = canonselphy_cmdline_arg,
 	.init = canonselphy_init,
@@ -1369,5 +1415,18 @@ struct dyesub_backend canonselphy_backend = {
   P == 7008800  == 2336256 * 3 + 32 (1872*1248)
   L == 5087264  == 1695744 * 3 + 32 (1536*1104)
   C == 2180384  == 726784 * 3 + 32  (1088*668)
+
+  It is worth mentioning that the image payload is Y'CbCr rather than the
+  traditional YMC (or even BGR) of other dyseubs.  Our best guess is that
+  we need to use the JPEG coefficients, although we realistically have
+  no way of confirming this.
+
+  It is hoped that the printers do support YMC data, but as of yet we
+  have no way of determining if this is possible.
+
+  Also, we have reports of the printer not quite behaving properly
+  in the face of multiple jobs; it's possible this thing may need a
+  backend after all, but more sniffs will need to be performed to determine
+  what the status readbacks (if any) mean.
 
 */

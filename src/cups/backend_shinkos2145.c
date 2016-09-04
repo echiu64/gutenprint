@@ -103,6 +103,10 @@ struct shinkos2145_ctx {
 
 	uint8_t *databuf;
 	int datalen;
+
+	uint16_t last_donor;
+	uint16_t last_remain;
+	uint16_t media_prints;
 };
 
 /* Structs for printer */
@@ -179,7 +183,7 @@ struct s2145_print_cmd {
 #define PRINT_MEDIA_6x8    0x06
 #define PRINT_MEDIA_2x6    0x07
 
-static char *print_medias (uint8_t v) {
+static char *print_sizes (uint8_t v) {
 	switch (v) {
 	case PRINT_MEDIA_4x6:
 		return "4x6";
@@ -195,6 +199,23 @@ static char *print_medias (uint8_t v) {
 		return "2x6";
 	default:
 		return "Unknown";
+	}
+}
+
+static int print_counts (uint8_t v) {
+	switch (v) {
+	case PRINT_MEDIA_4x6:
+		return 700;
+	case PRINT_MEDIA_5x3_5:
+		return 800;
+	case PRINT_MEDIA_5x7:
+		return 400;
+	case PRINT_MEDIA_6x9:
+		return 310;
+	case PRINT_MEDIA_6x8:
+		return 350;
+	default:
+		return 700;
 	}
 }
 
@@ -784,7 +805,7 @@ struct s2145_getunique_resp {
 #define READBACK_LEN 128    /* Needs to be larger than largest response hdr */
 #define CMDBUF_LEN sizeof(struct s2145_print_cmd)
 
-uint8_t rdbuf[READBACK_LEN];
+static uint8_t rdbuf[READBACK_LEN];
 
 static int s2145_do_cmd(struct shinkos2145_ctx *ctx,
 			uint8_t *cmd, int cmdlen,
@@ -868,7 +889,7 @@ static int get_status(struct shinkos2145_ctx *ctx)
 	     le16_to_cpu(resp->bank1_specified),
 	     le16_to_cpu(resp->bank1_remaining));
 
-	INFO("Bank 2: 0x%02x (%s) Job %03d @ %03d/%03d (%03d remaining)\n",
+	INFO("Bank 2: 0x%02x (%s) Job %03u @ %03u/%03u (%03u remaining)\n",
 	     resp->bank2_status, bank_statuses(resp->bank1_status),
 	     resp->bank2_printid,
 	     le16_to_cpu(resp->bank2_finished),
@@ -906,7 +927,7 @@ static int get_fwinfo(struct shinkos2145_ctx *ctx)
 
 		if (le16_to_cpu(resp->hdr.payload_len) != (sizeof(struct s2145_fwinfo_resp) - sizeof(struct s2145_status_hdr)))
 			continue;
-		
+
 		INFO(" %s\t ver %02x.%02x\n", fwinfo_targets(i),
 		     resp->major, resp->minor);
 #if 0
@@ -937,21 +958,21 @@ static int get_errorlog(struct shinkos2145_ctx *ctx)
 		ERROR("Failed to execute %s command\n", cmd_names(cmd.cmd));
 		return ret;
 	}
-	
+
 	if (le16_to_cpu(resp->hdr.payload_len) != (sizeof(struct s2145_errorlog_resp) - sizeof(struct s2145_status_hdr)))
 		return -2;
 
-	INFO("Stored Error Events: %d entries:\n", resp->count);
+	INFO("Stored Error Events: %u entries:\n", resp->count);
 	for (i = 0 ; i < resp->count ; i++) {
 		INFO(" %02d: @ %08u prints : 0x%02x/0x%02x (%s)\n", i,
 		     le32_to_cpu(resp->items[i].print_counter),
-		     resp->items[i].major, resp->items[i].minor, 
+		     resp->items[i].major, resp->items[i].minor,
 		     error_codes(resp->items[i].major, resp->items[i].minor));
 	}
 	return 0;
 }
 
-static int get_mediainfo(struct shinkos2145_ctx *ctx) 
+static int get_mediainfo(struct shinkos2145_ctx *ctx)
 {
 	struct s2145_cmd_hdr cmd;
 	struct s2145_mediainfo_resp *resp = (struct s2145_mediainfo_resp *) rdbuf;
@@ -968,23 +989,23 @@ static int get_mediainfo(struct shinkos2145_ctx *ctx)
 		ERROR("Failed to execute %s command\n", cmd_names(cmd.cmd));
 		return ret;
 	}
-	
+
 	if (le16_to_cpu(resp->hdr.payload_len) != (sizeof(struct s2145_mediainfo_resp) - sizeof(struct s2145_status_hdr)))
 		return -2;
 
-	INFO("Supported Media Information: %d entries:\n", resp->count);
+	INFO("Supported Media Information: %u entries:\n", resp->count);
 	for (i = 0 ; i < resp->count ; i++) {
-		INFO(" %02d: C 0x%02x (%s), %04dx%04d, M 0x%02x (%s), P 0x%02x (%s)\n", i,
-		     resp->items[i].code, print_medias(resp->items[i].code),
+		INFO(" %02d: C 0x%02x (%s), %04ux%04u, M 0x%02x (%s), P 0x%02x (%s)\n", i,
+		     resp->items[i].code, print_sizes(resp->items[i].code),
 		     le16_to_cpu(resp->items[i].columns),
-		     le16_to_cpu(resp->items[i].rows), 
+		     le16_to_cpu(resp->items[i].rows),
 		     resp->items[i].media_type, media_types(resp->items[i].media_type),
 		     resp->items[i].print_type, print_methods(resp->items[i].print_type));
 	}
 	return 0;
 }
 
-static int get_user_string(struct shinkos2145_ctx *ctx) 
+static int get_user_string(struct shinkos2145_ctx *ctx)
 {
 	struct s2145_cmd_hdr cmd;
 	struct s2145_getunique_resp *resp = (struct s2145_getunique_resp*) rdbuf;
@@ -1394,6 +1415,9 @@ static void shinkos2145_attach(void *vctx, struct libusb_device_handle *dev,
 	ctx->jobid = (jobid & 0x7f);
 	if (!ctx->jobid)
 		ctx->jobid++;
+
+	/* Initialize donor */
+	ctx->last_donor = ctx->last_remain = ctx->media_prints = 65535;
 }
 
 static void shinkos2145_teardown(void *vctx) {
@@ -1435,7 +1459,7 @@ static int shinkos2145_read_parse(void *vctx, int data_fd) {
 	}
 
 	if (le32_to_cpu(ctx->hdr.model) != 2145) {
-		ERROR("Unrecognized printer (%d)!\n", le32_to_cpu(ctx->hdr.model));
+		ERROR("Unrecognized printer (%u)!\n", le32_to_cpu(ctx->hdr.model));
 
 		return CUPS_BACKEND_CANCEL;
 	}
@@ -1519,6 +1543,11 @@ static int shinkos2145_main_loop(void *vctx, int copies) {
 
 	/* Validate print sizes */
 	for (i = 0; i < media->count ; i++) {
+		/* Figure out the media type... */
+		int media_prints = print_counts(media->items[i].code);
+		if (media_prints < ctx->media_prints)
+			ctx->media_prints = media_prints;
+
 		/* Look for matching media */
 		if (le16_to_cpu(media->items[i].columns) == cpu_to_le16(le32_to_cpu(ctx->hdr.columns)) &&
 		    le16_to_cpu(media->items[i].rows) == cpu_to_le16(le32_to_cpu(ctx->hdr.rows)) &&
@@ -1529,6 +1558,13 @@ static int shinkos2145_main_loop(void *vctx, int copies) {
 		ERROR("Incorrect media loaded for print!\n");
 		return CUPS_BACKEND_HOLD;
 	}
+
+        /* Tell CUPS about the consumables we report */
+        ATTR("marker-colors=#00FFFF#FF00FF#FFFF00\n");
+        ATTR("marker-high-levels=100\n");
+        ATTR("marker-low-levels=10\n");
+        ATTR("marker-names='Color'\n");
+        ATTR("marker-types=ribbonWax\n");
 
 	// XXX check copies against remaining media!
 
@@ -1552,10 +1588,25 @@ top:
 	}
 
 	if (memcmp(rdbuf, rdbuf2, READBACK_LEN)) {
+		uint16_t donor, remain;
+
 		memcpy(rdbuf2, rdbuf, READBACK_LEN);
 
 		INFO("Printer Status: 0x%02x (%s)\n",
 		     sts->hdr.status, status_str(sts->hdr.status));
+
+		/* Guessimate a percentage for the remaining media */
+		donor = le32_to_cpu(sts->count_ribbon_left) * 100 / ctx->media_prints;
+		if (donor != ctx->last_donor) {
+			ctx->last_donor = donor;
+			ATTR("marker-levels=%d\n", donor);
+		}
+		remain = le32_to_cpu(sts->count_ribbon_left);
+		if (remain != ctx->last_remain) {
+			ctx->last_remain = remain;
+			ATTR("marker-message=\"%d prints remaining on ribbon\"\n", remain);
+		}
+
 		if (sts->hdr.result != RESULT_SUCCESS)
 			goto printer_error;
 		if (sts->hdr.error == ERROR_PRINTER)
@@ -1589,7 +1640,7 @@ top:
 
 		break;
 	case S_PRINTER_READY_CMD:
-		INFO("Sending print job (internal id %d)\n", ctx->jobid);
+		INFO("Sending print job (internal id %u)\n", ctx->jobid);
 
 		memset(cmdbuf, 0, CMDBUF_LEN);
 		print->hdr.cmd = cpu_to_le16(S2145_CMD_PRINTJOB);
@@ -1702,7 +1753,7 @@ static int shinkos2145_query_serno(struct libusb_device_handle *dev, uint8_t end
 
 struct dyesub_backend shinkos2145_backend = {
 	.name = "Shinko/Sinfonia CHC-S2145",
-	.version = "0.47",
+	.version = "0.48",
 	.uri_prefix = "shinkos2145",
 	.cmdline_usage = shinkos2145_cmdline,
 	.cmdline_arg = shinkos2145_cmdline_arg,

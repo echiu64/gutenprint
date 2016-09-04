@@ -392,7 +392,7 @@ static int kodak1400_read_parse(void *vctx, int data_fd) {
 			do {
 				ret = read(data_fd, ptr, remain);
 				if (ret < 0) {
-					ERROR("Read failed (%d/%d/%d) (%d/%d @ %d)\n", 
+					ERROR("Read failed (%d/%d/%u) (%d/%u @ %d)\n", 
 					      ret, remain, ctx->hdr.columns,
 					      i, ctx->hdr.rows, j);
 					perror("ERROR: Read failed");

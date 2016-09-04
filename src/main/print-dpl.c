@@ -264,6 +264,28 @@ static const dpl_cap_t dpl_model_capabilities[] = {
    'C',
    'G',
    },
+/* Datamax-O'Neil Thermal DPL printers */
+  {10029,                       /* RL3e */
+   3 * 72, 99 * 72,             /* Max paper size */
+   1, 1,                        /* Min paper size */
+   DPL_RES_203_203,     /* Resolutions */
+   DPL_RES_203_203,
+   DPL_RES_203_203,
+   'G',
+   'A',
+   'E',
+   },
+/* Datamax-O'Neil Thermal DPL printers */
+  {10030,                       /* RL4e */
+   4 * 72, 99 * 72,             /* Max paper size */
+   1, 1,                        /* Min paper size */
+   DPL_RES_203_203,     /* Resolutions */
+   DPL_RES_203_203,
+   DPL_RES_203_203,
+   'G',
+   'A',
+   'E',
+   },
 };
 
 static const stp_parameter_t the_parameters[] = {

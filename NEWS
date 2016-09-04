@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.2.11, a stable release of Gutenprint
+Welcome to Gutenprint 5.2.12-pre1, a stable release of Gutenprint
 5.2. Please read these release notes carefully.
 
 Gutenprint is a suite of printer drivers that may be used with most
@@ -22,6 +22,7 @@ These release notes contain the following sections:
 I)    General Requirements
 II)   Critical Upgrade Note
 III)  Changes from Previous Releases
+        * Changes from 5.2.11
         * Changes from 5.2.10
         * Changes from 5.2.9
         * Changes from 5.2.8
@@ -253,6 +254,80 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      removed.  CUPS is ubiquitous on Linux/UNIX systems, and the
      Ghostscript IJS driver and Foomatic data are not needed with
      CUPS.
+
+  2) Added support for the following dye sublimation printers:
+
+        Canon SELPHY CP1000
+	Canon SELPHY CP1200
+	Mitsubishi CP-D90DW       [experimental]
+	DNP DS-RX1HS
+
+  3) Improved support (and bugfixes) for the following dye sublimation
+     printers:
+
+	Ciaat Brava 21        [*1]
+	Citizen CW-02              [experimental]
+	DNP DS620
+	DNP DS40
+	DNP DS80
+	DNP RX1
+	DNP DS80DX                 [experimental]
+	Kodak 305             [*2]
+	Kodak 6850
+        Mitsubishi CP-9550DW-S
+	Mitsubishi CP-D70DW   [*2] [experimental]
+	Mitsubishi CP-D707DW  [*2] [experimental]
+	Mitsubishi CP-D80DW   [*2] [experimental]
+	Mitsubishi CP-K60DW-S [*2] [experimental]
+	Sinfonia S1245/CE          [experimental]
+	Sinfonia S2145/CS
+	Sinfonia S6145/CS2    [*1]
+	Sinfonia S6245/CE2         [experimental]	
+	Sony UP-DR150
+	Sony UP-DR200
+
+     [*1] Optimal quality requires use of an external library
+          that is not bundled with Gutenprint. [[ TODOFIXME ]]
+
+     [*2] Please note that these models utilize a print engine that 
+	  requires the host system to process the print data using 
+	  unknown algorithms.  Until these algorithms can be determined
+	  and re-implemented, these models are unsuitable for general
+	  use due to very poor output quality.
+
+  4) Backend now reports media status via standard CUPS marker attributes
+     for the following printers:
+
+        Canon Selphy CP/ES series  (except CP820, CP910, CP1000, CP1200)
+	DNP DS40/DS80/DS80DX/DS620/DS-RX1
+	Citizen CX/CX-W/CY
+	Kodak 305/605/6800/6850
+	Mitsubishi CP-D70DW/CP-D707DW/CP-K60DW-S/CP-D9550DW
+	Sinfonia CHC-S2145/CHC-S6145/CHC-S6245
+	Ciaat Brava 21
+
+	(All printers supported by the backend report status, excecpt for
+	 the Sinfonia CHC-S1245, Kodak 805, and Kodak 1400)
+
+  5) Added support for the following Epson inkjet printers:
+
+	Epson Stylus XP100 	     	   	  [experimental]
+	Epson SureColor P400 	     	   	  [experimental]
+	Epson SureColor P600 	     	   	  [experimental]
+	Epson SureColor P800 	     	   	  [experimental]
+	Epson SureColor P6000 	     	   	  [experimental]
+	Epson SureColor P7000 	     	   	  [experimental]
+	Epson SureColor P7000 Commercial Edition  [experimental] [*1]
+	Epson SureColor P8000 	     	   	  [experimental]
+	Epson SureColor P9000 Commercial Edition  [experimental] [*1]
+	Epson SureColor P10000 	     	   	  [experimental] [*2]
+	Epson SureColor P20000 	     	   	  [experimental] [*2]
+
+     [*1] Violet ink is not supported in the Epson SureColor P7000 and
+     	  P9000 Commercial Editions.
+
+     [*2] Only three levels of gray are supported in the Epson
+     	  SureColor P10000 and P20000.
 
 
 * Changes from 5.2.10

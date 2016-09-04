@@ -2827,8 +2827,8 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
     /* Laminate a slightly larger boundary in Matte mode */
     stp_put16_be(privdata.w_size, v);
     stp_put16_be(privdata.h_size + 12, v);
-    if (model == 0x02) {
-      stp_putc(0x04, v); /* Matte Lamination forces UltraFine on K60 */
+    if (model == 0x02 || model == 0x90) {
+      stp_putc(0x04, v); /* Matte Lamination forces UltraFine on K60 or K305 */
     } else {
       stp_putc(0x03, v); /* Matte Lamination forces Superfine (or UltraFine) */
     }
@@ -3374,7 +3374,7 @@ LIST(dyesub_printsize_list_t, shinko_chcs1245_printsize_list, dyesub_printsize_t
 static const laminate_t shinko_chcs1245_laminate[] =
 {
   {"PrinterDefault",  N_("Printer Default"),  {1, "\x01"}},
-  {"Glossy",  N_("Glossy"),  {1, "\x02\0\0\0"}},
+  {"Glossy",  N_("Glossy"),  {1, "\x02"}},
   {"GlossyFine",  N_("Glossy Fine"),  {1, "\x03"}},
   {"Matte",  N_("Matte"),  {1, "\x04"}},
   {"MatteFine",  N_("Matte Fine"),  {1, "\x05"}},
@@ -3770,8 +3770,8 @@ LIST(dyesub_printsize_list_t, dnpds40_printsize_list, dyesub_printsize_t, dnpds4
 
 static const laminate_t dnpds40_laminate[] =
 {
-  {"Glossy",  N_("Glossy"),  {2, "00"}},
-  {"Matte", N_("Matte"), {2, "01"}},
+  {"Glossy",  N_("Glossy"),  {3, "000"}},
+  {"Matte", N_("Matte"), {3, "001"}},
 };
 
 LIST(laminate_list_t, dnpds40_laminate_list, laminate_t, dnpds40_laminate);
@@ -3780,7 +3780,7 @@ LIST(laminate_list_t, dnpds40_laminate_list, laminate_t, dnpds40_laminate);
 static void dnp_printer_start_common(stp_vars_t *v)
 {
   /* Configure Lamination */
-  stp_zprintf(v, "\033PCNTRL OVERCOAT        00000008000000");
+  stp_zprintf(v, "\033PCNTRL OVERCOAT        0000000800000");
   stp_zfwrite((privdata.laminate->seq).data, 1,
 	      (privdata.laminate->seq).bytes, v); /* Lamination mode */
 
@@ -4145,6 +4145,7 @@ static const dyesub_pagesize_t dnpsrx1_page[] =
   { "w288h432", "4x6", PT(1240,300)+1, PT(1920,300)+1, 0, 0, PT(38,300), PT(38,300), DYESUB_LANDSCAPE},
   { "w288h432-div2", "2x6*2", PT(1240,300)+1, PT(1920,300)+1, 0, 0, PT(38,300), PT(38,300), DYESUB_LANDSCAPE},
   { "w360h504",	"5x7", PT(1920,300)+1, PT(2138,300)+1, PT(186,300), PT(186,300), 0, 0, DYESUB_PORTRAIT},
+  { "w360h504-div2",	"3.5x5*2", PT(1920,300)+1, PT(2176,300)+1, PT(186,300), PT(186,300), 0, 0, DYESUB_PORTRAIT},
   { "w432h576", "6x8", PT(1920,300)+1, PT(2436,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
   { "w432h576-div4", "2x6*4", PT(1920,300)+1, PT(2436,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},  
   { "w432h576-div2", "4x6*2", PT(1920,300)+1, PT(2498,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
@@ -4162,6 +4163,8 @@ static const dyesub_printsize_t dnpsrx1_printsize[] =
   { "300x600", "w288h432-div2", 2480, 1920},
   { "300x300", "w360h504", 1920, 2138},
   { "300x600", "w360h504", 1920, 4276},
+  { "300x300", "w360h504-div2", 1920, 2176},
+  { "300x600", "w360h504-div2", 1920, 4352},
   { "300x300", "w432h576", 1920, 2436},
   { "300x600", "w432h576", 1920, 4872},
   { "300x300", "w432h576-div4", 1920, 2436},
@@ -4196,6 +4199,8 @@ static void dnpdsrx1_printer_start(stp_vars_t *v)
     stp_zprintf(v, "02");
   } else if (!strcmp(privdata.pagesize, "w360h504")) {
     stp_zprintf(v, "03");
+  } else if (!strcmp(privdata.pagesize, "w360h504-div2")) {
+    stp_zprintf(v, "22");
   } else if (!strcmp(privdata.pagesize, "w432h576")) {
     stp_zprintf(v, "04");
   } else if (!strcmp(privdata.pagesize, "w432h576-div2")) {
@@ -4210,6 +4215,15 @@ static void dnpdsrx1_printer_start(stp_vars_t *v)
 }
 
 /* Dai Nippon Printing DS620 */
+static const laminate_t dnpds620_laminate[] =
+{
+  {"Glossy",  N_("Glossy"),  {3, "000"}},
+  {"Matte", N_("Matte"), {3, "001"}},
+  {"MatteLuster", N_("Matte Luster"), {3, "022"}},
+};
+
+LIST(laminate_list_t, dnpds620_laminate_list, laminate_t, dnpds620_laminate);
+
 /* Imaging area is wider than print size, we always must supply the 
    printer with the full imaging width. */
 static const dyesub_pagesize_t dnpds620_page[] =
@@ -5062,7 +5076,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Mitsubishi CP9550D */
     4103,
-    &rgb_ink_list,
+    &bgr_ink_list,
     &res_346dpi_list,
     &mitsu_cp9550_page_list,
     &mitsu_cp9550_printsize_list,
@@ -5326,7 +5340,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &dnpds40_plane_init, NULL,
     NULL, NULL,
     NULL, NULL, NULL,
-    &dnpds40_laminate_list, NULL, NULL,    
+    &dnpds620_laminate_list, NULL, NULL,    
     NULL, NULL,
   },
   { /* Citizen CW-01 */

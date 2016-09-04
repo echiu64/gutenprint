@@ -3,7 +3,6 @@
 # Daniel Nylander <po@danielnylander.se>, 2006.
 # Christian Rose <menthos@menthos.com>, 2001, 2002.
 #
-# $Id$
 #
 msgid ""
 msgstr ""

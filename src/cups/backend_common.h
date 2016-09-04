@@ -184,7 +184,7 @@ extern struct dyesub_backend BACKEND;
 #define CUPS_BACKEND_RETRY_CURRENT 7 /* Retry immediately */
 
 /* Argument processing */
-#define GETOPT_LIST_GLOBAL "d:DfGhP:S:T:V:"
+#define GETOPT_LIST_GLOBAL "d:DfGh"
 #define GETOPT_PROCESS_GLOBAL \
 			case 'd': \
 				copies = atoi(optarg); \
@@ -200,18 +200,6 @@ extern struct dyesub_backend BACKEND;
 				exit(0); \
 			case 'h': \
 				print_help(argv[0], &BACKEND); \
-				exit(0); \
-			case 'P': \
-				extra_pid = strtol(optarg, NULL, 16); \
-				break; \
-			case 'S': \
-				use_serno = optarg; \
-				break; \
-			case 'T': \
-				extra_type = atoi(optarg); \
-				break; \
-			case 'V': \
-				extra_pid = strtol(optarg, NULL, 16); \
-				break;
+				exit(0);
 
 #endif /* __BACKEND_COMMON_H */

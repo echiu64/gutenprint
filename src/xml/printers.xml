@@ -1297,6 +1297,25 @@
       <printer translate="name" name="Datamax-ONeil E Class Mark III ProPlus 203 dpi" deviceid="MFG:Datamax-O'Neil ;CMD:DPL;MDL:E4206L Mark III;" color="false" driver="datamax_oneil_E4206L" manufacturer="DatamaxONeil" model="10027" parameters="dpl_params" />
       <printer translate="name" name="Datamax-ONeil E Class Mark III ProPlus 300 dpi" deviceid="MFG:Datamax-O'Neil ;CMD:DPL;MDL:E4305L Mark III;" color="false" driver="datamax_oneil_E4305L" manufacturer="DatamaxONeil" model="10028" parameters="dpl_params" />
     </family>
+    <family name="dpl">
+      <parameters name="dpl_params">
+        <parameter type="float" name="Gamma">1.000</parameter>
+        <parameter type="float" name="Density">1.000</parameter>
+      </parameters>
+      <printer translate="name" name="Datamax-O'Neil I4212e Mark II" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:I4212e Mark II;" color="false" driver="datamax_oneil_I4212e" manufacturer="Datamax O'Neil" model="10017" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-O'Neil I4310e Mark II" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:I4310e Mark II;" color="false" driver="datamax_oneil_I4310e" manufacturer="Datamax O'Neil" model="10018" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-O'Neil I4606e Mark II" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:I4606e Mark II;" color="false" driver="datamax_oneil_I4606e" manufacturer="Datamax O'Neil" model="10020" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-O'Neil E4204B Mark III" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:E4204B Mark III;" color="false" driver="datamax_oneil_E4204B" manufacturer="Datamax O'Neil" model="10021" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-O'Neil E4304B Mark III" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:E4304B Mark III;" color="false" driver="datamax_oneil_E4304B" manufacturer="Datamax O'Neil" model="10022" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-O'Neil E4205A Mark III" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:E4205A Mark III;" color="false" driver="datamax_oneil_E4205A" manufacturer="Datamax O'Neil" model="10023" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-O'Neil E4305A Mark III" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:E4305A Mark III;" color="false" driver="datamax_oneil_E4305A" manufacturer="Datamax O'Neil" model="10024" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-O'Neil E4206P Mark III" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:E4206P Mark III;" color="false" driver="datamax_oneil_E4206P" manufacturer="Datamax O'Neil" model="10025" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-O'Neil E4305P Mark III" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:E4305P Mark III;" color="false" driver="datamax_oneil_E4305P" manufacturer="Datamax O'Neil" model="10026" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-O'Neil E4206L Mark III" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:E4206L Mark III;" color="false" driver="datamax_oneil_E4206L" manufacturer="Datamax O'Neil" model="10027" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-O'Neil E4305L Mark III" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:E4305L Mark III;" color="false" driver="datamax_oneil_E4305L" manufacturer="Datamax O'Neil" model="10028" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-O'Neil RL3e" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:RL3e;" color="false" driver="datamax_oneil_RL3e" manufacturer="Datamax O'Neil" model="10029" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-O'Neil RL4e" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:RL4e;" color="false" driver="datamax_oneil_RL4e" manufacturer="Datamax O'Neil" model="10030" parameters="dpl_params" />
+    </family>
     <family name="escp2">
       <parameters name="standard_params">
         <parameter type="float" name="Gamma">0.470</parameter>
@@ -1700,6 +1719,18 @@
       <printer translate="name" name="Epson Stylus TX645" driver="escp2-tx645" manufacturer="Epson" model="118" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus TX650" driver="escp2-tx650" manufacturer="Epson" model="97" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus TX659" driver="escp2-tx659" manufacturer="Epson" model="97" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus XP100" driver="escp2-xp100" manufacturer="Epson" model="123" parameters="standard_params" />
+      <printer translate="name" name="Epson SureColor P400" driver="escp2-p400" manufacturer="Epson" model="91" parameters="standard_params" />
+      <printer translate="name" name="Epson SureColor P600" driver="escp2-p600" manufacturer="Epson" model="102" parameters="standard_params" />
+      <printer translate="name" name="Epson SureColor P800" driver="escp2-p800" manufacturer="Epson" model="102" parameters="standard_params" />
+      <printer translate="name" name="Epson SureColor P6000" driver="escp2-p6000" manufacturer="Epson" model="89" parameters="standard_params" />
+      <printer translate="name" name="Epson SureColor P7000" driver="escp2-p7000" manufacturer="Epson" model="124" parameters="standard_params" />
+      <printer translate="name" name="Epson SureColor P7000 Commercial Edition" driver="escp2-p7000c" manufacturer="Epson" model="126" parameters="standard_params" />
+      <printer translate="name" name="Epson SureColor P8000" driver="escp2-p8000" manufacturer="Epson" model="90" parameters="standard_params" />
+      <printer translate="name" name="Epson SureColor P9000" driver="escp2-p9000" manufacturer="Epson" model="125" parameters="standard_params" />
+      <printer translate="name" name="Epson SureColor P9000 Commercial Edition" driver="escp2-p9000c" manufacturer="Epson" model="127" parameters="standard_params" />
+      <printer translate="name" name="Epson SureColor P10000" driver="escp2-p10000" manufacturer="Epson" model="90" parameters="standard_params" />
+      <printer translate="name" name="Epson SureColor P20000" driver="escp2-p20000" manufacturer="Epson" model="88" parameters="standard_params" />
       <printer translate="name" name="Epson PictureMate" driver="escp2-picmate" manufacturer="Epson" model="73" parameters="standard_params" />
       <printer translate="name" name="Epson PictureMate Dash" driver="escp2-picmatedash" manufacturer="Epson" model="86" parameters="standard_params" />
       <printer translate="name" name="Epson PictureMate Deluxe" driver="escp2-picmated" manufacturer="Epson" model="73" parameters="standard_params" />
@@ -2934,7 +2965,7 @@
       <printer translate="name" name="Mitsubishi CP-9550D" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP9550D ;CLS:PRINTER;DES:MITSUBISHI CP9550D" driver="mitsubishi-9550d" manufacturer="Mitsubishi" model="4103" parameters="nativecopies" />
       <printer translate="name" name="Mitsubishi CP-9550DW" driver="mitsubishi-9550dw" manufacturer="Mitsubishi" model="4103" parameters="nativecopies" />
       <printer translate="name" name="Mitsubishi CP-9550DZ" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP9550DZ;CLS:PRINTER;DES:MITSUBISHI CP9550DZ;" driver="mitsubishi-9550dz" manufacturer="Mitsubishi" model="4103" parameters="nativecopies">EXPERIMENTAL</printer>
-      <printer translate="name" name="Mitsubishi CP-9550DW-S" driver="mitsubishi-9550dw-s" manufacturer="Mitsubishi" model="4103">EXPERIMENTAL</printer>
+      <printer translate="name" name="Mitsubishi CP-9550DW-S" driver="mitsubishi-9550dw-s" manufacturer="Mitsubishi" model="4103" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-9810D" driver="mitsubishi-9810d" manufacturer="Mitsubishi" model="4104" />
       <printer translate="name" name="Mitsubishi CP-9810DW" driver="mitsubishi-9810dw" manufacturer="Mitsubishi" model="4104" />
       <printer translate="name" name="Mitsubishi CP-D70DW" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP60D70D707D;CLS:PRINTER;DES:MITSUBISHI CP60D70D707D" driver="mitsubishi-d70dw" manufacturer="Mitsubishi" model="4105" parameters="nativecopies">EXPERIMENTAL</printer>
@@ -2950,9 +2981,9 @@
       <printer translate="name" name="Sinfonia CHC-S1245/E1" driver="sinfonia-chcs1245" manufacturer="Sinfonia" model="5002" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Shinko CHC-S6245" driver="shinko-chcs6245" manufacturer="Shinko" model="5003" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Sinfonia CHC-S6245/CE1" driver="sinfonia-chcs6245" manufacturer="Sinfonia" model="5003" parameters="nativecopies">EXPERIMENTAL</printer>
-      <printer translate="name" name="Shinko CHC-S6145" driver="shinko-chcs6145" manufacturer="Shinko" model="5004" parameters="nativecopies">EXPERIMENTAL</printer>
-      <printer translate="name" name="Sinfonia CHC-S6145/CS2" deviceid="MFG:SINFONIA;CMD:SUPCC;MDL:CHC-S6145;CLS:PRINTER;DES:Thermal Dye Photo Printer;" driver="sinfonia-chcs6145" manufacturer="Sinfonia" model="5004" parameters="nativecopies">EXPERIMENTAL</printer>
-      <printer translate="name" name="CIAAT Brava 21" deviceid="MFG:CIAAT;CMD:SUPCC;MDL:BRAVA21;CLS:PRINTER;DES:Thermal Dye Photo Printer;" driver="ciaat-brava-21" manufacturer="CIAAT" model="5005" parameters="nativecopies">EXPERIMENTAL</printer>
+      <printer translate="name" name="Shinko CHC-S6145" driver="shinko-chcs6145" manufacturer="Shinko" model="5004" parameters="nativecopies" />
+      <printer translate="name" name="Sinfonia CHC-S6145/CS2" deviceid="MFG:SINFONIA;CMD:SUPCC;MDL:CHC-S6145;CLS:PRINTER;DES:Thermal Dye Photo Printer;" driver="sinfonia-chcs6145" manufacturer="Sinfonia" model="5004" parameters="nativecopies" />
+      <printer translate="name" name="CIAAT Brava 21" deviceid="MFG:CIAAT;CMD:SUPCC;MDL:BRAVA21;CLS:PRINTER;DES:Thermal Dye Photo Printer;" driver="ciaat-brava-21" manufacturer="CIAAT" model="5005" parameters="nativecopies" />
       <printer translate="name" name="Dai Nippon Printing DS40" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DS40;" driver="dnp-ds40" manufacturer="Dai Nippon Printing" model="6000" parameters="nativecopies" />
       <printer translate="name" name="Dai Nippon Printing DS80" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DS80;" driver="dnp-ds80" manufacturer="Dai Nippon Printing" model="6001" parameters="nativecopies" />
       <printer translate="name" name="Dai Nippon Printing DSRX1" driver="dnp-dsrx1" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DS-RX1;" manufacturer="Dai Nippon Printing" model="6002" parameters="nativecopies" />

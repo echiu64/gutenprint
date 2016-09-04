@@ -103,6 +103,10 @@ struct shinkos6245_ctx {
 
 	uint8_t *databuf;
 	int datalen;
+
+	uint16_t last_donor;
+	uint16_t last_remain;
+	uint8_t  ribbon_code;
 };
 
 /* Structs for printer */
@@ -517,7 +521,7 @@ static char *error_codes(uint8_t major, uint8_t minor)
 			return "Paper Jam: Precut Print Position Off";
 		case 0x20:
 			return "Paper Jam: Precut Print Position On";
-			
+
 		case 0x29:
 			return "Paper Jam: Printing Paper Top On";
 		case 0x2A:
@@ -700,13 +704,13 @@ struct s6245_status_resp {
 	uint32_t count_head;
 	uint32_t count_ribbon_left;
 	uint32_t reserved;
-	
+
 	uint8_t  bank1_printid;
 	uint16_t bank1_remaining;
 	uint16_t bank1_finished;
 	uint16_t bank1_specified;
 	uint8_t  bank1_status;
-	
+
 	uint8_t  bank2_printid;
 	uint16_t bank2_remaining;
 	uint16_t bank2_finished;
@@ -715,7 +719,7 @@ struct s6245_status_resp {
 
 	uint8_t  reserved2[16];
 	uint8_t  tonecurve_status;
-	uint8_t  reserved3[6];	
+	uint8_t  reserved3[6];
 } __attribute__((packed));
 
 #define BANK_STATUS_FREE  0x00
@@ -787,7 +791,7 @@ struct s6245_mediainfo_item {
 #define MEDIA_8x6_2   0x32
 #define MEDIA_8x4_3   0x40
 
-static char *print_medias (uint8_t v) {
+static const char *print_sizes (uint8_t v) {
 	switch (v) {
 	case MEDIA_8x10:
 		return "8x10";
@@ -816,9 +820,35 @@ static char *print_medias (uint8_t v) {
 
 struct s6245_mediainfo_resp {
 	struct s6245_status_hdr hdr;
-	uint8_t  count;
+	uint8_t ribbon_code;
+	uint8_t reserved;
+	uint8_t count;
 	struct s6245_mediainfo_item items[10];  /* Not all necessarily used */
 } __attribute__((packed));
+
+static const char *ribbon_sizes (uint8_t v) {
+	switch (v) {
+	case 0x00:
+		return "None";
+	case 0x11:
+		return "8x10";
+	case 0x12:
+		return "8x12";
+	default:
+		return "Unknown";
+	}
+}
+
+static int ribbon_counts (uint8_t v) {
+	switch (v) {
+	case 0x11:
+		return 120;
+	case 0x12:
+		return 100;
+	default:
+		return 120;
+	}
+}
 
 struct s6245_errorlog_resp {
 	struct s6245_status_hdr hdr;
@@ -899,7 +929,7 @@ struct s6245_fwinfo_resp {
 #define READBACK_LEN 512    /* Needs to be larger than largest response hdr */
 #define CMDBUF_LEN sizeof(struct s6245_print_cmd)
 
-uint8_t rdbuf[READBACK_LEN];
+static uint8_t rdbuf[READBACK_LEN];
 
 static int s6245_do_cmd(struct shinkos6245_ctx *ctx,
 			uint8_t *cmd, int cmdlen,
@@ -984,7 +1014,7 @@ static int get_status(struct shinkos6245_ctx *ctx)
 	     le16_to_cpu(resp->bank1_specified),
 	     le16_to_cpu(resp->bank1_remaining));
 
-	INFO("Bank 2: 0x%02x (%s) Job %03d @ %03d/%03d (%03d remaining)\n",
+	INFO("Bank 2: 0x%02x (%s) Job %03u @ %03u/%03u (%03u remaining)\n",
 	     resp->bank2_status, bank_statuses(resp->bank1_status),
 	     resp->bank2_printid,
 	     le16_to_cpu(resp->bank2_finished),
@@ -1007,9 +1037,9 @@ static int get_status(struct shinkos6245_ctx *ctx)
 	if (le16_to_cpu(resp2->hdr.payload_len) != (sizeof(struct s6245_getextcounter_resp) - sizeof(struct s6245_status_hdr)))
 		return 0;
 
-	INFO("Lifetime Distance: %08d inches\n", le32_to_cpu(resp2->lifetime_distance));
-	INFO("Maintainence Distance: %08d inches\n", le32_to_cpu(resp2->maint_distance));
-	INFO("Head Distance: %08d inches\n", le32_to_cpu(resp2->head_distance));
+	INFO("Lifetime Distance: %08u inches\n", le32_to_cpu(resp2->lifetime_distance));
+	INFO("Maintainence Distance: %08u inches\n", le32_to_cpu(resp2->maint_distance));
+	INFO("Head Distance: %08u inches\n", le32_to_cpu(resp2->head_distance));
 
 	return 0;
 }
@@ -1080,13 +1110,13 @@ static int get_errorlog(struct shinkos6245_ctx *ctx)
 			return -2;
 
 		INFO("Stored Error ID %d:\n", i);
-		INFO(" %04d-%02d-%02d %02d:%02d:%02d @ %08u prints : 0x%02x/0x%02x (%s)\n",
+		INFO(" %04d-%02u-%02u %02u:%02u:%02u @ %08u prints : 0x%02x/0x%02x (%s)\n",
 		     resp->time_year + 2000, resp->time_month, resp->time_day,
 		     resp->time_hour, resp->time_min, resp->time_sec,
 		     le32_to_cpu(resp->print_counter),
 		     resp->error_major, resp->error_minor, 
 		     error_codes(resp->error_major, resp->error_minor));
-		INFO("  Temp: %02d/%02d Hum: %02d\n",
+		INFO("  Temp: %02u/%02u Hum: %02u\n",
 		     resp->printer_thermistor, resp->head_thermistor, resp->printer_humidity);
 	} while (++i < le16_to_cpu(resp->error_count));
 	
@@ -1110,14 +1140,15 @@ static int get_mediainfo(struct shinkos6245_ctx *ctx)
 		ERROR("Failed to execute %s command\n", cmd_names(cmd.cmd));
 		return ret;
 	}
-	
+
 	if (le16_to_cpu(resp->hdr.payload_len) != (sizeof(struct s6245_mediainfo_resp) - sizeof(struct s6245_status_hdr)))
 		return -2;
 
-	INFO("Supported Media Information: %d entries:\n", resp->count);
+        INFO("Loaded Media Type:  %s\n", ribbon_sizes(resp->ribbon_code));
+	INFO("Supported Media Information: %u entries:\n", resp->count);
 	for (i = 0 ; i < resp->count ; i++) {
-		INFO(" %02d: C 0x%02x (%s), %04dx%04d, P 0x%02x (%s)\n", i,
-		     resp->items[i].media_code, print_medias(resp->items[i].media_code),
+		INFO(" %02d: C 0x%02x (%s), %04ux%04u, P 0x%02x (%s)\n", i,
+		     resp->items[i].media_code, print_sizes(resp->items[i].media_code),
 		     le16_to_cpu(resp->items[i].columns),
 		     le16_to_cpu(resp->items[i].rows), 
 		     resp->items[i].print_method, print_methods(resp->items[i].print_method));
@@ -1470,10 +1501,10 @@ static void shinkos6245_attach(void *vctx, struct libusb_device_handle *dev,
 	ctx->dev = dev;
 	ctx->endp_up = endp_up;
 	ctx->endp_down = endp_down;
-	
+
 	device = libusb_get_device(dev);
 	libusb_get_device_descriptor(device, &desc);
-	
+
 	ctx->type = lookup_printer_type(&shinkos6245_backend,
 					desc.idVendor, desc.idProduct);
 
@@ -1481,6 +1512,9 @@ static void shinkos6245_attach(void *vctx, struct libusb_device_handle *dev,
 	ctx->jobid = jobid & 0x7f;
 	if (!ctx->jobid)
 		ctx->jobid++;
+
+	/* Initialize donor */
+	ctx->last_donor = ctx->last_remain = 65535;
 }
 
 static void shinkos6245_teardown(void *vctx) {
@@ -1522,7 +1556,7 @@ static int shinkos6245_read_parse(void *vctx, int data_fd) {
 	}
 
 	if (le32_to_cpu(ctx->hdr.model) != 6245) {
-		ERROR("Unrecognized printer (%d)!\n", le32_to_cpu(ctx->hdr.model));
+		ERROR("Unrecognized printer (%u)!\n", le32_to_cpu(ctx->hdr.model));
 
 		return CUPS_BACKEND_CANCEL;
 	}
@@ -1637,6 +1671,7 @@ static int shinkos6245_main_loop(void *vctx, int copies) {
 		ERROR("Incorrect media loaded for print!\n");
 		return CUPS_BACKEND_HOLD;
 	}
+	ctx->ribbon_code = media->ribbon_code;
 
 	/* Send Set Time */
 	{
@@ -1666,6 +1701,13 @@ static int shinkos6245_main_loop(void *vctx, int copies) {
 			goto printer_error;
 	}
 
+        /* Tell CUPS about the consumables we report */
+        ATTR("marker-colors=#00FFFF#FF00FF#FFFF00\n");
+        ATTR("marker-high-levels=100\n");
+        ATTR("marker-low-levels=10\n");
+        ATTR("marker-names='%s'\n", ribbon_sizes(ctx->ribbon_code));
+        ATTR("marker-types=ribbonWax\n");
+
 	// XXX check copies against remaining media!
 
 top:
@@ -1688,12 +1730,27 @@ top:
 	}
 
 	if (memcmp(rdbuf, rdbuf2, READBACK_LEN)) {
+		uint16_t donor, remain;
+
 		memcpy(rdbuf2, rdbuf, READBACK_LEN);
 
 		INFO("Printer Status: 0x%02x (%s)\n", 
 		     sts->hdr.status, status_str(sts->hdr.status));
+
+		/* Guessimate a percentage for the remaining media */
+		donor = le32_to_cpu(sts->count_ribbon_left) * 100 / ribbon_counts(ctx->ribbon_code);
+		if (donor != ctx->last_donor) {
+			ctx->last_donor = donor;
+			ATTR("marker-levels=%d\n", donor);
+		}
+		remain = le32_to_cpu(sts->count_ribbon_left);
+		if (remain != ctx->last_remain) {
+			ctx->last_remain = remain;
+			ATTR("marker-message=\"%d prints remaining on '%s' ribbon\"\n", remain, ribbon_sizes(ctx->ribbon_code));
+		}
+
 		if (sts->hdr.result != RESULT_SUCCESS)
-			goto printer_error;		
+			goto printer_error;
 		if (sts->hdr.error == ERROR_PRINTER)
 			goto printer_error;
 	} else if (state == last_state) {
@@ -1702,7 +1759,7 @@ top:
 	}
 	last_state = state;
 
-	fflush(stderr);       
+	fflush(stderr);
 
 	switch (state) {
 	case S_IDLE:
@@ -1727,7 +1784,7 @@ top:
 	case S_PRINTER_READY_CMD:
 		// XXX send "get eeprom backup command"
 
-		INFO("Sending print job (internal id %d)\n", ctx->jobid);
+		INFO("Sending print job (internal id %u)\n", ctx->jobid);
 
 		memset(cmdbuf, 0, CMDBUF_LEN);
 		print->hdr.cmd = cpu_to_le16(S6245_CMD_PRINTJOB);
@@ -1838,7 +1895,7 @@ static int shinkos6245_query_serno(struct libusb_device_handle *dev, uint8_t end
 
 struct dyesub_backend shinkos6245_backend = {
 	.name = "Shinko/Sinfonia CHC-S6245",
-	.version = "0.05WIP",
+	.version = "0.07WIP",
 	.uri_prefix = "shinkos6245",
 	.cmdline_usage = shinkos6245_cmdline,
 	.cmdline_arg = shinkos6245_cmdline_arg,
