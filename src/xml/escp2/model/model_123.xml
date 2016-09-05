@@ -41,7 +41,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <headConfiguration type="default">
   <Nozzles>42</Nozzles>
   <MinNozzles>42</MinNozzles>
-  <FirstNozzle>1</FirstNozzle>
+  <FirstNozzle>0</FirstNozzle>
   <NozzleSeparation>3</NozzleSeparation>
  </headConfiguration>
  <headConfiguration type="black">
@@ -64,7 +64,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <extraVerticalFeed>10</extraVerticalFeed>
  <separationRows>1</separationRows>
  <zeroMarginOffset>80</zeroMarginOffset>
- <initialVerticalOffset>-256</initialVerticalOffset>
+ <initialVerticalOffset>-260</initialVerticalOffset>
  <microLeftMargin>42</microLeftMargin>
  <minHorizontalAlignment>1</minHorizontalAlignment>
  <baseHorizontalAlignment>28800</baseHorizontalAlignment>
@@ -72,8 +72,8 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <minimumMediaSize>144 144</minimumMediaSize>
  <maximumMediaSize>612 86400</maximumMediaSize>
  <maximumImageableArea>612 86400</maximumImageableArea>
- <margins interleave="soft" media="sheet">9 9 0 9</margins>
- <margins interleave="printer" media="sheet">9 9 0 9</margins>
+ <margins interleave="soft" media="sheet">9 9 9 9</margins>
+ <margins interleave="printer" media="sheet">9 9 9 9</margins>
  <margins interleave="soft" media="roll">9 9 0 0</margins>
  <margins interleave="printer" media="roll">9 9 0 0</margins>
  <extraBottom>24</extraBottom>
