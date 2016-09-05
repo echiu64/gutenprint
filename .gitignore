@@ -76,9 +76,6 @@ escp2-unprint
 escp2-weavetest
 escputil
 extract-strings
-foomatic-db
-foomatic-generator
-foomatic-stamp
 genppd
 gen-printer-list
 gutenprint
@@ -105,7 +102,6 @@ gutenprint.vr
 gutenprint.vrs
 html
 html-stamp
-ijsgutenprint.5.2
 Info.plist
 intl
 libgutenprintui.la

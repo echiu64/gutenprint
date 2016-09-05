@@ -434,7 +434,7 @@
     must be called to free the dither object and perform any
     cleanup.  In the future, this may do more (such as flush
     output).  This arrangement permits using these routines with
-    programs that create multiple output pages, such as GhostScript.
+    programs that create multiple output pages, such as the CUPS driver.
   </para>
   <para>
     The dithering routines themselves have a number of control knobs

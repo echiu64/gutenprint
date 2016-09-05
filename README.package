@@ -203,40 +203,15 @@ end-user use.
      not versioned, but are not linked against libgutenprint and do
      not have any other dependencies on Gutenprint.
 
-7) Packaging the IJS Driver and Foomatic Data
-
-   * We recommend packaging the IJS driver
-     (/usr/bin/ijsgutenprint.5.2) and its man page
-     (/usr/man/man1/ijsgutenprint.1.gz) together with the Foomatic
-     data.
-
-   * If your distribution uses CUPS as its print spooler, we very
-     strongly recommend using the native CUPS driver rather than
-     Foomatic.  The native CUPS driver has been better tested than the
-     IJS driver, and has more complete solutions for some issues
-     involving paper dimensions and presentation of numerical
-     options.  The native CUPS driver also has better management tools
-     (cups-genppdupdate, specifically).
-
-     If you wish to improve the IJS driver and Foomatic data, please
-     contact us.
-
-   * The IJS driver and the Foomatic data kit and PPD files are
-     versioned (major and minor), and hence you may consider
-     permitting multiple versions to be installed concurrently.  The
-     man page (/usr/man/man1/ijsgutenprint.1.gz) is not versioned, but
-     the interface to this command, which is intended only to be
-     invoked from within Ghostscript, is not likely to change.
-
-8) Packaging the Enhanced Print Plugin for GIMP
+7) Packaging the Enhanced Print Plugin for GIMP
 
    * The enhanced Print plugin for GIMP, unlike the core library and
-     the Foomatic and CUPS drivers, may not be installed concurrently
-     with other versions.  For example, you may not install both the
-     Gimp-Print 4.2 and the Gutenprint 5.2 version of the Print
-     plugin, as they use different configuration file formats.
+     CUPS drivers, may not be installed concurrently with other
+     versions.  For example, you may not install both the Gimp-Print
+     4.2 and the Gutenprint 5.2 version of the Print plugin, as they
+     use different configuration file formats.
 
-9) Packaging the Epson Inkjet Management Utility, escputil
+8) Packaging the Epson Inkjet Management Utility, escputil
 
    * We do not recommend installing this utility with enhanced
      privileges (via the setuid or setgid mechanism, or any other such

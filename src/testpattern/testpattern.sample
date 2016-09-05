@@ -1,7 +1,6 @@
 # Sample test pattern file, for use with Gimp-Print test pattern generator
 
-# Printer/driver settings. Please see src/ghost/README for appropriate
-# values for each of these settings
+# Printer/driver settings.
 # Printer model
 printer escp2-870;
 # Resolution, or print quality

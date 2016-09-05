@@ -5,9 +5,9 @@ Gutenprint is a suite of printer drivers that may be used with most
 common UNIX print spooling systems, including CUPS, lpr, LPRng, or
 others.  Gutenprint currently supports over 2500 printer models.
 These drivers provide high quality printing for UNIX, Linux, and
-Macintosh OS X (10.6 and above) systems.  Gutenprint includes CUPS and
-Foomatic drivers, and an enhanced Print plug-in for GIMP that replaces
-the print plug-in packaged with the GIMP distribution.
+Macintosh OS X (10.6 and above) systems.  Gutenprint includes a CUPS
+driver, and an enhanced Print plug-in for GIMP that replaces the print
+plug-in packaged with the GIMP distribution.
 
 As of 5.2.10, Gutenprint no longer supports Macintosh OS X 10.4 or
 earlier; as of 5.2.11, Gutenprint no longer supports Macintosh OS X
@@ -70,16 +70,15 @@ speed of at least 300 MHz.  Fast printers may require a faster
 processor to achieve maximum printing speed.
 
 For general use, you should have the Common UNIX Printing System, CUPS
-(version 1.1.15 or above) or Foomatic (2.0 or above) installed.
-Please the rest of the release notes, in particular the Exceptions and
-Workarounds, for full details on installation, as there is important
-information to be aware of.  CUPS is the printing system used on
-Macintosh OS X 10.3 and above, and many other systems use it.  The
-combination of CUPS and Gutenprint provides a flexible, general
-purpose printing system capable of producing the highest quality
-output with any of the printers supported by this package.  We
-strongly recommend using CUPS with Gutenprint as a general-purpose
-printing solution.
+(version 1.1.15 or above).  Please the rest of the release notes, in
+particular the Exceptions and Workarounds, for full details on
+installation, as there is important information to be aware of.  CUPS
+is the printing system used on Macintosh OS X 10.3 and above, and many
+other systems use it.  The combination of CUPS and Gutenprint provides
+a flexible, general purpose printing system capable of producing the
+highest quality output with any of the printers supported by this
+package.  We strongly recommend using CUPS with Gutenprint as a
+general-purpose printing solution.
 
 The enhanced Print plug-in for GIMP requires GIMP 2.0 or above (GIMP
 2.2 recommended).  This plug-in will work with any printing system,
@@ -88,13 +87,6 @@ the printing process.  If you are printing photographs in large format
 from GIMP at very high resolution, disk space requirements may be
 substantial, and we recommend at least 2 GB of free disk space for
 that purpose.
-
-The Ghostscript driver requires GNU Ghostscript 6.53 or higher, ESP
-Ghostscript 7.05 or higher, or AFPL Ghostscript 7.04 or higher.  It
-uses the IJS package included with these versions of Ghostscript to
-create a driver that may be built much more easily than traditional
-Ghostscript drivers.  This driver should be used in conjunction with
-Foomatic to configure printers.
 
 Users of Macintosh 10.6 (Snow Leopard) and above can use this package.
 For ease of installation, a pre-built package with installer is
@@ -258,14 +250,19 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
 * Changes from 5.2.11
 
-  1) Added support for the following dye sublimation printers:
+  1) The Ghostscript IJS driver and Foomatic data generator have been
+     removed.  CUPS is ubiquitous on Linux/UNIX systems, and the
+     Ghostscript IJS driver and Foomatic data are not needed with
+     CUPS.
+
+  2) Added support for the following dye sublimation printers:
 
         Canon SELPHY CP1000
 	Canon SELPHY CP1200
 	Mitsubishi CP-D90DW       [experimental]
 	DNP DS-RX1HS
 
-  2) Improved support (and bugfixes) for the following dye sublimation
+  3) Improved support (and bugfixes) for the following dye sublimation
      printers:
 
 	Ciaat Brava 21        [*1]
@@ -298,7 +295,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	  and re-implemented, these models are unsuitable for general
 	  use due to very poor output quality.
 
-  3) Backend now reports media status via standard CUPS marker attributes
+  4) Backend now reports media status via standard CUPS marker attributes
      for the following printers:
 
         Canon Selphy CP/ES series  (except CP820, CP910, CP1000, CP1200)
@@ -312,7 +309,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	(All printers supported by the backend report status, excecpt for
 	 the Sinfonia CHC-S1245, Kodak 805, and Kodak 1400)
 
-  4) Added support for the following Epson inkjet printers:
+  5) Added support for the following Epson inkjet printers:
 
 	Epson Stylus XP100 	     	   	  [experimental]
 	Epson SureColor P400 	     	   	  [experimental]
