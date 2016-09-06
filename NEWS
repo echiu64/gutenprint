@@ -289,8 +289,24 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	Sony UP-DR150
 	Sony UP-DR200
 
-     [*1] Optimal quality requires use of an external library
-          that is not bundled with Gutenprint. [[ TODOFIXME ]]
+     [*1] Optimal quality requires use of an external image processing
+          library.  Two options are available:
+
+  	  * libS6145ImageProcess -- Officially supported by Sinfonia,
+	    this library is proprietary, available only on a few platforms,
+	    and use requires a written license from Sinfonia.
+
+	  * libS6145ImageReProcess -- A reverse-engineered replacement
+	    for the Sinfonia library, released under the terms of
+	    the GNU GPLv3+.  Sinfonia does not support this in any way.
+	    Unfortunately, at this time it cannot be bundled with Gutenprint.
+
+          The backend will attempt to dynamically load the library at
+	  runtime, and will log an appropriate message if it is or is not
+	  successful.
+
+	  Note that without the library, the printer will function but
+	  the output image quality will be quite poor.
 
      [*2] Please note that these models utilize a print engine that 
 	  requires the host system to process the print data using 
