@@ -1285,23 +1285,6 @@
         <parameter type="float" name="Gamma">1.000</parameter>
         <parameter type="float" name="Density">1.000</parameter>
       </parameters>
-      <printer translate="name" name="Datamax-ONeil I Class Mark II 203 dpi" deviceid="MFG:Datamax-O'Neil ;CMD:DPL;MDL:I4212e Mark II;" color="false" driver="datamax_oneil_I4212e" manufacturer="DatamaxONeil" model="10017" parameters="dpl_params" />
-      <printer translate="name" name="Datamax-ONeil I Class Mark II 300 dpi" deviceid="MFG:Datamax-O'Neil ;CMD:DPL;MDL:I4310e Mark II;" color="false" driver="datamax_oneil_I4310e" manufacturer="DatamaxONeil" model="10018" parameters="dpl_params" />
-      <printer translate="name" name="Datamax-ONeil I Class Mark II 600 dpi" deviceid="MFG:Datamax-O'Neil ;CMD:DPL;MDL:I4606e Mark II;" color="false" driver="datamax_oneil_I4606e" manufacturer="DatamaxONeil" model="10020" parameters="dpl_params" />
-      <printer translate="name" name="Datamax-ONeil E Class Mark III Basic 203 dpi" deviceid="MFG:Datamax-O'Neil ;CMD:DPL;MDL:E4204B Mark III;" color="false" driver="datamax_oneil_E4204B" manufacturer="DatamaxONeil" model="10021" parameters="dpl_params" />
-      <printer translate="name" name="Datamax-ONeil E Class Mark III Basic 300 dpi" deviceid="MFG:Datamax-O'Neil ;CMD:DPL;MDL:E4304B Mark III;" color="false" driver="datamax_oneil_E4304B" manufacturer="DatamaxONeil" model="10022" parameters="dpl_params" />
-      <printer translate="name" name="Datamax-ONeil E Class Mark III Advanced 203 dpi" deviceid="MFG:Datamax-O'Neil ;CMD:DPL;MDL:E4205A Mark III;" color="false" driver="datamax_oneil_E4205A" manufacturer="DatamaxONeil" model="10023" parameters="dpl_params" />
-      <printer translate="name" name="Datamax-ONeil E Class Mark III Advanced 300 dpi" deviceid="MFG:Datamax-O'Neil ;CMD:DPL;MDL:E4305A Mark III;" color="false" driver="datamax_oneil_E4305A" manufacturer="DatamaxONeil" model="10024" parameters="dpl_params" />
-      <printer translate="name" name="Datamax-ONeil E Class Mark III Pro 203 dpi" deviceid="MFG:Datamax-O'Neil ;CMD:DPL;MDL:E4206P Mark III;" color="false" driver="datamax_oneil_E4206P" manufacturer="DatamaxONeil" model="10025" parameters="dpl_params" />
-      <printer translate="name" name="Datamax-ONeil E Class Mark III Pro 300 dpi" deviceid="MFG:Datamax-O'Neil ;CMD:DPL;MDL:E4305P Mark III;" color="false" driver="datamax_oneil_E4305P" manufacturer="DatamaxONeil" model="10026" parameters="dpl_params" />
-      <printer translate="name" name="Datamax-ONeil E Class Mark III ProPlus 203 dpi" deviceid="MFG:Datamax-O'Neil ;CMD:DPL;MDL:E4206L Mark III;" color="false" driver="datamax_oneil_E4206L" manufacturer="DatamaxONeil" model="10027" parameters="dpl_params" />
-      <printer translate="name" name="Datamax-ONeil E Class Mark III ProPlus 300 dpi" deviceid="MFG:Datamax-O'Neil ;CMD:DPL;MDL:E4305L Mark III;" color="false" driver="datamax_oneil_E4305L" manufacturer="DatamaxONeil" model="10028" parameters="dpl_params" />
-    </family>
-    <family name="dpl">
-      <parameters name="dpl_params">
-        <parameter type="float" name="Gamma">1.000</parameter>
-        <parameter type="float" name="Density">1.000</parameter>
-      </parameters>
       <printer translate="name" name="Datamax-O'Neil I4212e Mark II" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:I4212e Mark II;" color="false" driver="datamax_oneil_I4212e" manufacturer="Datamax O'Neil" model="10017" parameters="dpl_params" />
       <printer translate="name" name="Datamax-O'Neil I4310e Mark II" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:I4310e Mark II;" color="false" driver="datamax_oneil_I4310e" manufacturer="Datamax O'Neil" model="10018" parameters="dpl_params" />
       <printer translate="name" name="Datamax-O'Neil I4606e Mark II" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:I4606e Mark II;" color="false" driver="datamax_oneil_I4606e" manufacturer="Datamax O'Neil" model="10020" parameters="dpl_params" />

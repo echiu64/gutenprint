@@ -329,6 +329,21 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      [*2] Only three levels of gray are supported in the Epson
      	  SureColor P10000 and P20000.
 
+6) Added support for most of the Datamax-O'Neil DPL printers:
+
+	Datamax O'Neil I4212e
+	Datamax O'Neil I4310e
+	Datamax O'Neil I4606e
+	Datamax O'Neil E4204B
+	Datamax O'Neil E4304B
+	Datamax O'Neil E4205A
+	Datamax O'Neil E4305A
+	Datamax O'Neil E4206P
+	Datamax O'Neil E4305P
+	Datamax O'Neil E4206L
+	Datamax O'Neil E4305L
+	Datamax O'Neil RL3e			[experimental]
+	Datamax O'Neil RL4e			[experimental]
 
 * Changes from 5.2.10
 
