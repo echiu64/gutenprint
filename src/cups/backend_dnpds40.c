@@ -714,7 +714,7 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
 				ctx->media_count_new = 180;
 				break;
 			default:
-				ctx->media_count_new = 0;
+				ctx->media_count_new = 999; // non-zero
 			}
 			break;
 		case P_DNP_DSRX1:
@@ -726,7 +726,7 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
 				ctx->media_count_new = 350;
 				break;
 			default:
-				ctx->media_count_new = 0;
+				ctx->media_count_new = 999; // non-zero
 			}
 			break;
 		case P_DNP_DS80:
@@ -739,11 +739,11 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
 				ctx->media_count_new = 110;
 				break;
 			default:
-				ctx->media_count_new = 0;
+				ctx->media_count_new = 999; // non-zero
 			}
 			break;
 		default:
-			ctx->media_count_new = 0;
+			ctx->media_count_new = 999; // non-zero
 			break;
 		}
 	}
@@ -1279,6 +1279,10 @@ top:
 		count = atoi((char*)resp+4);
 		free(resp);
 
+		/* Old-sk00l models report one less than they should */
+		if (!ctx->correct_count)
+			count++;
+
 		count -= ctx->mediaoffset;
 
 		if (ctx->media_count_new) {
@@ -1416,6 +1420,10 @@ top:
 
 		count = atoi((char*)resp+4);
 		free(resp);
+
+		/* Old-sk00l models report one less than they should */
+		if (!ctx->correct_count)
+			count++;
 
 		count -= ctx->mediaoffset;
 
@@ -1833,6 +1841,10 @@ static int dnpds40_get_status(struct dnpds40_ctx *ctx)
 	count = atoi((char*)resp+4);
 	free(resp);
 
+	/* Old-sk00l models report one less than they should */
+	if (!ctx->correct_count)
+		count++;
+
 	count -= ctx->mediaoffset;
 	INFO("Native Prints Remaining on Media: %d\n", count);
 
@@ -2211,7 +2223,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS40/DS80/DSRX1/DS620",
-	.version = "0.87",
+	.version = "0.88",
 	.uri_prefix = "dnpds40",
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
