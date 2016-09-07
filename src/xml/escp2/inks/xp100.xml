@@ -44,13 +44,13 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    </channel>
    <channel name="c64_magenta" index="2">
     <HueCurveParam name="MagentaHueCurve"/>
-    <subchannel color="1" headOffset="128" name="Magenta" text="Magenta" translate="text">
+    <subchannel color="1" headOffset="130" name="Magenta" text="Magenta" translate="text">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="c64_yellow" index="3">
     <HueCurveParam name="YellowHueCurve"/>
-    <subchannel color="4" headOffset="256" name="Yellow" text="Yellow" translate="text">
+    <subchannel color="4" headOffset="260" name="Yellow" text="Yellow" translate="text">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
@@ -67,13 +67,13 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    </channel>
    <channel name="c64_magenta" index="2">
     <HueCurveParam name="MagentaHueCurve"/>
-    <subchannel color="1" headOffset="128" name="Magenta" text="Magenta" translate="text">
+    <subchannel color="1" headOffset="130" name="Magenta" text="Magenta" translate="text">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="c64_yellow" index="3">
     <HueCurveParam name="YellowHueCurve"/>
-    <subchannel color="4" headOffset="256" name="Yellow" text="Yellow" translate="text">
+    <subchannel color="4" headOffset="260" name="Yellow" text="Yellow" translate="text">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
@@ -98,12 +98,12 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
     </subchannel>
    </channel>
    <channel name="c64_magenta" index="1">
-    <subchannel color="1" headOffset="128" name="Magenta" text="Magenta" translate="text">
+    <subchannel color="1" headOffset="130" name="Magenta" text="Magenta" translate="text">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="c64_yellow" index="2">
-    <subchannel color="4" headOffset="256" name="Yellow" text="Yellow" translate="text">
+    <subchannel color="4" headOffset="260" name="Yellow" text="Yellow" translate="text">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
@@ -123,12 +123,12 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
     </subchannel>
    </channel>
    <channel name="c64_magenta" index="2">
-    <subchannel color="1" headOffset="128" name="Magenta" text="Magenta" translate="text">
+    <subchannel color="1" headOffset="130" name="Magenta" text="Magenta" translate="text">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="c64_yellow" index="3">
-    <subchannel color="4" headOffset="256" name="Yellow" text="Yellow" translate="text">
+    <subchannel color="4" headOffset="260" name="Yellow" text="Yellow" translate="text">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
