@@ -6,6 +6,7 @@
 *.o
 *.out
 *.tar*
+*.trs
 
 # Generated documentation
 *.1
