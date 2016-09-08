@@ -6,6 +6,7 @@
 *.o
 *.out
 *.tar*
+*.trs
 
 # Generated documentation
 *.1
@@ -155,3 +156,7 @@ ylwrap
 CATALOG.local
 suse-html.dsl
 suse-print.dsl
+
+# Removed by foomatic-remove
+src/ghost
+src/foomatic
