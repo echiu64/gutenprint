@@ -59,6 +59,8 @@
 #define DYESUB_PORTRAIT  0
 #define DYESUB_LANDSCAPE 1
 
+#define MITSU70X_8BPP
+
 #ifndef MIN
 #  define MIN(a,b)	(((a) < (b)) ? (a) : (b))
 #endif /* !MIN */
@@ -3057,6 +3059,8 @@ typedef struct
 {
   int quality;
   int laminate_offset;
+  int use_lut;
+  int sharpen;
 } mitsu70x_privdata_t;
 
 static mitsu70x_privdata_t mitsu70x_privdata;
@@ -3077,6 +3081,20 @@ static const stp_parameter_t mitsu70x_parameters[] =
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
+#ifdef MITSU70X_8BPP
+  {
+    "UseLUT", N_("Internal Color Correction"), "Color=No,Category=Advanced Printer Setup",
+    N_("Use Internal Color Correction"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "Sharpen", N_("Image Sharpening"), "Color=No,Category=Advanced Printer Setup",
+    N_("Sharpening to apply to image (0 is off, 1 is min, 9 is max"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+#endif
 };
 #define mitsu70x_parameter_count (sizeof(mitsu70x_parameters) / sizeof(const stp_parameter_t))
 
@@ -3112,6 +3130,19 @@ mitsu70x_load_parameters(const stp_vars_t *v, const char *name,
       description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
       description->is_active = 1;
     }
+#ifdef MITSU70X_8BPP
+  else if (strcmp(name, "UseLUT") == 0)
+    {
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "Sharpen") == 0)
+    {
+      description->deflt.integer = 0;
+      description->bounds.integer.lower = 0;
+      description->bounds.integer.upper = 9;
+      description->is_active = 1;      
+    }
+#endif
   else
   {
      return 0;
@@ -3133,6 +3164,11 @@ static int mitsu70x_parse_parameters(stp_vars_t *v)
   } else {
      mitsu70x_privdata.quality = 0;
   }
+
+#ifdef MITSU70X_8BPP
+  mitsu70x_privdata.use_lut = stp_get_boolean_parameter(v, "UseLUT");
+  mitsu70x_privdata.sharpen = stp_get_int_parameter(v, "Sharpen");  
+#endif
 
   return 1;
 }
@@ -3198,8 +3234,14 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
   } else {
     stp_putc(0x00, v);
   }
+#ifdef MITSU70X_8BPP
+  dyesub_nputc(v, 0x00, 12);
+  stp_putc(mitsu70x_privdata.sharpen, v);
+  stp_putc(0x01, v);  /* Mark as 8bpp BGR rather than 16bpp YMC cooked */
+  stp_putc(mitsu70x_privdata.use_lut, v);  /* Use LUT? */
+#else
   dyesub_nputc(v, 0x00, 15);
-
+#endif
   dyesub_nputc(v, 0x00, 448); /* Pad to 512-byte block */
 }
 
@@ -3208,6 +3250,7 @@ static void mitsu_cpd70x_printer_init(stp_vars_t *v)
   mitsu_cpd70k60_printer_init(v, 0x01);
 }
 
+#ifndef MITSU70X_8BPP
 static void mitsu_cpd70x_printer_end(stp_vars_t *v)
 {
   /* If Matte lamination is enabled, generate a lamination plane */
@@ -3241,12 +3284,14 @@ static void mitsu_cpd70x_printer_end(stp_vars_t *v)
     dyesub_nputc(v, 0x00, 512 - ((privdata.w_size * (privdata.h_size + mitsu70x_privdata.laminate_offset) * 2) % 512));
   }
 }
-
+#endif
 
 static void mitsu_cpd70x_plane_end(stp_vars_t *v)
 {
+#ifndef MITSU70X_8BPP
   /* Pad up to a 512-byte block */
   dyesub_nputc(v, 0x00, 512 - ((privdata.h_size * privdata.w_size * 2) % 512));
+#endif
 }
 
 /* Mitsubishi CP-K60D */
@@ -3331,6 +3376,19 @@ mitsu_k60_load_parameters(const stp_vars_t *v, const char *name,
       description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
       description->is_active = 1;
     }
+#ifdef MITSU70X_8BPP
+  else if (strcmp(name, "UseLUT") == 0)
+    {
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "Sharpen") == 0)
+    {
+      description->deflt.integer = 0;
+      description->bounds.integer.lower = 0;
+      description->bounds.integer.upper = 9;
+      description->is_active = 1;      
+    }
+#endif
   else
   {
      return 0;
@@ -3490,6 +3548,19 @@ mitsu_d90_load_parameters(const stp_vars_t *v, const char *name,
       description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
       description->is_active = 1;
     }
+#ifdef MITSU70X_8BPP
+  else if (strcmp(name, "UseLUT") == 0)
+    {
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "Sharpen") == 0)
+    {
+      description->deflt.integer = 0;
+      description->bounds.integer.lower = 0;
+      description->bounds.integer.upper = 9;
+      description->is_active = 0; // XXX not sure if supported on D90.
+    }
+#endif
   else
   {
      return 0;
@@ -3510,6 +3581,11 @@ static int mitsu_d90_parse_parameters(stp_vars_t *v)
      mitsu70x_privdata.quality = 0;
   }
 
+#ifdef MITSU70X_8BPP
+  mitsu70x_privdata.use_lut = stp_get_boolean_parameter(v, "UseLUT");
+  mitsu70x_privdata.sharpen = stp_get_int_parameter(v, "Sharpen"); // XXX
+#endif
+  
   return 1;
 }
 
@@ -3555,7 +3631,11 @@ static void mitsu_cpd90_printer_init(stp_vars_t *v)
   stp_zfwrite((privdata.laminate->seq).data, 1,
 	      (privdata.laminate->seq).bytes, v); /* Lamination mode */  
   stp_putc(mitsu70x_privdata.quality, v);
-  stp_putc(0x00, v);  /* XXX 0x01 = no color correction, 0x00 = on */
+#ifdef MITSU70X_8BPP
+  stp_putc(mitsu70x_privdata.use_lut, v);
+#else
+  stp_putc(0x00, v);  /* ie use printer's built in LUT */
+#endif
   stp_putc(0x04, v);
   stp_putc(0x04, v);  
   dyesub_nputc(v, 0x00, 11);
@@ -5579,15 +5659,24 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Mitsubishi CPD70D/CPD707D */
     4105,
+#ifdef MITSU70X_8BPP
+    &bgr_ink_list,
+#else
     &ymc_ink_list,
+#endif
     &res_300dpi_list,
     &mitsu_cpd70x_page_list,
     &mitsu_cpd70x_printsize_list,
     SHRT_MAX,
+#ifdef MITSU70X_8BPP
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
+    &mitsu_cpd70x_printer_init, NULL,
+#else
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_16BPP
       | DYESUB_FEATURE_BIGENDIAN,
-    &mitsu_cpd70x_printer_init, &mitsu_cpd70x_printer_end,
+    &mitsu_cpd70x_printer_init, &mitsu_cpd70x_printer_end,    
+#endif
     NULL, &mitsu_cpd70x_plane_end,
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
@@ -5600,15 +5689,24 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Mitsubishi CPK60D */
     4106,
+#ifdef MITSU70X_8BPP
+    &bgr_ink_list,
+#else
     &ymc_ink_list,
+#endif
     &res_300dpi_list,
     &mitsu_cpk60_page_list,
     &mitsu_cpk60_printsize_list,
     SHRT_MAX,
+#ifdef MITSU70X_8BPP
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
+    &mitsu_cpk60_printer_init, NULL,
+#else
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_16BPP
       | DYESUB_FEATURE_BIGENDIAN,
     &mitsu_cpk60_printer_init, &mitsu_cpd70x_printer_end,    
+#endif
     NULL, &mitsu_cpd70x_plane_end,
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
@@ -5621,15 +5719,24 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Mitsubishi CPD80D */
     4107,
+#ifdef MITSU70X_8BPP
+    &bgr_ink_list,
+#else
     &ymc_ink_list,
+#endif
     &res_300dpi_list,
     &mitsu_cpd80_page_list,
     &mitsu_cpd80_printsize_list,
     SHRT_MAX,
+#ifdef MITSU70X_8BPP
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
+    &mitsu_cpd70x_printer_init, NULL,
+#else
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_16BPP
       | DYESUB_FEATURE_BIGENDIAN,
     &mitsu_cpd70x_printer_init, &mitsu_cpd70x_printer_end,
+#endif
     NULL, &mitsu_cpd70x_plane_end,
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
@@ -5642,15 +5749,24 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Kodak 305 */
     4108,
+#ifdef MITSU70X_8BPP
+    &bgr_ink_list,
+#else
     &ymc_ink_list,
+#endif
     &res_300dpi_list,
     &kodak305_page_list,
     &kodak305_printsize_list,
     SHRT_MAX,
+#ifdef MITSU70X_8BPP
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
+    &kodak305_printer_init, NULL,    
+#else
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_16BPP
       | DYESUB_FEATURE_BIGENDIAN,
     &kodak305_printer_init, &mitsu_cpd70x_printer_end,    
+#endif
     NULL, &mitsu_cpd70x_plane_end,
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
