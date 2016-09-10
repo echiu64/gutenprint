@@ -2918,12 +2918,13 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
   stp_put16_be(privdata.w_size, v);
   stp_put16_be(privdata.h_size, v);
   if (*((const char*)((privdata.laminate->seq).data)) != 0x00) {
-    /* Laminate a slightly larger boundary in Matte mode */
     stp_put16_be(privdata.w_size, v);
-    stp_put16_be(privdata.h_size + 12, v);
     if (model == 0x02 || model == 0x90) {
+      stp_put16_be(privdata.h_size, v);
       quality = 4;  /* Matte Lamination forces UltraFine on K60 or K305 */
     } else {
+      /* Laminate a slightly larger boundary in Matte mode */
+      stp_put16_be(privdata.h_size + 12, v);
       quality = 3; /* Matte Lamination forces Superfine (or UltraFine) */
     }
   } else {
@@ -2946,7 +2947,7 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
 	      (privdata.laminate->seq).bytes, v); /* Lamination mode */
   dyesub_nputc(v, 0x00, 6);
 
-  /* Multi-cut controlx */
+  /* Multi-cut control */
   if (strcmp(privdata.pagesize,"w432h576-div2") == 0) {
     stp_putc(0x01, v);
   } else if (strcmp(privdata.pagesize,"w360h504-div2") == 0) {
