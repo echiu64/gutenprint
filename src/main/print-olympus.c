@@ -6654,7 +6654,7 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
     pv.byteswap = !dyesub_feature(caps, DYESUB_FEATURE_BIGENDIAN);
 #else
 #error "Unable to determine endianness, aborting compilation!"
-#endif    
+#endif
   }
 
   pv.image_data = dyesub_read_image(v, &pv, image);
