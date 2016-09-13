@@ -2978,7 +2978,7 @@ static void mitsu_cpd70x_printer_end(stp_vars_t *v)
     int r, c;
     unsigned long seed = 1;
 
-    /* Now generate lamination pattern */
+    /* Now generate lamination pattern, overshoot image by 12 rows. */
     for (c = 0 ; c < privdata.w_size ; c++) {
       for (r = 0 ; r < privdata.h_size + 12 ; r++) {
 	int i = xrand(&seed) & 0x3f;
@@ -3008,7 +3008,7 @@ static void mitsu_cpk60_printer_end(stp_vars_t *v)
 
     /* Now generate lamination pattern */
     for (c = 0 ; c < privdata.w_size ; c++) {
-      for (r = 0 ; r < privdata.h_size + 12 ; r++) {
+      for (r = 0 ; r < privdata.h_size ; r++) {
 	int i = xrand(&seed) & 0x3f;
 	if (i < 42)
 	  stp_put16_be(0x9d00, v);
