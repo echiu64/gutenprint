@@ -103,7 +103,7 @@
       <printer translate="name" name="Canon BJC-1000" deviceid="MFG:Canon;MDL:BJC-1000;DES:Canon BJC-1000;CMD:BJL,BJRaster,BSCC,TXT01;" driver="bjc-1000" manufacturer="Canon" model="1000" parameters="density_800_params" foomaticid="Canon-BJC-1000" />
       <printer translate="name" name="Canon BJC-2000" driver="bjc-2000" manufacturer="Canon" model="2000" parameters="density_800_params" foomaticid="Canon-BJC-2000" />
       <printer translate="name" name="Canon BJC-2010" driver="bjc-2010" manufacturer="Canon" model="2000" parameters="density_800_params" foomaticid="Canon-BJC-2010" />
-      <printer translate="name" name="Canon BJC-2100" deviceid="MFG:Canon;MDL:BJC-2100;DES:Canon BJC-2100;" driver="bjc-2100" manufacturer="Canon" model="4300" parameters="gamma_750_params" foomaticid="Canon-BJC-2100" />
+      <printer translate="name" name="Canon BJC-2100" deviceid="MFG:Canon;MDL:BJC-2100;DES:Canon BJC-2100;" driver="bjc-2100" manufacturer="Canon" model="2100" parameters="gamma_750_params" foomaticid="Canon-BJC-2100" />
       <printer translate="name" name="Canon BJC-2110" driver="bjc-2110" manufacturer="Canon" model="2000" parameters="density_800_params" foomaticid="Canon-BJC-2110" />
       <printer translate="name" name="Canon BJC-3000" deviceid="MFG:Canon;MDL:BJC-3000;DES:Canon BJC-3000;CMD:BJL,BJRaster3,BSCC,TXT01,BJScan2;" driver="bjc-3000" manufacturer="Canon" model="3000" parameters="density_800_params" foomaticid="Canon-BJC-3000" />
       <printer translate="name" name="Canon BJC-4000" driver="bjc-4000" manufacturer="Canon" model="4300" parameters="gamma_750_params" foomaticid="Canon-BJC-4000" />

@@ -311,6 +311,23 @@ static const canon_paper_t canon_default_papers[] = { /*                        
 };
 DECLARE_PAPERS(canon_default);
 
+static const canon_paper_t canon_BJC_2100_papers[] = {
+  /* Name                    Text                        (c   (l   (P   (w Density     k_upper lum_adj     */
+  { "Plain",		N_ ("Plain Paper"),		0x00,0x00,0x00,0x00,0.50, 0.25, 0.500, 0, 0, 0 },
+  { "Transparency",	N_ ("Transparencies"),		0x02,0x02,0x00,0x00,1.00, 1.00, 0.900, 0, 0, 0 },
+  { "BackPrint",	N_ ("Back Print Film"),		0x03,0x03,0x00,0x00,1.00, 1.00, 0.900, 0, 0, 0 },
+  { "Fabric",		N_ ("Fabric Sheets"),		0x04,0x04,0x00,0x00,0.50, 0.25, 0.500, 0, 0, 0 },
+  { "Envelope",		N_ ("Envelope"),		0x08,0x08,0x00,0x00,0.50, 0.25, 0.500, 0, 0, 0 },
+  { "Coated",		N_ ("High Resolution Paper"),	0x07,0x0b,0x00,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "TShirt",		N_ ("T-Shirt Transfers"),	0x03,0x03,0x00,0x00,0.50, 0.25, 0.500, 0, 0, 0 },
+  { "GlossyFilm",	N_ ("High Gloss Film"),		0x06,0x07,0x00,0x00,1.00, 1.00, 0.999, 0, 0, 0 },
+  { "GlossyPaper",	N_ ("Glossy Photo Paper"),	0x05,0x06,0x00,0x00,1.00, 1.00, 0.999, 0, 0, 0 },
+  { "GlossyCard",	N_ ("Glossy Photo Cards"),	0x05,0x0c,0x00,0x00,1.00, 1.00, 0.999, 0, 0, 0 },
+  { "GlossyPro",	N_ ("Photo Paper Pro"),		0x09,0x09,0x00,0x00,1.00, 1.00, 0.999, 0, 0, 0 },
+  { "Other",		N_ ("Other"),                   0x01,0x09,0x00,0x00,0.50, 0.25, 0.500, 0, 0, 0 },
+};
+DECLARE_PAPERS(canon_BJC_2100);
+
 static const canon_paper_t canon_PIXMA_iP4000_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
   { "Transparency", 	N_ ("Transparencies"),			0x02,0x02,0x00,0x00,0.78, 0.25, 0.500, 0, 0, 0 },

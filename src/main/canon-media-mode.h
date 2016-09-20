@@ -209,6 +209,54 @@ static const canon_modeuse_t canon_BJC_2000_modeuses[] = {
 
 DECLARE_MODEUSES(canon_BJC_2000);
 
+/* ----------------------------------- Canon BJC 2100 ----------------------------------- */
+
+static const char* canon_BJC_2100_modeuses_plain[] = {
+  "360x360dpi_high",
+  "360x360dpi",
+  "720x360dpi",
+  "360x360dpi_draft",
+  "180x180dpi",
+  /* Photo */
+  "360x360dpi_photo",
+  NULL
+};
+
+static const char* canon_BJC_2100_modeuses_PPgloss[] = {
+  "360x360dpi_high",
+  "360x360dpi",
+  /* Photo */
+  "360x360dpi_photo",
+  NULL
+};
+
+static const char* canon_BJC_2100_modeuses_coated[] = {
+  "360x360dpi_high",
+  "360x360dpi",
+  "720x360dpi",
+  "360x360dpi_draft",
+  /* Photo */
+  "360x360dpi_photo",
+  NULL
+};
+
+static const canon_modeuse_t canon_BJC_2100_modeuses[] = {
+  { "Plain",		canon_BJC_2100_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_PHOTO_SUPPORT | INKSET_PHOTO_MODEREPL },
+  { "Transparency",	canon_BJC_2100_modeuses_PPgloss, INKSET_BLACK_SUPPORT },
+  { "BackPrint",	canon_BJC_2100_modeuses_PPgloss, INKSET_BLACK_SUPPORT },
+  { "Fabric",		canon_BJC_2100_modeuses_PPgloss, INKSET_BLACK_SUPPORT },
+  { "Envelope",		canon_BJC_2100_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_PHOTO_SUPPORT | INKSET_PHOTO_MODEREPL },
+  { "Coated",		canon_BJC_2100_modeuses_coated, INKSET_BLACK_SUPPORT | INKSET_PHOTO_SUPPORT | INKSET_PHOTO_MODEREPL },
+  { "TShirt",		canon_BJC_2100_modeuses_PPgloss, INKSET_BLACK_SUPPORT },
+  { "GlossyFilm",	canon_BJC_2100_modeuses_PPgloss, INKSET_BLACK_SUPPORT },
+  { "GlossyPaper",	canon_BJC_2100_modeuses_PPgloss, INKSET_BLACK_SUPPORT | INKSET_PHOTO_SUPPORT | INKSET_PHOTO_MODEREPL },
+  { "GlossyCard",	canon_BJC_2100_modeuses_PPgloss, INKSET_BLACK_SUPPORT | INKSET_PHOTO_SUPPORT | INKSET_PHOTO_MODEREPL },
+  { "GlossyPro",	canon_BJC_2100_modeuses_PPgloss, INKSET_BLACK_SUPPORT | INKSET_PHOTO_SUPPORT | INKSET_PHOTO_MODEREPL },/*untested*/
+  { "Other",		canon_BJC_2100_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_PHOTO_SUPPORT | INKSET_PHOTO_MODEREPL },
+};
+
+DECLARE_MODEUSES(canon_BJC_2100);
+
 /* ----------------------------------- Canon BJC 3000 ----------------------------------- */
 
 static const char* canon_BJC_3000_modeuses_plain[] = {

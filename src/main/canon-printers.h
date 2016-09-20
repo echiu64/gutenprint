@@ -631,6 +631,25 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL
   },
 
+  { /* Canon BJC 2100 *//* heads: BC-20 (black), BC-21e (color/black), BC-22e (photo) (also IS-22 color scanner cartridge) */
+    /* 720 (hor) x 360 dpi (vert) */
+    "2100", 1,
+    618, 980,      /* 8.58" x 13.61" different per paper size, and banner (max 70") */
+    10, 10, 9, 20, /* for A4 from user manual */
+    &canon_default_slotlist,
+    CANON_CAP_STD0 | CANON_CAP_a | CANON_CAP_cart,0,
+    2,0,
+    0, /* Upper/Lower Cassette option */
+    NULL,/* only SetTime */
+    &canon_BJC_2100_modelist,
+    &canon_BJC_2100_paperlist,
+    &canon_BJC_2100_modeuselist,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+  },
+
   { /* Canon BJC 4300 *//* heads: BC-20 BC-21 BC-22 BC-29 */
     "4300", 1,
     618, 936,      /* 8.58" x 13 " */
