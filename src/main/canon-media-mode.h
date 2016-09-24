@@ -212,31 +212,31 @@ DECLARE_MODEUSES(canon_BJC_2000);
 /* ----------------------------------- Canon BJC 2100 ----------------------------------- */
 
 static const char* canon_BJC_2100_modeuses_plain[] = {
-  "360x360dpi_high",
+  "360x360dmt_high",
   "360x360dpi",
   "720x360dpi",
   "360x360dpi_draft",
   "180x180dpi",
   /* Photo */
-  "360x360dpi_photo",
+  "360x360dmt_photo",
   NULL
 };
 
 static const char* canon_BJC_2100_modeuses_PPgloss[] = {
-  "360x360dpi_high",
+  "360x360dmt_high",
   "360x360dpi",
   /* Photo */
-  "360x360dpi_photo",
+  "360x360dmt_photo",
   NULL
 };
 
 static const char* canon_BJC_2100_modeuses_coated[] = {
-  "360x360dpi_high",
+  "360x360dmt_high",
   "360x360dpi",
   "720x360dpi",
   "360x360dpi_draft",
   /* Photo */
-  "360x360dpi_photo",
+  "360x360dmt_photo",
   NULL
 };
 
