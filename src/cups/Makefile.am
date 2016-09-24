@@ -300,4 +300,5 @@ EXTRA_DIST = \
 	calibrate.ppm \
 	command.txt \
 	command.types \
+	gutenprint-users-manual.pdf \
 	test-ppds
