@@ -50,6 +50,14 @@
 
 //#define ENABLE_CORRTABLES
 
+#ifndef CORRTABLE_PATH
+#define CORRTABLE_PATH "D70"
+#endif
+
+#ifdef ENABLE_CORRTABLES
+#include "D70/Mitsu_D70.c"
+#endif
+
 /* Private data stucture */
 struct mitsu70x_ctx {
 	struct libusb_device_handle *dev;
@@ -71,10 +79,14 @@ struct mitsu70x_ctx {
 	int num_decks;
 
 #ifdef ENABLE_CORRTABLES
-	struct mitsu70x_corrdata *corrdata;
-	struct mitsu70x_corrdatalens *corrdatalens;
 	char *laminatefname;
 	char *lutfname;
+	char *cpcfname;
+
+	struct CColorConv3D lut;
+	struct CPCData cpcdata;
+
+	char *last_cpcfname;
 
 	int raw_format;
 #endif
@@ -260,74 +272,12 @@ struct mitsu70x_hdr {
 	uint8_t  zero3[6];
 
 	uint8_t  multicut;
-	uint8_t  zero4[15];
+	uint8_t  zero4[13];
+	uint8_t  mode;     /* 0 for cooked YMC planar, 1 for packed BGR */
+	uint8_t  use_lut;  /* in BGR mode, 0 disables, 1 enables */
 
 	uint8_t  pad[448];
 } __attribute__((packed));
-
-#ifdef ENABLE_CORRTABLES
-/* Correction data definitions */
-#define CORRDATA_DEF
-struct mitsu70x_corrdata {
-        uint16_t liney[2730];
-        uint16_t linem[2730];
-        uint16_t linec[2730];
-        uint16_t gnmby[256]; // B->Y conversion matrix
-        uint16_t gnmgm[256]; // G->M conversion matrix
-        uint16_t gnmrc[256]; // R->C conversion matrix
-        double fm[256];
-        double ksp[128];
-        double ksm[128];
-        double osp[128];
-        double osm[128];
-        double kp[11];
-        double km[11];
-        double hk[4];
-        uint16_t speed[3];
-        double fh[5];     /* only 4 in length on D70 Normal/Superfine */
-        double shk[72];
-        double uh[101];
-        uint16_t rolk[13]; /* Missing on D70x family */
-        uint32_t rev[76];  /* Missing on D70x and ASK300 */
-};
-
-struct mitsu70x_corrdatalens {
-        size_t liney;
-        size_t linem;
-        size_t linec;
-        size_t gnmby;
-        size_t gnmgm;
-        size_t gnmrc;
-        size_t fm;
-        size_t ksp;
-        size_t ksm;
-        size_t osp;
-        size_t osm;
-        size_t kp;
-        size_t km;
-        size_t hk;
-        size_t speed;
-        size_t fh;
-        size_t shk;
-        size_t uh;
-        size_t rolk;
-        size_t rev;
-};
-
-#include "D70/CPD70N01.h"    // Normal/Fine
-#include "D70/CPD70S01.h"    // Superfine
-#include "D70/CPD70U01.h"    // Ultrafine
-//#include "D70/CPD80E01.h"   // ???
-#include "D70/CPD80N01.h"    // Normal/Fine
-#include "D70/CPD80S01.h"    // Superfine
-#include "D70/CPD80U01.h"    // Ultrafine
-#include "D70/ASK300T1.h"    // Normal/Fine
-#include "D70/ASK300T3.h"    // Superfine/Ultrafine
-#include "D70/CPS60T01.h"    // Normal/Fine
-#include "D70/CPS60T03.h"    // Superfine/Ultrafine
-#include "D70/EK305T01.h"    // Normal/Fine
-#include "D70/EK305T03.h"    // Superfine/Ultrafine
-#endif
 
 /* Error dumps, etc */
 
@@ -382,11 +332,11 @@ static char *mitsu70x_jobstatuses(uint8_t *sts)
 		case JOB_STATUS1_PRINT_EJECT:
 			return "Ejecting page";
 		default:
-			return "Unknown 'Print' status1\n";
+			return "Unknown 'Print' status1";
 		}
 		break;
 	case JOB_STATUS0_ASSIGN:
-		return "Unknown 'Assignment' status1\n";
+		return "Unknown 'Assignment' status1";
 	case JOB_STATUS0_END:
 		switch(sts[1]) {
 		case JOB_STATUS1_END_OK:
@@ -616,6 +566,7 @@ static void mitsu70x_teardown(void *vctx) {
 
 	if (ctx->databuf)
 		free(ctx->databuf);
+
 	free(ctx);
 }
 
@@ -623,6 +574,7 @@ static int mitsu70x_read_parse(void *vctx, int data_fd) {
 	struct mitsu70x_ctx *ctx = vctx;
 	int i, remain;
 	struct mitsu70x_hdr mhdr;
+	uint32_t planelen;
 
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
@@ -663,83 +615,75 @@ repeat:
 	}
 
 #ifdef ENABLE_CORRTABLES
-	ctx->raw_format = 1; // XXX until we define a new spool format for
-	                     //     the data.  Maybe reuse D90 header?
+	ctx->raw_format = !mhdr.mode;
 
 	/* Figure out the correction data table to use */
 	if (ctx->type == P_MITSU_D70X) {
-		ctx->laminatefname = "D70MAT01.raw";
-		ctx->lutfname = "CPD70L01.lut";
+		ctx->laminatefname = CORRTABLE_PATH "/D70MAT01.raw";
+		ctx->lutfname = CORRTABLE_PATH "/CPD70L01.lut";
 
 		if (mhdr.speed == 3) {
-			ctx->corrdata = &CPD70S01_data;
-			ctx->corrdatalens = &CPD70S01_lengths;
+			ctx->cpcfname = CORRTABLE_PATH "/CPD70S01.cpc";
 		} else if (mhdr.speed == 4) {
-			ctx->corrdata = &CPD70U01_data;
-			ctx->corrdatalens = &CPD70U01_lengths;
+			ctx->cpcfname = CORRTABLE_PATH "/CPD70U01.cpc";
 		} else {
-			ctx->corrdata = &CPD70N01_data;
-			ctx->corrdatalens = &CPD70N01_lengths;
+			ctx->cpcfname = CORRTABLE_PATH "/CPD70N01.cpc";
 		}
 	} else if (ctx->type == P_MITSU_D80) {
-		ctx->laminatefname = "D80MAT01.raw";
-		ctx->lutfname = "CPD80L01.lut";
+		ctx->laminatefname = CORRTABLE_PATH "/D80MAT01.raw";
+		ctx->lutfname = CORRTABLE_PATH "/CPD80L01.lut";
 
 		if (mhdr.speed == 3) {
-			ctx->corrdata = &CPD80S01_data;
-			ctx->corrdatalens = &CPD80S01_lengths;
+			ctx->cpcfname = CORRTABLE_PATH "/CPD80S01.cpc";
 		} else if (mhdr.speed == 4) {
-			ctx->corrdata = &CPD80U01_data;
-			ctx->corrdatalens = &CPD80U01_lengths;
+			ctx->cpcfname = CORRTABLE_PATH "/CPD80U01.cpc";
 		} else {
-			ctx->corrdata = &CPD80N01_data;
-			ctx->corrdatalens = &CPD80N01_lengths;
+			ctx->cpcfname = CORRTABLE_PATH "/CPD80N01.cpc";
 		}
 		// XXX what about CPD80**E**01?
 	} else if (ctx->type == P_MITSU_K60) {
-		ctx->laminatefname = "S60MAT02.raw";
-		ctx->lutfname = "CPS60L01.lut";
+		ctx->laminatefname = CORRTABLE_PATH "/S60MAT02.raw";
+		ctx->lutfname = CORRTABLE_PATH "/CPS60L01.lut";
 
 		if (mhdr.speed == 3 || mhdr.speed == 4) {
-			ctx->corrdata = &CPS60T03_data;
-			ctx->corrdatalens = &CPS60T03_lengths;
+			ctx->cpcfname = CORRTABLE_PATH "/CPS60T03.cpc";
 		} else {
-			ctx->corrdata = &CPS60T01_data;
-			ctx->corrdatalens = &CPS60T01_lengths;
+			ctx->cpcfname = CORRTABLE_PATH "/CPS60T01.cpc";
 		}
 
 	} else if (ctx->type == P_KODAK_305) {
-		ctx->laminatefname = "EK305MAT.raw"; // Same as K60
-		ctx->lutfname = "EK305L01.lut";
+		ctx->laminatefname = CORRTABLE_PATH "/EK305MAT.raw"; // Same as K60
+		ctx->lutfname = CORRTABLE_PATH "/EK305L01.lut";
 
 		if (mhdr.speed == 3 || mhdr.speed == 4) {
-			ctx->corrdata = &EK305T03_data;
-			ctx->corrdatalens = &EK305T03_lengths;
+			ctx->cpcfname = CORRTABLE_PATH "/EK305T03.cpc";
 		} else {
-			ctx->corrdata = &EK305T01_data;
-			ctx->corrdatalens = &EK305T01_lengths;
+			ctx->cpcfname = CORRTABLE_PATH "/EK305T03.cpc";
 		}
 	} else if (ctx->type == P_FUJI_ASK300) {
-		ctx->laminatefname = "ASK300M2.raw"; // Same as D70
-		ctx->lutfname = "CPD70L01.lut";  // XXX guess!
+		ctx->laminatefname = CORRTABLE_PATH "/ASK300M2.raw"; // Same as D70
+		ctx->lutfname = CORRTABLE_PATH "/CPD70L01.lut";  // XXX guess, driver did not come with external LUT!
 
 		if (mhdr.speed == 3 || mhdr.speed == 4) {
-			ctx->corrdata = &ASK300T3_data;
-			ctx->corrdatalens = &ASK300T3_lengths;
+			ctx->cpcfname = CORRTABLE_PATH "/ASK300T3.cpc";
 		} else {
-			ctx->corrdata = &ASK300T1_data;
-			ctx->corrdatalens = &ASK300T1_lengths;
+			ctx->cpcfname = CORRTABLE_PATH "/ASK300T1.cpc";
 		}
 	}
+	if (!mhdr.use_lut)
+		ctx->lutfname = NULL;
+
+	/* Clean up header back to pristine. */
+	mhdr.use_lut = 0;
+	mhdr.mode = 0;
 #endif
 
-	/* Work out printjob size */
+	/* Work out total printjob size */
 	ctx->cols = be16_to_cpu(mhdr.cols);
 	ctx->rows = be16_to_cpu(mhdr.rows);
 
-	remain = ctx->rows * ctx->cols * 2;
-	remain = (remain + 511) / 512 * 512; /* Round to nearest 512 bytes. */
-	remain *= 3;  /* One for each plane */
+	planelen = ctx->rows * ctx->cols * 2;
+	planelen = (planelen + 511) / 512 * 512; /* Round to nearest 512 bytes. */
 
 	if (!mhdr.laminate && mhdr.laminate_mode) {
 		i = be16_to_cpu(mhdr.lamcols) * be16_to_cpu(mhdr.lamrows) * 2;
@@ -747,43 +691,26 @@ repeat:
 		ctx->matte = i;
 	}
 
-	ctx->databuf = malloc(sizeof(mhdr) + remain + ctx->matte);
+	remain = 3 * planelen + ctx->matte;
+
+	ctx->datalen = 0;
+	ctx->databuf = malloc(sizeof(mhdr) + remain);
 	if (!ctx->databuf) {
 		ERROR("Memory allocation failure!\n");
 		return CUPS_BACKEND_FAILED;
 	}
 
-	memcpy(ctx->databuf, &mhdr, sizeof(mhdr));
+	memcpy(ctx->databuf + ctx->datalen, &mhdr, sizeof(mhdr));
 	ctx->datalen += sizeof(mhdr);
 
-#ifndef ENABLE_CORRTABLES
-	/* Read matte from spool... */
-	remain += ctx->matte;
-#endif
-
-	/* Read in the spool data */
-	while(remain) {
-		i = read(data_fd, ctx->databuf + ctx->datalen, remain);
-		if (i == 0)
-			return CUPS_BACKEND_CANCEL;
-		if (i < 0)
-			return CUPS_BACKEND_CANCEL;
-		ctx->datalen += i;
-		remain -= i;
-	}
-
 #ifdef ENABLE_CORRTABLES
-	/* Read matte from matte file */
-	if (!ctx->raw_format && ctx->matte) {
-		int fd;
-		fd = open(ctx->laminatefname, O_RDONLY);
-		if (fd < 0) {
-			ERROR("Unable to open matte lamination data file '%s'\n", ctx->laminatefname);
-			return CUPS_BACKEND_CANCEL;
-		}
-		remain = ctx->matte;
-		while (remain) {
-			i = read(fd, ctx->databuf + ctx->datalen, remain);
+	if (ctx->raw_format) { /* RAW MODE */
+#endif
+		DEBUG("Reading in %d bytes of 16bpp YMCL data\n", remain);
+
+		/* Read in the spool data */
+		while(remain) {
+			i = read(data_fd, ctx->databuf + ctx->datalen, remain);
 			if (i == 0)
 				return CUPS_BACKEND_CANCEL;
 			if (i < 0)
@@ -791,9 +718,116 @@ repeat:
 			ctx->datalen += i;
 			remain -= i;
 		}
+#ifdef ENABLE_CORRTABLES
+	} else {  /* RAW MODE OFF */
+		int spoolbuflen = 0;
+		uint8_t *spoolbuf;
+
+		remain = ctx->rows * ctx->cols * 3;
+		DEBUG("Reading in %d bytes of 8bpp BGR data\n", remain);
+
+		spoolbuflen = 0; spoolbuf = malloc(remain);
+		if (!spoolbuf) {
+			ERROR("Memory allocation failure!\n");
+			return CUPS_BACKEND_FAILED;
+		}
+
+		/* Read in the BGR data */
+		while (remain) {
+			i = read(data_fd, spoolbuf + spoolbuflen, remain);
+			if (i == 0)
+				return CUPS_BACKEND_CANCEL;
+			if (i < 0)
+				return CUPS_BACKEND_CANCEL;
+			spoolbuflen += i;
+			remain -= i;
+		}
+
+		/* Run through basic LUT, if present and enabled */
+		if (ctx->lutfname) {
+			DEBUG("Running print data through LUT\n");
+			uint8_t *buf = malloc(LUT_LEN);
+			if (!buf) {
+				ERROR("Memory allocation failure!\n");
+				return CUPS_BACKEND_FAILED;
+			}
+			if (CColorConv3D_Get3DColorTable(buf, ctx->lutfname)) {
+				ERROR("Unable to open LUT file '%s'\n", ctx->lutfname);
+				return CUPS_BACKEND_CANCEL;
+			}
+			CColorConv3D_Load3DColorTable(&ctx->lut, buf);
+			free(buf);
+			CColorConv3D_DoColorConv(&ctx->lut, spoolbuf, ctx->cols, ctx->rows, ctx->cols * 3, 1);
+			// XXX proprietary lib also does gamma+contrast+brightness
+		}
+
+		/* Load in the CPC file, if needed! */
+		if (ctx->cpcfname && ctx->cpcfname != ctx->last_cpcfname) {
+			ctx->last_cpcfname = ctx->cpcfname;
+			if (load_CPCData(&ctx->cpcdata, ctx->cpcfname)) {
+				ERROR("Unable to load CPC file '%s'\n", ctx->cpcfname);
+				return CUPS_BACKEND_CANCEL;
+			}
+		}
+
+		// XXX INSERT ALGORITHM HERE...
+
+		// XXX optionally CreateInkCorrectGammaTable(...)
+
+		/* Convert to YMC using corrtables (aka CImageEffect70::DoGamma) */
+		{
+			uint32_t r, c;
+			uint32_t in = 0, out = 0;
+
+			uint16_t *offset_y = (uint16_t*)(ctx->databuf + ctx->datalen);
+			uint16_t *offset_m = offset_y + planelen/2;
+			uint16_t *offset_c = offset_m + planelen/2;
+//			uint16_t *offset_l = offset_c + planelen/2;
+
+			DEBUG("Running print data through BGR->YMC table (crude)\n");
+			for(r = 0 ; r < ctx->rows; r++) {
+				for (c = 0 ; c < ctx->cols ; c++) {
+					offset_y[out] = cpu_to_be16(ctx->cpcdata.GNMby[spoolbuf[in]]);
+					offset_m[out] = cpu_to_be16(ctx->cpcdata.GNMgm[spoolbuf[in + 1]]);
+					offset_c[out] = cpu_to_be16(ctx->cpcdata.GNMrc[spoolbuf[in + 2]]);
+					in += 3;
+					out++;
+				}
+			}
+		}
+		// XXX then call CImageEffect70::DoConv(...) to do the final corrections..
+
+		/* Move up the pointer */
+		ctx->datalen += 3*planelen;
+
+		/* Clean up */
+		free(spoolbuf);
+
+		/* Now that we've filled everything in, read latte from file */
+		if (ctx->matte) {
+			int fd;
+			DEBUG("Reading %d bytes of matte data from disk\n", ctx->matte);
+			fd = open(ctx->laminatefname, O_RDONLY);
+			if (fd < 0) {
+				ERROR("Unable to open matte lamination data file '%s'\n", ctx->laminatefname);
+				return CUPS_BACKEND_CANCEL;
+			}
+			remain = ctx->matte;
+			while (remain) {
+				i = read(fd, ctx->databuf + ctx->datalen, remain);
+				if (i == 0) {
+					/* We hit EOF, restart from beginning */
+					lseek(fd, 0, SEEK_SET);
+					continue;
+				}
+				if (i < 0)
+					return CUPS_BACKEND_CANCEL;
+				ctx->datalen += i;
+				remain -= i;
+			}
+		}
 	}
 #endif
-
 	return CUPS_BACKEND_OK;
 }
 
@@ -1287,6 +1321,7 @@ static void mitsu70x_dump_printerstatus(struct mitsu70x_printerstatus_resp *resp
 	INFO("Lower Prints remaining:  %03d/%03d\n",
 	     be16_to_cpu(resp->lower.remain),
 	     be16_to_cpu(resp->lower.capacity));
+//	INFO("Lower Lifetime prints:  %d\n", be16_to_cpu(resp->lower.prints));
 
 	if (resp->upper.mecha_status[0] != MECHA_STATUS_INIT) {
 		INFO("Upper Mechanical Status: %s\n",
@@ -1399,7 +1434,7 @@ static int mitsu70x_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend mitsu70x_backend = {
 	.name = "Mitsubishi CP-D70/D707/K60/D80",
-	.version = "0.41WIP",
+	.version = "0.42WIP",
 	.uri_prefix = "mitsu70x",
 	.cmdline_usage = mitsu70x_cmdline,
 	.cmdline_arg = mitsu70x_cmdline_arg,

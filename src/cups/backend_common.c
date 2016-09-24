@@ -713,7 +713,7 @@ void print_help(char *argv0, struct dyesub_backend *backend)
 		DEBUG("Standalone %s backend version %s\n",
 		      backend->name, backend->version);
 		DEBUG("\t%s\n", backend->uri_prefix);
-		DEBUG("\t[ -D ] [ -G ] [ -S serialnum ] \n");
+		DEBUG("\t[ -D ] [ -G ] \n");
 		DEBUG("\t[ -V extra_vid ] [ -P extra_pid ] [ -T extra_type ] \n");
 		if (backend->cmdline_usage)
 			backend->cmdline_usage();

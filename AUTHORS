@@ -121,6 +121,10 @@ Roger Leigh		<rleigh@debian.org>
 Sascha Sommer           <saschasommer@freenet.de>
         Canon PIXMA support
 
+Solomon Peachy		<pizza@shaftnet.org>
+	Dyesub driver
+	CUPS backend for dyesub printers
+
 Steve Kann		<stevek@stevek.com>
 	Roll feed support for Epson printers
 

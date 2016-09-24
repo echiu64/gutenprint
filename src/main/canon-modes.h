@@ -187,6 +187,21 @@ static const canon_mode_t canon_BJC_2000_modes[] = {
 };
 DECLARE_MODES(canon_BJC_2000,0);
 
+/* these printers only have K and CMYK */
+/* using color (CMYK) cartridge, all media use CMYK */
+/* some modes use ESC (t 0x02 0x80 0x09 which implies bits per ink > 1, but how to know how many? guess 2 bits */
+/* added MODE_FLAG_PHOTO as a means to set ESC (t to 0x02 0x80 0x0a --- no idea if 1 bit or 2 bits here either */
+/* Note: Forgotten what DMT means, and how to know if the printer uses it */
+static const canon_mode_t canon_BJC_2100_modes[] = {
+  {  360, 360,CANON_INK_K | CANON_INK_CMYK,"360x360dmt_high",N_("360x360 DMT HIGH (plain/Env/PPgloss/HR/HGF/GPC/TST/BPF/TPY/O)"),INKSET(4_C4M4Y4K4),8,0,NULL,1.0,1.0,NULL,NULL,NULL,1},/* 0x02 0x80 0x9 */
+  {  360, 360,CANON_INK_K | CANON_INK_CMYK,"360x360dpi",N_("360x360 DPI (plain ud2/PPgloss std/Env/HR/HGF/GPC/TST/BPF/TPY/O)"),INKSET(4_C2M2Y2K2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,1},
+  {  720, 360,CANON_INK_K | CANON_INK_CMYK,"720x360dpi",N_("720x360 DPI (plain ud3/Env/HR/O)"),INKSET(4_C2M2Y2K2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,0},
+  {  360, 360,CANON_INK_K | CANON_INK_CMYK,"360x360dpi_draft",N_("360x360 DPI DRAFT (plain std/Env/HR/O)"),INKSET(4_C2M2Y2K2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,0},
+  {  180, 180,CANON_INK_K | CANON_INK_CMYK,"180x180dpi",N_("180x180 DPI (plain fast/Env/O)"),INKSET(4_C2M2Y2K2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  {  360, 360,CANON_INK_CMYK,"360x360dmt_photo",N_("360x360 DMT PHOTO CARTRIDGE"),INKSET(4_C4M4Y4K4),8,MODE_FLAG_PHOTO,NULL,1.0,1.0,NULL,NULL,NULL,1},
+};
+DECLARE_MODES(canon_BJC_2100,1);
+
 /* these printers only have CMYK, so CcMmYK is not required I think */
 /* using color (CMYK) cartridge, some media use CMYK, others only use CMY --- need to check this as my test image lacked Y apparently */
 /* some modes use ESC (t 0x2 0x80 0x9 which implies bits per ink > 1, but how to know how many? */
@@ -207,7 +222,7 @@ DECLARE_MODES(canon_BJC_3000,1);
 /* some modes use ESC (t 0x2 0x80 0x9 which implies bits per ink > 1, but how to know how many? */
 /* added MODE_FLAG_PHOTO as a means to set ESC (t */
 static const canon_mode_t canon_BJC_4300_modes[] = {
-  {  760, 360,CANON_INK_K | CANON_INK_CMYK,"720x360dpi",N_("720x360 DPI"),INKSET(4_C4M4Y4K4),8,0,NULL,1.0,1.0,NULL,NULL,NULL,0},
+  {  720, 360,CANON_INK_K | CANON_INK_CMYK,"720x360dpi",N_("720x360 DPI"),INKSET(4_C4M4Y4K4),8,0,NULL,1.0,1.0,NULL,NULL,NULL,0},
   {  360, 360,CANON_INK_K | CANON_INK_CMYK,"360x360dpi_high",N_("360x360 DPI HIGH"),INKSET(4_C2M2Y2K2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,1},/* different code */
   {  360, 360,CANON_INK_K | CANON_INK_CMYK,"360x360dpi",N_("360x360 DPI"),INKSET(4_C2M2Y2K2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,1},
   {  360, 360,CANON_INK_K | CANON_INK_CMYK,"360x360dmt",N_("360x360 DMT"),INKSET(4_C4M4Y4K4),8,0,NULL,1.0,1.0,NULL,NULL,NULL,1},
