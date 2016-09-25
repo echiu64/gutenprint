@@ -514,6 +514,8 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AM_PROG_LEX
 AC_PROG_YACC
+AC_PROG_MKDIR_P
+AC_PATH_PROG([BZIP2], [bzip2])
 AC_PATH_PROG([TEST], [test])
 AC_PATH_PROG([TRUE], [true])
 AC_PATH_PROG([FIND], [find])
@@ -1019,6 +1021,10 @@ AC_CONFIG_FILES([src/testpattern/run-testpattern-2],
                 [chmod +x src/testpattern/run-testpattern-2])
 AC_CONFIG_FILES([src/testpattern/compare-checksums],
                 [chmod +x src/testpattern/compare-checksums])
+AC_CONFIG_FILES([src/testpattern/compress-checksums],
+                [chmod +x src/testpattern/compress-checksums])
+AC_CONFIG_FILES([src/testpattern/uncompress-checksums],
+                [chmod +x src/testpattern/uncompress-checksums])
 AC_CONFIG_FILES([src/cups/test-rastertogutenprint],
                 [chmod +x src/cups/test-rastertogutenprint])
 AC_CONFIG_FILES([src/testpattern/Makefile])

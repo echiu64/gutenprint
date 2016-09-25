@@ -8,6 +8,7 @@ use strict;
 my $valgrind = 0;
 my $callgrind = 0;
 my $gdb_attach = 0;
+my $compress_checksums = 0;
 my $csum_file = undef;
 my $csum_dir = undef;
 my $csum_type = 'sha512';
