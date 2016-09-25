@@ -939,7 +939,7 @@ fi
 # define what module system is to be used
 AC_MSG_CHECKING([which module system will be used])
 if test x$USE_LTDL = xtrue; then
-  if test -n "$WITH_MODULES" ; then
+  if test -z "$WITH_MODULES" ; then
     MODULE="false"
   else
     MODULE="true"
@@ -951,7 +951,7 @@ if test x$USE_LTDL = xtrue; then
   AC_DEFINE(USE_LTDL, "1", [Use GNU libltdl as module loader])
   AC_MSG_RESULT([ltdl])
 elif test x$USE_DLOPEN = xtrue; then
-  if test -n "$WITH_MODULES" ; then
+  if test -z "$WITH_MODULES" ; then
     MODULE="false"
   else
     MODULE="true"
