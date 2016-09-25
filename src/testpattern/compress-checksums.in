@@ -1,0 +1,153 @@
+#!@PERL@
+## Copyright (C) 2016 Robert Krawitz
+##
+## This program is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation; either version 2, or (at your option)
+## any later version.
+##
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+##
+## You should have received a copy of the GNU General Public License
+## along with this program; if not, write to the Free Software
+## Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+use strict;
+
+my (%checksums);
+
+while (<>) {
+    chomp;
+    my ($sum, @keys) = split;
+    my (@pchunks) = ();
+    foreach my $k (@keys) {
+	my (@chunks) = split(/_/, $k, -1);
+	foreach my $i (0..$#chunks) {
+	    if ($chunks[$i] eq '') {
+		$chunks[$i] = $pchunks[$i];
+	    } elsif ($chunks[$i] =~ /^([0-9]+)\+(.*)/) {
+		$chunks[$i] = substr($pchunks[$i], 0, $1) . $2;
+	    }
+	}
+	my $key = join('_', @chunks), '.prn';
+	if (! defined $checksums{$sum}) {
+	    $checksums{$sum} = [];
+	}
+	push @{$checksums{$sum}}, $key;
+    }
+}
+
+sub find_min_nonunique_prefix(@) {
+    my (@sums) = sort @_;
+    my ($last) = "";
+    my ($max_prefix) = 0;
+    my ($lc) = 0;
+
+    foreach my $sum (@sums) {
+	$lc++;
+	if ($last eq "") {
+	    $last = $sum;
+	    next;
+	}
+	foreach my $l ($max_prefix..length $sum) {
+	    if (substr($sum, 0, $l) eq substr($last, 0, $l)) {
+		$max_prefix++;
+	    } else {
+		next;
+	    }
+	}
+	$last = $sum;
+    }
+    return $max_prefix;
+}
+
+sub min($$) {
+    my ($a, $b) = @_;
+    if ($a < $b) {
+	return $a;
+    } else {
+	return $b;
+    }
+}
+
+sub get_printer($) {
+    my ($mode) = @_;
+    $mode =~ s/_PrintingMode.*//;
+    return $mode;
+}
+
+sub get_mode($) {
+    my ($mode) = @_;
+    $mode =~ s/.*_PrintingMode/PrintingMode/;
+    return $mode;
+}
+
+my $min_prefix = find_min_nonunique_prefix(keys %checksums);
+
+my ($last_sum) = "";
+
+foreach my $sum (sort keys %checksums) {
+    my ($out) = substr($sum, 0, $min_prefix);
+    if ($last_sum ne "") {
+	$out = substr($out, find_min_nonunique_prefix($sum, $last_sum) - 1);
+    }
+    $last_sum = $sum;
+    my ($prun) = "";
+    my (@pchunks) = ();
+    my ($plen) = 0;
+    my (@runs) = sort map {
+	s/^\*//;
+	s/\.prn$//;
+	my ($printer) = get_printer($_);
+	my ($mode) = get_mode($_);
+	"${mode}_:$printer"
+    } @{$checksums{$sum}};
+    foreach my $run (@runs) {
+	my (@chunks) = split(/_/, $run);
+	my ($mchunks) = min(scalar @pchunks, scalar @chunks);
+	my ($i) = 0;
+	$out .= " ";
+	while ($i < $mchunks) {
+	    if ($i > 0) {
+		$out .= '_';
+	    }
+	    if ($chunks[$i] ne $pchunks[$i]) {
+		my ($plen) = length $pchunks[$i];
+		my ($len) = length $chunks[$i];
+		my ($maxc) = min($len, $plen);
+		my ($dup) = 0;
+		while ($dup < $maxc) {
+		    last if (substr($pchunks[$i], $dup, 1) ne
+			     substr($chunks[$i], $dup, 1));
+		    $dup++;
+		}
+		if ($dup > 2) {
+		    $out .= "$dup+" . substr($chunks[$i], $dup);
+		} else {
+		    $out .= "$chunks[$i]";
+		}
+	    } else {
+		$out .= "";
+	    }
+	    $i++;
+	}
+	if ($i < scalar @chunks) {
+	    if ($i > 0) {
+		$out .= '_';
+	    }
+	    $out .= join("_", @chunks[$i..$#chunks]);
+	}
+	$out =~ s/________/=/g;
+	$out =~ s/_______/!/g;
+	$out =~ s/______/"/g;
+	$out =~ s/_____/,/g;
+	$out =~ s/____/'/g;
+	$out =~ s/___/%/g;
+	$out =~ s/__/>/g;
+	@pchunks = @chunks;
+    }
+    print "$out\n";
+}

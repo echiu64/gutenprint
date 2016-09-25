@@ -1,4 +1,19 @@
 #!@PERL@
+## Copyright (C) 2016 Robert Krawitz
+##
+## This program is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation; either version 2, or (at your option)
+## any later version.
+##
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+##
+## You should have received a copy of the GNU General Public License
+## along with this program; if not, write to the Free Software
+## Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 use strict;
 
@@ -14,9 +29,6 @@ if ($#ARGV != 1) {
     die "Usage: $0 old_checksum_file new_checksum_file\n";
 }
 
-open(OLD, $ARGV[0]) or die("Can't open old checksum file $ARGV[0]: $!\n");
-open(NEW, $ARGV[1]) or die("Can't open new checksum file $ARGV[1]: $!\n");
-
 sub get_printer($) {
     my ($mode) = @_;
     $mode =~ s/_PrintingMode.*//;
@@ -29,25 +41,58 @@ sub get_mode($) {
     return $mode;
 }
 
-while (<OLD>) {
-    chomp;
-    my ($sum, $mode) = split(/ +[*]?/);
-    $mode =~ s/\.prn$//;
-    $old_modes{$mode} = $sum;
-    my ($printer) = get_printer($mode);
-    $old_printers{$printer} = 1;
+sub load_file($\%\%) {
+    my ($file, $modes, $printers) = @_;
+    if ($file =~ /\.bz2$/) {
+	open(IN, "bunzip2 -c $file|") or die("Can't open checksum file $file: $!\n");
+    } elsif ($file =~ /.gz$/) {
+	open(IN, "gunzip -c $file|") or die("Can't open checksum file $file: $!\n");
+    } else {
+	open(IN, "$file") or die("Can't open checksum file $file: $!\n");
+    }
+    my ($inline);
+    my ($last_sum) = "";
+    while ($inline = <IN>) {
+	chomp $inline;
+	my ($sum, @okeys) = split(/ /, $inline);
+	if ($last_sum ne "" && ((length $sum) < (length $last_sum))) {
+	    $sum = substr($last_sum, 0, ((length $last_sum) - (length $sum))) . $sum;
+	}
+	$last_sum = $sum;
+	my @keys = map {
+	    s/\.prn$//;
+	    s/^\*//;
+	    $_;
+	} @okeys;
+	my (@pchunks) = ();
+	foreach my $k (@keys) {
+	    $k =~ s/=/________/g;
+	    $k =~ s/!/_______/g;
+	    $k =~ s/"/______/g;
+	    $k =~ s/,/_____/g;
+	    $k =~ s/'/____/g;
+	    $k =~ s/%/___/g;
+	    $k =~ s/>/__/g;
+	    my (@chunks) = split(/_/, $k, -1);
+	    foreach my $i (0..$#chunks) {
+		if ($chunks[$i] eq '') {
+		    $chunks[$i] = $pchunks[$i];
+		} elsif ($chunks[$i] =~ /^([0-9]+)\+(.*)/) {
+		    $chunks[$i] = substr($pchunks[$i], 0, $1) . $2;
+		}
+	    }
+	    my ($val) = join('_', @chunks);
+	    $val =~ s/(^[^:]*)_:(.*)/$2_$1/;
+	    $$modes{$val} = $sum;
+	    $$printers{get_printer($val)} = 1;
+	    @pchunks = @chunks;
+	}
+    }
+    close IN;
 }
 
-close OLD;
-
-while (<NEW>) {
-    chomp;
-    my ($sum, $mode) = split(/ +[*]?/);
-    $mode =~ s/\.prn$//;
-    $new_modes{$mode} = $sum;
-    my ($printer) = get_printer($mode);
-    $new_printers{$printer} = 1;
-}
+load_file($ARGV[0], %old_modes, %old_printers);
+load_file($ARGV[1], %new_modes, %new_printers);
 
 my (%only_old_printers, %only_new_printers);
 
@@ -65,10 +110,21 @@ foreach my $old_printer (keys %old_printers) {
 
 my (@only_old_modes, @only_new_modes, @changed_modes);
 
+sub mode_ne($$) {
+    my ($new, $old) = @_;
+    if (length $new == length $old) {
+	return ($new ne $old);
+    } elsif (length $new < length $old) {
+	return ($new ne substr($old, 0, length $new));
+    } else {
+	return ($old ne substr($new, 0, length $old));
+    }
+}
+
 foreach my $old_mode (sort keys %old_modes) {
     next if defined $only_old_printers{get_printer($old_mode)};
     if (defined $new_modes{$old_mode}) {
-	if ($new_modes{$old_mode} ne $old_modes{$old_mode}) {
+	if (mode_ne($new_modes{$old_mode}, $old_modes{$old_mode})) {
 	    push @changed_modes, $old_mode;
 	}
     } else {

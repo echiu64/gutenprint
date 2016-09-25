@@ -33,7 +33,7 @@ TESTS = run-testpattern-1 run-testpattern-2
 if BUILD_TESTPATTERN
 bin_PROGRAMS = testpattern
 noinst_PROGRAMS = printers printer_options
-noinst_SCRIPTS = run-testpattern-2 compare-checksums
+noinst_SCRIPTS = run-testpattern-2 compare-checksums compress-checksums uncompress-checksums
 endif
 
 AM_LFLAGS = -i
@@ -55,10 +55,25 @@ if INSTALL_SAMPLES
 pkgdata_DATA = testpattern.sample extended.sample
 endif
 
+## Generate checksums
+
+if BUILD_TESTPATTERN
+checksums: testpattern run-testpattern-2 ./compress-checksums
+	$(MKDIR_P) Checksums
+	./run-testpattern-2 -q -M Checksums/sums.@GUTENPRINT_VERSION@.in
+	./compress-checksums < Checksums/sums.@GUTENPRINT_VERSION@.in |$(BZIP2) -c > Checksums/sums.@GUTENPRINT_VERSION@.bz2
+	rm -f Checksums/sums.@GUTENPRINT_VERSION@.in
+endif
 
 ## Clean
 
 MAINTAINERCLEANFILES = Makefile.in testpatternl.c testpatterny.c testpatterny.h
 
-EXTRA_DIST =  testpatterny.h $(pkgdata_DATA) run-testpattern run-testpattern-1 compare-checksums.in
-
+EXTRA_DIST = \
+	testpatterny.h \
+	$(pkgdata_DATA) \
+	run-testpattern \
+	run-testpattern-1 \
+	compare-checksums.in \
+	compress-checksums.in \
+	uncompress-checksums.in

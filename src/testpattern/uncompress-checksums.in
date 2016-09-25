@@ -1,0 +1,53 @@
+#!@PERL@
+## Copyright (C) 2016 Robert Krawitz
+##
+## This program is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation; either version 2, or (at your option)
+## any later version.
+##
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+##
+## You should have received a copy of the GNU General Public License
+## along with this program; if not, write to the Free Software
+## Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+use strict;
+
+my (%checksums);
+
+my ($last_sum) = "";
+
+while (<>) {
+    chomp;
+    my ($sum, @keys) = split;
+    if ($last_sum ne "" && ((length $sum) < (length $last_sum))) {
+	$sum = substr($last_sum, 0, ((length $last_sum) - (length $sum))) . $sum;
+    }
+    $last_sum = $sum;
+    my (@pchunks) = ();
+    foreach my $k (@keys) {
+	$k =~ s/=/________/g;
+	$k =~ s/!/_______/g;
+	$k =~ s/"/______/g;
+	$k =~ s/,/_____/g;
+	$k =~ s/'/____/g;
+	$k =~ s/%/___/g;
+	$k =~ s/>/__/g;
+	my (@chunks) = split(/_/, $k, -1);
+	foreach my $i (0..$#chunks) {
+	    if ($chunks[$i] eq '') {
+		$chunks[$i] = $pchunks[$i];
+	    } elsif ($chunks[$i] =~ /^([0-9]+)\+(.*)/) {
+		$chunks[$i] = substr($pchunks[$i], 0, $1) . $2;
+	    }
+	}
+	my ($answer) = join('_', @chunks);
+	$answer =~ s/(^[^:]*)_:(.*)/$2_$1/;
+	print "$sum *$answer.prn\n";
+	@pchunks = @chunks;
+    }
+}
