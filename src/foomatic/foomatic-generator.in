@@ -1277,6 +1277,8 @@ sub qualityorder {
 		    "ov",
 		    "oov",
 		    # Canon
+		    "dmt_photo",
+		    "dmt_high",
 		    "dmt",
 		    "dpi_high",
 		    "dpi_high2",
