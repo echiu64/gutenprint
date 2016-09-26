@@ -854,13 +854,13 @@ static const canon_cap_t canon_model_capabilities[] =
     842, INCH(17),
     11, 9, 10, 18, /* unconfirmed */
     &canon_default_slotlist,
-    CANON_CAP_STD0 | CANON_CAP_a,0,
+    CANON_CAP_STD0 | CANON_CAP_a | CANON_CAP_cart,0,
     2,0,
     0, /* Upper/Lower Cassette option */
     NULL,
-    &canon_BJC_2000_modelist,
-    &canon_default_paperlist,
-    &canon_BJC_2000_modeuselist,
+    &canon_BJC_2100_modelist,
+    &canon_BJC_2100_paperlist,
+    &canon_BJC_2100_modeuselist,
     NULL,
     NULL,
     NULL,

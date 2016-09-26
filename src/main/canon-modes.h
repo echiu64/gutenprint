@@ -180,20 +180,22 @@ static const canon_mode_t canon_BJC_240_modes[] = {
 };
 DECLARE_MODES(canon_BJC_240,0);
 
-
-static const canon_mode_t canon_BJC_2000_modes[] = {
+/* BJC-2000 has same modes as BJC-2100, hence the below are outmoded */
+/*
+ * static const canon_mode_t canon_BJC_2000_modes[] = {
   {  360, 360,CANON_INK_CMYK,"360x360dpi",N_("360x360 DPI"),INKSET(4_C2M2Y2K2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},
   {  180, 180,CANON_INK_CMYK,"180x180dpi",N_("180x180 DPI"),INKSET(4_C2M2Y2K2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},
 };
 DECLARE_MODES(canon_BJC_2000,0);
+*/
 
 /* these printers only have K and CMYK */
 /* using color (CMYK) cartridge, all media use CMYK */
 /* some modes use ESC (t 0x02 0x80 0x09 which implies bits per ink > 1, but how to know how many? guess 2 bits */
-/* added MODE_FLAG_PHOTO as a means to set ESC (t to 0x02 0x80 0x0a --- no idea if 1 bit or 2 bits here either */
-/* Note: Forgotten what DMT means, and how to know if the printer uses it */
+/* added MODE_FLAG_PHOTO as a means to set ESC (t to 0x02 0x80 0x0a --- no idea if 1 bit or 2 bits here */
 static const canon_mode_t canon_BJC_2100_modes[] = {
   {  360, 360,CANON_INK_K | CANON_INK_CMYK,"360x360dmt_high",N_("360x360 DMT HIGH (plain/Env/PPgloss/HR/HGF/GPC/TST/BPF/TPY/O)"),INKSET(4_C4M4Y4K4),8,0,NULL,1.0,1.0,NULL,NULL,NULL,1},/* 0x02 0x80 0x9 */
+  {  360, 360,CANON_INK_K | CANON_INK_CMYK,"360x360dpi_high",N_("360x360 DPI (high legacy)"),INKSET(4_C2M2Y2K2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},
   {  360, 360,CANON_INK_K | CANON_INK_CMYK,"360x360dpi",N_("360x360 DPI (plain ud2/PPgloss std/Env/HR/HGF/GPC/TST/BPF/TPY/O)"),INKSET(4_C2M2Y2K2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,1},
   {  720, 360,CANON_INK_K | CANON_INK_CMYK,"720x360dpi",N_("720x360 DPI (plain ud3/Env/HR/O)"),INKSET(4_C2M2Y2K2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,0},
   {  360, 360,CANON_INK_K | CANON_INK_CMYK,"360x360dpi_draft",N_("360x360 DPI DRAFT (plain std/Env/HR/O)"),INKSET(4_C2M2Y2K2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,0},
