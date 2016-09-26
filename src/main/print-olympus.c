@@ -215,7 +215,7 @@ typedef struct
    dnp_privdata_t dnp;
    mitsu9550_privdata_t m9550;
    mitsu70x_privdata_t m70x;
-  };
+  } privdata;
 } dyesub_privdata_t;
 
 typedef struct {
@@ -2775,14 +2775,14 @@ static int mitsu9550_parse_parameters(stp_vars_t *v)
   if (!pd)
     return 1;
 
-  pd->m9550.quality = 0;
-  pd->m9550.finedeep = 0;
+  pd->privdata.m9550.quality = 0;
+  pd->privdata.m9550.finedeep = 0;
 
   /* Parse options */
   if (strcmp(quality, "SuperFine") == 0) {
-     pd->m9550.quality = 0x80;
+     pd->privdata.m9550.quality = 0x80;
   } else if (strcmp(quality, "FineDeep") == 0) {
-     pd->m9550.finedeep = 1;
+     pd->privdata.m9550.finedeep = 1;
   }
 
   return 1;
@@ -2823,7 +2823,7 @@ static void mitsu_cp9550_printer_init(stp_vars_t *v)
   else
     stp_putc(0x00, v);
   dyesub_nputc(v, 0x00, 5);
-  stp_putc(pd->m9550.quality, v);
+  stp_putc(pd->privdata.m9550.quality, v);
   dyesub_nputc(v, 0x00, 10);
   stp_putc(0x01, v);
   /* Parameters 2 */
@@ -2834,7 +2834,7 @@ static void mitsu_cp9550_printer_init(stp_vars_t *v)
   stp_putc(0x00, v);
   stp_putc(0x40, v);
   dyesub_nputc(v, 0x00, 5);
-  stp_putc(pd->m9550.finedeep, v);
+  stp_putc(pd->privdata.m9550.finedeep, v);
   dyesub_nputc(v, 0x00, 38);
   /* Unknown */
   stp_putc(0x1b, v);
@@ -3093,20 +3093,20 @@ static int mitsu9810_parse_parameters(stp_vars_t *v)
   if (!pd)
     return 1;
   
-  pd->m9550.quality = 0;
+  pd->privdata.m9550.quality = 0;
 
   /* Parse options */
   if (strcmp(quality, "SuperFine") == 0) {
-     pd->m9550.quality = 0x80;
+     pd->privdata.m9550.quality = 0x80;
   } else if (strcmp(quality, "Fine") == 0) {
-     pd->m9550.finedeep = 0x10;
+     pd->privdata.m9550.finedeep = 0x10;
   }
 
   /* Matte lamination forces SuperFine mode */
   if (caps->laminate) {
     laminate = dyesub_get_laminate_pattern(v);	  
     if (*((const char*)((laminate->seq).data)) != 0x00) {
-      pd->m9550.quality = 0x80;
+      pd->privdata.m9550.quality = 0x80;
     }
   }
   
@@ -3150,7 +3150,7 @@ static void mitsu_cp98xx_printer_init(stp_vars_t *v, int model)
   dyesub_nputc(v, 0x00, 18);
   stp_put16_be(1, v);  /* Copies */
   dyesub_nputc(v, 0x00, 8);
-  stp_putc(pd->m9550.quality, v);
+  stp_putc(pd->privdata.m9550.quality, v);
   dyesub_nputc(v, 0x00, 10);
   stp_putc(0x01, v);
   /* Unknown */
@@ -3373,18 +3373,18 @@ static int mitsu70x_parse_parameters(stp_vars_t *v)
 
   /* Parse options */
   if (strcmp(quality, "SuperFine") == 0) {
-     pd->m70x.quality = 3;
+     pd->privdata.m70x.quality = 3;
   } else if (strcmp(quality, "UltraFine") == 0) {
-     pd->m70x.quality = 4;
+     pd->privdata.m70x.quality = 4;
   } else if (strcmp(quality, "Fine") == 0) {
-     pd->m70x.quality = 0;
+     pd->privdata.m70x.quality = 0;
   } else {
-     pd->m70x.quality = 0;
+     pd->privdata.m70x.quality = 0;
   }
 
 #ifdef MITSU70X_8BPP
-  pd->m70x.use_lut = stp_get_boolean_parameter(v, "UseLUT");
-  pd->m70x.sharpen = stp_get_int_parameter(v, "Sharpen");  
+  pd->privdata.m70x.use_lut = stp_get_boolean_parameter(v, "UseLUT");
+  pd->privdata.m70x.sharpen = stp_get_int_parameter(v, "Sharpen");  
 #endif
 
   return 1;
@@ -3415,22 +3415,22 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
   if (caps->laminate && *((const char*)((pd->laminate->seq).data)) != 0x00) {
     stp_put16_be(pd->w_size, v);
     if (model == 0x00 || model == 0x90) {
-      pd->m70x.laminate_offset = 0;
-      if (!pd->m70x.quality)
-	pd->m70x.quality = 4;  /* Matte Lamination forces UltraFine on K60 or K305 */
+      pd->privdata.m70x.laminate_offset = 0;
+      if (!pd->privdata.m70x.quality)
+	pd->privdata.m70x.quality = 4;  /* Matte Lamination forces UltraFine on K60 or K305 */
     } else {
       /* Laminate a slightly larger boundary in Matte mode */
-      pd->m70x.laminate_offset = 12;
-      if (!pd->m70x.quality)
-        pd->m70x.quality = 3; /* Matte Lamination forces Superfine (or UltraFine) */
+      pd->privdata.m70x.laminate_offset = 12;
+      if (!pd->privdata.m70x.quality)
+        pd->privdata.m70x.quality = 3; /* Matte Lamination forces Superfine (or UltraFine) */
     }
-    stp_put16_be(pd->h_size + pd->m70x.laminate_offset, v);    
+    stp_put16_be(pd->h_size + pd->privdata.m70x.laminate_offset, v);    
   } else {
     /* Glossy lamination here */
     stp_put16_be(0, v);
     stp_put16_be(0, v);
   }
-  stp_putc(pd->m70x.quality, v);
+  stp_putc(pd->privdata.m70x.quality, v);
   dyesub_nputc(v, 0x00, 7);
 
   if (model == 0x01) {
@@ -3462,9 +3462,9 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
   }
 #ifdef MITSU70X_8BPP
   dyesub_nputc(v, 0x00, 12);
-  stp_putc(pd->m70x.sharpen, v);
+  stp_putc(pd->privdata.m70x.sharpen, v);
   stp_putc(0x01, v);  /* Mark as 8bpp BGR rather than 16bpp YMC cooked */
-  stp_putc(pd->m70x.use_lut, v);  /* Use LUT? */
+  stp_putc(pd->privdata.m70x.use_lut, v);  /* Use LUT? */
 #else
   dyesub_nputc(v, 0x00, 15);
 #endif
@@ -3489,9 +3489,9 @@ static void mitsu_cpd70x_printer_end(stp_vars_t *v)
 
     /* Now generate lamination pattern */
     for (c = 0 ; c < pd->w_size ; c++) {
-      for (r = 0 ; r < pd->h_size + pd->m70x.laminate_offset ; r++) {
+      for (r = 0 ; r < pd->h_size + pd->privdata.m70x.laminate_offset ; r++) {
 	int i = xrand(&seed) & 0x3f;
-	if (pd->m70x.laminate_offset) { /* D70x uses 0x384b, 0x286a, 0x6c22 */
+	if (pd->privdata.m70x.laminate_offset) { /* D70x uses 0x384b, 0x286a, 0x6c22 */
 	  if (i < 42)
 	    stp_put16_be(0xe84b, v);
 	  else if (i < 62)
@@ -3509,7 +3509,7 @@ static void mitsu_cpd70x_printer_end(stp_vars_t *v)
       }
     }
     /* Pad up to a 512-byte block */
-    dyesub_nputc(v, 0x00, 512 - ((pd->w_size * (pd->h_size + pd->m70x.laminate_offset) * 2) % 512));
+    dyesub_nputc(v, 0x00, 512 - ((pd->w_size * (pd->h_size + pd->privdata.m70x.laminate_offset) * 2) % 512));
   }
 }
 #endif
@@ -3807,16 +3807,16 @@ static int mitsu_d90_parse_parameters(stp_vars_t *v)
 
   /* Parse options */
   if (strcmp(quality, "UltraFine") == 0) {
-     pd->m70x.quality = 3;
+     pd->privdata.m70x.quality = 3;
   } else if (strcmp(quality, "Fine") == 0) {
-     pd->m70x.quality = 2;
+     pd->privdata.m70x.quality = 2;
   } else {
-     pd->m70x.quality = 0;
+     pd->privdata.m70x.quality = 0;
   }
 
 #ifdef MITSU70X_8BPP
-  pd->m70x.use_lut = stp_get_boolean_parameter(v, "UseLUT");
-  pd->m70x.sharpen = stp_get_int_parameter(v, "Sharpen");
+  pd->privdata.m70x.use_lut = stp_get_boolean_parameter(v, "UseLUT");
+  pd->privdata.m70x.sharpen = stp_get_int_parameter(v, "Sharpen");
 #endif
   
   return 1;
@@ -3865,14 +3865,14 @@ static void mitsu_cpd90_printer_init(stp_vars_t *v)
 
   stp_zfwrite((pd->laminate->seq).data, 1,
 	      (pd->laminate->seq).bytes, v); /* Lamination mode */  
-  stp_putc(pd->m70x.quality, v);
+  stp_putc(pd->privdata.m70x.quality, v);
 #ifdef MITSU70X_8BPP
-  stp_putc(pd->m70x.use_lut, v);
+  stp_putc(pd->privdata.m70x.use_lut, v);
 #else
   stp_putc(0x00, v);  /* ie use printer's built in LUT */
 #endif
-  stp_putc(pd->m70x.sharpen, v); /* Horizontal */
-  stp_putc(pd->m70x.sharpen, v); /* Vertical */
+  stp_putc(pd->privdata.m70x.sharpen, v); /* Horizontal */
+  stp_putc(pd->privdata.m70x.sharpen, v); /* Vertical */
   dyesub_nputc(v, 0x00, 11);
   
   dyesub_nputc(v, 0x00, 512 - 64);
@@ -4769,7 +4769,7 @@ static int dnpds80_parse_parameters(stp_vars_t *v)
 
   /* No need to set global params if there's no privdata yet */  
   if (pd)
-    pd->dnp.multicut = multicut;
+    pd->privdata.dnp.multicut = multicut;
   
  return 1;
 }
@@ -4785,7 +4785,7 @@ static void dnpds80_printer_start(stp_vars_t *v)
   stp_zprintf(v, "\033PCNTRL CUTTER          0000000800000000");
 
   /* Configure multi-cut/page size */
-  stp_zprintf(v, "\033PIMAGE MULTICUT        00000008%08d", pd->dnp.multicut);
+  stp_zprintf(v, "\033PIMAGE MULTICUT        00000008%08d", pd->privdata.dnp.multicut);
 }
 
 /* Dai Nippon Printing DS80DX */
@@ -4861,7 +4861,7 @@ static int dnpds80dx_parse_parameters(stp_vars_t *v)
 
   /* No need to set global params if there's no privdata yet */  
   if (pd)
-    pd->dnp.multicut = multicut;
+    pd->privdata.dnp.multicut = multicut;
   
   return 1;
 }
@@ -4872,7 +4872,6 @@ static int dnpds80dx_parse_parameters(stp_vars_t *v)
    Also, 8x4*3 differs depending on if you're using sheet or roll media,
    hence the almost-duplicated definition.
 
-   See the constraints list for the illegal combinations
 */
 
 static const dyesub_pagesize_t dnpds80dx_page[] =

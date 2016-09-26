@@ -51,6 +51,8 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <sys/times.h>
+#include <strings.h>
+#include <sys/time.h>
 #ifdef HAVE_LIMITS_H
 #include <limits.h>
 #endif
@@ -1092,7 +1094,6 @@ main(int  argc,				/* I - Number of command-line arguments */
   struct tms		tms;
   long			clocks_per_sec;
   struct timeval	t1, t2;
-  struct timezone	tz;
   char			*page_size_name = NULL;
   int			aborted = 0;
 #ifdef ENABLE_CUPS_LOAD_SAVE_OPTIONS
@@ -1120,7 +1121,7 @@ main(int  argc,				/* I - Number of command-line arguments */
 
   theImage.rep = &cups;
 
-  (void) gettimeofday(&t1, &tz);
+  (void) gettimeofday(&t1, NULL);
   stp_init();
   version_id = stp_get_version();
   default_settings = stp_vars_create();
@@ -1402,7 +1403,7 @@ main(int  argc,				/* I - Number of command-line arguments */
     }
   cupsRasterClose(cups.ras);
   (void) times(&tms);
-  (void) gettimeofday(&t2, &tz);
+  (void) gettimeofday(&t2, NULL);
   clocks_per_sec = sysconf(_SC_CLK_TCK);
   fprintf(stderr, "DEBUG: Gutenprint: stats %.0fB, %.3fu, %.3fs, %.3fel\n",
 	  total_bytes_printed,

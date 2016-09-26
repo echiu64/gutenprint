@@ -47,6 +47,7 @@
 #include <errno.h>
 #include <string.h>
 #include <ctype.h>
+#include <time.h>
 
 #include "d4lib.h"
 
@@ -183,6 +184,14 @@ static errorMessage_t errorMessage[] =
                                 sig = signal(SIGALRM, sigAlarm); \
                               }
 
+static int d4USleep(long usec)
+{
+  struct timespec t;
+  t.tv_sec = 0;
+  t.tv_nsec = 1000l * usec;
+  return nanosleep(&t, NULL);
+}
+
 /*******************************************************************/
 /* Function printHexValues                                         */
 /*                                                                 */
@@ -275,7 +284,7 @@ int SafeWrite(int fd, const void *data, int len)
     {
       status = write(fd, data, len);
       if(status < len)
-	usleep(d4WrTimeout);
+	d4USleep(d4WrTimeout);
       retries--;
     }
   while ((status < len) && (retries > 0));
@@ -405,7 +414,7 @@ static int writeCmd(int fd, unsigned char *cmd, int len)
 
    /* according to Glen Steward, this will solve problems  */
    /* for the cartridge exchange with the Stylus Color 580 */
-   usleep(d4MicroTimeout);
+   d4USleep(d4MicroTimeout);
 
    timeoutGot = 0;
    errno = 0;
@@ -464,7 +473,7 @@ int readAnswer(int fd, unsigned char *buf, int len, int allowExtra)
    int first_read = 1;
    int excess = 0;
    /* wait a little bit before reading an answer */
-   usleep(d4RdTimeout);
+   d4USleep(d4RdTimeout);
 
    /* for error handling in case of timeout */
    timeoutGot = 0;
@@ -542,7 +551,7 @@ int readAnswer(int fd, unsigned char *buf, int len, int allowExtra)
 	      }
          }
       }
-      usleep(d4RdTimeout);
+      d4USleep(d4RdTimeout);
    }
    if (debugD4)
      printf("\n");
@@ -563,7 +572,7 @@ int readAnswer(int fd, unsigned char *buf, int len, int allowExtra)
 	   else
 	     retry_count = 0;
 	   if (status < bytes)
-	     usleep(d4RdTimeout);
+	     d4USleep(d4RdTimeout);
 	   if (debugD4)
 	     printHexValues("waste", (const unsigned char *) wastebuf, status);
 	   excess -= status;
@@ -600,7 +609,7 @@ static void _flushData(int fd)
    char buf[1024];
    int len = 1023;
    int count = 200;
-   usleep(d4RdTimeout);
+   d4USleep(d4RdTimeout);
 
    /* for error handling in case of timeout */
    timeoutGot = 0;
@@ -613,7 +622,7 @@ static void _flushData(int fd)
      printf("+++flush data: length: %i\n", len);
    do
      {
-       usleep(d4RdTimeout);
+       d4USleep(d4RdTimeout);
        SET_TIMER(ti,oti, d4RdTimeout);
        rd = read(fd, buf, len);
        if (debugD4)
@@ -1144,7 +1153,7 @@ int askForCredit(int fd, unsigned char socketID, int *sndSize, int *rcvSize)
    while (credit == 0 && retries-- >= 0 )
    {
       while((credit=CreditRequest(fd,socketID)) == 0  && count < MAX_CREDIT_REQUEST && retries-- >= 0)
-         usleep(d4RdTimeout);
+         d4USleep(d4RdTimeout);
 
       if ( credit == -1 )
       {
@@ -1281,7 +1290,7 @@ int readData(int fd, unsigned char socketID, unsigned char *buf, int len)
    if ( Credit(fd, socketID, 1) == 1 )
    {
       /* wait a little bit */
-      usleep(d4RdDataTimeout);
+      d4USleep(d4RdDataTimeout);
       ret = _readData(fd, buf, len);
       return ret; 
    }
@@ -1332,7 +1341,7 @@ int writeAndReadData(int fd, unsigned char socketID,
        /* wait a little bit */
        do
 	 {
-	   usleep(d4RdDataTimeout);
+	   d4USleep(d4RdDataTimeout);
 	   ret = _readData(fd, buf, len);
 	   if (ret < 0)
 	     return ret;
@@ -1366,7 +1375,7 @@ void flushData(int fd, unsigned char socketID)
        if ( Credit(fd, socketID, 1) == 1 )
 	 {
 	   /* wait a little bit */
-	   usleep(d4RdDataTimeout);
+	   d4USleep(d4RdDataTimeout);
 	   _flushData(fd);
 	 }
      }

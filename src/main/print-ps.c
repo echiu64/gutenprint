@@ -39,6 +39,7 @@
 #endif
 #include <stdio.h>
 #include <unistd.h>
+#include <strings.h>
 #include "xmlppd.h"
 
 #ifdef _MSC_VER

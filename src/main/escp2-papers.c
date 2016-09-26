@@ -26,6 +26,7 @@
 #include <gutenprint/gutenprint.h>
 #include "gutenprint-internal.h"
 #include <gutenprint/gutenprint-intl-internal.h>
+#include <strings.h>
 #include "print-escp2.h"
 
 static stp_mxml_node_t *

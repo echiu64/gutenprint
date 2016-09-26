@@ -26,6 +26,7 @@
 #include <gutenprint/util.h>
 #include <gutenprint/string-list.h>
 #include <stdlib.h>
+#include <strings.h>
 #include "xmlppd.h"
 
 typedef struct

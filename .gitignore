@@ -8,6 +8,9 @@
 *.tar*
 *.trs
 
+# Random noise
+*.patch
+
 # Generated documentation
 *.1
 *.3
