@@ -2979,7 +2979,7 @@ static void mitsu_cpd70x_printer_end(stp_vars_t *v)
 
     /* Now generate lamination pattern */
     for (c = 0 ; c < privdata.w_size ; c++) {
-      for (r = 0 ; r < privdata.h_size ; r++) {
+      for (r = 0 ; r < privdata.h_size + mitsu70x_privdata.laminate_offset ; r++) {
 	int i = xrand(&seed) & 0x3f;
 	if (mitsu70x_privdata.laminate_offset) { /* D70x uses 0x384b, 0x286a, 0x6c22 */
 	  if (i < 42)
