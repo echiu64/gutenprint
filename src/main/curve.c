@@ -36,6 +36,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <strings.h>
 
 #ifdef __GNUC__
 #define inline __inline__

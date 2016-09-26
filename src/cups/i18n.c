@@ -39,6 +39,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <iconv.h>
+#include <strings.h>
 
 
 /*
