@@ -2812,7 +2812,7 @@ LIST(laminate_list_t, mitsu_cpd70x_laminate_list, laminate_t, mitsu_cpd70x_lamin
 static const dyesub_stringitem_t mitsu70x_uiconstraints[] = {
   /* PPD generation handles constraint reciprocation */
   /* Basically, exclude Matte and "Fine" quality */
-  {"UIConstraints", "*Laminate Matte *Quality Fine"},
+  {"UIConstraints", "*Laminate Matte *PrintSpeed Fine"},
 };
 LIST(dyesub_stringlist_t, mitsu70x_uiconstraints_list, dyesub_stringitem_t, mitsu70x_uiconstraints);
 
@@ -2835,8 +2835,8 @@ LIST(dyesub_stringlist_t, mitsu70x_quality_list, dyesub_stringitem_t, mitsu70x_q
 static const stp_parameter_t mitsu70x_parameters[] =
 {
   {
-    "Quality", N_("Quality"), "Color=No,Category=Advanced Printer Setup",
-    N_("Quality"),
+    "PrintSpeed", N_("Print Speed"), "Color=No,Category=Advanced Printer Setup",
+    N_("Print Speed"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
@@ -2861,7 +2861,7 @@ mitsu70x_load_parameters(const stp_vars_t *v, const char *name,
           }
     }
 
-  if (strcmp(name, "Quality") == 0)
+  if (strcmp(name, "PrintSpeed") == 0)
     {
       description->bounds.str = stp_string_list_create();
 
@@ -2884,7 +2884,7 @@ mitsu70x_load_parameters(const stp_vars_t *v, const char *name,
 
 static void mitsu70x_parse_parameters(stp_vars_t *v)
 {
-  mitsu70x_privdata.quality = stp_get_string_parameter(v, "Quality");
+  mitsu70x_privdata.quality = stp_get_string_parameter(v, "PrintSpeed");
 }
 
 static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
@@ -3078,7 +3078,7 @@ mitsu_k60_load_parameters(const stp_vars_t *v, const char *name,
           }
     }
 
-  if (strcmp(name, "Quality") == 0)
+  if (strcmp(name, "PrintSpeed") == 0)
     {
       description->bounds.str = stp_string_list_create();
 
@@ -3131,7 +3131,6 @@ static const dyesub_printsize_t mitsu_cpd80_printsize[] =
 };
 
 LIST(dyesub_printsize_list_t, mitsu_cpd80_printsize_list, dyesub_printsize_t, mitsu_cpd80_printsize);
-
 
 /* Kodak 305 */
 static const dyesub_pagesize_t kodak305_page[] =
