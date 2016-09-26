@@ -78,6 +78,8 @@ struct mitsu70x_ctx {
 	uint16_t last_donor_u;
 	int num_decks;
 
+	int supports_jobs_query;
+
 #ifdef ENABLE_CORRTABLES
 	char *laminatefname;
 	char *lutfname;
@@ -94,9 +96,9 @@ struct mitsu70x_ctx {
 
 /* Printer data structures */
 struct mitsu70x_jobstatus {
-	uint8_t  hdr[4];
-	uint16_t jobid;
-	uint16_t mecha_no;
+	uint8_t  hdr[4]; /* E4 56 31 30 */
+	uint16_t jobid;  /* BE */
+	uint16_t mecha_no; /* BE */
 	uint8_t  job_status[4];
 	uint8_t  memory;
 	uint8_t  power;
@@ -107,11 +109,11 @@ struct mitsu70x_jobstatus {
 } __attribute__((packed));
 
 struct mitsu70x_jobs {
-	uint8_t  hdr[4];
+	uint8_t  hdr[4]; /* E4 56 31 31 */
 	uint16_t dummy;
-	uint16_t jobid_0;
+	uint16_t jobid_0;  /* BE */
 	uint8_t  job0_status[4];
-	uint16_t jobid_1;
+	uint16_t jobid_1;  /* BE */
 	uint8_t  job1_status[4];
 	// XXX are there more?
 } __attribute__((packed));
@@ -236,8 +238,10 @@ struct mitsu70x_status_ver {
 } __attribute__((packed));
 
 struct mitsu70x_printerstatus_resp {
-	uint8_t  hdr[4];
-	uint8_t  unk[36];
+	uint8_t  hdr[4];  /* E4 56 32 31 */
+	uint8_t  memory;
+	uint8_t  power;
+	uint8_t  unk[34];
 	int16_t  model[6]; /* LE, UTF-16 */
 	int16_t  serno[6]; /* LE, UTF-16 */
 	struct mitsu70x_status_ver vers[7]; // components are 'LMFTR??'
@@ -247,7 +251,7 @@ struct mitsu70x_printerstatus_resp {
 } __attribute__((packed));
 
 struct mitsu70x_memorystatus_resp {
-	uint8_t  hdr[3];
+	uint8_t  hdr[3]; /* E4 56 33 */
 	uint8_t  memory;
 	uint8_t  size;
 	uint8_t  rsvd;
@@ -556,7 +560,14 @@ static void mitsu70x_attach(void *vctx, struct libusb_device_handle *dev,
 	ctx->type = lookup_printer_type(&mitsu70x_backend,
 					desc.idVendor, desc.idProduct);
 
-	ctx->last_donor_l = ctx->last_donor_u = 65535;}
+	ctx->last_donor_l = ctx->last_donor_u = 65535;
+
+	if (ctx->type == P_KODAK_305 ||
+	    ctx->type == P_MITSU_K60)
+		ctx->supports_jobs_query = 0;
+	else
+		ctx->supports_jobs_query = 1;
+}
 
 static void mitsu70x_teardown(void *vctx) {
 	struct mitsu70x_ctx *ctx = vctx;
@@ -646,25 +657,27 @@ repeat:
 		ctx->lutfname = CORRTABLE_PATH "/CPS60L01.lut";
 
 		if (mhdr.speed == 3 || mhdr.speed == 4) {
+			mhdr.speed = 4; /* Ultra Fine */
 			ctx->cpcfname = CORRTABLE_PATH "/CPS60T03.cpc";
 		} else {
 			ctx->cpcfname = CORRTABLE_PATH "/CPS60T01.cpc";
 		}
-
 	} else if (ctx->type == P_KODAK_305) {
 		ctx->laminatefname = CORRTABLE_PATH "/EK305MAT.raw"; // Same as K60
 		ctx->lutfname = CORRTABLE_PATH "/EK305L01.lut";
 
 		if (mhdr.speed == 3 || mhdr.speed == 4) {
+			mhdr.speed = 4; /* Ultra Fine */
 			ctx->cpcfname = CORRTABLE_PATH "/EK305T03.cpc";
 		} else {
-			ctx->cpcfname = CORRTABLE_PATH "/EK305T03.cpc";
+			ctx->cpcfname = CORRTABLE_PATH "/EK305T01.cpc";
 		}
+
 	} else if (ctx->type == P_FUJI_ASK300) {
 		ctx->laminatefname = CORRTABLE_PATH "/ASK300M2.raw"; // Same as D70
 		ctx->lutfname = CORRTABLE_PATH "/CPD70L01.lut";  // XXX guess, driver did not come with external LUT!
-
 		if (mhdr.speed == 3 || mhdr.speed == 4) {
+			mhdr.speed = 3; /* Super Fine */
 			ctx->cpcfname = CORRTABLE_PATH "/ASK300T3.cpc";
 		} else {
 			ctx->cpcfname = CORRTABLE_PATH "/ASK300T1.cpc";
@@ -865,7 +878,6 @@ static int mitsu70x_get_jobstatus(struct mitsu70x_ctx *ctx, struct mitsu70x_jobs
 	return 0;
 }
 
-#ifdef BROKEN_ON_EK305 // XXX broken on EK305
 static int mitsu70x_get_jobs(struct mitsu70x_ctx *ctx, struct mitsu70x_jobs *resp)
 {
 	uint8_t cmdbuf[CMDBUF_LEN];
@@ -898,7 +910,6 @@ static int mitsu70x_get_jobs(struct mitsu70x_ctx *ctx, struct mitsu70x_jobs *res
 
 	return 0;
 }
-#endif
 
 static int mitsu70x_get_memorystatus(struct mitsu70x_ctx *ctx, struct mitsu70x_memorystatus_resp *resp)
 {
@@ -986,7 +997,7 @@ static int mitsu70x_cancel_job(struct mitsu70x_ctx *ctx, uint16_t jobid)
 	cmdbuf[0] = 0x1b;
 	cmdbuf[1] = 0x44;
 	cmdbuf[2] = (jobid >> 8) & 0xff;
-	cmdbuf[3] = jobid & 0xffl;
+	cmdbuf[3] = jobid & 0xff;
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
 			     cmdbuf, 4)))
 		return ret;
@@ -1013,13 +1024,31 @@ static int mitsu70x_set_sleeptime(struct mitsu70x_ctx *ctx, uint8_t time)
 	return 0;
 }
 
-static int mitsu70x_main_loop(void *vctx, int copies) {
+static int mitsu70x_wakeup(struct mitsu70x_ctx *ctx)
+{
+	int ret;
+	uint8_t buf[512];
+
+	memset(buf, 0, sizeof(buf));
+	buf[0] = 0x1b;
+	buf[1] = 0x45;
+	buf[2] = 0x57;
+	buf[3] = 0x55;
+
+	INFO("Waking up printer...\n");
+	if ((ret = send_data(ctx->dev, ctx->endp_down,
+			     buf, sizeof(buf))))
+		return CUPS_BACKEND_FAILED;
+
+	return 0;
+}
+
+static int mitsu70x_main_loop(void *vctx, int copies)
+{
 	struct mitsu70x_ctx *ctx = vctx;
 	struct mitsu70x_jobstatus jobstatus;
 	struct mitsu70x_printerstatus_resp resp;
-#ifdef BROKEN_ON_EK305	
 	struct mitsu70x_jobs jobs;
-#endif	
 	struct mitsu70x_hdr *hdr;
 
 	int ret;
@@ -1039,18 +1068,10 @@ top:
 
 	/* Make sure we're awake! */
 	if (jobstatus.power) {
-		uint8_t buf[512];
-
-		memset(buf, 0, sizeof(buf));
-		buf[0] = 0x1b;
-		buf[1] = 0x45;
-		buf[2] = 0x57;
-		buf[3] = 0x55;
-
-		INFO("Waking up printer...\n");
-		if ((ret = send_data(ctx->dev, ctx->endp_down,
-				     buf, sizeof(buf))))
+		ret = mitsu70x_wakeup(ctx);
+		if (ret)
 			return CUPS_BACKEND_FAILED;
+
 		sleep(1);
 		goto top;
 	}
@@ -1127,19 +1148,21 @@ skip_status:
 		}
 	}
 
-#ifdef BROKEN_ON_EK305 // XXX broken on K305, at least.
 	/* Make sure we don't have any jobid collisions */
-	ret = mitsu70x_get_jobs(ctx, &jobs);
-	if (ret)
-		return CUPS_BACKEND_FAILED;
-
-	while (ctx->jobid == be16_to_cpu(jobs.jobid_0) ||
-	       ctx->jobid == be16_to_cpu(jobs.jobid_1)) {
-		ctx->jobid++;
-		if (!ctx->jobid)
+	if (ctx->supports_jobs_query) {
+		ret = mitsu70x_get_jobs(ctx, &jobs);
+		if (ret)
+			return CUPS_BACKEND_FAILED;
+		while (ctx->jobid == be16_to_cpu(jobs.jobid_0) ||
+		       ctx->jobid == be16_to_cpu(jobs.jobid_1)) {
+			ctx->jobid++;
+			if (!ctx->jobid)
+				ctx->jobid++;
+		}
+	} else {
+		while(!ctx->jobid || ctx->jobid == be16_to_cpu(jobstatus.jobid))
 			ctx->jobid++;
 	}
-#endif
 
 	/* Set jobid */
 	hdr->jobid = cpu_to_be16(ctx->jobid);
@@ -1345,26 +1368,45 @@ static void mitsu70x_dump_printerstatus(struct mitsu70x_printerstatus_resp *resp
 static int mitsu70x_query_status(struct mitsu70x_ctx *ctx)
 {
 	struct mitsu70x_printerstatus_resp resp;
-#ifdef BROKEN_ON_EK305	
 	struct mitsu70x_jobs jobs;
-#endif
+	struct mitsu70x_jobstatus jobstatus;
+
 	int ret;
+
+top:
+	ret = mitsu70x_get_jobstatus(ctx, &jobstatus, 0x0000);
+	if (ret)
+		goto done;
+
+	/* Make sure we're awake! */
+	if (jobstatus.power) {
+		ret = mitsu70x_wakeup(ctx);
+		if (ret)
+			return CUPS_BACKEND_FAILED;
+
+		sleep(1);
+		goto top;
+	}
 
 	ret = mitsu70x_get_printerstatus(ctx, &resp);
 	if (!ret)
 		mitsu70x_dump_printerstatus(&resp);
 
-#ifdef BROKEN_ON_EK305 // XXX broken on EK305, at least
-	ret = mitsu70x_get_jobs(ctx, &jobs);
-	if (!ret) {
-		INFO("JOB0 ID     : %06u\n", jobs.jobid_0);
-		INFO("JOB0 status : %s\n", mitsu70x_jobstatuses(jobs.job0_status));
-		INFO("JOB1 ID     : %06u\n", jobs.jobid_1);
-		INFO("JOB1 status : %s\n", mitsu70x_jobstatuses(jobs.job1_status));
-		// XXX are there more?
+	if (ctx->supports_jobs_query) {
+		ret = mitsu70x_get_jobs(ctx, &jobs);
+		if (!ret) {
+			INFO("JOB0 ID     : %06u\n", jobs.jobid_0);
+			INFO("JOB0 status : %s\n", mitsu70x_jobstatuses(jobs.job0_status));
+			INFO("JOB1 ID     : %06u\n", jobs.jobid_1);
+			INFO("JOB1 status : %s\n", mitsu70x_jobstatuses(jobs.job1_status));
+			// XXX are there more?
+		}
+	} else {
+		INFO("JOB0 ID     : %06u\n", jobstatus.jobid);
+		INFO("JOB0 status : %s\n", mitsu70x_jobstatuses(jobstatus.job_status));
 	}
-#endif
 
+done:
 	return ret;
 }
 
@@ -1434,7 +1476,7 @@ static int mitsu70x_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend mitsu70x_backend = {
 	.name = "Mitsubishi CP-D70/D707/K60/D80",
-	.version = "0.42WIP",
+	.version = "0.43WIP",
 	.uri_prefix = "mitsu70x",
 	.cmdline_usage = mitsu70x_cmdline,
 	.cmdline_arg = mitsu70x_cmdline_arg,
