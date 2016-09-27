@@ -316,7 +316,7 @@ static const canon_paper_t canon_BJC_2100_papers[] = {
   { "Plain",		N_ ("Plain Paper"),		0x00,0x00,0x00,0x00,0.50, 0.25, 0.500, 0, 0, 0 },
   { "Transparency",	N_ ("Transparencies"),		0x02,0x02,0x00,0x00,1.00, 1.00, 0.900, 0, 0, 0 },
   { "BackPrint",	N_ ("Back Print Film"),		0x03,0x03,0x00,0x00,1.00, 1.00, 0.900, 0, 0, 0 },
-  { "Fabric",		N_ ("Fabric Sheets"),		0x04,0x04,0x00,0x00,0.50, 0.25, 0.500, 0, 0, 0 },
+  { "Fabric",		N_ ("Fabric Sheets"),		0x04,0x05,0x00,0x00,0.50, 0.25, 0.500, 0, 0, 0 },
   { "Envelope",		N_ ("Envelope"),		0x08,0x08,0x00,0x00,0.50, 0.25, 0.500, 0, 0, 0 },
   { "Coated",		N_ ("High Resolution Paper"),	0x07,0x0b,0x00,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "TShirt",		N_ ("T-Shirt Transfers"),	0x03,0x03,0x00,0x00,0.50, 0.25, 0.500, 0, 0, 0 },

@@ -186,6 +186,7 @@ DECLARE_MODEUSES(canon_BJC_240);
 
 /* ----------------------------------- Canon BJC 2000 ----------------------------------- */
 /* TODO: mode-media correlation */
+/*
 static const char* canon_BJC_2000_modeuses_plain[] = {
   "360x360dpi",
   "180x180dpi",
@@ -208,11 +209,13 @@ static const canon_modeuse_t canon_BJC_2000_modeuses[] = {
 };
 
 DECLARE_MODEUSES(canon_BJC_2000);
+*/
 
 /* ----------------------------------- Canon BJC 2100 ----------------------------------- */
 
 static const char* canon_BJC_2100_modeuses_plain[] = {
   "360x360dmt_high",
+  "360x360dpi_high",
   "360x360dpi",
   "720x360dpi",
   "360x360dpi_draft",
@@ -224,6 +227,7 @@ static const char* canon_BJC_2100_modeuses_plain[] = {
 
 static const char* canon_BJC_2100_modeuses_PPgloss[] = {
   "360x360dmt_high",
+  "360x360dpi_high",
   "360x360dpi",
   /* Photo */
   "360x360dmt_photo",
@@ -232,6 +236,7 @@ static const char* canon_BJC_2100_modeuses_PPgloss[] = {
 
 static const char* canon_BJC_2100_modeuses_coated[] = {
   "360x360dmt_high",
+  "360x360dpi_high",
   "360x360dpi",
   "720x360dpi",
   "360x360dpi_draft",

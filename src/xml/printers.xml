@@ -104,7 +104,7 @@
       <printer translate="name" name="Canon BJC-2000" driver="bjc-2000" manufacturer="Canon" model="2000" parameters="density_800_params" />
       <printer translate="name" name="Canon BJC-2010" driver="bjc-2010" manufacturer="Canon" model="2000" parameters="density_800_params" />
       <printer translate="name" name="Canon BJC-2100" deviceid="MFG:Canon;MDL:BJC-2100;DES:Canon BJC-2100;" driver="bjc-2100" manufacturer="Canon" model="2100" parameters="gamma_750_params" />
-      <printer translate="name" name="Canon BJC-2110" driver="bjc-2110" manufacturer="Canon" model="2000" parameters="density_800_params" />
+      <printer translate="name" name="Canon BJC-2110" driver="bjc-2110" manufacturer="Canon" model="2100" parameters="density_800_params" />
       <printer translate="name" name="Canon BJC-3000" deviceid="MFG:Canon;MDL:BJC-3000;DES:Canon BJC-3000;CMD:BJL,BJRaster3,BSCC,TXT01,BJScan2;" driver="bjc-3000" manufacturer="Canon" model="3000" parameters="density_800_params" />
       <printer translate="name" name="Canon BJC-4000" driver="bjc-4000" manufacturer="Canon" model="4300" parameters="gamma_750_params" />
       <printer translate="name" name="Canon BJC-4300" deviceid="MFG:Canon;MDL:BJC-4300;DES:Canon BJC-4300;CMD:BJ,LQ,BJL,BJRaster,BSCC;" driver="bjc-4300" manufacturer="Canon" model="4300" parameters="gamma_750_params" />
@@ -1285,19 +1285,19 @@
         <parameter type="float" name="Gamma">1.000</parameter>
         <parameter type="float" name="Density">1.000</parameter>
       </parameters>
-      <printer translate="name" name="Datamax-O'Neil I4212e Mark II" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:I4212e Mark II;" color="false" driver="datamax_oneil_I4212e" manufacturer="Datamax O'Neil" model="10017" parameters="dpl_params" />
-      <printer translate="name" name="Datamax-O'Neil I4310e Mark II" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:I4310e Mark II;" color="false" driver="datamax_oneil_I4310e" manufacturer="Datamax O'Neil" model="10018" parameters="dpl_params" />
-      <printer translate="name" name="Datamax-O'Neil I4606e Mark II" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:I4606e Mark II;" color="false" driver="datamax_oneil_I4606e" manufacturer="Datamax O'Neil" model="10020" parameters="dpl_params" />
-      <printer translate="name" name="Datamax-O'Neil E4204B Mark III" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:E4204B Mark III;" color="false" driver="datamax_oneil_E4204B" manufacturer="Datamax O'Neil" model="10021" parameters="dpl_params" />
-      <printer translate="name" name="Datamax-O'Neil E4304B Mark III" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:E4304B Mark III;" color="false" driver="datamax_oneil_E4304B" manufacturer="Datamax O'Neil" model="10022" parameters="dpl_params" />
-      <printer translate="name" name="Datamax-O'Neil E4205A Mark III" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:E4205A Mark III;" color="false" driver="datamax_oneil_E4205A" manufacturer="Datamax O'Neil" model="10023" parameters="dpl_params" />
-      <printer translate="name" name="Datamax-O'Neil E4305A Mark III" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:E4305A Mark III;" color="false" driver="datamax_oneil_E4305A" manufacturer="Datamax O'Neil" model="10024" parameters="dpl_params" />
-      <printer translate="name" name="Datamax-O'Neil E4206P Mark III" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:E4206P Mark III;" color="false" driver="datamax_oneil_E4206P" manufacturer="Datamax O'Neil" model="10025" parameters="dpl_params" />
-      <printer translate="name" name="Datamax-O'Neil E4305P Mark III" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:E4305P Mark III;" color="false" driver="datamax_oneil_E4305P" manufacturer="Datamax O'Neil" model="10026" parameters="dpl_params" />
-      <printer translate="name" name="Datamax-O'Neil E4206L Mark III" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:E4206L Mark III;" color="false" driver="datamax_oneil_E4206L" manufacturer="Datamax O'Neil" model="10027" parameters="dpl_params" />
-      <printer translate="name" name="Datamax-O'Neil E4305L Mark III" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:E4305L Mark III;" color="false" driver="datamax_oneil_E4305L" manufacturer="Datamax O'Neil" model="10028" parameters="dpl_params" />
-      <printer translate="name" name="Datamax-O'Neil RL3e" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:RL3e;" color="false" driver="datamax_oneil_RL3e" manufacturer="Datamax O'Neil" model="10029" parameters="dpl_params" />
-      <printer translate="name" name="Datamax-O'Neil RL4e" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:RL4e;" color="false" driver="datamax_oneil_RL4e" manufacturer="Datamax O'Neil" model="10030" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil I4212e Mark II" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:I4212e Mark II;" color="false" driver="datamax_oneil_I4212e" manufacturer="DatamaxONeil" model="10017" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil I4310e Mark II" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:I4310e Mark II;" color="false" driver="datamax_oneil_I4310e" manufacturer="DatamaxONeil" model="10018" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil I4606e Mark II" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:I4606e Mark II;" color="false" driver="datamax_oneil_I4606e" manufacturer="DatamaxONeil" model="10020" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil E4204B Mark III" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:E4204B Mark III;" color="false" driver="datamax_oneil_E4204B" manufacturer="DatamaxONeil" model="10021" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil E4304B Mark III" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:E4304B Mark III;" color="false" driver="datamax_oneil_E4304B" manufacturer="DatamaxONeil" model="10022" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil E4205A Mark III" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:E4205A Mark III;" color="false" driver="datamax_oneil_E4205A" manufacturer="DatamaxONeil" model="10023" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil E4305A Mark III" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:E4305A Mark III;" color="false" driver="datamax_oneil_E4305A" manufacturer="DatamaxONeil" model="10024" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil E4206P Mark III" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:E4206P Mark III;" color="false" driver="datamax_oneil_E4206P" manufacturer="DatamaxONeil" model="10025" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil E4305P Mark III" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:E4305P Mark III;" color="false" driver="datamax_oneil_E4305P" manufacturer="DatamaxONeil" model="10026" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil E4206L Mark III" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:E4206L Mark III;" color="false" driver="datamax_oneil_E4206L" manufacturer="DatamaxONeil" model="10027" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil E4305L Mark III" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:E4305L Mark III;" color="false" driver="datamax_oneil_E4305L" manufacturer="DatamaxONeil" model="10028" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil RL3e" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:RL3e;" color="false" driver="datamax_oneil_RL3e" manufacturer="DatamaxONeil" model="10029" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil RL4e" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:RL4e;" color="false" driver="datamax_oneil_RL4e" manufacturer="DatamaxONeil" model="10030" parameters="dpl_params" />
     </family>
     <family name="escp2">
       <parameters name="standard_params">
