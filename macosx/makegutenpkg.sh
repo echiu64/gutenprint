@@ -247,10 +247,14 @@ cp AUTHORS ~/Desktop/gutenprint-$pkgversion/Authors.txt
 cp COPYING ~/Desktop/gutenprint-$pkgversion/Copying.txt
 cp NEWS ~/Desktop/gutenprint-$pkgversion/News.txt
 
-cp scripts/uninstall-gutenprint.command ~/Desktop/gutenprint-$pkgversion/
+cp -f macosx/scripts/uninstall-gutenprint.command ~/Desktop/gutenprint-$pkgversion/
 chmod 755 ~/Desktop/gutenprint-$pkgversion/uninstall-gutenprint.command
 
-cp -r "scripts/Gutenprint Utility for EPSON Inkjet Printers" ~/Desktop/gutenprint-$pkgversion/
+cp -f macosx/scripts/Gutenprint\ Utility\ for\ EPSON\ Inkjet\ Printers.command ~/Desktop/gutenprint-$pkgversion/
+chmod 755 ~/Desktop/gutenprint-$pkgversion/Gutenprint\ Utility\ for\ EPSON\ Inkjet\ Printers.command
+
+codesign -s "$CODESIGN_IDENTITY" -fv ~/Desktop/gutenprint-$pkgversion/uninstall-gutenprint.command
+codesign -s "$CODESIGN_IDENTITY" -fv ~/Desktop/gutenprint-$pkgversion/Gutenprint\ Utility\ for\ EPSON\ Inkjet\ Printers.command
 
 test -f ~/Desktop/gutenprint-$pkgversion.dmg && rm -f ~/Desktop/gutenprint-$pkgversion.dmg
 hdiutil create -srcfolder ~/Desktop/gutenprint-$pkgversion ~/Desktop/gutenprint-$pkgversion.dmg
