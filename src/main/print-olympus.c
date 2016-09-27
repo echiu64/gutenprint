@@ -2812,7 +2812,7 @@ LIST(laminate_list_t, mitsu_cpd70x_laminate_list, laminate_t, mitsu_cpd70x_lamin
 static const dyesub_stringitem_t mitsu70x_uiconstraints[] = {
   /* PPD generation handles constraint reciprocation */
   /* Basically, exclude Matte and "Fine" quality */
-  {"UIConstraints", "*Laminate Matte *PrintSpeed Fine"},
+  {"UIConstraints", "*StpLaminate Matte *StpPrintSpeed Fine"},
 };
 LIST(dyesub_stringlist_t, mitsu70x_uiconstraints_list, dyesub_stringitem_t, mitsu70x_uiconstraints);
 
