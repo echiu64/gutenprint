@@ -66,7 +66,7 @@ struct mitsu9550_ctx {
 /* Spool file structures */
 struct mitsu9550_hdr1 {
 	uint8_t  cmd[4]; /* 1b 57 20 2e */
-	uint8_t  unk[10]; 
+	uint8_t  unk[10];
 	uint16_t cols; /* BE */
 	uint16_t rows; /* BE */
 	uint8_t  null[32];
@@ -74,25 +74,25 @@ struct mitsu9550_hdr1 {
 
 struct mitsu9550_hdr2 {
 	uint8_t  cmd[4]; /* 1b 57 21 2e */
-	uint8_t  unk[24];
-	uint16_t copies; /* BE, 1-580 */
+	uint8_t  unk[24]; /* 00 80 00 22 08 03 00 [...] */
+	uint16_t copies; /* BE, 1-680 */
 	uint8_t  null[2];
 	uint8_t  cut; /* 00 == normal, 83 == 2x6*2 */
 	uint8_t  unkb[5];
 	uint8_t  mode; /* 00 == normal, 80 == fine */
-	uint8_t  unkc[11];
+	uint8_t  unkc[11]; /* 00 [...] 00 01 */
 } __attribute__((packed));
 
 struct mitsu9550_hdr3 {
 	uint8_t  cmd[4]; /* 1b 57 22 2e */
-	uint8_t  unk[7];
+	uint8_t  unk[7]; /* 00 40 00 [...] */
 	uint8_t  mode2;  /* 00 == normal, 01 == finedeep */
-	uint8_t  unkb[38];
+	uint8_t  null[38];
 } __attribute__((packed));
 
 struct mitsu9550_hdr4 {
 	uint8_t  cmd[4]; /* 1b 57 26 2e */
-	uint8_t  unk[46];
+	uint8_t  unk[46]; /* 00 70 00 00 00 00 00 00 01 01 00 [...] */
 } __attribute__((packed));
 
 struct mitsu9550_plane {
@@ -124,7 +124,7 @@ struct mitsu9550_status {
 	uint8_t  null[4];
 	uint8_t  sts1; // MM
 	uint8_t  nullb[1];
-	uint16_t copies; // NN
+	uint16_t copies; // BE, NN
 	uint8_t  nullc[6];
 	uint8_t  sts3; // QQ
 	uint8_t  sts4; // RR
@@ -347,19 +347,19 @@ static int mitsu9550_get_status(struct mitsu9550_ctx *ctx, uint8_t *resp, int st
 
 static char *mitsu9550_media_types(uint8_t type)
 {
-	switch (type) {
+	switch (type & 0xf) { /* values can be 0x0? or 0x4? */
 	case 0x01:
-		return "3.5x5";
+		return "CK9035 (3.5x5)";
 	case 0x02:
-		return "4x6";
+		return "CK9046 (4x6)";
 	case 0x03:
-		return "PC";
+		return "CK9046PST (4x6)";
 	case 0x04:
-		return "5x7";
+		return "CK9057 (5x7)";
 	case 0x05:
-		return "6x9";
+		return "CK9069 (6x9)";
 	case 0x06:
-		return "V";
+		return "CK9068 (6x8)";
 	default:
 		return "Unknown";
 	}
@@ -373,7 +373,7 @@ static int validate_media(int type, int cols, int rows) {
 			return 1;
 		break;
 	case 0x02: /* 4x6 */
-	case 0x03: /* PC ??? */ 
+	case 0x03: /* 4x6 postcard */ 
 		if (cols != 2152)
 			return 1;
 		if (rows != 1416 && rows != 1184 &&
@@ -389,11 +389,15 @@ static int validate_media(int type, int cols, int rows) {
 	case 0x05: /* 6x9 */
 		if (cols != 2152)
 			return 1;
-		if (rows != 1416 && rows != 2972 &&
+		if (rows != 1416 && rows != 2792 &&
 		    rows != 2956 && rows != 3146)
 			return 1;
 		break;
-	case 0x06: /* V */
+	case 0x06: /* V (6x8??) */
+		if (cols != 2152)
+			return 1;
+		if (rows != 1416 && rows != 2792)
+			return 1;
 		break;
 	default: /* Unknown */
 		break;
@@ -781,7 +785,7 @@ static int mitsu9550_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend mitsu9550_backend = {
 	.name = "Mitsubishi CP-9550DW-S",
-	.version = "0.16",
+	.version = "0.17",
 	.uri_prefix = "mitsu9550",
 	.cmdline_usage = mitsu9550_cmdline,
 	.cmdline_arg = mitsu9550_cmdline_arg,

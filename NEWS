@@ -262,6 +262,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
         Canon SELPHY CP1000
 	Canon SELPHY CP1200
+	Mitsubishi CP-9600DW      [experimental]
 	Mitsubishi CP-D90DW       [experimental]
 	DNP DS-RX1HS
 
@@ -292,7 +293,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      [*1] Optimal quality requires use of an external image processing
           library.  Two options are available:
 
-  	  * libS6145ImageProcess -- Officially supported by Sinfonia,
+	  * libS6145ImageProcess -- Officially supported by Sinfonia,
 	    this library is proprietary, available only on a few platforms,
 	    and use requires a written license from Sinfonia.
 

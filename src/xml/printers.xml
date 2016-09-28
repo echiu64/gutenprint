@@ -2957,6 +2957,7 @@
       <printer translate="name" name="Mitsubishi CP-D80DW" driver="mitsubishi-d80dw" manufacturer="Mitsubishi" model="4107" foomaticid="Mitsubishi-D80DW" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Kodak 305" deviceid="MFG:KODAK;CMD:KODAK305;MDL:305 Photo Printer;CLS:PRINTER;DES:KODAK 305 Photo Printer" driver="kodak-305" manufacturer="Kodak" model="4108" foomaticid="Kodak-305" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-D90DW" driver="mitsubishi-d90dw" manufacturer="Mitsubishi" model="4109" foomaticid="Mitsubishi-D90DW" parameters="nativecopies">EXPERIMENTAL</printer>
+      <printer translate="name" name="Mitsubishi CP-9600DW" driver="mitsubishi-9600dw" manufacturer="Mitsubishi" model="4110" foomaticid="Mitsubishi-9600DW" parameters="nativecopies" />
       <printer translate="name" name="Shinko CHC-S9045" driver="shinko-chcs9045" manufacturer="Shinko" model="5000" foomaticid="Shinko-CHC-S9045" />
       <printer translate="name" name="Shinko CHC-S2145" deviceid="MFG:SHINKO;CMD:SUPCC;MDL:CHC-S2145;CLS:PRINTER;DES:SHINKO CHC-S2145;" driver="shinko-chcs2145" manufacturer="Shinko" model="5001" foomaticid="Shinko-CHC-S2145" parameters="nativecopies" />
       <printer translate="name" name="Sinfonia S2145/S2" driver="sinfonia-chcs2145" manufacturer="Sinfonia" model="5001" foomaticid="Sinfonia-CHC-S2145" parameters="nativecopies" />
