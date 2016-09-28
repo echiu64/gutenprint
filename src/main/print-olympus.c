@@ -5483,6 +5483,23 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
+  { /* Mitsubishi CP9550DW-S */
+    4111,
+    &rgb_ink_list, /* Identical to 9550D except it's rgb instead of bgr */
+    &res_346dpi_list,
+    &mitsu_cp9550_page_list,
+    &mitsu_cp9550_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_PLANE_INTERLACE,
+    &mitsu_cp9550_printer_init, &mitsu_cp9550_printer_end,
+    &mitsu_cp3020da_plane_init, NULL,
+    NULL, NULL, /* No block funcs */
+    NULL, NULL, NULL, /* color profile/adjustment is built into printer */
+    NULL, NULL, NULL,
+    NULL, NULL,
+    NULL, 0, NULL, NULL,
+  },
   { /* Shinko CHC-S9045 (experimental) */
     5000, 		
     &rgb_ink_list,
