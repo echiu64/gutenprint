@@ -238,7 +238,7 @@ typedef struct /* printer specific parameters */
   const stp_parameter_t *parameters;
   int parameter_count;
   int (*load_parameters)(const stp_vars_t *, const char *name, stp_parameter_t *);
-  void (*parse_parameters)(stp_vars_t *);
+  int (*parse_parameters)(stp_vars_t *);
 } dyesub_cap_t;
 
 
@@ -2905,17 +2905,9 @@ static const laminate_t mitsu_cpd70x_laminate[] =
 
 LIST(laminate_list_t, mitsu_cpd70x_laminate_list, laminate_t, mitsu_cpd70x_laminate);
 
-/* This list is *not* translated */
-static const dyesub_stringitem_t mitsu70x_uiconstraints[] = {
-  /* PPD generation handles constraint reciprocation */
-  /* Basically, exclude Matte and "Fine" quality */
-  {"UIConstraints", "*StpLaminate Matte *StpPrintSpeed Fine"},
-};
-LIST(dyesub_stringlist_t, mitsu70x_uiconstraints_list, dyesub_stringitem_t, mitsu70x_uiconstraints);
-
 typedef struct
 {
-  const char *quality;
+  int quality;
   int laminate_offset;
 } mitsu70x_privdata_t;
 
@@ -2979,26 +2971,26 @@ mitsu70x_load_parameters(const stp_vars_t *v, const char *name,
   return 1;
 }
 
-static void mitsu70x_parse_parameters(stp_vars_t *v)
+static int mitsu70x_parse_parameters(stp_vars_t *v)
 {
-  mitsu70x_privdata.quality = stp_get_string_parameter(v, "PrintSpeed");
+  const char *quality = stp_get_string_parameter(v, "PrintSpeed");
+
+  /* Parse options */
+  if (strcmp(quality, "SuperFine") == 0) {
+     mitsu70x_privdata.quality = 3;
+  } else if (strcmp(quality, "UltraFine") == 0) {
+     mitsu70x_privdata.quality = 4;
+  } else if (strcmp(quality, "Fine") == 0) {
+     mitsu70x_privdata.quality = 0;
+  } else {
+     mitsu70x_privdata.quality = 0;
+  }
+
+  return 1;
 }
 
 static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
 {
-  int quality;
-
-  /* Parse options */
-  if (strcmp(mitsu70x_privdata.quality, "SuperFine") == 0) {
-	  quality = 3;
-  } else if (strcmp(mitsu70x_privdata.quality, "UltraFine") == 0) {
-	  quality = 4;
-  } else if (strcmp(mitsu70x_privdata.quality, "Fine") == 0) {
-	  quality = 0;	  
-  } else {
-	  quality = 0;
-  }
-
   /* Printer wakeup */
   stp_putc(0x1b, v);
   stp_putc(0x45, v);
@@ -3019,11 +3011,13 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
     stp_put16_be(privdata.w_size, v);
     if (model == 0x02 || model == 0x90) {
       mitsu70x_privdata.laminate_offset = 0;
-      quality = 4;  /* Matte Lamination forces UltraFine on K60 or K305 */
+      if (!mitsu70x_privdata.quality)
+	mitsu70x_privdata.quality = 4;  /* Matte Lamination forces UltraFine on K60 or K305 */
     } else {
       /* Laminate a slightly larger boundary in Matte mode */
-      mitsu70x_privdata.laminate_offset = 12;	          
-      quality = 3; /* Matte Lamination forces Superfine (or UltraFine) */
+      mitsu70x_privdata.laminate_offset = 12;
+      if (!mitsu70x_privdata.quality)
+        mitsu70x_privdata.quality = 3; /* Matte Lamination forces Superfine (or UltraFine) */
     }
     stp_put16_be(privdata.h_size + mitsu70x_privdata.laminate_offset, v);    
   } else {
@@ -3031,7 +3025,7 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
     stp_put16_be(0, v);
     stp_put16_be(0, v);
   }
-  stp_putc(quality, v);
+  stp_putc(mitsu70x_privdata.quality, v);
   dyesub_nputc(v, 0x00, 7);
 
   if (model != 0x01) {
@@ -4100,6 +4094,14 @@ static void dnpds40_plane_init(stp_vars_t *v)
 }
 
 /* Dai Nippon Printing DS80 */
+
+typedef struct
+{
+  int multicut;
+} dnp_privdata_t;
+
+static dnp_privdata_t dnp_privdata;
+
 /* Imaging area is wider than print size, we always must supply the 
    printer with the full imaging width. */
 static const dyesub_pagesize_t dnpds80_page[] =
@@ -4159,6 +4161,46 @@ static const dyesub_printsize_t dnpds80_printsize[] =
 
 LIST(dyesub_printsize_list_t, dnpds80_printsize_list, dyesub_printsize_t, dnpds80_printsize);
 
+static int dnpds80_parse_parameters(stp_vars_t *v)
+{
+ if (!strcmp(privdata.pagesize, "c8x10")) {
+    dnp_privdata.multicut = 6;
+  } else if (!strcmp(privdata.pagesize, "w576h864")) {
+    dnp_privdata.multicut = 7;
+  } else if (!strcmp(privdata.pagesize, "w288h576")) {
+    dnp_privdata.multicut = 8;
+  } else if (!strcmp(privdata.pagesize, "w360h576")) {
+    dnp_privdata.multicut = 9;
+  } else if (!strcmp(privdata.pagesize, "w432h576")) {
+    dnp_privdata.multicut = 10;
+  } else if (!strcmp(privdata.pagesize, "w576h576")) {
+    dnp_privdata.multicut = 11;
+  } else if (!strcmp(privdata.pagesize, "w576h576-div2")) {
+    dnp_privdata.multicut = 13;
+  } else if (!strcmp(privdata.pagesize, "c8x10-div2")) {
+    dnp_privdata.multicut = 14;
+  } else if (!strcmp(privdata.pagesize, "w576h864-div2")) {
+    dnp_privdata.multicut = 15;
+  } else if (!strcmp(privdata.pagesize, "w576h648-w576h360_w576h288")) {
+    dnp_privdata.multicut = 16;
+  } else if (!strcmp(privdata.pagesize, "c8x10-w576h432_w576h288")) {
+    dnp_privdata.multicut = 17;
+  } else if (!strcmp(privdata.pagesize, "w576h792-w576h432_w576h360")) {
+    dnp_privdata.multicut = 18;
+  } else if (!strcmp(privdata.pagesize, "w576h864-w576h576_w576h288")) {
+    dnp_privdata.multicut = 19;
+  } else if (!strcmp(privdata.pagesize, "w576h864-div3")) {
+    dnp_privdata.multicut = 20;
+  } else if (!strcmp(privdata.pagesize, "A4")) {
+    dnp_privdata.multicut = 21;
+  } else {
+    stp_eprintf(v, _("Illegal print size selected for roll media!\n"));
+    return 0;
+  }
+
+ return 1;
+}
+
 static void dnpds80_printer_start(stp_vars_t *v)
 {
   /* Common code */
@@ -4168,41 +4210,7 @@ static void dnpds80_printer_start(stp_vars_t *v)
   stp_zprintf(v, "\033PCNTRL CUTTER          0000000800000000");
 
   /* Configure multi-cut/page size */
-  stp_zprintf(v, "\033PIMAGE MULTICUT        00000008000000");
-
-  if (!strcmp(privdata.pagesize, "c8x10")) {
-    stp_zprintf(v, "06");
-  } else if (!strcmp(privdata.pagesize, "w576h864")) {
-    stp_zprintf(v, "07");
-  } else if (!strcmp(privdata.pagesize, "w288h576")) {
-    stp_zprintf(v, "08");
-  } else if (!strcmp(privdata.pagesize, "w360h576")) {
-    stp_zprintf(v, "09");
-  } else if (!strcmp(privdata.pagesize, "w432h576")) {
-    stp_zprintf(v, "10");
-  } else if (!strcmp(privdata.pagesize, "w576h576")) {
-    stp_zprintf(v, "11");
-  } else if (!strcmp(privdata.pagesize, "w576h576-div2")) {
-    stp_zprintf(v, "13");
-  } else if (!strcmp(privdata.pagesize, "c8x10-div2")) {
-    stp_zprintf(v, "14");
-  } else if (!strcmp(privdata.pagesize, "w576h864-div2")) {
-    stp_zprintf(v, "15");
-  } else if (!strcmp(privdata.pagesize, "w576h648-w576h360_w576h288")) {
-    stp_zprintf(v, "16");
-  } else if (!strcmp(privdata.pagesize, "c8x10-w576h432_w576h288")) {
-    stp_zprintf(v, "17");
-  } else if (!strcmp(privdata.pagesize, "w576h792-w576h432_w576h360")) {
-    stp_zprintf(v, "18");
-  } else if (!strcmp(privdata.pagesize, "w576h864-w576h576_w576h288")) {
-    stp_zprintf(v, "19");
-  } else if (!strcmp(privdata.pagesize, "w576h864-div3")) {
-    stp_zprintf(v, "20");
-  } else if (!strcmp(privdata.pagesize, "A4")) {
-    stp_zprintf(v, "21");
-  } else {
-    stp_zprintf(v, "00"); /* should not be possible */
-  }
+  stp_zprintf(v, "\033PIMAGE MULTICUT        00000008%08d", dnp_privdata.multicut);
 }
 
 /* Dai Nippon Printing DS80DX */
@@ -4214,23 +4222,56 @@ static const dyesub_media_t dnpds80dx_medias[] =
 
 LIST(dyesub_media_list_t, dnpds80dx_media_list, dyesub_media_t, dnpds80dx_medias);
 
-/* This list is *not* translated */
-static const dyesub_stringitem_t dnpds80dx_uiconstraints[] =
+static int dnpds80dx_parse_parameters(stp_vars_t *v)
 {
-  /* PPD generation handles constraint reciprocation */
-  {"UIConstraints", "*Duplex *MediaType Roll"},
-  {"UIConstraints", "*PageSize A4 *MediaType Sheet"},
-  {"UIConstraints", "*PageSize w576h792-w576h432_w576h360 *MediaType Sheet"},
-  {"UIConstraints", "*PageSize w576h648-w576h360_w576h288 *MediaType Sheet"},
-  {"UIConstraints", "*PageSize c8x10-w576h432_w576h288 *MediaType Sheet"},
-  {"UIConstraints", "*PageSize w576h864-w576h576_w576h288 *MediaType Sheet"},
-  {"UIConstraints", "*PageSize w576h864-div3 *MediaType Sheet"},
-  {"UIConstraints", "*PageSize w576h864-div3sheet *MediaType Roll"},
-  {"UIConstraints", "*PageSize w576h774-w576h756 *MediaType Roll"},
-  {"UIConstraints", "*PageSize w576h774 *MediaType Roll"},
-};
+  if (!strcmp(privdata.media->name, "Roll")) {
+    if (strcmp(privdata.duplex_mode, "None")) {
+      stp_eprintf(v, _("Duplex not supported when using roll media!\n"));
+      return 0;
+    } else {
+      return dnpds80_parse_parameters(v);
+    }
+  }
 
-LIST(dyesub_stringlist_t, dnpds80dx_uiconstraints_list, dyesub_stringitem_t, dnpds80dx_uiconstraints);
+  if (!strcmp(privdata.pagesize, "c8x10")) {
+    dnp_privdata.multicut = 6;
+  } else if (!strcmp(privdata.pagesize, "w576h864")) {
+    dnp_privdata.multicut = 7;
+  } else if (!strcmp(privdata.pagesize, "w288h576")) {
+    dnp_privdata.multicut = 8;
+  } else if (!strcmp(privdata.pagesize, "w360h576")) {
+    dnp_privdata.multicut = 9;
+  } else if (!strcmp(privdata.pagesize, "w432h576")) {
+    dnp_privdata.multicut = 10;
+  } else if (!strcmp(privdata.pagesize, "w576h576")) {
+    dnp_privdata.multicut = 11;
+  } else if (!strcmp(privdata.pagesize, "w576h774-w576h756")) {
+    dnp_privdata.multicut = 25;
+  } else if (!strcmp(privdata.pagesize, "w576h774")) {
+    dnp_privdata.multicut = 26;
+  } else if (!strcmp(privdata.pagesize, "w576h576-div2")) {
+    dnp_privdata.multicut = 13;
+  } else if (!strcmp(privdata.pagesize, "c8x10-div2")) {
+    dnp_privdata.multicut = 14;
+  } else if (!strcmp(privdata.pagesize, "w576h864-div2")) {
+    dnp_privdata.multicut = 15;
+  } else if (!strcmp(privdata.pagesize, "w576h864-div3sheet")) {
+    dnp_privdata.multicut = 28;
+  } else {
+    stp_eprintf(v, _("Illegal print size selected for cut media!\n"));
+    return 0;
+  }
+
+  /* Add correct offset to multicut mode based on duplex state */
+  if (!strcmp(privdata.duplex_mode, "None"))
+     dnp_privdata.multicut += 100; /* Simplex */
+  else if (privdata.page_number & 1)
+     dnp_privdata.multicut += 300; /* Duplex, back */
+  else
+     dnp_privdata.multicut += 200; /* Duplex, front */
+  
+  return 1;
+}
 
 /* This is the same as the DS80, except with 10.5" and 10.75" sizes
    only meant for sheet media.  Duplex is *only* supported on sheet media.
@@ -4309,8 +4350,6 @@ LIST(dyesub_printsize_list_t, dnpds80dx_printsize_list, dyesub_printsize_t, dnpd
 
 static void dnpds80dx_printer_start(stp_vars_t *v)
 {
-  int multicut;
-	
   /* If we're using roll media, act the same as a standard DS80 */
   if (!strcmp(privdata.media->name, "Roll"))
     {
@@ -4324,43 +4363,7 @@ static void dnpds80dx_printer_start(stp_vars_t *v)
   /* Set cutter option to "normal" */
   stp_zprintf(v, "\033PCNTRL CUTTER          0000000800000000");
 
-  if (!strcmp(privdata.pagesize, "c8x10")) {
-    multicut = 6;
-  } else if (!strcmp(privdata.pagesize, "w576h864")) {
-    multicut = 7;
-  } else if (!strcmp(privdata.pagesize, "w288h576")) {
-    multicut = 8;
-  } else if (!strcmp(privdata.pagesize, "w360h576")) {
-    multicut = 9;
-  } else if (!strcmp(privdata.pagesize, "w432h576")) {
-    multicut = 10;
-  } else if (!strcmp(privdata.pagesize, "w576h576")) {
-    multicut = 11;
-  } else if (!strcmp(privdata.pagesize, "w576h774-w576h756")) {
-    multicut = 25;
-  } else if (!strcmp(privdata.pagesize, "w576h774")) {
-    multicut = 26;
-  } else if (!strcmp(privdata.pagesize, "w576h576-div2")) {
-    multicut = 13;
-  } else if (!strcmp(privdata.pagesize, "c8x10-div2")) {
-    multicut = 14;
-  } else if (!strcmp(privdata.pagesize, "w576h864-div2")) {
-    multicut = 15;
-  } else if (!strcmp(privdata.pagesize, "w576h864-div3sheet")) {
-    multicut = 28;
-  } else {
-    multicut = 0;
-  }
-
-  /* Add correct offset to multicut mode based on duplex state */
-  if (!strcmp(privdata.duplex_mode, "None"))
-     multicut += 100; /* Simplex */
-  else if (privdata.page_number & 1)
-     multicut += 300; /* Duplex, back */
-  else
-     multicut += 200; /* Duplex, front */
-
-  stp_zprintf(v, "\033PIMAGE MULTICUT        00000008%08d", multicut);
+  stp_zprintf(v, "\033PIMAGE MULTICUT        00000008%08d", dnp_privdata.multicut);
 }
 
 /* Dai Nippon Printing DS-RX1 */
@@ -5389,7 +5392,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, &mitsu_cpd70x_plane_end,
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
-    &mitsu_cpd70x_laminate_list, NULL, &mitsu70x_uiconstraints_list,
+    &mitsu_cpd70x_laminate_list, NULL, NULL,
     NULL, NULL,
     mitsu70x_parameters,
     mitsu70x_parameter_count,
@@ -5410,7 +5413,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, &mitsu_cpd70x_plane_end,
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
-    &mitsu_cpd70x_laminate_list, NULL, &mitsu70x_uiconstraints_list,
+    &mitsu_cpd70x_laminate_list, NULL, NULL,
     NULL, NULL,
     mitsu70x_parameters,
     mitsu70x_parameter_count,
@@ -5431,7 +5434,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, &mitsu_cpd70x_plane_end,
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
-    &mitsu_cpd70x_laminate_list, NULL, &mitsu70x_uiconstraints_list,
+    &mitsu_cpd70x_laminate_list, NULL, NULL,
     NULL, NULL,
     mitsu70x_parameters,
     mitsu70x_parameter_count,
@@ -5452,7 +5455,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, &mitsu_cpd70x_plane_end,
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
-    &mitsu_cpd70x_laminate_list, NULL, &mitsu70x_uiconstraints_list,
+    &mitsu_cpd70x_laminate_list, NULL, NULL,
     NULL, NULL,
     mitsu70x_parameters,
     mitsu70x_parameter_count,
@@ -5637,7 +5640,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, NULL,
     &dnpds40_laminate_list, NULL, NULL,    
     NULL, NULL,
-    NULL, 0, NULL, NULL,
+    NULL, 0, NULL, dnpds80_parse_parameters,
   },
   { /* Dai Nippon Printing DSRX1 */
     6002,
@@ -5703,9 +5706,9 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &dnpds40_plane_init, NULL,
     NULL, NULL,
     NULL, NULL, NULL,
-    &dnpds40_laminate_list, &dnpds80dx_media_list, &dnpds80dx_uiconstraints_list,
+    &dnpds40_laminate_list, &dnpds80dx_media_list, NULL,
     NULL, NULL,
-    NULL, 0, NULL, NULL,    
+    NULL, 0, NULL, dnpds80dx_parse_parameters,
   },
 };
 
@@ -6379,6 +6382,20 @@ dyesub_exec(stp_vars_t *v,
 }
 
 static int
+dyesub_exec_check(stp_vars_t *v,
+		  int (*func)(stp_vars_t *),
+		  const char *debug_string)
+{
+  if (func)
+    {
+      stp_deprintf(STP_DBG_DYESUB, "dyesub: %s\n", debug_string);
+      return (*func)(v);
+    }
+  return 1;
+}
+
+
+static int
 dyesub_interpolate(int oldval, int oldsize, int newsize)
 {
   /* 
@@ -6673,9 +6690,6 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   stp_describe_resolution(v, &w_dpi, &h_dpi);
   dyesub_printsize(v, &max_print_px_width, &max_print_px_height);
 
-  /* Parse any per-printer parameters */
-  dyesub_exec(v, caps->parse_parameters, "caps->parse_parameters");
-
   /* Duplex processing -- Rotate even pages for DuplexNoTumble */
   privdata.duplex_mode = stp_get_string_parameter(v, "Duplex");
   privdata.page_number = stp_get_int_parameter(v, "PageNumber");
@@ -6687,6 +6701,12 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
 	  privdata.laminate = dyesub_get_laminate_pattern(v);
   if (caps->media)
 	  privdata.media = dyesub_get_mediatype(v);
+
+  /* Parse any per-printer parameters after we've done all generic ones */
+  status = dyesub_exec_check(v, caps->parse_parameters, "caps->parse_parameters");
+  if (status != 1) {
+     goto done;
+  }
 
   dyesub_imageable_area_internal(v, 
   	(dyesub_feature(caps, DYESUB_FEATURE_WHITE_BORDER) ? 1 : 0),
@@ -6884,7 +6904,11 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   /* printer end */
   dyesub_exec(v, caps->printer_end_func, "caps->printer_end");
 
-  dyesub_free_image(&pv, image);
+done:
+  if (pv.image_data) {
+    dyesub_free_image(&pv, image);
+  }
+
   stp_image_conclude(image);
   return status;
 }
