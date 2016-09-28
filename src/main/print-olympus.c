@@ -4348,24 +4348,6 @@ static const dyesub_printsize_t dnpds80dx_printsize[] =
 
 LIST(dyesub_printsize_list_t, dnpds80dx_printsize_list, dyesub_printsize_t, dnpds80dx_printsize);
 
-static void dnpds80dx_printer_start(stp_vars_t *v)
-{
-  /* If we're using roll media, act the same as a standard DS80 */
-  if (!strcmp(privdata.media->name, "Roll"))
-    {
-      dnpds80_printer_start(v);
-      return;
-    }
-	
-  /* Common code */
-  dnp_printer_start_common(v);
-
-  /* Set cutter option to "normal" */
-  stp_zprintf(v, "\033PCNTRL CUTTER          0000000800000000");
-
-  stp_zprintf(v, "\033PIMAGE MULTICUT        00000008%08d", dnp_privdata.multicut);
-}
-
 /* Dai Nippon Printing DS-RX1 */
 /* Imaging area is wider than print size, we always must supply the 
    printer with the full imaging width. */
@@ -5702,7 +5684,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_WHITE_BORDER
       | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_DUPLEX,
-    &dnpds80dx_printer_start, &dnpds40_printer_end,
+    &dnpds80_printer_start, &dnpds40_printer_end,
     &dnpds40_plane_init, NULL,
     NULL, NULL,
     NULL, NULL, NULL,
@@ -5777,12 +5759,6 @@ static const stp_parameter_t the_parameters[] =
     N_("Duplex/Tumble Setting"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
-  },
-  {
-    "PPDUIConstraints", N_("PPD User Interface Constraints"), "Color=No,Category=Advanced Printer Functionality",
-    N_("PPD UIConstraints List"),
-    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,    
-    STP_PARAMETER_LEVEL_INTERNAL, 0, 0, STP_CHANNEL_NONE, 0, 1
   },
 };
 
@@ -6092,24 +6068,6 @@ dyesub_parameters(const stp_vars_t *v, const char *name,
 	(description->bounds.str, "Color", _("Color"));
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
-    }
-  else if (strcmp(name, "PPDUIConstraints") == 0)
-    {
-      description->bounds.str = stp_string_list_create();
-      if (caps->uiconstraints) {
-	const dyesub_stringlist_t *mlist = caps->uiconstraints;
-	for (i = 0; i < mlist->n_items; i++)
-	  {
-	    const dyesub_stringitem_t *m = &(mlist->item[i]);
-	    stp_string_list_add_string(description->bounds.str,
-				       m->name, m->text); /* Do *not* want this translated */
-	  }
-	description->deflt.str =
-	  stp_string_list_param(description->bounds.str, 0)->name;
-	description->is_active = 1;
-      } else {
-	description->is_active = 0;
-      }
     }
   else if (strcmp(name, "Duplex") == 0)
     {
