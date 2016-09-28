@@ -5953,10 +5953,10 @@ dyesub_parameters(const stp_vars_t *v, const char *name,
 	stp_fill_parameter_settings(description, &(the_parameters[i]));
 	break;
       }
-  if (caps->load_parameters)
+  if (caps->load_parameters) /* do *NOT* use dyesub_exec() here */
     {
       if (caps->load_parameters(v, name, description))
-        return;
+        return; /* Ie parameter handled */
     }
 
   if (strcmp(name, "PageSize") == 0)
@@ -6648,8 +6648,7 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   dyesub_printsize(v, &max_print_px_width, &max_print_px_height);
 
   /* Parse any per-printer parameters */
-  if (caps->parse_parameters)
-    caps->parse_parameters(v);
+  dyesub_exec(v, caps->parse_parameters, "caps->parse_parameters");
 
   /* Duplex processing -- Rotate even pages for DuplexNoTumble */
   privdata.duplex_mode = stp_get_string_parameter(v, "Duplex");
