@@ -232,7 +232,6 @@ typedef struct /* printer specific parameters */
   const char *adj_yellow;
   const laminate_list_t *laminate;
   const dyesub_media_list_t *media;
-  const dyesub_stringlist_t *uiconstraints;
   void (*job_start_func)(stp_vars_t *);
   void (*job_end_func)(stp_vars_t *);
   const stp_parameter_t *parameters;
@@ -4670,7 +4669,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, 
     &p10_block_init_func, NULL,
     NULL, NULL, NULL,  /* color profile/adjustment is built into printer */
-    &p10_laminate_list, NULL, NULL,
+    &p10_laminate_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -4687,7 +4686,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &p200_plane_init_func, NULL,
     NULL, NULL,
     p200_adj_any, p200_adj_any, p200_adj_any,
-    NULL, NULL, NULL,
+    NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -4704,7 +4703,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, &p300_plane_end_func,
     &p300_block_init_func, NULL,
     p300_adj_cyan, p300_adj_magenta, p300_adj_yellow,
-    NULL, NULL, NULL,
+    NULL, NULL,
     NULL, NULL,    
     NULL, 0, NULL, NULL,
   },
@@ -4721,7 +4720,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &p400_plane_init_func, &p400_plane_end_func,
     &p400_block_init_func, NULL,
     p400_adj_cyan, p400_adj_magenta, p400_adj_yellow,
-    NULL, NULL, NULL,
+    NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -4737,7 +4736,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     &p440_block_init_func, &p440_block_end_func,
     NULL, NULL, NULL,	/* color profile/adjustment is built into printer */
-    &p10_laminate_list, NULL, NULL,
+    &p10_laminate_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -4753,7 +4752,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL,
     NULL, NULL, NULL,	/* color profile/adjustment is built into printer */
-    NULL, NULL, NULL,
+    NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -4771,7 +4770,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &cpx00_plane_init_func, NULL,
     NULL, NULL,
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
-    NULL, NULL, NULL,
+    NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -4789,7 +4788,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &cpx00_plane_init_func, NULL,
     NULL, NULL,
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
-    NULL, NULL, NULL,
+    NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -4810,7 +4809,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &cpx00_plane_init_func, NULL,
     NULL, NULL,
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
-    NULL, NULL, NULL,
+    NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -4828,7 +4827,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &es1_plane_init_func, NULL,
     NULL, NULL,
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
-    NULL, NULL, NULL,
+    NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -4846,7 +4845,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &es2_plane_init_func, NULL,
     NULL, NULL,
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
-    NULL, NULL, NULL,
+    NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -4864,7 +4863,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &es2_plane_init_func, NULL,
     NULL, NULL,
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
-    NULL, NULL, NULL,
+    NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -4882,7 +4881,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &es2_plane_init_func, NULL,
     NULL, NULL,
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
-    NULL, NULL, NULL,
+    NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -4900,7 +4899,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &es2_plane_init_func, NULL,
     NULL, NULL,
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
-    NULL, NULL, NULL,
+    NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -4918,7 +4917,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &cpx00_plane_init_func, NULL,
     NULL, NULL,
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
-    NULL, NULL, NULL,
+    NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -4936,7 +4935,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &cpx00_plane_init_func, NULL,
     NULL, NULL,
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
-    NULL, NULL, NULL,
+    NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -4954,7 +4953,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL,
     NULL, NULL, NULL, /* Printer handles color correction! */
-    NULL, NULL, NULL,
+    NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -4971,7 +4970,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL,
     updp10_adj_cyan, updp10_adj_magenta, updp10_adj_yellow,
-    &updp10_laminate_list, NULL, NULL,
+    &updp10_laminate_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -4987,7 +4986,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL,
     NULL, NULL, NULL, 
-    &updp10_laminate_list, NULL, NULL,
+    &updp10_laminate_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5004,7 +5003,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     &dppex5_block_init, NULL,
     NULL, NULL, NULL,
-    &dppex5_laminate_list, NULL, NULL,
+    &dppex5_laminate_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5020,7 +5019,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL,
     NULL, NULL, NULL, 
-    &updr100_laminate_list, NULL, NULL,
+    &updr100_laminate_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5036,7 +5035,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL,
     NULL, NULL, NULL, 
-    &updr200_laminate_list, NULL, NULL,
+    &updr200_laminate_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5052,7 +5051,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL,
     NULL, NULL, NULL, 
-    NULL, NULL, NULL,
+    NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5069,7 +5068,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL,
     NULL, NULL, NULL,	/* color profile/adjustment is built into printer */
-    NULL, NULL, NULL,
+    NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5086,7 +5085,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL,
     NULL, NULL, NULL,	/* color profile/adjustment is built into printer */
-    NULL, NULL, NULL,
+    NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5102,7 +5101,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL,
     NULL, NULL, NULL,	/* color profile/adjustment is built into printer */
-    NULL, NULL, NULL,
+    NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5119,7 +5118,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak_dock_plane_init, NULL,
     NULL, NULL,
     NULL, NULL, NULL,
-    NULL, NULL, NULL,
+    NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5135,7 +5134,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No plane funcs */
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
-    &kodak_6800_laminate_list, NULL, NULL,
+    &kodak_6800_laminate_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5151,7 +5150,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No plane funcs */
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
-    &kodak_6800_laminate_list, NULL, NULL,
+    &kodak_6800_laminate_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5167,7 +5166,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No plane funcs */
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
-    &kodak_605_laminate_list, NULL, NULL,
+    &kodak_605_laminate_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5185,7 +5184,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, 
     NULL, NULL, 
     NULL, NULL, NULL, 
-    &kodak_6800_laminate_list, &kodak_1400_media_list, NULL,
+    &kodak_6800_laminate_list, &kodak_1400_media_list,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5203,7 +5202,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No plane funcs */
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
-    &kodak_6800_laminate_list, NULL, NULL,
+    &kodak_6800_laminate_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5220,7 +5219,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak_9810_plane_init, NULL, 
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
-    &kodak_9810_laminate_list, NULL, NULL,
+    &kodak_9810_laminate_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5237,7 +5236,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
-    &kodak_8810_laminate_list, NULL, NULL,
+    &kodak_8810_laminate_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5254,7 +5253,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
-    &kodak_7000_laminate_list, NULL, NULL,
+    &kodak_7000_laminate_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5271,7 +5270,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
-    &kodak_7000_laminate_list, NULL, NULL,
+    &kodak_7000_laminate_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5287,7 +5286,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No plane funcs */ 
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
-    &kodak_8500_laminate_list, &kodak_8500_media_list, NULL,    
+    &kodak_8500_laminate_list, &kodak_8500_media_list,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5304,7 +5303,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cp3020d_plane_init, &mitsu_cp3020d_plane_end, 
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
-    NULL, NULL, NULL,
+    NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5321,7 +5320,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cp3020da_plane_init, NULL,
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
-    NULL, NULL, NULL,
+    NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5338,7 +5337,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cp3020da_plane_init, NULL,
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
-    NULL, NULL, NULL,
+    NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5356,7 +5355,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cp3020da_plane_init, NULL,
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
-    &mitsu_cp9810_laminate_list, NULL, NULL,
+    &mitsu_cp9810_laminate_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5374,7 +5373,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, &mitsu_cpd70x_plane_end,
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
-    &mitsu_cpd70x_laminate_list, NULL, NULL,
+    &mitsu_cpd70x_laminate_list, NULL,
     NULL, NULL,
     mitsu70x_parameters,
     mitsu70x_parameter_count,
@@ -5395,7 +5394,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, &mitsu_cpd70x_plane_end,
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
-    &mitsu_cpd70x_laminate_list, NULL, NULL,
+    &mitsu_cpd70x_laminate_list, NULL,
     NULL, NULL,
     mitsu70x_parameters,
     mitsu70x_parameter_count,
@@ -5416,7 +5415,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, &mitsu_cpd70x_plane_end,
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
-    &mitsu_cpd70x_laminate_list, NULL, NULL,
+    &mitsu_cpd70x_laminate_list, NULL,
     NULL, NULL,
     mitsu70x_parameters,
     mitsu70x_parameter_count,
@@ -5437,7 +5436,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, &mitsu_cpd70x_plane_end,
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
-    &mitsu_cpd70x_laminate_list, NULL, NULL,
+    &mitsu_cpd70x_laminate_list, NULL,
     NULL, NULL,
     mitsu70x_parameters,
     mitsu70x_parameter_count,
@@ -5456,7 +5455,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
-    &mitsu_cpd70x_laminate_list, NULL, NULL,
+    &mitsu_cpd70x_laminate_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5473,7 +5472,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cp3020da_plane_init, NULL,
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
-    NULL, NULL, NULL,
+    NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5490,7 +5489,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cp3020da_plane_init, NULL,
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
-    NULL, NULL, NULL,
+    NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5506,7 +5505,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL,
     NULL, NULL, NULL,
-    NULL, NULL, NULL,    
+    NULL, NULL,    
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5522,7 +5521,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,  /* No planes */
     NULL, NULL,  /* No blocks */
     NULL, NULL, NULL, /* Color correction in printer */
-    &shinko_chcs2145_laminate_list, NULL, NULL,    
+    &shinko_chcs2145_laminate_list, NULL,    
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5538,7 +5537,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,  /* No planes */
     NULL, NULL,  /* No blocks */
     NULL, NULL, NULL, /* Color correction in printer */
-    &shinko_chcs1245_laminate_list, NULL, NULL,
+    &shinko_chcs1245_laminate_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5554,7 +5553,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,  /* No planes */
     NULL, NULL,  /* No blocks */
     NULL, NULL, NULL, /* Color correction in printer */
-    &shinko_chcs6245_laminate_list, NULL, NULL,
+    &shinko_chcs6245_laminate_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5570,7 +5569,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,  /* No planes */
     NULL, NULL,  /* No blocks */
     NULL, NULL, NULL, /* Color correction in printer */
-    &shinko_chcs6145_laminate_list, NULL, NULL,    
+    &shinko_chcs6145_laminate_list, NULL,    
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5586,7 +5585,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,  /* No planes */
     NULL, NULL,  /* No blocks */
     NULL, NULL, NULL, /* Color correction in printer */
-    &shinko_chcs6145_laminate_list, NULL, NULL,    
+    &shinko_chcs6145_laminate_list, NULL,    
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5603,7 +5602,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &dnpds40_plane_init, NULL,
     NULL, NULL,
     NULL, NULL, NULL,
-    &dnpds40_laminate_list, NULL, NULL,    
+    &dnpds40_laminate_list, NULL,    
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5620,7 +5619,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &dnpds40_plane_init, NULL,
     NULL, NULL,
     NULL, NULL, NULL,
-    &dnpds40_laminate_list, NULL, NULL,    
+    &dnpds40_laminate_list, NULL,    
     NULL, NULL,
     NULL, 0, NULL, dnpds80_parse_parameters,
   },
@@ -5637,7 +5636,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &dnpds40_plane_init, NULL,
     NULL, NULL,
     NULL, NULL, NULL,
-    &dnpds40_laminate_list, NULL, NULL,    
+    &dnpds40_laminate_list, NULL,    
     NULL, NULL,
     NULL, 0, NULL, NULL,    
   },
@@ -5654,7 +5653,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &dnpds40_plane_init, NULL,
     NULL, NULL,
     NULL, NULL, NULL,
-    &dnpds620_laminate_list, NULL, NULL,    
+    &dnpds620_laminate_list, NULL,    
     NULL, NULL,
     NULL, 0, NULL, NULL,    
   },
@@ -5671,7 +5670,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &citizen_cw01_plane_init, NULL,
     NULL, NULL,
     NULL, NULL, NULL,
-    NULL, NULL, NULL,    
+    NULL, NULL,    
     NULL, NULL,
     NULL, 0, NULL, NULL,    
   },
@@ -5688,7 +5687,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &dnpds40_plane_init, NULL,
     NULL, NULL,
     NULL, NULL, NULL,
-    &dnpds40_laminate_list, &dnpds80dx_media_list, NULL,
+    &dnpds40_laminate_list, &dnpds80dx_media_list,
     NULL, NULL,
     NULL, 0, NULL, dnpds80dx_parse_parameters,
   },
