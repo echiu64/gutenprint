@@ -1178,9 +1178,15 @@ skip_status:
 	/* Matte operation requires Ultrafine/superfine */
 	if (ctx->matte) {
 		if (ctx->type != P_MITSU_D70X) {
-			hdr->speed = 0x04; /* Force UltraFine */
+			if (hdr->speed != 0x03 && hdr->speed != 0x04) {
+				WARNING("Forcing Ultrafine mode for matte printing!\n");
+				hdr->speed = 0x04; /* Force UltraFine */
+			}
 		} else {
-			hdr->speed = 0x03; /* Force SuperFine */
+			if (hdr->speed != 0x03) {
+				hdr->speed = 0x03; /* Force SuperFine */
+				WARNING("Forcing Ultrafine mode for matte printing!\n");
+			}
 		}
 	}
 
@@ -1188,8 +1194,8 @@ skip_status:
 #if 1 // XXX is this actually needed?
 	if ((ctx->type == P_MITSU_K60 || ctx->type == P_KODAK_305) &&
 	    ctx->cols == 0x0748 &&
-	    ctx->rows == 0x04c2) {
-		hdr->multicut = 1; // XXX only if print count even?
+	    ctx->rows == 0x04c2 && !hdr->multicut) {
+		hdr->multicut = 1;
 	}
 #endif
 
@@ -1476,7 +1482,7 @@ static int mitsu70x_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend mitsu70x_backend = {
 	.name = "Mitsubishi CP-D70/D707/K60/D80",
-	.version = "0.43WIP",
+	.version = "0.44WIP",
 	.uri_prefix = "mitsu70x",
 	.cmdline_usage = mitsu70x_cmdline,
 	.cmdline_arg = mitsu70x_cmdline_arg,
