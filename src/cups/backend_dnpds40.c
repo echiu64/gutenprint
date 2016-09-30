@@ -715,6 +715,7 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
 				break;
 			default:
 				ctx->media_count_new = 999; // non-zero
+				break;
 			}
 			break;
 		case P_DNP_DSRX1:
@@ -727,6 +728,7 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
 				break;
 			default:
 				ctx->media_count_new = 999; // non-zero
+				break;
 			}
 			break;
 		case P_DNP_DS80:
@@ -740,6 +742,7 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
 				break;
 			default:
 				ctx->media_count_new = 999; // non-zero
+				break;
 			}
 			break;
 		default:
@@ -1279,11 +1282,13 @@ top:
 		count = atoi((char*)resp+4);
 		free(resp);
 
-		/* Old-sk00l models report one less than they should */
-		if (!ctx->correct_count)
-			count++;
+		if (count) {
+			/* Old-sk00l models report one less than they should */
+			if (!ctx->correct_count)
+				count++;
 
-		count -= ctx->mediaoffset;
+			count -= ctx->mediaoffset;
+		}
 
 		if (ctx->media_count_new) {
 			ATTR("marker-levels=%d\n", count * 100 / ctx->media_count_new);
@@ -1421,11 +1426,13 @@ top:
 		count = atoi((char*)resp+4);
 		free(resp);
 
-		/* Old-sk00l models report one less than they should */
-		if (!ctx->correct_count)
-			count++;
+		if (count) {
+			/* Old-sk00l models report one less than they should */
+			if (!ctx->correct_count)
+				count++;
 
-		count -= ctx->mediaoffset;
+			count -= ctx->mediaoffset;
+		}
 
 		if (ctx->media_count_new) {
 			ATTR("marker-levels=%d\n", count * 100 / ctx->media_count_new);
@@ -1841,11 +1848,13 @@ static int dnpds40_get_status(struct dnpds40_ctx *ctx)
 	count = atoi((char*)resp+4);
 	free(resp);
 
-	/* Old-sk00l models report one less than they should */
-	if (!ctx->correct_count)
-		count++;
+	if (count) {
+		/* Old-sk00l models report one less than they should */
+		if (!ctx->correct_count)
+			count++;
 
-	count -= ctx->mediaoffset;
+		count -= ctx->mediaoffset;
+	}
 	INFO("Native Prints Remaining on Media: %d\n", count);
 
 	if (ctx->supports_rewind) {
@@ -2223,7 +2232,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS40/DS80/DSRX1/DS620",
-	.version = "0.88",
+	.version = "0.89",
 	.uri_prefix = "dnpds40",
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
