@@ -2422,33 +2422,6 @@ write_ppd(
     }
   stp_parameter_description_destroy(&desc);
 
-  /* Constraints */
-  stp_describe_parameter(v, "PPDUIConstraints", &desc);
-  if (desc.is_active && desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
-    {
-      num_opts = stp_string_list_count(desc.bounds.str);
-      if (num_opts > 0)
-	{
-          gpputs(fp, "*% ===== Constraints ===== \n");
-	  for (i = 0; i < num_opts; i++)
-	    {
-	      char *opt1, *opt2;
-	      opt = stp_string_list_param(desc.bounds.str, i);
-	      opt1 = stp_strdup(opt->text);
-	      opt2 = strrchr(opt1, '*');
-	      if (opt2)
-	        {
-		  opt2[-1] = 0;
-		  gpprintf(fp, "*%s: %s %s\n", opt->name, opt1, opt2);
-		  gpprintf(fp, "*%s: %s %s\n", opt->name, opt2, opt1);
-		}
-	      stp_free(opt1);
-	    }
-	  gpputs(fp, "\n");      
-	}
-    }  
-  stp_parameter_description_destroy(&desc);
-
   if (!language)
     {
       /*
