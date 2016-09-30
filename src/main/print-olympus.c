@@ -2531,7 +2531,7 @@ static const dyesub_pagesize_t mitsu_cp9550_page[] =
   						DYESUB_LANDSCAPE},
   { "w288h432-div2", "2x6*2", PT(1416,346)+1, PT(2152,346)+1, 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},  
-  { "w360h504", "5x7", PT(1812,346)+1, PT(2402,346)+1, 0, 0, 0, 0,
+  { "w360h504", "5x7", PT(1812,346)+1, PT(2452,346)+1, 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
   { "w432h576", "6x8", PT(2152,346)+1, PT(2792,346)+1, 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
@@ -2539,6 +2539,8 @@ static const dyesub_pagesize_t mitsu_cp9550_page[] =
   						DYESUB_PORTRAIT},
   { "w432h648", "6x9", PT(2152,346)+1, PT(3146,346)+1, 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
+  /* XXX also 3.3x6 and 3.5x6!
+     XXX also 4x6*2, 4.4*6*2, 3x6*3, 2x6*4!  (Built on 6x9 media) */
 };
 
 LIST(dyesub_pagesize_list_t, mitsu_cp9550_page_list, dyesub_pagesize_t, mitsu_cp9550_page);
@@ -2548,7 +2550,7 @@ static const dyesub_printsize_t mitsu_cp9550_printsize[] =
   { "346x346", "B7", 1240, 1812},
   { "346x346", "w288h432", 1416, 2152},
   { "346x346", "w288h432-div2", 1416, 2152},
-  { "346x346", "w360h504", 1812, 2402},
+  { "346x346", "w360h504", 1812, 2452},
   { "346x346", "w432h576", 2152, 2792},
   { "346x346", "w432h612", 2152, 2956},
   { "346x346", "w432h648", 2152, 3146},
@@ -2582,7 +2584,7 @@ static void mitsu_cp9550_printer_init(stp_vars_t *v)
   stp_putc(0x08, v);
   stp_putc(0x03, v);
   dyesub_nputc(v, 0x00, 19);
-  stp_putc(0x01, v);  /* This is Copies on other models.. */
+  stp_putc(0x01, v);  /* Copies */
   dyesub_nputc(v, 0x00, 2);
   if (strcmp(privdata.pagesize,"w288h432-div2") == 0)
     stp_putc(0x83, v);
@@ -2621,6 +2623,101 @@ static void mitsu_cp9550_printer_end(stp_vars_t *v)
   stp_putc(0x1b, v);
   stp_putc(0x50, v);
   stp_putc(0x46, v);
+  stp_putc(0x00, v);
+}
+
+/* Mitsubishi 9600D/DW */
+static const dyesub_resolution_t res_mitsu9600_dpi[] =
+{
+  { "300x300", 300, 300},
+  { "600x600", 600, 600},
+};
+
+LIST(dyesub_resolution_list_t, res_mitsu9600_dpi_list, dyesub_resolution_t, res_mitsu9600_dpi);
+
+static const dyesub_pagesize_t mitsu_cp9600_page[] =
+{
+  { "B7", "3.5x5", PT(1076,300)+1, PT(1572,300)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE},
+  { "w288h432", "4x6", PT(1228,300)+1, PT(1868,300)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE},
+  { "w360h504", "5x7", PT(1572,300)+1, PT(2128,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+  { "w432h576", "6x8", PT(1868,300)+1, PT(2442,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+  { "w432h612", "6x8.5", PT(1868,300)+1, PT(2564,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+  { "w432h648", "6x9", PT(1868,300)+1, PT(2730,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+};
+
+LIST(dyesub_pagesize_list_t, mitsu_cp9600_page_list, dyesub_pagesize_t, mitsu_cp9600_page);
+
+static const dyesub_printsize_t mitsu_cp9600_printsize[] =
+{
+  { "300x300", "B7", 1076, 1572},
+  { "600x600", "B7", 2152, 3144},
+  { "300x300", "w288h432", 1228, 1868},
+  { "600x600", "w288h432", 2458, 3736},
+  { "300x300", "w360h504", 1572, 2128},
+  { "600x600", "w360h504", 3144, 4256},
+  { "300x300", "w432h576", 1868, 2442},
+  { "600x600", "w432h576", 3736, 4846},
+  { "300x300", "w432h612", 1868, 2564},
+  { "600x600", "w432h612", 3736, 5130},
+  { "300x300", "w432h648", 1868, 2730},
+  { "600x600", "w432h648", 3736, 5462},
+};
+
+LIST(dyesub_printsize_list_t, mitsu_cp9600_printsize_list, dyesub_printsize_t, mitsu_cp9600_printsize);
+
+static void mitsu_cp9600_printer_init(stp_vars_t *v)
+{
+  /* Parameters 1 */
+  stp_putc(0x1b, v);
+  stp_putc(0x57, v);
+  stp_putc(0x21, v);
+  stp_putc(0x2e, v);
+  stp_putc(0x00, v);
+  stp_putc(0x80, v);
+  stp_putc(0x00, v);
+  stp_putc(0x22, v);
+  stp_putc(0x00, v);
+  stp_putc(0x03, v);
+  dyesub_nputc(v, 0x00, 19);
+  stp_putc(0x01, v);  /* Copies */
+  dyesub_nputc(v, 0x00, 19);
+  stp_putc(0x01, v);
+  /* Parameters 2 */
+  stp_putc(0x1b, v);
+  stp_putc(0x57, v);
+  stp_putc(0x20, v);
+  stp_putc(0x2e, v);
+  stp_putc(0x00, v);
+  stp_putc(0x0a, v);
+  stp_putc(0x10, v);
+  dyesub_nputc(v, 0x00, 7);
+  stp_put16_be(privdata.w_size, v);
+  stp_put16_be(privdata.h_size, v);
+  dyesub_nputc(v, 0x00, 32);
+  /* Parameters 3 */
+  stp_putc(0x1b, v);
+  stp_putc(0x57, v);
+  stp_putc(0x26, v);
+  stp_putc(0x2e, v);
+  stp_putc(0x00, v);
+  stp_putc(0x60, v);
+  dyesub_nputc(v, 0x00, 6);
+  stp_putc(0x01, v);
+  dyesub_nputc(v, 0x00, 37);
+}
+
+static void mitsu_cp9600_printer_end(stp_vars_t *v)
+{
+  /* Page Footer */
+  stp_putc(0x1b, v);
+  stp_putc(0x50, v);
+  stp_putc(0x48, v);
   stp_putc(0x00, v);
 }
 
@@ -5349,6 +5446,40 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
+  { /* Mitsubishi CP9600D */
+    4110,
+    &bgr_ink_list,
+    &res_mitsu9600_dpi_list,
+    &mitsu_cp9600_page_list,
+    &mitsu_cp9600_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_PLANE_INTERLACE,
+    &mitsu_cp9600_printer_init, &mitsu_cp9600_printer_end,
+    &mitsu_cp3020da_plane_init, NULL,
+    NULL, NULL, /* No block funcs */
+    NULL, NULL, NULL, /* color profile/adjustment is built into printer */
+    NULL, NULL,
+    NULL, NULL,
+    NULL, 0, NULL, NULL,
+  },
+  { /* Mitsubishi CP9550DW-S */
+    4111,
+    &rgb_ink_list, /* Identical to 9550D except it's rgb instead of bgr */
+    &res_346dpi_list,
+    &mitsu_cp9550_page_list,
+    &mitsu_cp9550_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_PLANE_INTERLACE,
+    &mitsu_cp9550_printer_init, &mitsu_cp9550_printer_end,
+    &mitsu_cp3020da_plane_init, NULL,
+    NULL, NULL, /* No block funcs */
+    NULL, NULL, NULL, /* color profile/adjustment is built into printer */
+    NULL, NULL,
+    NULL, NULL,
+    NULL, 0, NULL, NULL,
+  },
   { /* Shinko CHC-S9045 (experimental) */
     5000, 		
     &rgb_ink_list,
@@ -5813,10 +5944,10 @@ dyesub_parameters(const stp_vars_t *v, const char *name,
 	stp_fill_parameter_settings(description, &(the_parameters[i]));
 	break;
       }
-  if (caps->load_parameters)
+  if (caps->load_parameters) /* do *NOT* use dyesub_exec() here */
     {
       if (caps->load_parameters(v, name, description))
-        return;
+        return; /* Ie parameter handled */
     }
 
   if (strcmp(name, "PageSize") == 0)
@@ -6490,8 +6621,7 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   dyesub_printsize(v, &max_print_px_width, &max_print_px_height);
 
   /* Parse any per-printer parameters */
-  if (caps->parse_parameters)
-    caps->parse_parameters(v);
+  dyesub_exec(v, caps->parse_parameters, "caps->parse_parameters");
 
   /* Duplex processing -- Rotate even pages for DuplexNoTumble */
   privdata.duplex_mode = stp_get_string_parameter(v, "Duplex");
