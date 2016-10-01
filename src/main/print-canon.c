@@ -4608,11 +4608,19 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
   
   if ( init->caps->ESC_P_len == 9 ) /* support for new devices from October 2012. */
     {/* the 4th of the 6 bytes is the media type. 2nd byte is media size. Both read from canon-media array. */
-  
+
+      if ( !(strcmp(init->caps->name,"PIXMA MG7700")) ) {
+	/* output with 3 extra 0s at the end */
+	canon_cmd( v,ESC28,0x50,12,0x00,arg_ESCP_1,0x00,arg_ESCP_2,0x01,0x00,0x01,0x00,arg_ESCP_9,0x00,0x00,0x00);
+      }
+      else {
+      
       /* arg_ESCP_1 = 0x03; */ /* A4 size */
       /* arg_ESCP_2 = 0x00; */ /* plain media */
       /*                             size                media                      tray */
       canon_cmd( v,ESC28,0x50,9,0x00,arg_ESCP_1,0x00,arg_ESCP_2,0x01,0x00,0x01,0x00,arg_ESCP_9);
+
+      }
     }
   else if ( init->caps->ESC_P_len == 8 ) /* support for new devices from 2012. */
     {/* the 4th of the 6 bytes is the media type. 2nd byte is media size. Both read from canon-media array. */
