@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.2.12-pre2!  Please read these notes carefully.
+Welcome to Gutenprint 5.2.12-pre3!  Please read these notes carefully.
 
 *** NOTE TO PACKAGERS: Please read the file README.package for issues
     that are of interest to distributors and packagers of Gutenprint.
@@ -16,15 +16,15 @@ I) INTRODUCTION
     includes a CUPS driver and an enhanced Print plug-in for GIMP that
     replaces the print plug-in packaged with the GIMP distribution.
 
-    This is Gutenprint version 5.2.11, a stable release of Gutenprint
-    5.2.  Gutenprint, formerly named Gimp-Print, is a suite of printer
-    drivers that may be used with most common UNIX print spooling
-    systems, including CUPS, lpr, LPRng, or others.  Gutenprint also
-    includes an enhanced print plug-in for the GIMP image editor,
-    replacing the Gimp-Print 4.2-based plugin supplied with GIMP 1.2,
-    2.0, and 2.2, and offering an alternative with additional
-    capabilities to the GtkPrint-based plugin supplied with GIMP 2.4
-    and beyond.
+    This is Gutenprint version 5.2.12-pre3, a pre-release of
+    Gutenprint 5.2.12.  Gutenprint, formerly named Gimp-Print, is a
+    suite of printer drivers that may be used with most common UNIX
+    print spooling systems, including CUPS, lpr, LPRng, or others.
+    Gutenprint also includes an enhanced print plug-in for the GIMP
+    image editor, replacing the Gimp-Print 4.2-based plugin supplied
+    with GIMP 1.2, 2.0, and 2.2, and offering an alternative with
+    additional capabilities to the GtkPrint-based plugin supplied with
+    GIMP 2.4 and beyond.
 
     Gutenprint was renamed from its original name of Gimp-Print in
     order to clearly distinguish it from GIMP.  While this package
@@ -122,7 +122,7 @@ A) OVERVIEW
 	gimp-print-devel@lists.sourceforge.net
 
 	================================================================
-	  Release: gutenprint 5.2.11 generated on 12 Jan 2016
+	  Release: gutenprint 5.2.12-pre3 generated on 01 Oct 2016
 
 	  Features:
 	    Build CUPS:                                 yes, installing in /usr
