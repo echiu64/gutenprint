@@ -3234,7 +3234,13 @@ static const dyesub_pagesize_t kodak305_page[] =
 {
   { "w288h432", "4x6", PT(1218,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
+  { "w288h432-div2", "2x6*2", PT(1218,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
+						DYESUB_LANDSCAPE},
+  { "w432h432", "6x6", PT(1820,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE},
   { "w432h576", "6x8", PT(1864,300)+1, PT(2422,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+  { "w432h576-div2", "4x6*2", PT(1864,300)+1, PT(2454,300)+1, 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
 };
 
@@ -3243,7 +3249,10 @@ LIST(dyesub_pagesize_list_t, kodak305_page_list, dyesub_pagesize_t, kodak305_pag
 static const dyesub_printsize_t kodak305_printsize[] =
 {
   { "300x300", "w288h432", 1218, 1864},
+  { "300x300", "w288h432-div2", 1218, 1864},
+  { "300x300", "w432h432", 1820, 1864},
   { "300x300", "w432h576", 1864, 2422},
+  { "300x300", "w432h576-div2", 1864, 2454},
 };
 
 LIST(dyesub_printsize_list_t, kodak305_printsize_list, dyesub_printsize_t, kodak305_printsize);
