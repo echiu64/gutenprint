@@ -2958,6 +2958,7 @@
       <printer translate="name" name="Mitsubishi CP-9600DW" driver="mitsubishi-9600dw" manufacturer="Mitsubishi" model="4110" foomaticid="Mitsubishi-9600DW" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-9550DZ" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP9550DZ;CLS:PRINTER;DES:MITSUBISHI CP9550DZ;" driver="mitsubishi-9550dz" manufacturer="Mitsubishi" model="4111" foomaticid="Mitsubishi-9550DZ" parameters="nativecopies" />
       <printer translate="name" name="Mitsubishi CP-9550DW-S" driver="mitsubishi-9550dw-s" manufacturer="Mitsubishi" model="4111" foomaticid="Mitsubishi-9550DW-S" parameters="nativecopies" />
+      <printer translate="name" name="Fujifilm ASK-300" driver="fujifilm-ask-300" manufacturer="Fujifilm" model="4112" foomaticid="Fujifilm-ASK-300" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Shinko CHC-S9045" driver="shinko-chcs9045" manufacturer="Shinko" model="5000" foomaticid="Shinko-CHC-S9045" />
       <printer translate="name" name="Shinko CHC-S2145" deviceid="MFG:SHINKO;CMD:SUPCC;MDL:CHC-S2145;CLS:PRINTER;DES:SHINKO CHC-S2145;" driver="shinko-chcs2145" manufacturer="Shinko" model="5001" foomaticid="Shinko-CHC-S2145" parameters="nativecopies" />
       <printer translate="name" name="Sinfonia S2145/S2" driver="sinfonia-chcs2145" manufacturer="Sinfonia" model="5001" foomaticid="Sinfonia-CHC-S2145" parameters="nativecopies" />

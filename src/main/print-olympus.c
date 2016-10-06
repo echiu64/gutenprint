@@ -3668,6 +3668,37 @@ static void mitsu_cpd90_printer_end(stp_vars_t *v)
   stp_putc(0x05, v); // XXX seconds to wait for second print
 }
 
+/* Fujifilm ASK-300 */
+static const dyesub_pagesize_t fuji_ask300_page[] =
+{
+  { "B7", "3.5x5", PT(1076,300)+1, PT(1568,300)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE},
+  { "w288h432", "4x6", PT(1228,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE},
+  { "w360h504", "5x7", PT(1568,300)+1, PT(2128,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+  { "w360h504-div2", "3.5x5*2", PT(1568,300)+1, PT(2128,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+  { "w432h576", "6x8", PT(1864,300)+1, PT(2422,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+  { "w432h648", "6x9", PT(1864,300)+1, PT(2730,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+};
+
+LIST(dyesub_pagesize_list_t, fuji_ask300_page_list, dyesub_pagesize_t, fuji_ask300_page);
+
+static const dyesub_printsize_t fuji_ask300_printsize[] =
+{
+  { "300x300", "B7", 1076, 1568},
+  { "300x300", "w288h432", 1228, 1864},
+  { "300x300", "w360h504", 1568, 2128},
+  { "300x300", "w360h504-div2", 1568, 2128},
+  { "300x300", "w432h576", 1864, 2422},
+  { "300x300", "w432h648", 1864, 2730},
+};
+
+LIST(dyesub_printsize_list_t, fuji_ask300_printsize_list, dyesub_printsize_t, fuji_ask300_printsize);
+
 /* Shinko CHC-S9045 (experimental) */
 static const dyesub_pagesize_t shinko_chcs9045_page[] =
 {
@@ -5832,6 +5863,36 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     mitsu9550_parameter_count,
     mitsu9550_load_parameters,
     mitsu9550_parse_parameters,
+  },
+  { /* Fujifilm ASK-300 */
+    4112,
+#ifdef MITSU70X_8BPP
+    &bgr_ink_list,
+#else
+    &ymc_ink_list,
+#endif
+    &res_300dpi_list,
+    &fuji_ask300_page_list,
+    &fuji_ask300_printsize_list,
+    SHRT_MAX,
+#ifdef MITSU70X_8BPP
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
+    &mitsu_cpd70x_printer_init, NULL,    
+#else
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_16BPP
+      | DYESUB_FEATURE_BIGENDIAN,
+    &mitsu_cpd70x_printer_init, &mitsu_cpd70x_printer_end,    
+#endif
+    NULL, &mitsu_cpd70x_plane_end,
+    NULL, NULL, /* No block funcs */
+    NULL, NULL, NULL, /* color profile/adjustment is built into printer */
+    NULL, NULL,
+    NULL, NULL,
+    mitsu70x_parameters,
+    mitsu70x_parameter_count,
+    mitsu_k60_load_parameters,
+    mitsu70x_parse_parameters,
   },
   { /* Shinko CHC-S9045 (experimental) */
     5000, 		

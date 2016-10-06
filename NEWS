@@ -262,8 +262,9 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
         Canon SELPHY CP1000
 	Canon SELPHY CP1200
-	Mitsubishi CP-9600DW      [experimental]
-	Mitsubishi CP-D90DW       [experimental]
+	Fujifilm ASK-300      [*2] [experimental]
+	Mitsubishi CP-9600DW       [experimental]
+	Mitsubishi CP-D90DW        [experimental]
 	DNP DS-RX1HS
 
   2) Improved support (and bugfixes) for the following dye sublimation
