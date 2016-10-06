@@ -311,11 +311,21 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	  Note that without the library, the printer will function but
 	  the output image quality will be quite poor.
 
-     [*2] Please note that these models utilize a print engine that 
-	  requires the host system to process the print data using 
-	  unknown algorithms.  Until these algorithms can be determined
-	  and re-implemented, these models are unsuitable for general
-	  use due to very poor output quality.
+     [*2] Optimal quality requires use of an external image processing
+     	  library.  Only one option is available:
+
+	  * libMitsuD70ImageReProcess -- A reverse-engineered implementation
+	    of the Mitsubishi algorithms, relased under the terms of the GNU
+	    GPLv3+.  Mitsubishi foes not support this in any way.
+	    Unfortunately, at this time it cannot be bundled with Gutenprint.
+
+          The backend will attempt to dynamically load the library at
+	  runtime, and will log an appropriate message if it is or is not
+	  successful.
+
+	  Note that without the library, the printer will not be able to
+	  successfully print.  Work is underway on a crude fallback that will
+	  at least generate (very poor quality) output.
 
   3) Backend now reports media status via standard CUPS marker attributes
      for the following printers:
