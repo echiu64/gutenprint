@@ -3137,7 +3137,7 @@ mitsu70x_load_parameters(const stp_vars_t *v, const char *name,
     }
   else if (strcmp(name, "Sharpen") == 0)
     {
-      description->deflt.integer = 0;
+      description->deflt.integer = 4;
       description->bounds.integer.lower = 0;
       description->bounds.integer.upper = 9;
       description->is_active = 1;      
@@ -3383,7 +3383,7 @@ mitsu_k60_load_parameters(const stp_vars_t *v, const char *name,
     }
   else if (strcmp(name, "Sharpen") == 0)
     {
-      description->deflt.integer = 0;
+      description->deflt.integer = 4;
       description->bounds.integer.lower = 0;
       description->bounds.integer.upper = 9;
       description->is_active = 1;      
@@ -3555,10 +3555,10 @@ mitsu_d90_load_parameters(const stp_vars_t *v, const char *name,
     }
   else if (strcmp(name, "Sharpen") == 0)
     {
-      description->deflt.integer = 0;
+      description->deflt.integer = 4;
       description->bounds.integer.lower = 0;
       description->bounds.integer.upper = 9;
-      description->is_active = 0; // XXX not sure if supported on D90.
+      description->is_active = 1;
     }
 #endif
   else
@@ -3636,8 +3636,8 @@ static void mitsu_cpd90_printer_init(stp_vars_t *v)
 #else
   stp_putc(0x00, v);  /* ie use printer's built in LUT */
 #endif
-  stp_putc(0x04, v);
-  stp_putc(0x04, v);  
+  stp_putc(mitsu70x_privdata.sharpen, v); /* Horizontal */
+  stp_putc(mitsu70x_privdata.sharpen, v); /* Vertical */
   dyesub_nputc(v, 0x00, 11);
   
   dyesub_nputc(v, 0x00, 512 - 64);
@@ -3665,7 +3665,7 @@ static void mitsu_cpd90_printer_end(stp_vars_t *v)
   stp_putc(0x51, v);
   stp_putc(0x31, v);
   stp_putc(0x00, v);
-  stp_putc(0x05, v);
+  stp_putc(0x05, v); // XXX seconds to wait for second print
 }
 
 /* Shinko CHC-S9045 (experimental) */
