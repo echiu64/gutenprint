@@ -2910,17 +2910,29 @@
       <printer translate="name" name="Canon SELPHY ES20" driver="canon-es20" manufacturer="Canon" model="1005" foomaticid="Canon-SELPHY-ES20" parameters="nativecopies" />
       <printer translate="name" name="Canon SELPHY ES30" deviceid="MFG:Canon;CMD:Raster3;MDL:ES30;CLS:PRINTER;DES:Canon SELPHY ES30;VER:1.00;" driver="canon-es30" manufacturer="Canon" model="1006" foomaticid="Canon-SELPHY-ES30" parameters="nativecopies" />
       <printer translate="name" name="Canon SELPHY ES40" deviceid="MFG:Canon;CMD:Raster3;MDL:ES40;CLS:PRINTER;DES:Canon SELPHY ES40;VER:1.00;" driver="canon-es40" manufacturer="Canon" model="1007" foomaticid="Canon-SELPHY-ES40" parameters="nativecopies" />
+      <printer translate="name" name="Sony UP-CR10L" driver="sony-upcr10l" manufacturer="Sony" model="2005" foomaticid="Sony-UP-CR10L" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Sony UP-DP10" driver="sony-updp10" manufacturer="Sony" model="2000" foomaticid="Sony-UP-DP10" />
       <printer translate="name" name="Sony UP-DR150" deviceid="MFG:Sony;MDL:UP-DR150;DES:Sony UP-DR150;CMD:SONY-Original;CLS:PRINTER" driver="sony-updr150" manufacturer="Sony" model="2001" foomaticid="Sony-UP-DR150" parameters="nativecopies" />
       <printer translate="name" name="Sony DPP-EX5" driver="sony-dppex5" manufacturer="Sony" model="2002" foomaticid="Sony-DPP-EX5" />
       <printer translate="name" name="Sony DPP-EX7" driver="sony-dppex7" manufacturer="Sony" model="2002" foomaticid="Sony-DPP-EX7" />
       <printer translate="name" name="Sony UP-DR100" driver="sony-updr100" manufacturer="Sony" model="2003" foomaticid="Sony-UP-DR100" />
       <printer translate="name" name="Sony UP-DR200" driver="sony-updr200" manufacturer="Sony" model="2004" foomaticid="Sony-UP-DR200" parameters="nativecopies" />
-      <printer translate="name" name="Sony UP-CR10L" driver="sony-upcr10l" manufacturer="Sony" model="2005" foomaticid="Sony-UP-CR10L" parameters="nativecopies">EXPERIMENTAL</printer>
-      <printer translate="name" name="Dai Nippon Printing SL10" driver="dnp-sl10" manufacturer="Dai Nippon Printing" model="2005" foomaticid="DNP-SL10" parameters="nativecopies">EXPERIMENTAL</printer>
+      <printer translate="name" name="Fujifilm ASK-300" driver="fujifilm-ask-300" manufacturer="Fujifilm" model="4112" foomaticid="Fujifilm-ASK-300" parameters="nativecopies">EXPERIMENTAL</printer>      
       <printer translate="name" name="Fujifilm Printpix-CX-400" driver="fujifilm-cx400" manufacturer="Fujifilm" model="3000" foomaticid="Fujifilm-Printpix-CX-400" />
       <printer translate="name" name="Fujifilm Printpix-CX-550" driver="fujifilm-cx550" manufacturer="Fujifilm" model="3001" foomaticid="Fujifilm-Printpix-CX-550" />
       <printer translate="name" name="Fujifilm FinePix-NX-500" driver="fujifilm-nx500" manufacturer="Fujifilm" model="3002" foomaticid="Fujifilm-FinePix-NX-500" />
+      <printer translate="name" name="Kodak 1400" deviceid="MFG:Eastman Kodak Company;CMD:EK1;MDL: 1400 Printer;CLS:Printer;DES:Kodak 1400 Printer;`" driver="kodak-1400" manufacturer="Kodak" model="4004" foomaticid="Kodak-1400" parameters="nativecopies" />
+      <printer translate="name" name="Kodak 305" deviceid="MFG:KODAK;CMD:KODAK305;MDL:305 Photo Printer;CLS:PRINTER;DES:KODAK 305 Photo Printer" driver="kodak-305" manufacturer="Kodak" model="4108" foomaticid="Kodak-305" parameters="nativecopies" />
+      <printer translate="name" name="Kodak 605" deviceid="MFG:Eastman Kodak Company;CMD:SUPCC;MCL:KODAK 605 Photo Printer;CLS:PRINTER;DES:Thermal Dye Photo Printer;" driver="kodak-605" manufacturer="Kodak" model="4003" foomaticid="Kodak-605" parameters="nativecopies" />
+      <printer translate="name" name="Kodak 6800" deviceid="MFG:Eastman Kodak Company;CMD:ESC;MDL:Photo Printer 6800;CLS:PRINTER;DES:KODAK Photo Printer 6800;" driver="kodak-6800" manufacturer="Kodak" model="4001" foomaticid="Kodak-6800" parameters="nativecopies" />
+      <printer translate="name" name="Kodak 6850" deviceid="MFG:Eastman Kodak Company;CMD:ESC;MDL:Photo Printer 6850;CLS:PRINTER;DES:KODAK Photo Printer 6850;" driver="kodak-6850" manufacturer="Kodak" model="4002" foomaticid="Kodak-6850" parameters="nativecopies" />
+      <printer translate="name" name="Kodak 7000" driver="kodak-7000" manufacturer="Kodak" model="4008" foomaticid="Kodak-7000">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kodak 7010" driver="kodak-7010" manufacturer="Kodak" model="4008" foomaticid="Kodak-7010">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kodak 7015" driver="kodak-7015" manufacturer="Kodak" model="4009" foomaticid="Kodak-7015">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kodak 805" deviceid="MFG:Eastman Kodak Company;CMD:EK2;MDL: KODAK 805 Photo Printer;CLS:Printer;DES:Kodak 805 Photo Printer;" driver="kodak-805" manufacturer="Kodak" model="4005" foomaticid="Kodak-805" parameters="nativecopies" />
+      <printer translate="name" name="Kodak 8500" driver="kodak-8500" manufacturer="Kodak" model="4100" foomaticid="Kodak-8500">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kodak 8810" driver="kodak-8810" manufacturer="Kodak" model="4007" foomaticid="Kodak-8810">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kodak 9810" driver="kodak-9810" manufacturer="Kodak" model="4006" foomaticid="Kodak-9810">EXPERIMENTAL</printer>
       <printer translate="name" name="Kodak Easyshare-Printer-Dock" driver="kodak-dock" manufacturer="Kodak" model="4000" foomaticid="Kodak-Easyshare-Printer-Dock" />
       <printer translate="name" name="Kodak EasyShare-G600-Printer-Dock" driver="kodak-g600-dock" manufacturer="Kodak" model="4000" foomaticid="Kodak-EasyShare-G600-Printer-Dock" />
       <printer translate="name" name="Kodak PD-4000" driver="kodak-pd-4000" manufacturer="Kodak" model="4000" foomaticid="Kodak-PD-4000" />
@@ -2929,59 +2941,47 @@
       <printer translate="name" name="Kodak Photo-Printer-500" driver="kodak-photo-printer-500" manufacturer="Kodak" model="4000" foomaticid="Kodak-Photo-Printer-500" />
       <printer translate="name" name="Kodak Printer-Dock-Plus" driver="kodak-dock-plus" manufacturer="Kodak" model="4000" foomaticid="Kodak-Printer-Dock-Plus" />
       <printer translate="name" name="Kodak Printer-Dock-Plus-S3" driver="kodak-dock-plus-s3" manufacturer="Kodak" model="4000" foomaticid="Kodak-Printer-Dock-Plus-S3" />
-      <printer translate="name" name="Kodak 6800" deviceid="MFG:Eastman Kodak Company;CMD:ESC;MDL:Photo Printer 6800;CLS:PRINTER;DES:KODAK Photo Printer 6800;" driver="kodak-6800" manufacturer="Kodak" model="4001" foomaticid="Kodak-6800" parameters="nativecopies" />
-      <printer translate="name" name="Kodak 6850" deviceid="MFG:Eastman Kodak Company;CMD:ESC;MDL:Photo Printer 6850;CLS:PRINTER;DES:KODAK Photo Printer 6850;" driver="kodak-6850" manufacturer="Kodak" model="4002" foomaticid="Kodak-6850" parameters="nativecopies" />
-      <printer translate="name" name="Kodak 605" deviceid="MFG:Eastman Kodak Company;CMD:SUPCC;MCL:KODAK 605 Photo Printer;CLS:PRINTER;DES:Thermal Dye Photo Printer;" driver="kodak-605" manufacturer="Kodak" model="4003" foomaticid="Kodak-605" parameters="nativecopies" />
-      <printer translate="name" name="Kodak 1400" deviceid="MFG:Eastman Kodak Company;CMD:EK1;MDL: 1400 Printer;CLS:Printer;DES:Kodak 1400 Printer;`" driver="kodak-1400" manufacturer="Kodak" model="4004" foomaticid="Kodak-1400" parameters="nativecopies" />
-      <printer translate="name" name="Kodak 805" deviceid="MFG:Eastman Kodak Company;CMD:EK2;MDL: KODAK 805 Photo Printer;CLS:Printer;DES:Kodak 805 Photo Printer;" driver="kodak-805" manufacturer="Kodak" model="4005" foomaticid="Kodak-805" parameters="nativecopies" />
-      <printer translate="name" name="Kodak 8500" driver="kodak-8500" manufacturer="Kodak" model="4100" foomaticid="Kodak-8500">EXPERIMENTAL</printer>
-      <printer translate="name" name="Kodak 9810" driver="kodak-9810" manufacturer="Kodak" model="4006" foomaticid="Kodak-9810">EXPERIMENTAL</printer>
-      <printer translate="name" name="Kodak 8810" driver="kodak-8810" manufacturer="Kodak" model="4007" foomaticid="Kodak-8810">EXPERIMENTAL</printer>
-      <printer translate="name" name="Kodak 7000" driver="kodak-7000" manufacturer="Kodak" model="4008" foomaticid="Kodak-7000">EXPERIMENTAL</printer>
-      <printer translate="name" name="Kodak 7010" driver="kodak-7010" manufacturer="Kodak" model="4008" foomaticid="Kodak-7010">EXPERIMENTAL</printer>
-      <printer translate="name" name="Kodak 7015" driver="kodak-7015" manufacturer="Kodak" model="4009" foomaticid="Kodak-7015">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-3020D" driver="mitsubishi-3020d" manufacturer="Mitsubishi" model="4101" foomaticid="Mitsubishi-3020D">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-3020DU" driver="mitsubishi-3020du" manufacturer="Mitsubishi" model="4101" foomaticid="Mitsubishi-3020DU">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-3020DE" driver="mitsubishi-3020de" manufacturer="Mitsubishi" model="4101" foomaticid="Mitsubishi-3020DE">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-3020DA" driver="mitsubishi-3020da" manufacturer="Mitsubishi" model="4102" foomaticid="Mitsubishi-3020DA">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-3020DAE" driver="mitsubishi-3020dae" manufacturer="Mitsubishi" model="4102" foomaticid="Mitsubishi-3020DAE">EXPERIMENTAL</printer>
+      <printer translate="name" name="Mitsubishi CP-3800DW" driver="mitsubishi-cp-3800dw" manufacturer="Mitsubishi" model="6001" foomaticid="Mitsubishi-CP-3800DW" parameters="nativecopies" />
       <printer translate="name" name="Mitsubishi CP-9550D" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP9550D ;CLS:PRINTER;DES:MITSUBISHI CP9550D" driver="mitsubishi-9550d" manufacturer="Mitsubishi" model="4103" foomaticid="Mitsubishi-9550D" parameters="nativecopies" />
       <printer translate="name" name="Mitsubishi CP-9550DW" driver="mitsubishi-9550dw" manufacturer="Mitsubishi" model="4103" foomaticid="Mitsubishi-9550DW" parameters="nativecopies" />
+      <printer translate="name" name="Mitsubishi CP-9550DW-S" driver="mitsubishi-9550dw-s" manufacturer="Mitsubishi" model="4111" foomaticid="Mitsubishi-9550DW-S" parameters="nativecopies" />
+      <printer translate="name" name="Mitsubishi CP-9550DZ" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP9550DZ;CLS:PRINTER;DES:MITSUBISHI CP9550DZ;" driver="mitsubishi-9550dz" manufacturer="Mitsubishi" model="4111" foomaticid="Mitsubishi-9550DZ" parameters="nativecopies" />
+      <printer translate="name" name="Mitsubishi CP-9600DW" driver="mitsubishi-9600dw" manufacturer="Mitsubishi" model="4110" foomaticid="Mitsubishi-9600DW" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-9810D" driver="mitsubishi-9810d" manufacturer="Mitsubishi" model="4104" foomaticid="Mitsubishi-9810D" />
       <printer translate="name" name="Mitsubishi CP-9810DW" driver="mitsubishi-9810dw" manufacturer="Mitsubishi" model="4104" foomaticid="Mitsubishi-9810DW" />
       <printer translate="name" name="Mitsubishi CP-D70DW" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP60D70D707D;CLS:PRINTER;DES:MITSUBISHI CP60D70D707D" driver="mitsubishi-d70dw" manufacturer="Mitsubishi" model="4105" foomaticid="Mitsubishi-D70DW" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-D707DW" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP60D70D707D;CLS:PRINTER;DES:MITSUBISHI CP60D70D707D" driver="mitsubishi-d707dw" manufacturer="Mitsubishi" model="4105" foomaticid="Mitsubishi-D707DW" parameters="nativecopies">EXPERIMENTAL</printer>
-      <printer translate="name" name="Mitsubishi CP-K60DW-S" driver="mitsubishi-k60dw" manufacturer="Mitsubishi" model="4106" foomaticid="Mitsubishi-K60DW-S" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-D80DW" driver="mitsubishi-d80dw" manufacturer="Mitsubishi" model="4107" foomaticid="Mitsubishi-D80DW" parameters="nativecopies">EXPERIMENTAL</printer>
-      <printer translate="name" name="Kodak 305" deviceid="MFG:KODAK;CMD:KODAK305;MDL:305 Photo Printer;CLS:PRINTER;DES:KODAK 305 Photo Printer" driver="kodak-305" manufacturer="Kodak" model="4108" foomaticid="Kodak-305" parameters="nativecopies" />
       <printer translate="name" name="Mitsubishi CP-D90DW" driver="mitsubishi-d90dw" manufacturer="Mitsubishi" model="4109" foomaticid="Mitsubishi-D90DW" parameters="nativecopies">EXPERIMENTAL</printer>
-      <printer translate="name" name="Mitsubishi CP-9600DW" driver="mitsubishi-9600dw" manufacturer="Mitsubishi" model="4110" foomaticid="Mitsubishi-9600DW" parameters="nativecopies">EXPERIMENTAL</printer>
-      <printer translate="name" name="Mitsubishi CP-9550DZ" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP9550DZ;CLS:PRINTER;DES:MITSUBISHI CP9550DZ;" driver="mitsubishi-9550dz" manufacturer="Mitsubishi" model="4111" foomaticid="Mitsubishi-9550DZ" parameters="nativecopies" />
-      <printer translate="name" name="Mitsubishi CP-9550DW-S" driver="mitsubishi-9550dw-s" manufacturer="Mitsubishi" model="4111" foomaticid="Mitsubishi-9550DW-S" parameters="nativecopies" />
-      <printer translate="name" name="Fujifilm ASK-300" driver="fujifilm-ask-300" manufacturer="Fujifilm" model="4112" foomaticid="Fujifilm-ASK-300" parameters="nativecopies">EXPERIMENTAL</printer>
-      <printer translate="name" name="Shinko CHC-S9045" driver="shinko-chcs9045" manufacturer="Shinko" model="5000" foomaticid="Shinko-CHC-S9045" />
+      <printer translate="name" name="Mitsubishi CP-K60DW-S" driver="mitsubishi-k60dw" manufacturer="Mitsubishi" model="4106" foomaticid="Mitsubishi-K60DW-S" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Shinko CHC-S2145" deviceid="MFG:SHINKO;CMD:SUPCC;MDL:CHC-S2145;CLS:PRINTER;DES:SHINKO CHC-S2145;" driver="shinko-chcs2145" manufacturer="Shinko" model="5001" foomaticid="Shinko-CHC-S2145" parameters="nativecopies" />
       <printer translate="name" name="Sinfonia S2145/S2" driver="sinfonia-chcs2145" manufacturer="Sinfonia" model="5001" foomaticid="Sinfonia-CHC-S2145" parameters="nativecopies" />
       <printer translate="name" name="Shinko CHC-S1245" driver="shinko-chcs1245" manufacturer="Shinko" model="5002" foomaticid="Shinko-CHC-S1245" parameters="nativecopies">EXPERIMENTAL</printer>
-      <printer translate="name" name="Sinfonia CHC-S1245/E1" driver="sinfonia-chcs1245" manufacturer="Sinfonia" model="5002" foomaticid="Sinfonia-CHC-S1245" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Shinko CHC-S6245" driver="shinko-chcs6245" manufacturer="Shinko" model="5003" foomaticid="Shinko-CHC-S6245" parameters="nativecopies">EXPERIMENTAL</printer>
-      <printer translate="name" name="Sinfonia CHC-S6245/CE1" driver="sinfonia-chcs6245" manufacturer="Sinfonia" model="5003" foomaticid="Sinfonia-CHC-S6245" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Shinko CHC-S6145" driver="shinko-chcs6145" manufacturer="Shinko" model="5004" foomaticid="Shinko-CHC-S6145" parameters="nativecopies" />
+      <printer translate="name" name="Shinko CHC-S9045" driver="shinko-chcs9045" manufacturer="Shinko" model="5000" foomaticid="Shinko-CHC-S9045" />
+      <printer translate="name" name="Sinfonia CHC-S1245/E1" driver="sinfonia-chcs1245" manufacturer="Sinfonia" model="5002" foomaticid="Sinfonia-CHC-S1245" parameters="nativecopies">EXPERIMENTAL</printer>
+      <printer translate="name" name="Sinfonia CHC-S6245/CE1" driver="sinfonia-chcs6245" manufacturer="Sinfonia" model="5003" foomaticid="Sinfonia-CHC-S6245" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Sinfonia CHC-S6145/CS2" deviceid="MFG:SINFONIA;CMD:SUPCC;MDL:CHC-S6145;CLS:PRINTER;DES:Thermal Dye Photo Printer;" driver="sinfonia-chcs6145" manufacturer="Sinfonia" model="5004" foomaticid="Sinfonia-CHC-S6145" parameters="nativecopies" />
       <printer translate="name" name="CIAAT Brava 21" deviceid="MFG:CIAAT;CMD:SUPCC;MDL:BRAVA21;CLS:PRINTER;DES:Thermal Dye Photo Printer;" driver="ciaat-brava-21" manufacturer="CIAAT" model="5005" foomaticid="CIAAT-Brava-21" parameters="nativecopies" />
+      <printer translate="name" name="Dai Nippon Printing SL10" driver="dnp-sl10" manufacturer="Dai Nippon Printing" model="2005" foomaticid="DNP-SL10" parameters="nativecopies">EXPERIMENTAL</printer>      
       <printer translate="name" name="Dai Nippon Printing DS40" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DS40;" driver="dnp-ds40" manufacturer="Dai Nippon Printing" model="6000" foomaticid="DNP-DS40" parameters="nativecopies" />
-      <printer translate="name" name="Dai Nippon Printing DS80" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DS80;" driver="dnp-ds80" manufacturer="Dai Nippon Printing" model="6001" foomaticid="DNP-DS80" parameters="nativecopies" />
-      <printer translate="name" name="Dai Nippon Printing DSRX1" driver="dnp-dsrx1" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DS-RX1;" manufacturer="Dai Nippon Printing" model="6002" foomaticid="DNP-DSRX1" parameters="nativecopies" />
       <printer translate="name" name="Dai Nippon Printing DS620" driver="dnp-ds620" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DP-DS620;" manufacturer="Dai Nippon Printing" model="6003" foomaticid="DNP-DS620" parameters="nativecopies" />
+      <printer translate="name" name="Dai Nippon Printing DS80" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DS80;" driver="dnp-ds80" manufacturer="Dai Nippon Printing" model="6001" foomaticid="DNP-DS80" parameters="nativecopies" />
+      <printer translate="name" name="Dai Nippon Printing DS80DX" driver="dnp-ds80dx" manufacturer="Dai Nippon Printing" model="6006" foomaticid="DNP-DS80DX" parameters="nativecopies">EXPERIMENTAL</printer>
+      <printer translate="name" name="Dai Nippon Printing DSRX1" driver="dnp-dsrx1" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DS-RX1;" manufacturer="Dai Nippon Printing" model="6002" foomaticid="DNP-DSRX1" parameters="nativecopies" />
+      <printer translate="name" name="Citizen CW-01" driver="citizen-cw-01" manufacturer="Citizen" model="6005" foomaticid="Citizen-CW-01" parameters="nativecopies" />
+      <printer translate="name" name="Citizen CW-02" driver="citizen-cw-02" manufacturer="Citizen" model="6000" foomaticid="Citizen-CW-02" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Citizen CX" driver="citizen-cx" deviceid="MANUFACTURER:CITIZEN SYSTEMS ;MODEL:CX;" manufacturer="Citizen" model="6000" foomaticid="Citizen-CX" parameters="nativecopies" />
       <printer translate="name" name="Citizen CX-W" driver="citizen-cx-w" manufacturer="Citizen" model="6001" foomaticid="Citizen-CX-W" parameters="nativecopies" />
       <printer translate="name" name="Citizen CY" driver="citizen-cy" manufacturer="Citizen" model="6002" foomaticid="Citizen-CY" parameters="nativecopies" />
-      <printer translate="name" name="Citizen CW-01" driver="citizen-cw-01" manufacturer="Citizen" model="6005" foomaticid="Citizen-CW-01" parameters="nativecopies" />
       <printer translate="name" name="Citizen OP900" driver="citizen-op900" manufacturer="Citizen" model="6005" foomaticid="Citizen-OP900" parameters="nativecopies" />
-      <printer translate="name" name="Citizen CW-02" driver="citizen-cw-02" manufacturer="Citizen" model="6000" foomaticid="Citizen-CW-02" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Citizen OP900II" driver="citizen-op900ii" manufacturer="Citizen" model="6000" foomaticid="Citizen-OP900II" parameters="nativecopies">EXPERIMENTAL</printer>
-      <printer translate="name" name="Mitsubishi CP-3800DW" driver="mitsubishi-cp-3800dw" manufacturer="Mitsubishi" model="6001" foomaticid="Mitsubishi-CP-3800DW" parameters="nativecopies" />
-      <printer translate="name" name="Dai Nippon Printing DS80DX" driver="dnp-ds80dx" manufacturer="Dai Nippon Printing" model="6006" foomaticid="DNP-DS80DX" parameters="nativecopies">EXPERIMENTAL</printer>
     </family>
     <family name="raw">
       <printer translate="name" name="RAW DATA 16 bit" driver="raw-data-16" manufacturer="" model="0" />
