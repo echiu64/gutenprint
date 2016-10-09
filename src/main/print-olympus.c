@@ -2911,7 +2911,7 @@ static int mitsu9810_parse_parameters(stp_vars_t *v)
 }
 
 
-static void mitsu_cp9810_printer_init(stp_vars_t *v)
+static void mitsu_cp98xx_printer_init(stp_vars_t *v, int model)
 {
   /* Init */
   stp_putc(0x1b, v);
@@ -2920,12 +2920,16 @@ static void mitsu_cp9810_printer_init(stp_vars_t *v)
   stp_putc(0x2e, v);
   stp_putc(0x00, v);
   stp_putc(0x0a, v);
-  stp_putc(0x90, v);
+  stp_putc(model, v);
   dyesub_nputc(v, 0x00, 7);
   stp_put16_be(privdata.w_size, v);
   stp_put16_be(privdata.h_size, v);
-  stp_zfwrite((privdata.laminate->seq).data, 1,
-	      (privdata.laminate->seq).bytes, v); /* Lamination */
+  if (model == 0x90) {
+	  stp_zfwrite((privdata.laminate->seq).data, 1,
+		      (privdata.laminate->seq).bytes, v); /* Lamination */
+  } else {
+	  stp_putc(0x00, v);
+  }
   dyesub_nputc(v, 0x00, 31);
   /* Parameters 1 */
   stp_putc(0x1b, v);
@@ -2957,6 +2961,16 @@ static void mitsu_cp9810_printer_init(stp_vars_t *v)
   dyesub_nputc(v, 0x00, 36);
 }
 
+static void mitsu_cp9810_printer_init(stp_vars_t *v)
+{
+  mitsu_cp98xx_printer_init(v, 0x90);
+}
+
+static void mitsu_cp9800_printer_init(stp_vars_t *v)
+{
+  mitsu_cp98xx_printer_init(v, 0x10);
+}
+
 static void mitsu_cp9810_printer_end(stp_vars_t *v)
 {
   /* Job Footer */
@@ -2965,7 +2979,8 @@ static void mitsu_cp9810_printer_end(stp_vars_t *v)
   stp_putc(0x4c, v);
   stp_putc(0x00, v);
 
-  if (*((const char*)((privdata.laminate->seq).data)) == 0x01) {
+  if (privdata.laminate &&
+      *((const char*)((privdata.laminate->seq).data)) == 0x01) {
 
     /* Generate a full plane of lamination data */
 
@@ -5893,6 +5908,27 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     mitsu70x_parameter_count,
     mitsu_k60_load_parameters,
     mitsu70x_parse_parameters,
+  },
+  { /* Mitsubishi CP9800D */
+    4113,
+    &bgr_ink_list,
+    &res_300dpi_list,
+    &mitsu_cp9810_page_list,
+    &mitsu_cp9810_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_12BPP
+      | DYESUB_FEATURE_BIGENDIAN,
+    &mitsu_cp9800_printer_init, &mitsu_cp9810_printer_end,
+    &mitsu_cp3020da_plane_init, NULL,
+    NULL, NULL, /* No block funcs */
+    NULL, NULL, NULL, /* color profile/adjustment is built into printer */
+    NULL, NULL,
+    NULL, NULL,
+    mitsu9550_parameters,
+    mitsu9550_parameter_count,
+    mitsu9810_load_parameters,
+    mitsu9810_parse_parameters,
   },
   { /* Shinko CHC-S9045 (experimental) */
     5000, 		

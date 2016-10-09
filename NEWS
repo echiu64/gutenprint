@@ -264,6 +264,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	Canon SELPHY CP1200
 	Fujifilm ASK-300      [*2] [experimental]
 	Mitsubishi CP-9600DW       [experimental]
+	Mitsubishi CP-9800DW       [experimental]
 	Mitsubishi CP-D90DW        [experimental]
 	DNP DS-RX1HS
 
@@ -279,9 +280,9 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	DNP DS80DX                 [experimental]
 	Kodak 305             [*2]
 	Kodak 6850
-        Mitsubishi CP-9550DW
-        Mitsubishi CP-9550DW-S
-        Mitsubishi CP-9810DW
+	Mitsubishi CP-9550DW
+	Mitsubishi CP-9550DW-S
+	Mitsubishi CP-9810DW
 	Mitsubishi CP-D70DW   [*2] [experimental]
 	Mitsubishi CP-D707DW  [*2] [experimental]
 	Mitsubishi CP-D80DW   [*2] [experimental]
