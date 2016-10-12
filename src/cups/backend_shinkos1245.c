@@ -412,6 +412,7 @@ struct shinkos1245_ctx {
 
 	struct shinkos1245_mediadesc medias[15];
 	int num_medias;
+	int media_8x12;
 
 	uint8_t *databuf;
 	int datalen;
@@ -1402,6 +1403,9 @@ static int shinkos1245_main_loop(void *vctx, int copies) {
 	}
 	/* Make sure print size is supported */
 	for (i = 0 ; i < ctx->num_medias ; i++) {
+		if (ctx->medias[i].rows >= 3636)
+			ctx->media_8x12 = 1;
+
 		if (ctx->hdr.media == ctx->medias[i].code &&
 		    ctx->hdr.method == ctx->medias[i].print_type &&
 		    ctx->hdr.rows == ctx->medias[i].rows &&
@@ -1416,6 +1420,13 @@ static int shinkos1245_main_loop(void *vctx, int copies) {
 	/* Fix max print count. */
 	if (copies > 9999) // XXX test against remaining media?
 		copies = 9999;
+
+        /* Tell CUPS about the consumables we report */
+        ATTR("marker-colors=#00FFFF#FF00FF#FFFF00\n");
+        ATTR("marker-high-levels=100\n");
+        ATTR("marker-low-levels=10\n");
+        ATTR("marker-names='%s'\n", ctx->media_8x12? "8x12" : "8x10");
+        ATTR("marker-types=ribbonWax\n");
 
 top:
 	if (state != last_state) {
@@ -1439,6 +1450,14 @@ top:
 	/* Make sure we're not in an error state */
 	if (status1.state.status1 == STATE_STATUS1_ERROR)
 		goto printer_error;
+
+	/* Work out the remaining media percentage */
+	{
+		int remain = ctx->media_8x12 ? 230 : 280;
+
+		remain = (remain - be32_to_cpu(status1.counters.media)) * 100 / remain;
+		ATTR("marker-levels=%d\n", remain);
+	}
 
 	last_state = state;
 
@@ -1620,7 +1639,7 @@ static int shinkos1245_query_serno(struct libusb_device_handle *dev, uint8_t end
 
 struct dyesub_backend shinkos1245_backend = {
 	.name = "Shinko/Sinfonia CHC-S1245",
-	.version = "0.09WIP",
+	.version = "0.10WIP",
 	.uri_prefix = "shinkos1245",
 	.cmdline_usage = shinkos1245_cmdline,
 	.cmdline_arg = shinkos1245_cmdline_arg,
@@ -1645,7 +1664,7 @@ struct dyesub_backend shinkos1245_backend = {
    10 00 00 00 MM MM 00 00  00 00 00 00 01 00 00 00  MM == Model (ie 1245d)
    64 00 00 00 00 00 00 00  TT 00 00 00 00 00 00 00  TT == Media Size (0x10 fixed)
    MM 00 00 00 PP 00 00 00  00 00 00 00 ZZ ZZ ZZ ZZ  MM = Print Method (aka cut control), PP = Default/Glossy/Matte (0x01/0x03/0x05), ZZ == matte intensity (0x7fffffff for glossy, else 0x00000000 +- 25 for matte)
-   VV 00 00 00 WW WW 00 00  HH HH 00 00 XX 00 00 00  VV == dust; 0x00 default, 0x01 off, 0x02 on, XX == Copies
+   VV 00 00 00 WW WW 00 00  HH HH 00 00 XX XX 00 00  VV == dust; 0x00 default, 0x01 off, 0x02 on, XX == Copies
    00 00 00 00 00 00 00 00  00 00 00 00 ce ff ff ff
    00 00 00 00 ce ff ff ff  QQ QQ 00 00 ce ff ff ff  QQ == DPI, ie 300.
    00 00 00 00 ce ff ff ff  00 00 00 00 00 00 00 00

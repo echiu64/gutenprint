@@ -314,7 +314,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	  the output image quality will be quite poor.
 
      [*2] Optimal quality requires use of an external image processing
-     	  library.  Only one option is available:
+	  library.  Only one option is available:
 
 	  * libMitsuD70ImageReProcess -- A reverse-engineered implementation
 	    of the Mitsubishi algorithms, relased under the terms of the GNU
@@ -337,11 +337,11 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	Citizen CX/CX-W/CY
 	Kodak 305/605/6800/6850
 	Mitsubishi CP-D70DW/CP-D707DW/CP-K60DW-S/CP-D9550DW
-	Sinfonia CHC-S2145/CHC-S6145/CHC-S6245
+	Sinfonia CHC-S1245/CHC-S2145/CHC-S6145/CHC-S6245
 	Ciaat Brava 21
 
 	(All printers supported by the backend report status, excecpt for
-	 the Sinfonia CHC-S1245, Kodak 805, and Kodak 1400)
+	 the Kodak 805 and Kodak 1400)
 
   4) Added support for the following Epson inkjet printers:
 
