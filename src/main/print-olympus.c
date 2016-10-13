@@ -2667,8 +2667,8 @@ static void mitsu_cp9550_printer_init(stp_vars_t *v)
   stp_putc(0x22, v);
   stp_putc(0x08, v);
   stp_putc(0x03, v);
-  dyesub_nputc(v, 0x00, 19);
-  stp_putc(0x01, v);  /* Copies */
+  dyesub_nputc(v, 0x00, 18);
+  stp_put16_be(1, v);  /* Copies */
   dyesub_nputc(v, 0x00, 2);
   if (strcmp(privdata.pagesize,"w288h432-div2") == 0)
     stp_putc(0x83, v);
@@ -2707,6 +2707,15 @@ static void mitsu_cp9550_printer_end(stp_vars_t *v)
   stp_putc(0x1b, v);
   stp_putc(0x50, v);
   stp_putc(0x46, v);
+  stp_putc(0x00, v);
+}
+
+static void mitsu_cp9550s_printer_end(stp_vars_t *v)
+{
+  /* Page Footer */
+  stp_putc(0x1b, v);
+  stp_putc(0x50, v);
+  stp_putc(0x47, v);
   stp_putc(0x00, v);
 }
 
@@ -2768,8 +2777,8 @@ static void mitsu_cp9600_printer_init(stp_vars_t *v)
   stp_putc(0x22, v);
   stp_putc(0x00, v);
   stp_putc(0x03, v);
-  dyesub_nputc(v, 0x00, 19);
-  stp_putc(0x01, v);  /* Copies */
+  dyesub_nputc(v, 0x00, 18);
+  stp_put16_be(1, v);  /* Copies */
   dyesub_nputc(v, 0x00, 19);
   stp_putc(0x01, v);
   /* Parameters 2 */
@@ -2942,8 +2951,8 @@ static void mitsu_cp98xx_printer_init(stp_vars_t *v, int model)
   stp_putc(0x22, v);
   stp_putc(0x08, v);
   stp_putc(0x01, v);
-  dyesub_nputc(v, 0x00, 19);
-  stp_putc(0x01, v); /* Copies */
+  dyesub_nputc(v, 0x00, 18);
+  stp_put16_be(1, v);  /* Copies */
   dyesub_nputc(v, 0x00, 8);
   stp_putc(mitsu9550_privdata.quality, v);
   dyesub_nputc(v, 0x00, 10);
@@ -5868,7 +5877,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_PLANE_INTERLACE,
-    &mitsu_cp9550_printer_init, &mitsu_cp9550_printer_end,
+    &mitsu_cp9550_printer_init, &mitsu_cp9550s_printer_end,
     &mitsu_cp3020da_plane_init, NULL,
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
