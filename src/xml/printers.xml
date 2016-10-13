@@ -2598,6 +2598,7 @@
       <printer translate="name" name="NRG MP 7500" driver="nrg-mp_7500" manufacturer="NRG" model="61" parameters="pcl_laser_params" foomaticid="NRG-MP_7500" />
       <printer translate="name" name="NRG MP 9000" driver="nrg-mp_9000" manufacturer="NRG" model="61" parameters="pcl_laser_params" foomaticid="NRG-MP_9000" />
       <printer translate="name" name="Oki B401d" driver="oki-b401d" manufacturer="Oki" model="6" parameters="pcl_laser_params" foomaticid="Oki-B4401d" />
+      <printer translate="name" name="Oki B430" driver="oki-b430" manufacturer="Oki" model="6" parameters="pcl_laser_params" foomaticid="Oki-B430" />
       <printer translate="name" name="Oki B4350" driver="oki-b4350" manufacturer="Oki" model="6" parameters="pcl_laser_params" foomaticid="Oki-B4350" />
       <printer translate="name" name="Oki OL400" driver="okidata-ol400" manufacturer="Oki" model="2" parameters="pcl_laser_params" foomaticid="Oki-OL400" />
       <printer translate="name" name="Oki OL400e" driver="okidata-ol400e" manufacturer="Oki" model="2" parameters="pcl_laser_params" foomaticid="Oki-OL400e" />
