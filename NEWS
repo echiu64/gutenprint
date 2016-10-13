@@ -329,6 +329,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
   5) Added support for the following Epson inkjet printers:
 
+	Epson L1300
 	Epson Stylus XP100 	     	   	  [experimental]
 	Epson SureColor P400 	     	   	  [experimental]
 	Epson SureColor P600 	     	   	  [experimental]
