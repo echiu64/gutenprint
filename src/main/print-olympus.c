@@ -59,6 +59,8 @@
 #define DYESUB_PORTRAIT  0
 #define DYESUB_LANDSCAPE 1
 
+#define MITSU70X_8BPP
+
 #ifndef MIN
 #  define MIN(a,b)	(((a) < (b)) ? (a) : (b))
 #endif /* !MIN */
@@ -237,7 +239,7 @@ typedef struct /* printer specific parameters */
   const stp_parameter_t *parameters;
   int parameter_count;
   int (*load_parameters)(const stp_vars_t *, const char *name, stp_parameter_t *);
-  void (*parse_parameters)(stp_vars_t *);
+  int (*parse_parameters)(stp_vars_t *);
 } dyesub_cap_t;
 
 
@@ -2558,6 +2560,88 @@ static const dyesub_printsize_t mitsu_cp9550_printsize[] =
 
 LIST(dyesub_printsize_list_t, mitsu_cp9550_printsize_list, dyesub_printsize_t, mitsu_cp9550_printsize);
 
+typedef struct
+{
+  int quality;
+  int finedeep;
+} mitsu9550_privdata_t;
+
+static mitsu9550_privdata_t mitsu9550_privdata;
+
+static const dyesub_stringitem_t mitsu9550_qualities[] =
+{
+  { "Fine",      N_ ("Fine") },
+  { "SuperFine", N_ ("Super Fine") },
+  { "FineDeep", N_ ("Fine Deep") }
+};
+LIST(dyesub_stringlist_t, mitsu9550_quality_list, dyesub_stringitem_t, mitsu9550_qualities);
+
+static const stp_parameter_t mitsu9550_parameters[] =
+{
+  {
+    "PrintSpeed", N_("Print Speed"), "Color=No,Category=Advanced Printer Setup",
+    N_("Print Speed"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+};
+#define mitsu9550_parameter_count (sizeof(mitsu9550_parameters) / sizeof(const stp_parameter_t))
+
+static int
+mitsu9550_load_parameters(const stp_vars_t *v, const char *name,
+			 stp_parameter_t *description)
+{
+  int	i;
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+		  				stp_get_model_id(v));
+ 
+  if (caps->parameter_count && caps->parameters)
+    {
+      for (i = 0; i < caps->parameter_count; i++)
+        if (strcmp(name, caps->parameters[i].name) == 0)
+          {
+	    stp_fill_parameter_settings(description, &(caps->parameters[i]));
+	    break;
+          }
+    }
+
+  if (strcmp(name, "PrintSpeed") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+
+      const dyesub_stringlist_t *mlist = &mitsu9550_quality_list;
+      for (i = 0; i < mlist->n_items; i++)
+        {
+	  const dyesub_stringitem_t *m = &(mlist->item[i]);
+	  stp_string_list_add_string(description->bounds.str,
+				       m->name, m->text); /* Do *not* want this translated, otherwise use gettext(m->text) */
+	}
+      description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
+      description->is_active = 1;
+    }
+  else
+  {
+     return 0;
+  }
+  return 1;
+}
+
+static int mitsu9550_parse_parameters(stp_vars_t *v)
+{
+  const char *quality = stp_get_string_parameter(v, "PrintSpeed");
+  mitsu9550_privdata.quality = 0;
+  mitsu9550_privdata.finedeep = 0;
+
+  /* Parse options */
+  if (strcmp(quality, "SuperFine") == 0) {
+     mitsu9550_privdata.quality = 0x80;
+  } else if (strcmp(quality, "FineDeep") == 0) {
+     mitsu9550_privdata.finedeep = 1;
+  }
+
+  return 1;
+}
+
 static void mitsu_cp9550_printer_init(stp_vars_t *v)
 {
   /* Init */
@@ -2583,15 +2667,15 @@ static void mitsu_cp9550_printer_init(stp_vars_t *v)
   stp_putc(0x22, v);
   stp_putc(0x08, v);
   stp_putc(0x03, v);
-  dyesub_nputc(v, 0x00, 19);
-  stp_putc(0x01, v);  /* Copies */
+  dyesub_nputc(v, 0x00, 18);
+  stp_put16_be(1, v);  /* Copies */
   dyesub_nputc(v, 0x00, 2);
   if (strcmp(privdata.pagesize,"w288h432-div2") == 0)
     stp_putc(0x83, v);
   else
     stp_putc(0x00, v);
   dyesub_nputc(v, 0x00, 5);
-  stp_putc(0x00, v); /* XXX 00 == normal, 80 = fine */
+  stp_putc(mitsu9550_privdata.quality, v);
   dyesub_nputc(v, 0x00, 10);
   stp_putc(0x01, v);
   /* Parameters 2 */
@@ -2602,7 +2686,7 @@ static void mitsu_cp9550_printer_init(stp_vars_t *v)
   stp_putc(0x00, v);
   stp_putc(0x40, v);
   dyesub_nputc(v, 0x00, 5);
-  stp_putc(0x00, v);  /* XXX 00 == normal, 01 == finedeep (some models only) */
+  stp_putc(mitsu9550_privdata.finedeep, v);
   dyesub_nputc(v, 0x00, 38);
   /* Unknown */
   stp_putc(0x1b, v);
@@ -2623,6 +2707,15 @@ static void mitsu_cp9550_printer_end(stp_vars_t *v)
   stp_putc(0x1b, v);
   stp_putc(0x50, v);
   stp_putc(0x46, v);
+  stp_putc(0x00, v);
+}
+
+static void mitsu_cp9550s_printer_end(stp_vars_t *v)
+{
+  /* Page Footer */
+  stp_putc(0x1b, v);
+  stp_putc(0x50, v);
+  stp_putc(0x47, v);
   stp_putc(0x00, v);
 }
 
@@ -2684,8 +2777,8 @@ static void mitsu_cp9600_printer_init(stp_vars_t *v)
   stp_putc(0x22, v);
   stp_putc(0x00, v);
   stp_putc(0x03, v);
-  dyesub_nputc(v, 0x00, 19);
-  stp_putc(0x01, v);  /* Copies */
+  dyesub_nputc(v, 0x00, 18);
+  stp_put16_be(1, v);  /* Copies */
   dyesub_nputc(v, 0x00, 19);
   stp_putc(0x01, v);
   /* Parameters 2 */
@@ -2755,12 +2848,79 @@ LIST(dyesub_printsize_list_t, mitsu_cp9810_printsize_list, dyesub_printsize_t, m
 static const laminate_t mitsu_cp9810_laminate[] =
 {
   {"Matte", N_("Matte"), {1, "\x01"}},
-  {"None",  N_("None"),  {1, "\x00"}},
+  {"Glossy",  N_("Glossy"),  {1, "\x00"}},
 };
 
 LIST(laminate_list_t, mitsu_cp9810_laminate_list, laminate_t, mitsu_cp9810_laminate);
 
-static void mitsu_cp9810_printer_init(stp_vars_t *v)
+static const dyesub_stringitem_t mitsu9810_qualities[] =
+{
+  { "Fine",      N_ ("Fine") },
+  { "SuperFine", N_ ("Super Fine") },
+};
+LIST(dyesub_stringlist_t, mitsu9810_quality_list, dyesub_stringitem_t, mitsu9810_qualities);
+
+static int
+mitsu9810_load_parameters(const stp_vars_t *v, const char *name,
+			  stp_parameter_t *description)
+{
+  int	i;
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+		  				stp_get_model_id(v));
+ 
+  if (caps->parameter_count && caps->parameters)
+    {
+      for (i = 0; i < caps->parameter_count; i++)
+        if (strcmp(name, caps->parameters[i].name) == 0)
+          {
+	    stp_fill_parameter_settings(description, &(caps->parameters[i]));
+	    break;
+          }
+    }
+
+  if (strcmp(name, "PrintSpeed") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+
+      const dyesub_stringlist_t *mlist = &mitsu9810_quality_list;
+      for (i = 0; i < mlist->n_items; i++)
+        {
+	  const dyesub_stringitem_t *m = &(mlist->item[i]);
+	  stp_string_list_add_string(description->bounds.str,
+				       m->name, m->text); /* Do *not* want this translated, otherwise use gettext(m->text) */
+	}
+      description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
+      description->is_active = 1;
+    }
+  else
+  {
+     return 0;
+  }
+  return 1;
+}
+
+static int mitsu9810_parse_parameters(stp_vars_t *v)
+{
+  const char *quality = stp_get_string_parameter(v, "PrintSpeed");
+  mitsu9550_privdata.quality = 0;
+
+  /* Parse options */
+  if (strcmp(quality, "SuperFine") == 0) {
+     mitsu9550_privdata.quality = 0x80;
+  } else if (strcmp(quality, "Fine") == 0) {
+     mitsu9550_privdata.finedeep = 0x10;
+  }
+
+  /* Matte lamination forces SuperFine mode */
+  if (*((const char*)((privdata.laminate->seq).data)) != 0x00) {
+     mitsu9550_privdata.quality = 0x80;
+  }
+  
+  return 1;
+}
+
+
+static void mitsu_cp98xx_printer_init(stp_vars_t *v, int model)
 {
   /* Init */
   stp_putc(0x1b, v);
@@ -2769,12 +2929,16 @@ static void mitsu_cp9810_printer_init(stp_vars_t *v)
   stp_putc(0x2e, v);
   stp_putc(0x00, v);
   stp_putc(0x0a, v);
-  stp_putc(0x90, v);
+  stp_putc(model, v);
   dyesub_nputc(v, 0x00, 7);
   stp_put16_be(privdata.w_size, v);
   stp_put16_be(privdata.h_size, v);
-  stp_zfwrite((privdata.laminate->seq).data, 1,
-	      (privdata.laminate->seq).bytes, v); /* Lamination */
+  if (model == 0x90) {
+	  stp_zfwrite((privdata.laminate->seq).data, 1,
+		      (privdata.laminate->seq).bytes, v); /* Lamination */
+  } else {
+	  stp_putc(0x00, v);
+  }
   dyesub_nputc(v, 0x00, 31);
   /* Parameters 1 */
   stp_putc(0x1b, v);
@@ -2787,10 +2951,10 @@ static void mitsu_cp9810_printer_init(stp_vars_t *v)
   stp_putc(0x22, v);
   stp_putc(0x08, v);
   stp_putc(0x01, v);
-  dyesub_nputc(v, 0x00, 19);
-  stp_putc(0x01, v); /* Copies */
+  dyesub_nputc(v, 0x00, 18);
+  stp_put16_be(1, v);  /* Copies */
   dyesub_nputc(v, 0x00, 8);
-  stp_putc(0x80, v); /* XXX 10 == Fine, 80 = SuperFine (required for lamination) */
+  stp_putc(mitsu9550_privdata.quality, v);
   dyesub_nputc(v, 0x00, 10);
   stp_putc(0x01, v);
   /* Unknown */
@@ -2806,6 +2970,16 @@ static void mitsu_cp9810_printer_init(stp_vars_t *v)
   dyesub_nputc(v, 0x00, 36);
 }
 
+static void mitsu_cp9810_printer_init(stp_vars_t *v)
+{
+  mitsu_cp98xx_printer_init(v, 0x90);
+}
+
+static void mitsu_cp9800_printer_init(stp_vars_t *v)
+{
+  mitsu_cp98xx_printer_init(v, 0x10);
+}
+
 static void mitsu_cp9810_printer_end(stp_vars_t *v)
 {
   /* Job Footer */
@@ -2814,7 +2988,8 @@ static void mitsu_cp9810_printer_end(stp_vars_t *v)
   stp_putc(0x4c, v);
   stp_putc(0x00, v);
 
-  if (*((const char*)((privdata.laminate->seq).data)) == 0x01) {
+  if (privdata.laminate &&
+      *((const char*)((privdata.laminate->seq).data)) == 0x01) {
 
     /* Generate a full plane of lamination data */
 
@@ -2904,18 +3079,12 @@ static const laminate_t mitsu_cpd70x_laminate[] =
 
 LIST(laminate_list_t, mitsu_cpd70x_laminate_list, laminate_t, mitsu_cpd70x_laminate);
 
-/* This list is *not* translated */
-static const dyesub_stringitem_t mitsu70x_uiconstraints[] = {
-  /* PPD generation handles constraint reciprocation */
-  /* Basically, exclude Matte and "Fine" quality */
-  {"UIConstraints", "*StpLaminate Matte *StpPrintSpeed Fine"},
-};
-LIST(dyesub_stringlist_t, mitsu70x_uiconstraints_list, dyesub_stringitem_t, mitsu70x_uiconstraints);
-
 typedef struct
 {
-  const char *quality;
+  int quality;
   int laminate_offset;
+  int use_lut;
+  int sharpen;
 } mitsu70x_privdata_t;
 
 static mitsu70x_privdata_t mitsu70x_privdata;
@@ -2936,6 +3105,20 @@ static const stp_parameter_t mitsu70x_parameters[] =
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
+#ifdef MITSU70X_8BPP
+  {
+    "UseLUT", N_("Internal Color Correction"), "Color=No,Category=Advanced Printer Setup",
+    N_("Use Internal Color Correction"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "Sharpen", N_("Image Sharpening"), "Color=No,Category=Advanced Printer Setup",
+    N_("Sharpening to apply to image (0 is off, 1 is min, 9 is max"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+#endif
 };
 #define mitsu70x_parameter_count (sizeof(mitsu70x_parameters) / sizeof(const stp_parameter_t))
 
@@ -2971,6 +3154,19 @@ mitsu70x_load_parameters(const stp_vars_t *v, const char *name,
       description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
       description->is_active = 1;
     }
+#ifdef MITSU70X_8BPP
+  else if (strcmp(name, "UseLUT") == 0)
+    {
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "Sharpen") == 0)
+    {
+      description->deflt.integer = 4;
+      description->bounds.integer.lower = 0;
+      description->bounds.integer.upper = 9;
+      description->is_active = 1;      
+    }
+#endif
   else
   {
      return 0;
@@ -2978,26 +3174,31 @@ mitsu70x_load_parameters(const stp_vars_t *v, const char *name,
   return 1;
 }
 
-static void mitsu70x_parse_parameters(stp_vars_t *v)
+static int mitsu70x_parse_parameters(stp_vars_t *v)
 {
-  mitsu70x_privdata.quality = stp_get_string_parameter(v, "PrintSpeed");
+  const char *quality = stp_get_string_parameter(v, "PrintSpeed");
+
+  /* Parse options */
+  if (strcmp(quality, "SuperFine") == 0) {
+     mitsu70x_privdata.quality = 3;
+  } else if (strcmp(quality, "UltraFine") == 0) {
+     mitsu70x_privdata.quality = 4;
+  } else if (strcmp(quality, "Fine") == 0) {
+     mitsu70x_privdata.quality = 0;
+  } else {
+     mitsu70x_privdata.quality = 0;
+  }
+
+#ifdef MITSU70X_8BPP
+  mitsu70x_privdata.use_lut = stp_get_boolean_parameter(v, "UseLUT");
+  mitsu70x_privdata.sharpen = stp_get_int_parameter(v, "Sharpen");  
+#endif
+
+  return 1;
 }
 
 static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
 {
-  int quality;
-
-  /* Parse options */
-  if (strcmp(mitsu70x_privdata.quality, "SuperFine") == 0) {
-	  quality = 3;
-  } else if (strcmp(mitsu70x_privdata.quality, "UltraFine") == 0) {
-	  quality = 4;
-  } else if (strcmp(mitsu70x_privdata.quality, "Fine") == 0) {
-	  quality = 0;	  
-  } else {
-	  quality = 0;
-  }
-
   /* Printer wakeup */
   stp_putc(0x1b, v);
   stp_putc(0x45, v);
@@ -3018,11 +3219,13 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
     stp_put16_be(privdata.w_size, v);
     if (model == 0x02 || model == 0x90) {
       mitsu70x_privdata.laminate_offset = 0;
-      quality = 4;  /* Matte Lamination forces UltraFine on K60 or K305 */
+      if (!mitsu70x_privdata.quality)
+	mitsu70x_privdata.quality = 4;  /* Matte Lamination forces UltraFine on K60 or K305 */
     } else {
       /* Laminate a slightly larger boundary in Matte mode */
-      mitsu70x_privdata.laminate_offset = 12;	          
-      quality = 3; /* Matte Lamination forces Superfine (or UltraFine) */
+      mitsu70x_privdata.laminate_offset = 12;
+      if (!mitsu70x_privdata.quality)
+        mitsu70x_privdata.quality = 3; /* Matte Lamination forces Superfine (or UltraFine) */
     }
     stp_put16_be(privdata.h_size + mitsu70x_privdata.laminate_offset, v);    
   } else {
@@ -3030,7 +3233,7 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
     stp_put16_be(0, v);
     stp_put16_be(0, v);
   }
-  stp_putc(quality, v);
+  stp_putc(mitsu70x_privdata.quality, v);
   dyesub_nputc(v, 0x00, 7);
 
   if (model != 0x01) {
@@ -3055,8 +3258,14 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
   } else {
     stp_putc(0x00, v);
   }
+#ifdef MITSU70X_8BPP
+  dyesub_nputc(v, 0x00, 12);
+  stp_putc(mitsu70x_privdata.sharpen, v);
+  stp_putc(0x01, v);  /* Mark as 8bpp BGR rather than 16bpp YMC cooked */
+  stp_putc(mitsu70x_privdata.use_lut, v);  /* Use LUT? */
+#else
   dyesub_nputc(v, 0x00, 15);
-
+#endif
   dyesub_nputc(v, 0x00, 448); /* Pad to 512-byte block */
 }
 
@@ -3065,6 +3274,7 @@ static void mitsu_cpd70x_printer_init(stp_vars_t *v)
   mitsu_cpd70k60_printer_init(v, 0x01);
 }
 
+#ifndef MITSU70X_8BPP
 static void mitsu_cpd70x_printer_end(stp_vars_t *v)
 {
   /* If Matte lamination is enabled, generate a lamination plane */
@@ -3098,12 +3308,14 @@ static void mitsu_cpd70x_printer_end(stp_vars_t *v)
     dyesub_nputc(v, 0x00, 512 - ((privdata.w_size * (privdata.h_size + mitsu70x_privdata.laminate_offset) * 2) % 512));
   }
 }
-
+#endif
 
 static void mitsu_cpd70x_plane_end(stp_vars_t *v)
 {
+#ifndef MITSU70X_8BPP
   /* Pad up to a 512-byte block */
   dyesub_nputc(v, 0x00, 512 - ((privdata.h_size * privdata.w_size * 2) % 512));
+#endif
 }
 
 /* Mitsubishi CP-K60D */
@@ -3188,6 +3400,19 @@ mitsu_k60_load_parameters(const stp_vars_t *v, const char *name,
       description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
       description->is_active = 1;
     }
+#ifdef MITSU70X_8BPP
+  else if (strcmp(name, "UseLUT") == 0)
+    {
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "Sharpen") == 0)
+    {
+      description->deflt.integer = 4;
+      description->bounds.integer.lower = 0;
+      description->bounds.integer.upper = 9;
+      description->is_active = 1;      
+    }
+#endif
   else
   {
      return 0;
@@ -3233,7 +3458,13 @@ static const dyesub_pagesize_t kodak305_page[] =
 {
   { "w288h432", "4x6", PT(1218,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
+  { "w288h432-div2", "2x6*2", PT(1218,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
+						DYESUB_LANDSCAPE},
+  { "w432h432", "6x6", PT(1820,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE},
   { "w432h576", "6x8", PT(1864,300)+1, PT(2422,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+  { "w432h576-div2", "4x6*2", PT(1864,300)+1, PT(2454,300)+1, 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
 };
 
@@ -3242,7 +3473,10 @@ LIST(dyesub_pagesize_list_t, kodak305_page_list, dyesub_pagesize_t, kodak305_pag
 static const dyesub_printsize_t kodak305_printsize[] =
 {
   { "300x300", "w288h432", 1218, 1864},
+  { "300x300", "w288h432-div2", 1218, 1864},
+  { "300x300", "w432h432", 1820, 1864},
   { "300x300", "w432h576", 1864, 2422},
+  { "300x300", "w432h576-div2", 1864, 2454},
 };
 
 LIST(dyesub_printsize_list_t, kodak305_printsize_list, dyesub_printsize_t, kodak305_printsize);
@@ -3298,6 +3532,87 @@ static const dyesub_printsize_t mitsu_cpd90_printsize[] =
 
 LIST(dyesub_printsize_list_t, mitsu_cpd90_printsize_list, dyesub_printsize_t, mitsu_cpd90_printsize);
 
+static const dyesub_stringitem_t mitsu_d90_qualities[] =
+{
+  { "Auto",      N_ ("Automatic") },
+  { "Fine",      N_ ("Fine") },
+  { "UltraFine", N_ ("Ultra Fine") }
+};
+LIST(dyesub_stringlist_t, mitsu_d90_quality_list, dyesub_stringitem_t, mitsu_d90_qualities);
+
+static int
+mitsu_d90_load_parameters(const stp_vars_t *v, const char *name,
+			  stp_parameter_t *description)
+{
+  int	i;
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+		  				stp_get_model_id(v));
+ 
+  if (caps->parameter_count && caps->parameters)
+    {
+      for (i = 0; i < caps->parameter_count; i++)
+        if (strcmp(name, caps->parameters[i].name) == 0)
+          {
+	    stp_fill_parameter_settings(description, &(caps->parameters[i]));
+	    break;
+          }
+    }
+
+  if (strcmp(name, "PrintSpeed") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+
+      const dyesub_stringlist_t *mlist = &mitsu_d90_quality_list;
+      for (i = 0; i < mlist->n_items; i++)
+        {
+	  const dyesub_stringitem_t *m = &(mlist->item[i]);
+	  stp_string_list_add_string(description->bounds.str,
+				       m->name, m->text); /* Do *not* want this translated, otherwise use gettext(m->text) */
+	}
+      description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
+      description->is_active = 1;
+    }
+#ifdef MITSU70X_8BPP
+  else if (strcmp(name, "UseLUT") == 0)
+    {
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "Sharpen") == 0)
+    {
+      description->deflt.integer = 4;
+      description->bounds.integer.lower = 0;
+      description->bounds.integer.upper = 9;
+      description->is_active = 1;
+    }
+#endif
+  else
+  {
+     return 0;
+  }
+  return 1;
+}
+
+static int mitsu_d90_parse_parameters(stp_vars_t *v)
+{
+  const char *quality = stp_get_string_parameter(v, "PrintSpeed");
+
+  /* Parse options */
+  if (strcmp(quality, "UltraFine") == 0) {
+     mitsu70x_privdata.quality = 3;
+  } else if (strcmp(quality, "Fine") == 0) {
+     mitsu70x_privdata.quality = 2;
+  } else {
+     mitsu70x_privdata.quality = 0;
+  }
+
+#ifdef MITSU70X_8BPP
+  mitsu70x_privdata.use_lut = stp_get_boolean_parameter(v, "UseLUT");
+  mitsu70x_privdata.sharpen = stp_get_int_parameter(v, "Sharpen"); // XXX
+#endif
+  
+  return 1;
+}
+
 static void mitsu_cpd90_printer_init(stp_vars_t *v)
 {
   /* Start things going */
@@ -3339,10 +3654,14 @@ static void mitsu_cpd90_printer_init(stp_vars_t *v)
 
   stp_zfwrite((privdata.laminate->seq).data, 1,
 	      (privdata.laminate->seq).bytes, v); /* Lamination mode */  
-  stp_putc(0x00, v);  /* XXX 0x02 = fine, 0x03 = ultrafine, 0x00 = auto */
-  stp_putc(0x00, v);  /* XXX 0x01 = no color correction, 0x00 = on */
-  stp_putc(0x04, v);
-  stp_putc(0x04, v);  
+  stp_putc(mitsu70x_privdata.quality, v);
+#ifdef MITSU70X_8BPP
+  stp_putc(mitsu70x_privdata.use_lut, v);
+#else
+  stp_putc(0x00, v);  /* ie use printer's built in LUT */
+#endif
+  stp_putc(mitsu70x_privdata.sharpen, v); /* Horizontal */
+  stp_putc(mitsu70x_privdata.sharpen, v); /* Vertical */
   dyesub_nputc(v, 0x00, 11);
   
   dyesub_nputc(v, 0x00, 512 - 64);
@@ -3370,8 +3689,39 @@ static void mitsu_cpd90_printer_end(stp_vars_t *v)
   stp_putc(0x51, v);
   stp_putc(0x31, v);
   stp_putc(0x00, v);
-  stp_putc(0x05, v);
+  stp_putc(0x05, v); // XXX seconds to wait for second print
 }
+
+/* Fujifilm ASK-300 */
+static const dyesub_pagesize_t fuji_ask300_page[] =
+{
+  { "B7", "3.5x5", PT(1076,300)+1, PT(1568,300)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE},
+  { "w288h432", "4x6", PT(1228,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE},
+  { "w360h504", "5x7", PT(1568,300)+1, PT(2128,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+  { "w360h504-div2", "3.5x5*2", PT(1568,300)+1, PT(2128,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+  { "w432h576", "6x8", PT(1864,300)+1, PT(2422,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+  { "w432h648", "6x9", PT(1864,300)+1, PT(2730,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+};
+
+LIST(dyesub_pagesize_list_t, fuji_ask300_page_list, dyesub_pagesize_t, fuji_ask300_page);
+
+static const dyesub_printsize_t fuji_ask300_printsize[] =
+{
+  { "300x300", "B7", 1076, 1568},
+  { "300x300", "w288h432", 1228, 1864},
+  { "300x300", "w360h504", 1568, 2128},
+  { "300x300", "w360h504-div2", 1568, 2128},
+  { "300x300", "w432h576", 1864, 2422},
+  { "300x300", "w432h648", 1864, 2730},
+};
+
+LIST(dyesub_printsize_list_t, fuji_ask300_printsize_list, dyesub_printsize_t, fuji_ask300_printsize);
 
 /* Shinko CHC-S9045 (experimental) */
 static const dyesub_pagesize_t shinko_chcs9045_page[] =
@@ -4090,6 +4440,14 @@ static void dnpds40_plane_init(stp_vars_t *v)
 }
 
 /* Dai Nippon Printing DS80 */
+
+typedef struct
+{
+  int multicut;
+} dnp_privdata_t;
+
+static dnp_privdata_t dnp_privdata;
+
 /* Imaging area is wider than print size, we always must supply the 
    printer with the full imaging width. */
 static const dyesub_pagesize_t dnpds80_page[] =
@@ -4149,6 +4507,46 @@ static const dyesub_printsize_t dnpds80_printsize[] =
 
 LIST(dyesub_printsize_list_t, dnpds80_printsize_list, dyesub_printsize_t, dnpds80_printsize);
 
+static int dnpds80_parse_parameters(stp_vars_t *v)
+{
+ if (!strcmp(privdata.pagesize, "c8x10")) {
+    dnp_privdata.multicut = 6;
+  } else if (!strcmp(privdata.pagesize, "w576h864")) {
+    dnp_privdata.multicut = 7;
+  } else if (!strcmp(privdata.pagesize, "w288h576")) {
+    dnp_privdata.multicut = 8;
+  } else if (!strcmp(privdata.pagesize, "w360h576")) {
+    dnp_privdata.multicut = 9;
+  } else if (!strcmp(privdata.pagesize, "w432h576")) {
+    dnp_privdata.multicut = 10;
+  } else if (!strcmp(privdata.pagesize, "w576h576")) {
+    dnp_privdata.multicut = 11;
+  } else if (!strcmp(privdata.pagesize, "w576h576-div2")) {
+    dnp_privdata.multicut = 13;
+  } else if (!strcmp(privdata.pagesize, "c8x10-div2")) {
+    dnp_privdata.multicut = 14;
+  } else if (!strcmp(privdata.pagesize, "w576h864-div2")) {
+    dnp_privdata.multicut = 15;
+  } else if (!strcmp(privdata.pagesize, "w576h648-w576h360_w576h288")) {
+    dnp_privdata.multicut = 16;
+  } else if (!strcmp(privdata.pagesize, "c8x10-w576h432_w576h288")) {
+    dnp_privdata.multicut = 17;
+  } else if (!strcmp(privdata.pagesize, "w576h792-w576h432_w576h360")) {
+    dnp_privdata.multicut = 18;
+  } else if (!strcmp(privdata.pagesize, "w576h864-w576h576_w576h288")) {
+    dnp_privdata.multicut = 19;
+  } else if (!strcmp(privdata.pagesize, "w576h864-div3")) {
+    dnp_privdata.multicut = 20;
+  } else if (!strcmp(privdata.pagesize, "A4")) {
+    dnp_privdata.multicut = 21;
+  } else {
+    stp_eprintf(v, _("Illegal print size selected for roll media!\n"));
+    return 0;
+  }
+
+ return 1;
+}
+
 static void dnpds80_printer_start(stp_vars_t *v)
 {
   /* Common code */
@@ -4158,41 +4556,7 @@ static void dnpds80_printer_start(stp_vars_t *v)
   stp_zprintf(v, "\033PCNTRL CUTTER          0000000800000000");
 
   /* Configure multi-cut/page size */
-  stp_zprintf(v, "\033PIMAGE MULTICUT        00000008000000");
-
-  if (!strcmp(privdata.pagesize, "c8x10")) {
-    stp_zprintf(v, "06");
-  } else if (!strcmp(privdata.pagesize, "w576h864")) {
-    stp_zprintf(v, "07");
-  } else if (!strcmp(privdata.pagesize, "w288h576")) {
-    stp_zprintf(v, "08");
-  } else if (!strcmp(privdata.pagesize, "w360h576")) {
-    stp_zprintf(v, "09");
-  } else if (!strcmp(privdata.pagesize, "w432h576")) {
-    stp_zprintf(v, "10");
-  } else if (!strcmp(privdata.pagesize, "w576h576")) {
-    stp_zprintf(v, "11");
-  } else if (!strcmp(privdata.pagesize, "w576h576-div2")) {
-    stp_zprintf(v, "13");
-  } else if (!strcmp(privdata.pagesize, "c8x10-div2")) {
-    stp_zprintf(v, "14");
-  } else if (!strcmp(privdata.pagesize, "w576h864-div2")) {
-    stp_zprintf(v, "15");
-  } else if (!strcmp(privdata.pagesize, "w576h648-w576h360_w576h288")) {
-    stp_zprintf(v, "16");
-  } else if (!strcmp(privdata.pagesize, "c8x10-w576h432_w576h288")) {
-    stp_zprintf(v, "17");
-  } else if (!strcmp(privdata.pagesize, "w576h792-w576h432_w576h360")) {
-    stp_zprintf(v, "18");
-  } else if (!strcmp(privdata.pagesize, "w576h864-w576h576_w576h288")) {
-    stp_zprintf(v, "19");
-  } else if (!strcmp(privdata.pagesize, "w576h864-div3")) {
-    stp_zprintf(v, "20");
-  } else if (!strcmp(privdata.pagesize, "A4")) {
-    stp_zprintf(v, "21");
-  } else {
-    stp_zprintf(v, "00"); /* should not be possible */
-  }
+  stp_zprintf(v, "\033PIMAGE MULTICUT        00000008%08d", dnp_privdata.multicut);
 }
 
 /* Dai Nippon Printing DS80DX */
@@ -4203,6 +4567,57 @@ static const dyesub_media_t dnpds80dx_medias[] =
 };
 
 LIST(dyesub_media_list_t, dnpds80dx_media_list, dyesub_media_t, dnpds80dx_medias);
+
+static int dnpds80dx_parse_parameters(stp_vars_t *v)
+{
+  if (!strcmp(privdata.media->name, "Roll")) {
+    if (strcmp(privdata.duplex_mode, "None")) {
+      stp_eprintf(v, _("Duplex not supported when using roll media!\n"));
+      return 0;
+    } else {
+      return dnpds80_parse_parameters(v);
+    }
+  }
+
+  if (!strcmp(privdata.pagesize, "c8x10")) {
+    dnp_privdata.multicut = 6;
+  } else if (!strcmp(privdata.pagesize, "w576h864")) {
+    dnp_privdata.multicut = 7;
+  } else if (!strcmp(privdata.pagesize, "w288h576")) {
+    dnp_privdata.multicut = 8;
+  } else if (!strcmp(privdata.pagesize, "w360h576")) {
+    dnp_privdata.multicut = 9;
+  } else if (!strcmp(privdata.pagesize, "w432h576")) {
+    dnp_privdata.multicut = 10;
+  } else if (!strcmp(privdata.pagesize, "w576h576")) {
+    dnp_privdata.multicut = 11;
+  } else if (!strcmp(privdata.pagesize, "w576h774-w576h756")) {
+    dnp_privdata.multicut = 25;
+  } else if (!strcmp(privdata.pagesize, "w576h774")) {
+    dnp_privdata.multicut = 26;
+  } else if (!strcmp(privdata.pagesize, "w576h576-div2")) {
+    dnp_privdata.multicut = 13;
+  } else if (!strcmp(privdata.pagesize, "c8x10-div2")) {
+    dnp_privdata.multicut = 14;
+  } else if (!strcmp(privdata.pagesize, "w576h864-div2")) {
+    dnp_privdata.multicut = 15;
+  } else if (!strcmp(privdata.pagesize, "w576h864-div3sheet")) {
+    dnp_privdata.multicut = 28;
+  } else {
+    stp_eprintf(v, _("Illegal print size selected for cut media!\n"));
+    return 0;
+  }
+
+  /* Add correct offset to multicut mode based on duplex state */
+  if (!strcmp(privdata.duplex_mode, "None"))
+     dnp_privdata.multicut += 100; /* Simplex */
+  else if (privdata.page_number & 1)
+     dnp_privdata.multicut += 300; /* Duplex, back */
+  else
+     dnp_privdata.multicut += 200; /* Duplex, front */
+  
+  return 1;
+}
 
 /* This is the same as the DS80, except with 10.5" and 10.75" sizes
    only meant for sheet media.  Duplex is *only* supported on sheet media.
@@ -4277,62 +4692,6 @@ static const dyesub_printsize_t dnpds80dx_printsize[] =
 };
 
 LIST(dyesub_printsize_list_t, dnpds80dx_printsize_list, dyesub_printsize_t, dnpds80dx_printsize);
-
-static void dnpds80dx_printer_start(stp_vars_t *v)
-{
-  int multicut;
-	
-  /* If we're using roll media, act the same as a standard DS80 */
-  if (!strcmp(privdata.media->name, "Roll"))
-    {
-      dnpds80_printer_start(v);
-      return;
-    }
-	
-  /* Common code */
-  dnp_printer_start_common(v);
-
-  /* Set cutter option to "normal" */
-  stp_zprintf(v, "\033PCNTRL CUTTER          0000000800000000");
-
-  if (!strcmp(privdata.pagesize, "c8x10")) {
-    multicut = 6;
-  } else if (!strcmp(privdata.pagesize, "w576h864")) {
-    multicut = 7;
-  } else if (!strcmp(privdata.pagesize, "w288h576")) {
-    multicut = 8;
-  } else if (!strcmp(privdata.pagesize, "w360h576")) {
-    multicut = 9;
-  } else if (!strcmp(privdata.pagesize, "w432h576")) {
-    multicut = 10;
-  } else if (!strcmp(privdata.pagesize, "w576h576")) {
-    multicut = 11;
-  } else if (!strcmp(privdata.pagesize, "w576h774-w576h756")) {
-    multicut = 25;
-  } else if (!strcmp(privdata.pagesize, "w576h774")) {
-    multicut = 26;
-  } else if (!strcmp(privdata.pagesize, "w576h576-div2")) {
-    multicut = 13;
-  } else if (!strcmp(privdata.pagesize, "c8x10-div2")) {
-    multicut = 14;
-  } else if (!strcmp(privdata.pagesize, "w576h864-div2")) {
-    multicut = 15;
-  } else if (!strcmp(privdata.pagesize, "w576h864-div3sheet")) {
-    multicut = 28;
-  } else {
-    multicut = 0;
-  }
-
-  /* Add correct offset to multicut mode based on duplex state */
-  if (!strcmp(privdata.duplex_mode, "None"))
-     multicut += 100; /* Simplex */
-  else if (privdata.page_number & 1)
-     multicut += 300; /* Duplex, back */
-  else
-     multicut += 200; /* Duplex, front */
-
-  stp_zprintf(v, "\033PIMAGE MULTICUT        00000008%08d", multicut);
-}
 
 /* Dai Nippon Printing DS-RX1 */
 /* Imaging area is wider than print size, we always must supply the 
@@ -5273,7 +5632,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No plane funcs */ 
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
-    &kodak_8500_laminate_list, &kodak_8500_media_list,    
+    &kodak_8500_laminate_list, &kodak_8500_media_list,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -5326,7 +5685,10 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
     NULL, NULL,
     NULL, NULL,
-    NULL, 0, NULL, NULL,
+    mitsu9550_parameters,
+    mitsu9550_parameter_count,
+    mitsu9550_load_parameters,
+    mitsu9550_parse_parameters,
   },
   { /* Mitsubishi CP9810D */
     4104,
@@ -5344,19 +5706,31 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
     &mitsu_cp9810_laminate_list, NULL,
     NULL, NULL,
-    NULL, 0, NULL, NULL,
+    mitsu9550_parameters,
+    mitsu9550_parameter_count,
+    mitsu9810_load_parameters,
+    mitsu9810_parse_parameters,
   },
   { /* Mitsubishi CPD70D/CPD707D */
     4105,
+#ifdef MITSU70X_8BPP
+    &bgr_ink_list,
+#else
     &ymc_ink_list,
+#endif
     &res_300dpi_list,
     &mitsu_cpd70x_page_list,
     &mitsu_cpd70x_printsize_list,
     SHRT_MAX,
+#ifdef MITSU70X_8BPP
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
+    &mitsu_cpd70x_printer_init, NULL,
+#else
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_16BPP
       | DYESUB_FEATURE_BIGENDIAN,
-    &mitsu_cpd70x_printer_init, &mitsu_cpd70x_printer_end,
+    &mitsu_cpd70x_printer_init, &mitsu_cpd70x_printer_end,    
+#endif
     NULL, &mitsu_cpd70x_plane_end,
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
@@ -5369,15 +5743,24 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Mitsubishi CPK60D */
     4106,
+#ifdef MITSU70X_8BPP
+    &bgr_ink_list,
+#else
     &ymc_ink_list,
+#endif
     &res_300dpi_list,
     &mitsu_cpk60_page_list,
     &mitsu_cpk60_printsize_list,
     SHRT_MAX,
+#ifdef MITSU70X_8BPP
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
+    &mitsu_cpk60_printer_init, NULL,
+#else
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_16BPP
       | DYESUB_FEATURE_BIGENDIAN,
     &mitsu_cpk60_printer_init, &mitsu_cpd70x_printer_end,    
+#endif
     NULL, &mitsu_cpd70x_plane_end,
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
@@ -5390,15 +5773,24 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Mitsubishi CPD80D */
     4107,
+#ifdef MITSU70X_8BPP
+    &bgr_ink_list,
+#else
     &ymc_ink_list,
+#endif
     &res_300dpi_list,
     &mitsu_cpd80_page_list,
     &mitsu_cpd80_printsize_list,
     SHRT_MAX,
+#ifdef MITSU70X_8BPP
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
+    &mitsu_cpd70x_printer_init, NULL,
+#else
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_16BPP
       | DYESUB_FEATURE_BIGENDIAN,
     &mitsu_cpd70x_printer_init, &mitsu_cpd70x_printer_end,
+#endif
     NULL, &mitsu_cpd70x_plane_end,
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
@@ -5411,15 +5803,24 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Kodak 305 */
     4108,
+#ifdef MITSU70X_8BPP
+    &bgr_ink_list,
+#else
     &ymc_ink_list,
+#endif
     &res_300dpi_list,
     &kodak305_page_list,
     &kodak305_printsize_list,
     SHRT_MAX,
+#ifdef MITSU70X_8BPP
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
+    &kodak305_printer_init, NULL,    
+#else
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_16BPP
       | DYESUB_FEATURE_BIGENDIAN,
     &kodak305_printer_init, &mitsu_cpd70x_printer_end,    
+#endif
     NULL, &mitsu_cpd70x_plane_end,
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
@@ -5444,7 +5845,10 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
     &mitsu_cpd70x_laminate_list, NULL,
     NULL, NULL,
-    NULL, 0, NULL, NULL,
+    mitsu70x_parameters,
+    mitsu70x_parameter_count,
+    mitsu_d90_load_parameters,
+    mitsu_d90_parse_parameters,
   },
   { /* Mitsubishi CP9600D */
     4110,
@@ -5472,13 +5876,67 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_PLANE_INTERLACE,
-    &mitsu_cp9550_printer_init, &mitsu_cp9550_printer_end,
+    &mitsu_cp9550_printer_init, &mitsu_cp9550s_printer_end,
     &mitsu_cp3020da_plane_init, NULL,
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
     NULL, NULL,
     NULL, NULL,
-    NULL, 0, NULL, NULL,
+    mitsu9550_parameters,
+    mitsu9550_parameter_count,
+    mitsu9550_load_parameters,
+    mitsu9550_parse_parameters,
+  },
+  { /* Fujifilm ASK-300 */
+    4112,
+#ifdef MITSU70X_8BPP
+    &bgr_ink_list,
+#else
+    &ymc_ink_list,
+#endif
+    &res_300dpi_list,
+    &fuji_ask300_page_list,
+    &fuji_ask300_printsize_list,
+    SHRT_MAX,
+#ifdef MITSU70X_8BPP
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
+    &mitsu_cpd70x_printer_init, NULL,    
+#else
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_16BPP
+      | DYESUB_FEATURE_BIGENDIAN,
+    &mitsu_cpd70x_printer_init, &mitsu_cpd70x_printer_end,    
+#endif
+    NULL, &mitsu_cpd70x_plane_end,
+    NULL, NULL, /* No block funcs */
+    NULL, NULL, NULL, /* color profile/adjustment is built into printer */
+    NULL, NULL,
+    NULL, NULL,
+    mitsu70x_parameters,
+    mitsu70x_parameter_count,
+    mitsu_k60_load_parameters,
+    mitsu70x_parse_parameters,
+  },
+  { /* Mitsubishi CP9800D */
+    4113,
+    &bgr_ink_list,
+    &res_300dpi_list,
+    &mitsu_cp9810_page_list,
+    &mitsu_cp9810_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_12BPP
+      | DYESUB_FEATURE_BIGENDIAN,
+    &mitsu_cp9800_printer_init, &mitsu_cp9810_printer_end,
+    &mitsu_cp3020da_plane_init, NULL,
+    NULL, NULL, /* No block funcs */
+    NULL, NULL, NULL, /* color profile/adjustment is built into printer */
+    NULL, NULL,
+    NULL, NULL,
+    mitsu9550_parameters,
+    mitsu9550_parameter_count,
+    mitsu9810_load_parameters,
+    mitsu9810_parse_parameters,
   },
   { /* Shinko CHC-S9045 (experimental) */
     5000, 		
@@ -5608,7 +6066,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, NULL,
     &dnpds40_laminate_list, NULL,    
     NULL, NULL,
-    NULL, 0, NULL, NULL,
+    NULL, 0, NULL, dnpds80_parse_parameters,
   },
   { /* Dai Nippon Printing DSRX1 */
     6002,
@@ -5670,13 +6128,13 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_WHITE_BORDER
       | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_DUPLEX,
-    &dnpds80dx_printer_start, &dnpds40_printer_end,
+    &dnpds80_printer_start, &dnpds40_printer_end,
     &dnpds40_plane_init, NULL,
     NULL, NULL,
     NULL, NULL, NULL,
     &dnpds40_laminate_list, &dnpds80dx_media_list,
     NULL, NULL,
-    NULL, 0, NULL, NULL,    
+    NULL, 0, NULL, dnpds80dx_parse_parameters,
   },
 };
 
@@ -6326,6 +6784,20 @@ dyesub_exec(stp_vars_t *v,
 }
 
 static int
+dyesub_exec_check(stp_vars_t *v,
+		  int (*func)(stp_vars_t *),
+		  const char *debug_string)
+{
+  if (func)
+    {
+      stp_deprintf(STP_DBG_DYESUB, "dyesub: %s\n", debug_string);
+      return (*func)(v);
+    }
+  return 1;
+}
+
+
+static int
 dyesub_interpolate(int oldval, int oldsize, int newsize)
 {
   /* 
@@ -6620,9 +7092,6 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   stp_describe_resolution(v, &w_dpi, &h_dpi);
   dyesub_printsize(v, &max_print_px_width, &max_print_px_height);
 
-  /* Parse any per-printer parameters */
-  dyesub_exec(v, caps->parse_parameters, "caps->parse_parameters");
-
   /* Duplex processing -- Rotate even pages for DuplexNoTumble */
   privdata.duplex_mode = stp_get_string_parameter(v, "Duplex");
   privdata.page_number = stp_get_int_parameter(v, "PageNumber");
@@ -6634,6 +7103,12 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
 	  privdata.laminate = dyesub_get_laminate_pattern(v);
   if (caps->media)
 	  privdata.media = dyesub_get_mediatype(v);
+
+  /* Parse any per-printer parameters after we've done all generic ones */
+  status = dyesub_exec_check(v, caps->parse_parameters, "caps->parse_parameters");
+  if (status != 1) {
+     goto done;
+  }
 
   dyesub_imageable_area_internal(v, 
   	(dyesub_feature(caps, DYESUB_FEATURE_WHITE_BORDER) ? 1 : 0),
@@ -6831,7 +7306,11 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   /* printer end */
   dyesub_exec(v, caps->printer_end_func, "caps->printer_end");
 
-  dyesub_free_image(&pv, image);
+done:
+  if (pv.image_data) {
+    dyesub_free_image(&pv, image);
+  }
+
   stp_image_conclude(image);
   return status;
 }

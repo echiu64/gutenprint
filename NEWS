@@ -259,8 +259,10 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
         Canon SELPHY CP1000
 	Canon SELPHY CP1200
-	Mitsubishi CP-9600DW      [experimental]
-	Mitsubishi CP-D90DW       [experimental]
+	Fujifilm ASK-300      [*2] [experimental]
+	Mitsubishi CP-9600DW       [experimental]
+	Mitsubishi CP-9800DW       [experimental]
+	Mitsubishi CP-D90DW        [experimental]
 	DNP DS-RX1HS
 
   3) Improved support (and bugfixes) for the following dye sublimation
@@ -275,8 +277,9 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	DNP DS80DX                 [experimental]
 	Kodak 305             [*2]
 	Kodak 6850
-        Mitsubishi CP-9550DW
-        Mitsubishi CP-9550DW-S
+	Mitsubishi CP-9550DW
+	Mitsubishi CP-9550DW-S
+	Mitsubishi CP-9810DW
 	Mitsubishi CP-D70DW   [*2] [experimental]
 	Mitsubishi CP-D707DW  [*2] [experimental]
 	Mitsubishi CP-D80DW   [*2] [experimental]
@@ -307,11 +310,21 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	  Note that without the library, the printer will function but
 	  the output image quality will be quite poor.
 
-     [*2] Please note that these models utilize a print engine that 
-	  requires the host system to process the print data using 
-	  unknown algorithms.  Until these algorithms can be determined
-	  and re-implemented, these models are unsuitable for general
-	  use due to very poor output quality.
+     [*2] Optimal quality requires use of an external image processing
+	  library.  Only one option is available:
+
+	  * libMitsuD70ImageReProcess -- A reverse-engineered implementation
+	    of the Mitsubishi algorithms, relased under the terms of the GNU
+	    GPLv3+.  Mitsubishi foes not support this in any way.
+	    Unfortunately, at this time it cannot be bundled with Gutenprint.
+
+          The backend will attempt to dynamically load the library at
+	  runtime, and will log an appropriate message if it is or is not
+	  successful.
+
+	  Note that without the library, the printer will not be able to
+	  successfully print.  Work is underway on a crude fallback that will
+	  at least generate (very poor quality) output.
 
   4) Backend now reports media status via standard CUPS marker attributes
      for the following printers:
@@ -321,11 +334,11 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	Citizen CX/CX-W/CY
 	Kodak 305/605/6800/6850
 	Mitsubishi CP-D70DW/CP-D707DW/CP-K60DW-S/CP-D9550DW
-	Sinfonia CHC-S2145/CHC-S6145/CHC-S6245
+	Sinfonia CHC-S1245/CHC-S2145/CHC-S6145/CHC-S6245
 	Ciaat Brava 21
 
 	(All printers supported by the backend report status, excecpt for
-	 the Sinfonia CHC-S1245, Kodak 805, and Kodak 1400)
+	 the Kodak 805 and Kodak 1400)
 
   5) Added support for the following Epson inkjet printers:
 
@@ -364,7 +377,11 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	Datamax O'Neil RL3e			[experimental]
 	Datamax O'Neil RL4e			[experimental]
 
-  7) Improved support for the following Canon inkjet printers:
+  7) Added support for the following laser printer:
+
+	OKI B430
+
+  8) Improved support for the following Canon inkjet printers:
 
 	Canon BJC-2000
 	Canon BJC-2010
