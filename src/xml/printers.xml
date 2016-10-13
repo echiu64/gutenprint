@@ -2948,8 +2948,8 @@
       <printer translate="name" name="Mitsubishi CP-3020DAE" driver="mitsubishi-3020dae" manufacturer="Mitsubishi" model="4102" foomaticid="Mitsubishi-3020DAE">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-9550D" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP9550D ;CLS:PRINTER;DES:MITSUBISHI CP9550D" driver="mitsubishi-9550d" manufacturer="Mitsubishi" model="4103" foomaticid="Mitsubishi-9550D" parameters="nativecopies" />
       <printer translate="name" name="Mitsubishi CP-9550DW" driver="mitsubishi-9550dw" manufacturer="Mitsubishi" model="4103" foomaticid="Mitsubishi-9550DW" parameters="nativecopies" />
-      <printer translate="name" name="Mitsubishi CP-9810D" driver="mitsubishi-9810d" manufacturer="Mitsubishi" model="4104" foomaticid="Mitsubishi-9810D" />
-      <printer translate="name" name="Mitsubishi CP-9810DW" driver="mitsubishi-9810dw" manufacturer="Mitsubishi" model="4104" foomaticid="Mitsubishi-9810DW" />
+      <printer translate="name" name="Mitsubishi CP-9810D" driver="mitsubishi-9810d" manufacturer="Mitsubishi" model="4104" foomaticid="Mitsubishi-9810D" parameters="nativecopies">EXPERIMENTAL</printer>
+      <printer translate="name" name="Mitsubishi CP-9810DW" driver="mitsubishi-9810dw" manufacturer="Mitsubishi" model="4104" foomaticid="Mitsubishi-9810DW" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-D70DW" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP60D70D707D;CLS:PRINTER;DES:MITSUBISHI CP60D70D707D" driver="mitsubishi-d70dw" manufacturer="Mitsubishi" model="4105" foomaticid="Mitsubishi-D70DW" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-D707DW" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP60D70D707D;CLS:PRINTER;DES:MITSUBISHI CP60D70D707D" driver="mitsubishi-d707dw" manufacturer="Mitsubishi" model="4105" foomaticid="Mitsubishi-D707DW" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-K60DW-S" driver="mitsubishi-k60dw" manufacturer="Mitsubishi" model="4106" foomaticid="Mitsubishi-K60DW-S" parameters="nativecopies">EXPERIMENTAL</printer>
@@ -2960,8 +2960,10 @@
       <printer translate="name" name="Mitsubishi CP-9550DZ" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP9550DZ;CLS:PRINTER;DES:MITSUBISHI CP9550DZ;" driver="mitsubishi-9550dz" manufacturer="Mitsubishi" model="4111" foomaticid="Mitsubishi-9550DZ" parameters="nativecopies" />
       <printer translate="name" name="Mitsubishi CP-9550DW-S" driver="mitsubishi-9550dw-s" manufacturer="Mitsubishi" model="4111" foomaticid="Mitsubishi-9550DW-S" parameters="nativecopies" />
       <printer translate="name" name="Fujifilm ASK-300" driver="fujifilm-ask-300" manufacturer="Fujifilm" model="4112" foomaticid="Fujifilm-ASK-300" parameters="nativecopies">EXPERIMENTAL</printer>
-      <printer translate="name" name="Mitsubishi CP-9800D" driver="mitsubishi-9800d" manufacturer="Mitsubishi" model="4113" foomaticid="Mitsubishi-9800D" >EXPERIMENTAL</printer>
-      <printer translate="name" name="Mitsubishi CP-9800DW" driver="mitsubishi-9800dw" manufacturer="Mitsubishi" model="4113" foomaticid="Mitsubishi-9800DW" >EXPERIMENTAL</printer>
+      <printer translate="name" name="Mitsubishi CP-9800D" driver="mitsubishi-9800d" manufacturer="Mitsubishi" model="4113" foomaticid="Mitsubishi-9800D" parameters="nativecopies">EXPERIMENTAL</printer>
+      <printer translate="name" name="Mitsubishi CP-9800DW" driver="mitsubishi-9800dw" manufacturer="Mitsubishi" model="4113" foomaticid="Mitsubishi-9800DW" parameters="nativecopies">EXPERIMENTAL</printer>
+      <printer translate="name" name="Mitsubishi CP-9800DW-S" driver="mitsubishi-9800dw-s" manufacturer="Mitsubishi" model="4114" foomaticid="Mitsubishi-9800DW-S" parameters="nativecopies">EXPERIMENTAL</printer>
+      <printer translate="name" name="Mitsubishi CP-9800DZ" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP9800DZ;CLS:PRINTER;DES:MITSUBISHI CP9800DZ;" driver="mitsubishi-9800dz" manufacturer="Mitsubishi" model="4114" foomaticid="Mitsubishi-9800DZ" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Shinko CHC-S9045" driver="shinko-chcs9045" manufacturer="Shinko" model="5000" foomaticid="Shinko-CHC-S9045" />
       <printer translate="name" name="Shinko CHC-S2145" deviceid="MFG:SHINKO;CMD:SUPCC;MDL:CHC-S2145;CLS:PRINTER;DES:SHINKO CHC-S2145;" driver="shinko-chcs2145" manufacturer="Shinko" model="5001" foomaticid="Shinko-CHC-S2145" parameters="nativecopies" />
       <printer translate="name" name="Sinfonia S2145/S2" driver="sinfonia-chcs2145" manufacturer="Sinfonia" model="5001" foomaticid="Sinfonia-CHC-S2145" parameters="nativecopies" />

@@ -3139,6 +3139,15 @@ static void mitsu_cp9800_printer_init(stp_vars_t *v)
   mitsu_cp98xx_printer_init(v, 0x10);
 }
 
+static void mitsu_cp9800s_printer_end(stp_vars_t *v)
+{
+  /* Page Footer */
+  stp_putc(0x1b, v);
+  stp_putc(0x50, v);
+  stp_putc(0x4e, v);
+  stp_putc(0x00, v);
+}
+
 static void mitsu_cp9810_printer_end(stp_vars_t *v)
 {
   dyesub_privdata_t *pd = get_privdata(v);
@@ -6140,6 +6149,27 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
       | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_12BPP
       | DYESUB_FEATURE_BIGENDIAN,
     &mitsu_cp9800_printer_init, &mitsu_cp9810_printer_end,
+    &mitsu_cp3020da_plane_init, NULL,
+    NULL, NULL, /* No block funcs */
+    NULL, NULL, NULL, /* color profile/adjustment is built into printer */
+    NULL, NULL,
+    NULL, NULL,
+    mitsu9550_parameters,
+    mitsu9550_parameter_count,
+    mitsu9810_load_parameters,
+    mitsu9810_parse_parameters,
+  },
+  { /* Mitsubishi CP9800DW-S */
+    4114,
+    &rgb_ink_list,  /* Identical to 9800 except for ink order */
+    &res_300dpi_list,
+    &mitsu_cp9810_page_list,
+    &mitsu_cp9810_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_12BPP
+      | DYESUB_FEATURE_BIGENDIAN,
+    &mitsu_cp9800_printer_init, &mitsu_cp9800s_printer_end,
     &mitsu_cp3020da_plane_init, NULL,
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
