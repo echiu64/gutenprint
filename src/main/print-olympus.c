@@ -4572,9 +4572,12 @@ static int dnpds80dx_parse_parameters(stp_vars_t *v)
 {
   if (!strcmp(privdata.media->name, "Roll")) {
     if (strcmp(privdata.duplex_mode, "None")) {
-      stp_eprintf(v, _("Duplex not supported when using roll media!\n"));
-      return 0;
+      stp_eprintf(v, _("Duplex not supported on roll media, switching to sheet media!\n"));
+      stp_set_string_parameter(v, "MediaType", "Sheet");
+      privdata.media = dyesub_get_mediatype(v);
     } else {
+      /* If we're not using duplex and roll media, this is
+	 effectively a DS80 (non-DX) */
       return dnpds80_parse_parameters(v);
     }
   }
@@ -4604,7 +4607,7 @@ static int dnpds80dx_parse_parameters(stp_vars_t *v)
   } else if (!strcmp(privdata.pagesize, "w576h864-div3sheet")) {
     dnp_privdata.multicut = 28;
   } else {
-    stp_eprintf(v, _("Illegal print size selected for cut media!\n"));
+    stp_eprintf(v, _("Illegal print size selected for sheet media!\n"));
     return 0;
   }
 
