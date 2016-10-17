@@ -175,6 +175,29 @@ typedef struct {
 
 #define NPUTC_BUFSIZE (4096)
 
+/* Private data for some of the major dyesub driver families */
+typedef struct
+{
+  int multicut;
+} dnp_privdata_t;
+
+typedef struct
+{
+  int quality;
+  int finedeep;
+} mitsu9550_privdata_t;
+
+typedef struct
+{
+  int quality;
+  int laminate_offset;
+#ifdef MITSU70X_8BPP	
+  int use_lut;
+#endif
+  int sharpen;
+} mitsu70x_privdata_t;
+
+/* Private data for dyesub driver as a whole */
 typedef struct
 {
   int w_dpi, h_dpi;
@@ -190,6 +213,11 @@ typedef struct
   int bpp;
   const char* duplex_mode;
   int page_number;
+  union {
+   dnp_privdata_t dnp;
+   mitsu9550_privdata_t m9550;
+   mitsu70x_privdata_t m70x;
+  };
   char nputc_buf[NPUTC_BUFSIZE];
 } dyesub_privdata_t;
 
@@ -2652,14 +2680,6 @@ static const dyesub_printsize_t mitsu_cp9550_printsize[] =
 
 LIST(dyesub_printsize_list_t, mitsu_cp9550_printsize_list, dyesub_printsize_t, mitsu_cp9550_printsize);
 
-typedef struct
-{
-  int quality;
-  int finedeep;
-} mitsu9550_privdata_t;
-
-static mitsu9550_privdata_t mitsu9550_privdata; /* XXXFIXME */
-
 static const dyesub_stringitem_t mitsu9550_qualities[] =
 {
   { "Fine",      N_ ("Fine") },
@@ -2721,14 +2741,20 @@ mitsu9550_load_parameters(const stp_vars_t *v, const char *name,
 static int mitsu9550_parse_parameters(stp_vars_t *v)
 {
   const char *quality = stp_get_string_parameter(v, "PrintSpeed");
-  mitsu9550_privdata.quality = 0;
-  mitsu9550_privdata.finedeep = 0;
+  dyesub_privdata_t *pd = get_privdata(v);
+  
+  /* No need to set global params if there's no privdata yet */
+  if (!pd)
+    return 1;
+
+  pd->m9550.quality = 0;
+  pd->m9550.finedeep = 0;
 
   /* Parse options */
   if (strcmp(quality, "SuperFine") == 0) {
-     mitsu9550_privdata.quality = 0x80;
+     pd->m9550.quality = 0x80;
   } else if (strcmp(quality, "FineDeep") == 0) {
-     mitsu9550_privdata.finedeep = 1;
+     pd->m9550.finedeep = 1;
   }
 
   return 1;
@@ -2769,7 +2795,7 @@ static void mitsu_cp9550_printer_init(stp_vars_t *v)
   else
     stp_putc(0x00, v);
   dyesub_nputc(v, 0x00, 5);
-  stp_putc(mitsu9550_privdata.quality, v);
+  stp_putc(pd->m9550.quality, v);
   dyesub_nputc(v, 0x00, 10);
   stp_putc(0x01, v);
   /* Parameters 2 */
@@ -2780,7 +2806,7 @@ static void mitsu_cp9550_printer_init(stp_vars_t *v)
   stp_putc(0x00, v);
   stp_putc(0x40, v);
   dyesub_nputc(v, 0x00, 5);
-  stp_putc(mitsu9550_privdata.finedeep, v);
+  stp_putc(pd->m9550.finedeep, v);
   dyesub_nputc(v, 0x00, 38);
   /* Unknown */
   stp_putc(0x1b, v);
@@ -2997,22 +3023,25 @@ mitsu9810_load_parameters(const stp_vars_t *v, const char *name,
 
 static int mitsu9810_parse_parameters(stp_vars_t *v)
 {
+  const char *quality = stp_get_string_parameter(v, "PrintSpeed");
   dyesub_privdata_t *pd = get_privdata(v);
 
-  const char *quality = stp_get_string_parameter(v, "PrintSpeed");
-  mitsu9550_privdata.quality = 0;
+  /* No need to set global params if there's no privdata yet */  
+  if (!pd)
+    return 1;
+
+  pd->m9550.quality = 0;
 
   /* Parse options */
   if (strcmp(quality, "SuperFine") == 0) {
-     mitsu9550_privdata.quality = 0x80;
+     pd->m9550.quality = 0x80;
   } else if (strcmp(quality, "Fine") == 0) {
-     mitsu9550_privdata.finedeep = 0x10;
+     pd->m9550.finedeep = 0x10;
   }
 
-  // XXXXFIXME, pd may be null!
   /* Matte lamination forces SuperFine mode */
   if (*((const char*)((pd->laminate->seq).data)) != 0x00) {
-     mitsu9550_privdata.quality = 0x80;
+     pd->m9550.quality = 0x80;
   }
   
   return 1;
@@ -3055,7 +3084,7 @@ static void mitsu_cp98xx_printer_init(stp_vars_t *v, int model)
   dyesub_nputc(v, 0x00, 18);
   stp_put16_be(1, v);  /* Copies */
   dyesub_nputc(v, 0x00, 8);
-  stp_putc(mitsu9550_privdata.quality, v);
+  stp_putc(pd->m9550.quality, v);
   dyesub_nputc(v, 0x00, 10);
   stp_putc(0x01, v);
   /* Unknown */
@@ -3182,16 +3211,6 @@ static const laminate_t mitsu_cpd70x_laminate[] =
 
 LIST(laminate_list_t, mitsu_cpd70x_laminate_list, laminate_t, mitsu_cpd70x_laminate);
 
-typedef struct
-{
-  int quality;
-  int laminate_offset;
-  int use_lut;
-  int sharpen;
-} mitsu70x_privdata_t;
-
-static mitsu70x_privdata_t mitsu70x_privdata; /* XXXFIXME */
-
 static const dyesub_stringitem_t mitsu70x_qualities[] =
 {
   { "Fine",      N_ ("Fine") },
@@ -3280,21 +3299,26 @@ mitsu70x_load_parameters(const stp_vars_t *v, const char *name,
 static int mitsu70x_parse_parameters(stp_vars_t *v)
 {
   const char *quality = stp_get_string_parameter(v, "PrintSpeed");
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  /* No need to set global params if there's no privdata yet */  
+  if (!pd)
+    return 1;
 
   /* Parse options */
   if (strcmp(quality, "SuperFine") == 0) {
-     mitsu70x_privdata.quality = 3;
+     pd->m70x.quality = 3;
   } else if (strcmp(quality, "UltraFine") == 0) {
-     mitsu70x_privdata.quality = 4;
+     pd->m70x.quality = 4;
   } else if (strcmp(quality, "Fine") == 0) {
-     mitsu70x_privdata.quality = 0;
+     pd->m70x.quality = 0;
   } else {
-     mitsu70x_privdata.quality = 0;
+     pd->m70x.quality = 0;
   }
 
 #ifdef MITSU70X_8BPP
-  mitsu70x_privdata.use_lut = stp_get_boolean_parameter(v, "UseLUT");
-  mitsu70x_privdata.sharpen = stp_get_int_parameter(v, "Sharpen");  
+  pd->m70x.use_lut = stp_get_boolean_parameter(v, "UseLUT");
+  pd->m70x.sharpen = stp_get_int_parameter(v, "Sharpen");  
 #endif
 
   return 1;
@@ -3323,22 +3347,22 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
   if (*((const char*)((pd->laminate->seq).data)) != 0x00) {
     stp_put16_be(pd->w_size, v);
     if (model == 0x02 || model == 0x90) {
-      mitsu70x_privdata.laminate_offset = 0;
-      if (!mitsu70x_privdata.quality)
-	mitsu70x_privdata.quality = 4;  /* Matte Lamination forces UltraFine on K60 or K305 */
+      pd->m70x.laminate_offset = 0;
+      if (!pd->m70x.quality)
+	pd->m70x.quality = 4;  /* Matte Lamination forces UltraFine on K60 or K305 */
     } else {
       /* Laminate a slightly larger boundary in Matte mode */
-      mitsu70x_privdata.laminate_offset = 12;
-      if (!mitsu70x_privdata.quality)
-        mitsu70x_privdata.quality = 3; /* Matte Lamination forces Superfine (or UltraFine) */
+      pd->m70x.laminate_offset = 12;
+      if (!pd->m70x.quality)
+        pd->m70x.quality = 3; /* Matte Lamination forces Superfine (or UltraFine) */
     }
-    stp_put16_be(pd->h_size + mitsu70x_privdata.laminate_offset, v);    
+    stp_put16_be(pd->h_size + pd->m70x.laminate_offset, v);    
   } else {
     /* Glossy lamination here */
     stp_put16_be(0, v);
     stp_put16_be(0, v);
   }
-  stp_putc(mitsu70x_privdata.quality, v);
+  stp_putc(pd->m70x.quality, v);
   dyesub_nputc(v, 0x00, 7);
 
   if (model != 0x01) {
@@ -3365,9 +3389,9 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
   }
 #ifdef MITSU70X_8BPP
   dyesub_nputc(v, 0x00, 12);
-  stp_putc(mitsu70x_privdata.sharpen, v);
+  stp_putc(pd->m70x.sharpen, v);
   stp_putc(0x01, v);  /* Mark as 8bpp BGR rather than 16bpp YMC cooked */
-  stp_putc(mitsu70x_privdata.use_lut, v);  /* Use LUT? */
+  stp_putc(pd->m70x.use_lut, v);  /* Use LUT? */
 #else
   dyesub_nputc(v, 0x00, 15);
 #endif
@@ -3392,9 +3416,9 @@ static void mitsu_cpd70x_printer_end(stp_vars_t *v)
 
     /* Now generate lamination pattern */
     for (c = 0 ; c < pd->w_size ; c++) {
-      for (r = 0 ; r < pd->h_size + mitsu70x_privdata.laminate_offset ; r++) {
+      for (r = 0 ; r < pd->h_size + pd->m70x.laminate_offset ; r++) {
 	int i = xrand(&seed) & 0x3f;
-	if (mitsu70x_privdata.laminate_offset) { /* D70x uses 0x384b, 0x286a, 0x6c22 */
+	if (pd->m70x.laminate_offset) { /* D70x uses 0x384b, 0x286a, 0x6c22 */
 	  if (i < 42)
 	    stp_put16_be(0xe84b, v);
 	  else if (i < 62)
@@ -3412,7 +3436,7 @@ static void mitsu_cpd70x_printer_end(stp_vars_t *v)
       }
     }
     /* Pad up to a 512-byte block */
-    dyesub_nputc(v, 0x00, 512 - ((pd->w_size * (pd->h_size + mitsu70x_privdata.laminate_offset) * 2) % 512));
+    dyesub_nputc(v, 0x00, 512 - ((pd->w_size * (pd->h_size + pd->m70x.laminate_offset) * 2) % 512));
   }
 }
 #endif
@@ -3702,19 +3726,24 @@ mitsu_d90_load_parameters(const stp_vars_t *v, const char *name,
 static int mitsu_d90_parse_parameters(stp_vars_t *v)
 {
   const char *quality = stp_get_string_parameter(v, "PrintSpeed");
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  /* No need to set global params if there's no privdata yet */  
+  if (!pd)
+    return 1;
 
   /* Parse options */
   if (strcmp(quality, "UltraFine") == 0) {
-     mitsu70x_privdata.quality = 3;
+     pd->m70x.quality = 3;
   } else if (strcmp(quality, "Fine") == 0) {
-     mitsu70x_privdata.quality = 2;
+     pd->m70x.quality = 2;
   } else {
-     mitsu70x_privdata.quality = 0;
+     pd->m70x.quality = 0;
   }
 
 #ifdef MITSU70X_8BPP
-  mitsu70x_privdata.use_lut = stp_get_boolean_parameter(v, "UseLUT");
-  mitsu70x_privdata.sharpen = stp_get_int_parameter(v, "Sharpen");
+  pd->m70x.use_lut = stp_get_boolean_parameter(v, "UseLUT");
+  pd->m70x.sharpen = stp_get_int_parameter(v, "Sharpen");
 #endif
   
   return 1;
@@ -3763,14 +3792,14 @@ static void mitsu_cpd90_printer_init(stp_vars_t *v)
 
   stp_zfwrite((pd->laminate->seq).data, 1,
 	      (pd->laminate->seq).bytes, v); /* Lamination mode */  
-  stp_putc(mitsu70x_privdata.quality, v);
+  stp_putc(pd->m70x.quality, v);
 #ifdef MITSU70X_8BPP
-  stp_putc(mitsu70x_privdata.use_lut, v);
+  stp_putc(pd->m70x.use_lut, v);
 #else
   stp_putc(0x00, v);  /* ie use printer's built in LUT */
 #endif
-  stp_putc(mitsu70x_privdata.sharpen, v); /* Horizontal */
-  stp_putc(mitsu70x_privdata.sharpen, v); /* Vertical */
+  stp_putc(pd->m70x.sharpen, v); /* Horizontal */
+  stp_putc(pd->m70x.sharpen, v); /* Vertical */
   dyesub_nputc(v, 0x00, 11);
   
   dyesub_nputc(v, 0x00, 512 - 64);
@@ -4565,13 +4594,6 @@ static void dnpds40_plane_init(stp_vars_t *v)
 
 /* Dai Nippon Printing DS80 */
 
-typedef struct
-{
-  int multicut;
-} dnp_privdata_t;
-
-static dnp_privdata_t dnp_privdata; /* XXXFIXME */
-
 /* Imaging area is wider than print size, we always must supply the 
    printer with the full imaging width. */
 static const dyesub_pagesize_t dnpds80_page[] =
@@ -4634,47 +4656,55 @@ LIST(dyesub_printsize_list_t, dnpds80_printsize_list, dyesub_printsize_t, dnpds8
 static int dnpds80_parse_parameters(stp_vars_t *v)
 {
   const char *pagesize = stp_get_string_parameter(v, "PageSize");
+  dyesub_privdata_t *pd = get_privdata(v);
+  int multicut = 0;
 
   if (!strcmp(pagesize, "c8x10")) {
-    dnp_privdata.multicut = 6;
+    multicut = 6;
   } else if (!strcmp(pagesize, "w576h864")) {
-    dnp_privdata.multicut = 7;
+    multicut = 7;
   } else if (!strcmp(pagesize, "w288h576")) {
-    dnp_privdata.multicut = 8;
+    multicut = 8;
   } else if (!strcmp(pagesize, "w360h576")) {
-    dnp_privdata.multicut = 9;
+    multicut = 9;
   } else if (!strcmp(pagesize, "w432h576")) {
-    dnp_privdata.multicut = 10;
+    multicut = 10;
   } else if (!strcmp(pagesize, "w576h576")) {
-    dnp_privdata.multicut = 11;
+    multicut = 11;
   } else if (!strcmp(pagesize, "w576h576-div2")) {
-    dnp_privdata.multicut = 13;
+    multicut = 13;
   } else if (!strcmp(pagesize, "c8x10-div2")) {
-    dnp_privdata.multicut = 14;
+    multicut = 14;
   } else if (!strcmp(pagesize, "w576h864-div2")) {
-    dnp_privdata.multicut = 15;
+    multicut = 15;
   } else if (!strcmp(pagesize, "w576h648-w576h360_w576h288")) {
-    dnp_privdata.multicut = 16;
+    multicut = 16;
   } else if (!strcmp(pagesize, "c8x10-w576h432_w576h288")) {
-    dnp_privdata.multicut = 17;
+    multicut = 17;
   } else if (!strcmp(pagesize, "w576h792-w576h432_w576h360")) {
-    dnp_privdata.multicut = 18;
+    multicut = 18;
   } else if (!strcmp(pagesize, "w576h864-w576h576_w576h288")) {
-    dnp_privdata.multicut = 19;
+    multicut = 19;
   } else if (!strcmp(pagesize, "w576h864-div3")) {
-    dnp_privdata.multicut = 20;
+    multicut = 20;
   } else if (!strcmp(pagesize, "A4")) {
-    dnp_privdata.multicut = 21;
+    multicut = 21;
   } else {
     stp_eprintf(v, _("Illegal print size selected for roll media!\n"));
     return 0;
   }
 
+  /* No need to set global params if there's no privdata yet */  
+  if (pd)
+    pd->dnp.multicut = multicut;
+  
  return 1;
 }
 
 static void dnpds80_printer_start(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   /* Common code */
   dnp_printer_start_common(v);
 
@@ -4682,7 +4712,7 @@ static void dnpds80_printer_start(stp_vars_t *v)
   stp_zprintf(v, "\033PCNTRL CUTTER          0000000800000000");
 
   /* Configure multi-cut/page size */
-  stp_zprintf(v, "\033PIMAGE MULTICUT        00000008%08d", dnp_privdata.multicut);
+  stp_zprintf(v, "\033PIMAGE MULTICUT        00000008%08d", pd->dnp.multicut);
 }
 
 /* Dai Nippon Printing DS80DX */
@@ -4700,6 +4730,8 @@ static int dnpds80dx_parse_parameters(stp_vars_t *v)
   const dyesub_media_t* media = NULL;
   const char* duplex_mode;
   int page_number;
+  dyesub_privdata_t *pd = get_privdata(v);
+  int multicut = 0;
   
   pagesize = stp_get_string_parameter(v, "PageSize");
   duplex_mode = stp_get_string_parameter(v, "Duplex");
@@ -4718,29 +4750,29 @@ static int dnpds80dx_parse_parameters(stp_vars_t *v)
   }
 
   if (!strcmp(pagesize, "c8x10")) {
-    dnp_privdata.multicut = 6;
+    multicut = 6;
   } else if (!strcmp(pagesize, "w576h864")) {
-    dnp_privdata.multicut = 7;
+    multicut = 7;
   } else if (!strcmp(pagesize, "w288h576")) {
-    dnp_privdata.multicut = 8;
+    multicut = 8;
   } else if (!strcmp(pagesize, "w360h576")) {
-    dnp_privdata.multicut = 9;
+    multicut = 9;
   } else if (!strcmp(pagesize, "w432h576")) {
-    dnp_privdata.multicut = 10;
+    multicut = 10;
   } else if (!strcmp(pagesize, "w576h576")) {
-    dnp_privdata.multicut = 11;
+    multicut = 11;
   } else if (!strcmp(pagesize, "w576h774-w576h756")) {
-    dnp_privdata.multicut = 25;
+    multicut = 25;
   } else if (!strcmp(pagesize, "w576h774")) {
-    dnp_privdata.multicut = 26;
+    multicut = 26;
   } else if (!strcmp(pagesize, "w576h576-div2")) {
-    dnp_privdata.multicut = 13;
+    multicut = 13;
   } else if (!strcmp(pagesize, "c8x10-div2")) {
-    dnp_privdata.multicut = 14;
+    multicut = 14;
   } else if (!strcmp(pagesize, "w576h864-div2")) {
-    dnp_privdata.multicut = 15;
+    multicut = 15;
   } else if (!strcmp(pagesize, "w576h864-div3sheet")) {
-    dnp_privdata.multicut = 28;
+    multicut = 28;
   } else {
     stp_eprintf(v, _("Illegal print size selected for sheet media!\n"));
     return 0;
@@ -4748,11 +4780,15 @@ static int dnpds80dx_parse_parameters(stp_vars_t *v)
 
   /* Add correct offset to multicut mode based on duplex state */
   if (!strcmp(duplex_mode, "None"))
-     dnp_privdata.multicut += 100; /* Simplex */
+     multicut += 100; /* Simplex */
   else if (page_number & 1)
-     dnp_privdata.multicut += 300; /* Duplex, back */
+     multicut += 300; /* Duplex, back */
   else
-     dnp_privdata.multicut += 200; /* Duplex, front */
+     multicut += 200; /* Duplex, front */
+
+  /* No need to set global params if there's no privdata yet */  
+  if (pd)
+    pd->dnp.multicut = multicut;
   
   return 1;
 }
