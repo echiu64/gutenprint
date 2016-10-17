@@ -193,8 +193,6 @@ typedef struct
   char nputc_buf[NPUTC_BUFSIZE];
 } dyesub_privdata_t;
 
-static dyesub_privdata_t privdata; /* XXXFIXME */
-
 typedef struct {
   int out_channels;
   int ink_channels;
@@ -248,6 +246,11 @@ static const laminate_t* dyesub_get_laminate_pattern(stp_vars_t *v);
 static const dyesub_media_t* dyesub_get_mediatype(stp_vars_t *v);
 static void  dyesub_nputc(stp_vars_t *v, char byte, int count);
 
+static dyesub_privdata_t *
+get_privdata(stp_vars_t *v)
+{
+  return (dyesub_privdata_t *) stp_get_component_data(v, "Driver");
+}
 
 static const ink_t cmy_inks[] =
 {
@@ -305,8 +308,10 @@ LIST(dyesub_printsize_list_t, p10_printsize_list, dyesub_printsize_t, p10_prints
 
 static void p10_printer_init_func(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+	
   stp_zfwrite("\033R\033M\033S\2\033N\1\033D\1\033Y", 1, 15, v);
-  stp_write_raw(&(privdata.laminate->seq), v); /* laminate */
+  stp_write_raw(&(pd->laminate->seq), v); /* laminate */
   stp_zfwrite("\033Z\0", 1, 3, v);
 }
 
@@ -317,11 +322,13 @@ static void p10_printer_end_func(stp_vars_t *v)
 
 static void p10_block_init_func(stp_vars_t *v)
 {
-  stp_zprintf(v, "\033T%c", privdata.plane);
-  stp_put16_le(privdata.block_min_w, v);
-  stp_put16_le(privdata.block_min_h, v);
-  stp_put16_le(privdata.block_max_w + 1, v);
-  stp_put16_le(privdata.block_max_h + 1, v);
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  stp_zprintf(v, "\033T%c", pd->plane);
+  stp_put16_le(pd->block_min_w, v);
+  stp_put16_le(pd->block_min_h, v);
+  stp_put16_le(pd->block_max_w + 1, v);
+  stp_put16_le(pd->block_max_h + 1, v);
 }
 
 static const laminate_t p10_laminate[] =
@@ -364,8 +371,10 @@ static void p200_printer_init_func(stp_vars_t *v)
 
 static void p200_plane_init_func(stp_vars_t *v)
 {
-  stp_zprintf(v, "P0%d9999", 3 - privdata.plane+1 );
-  stp_put32_be(privdata.w_size * privdata.h_size, v);
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  stp_zprintf(v, "P0%d9999", 3 - pd->plane+1 );
+  stp_put32_be(pd->w_size * pd->h_size, v);
 }
 
 static void p200_printer_end_func(stp_vars_t *v)
@@ -417,32 +426,38 @@ LIST(dyesub_printsize_list_t, p300_printsize_list, dyesub_printsize_t, p300_prin
 
 static void p300_printer_init_func(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   stp_zfwrite("\033\033\033C\033N\1\033F\0\1\033MS\xff\xff\xff"
 	      "\033Z", 1, 19, v);
-  stp_put16_be(privdata.w_dpi, v);
-  stp_put16_be(privdata.h_dpi, v);
+  stp_put16_be(pd->w_dpi, v);
+  stp_put16_be(pd->h_dpi, v);
 }
 
 static void p300_plane_end_func(stp_vars_t *v)
 {
   const char *c = "CMY";
-  stp_zprintf(v, "\033\033\033P%cS", c[privdata.plane-1]);
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  stp_zprintf(v, "\033\033\033P%cS", c[pd->plane-1]);
   stp_deprintf(STP_DBG_DYESUB, "dyesub: p300_plane_end_func: %c\n",
-	c[privdata.plane-1]);
+	c[pd->plane-1]);
 }
 
 static void p300_block_init_func(stp_vars_t *v)
 {
   const char *c = "CMY";
-  stp_zprintf(v, "\033\033\033W%c", c[privdata.plane-1]);
-  stp_put16_be(privdata.block_min_h, v);
-  stp_put16_be(privdata.block_min_w, v);
-  stp_put16_be(privdata.block_max_h, v);
-  stp_put16_be(privdata.block_max_w, v);
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  stp_zprintf(v, "\033\033\033W%c", c[pd->plane-1]);
+  stp_put16_be(pd->block_min_h, v);
+  stp_put16_be(pd->block_min_w, v);
+  stp_put16_be(pd->block_max_h, v);
+  stp_put16_be(pd->block_max_w, v);
 
   stp_deprintf(STP_DBG_DYESUB, "dyesub: p300_block_init_func: %d-%dx%d-%d\n",
-	privdata.block_min_w, privdata.block_max_w,
-	privdata.block_min_h, privdata.block_max_h);
+	pd->block_min_w, pd->block_max_w,
+	pd->block_min_h, pd->block_max_h);
 }
 
 static const char p300_adj_cyan[] =
@@ -515,8 +530,9 @@ LIST(dyesub_printsize_list_t, p400_printsize_list, dyesub_printsize_t, p400_prin
 
 static void p400_printer_init_func(stp_vars_t *v)
 {
-  int wide = (strcmp(privdata.pagesize, "c8x10") == 0
-		  || strcmp(privdata.pagesize, "C6") == 0);
+  dyesub_privdata_t *pd = get_privdata(v);
+  int wide = (strcmp(pd->pagesize, "c8x10") == 0
+		  || strcmp(pd->pagesize, "C6") == 0);
 
   stp_zprintf(v, "\033ZQ"); dyesub_nputc(v, '\0', 61);
   stp_zprintf(v, "\033FP"); dyesub_nputc(v, '\0', 61);
@@ -525,13 +541,13 @@ static void p400_printer_init_func(stp_vars_t *v)
   stp_zprintf(v, "\033ZS");
   if (wide)
     {
-      stp_put16_be(privdata.h_size, v);
-      stp_put16_be(privdata.w_size, v);
+      stp_put16_be(pd->h_size, v);
+      stp_put16_be(pd->w_size, v);
     }
   else
     {
-      stp_put16_be(privdata.w_size, v);
-      stp_put16_be(privdata.h_size, v);
+      stp_put16_be(pd->w_size, v);
+      stp_put16_be(pd->h_size, v);
     }
   dyesub_nputc(v, '\0', 57);
   stp_zprintf(v, "\033ZP"); dyesub_nputc(v, '\0', 61);
@@ -549,23 +565,24 @@ static void p400_plane_end_func(stp_vars_t *v)
 
 static void p400_block_init_func(stp_vars_t *v)
 {
-  int wide = (strcmp(privdata.pagesize, "c8x10") == 0
-		  || strcmp(privdata.pagesize, "C6") == 0);
+  dyesub_privdata_t *pd = get_privdata(v);
+  int wide = (strcmp(pd->pagesize, "c8x10") == 0
+		  || strcmp(pd->pagesize, "C6") == 0);
 
-  stp_zprintf(v, "\033Z%c", '3' - privdata.plane + 1);
+  stp_zprintf(v, "\033Z%c", '3' - pd->plane + 1);
   if (wide)
     {
-      stp_put16_be(privdata.h_size - privdata.block_max_h - 1, v);
-      stp_put16_be(privdata.w_size - privdata.block_max_w - 1, v);
-      stp_put16_be(privdata.block_max_h - privdata.block_min_h + 1, v);
-      stp_put16_be(privdata.block_max_w - privdata.block_min_w + 1, v);
+      stp_put16_be(pd->h_size - pd->block_max_h - 1, v);
+      stp_put16_be(pd->w_size - pd->block_max_w - 1, v);
+      stp_put16_be(pd->block_max_h - pd->block_min_h + 1, v);
+      stp_put16_be(pd->block_max_w - pd->block_min_w + 1, v);
     }
   else
     {
-      stp_put16_be(privdata.block_min_w, v);
-      stp_put16_be(privdata.block_min_h, v);
-      stp_put16_be(privdata.block_max_w - privdata.block_min_w + 1, v);
-      stp_put16_be(privdata.block_max_h - privdata.block_min_h + 1, v);
+      stp_put16_be(pd->block_min_w, v);
+      stp_put16_be(pd->block_min_h, v);
+      stp_put16_be(pd->block_max_w - pd->block_min_w + 1, v);
+      stp_put16_be(pd->block_max_h - pd->block_min_h + 1, v);
     }
   dyesub_nputc(v, '\0', 53);
 }
@@ -635,12 +652,13 @@ LIST(dyesub_printsize_list_t, p440_printsize_list, dyesub_printsize_t, p440_prin
 
 static void p440_printer_init_func(stp_vars_t *v)
 {
-  int wide = ! (strcmp(privdata.pagesize, "A4") == 0
-		  || strcmp(privdata.pagesize, "Custom") == 0);
+  dyesub_privdata_t *pd = get_privdata(v);
+  int wide = ! (strcmp(pd->pagesize, "A4") == 0
+		  || strcmp(pd->pagesize, "Custom") == 0);
 
   stp_zprintf(v, "\033FP"); dyesub_nputc(v, '\0', 61);
   stp_zprintf(v, "\033Y");
-  stp_write_raw(&(privdata.laminate->seq), v); /* laminate */ 
+  stp_write_raw(&(pd->laminate->seq), v); /* laminate */ 
   dyesub_nputc(v, '\0', 61);
   stp_zprintf(v, "\033FC"); dyesub_nputc(v, '\0', 61);
   stp_zprintf(v, "\033ZF");
@@ -649,16 +667,16 @@ static void p440_printer_init_func(stp_vars_t *v)
   stp_zprintf(v, "\033ZS");
   if (wide)
     {
-      stp_put16_be(privdata.h_size, v);
-      stp_put16_be(privdata.w_size, v);
+      stp_put16_be(pd->h_size, v);
+      stp_put16_be(pd->w_size, v);
     }
   else
     {
-      stp_put16_be(privdata.w_size, v);
-      stp_put16_be(privdata.h_size, v);
+      stp_put16_be(pd->w_size, v);
+      stp_put16_be(pd->h_size, v);
     }
   dyesub_nputc(v, '\0', 57);
-  if (strcmp(privdata.pagesize, "C6") == 0)
+  if (strcmp(pd->pagesize, "C6") == 0)
     {
       stp_zprintf(v, "\033ZC"); dyesub_nputc(v, '\0', 61);
     }
@@ -671,35 +689,37 @@ static void p440_printer_end_func(stp_vars_t *v)
 
 static void p440_block_init_func(stp_vars_t *v)
 {
-  int wide = ! (strcmp(privdata.pagesize, "A4") == 0
-		  || strcmp(privdata.pagesize, "Custom") == 0);
+  dyesub_privdata_t *pd = get_privdata(v);
+  int wide = ! (strcmp(pd->pagesize, "A4") == 0
+		  || strcmp(pd->pagesize, "Custom") == 0);
 
   stp_zprintf(v, "\033ZT");
   if (wide)
     {
-      stp_put16_be(privdata.h_size - privdata.block_max_h - 1, v);
-      stp_put16_be(privdata.w_size - privdata.block_max_w - 1, v);
-      stp_put16_be(privdata.block_max_h - privdata.block_min_h + 1, v);
-      stp_put16_be(privdata.block_max_w - privdata.block_min_w + 1, v);
+      stp_put16_be(pd->h_size - pd->block_max_h - 1, v);
+      stp_put16_be(pd->w_size - pd->block_max_w - 1, v);
+      stp_put16_be(pd->block_max_h - pd->block_min_h + 1, v);
+      stp_put16_be(pd->block_max_w - pd->block_min_w + 1, v);
     }
   else
     {
-      stp_put16_be(privdata.block_min_w, v);
-      stp_put16_be(privdata.block_min_h, v);
-      stp_put16_be(privdata.block_max_w - privdata.block_min_w + 1, v);
-      stp_put16_be(privdata.block_max_h - privdata.block_min_h + 1, v);
+      stp_put16_be(pd->block_min_w, v);
+      stp_put16_be(pd->block_min_h, v);
+      stp_put16_be(pd->block_max_w - pd->block_min_w + 1, v);
+      stp_put16_be(pd->block_max_h - pd->block_min_h + 1, v);
     }
   dyesub_nputc(v, '\0', 53);
 }
 
 static void p440_block_end_func(stp_vars_t *v)
 {
-  int pad = (64 - (((privdata.block_max_w - privdata.block_min_w + 1)
-	  * (privdata.block_max_h - privdata.block_min_h + 1) * 3) % 64)) % 64;
+  dyesub_privdata_t *pd = get_privdata(v);
+  int pad = (64 - (((pd->block_max_w - pd->block_min_w + 1)
+	  * (pd->block_max_h - pd->block_min_h + 1) * 3) % 64)) % 64;
   stp_deprintf(STP_DBG_DYESUB,
 		  "dyesub: max_x %d min_x %d max_y %d min_y %d\n",
-  		  privdata.block_max_w, privdata.block_min_w,
-	  	  privdata.block_max_h, privdata.block_min_h);
+  		  pd->block_max_w, pd->block_min_w,
+	  	  pd->block_max_h, pd->block_min_h);
   stp_deprintf(STP_DBG_DYESUB, "dyesub: olympus-p440 padding=%d\n", pad);
   dyesub_nputc(v, '\0', pad);
 }
@@ -726,6 +746,8 @@ LIST(dyesub_printsize_list_t, ps100_printsize_list, dyesub_printsize_t, ps100_pr
 
 static void ps100_printer_init_func(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   stp_zprintf(v, "\033U"); dyesub_nputc(v, '\0', 62);
   
   /* stp_zprintf(v, "\033ZC"); dyesub_nputc(v, '\0', 61); */
@@ -733,8 +755,8 @@ static void ps100_printer_init_func(stp_vars_t *v)
   stp_zprintf(v, "\033W"); dyesub_nputc(v, '\0', 62);
   
   stp_zfwrite("\x30\x2e\x00\xa2\x00\xa0\x00\xa0", 1, 8, v);
-  stp_put16_be(privdata.h_size, v);	/* paper height (px) */
-  stp_put16_be(privdata.w_size, v);	/* paper width (px) */
+  stp_put16_be(pd->h_size, v);	/* paper height (px) */
+  stp_put16_be(pd->w_size, v);	/* paper width (px) */
   dyesub_nputc(v, '\0', 3);
   stp_putc('\1', v);	/* number of copies */
   dyesub_nputc(v, '\0', 8);
@@ -746,19 +768,20 @@ static void ps100_printer_init_func(stp_vars_t *v)
   stp_zfwrite("\033ZT\0", 1, 4, v);
   stp_put16_be(0, v);			/* image width offset (px) */
   stp_put16_be(0, v);			/* image height offset (px) */
-  stp_put16_be(privdata.w_size, v);	/* image width (px) */
-  stp_put16_be(privdata.h_size, v);	/* image height (px) */
+  stp_put16_be(pd->w_size, v);	/* image width (px) */
+  stp_put16_be(pd->h_size, v);	/* image height (px) */
   dyesub_nputc(v, '\0', 52);
 }
 
 static void ps100_printer_end_func(stp_vars_t *v)
 {
-  int pad = (64 - (((privdata.block_max_w - privdata.block_min_w + 1)
-	  * (privdata.block_max_h - privdata.block_min_h + 1) * 3) % 64)) % 64;
+  dyesub_privdata_t *pd = get_privdata(v);
+  int pad = (64 - (((pd->block_max_w - pd->block_min_w + 1)
+	  * (pd->block_max_h - pd->block_min_h + 1) * 3) % 64)) % 64;
   stp_deprintf(STP_DBG_DYESUB,
 		  "dyesub: max_x %d min_x %d max_y %d min_y %d\n",
-  		  privdata.block_max_w, privdata.block_min_w,
-	  	  privdata.block_max_h, privdata.block_min_h);
+  		  pd->block_max_w, pd->block_min_w,
+	  	  pd->block_max_h, pd->block_min_h);
   stp_deprintf(STP_DBG_DYESUB, "dyesub: olympus-ps100 padding=%d\n", pad);
   dyesub_nputc(v, '\0', pad);		/* padding to 64B blocks */
 
@@ -816,12 +839,14 @@ static void cp10_printer_init_func(stp_vars_t *v)
 
 static void cpx00_printer_init_func(stp_vars_t *v)
 {
-  char pg = (strcmp(privdata.pagesize, "Postcard") == 0 ? '\1' :
-		(strcmp(privdata.pagesize, "w253h337") == 0 ? '\2' :
-		(strcmp(privdata.pagesize, "w155h244") == 0 ? 
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  char pg = (strcmp(pd->pagesize, "Postcard") == 0 ? '\1' :
+		(strcmp(pd->pagesize, "w253h337") == 0 ? '\2' :
+		(strcmp(pd->pagesize, "w155h244") == 0 ? 
 			(strcmp(stp_get_driver(v),"canon-cp10") == 0 ?
 				'\0' : '\3' ) :
-		(strcmp(privdata.pagesize, "w283h566") == 0 ? '\4' :
+		(strcmp(pd->pagesize, "w283h566") == 0 ? '\4' :
 		 '\1' ))));
 
   stp_put16_be(0x4000, v);
@@ -832,10 +857,12 @@ static void cpx00_printer_init_func(stp_vars_t *v)
 
 static void cpx00_plane_init_func(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   stp_put16_be(0x4001, v);
-  stp_putc(3 - privdata.plane, v);
+  stp_putc(3 - pd->plane, v);
   stp_putc('\0', v);
-  stp_put32_le(privdata.w_size * privdata.h_size, v);
+  stp_put32_le(pd->w_size * pd->h_size, v);
   dyesub_nputc(v, '\0', 4);
 }
 
@@ -903,25 +930,29 @@ LIST(dyesub_printsize_list_t, cp220_printsize_list, dyesub_printsize_t, cp220_pr
 /* Canon SELPHY CP790 */
 static void cp790_printer_init_func(stp_vars_t *v)
 {
-  char pg = (strcmp(privdata.pagesize, "Postcard") == 0 ? '\0' :
-		(strcmp(privdata.pagesize, "w253h337") == 0 ? '\1' :
-		(strcmp(privdata.pagesize, "w155h244") == 0 ? '\2' :
-		(strcmp(privdata.pagesize, "w283h566") == 0 ? '\3' : 
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  char pg = (strcmp(pd->pagesize, "Postcard") == 0 ? '\0' :
+		(strcmp(pd->pagesize, "w253h337") == 0 ? '\1' :
+		(strcmp(pd->pagesize, "w155h244") == 0 ? '\2' :
+		(strcmp(pd->pagesize, "w283h566") == 0 ? '\3' : 
 		 '\0' ))));
 
   stp_put16_be(0x4000, v);
   stp_putc(pg, v);
   stp_putc('\0', v);
   dyesub_nputc(v, '\0', 8);
-  stp_put32_le(privdata.w_size * privdata.h_size, v);
+  stp_put32_le(pd->w_size * pd->h_size, v);
 }
 
 /* Canon SELPHY ES series */
 static void es1_printer_init_func(stp_vars_t *v)
 {
-  char pg = (strcmp(privdata.pagesize, "Postcard") == 0 ? 0x11 :
-	     (strcmp(privdata.pagesize, "w253h337") == 0 ? 0x12 :
-	      (strcmp(privdata.pagesize, "w155h244") == 0 ? 0x13 : 0x11)));
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  char pg = (strcmp(pd->pagesize, "Postcard") == 0 ? 0x11 :
+	     (strcmp(pd->pagesize, "w253h337") == 0 ? 0x12 :
+	      (strcmp(pd->pagesize, "w155h244") == 0 ? 0x13 : 0x11)));
 
   stp_put16_be(0x4000, v);
   stp_putc(0x10, v);  /* 0x20 for P-BW */
@@ -931,9 +962,11 @@ static void es1_printer_init_func(stp_vars_t *v)
 
 static void es1_plane_init_func(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   unsigned char plane = 0;
 
-  switch (privdata.plane) {
+  switch (pd->plane) {
   case 3: /* Y */
     plane = 0x01;
     break;
@@ -948,16 +981,18 @@ static void es1_plane_init_func(stp_vars_t *v)
   stp_put16_be(0x4001, v);
   stp_putc(0x1, v); /* 0x02 for P-BW */
   stp_putc(plane, v);
-  stp_put32_le(privdata.w_size * privdata.h_size, v);
+  stp_put32_le(pd->w_size * pd->h_size, v);
   dyesub_nputc(v, '\0', 4);
 }
 
 static void es2_printer_init_func(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   char pg2 = 0x0;
-  char pg = (strcmp(privdata.pagesize, "Postcard") == 0 ? 0x1:
-	     (strcmp(privdata.pagesize, "w253h337") == 0 ? 0x2 :
-	      (strcmp(privdata.pagesize, "w155h244") == 0 ? 0x3 : 0x1)));
+  char pg = (strcmp(pd->pagesize, "Postcard") == 0 ? 0x1:
+	     (strcmp(pd->pagesize, "w253h337") == 0 ? 0x2 :
+	      (strcmp(pd->pagesize, "w155h244") == 0 ? 0x3 : 0x1)));
 
   if (pg == 0x03)
     pg2 = 0x01;
@@ -972,22 +1007,26 @@ static void es2_printer_init_func(stp_vars_t *v)
 
   dyesub_nputc(v, 0x0, 3);
   stp_putc(pg2, v);
-  stp_put32_le(privdata.w_size * privdata.h_size, v);
+  stp_put32_le(pd->w_size * pd->h_size, v);
 }
 
 static void es2_plane_init_func(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   stp_put16_be(0x4001, v);
-  stp_putc(4 - privdata.plane, v);  
+  stp_putc(4 - pd->plane, v);  
   stp_putc(0x0, v);
   dyesub_nputc(v, '\0', 8);
 }
 
 static void es3_printer_init_func(stp_vars_t *v)
 {
-  char pg = (strcmp(privdata.pagesize, "Postcard") == 0 ? 0x1:
-	     (strcmp(privdata.pagesize, "w253h337") == 0 ? 0x2 :
-	      (strcmp(privdata.pagesize, "w155h244") == 0 ? 0x3 : 0x1)));
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  char pg = (strcmp(pd->pagesize, "Postcard") == 0 ? 0x1:
+	     (strcmp(pd->pagesize, "w253h337") == 0 ? 0x2 :
+	      (strcmp(pd->pagesize, "w155h244") == 0 ? 0x3 : 0x1)));
 
     /* We also have Pg and Ps  (Gold/Silver) papers on the ES3/30/40 */
 
@@ -995,7 +1034,7 @@ static void es3_printer_init_func(stp_vars_t *v)
   stp_putc(pg, v);
   stp_putc(0x0, v);  /* 0x1 for P-BW */
   dyesub_nputc(v, 0x0, 8);
-  stp_put32_le(privdata.w_size * privdata.h_size, v);
+  stp_put32_le(pd->w_size * pd->h_size, v);
 }
 
 static void es3_printer_end_func(stp_vars_t *v)
@@ -1006,9 +1045,11 @@ static void es3_printer_end_func(stp_vars_t *v)
 
 static void es40_printer_init_func(stp_vars_t *v)
 {
-  char pg = (strcmp(privdata.pagesize, "Postcard") == 0 ? 0x0:
-	     (strcmp(privdata.pagesize, "w253h337") == 0 ? 0x1 :
-	      (strcmp(privdata.pagesize, "w155h244") == 0 ? 0x2 : 0x0)));
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  char pg = (strcmp(pd->pagesize, "Postcard") == 0 ? 0x0:
+	     (strcmp(pd->pagesize, "w253h337") == 0 ? 0x1 :
+	      (strcmp(pd->pagesize, "w155h244") == 0 ? 0x2 : 0x0)));
 
     /* We also have Pg and Ps  (Gold/Silver) papers on the ES3/30/40 */
 
@@ -1017,7 +1058,7 @@ static void es40_printer_init_func(stp_vars_t *v)
   stp_putc(0x0, v);  /*  0x1 for P-BW */
   dyesub_nputc(v, 0x0, 8);
 
-  stp_put32_le(privdata.w_size * privdata.h_size, v);
+  stp_put32_le(pd->w_size * pd->h_size, v);
 }
 
 /* Canon SELPHY CP900 */
@@ -1047,6 +1088,8 @@ LIST(dyesub_printsize_list_t, cp910_printsize_list, dyesub_printsize_t, cp910_pr
 
 static void cp910_printer_init_func(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   char pg;
 
   stp_zfwrite("\x0f\x00\x00\x40\x00\x00\x00\x00", 1, 8, v);
@@ -1054,32 +1097,32 @@ static void cp910_printer_init_func(stp_vars_t *v)
   stp_putc(0x01, v);
   stp_putc(0x00, v);
 
-  pg = (strcmp(privdata.pagesize, "Postcard") == 0 ? 0x50 :
-                (strcmp(privdata.pagesize, "w253h337") == 0 ? 0x4c :
-                (strcmp(privdata.pagesize, "w155h244") == 0 ? 0x43 :
+  pg = (strcmp(pd->pagesize, "Postcard") == 0 ? 0x50 :
+                (strcmp(pd->pagesize, "w253h337") == 0 ? 0x4c :
+                (strcmp(pd->pagesize, "w155h244") == 0 ? 0x43 :
                  0x50 )));
   stp_putc(pg, v);
 
   dyesub_nputc(v, '\0', 5);
 
-  pg = (strcmp(privdata.pagesize, "Postcard") == 0 ? 0xe0 :
-                (strcmp(privdata.pagesize, "w253h337") == 0 ? 0x80 :
-                (strcmp(privdata.pagesize, "w155h244") == 0 ? 0x40 :
+  pg = (strcmp(pd->pagesize, "Postcard") == 0 ? 0xe0 :
+                (strcmp(pd->pagesize, "w253h337") == 0 ? 0x80 :
+                (strcmp(pd->pagesize, "w155h244") == 0 ? 0x40 :
                  0xe0 )));
   stp_putc(pg, v);
 
   stp_putc(0x04, v);
   dyesub_nputc(v, '\0', 2);
 
-  pg = (strcmp(privdata.pagesize, "Postcard") == 0 ? 0x50 :
-                (strcmp(privdata.pagesize, "w253h337") == 0 ? 0xc0 :
-                (strcmp(privdata.pagesize, "w155h244") == 0 ? 0x9c :
+  pg = (strcmp(pd->pagesize, "Postcard") == 0 ? 0x50 :
+                (strcmp(pd->pagesize, "w253h337") == 0 ? 0xc0 :
+                (strcmp(pd->pagesize, "w155h244") == 0 ? 0x9c :
                  0x50 )));
   stp_putc(pg, v);
 
-  pg = (strcmp(privdata.pagesize, "Postcard") == 0 ? 0x07 :
-                (strcmp(privdata.pagesize, "w253h337") == 0 ? 0x05 :
-                (strcmp(privdata.pagesize, "w155h244") == 0 ? 0x02 :
+  pg = (strcmp(pd->pagesize, "Postcard") == 0 ? 0x07 :
+                (strcmp(pd->pagesize, "w253h337") == 0 ? 0x05 :
+                (strcmp(pd->pagesize, "w155h244") == 0 ? 0x02 :
                  0x07 )));
   stp_putc(pg, v);
 
@@ -1115,11 +1158,13 @@ LIST(dyesub_printsize_list_t, dppex5_printsize_list, dyesub_printsize_t, dppex5_
 
 static void dppex5_printer_init(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   stp_zfwrite("DPEX\0\0\0\x80", 1, 8, v);
   stp_zfwrite("DPEX\0\0\0\x82", 1, 8, v);
   stp_zfwrite("DPEX\0\0\0\x84", 1, 8, v);
-  stp_put32_be(privdata.w_size, v);
-  stp_put32_be(privdata.h_size, v);
+  stp_put32_be(pd->w_size, v);
+  stp_put32_be(pd->h_size, v);
   stp_zfwrite("S\0o\0n\0y\0 \0D\0P\0P\0-\0E\0X\0\x35\0", 1, 24, v);
   dyesub_nputc(v, '\0', 40);
   stp_zfwrite("\1\4\0\4\xdc\0\x24\0\3\3\1\0\1\0\x82\0", 1, 16, v);
@@ -1133,17 +1178,19 @@ static void dppex5_printer_init(stp_vars_t *v)
   dyesub_nputc(v, '\0', 19);
   stp_zprintf(v, "5EPD");
   dyesub_nputc(v, '\0', 4);
-  stp_zfwrite((privdata.laminate->seq).data, 1,
-			(privdata.laminate->seq).bytes, v); /*laminate pattern*/
+  stp_zfwrite((pd->laminate->seq).data, 1,
+			(pd->laminate->seq).bytes, v); /*laminate pattern*/
   stp_zfwrite("\0d\0d\0d", 1, 6, v);
   dyesub_nputc(v, '\0', 21);
 }
 
 static void dppex5_block_init(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   stp_zfwrite("DPEX\0\0\0\x85", 1, 8, v);
-  stp_put32_be((privdata.block_max_w - privdata.block_min_w + 1)
-  		* (privdata.block_max_h - privdata.block_min_h + 1) * 3, v);
+  stp_put32_be((pd->block_max_w - pd->block_min_w + 1)
+  		* (pd->block_max_h - pd->block_min_h + 1) * 3, v);
 }
 
 static void dppex5_printer_end(stp_vars_t *v)
@@ -1186,33 +1233,35 @@ LIST(dyesub_printsize_list_t, updp10_printsize_list, dyesub_printsize_t, updp10_
 
 static void updp10_printer_init_func(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   stp_zfwrite("\x98\xff\xff\xff\xff\xff\xff\xff"
 	      "\x09\x00\x00\x00\x1b\xee\x00\x00"
 	      "\x00\x02\x00\x00\x01\x12\x00\x00"
 	      "\x00\x1b\xe1\x00\x00\x00\x0b\x00"
 	      "\x00\x04", 1, 34, v);
-  stp_zfwrite((privdata.laminate->seq).data, 1,
-			(privdata.laminate->seq).bytes, v); /*laminate pattern*/
+  stp_zfwrite((pd->laminate->seq).data, 1,
+			(pd->laminate->seq).bytes, v); /*laminate pattern*/
   stp_zfwrite("\x00\x00\x00\x00", 1, 4, v);
-  stp_put16_be(privdata.w_size, v);
-  stp_put16_be(privdata.h_size, v);
+  stp_put16_be(pd->w_size, v);
+  stp_put16_be(pd->h_size, v);
   stp_zfwrite("\x14\x00\x00\x00\x1b\x15\x00\x00"
 	      "\x00\x0d\x00\x00\x00\x00\x00\x07"
 	      "\x00\x00\x00\x00", 1, 20, v);
-  stp_put16_be(privdata.w_size, v);
-  stp_put16_be(privdata.h_size, v);
-  stp_put32_le(privdata.w_size*privdata.h_size*3+11, v);
+  stp_put16_be(pd->w_size, v);
+  stp_put16_be(pd->h_size, v);
+  stp_put32_le(pd->w_size*pd->h_size*3+11, v);
   stp_zfwrite("\x1b\xea\x00\x00\x00\x00", 1, 6, v);
-  stp_put32_be(privdata.w_size*privdata.h_size*3, v);
+  stp_put32_be(pd->w_size*pd->h_size*3, v);
   stp_zfwrite("\x00", 1, 1, v);
 }
 
 static void updp10_printer_end_func(stp_vars_t *v)
 {
-	stp_zfwrite("\xff\xff\xff\xff\x07\x00\x00\x00"
-		    "\x1b\x0a\x00\x00\x00\x00\x00\xfd"
-		    "\xff\xff\xff\xff\xff\xff\xff"
-		    , 1, 23, v);
+  stp_zfwrite("\xff\xff\xff\xff\x07\x00\x00\x00"
+	      "\x1b\x0a\x00\x00\x00\x00\x00\xfd"
+	      "\xff\xff\xff\xff\xff\xff\xff"
+	      , 1, 23, v);
 }
 
 static const laminate_t updp10_laminate[] =
@@ -1290,11 +1339,13 @@ LIST(dyesub_printsize_list_t, updr100_printsize_list, dyesub_printsize_t, updr10
 
 static void updr100_printer_init_func(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   stp_zfwrite("UPD8D\x00\x00\x00\x10\x03\x00\x00", 1, 12, v);
-  stp_put32_le(privdata.w_size, v);
-  stp_put32_le(privdata.h_size, v);
+  stp_put32_le(pd->w_size, v);
+  stp_put32_le(pd->h_size, v);
   stp_zfwrite("\x1e\x00\x03\x00\x01\x00\x4e\x01\x00\x00", 1, 10, v);
-  stp_write_raw(&(privdata.laminate->seq), v); /* laminate pattern */
+  stp_write_raw(&(pd->laminate->seq), v); /* laminate pattern */
   dyesub_nputc(v, '\0', 13);
   stp_zfwrite("\x01\x00\x01\x00\x03", 1, 5, v);
   dyesub_nputc(v, '\0', 19);
@@ -1351,24 +1402,26 @@ LIST(dyesub_printsize_list_t, updr150_printsize_list, dyesub_printsize_t, updr15
 
 static void updr150_200_printer_init_func(stp_vars_t *v, int updr200)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   char pg;
 
   stp_zfwrite("\x6a\xff\xff\xff"
 	      "\xef\xff\xff\xff", 1, 8, v);
 
-  if (strcmp(privdata.pagesize,"B7") == 0)
+  if (strcmp(pd->pagesize,"B7") == 0)
     pg = '\x01';
-  else if (strcmp(privdata.pagesize,"w288h432") == 0)
+  else if (strcmp(pd->pagesize,"w288h432") == 0)
     pg = '\x02';
-  else if (updr200 && strcmp(privdata.pagesize,"w288h432-div2") == 0)
+  else if (updr200 && strcmp(pd->pagesize,"w288h432-div2") == 0)
     pg = '\x02';
-  else if (strcmp(privdata.pagesize,"w360h504") == 0)
+  else if (strcmp(pd->pagesize,"w360h504") == 0)
     pg = '\x03';
-  else if (updr200 && strcmp(privdata.pagesize,"w360h504-div2") == 0)
+  else if (updr200 && strcmp(pd->pagesize,"w360h504-div2") == 0)
     pg = '\x03';
-  else if (strcmp(privdata.pagesize,"w432h576") == 0)
+  else if (strcmp(pd->pagesize,"w432h576") == 0)
     pg = '\x04';
-  else if (updr200 && strcmp(privdata.pagesize,"w432h576-div2") == 0)
+  else if (updr200 && strcmp(pd->pagesize,"w432h576-div2") == 0)
     pg = '\x04';
   else
     pg = 0;
@@ -1383,9 +1436,9 @@ static void updr150_200_printer_init_func(stp_vars_t *v, int updr200)
 
   /* Multicut mode */
   if (updr200) {
-    if (!strcmp(privdata.pagesize,"w288h432-div2") ||
-	!strcmp(privdata.pagesize,"w360h504-div2") ||
-	!strcmp(privdata.pagesize,"w432h576-div2"))
+    if (!strcmp(pd->pagesize,"w288h432-div2") ||
+	!strcmp(pd->pagesize,"w360h504-div2") ||
+	!strcmp(pd->pagesize,"w432h576-div2"))
       pg = 0x01;
     else
       pg = 0x02;
@@ -1415,9 +1468,9 @@ static void updr150_200_printer_init_func(stp_vars_t *v, int updr200)
 
   /* Multicut mode */
   if (updr200) {
-    if (!strcmp(privdata.pagesize,"w288h432-div2") ||
-	!strcmp(privdata.pagesize,"w360h504-div2") ||
-	!strcmp(privdata.pagesize,"w432h576-div2"))
+    if (!strcmp(pd->pagesize,"w288h432-div2") ||
+	!strcmp(pd->pagesize,"w360h504-div2") ||
+	!strcmp(pd->pagesize,"w432h576-div2"))
       stp_putc(0x02, v);
     else
       stp_putc(0x00, v);
@@ -1430,29 +1483,29 @@ static void updr150_200_printer_init_func(stp_vars_t *v, int updr200)
 	      "\x0d\x00\x00\x00"
 	      "\x00\x00\x00\x00\x07\x00\x00\x00\x00", 1, 24, v);
 
-  stp_put16_be(privdata.w_size, v);
-  stp_put16_be(privdata.h_size, v);
+  stp_put16_be(pd->w_size, v);
+  stp_put16_be(pd->h_size, v);
   
   stp_zfwrite("\xf9\xff\xff\xff",
 	      1, 4, v);
   stp_zfwrite("\x07\x00\x00\x00"
 	      "\x1b\xe1\x00\x00\x00\x0b\x00"
 	      "\x0b\x00\x00\x00\x00\x80", 1, 17, v);
-  stp_zfwrite((privdata.laminate->seq).data, 1,
-			(privdata.laminate->seq).bytes, v); /*laminate pattern*/
+  stp_zfwrite((pd->laminate->seq).data, 1,
+			(pd->laminate->seq).bytes, v); /*laminate pattern*/
 
   stp_zfwrite("\x00\x00\x00\x00", 1, 4, v);
-  stp_put16_be(privdata.w_size, v);
-  stp_put16_be(privdata.h_size, v);
+  stp_put16_be(pd->w_size, v);
+  stp_put16_be(pd->h_size, v);
   stp_zfwrite("\xf8\xff\xff\xff", 1, 4, v);
 
   /* Each data block has this header.  Can actually have multiple blocks! */
   stp_zfwrite("\xec\xff\xff\xff", 1, 4, v);  
   stp_zfwrite("\x0b\x00\x00\x00\x1b\xea"
 	      "\x00\x00\x00\x00", 1, 10, v);
-  stp_put32_be(privdata.w_size*privdata.h_size*3, v);
+  stp_put32_be(pd->w_size*pd->h_size*3, v);
   stp_zfwrite("\x00", 1, 1, v);
-  stp_put32_le(privdata.w_size*privdata.h_size*3, v);
+  stp_put32_le(pd->w_size*pd->h_size*3, v);
 }
 
 static void updr150_printer_init_func(stp_vars_t *v)
@@ -1462,17 +1515,17 @@ static void updr150_printer_init_func(stp_vars_t *v)
 
 static void updr150_printer_end_func(stp_vars_t *v)
 {
-	stp_zfwrite("\xeb\xff\xff\xff"
-		    "\xfc\xff\xff\xff"
-		    "\xfa\xff\xff\xff",
-		    1, 12, v);
-	stp_zfwrite("\x07\x00\x00\x00"
-		    "\x1b\x0a\x00\x00\x00\x00\x00"
-		    "\x07\x00\x00\x00"
-		    "\x1b\x17\x00\x00\x00\x00\x00",
-		    1, 22, v);
-	stp_zfwrite("\xf3\xff\xff\xff",
-		    1, 4, v);
+  stp_zfwrite("\xeb\xff\xff\xff"
+	      "\xfc\xff\xff\xff"
+	      "\xfa\xff\xff\xff",
+	      1, 12, v);
+  stp_zfwrite("\x07\x00\x00\x00"
+	      "\x1b\x0a\x00\x00\x00\x00\x00"
+	      "\x07\x00\x00\x00"
+	      "\x1b\x17\x00\x00\x00\x00\x00",
+	      1, 22, v);
+  stp_zfwrite("\xf3\xff\xff\xff",
+	      1, 4, v);
 }
 
 /* Sony UP-DR200 */
@@ -1538,43 +1591,47 @@ LIST(dyesub_printsize_list_t, upcr10_printsize_list, dyesub_printsize_t, upcr10_
 
 static void upcr10_printer_init_func(stp_vars_t *v)
 {
-	stp_zfwrite("\x60\xff\xff\xff"
-		    "\xf8\xff\xff\xff"
-		    "\xfd\xff\xff\xff\x14\x00\x00\x00"
-		    "\x1b\x15\x00\x00\x00\x0d\x00\x00"
-		    "\x00\x00\x00\x07\x00\x00\x00\x00", 1, 32, v);
-	stp_put16_be(privdata.w_size, v);
-	stp_put16_be(privdata.h_size, v);
-	stp_zfwrite("\xfb\xff\xff\xff"
-		    "\xf4\xff\xff\xff\x0b\x00\x00\x00"
-		    "\x1b\xea\x00\x00\x00\x00", 1, 18, v);
-	stp_put32_be(privdata.w_size * privdata.h_size * 3, v);
-	stp_putc(0, v);
-	stp_put32_le(privdata.w_size * privdata.h_size * 3, v);
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  stp_zfwrite("\x60\xff\xff\xff"
+	      "\xf8\xff\xff\xff"
+	      "\xfd\xff\xff\xff\x14\x00\x00\x00"
+	      "\x1b\x15\x00\x00\x00\x0d\x00\x00"
+	      "\x00\x00\x00\x07\x00\x00\x00\x00", 1, 32, v);
+  stp_put16_be(pd->w_size, v);
+  stp_put16_be(pd->h_size, v);
+  stp_zfwrite("\xfb\xff\xff\xff"
+	      "\xf4\xff\xff\xff\x0b\x00\x00\x00"
+	      "\x1b\xea\x00\x00\x00\x00", 1, 18, v);
+  stp_put32_be(pd->w_size * pd->h_size * 3, v);
+  stp_putc(0, v);
+  stp_put32_le(pd->w_size * pd->h_size * 3, v);
 }
 
 static void upcr10_printer_end_func(stp_vars_t *v)
 {
-	stp_zfwrite("\xf3\xff\xff\xff"
-		    "\x0f\x00\x00\x00"
-		    "\x1b\xe5\x00\x00\x00\x08\x00\x00"
-		    "\x00\x00\x00\x00\x00\x0d\x00", 1, 23, v);
-	stp_zfwrite("\x12\x00\x00\x00\x1b\xe1\x00\x00"
-		    "\x000x0b\x00\x00\x80\x08\x00\x00"
-		    "\x00\x00", 1, 18, v);
-	stp_put16_be(privdata.w_size, v);
-	stp_put16_be(privdata.h_size, v);
-	stp_zfwrite("\xfa\xff\xff\xff"
-		    "\x09\x00\x00\x00"
-		    "\x1b\xee\x00\x00\x00\x02\x00\x00", 1, 16, v);
-	stp_putc(1, v); /* Copies */
-	stp_zfwrite("\x07\x00\x00\x00"
-		    "\x1b\x17\x00\x00\x00\x00\x00", 1, 11, v);
-	stp_zfwrite("\xf9\xff\xff\xff"
-		    "\xfc\xff\xff\xff"
-		    "\x07\x00\x00\x00"
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  stp_zfwrite("\xf3\xff\xff\xff"
+	      "\x0f\x00\x00\x00"
+	      "\x1b\xe5\x00\x00\x00\x08\x00\x00"
+	      "\x00\x00\x00\x00\x00\x0d\x00", 1, 23, v);
+  stp_zfwrite("\x12\x00\x00\x00\x1b\xe1\x00\x00"
+	      "\x000x0b\x00\x00\x80\x08\x00\x00"
+	      "\x00\x00", 1, 18, v);
+  stp_put16_be(pd->w_size, v);
+  stp_put16_be(pd->h_size, v);
+  stp_zfwrite("\xfa\xff\xff\xff"
+	      "\x09\x00\x00\x00"
+	      "\x1b\xee\x00\x00\x00\x02\x00\x00", 1, 16, v);
+  stp_putc(1, v); /* Copies */
+  stp_zfwrite("\x07\x00\x00\x00"
+	      "\x1b\x17\x00\x00\x00\x00\x00", 1, 11, v);
+  stp_zfwrite("\xf9\xff\xff\xff"
+	      "\xfc\xff\xff\xff"
+	      "\x07\x00\x00\x00"
 		    "\x1b\x17\x00\x00\x00\x00\x00", 1, 19, v);
-	stp_zfwrite("\xf7\xff\xff\xff", 1, 4, v);
+  stp_zfwrite("\xf7\xff\xff\xff", 1, 4, v);
 }
 
 /* Fujifilm CX-400 */
@@ -1600,6 +1657,8 @@ LIST(dyesub_printsize_list_t, cx400_printsize_list, dyesub_printsize_t, cx400_pr
 
 static void cx400_printer_init_func(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   char pg = '\0';
   const char *pname = "XXXXXX";
 
@@ -1613,13 +1672,13 @@ static void cx400_printer_init_func(stp_vars_t *v)
   stp_zfwrite("FUJIFILM", 1, 8, v);
   stp_zfwrite(pname, 1, 6, v);
   stp_putc('\0', v);
-  stp_put16_le(privdata.w_size, v);
-  stp_put16_le(privdata.h_size, v);
-  if (strcmp(privdata.pagesize,"w288h504") == 0)
+  stp_put16_le(pd->w_size, v);
+  stp_put16_le(pd->h_size, v);
+  if (strcmp(pd->pagesize,"w288h504") == 0)
     pg = '\x0d';
-  else if (strcmp(privdata.pagesize,"w288h432") == 0)
+  else if (strcmp(pd->pagesize,"w288h432") == 0)
     pg = '\x0c';
-  else if (strcmp(privdata.pagesize,"w288h387") == 0)
+  else if (strcmp(pd->pagesize,"w288h387") == 0)
     pg = '\x0b';
   stp_putc(pg, v);
   stp_zfwrite("\x00\x00\x00\x00\x00\x01\x00\x01\x00\x00\x00\x00"
@@ -1656,14 +1715,16 @@ LIST(dyesub_printsize_list_t, nx500_printsize_list, dyesub_printsize_t, nx500_pr
 
 static void nx500_printer_init_func(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   stp_zfwrite("INFO-QX-20--MKS\x00\x00\x00M\x00W\00A\x00R\00E", 1, 27, v);
   dyesub_nputc(v, '\0', 21);
   stp_zfwrite("\x80\x00\x02", 1, 3, v);
   dyesub_nputc(v, '\0', 20);
   stp_zfwrite("\x02\x01\x01", 1, 3, v);
   dyesub_nputc(v, '\0', 2);
-  stp_put16_le(privdata.h_size, v);
-  stp_put16_le(privdata.w_size, v);
+  stp_put16_le(pd->h_size, v);
+  stp_put16_le(pd->w_size, v);
   stp_zfwrite("\x00\x02\x00\x70\x2f", 1, 5, v);
   dyesub_nputc(v, '\0', 43);
 }
@@ -1696,9 +1757,11 @@ static void kodak_dock_printer_init(stp_vars_t *v)
 
 static void kodak_dock_plane_init(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   stp_put16_be(0x3001, v);
-  stp_put16_le(3 - privdata.plane, v);
-  stp_put32_le(privdata.w_size*privdata.h_size, v);
+  stp_put16_le(3 - pd->plane, v);
+  stp_put32_le(pd->w_size*pd->h_size, v);
   dyesub_nputc(v, '\0', 4);
 }
 
@@ -1753,22 +1816,24 @@ LIST(dyesub_printsize_list_t, kodak_6850_printsize_list, dyesub_printsize_t, kod
 
 static void kodak_68xx_printer_init(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   stp_zfwrite("\x03\x1b\x43\x48\x43\x0a\x00\x01", 1, 8, v);
   stp_put16_be(0x01, v); /* Number of copies in BCD */
-  stp_put16_be(privdata.w_size, v);
-  stp_put16_be(privdata.h_size, v);
+  stp_put16_be(pd->w_size, v);
+  stp_put16_be(pd->h_size, v);
 
-  if (!strcmp(privdata.pagesize,"w288h432"))
+  if (!strcmp(pd->pagesize,"w288h432"))
 	  stp_putc(0x00, v);
-  else if (!strcmp(privdata.pagesize,"w432h576"))
+  else if (!strcmp(pd->pagesize,"w432h576"))
 	  stp_putc(0x06, v);
-  else if (!strcmp(privdata.pagesize,"w360h504"))
+  else if (!strcmp(pd->pagesize,"w360h504"))
 	  stp_putc(0x07, v);
   else
 	  stp_putc(0x00, v); /* Just in case */
 
-  stp_zfwrite((privdata.laminate->seq).data, 1,
-			(privdata.laminate->seq).bytes, v);
+  stp_zfwrite((pd->laminate->seq).data, 1,
+			(pd->laminate->seq).bytes, v);
   stp_putc(0x00, v);
 }
 
@@ -1796,23 +1861,25 @@ LIST(dyesub_printsize_list_t, kodak_605_printsize_list, dyesub_printsize_t, koda
 
 static void kodak_605_printer_init(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   stp_zfwrite("\x01\x40\x0a\x00\x01", 1, 5, v);
   stp_putc(0x01, v); /* Number of copies */
   stp_putc(0x00, v);
-  stp_put16_le(privdata.w_size, v);
-  stp_put16_le(privdata.h_size, v);
+  stp_put16_le(pd->w_size, v);
+  stp_put16_le(pd->h_size, v);
 
-  if (!strcmp(privdata.pagesize,"w288h432"))
+  if (!strcmp(pd->pagesize,"w288h432"))
 	  stp_putc(0x01, v);
-  else if (!strcmp(privdata.pagesize,"w432h576"))
+  else if (!strcmp(pd->pagesize,"w432h576"))
 	  stp_putc(0x03, v);
-  else if (!strcmp(privdata.pagesize,"w360h504"))
+  else if (!strcmp(pd->pagesize,"w360h504"))
 	  stp_putc(0x02, v);
   else
 	  stp_putc(0x01, v);
 
-  stp_zfwrite((privdata.laminate->seq).data, 1,
-			(privdata.laminate->seq).bytes, v);
+  stp_zfwrite((pd->laminate->seq).data, 1,
+			(pd->laminate->seq).bytes, v);
   stp_putc(0x00, v);
 }
 
@@ -1879,18 +1946,20 @@ LIST(dyesub_printsize_list_t, kodak_1400_printsize_list, dyesub_printsize_t, kod
 
 static void kodak_1400_printer_init(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   stp_zfwrite("PGHD", 1, 4, v);
-  stp_put16_le(privdata.w_size, v);
+  stp_put16_le(pd->w_size, v);
   dyesub_nputc(v, 0x00, 2);
-  stp_put16_le(privdata.h_size, v);
+  stp_put16_le(pd->h_size, v);
   dyesub_nputc(v, 0x00, 2);
-  stp_put32_le(privdata.h_size*privdata.w_size, v);
+  stp_put32_le(pd->h_size*pd->w_size, v);
   dyesub_nputc(v, 0x00, 4);
-  stp_zfwrite((privdata.media->seq).data, 1, 1, v);  /* Matte or Glossy? */
-  stp_zfwrite((privdata.laminate->seq).data, 1,
-			(privdata.laminate->seq).bytes, v);
+  stp_zfwrite((pd->media->seq).data, 1, 1, v);  /* Matte or Glossy? */
+  stp_zfwrite((pd->laminate->seq).data, 1,
+			(pd->laminate->seq).bytes, v);
   stp_putc(0x01, v);
-  stp_zfwrite((const char*)((privdata.media->seq).data) + 1, 1, 1, v); /* Lamination intensity */
+  stp_zfwrite((const char*)((pd->media->seq).data) + 1, 1, 1, v); /* Lamination intensity */
   dyesub_nputc(v, 0x00, 12);
 }
 
@@ -1915,15 +1984,17 @@ LIST(dyesub_printsize_list_t, kodak_805_printsize_list, dyesub_printsize_t, koda
 
 static void kodak_805_printer_init(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   stp_zfwrite("PGHD", 1, 4, v);
-  stp_put16_le(privdata.w_size, v);
+  stp_put16_le(pd->w_size, v);
   dyesub_nputc(v, 0x00, 2);
-  stp_put16_le(privdata.h_size, v);
+  stp_put16_le(pd->h_size, v);
   dyesub_nputc(v, 0x00, 2);
-  stp_put32_le(privdata.h_size*privdata.w_size, v);
+  stp_put32_le(pd->h_size*pd->w_size, v);
   dyesub_nputc(v, 0x00, 5);
-  stp_zfwrite((privdata.laminate->seq).data, 1,
-			(privdata.laminate->seq).bytes, v);
+  stp_zfwrite((pd->laminate->seq).data, 1,
+			(pd->laminate->seq).bytes, v);
   stp_putc(0x01, v);
   stp_putc(0x3c, v); /* Lamination intensity; fixed on glossy media */
   dyesub_nputc(v, 0x00, 12);
@@ -1955,7 +2026,9 @@ LIST(laminate_list_t, kodak_9810_laminate_list, laminate_t, kodak_9810_laminate)
 
 static void kodak_9810_printer_init(stp_vars_t *v)
 {
-  /* Command stream header */
+  dyesub_privdata_t *pd = get_privdata(v);
+
+/* Command stream header */
   stp_putc(0x1b, v);
   stp_zfwrite("MndROSETTA V001.00100000020525072696E74657242696E4D6F74726C", 1, 59, v);
 
@@ -1977,7 +2050,7 @@ static void kodak_9810_printer_init(stp_vars_t *v)
   stp_zfwrite("FlsJbMkMed Name    ", 1, 19, v);
   dyesub_nputc(v, 0x00, 4);
   stp_put32_be(64, v);
-  if (privdata.h_size == 3624) {
+  if (pd->h_size == 3624) {
     stp_zfwrite("YMCX 8x12 Glossy", 1, 16, v);
   } else {
     stp_zfwrite("YMCX 8x10 Glossy", 1, 16, v);
@@ -1995,8 +2068,8 @@ static void kodak_9810_printer_init(stp_vars_t *v)
   /* Lamination */
   stp_putc(0x1b, v);
   stp_zfwrite("FlsJbLam   ", 1, 11, v);
-  stp_zfwrite((privdata.laminate->seq).data, 1,
-			(privdata.laminate->seq).bytes, v);
+  stp_zfwrite((pd->laminate->seq).data, 1,
+			(pd->laminate->seq).bytes, v);
   dyesub_nputc(v, 0x20, 5);
   dyesub_nputc(v, 0x00, 4);
   stp_put32_be(0, v);
@@ -2019,17 +2092,17 @@ static void kodak_9810_printer_init(stp_vars_t *v)
   stp_zfwrite("MndSetLPage        ", 1, 19, v);
   dyesub_nputc(v, 0x00, 4);
   stp_put32_be(8, v);
-  stp_put32_be(privdata.w_size, v);
-  stp_put32_be(privdata.h_size, v);
+  stp_put32_be(pd->w_size, v);
+  stp_put32_be(pd->h_size, v);
 
   /* Page dimensions II -- maybe this is image data size? */
   stp_putc(0x1b, v);
   stp_zfwrite("MndImSpec  Size    ", 1, 19, v);
   dyesub_nputc(v, 0x00, 4);
   stp_put32_be(16, v);
-  stp_put32_be(privdata.w_size, v);
-  stp_put32_be(privdata.h_size, v);
-  stp_put32_be(privdata.w_size, v);
+  stp_put32_be(pd->w_size, v);
+  stp_put32_be(pd->h_size, v);
+  stp_put32_be(pd->w_size, v);
   stp_put32_be(0, v);
 
   /* Positioning within page? */
@@ -2074,7 +2147,7 @@ static void kodak_9810_printer_init(stp_vars_t *v)
   stp_put32_be(4, v);
 
   /* Cut at start/end of sheet */
-  if (privdata.h_size == 3624) {
+  if (pd->h_size == 3624) {
     stp_zfwrite("\x00\x0c\x0e\x1c", 1, 4, v);
   } else {
     stp_zfwrite("\x00\x0c\x0b\xc4", 1, 4, v);
@@ -2083,14 +2156,14 @@ static void kodak_9810_printer_init(stp_vars_t *v)
 #if 0  /* Additional Known Cut lists */
   /* Single cut, down the center */
   stp_put32_be(6, v);
-  if (privdata.h_size == 3624) {
+  if (pd->h_size == 3624) {
     stp_zfwrite("\x00\x0c\x07\x14\x0e\x1c", 1, 6, v);
   } else {
     stp_zfwrite("\x00\x0c\x05\xe8\x0b\xc4", 1, 6, v);
   }
   /* Double-Slug Cut, down the center */
   stp_put32_be(8, v);
-  if (privdata.h_size == 3624) {
+  if (pd->h_size == 3624) {
     stp_zfwrite("\x00\x0c\x07\x01\x07\x27\x0e\x1c", 1, 6, v);
   } else {
     stp_zfwrite("\x00\x0c\x05\xd5\x05\xfb\x0b\xc4", 1, 6, v);
@@ -2116,11 +2189,13 @@ static void kodak_9810_printer_end(stp_vars_t *v)
 
 static void kodak_9810_plane_init(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   /* Data block */
   stp_putc(0x1b, v);
   stp_zfwrite("FlsData    Block   ", 1, 19, v);
   dyesub_nputc(v, 0x00, 4);
-  stp_put32_be((privdata.w_size * privdata.h_size) + 8, v);
+  stp_put32_be((pd->w_size * pd->h_size) + 8, v);
   stp_zfwrite("Image   ", 1, 8, v);
 }
 
@@ -2155,19 +2230,21 @@ LIST(laminate_list_t, kodak_8810_laminate_list, laminate_t, kodak_8810_laminate)
 
 static void kodak_8810_printer_init(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   stp_putc(0x01, v);
   stp_putc(0x40, v);
   stp_putc(0x12, v);
   stp_putc(0x00, v);
   stp_putc(0x01, v);
   stp_put16_le(0x01, v); /* Actually, # of copies */
-  stp_put16_le(privdata.w_size, v);
-  stp_put16_le(privdata.h_size, v);
-  stp_put16_le(privdata.w_size, v);
-  stp_put16_le(privdata.h_size, v);
+  stp_put16_le(pd->w_size, v);
+  stp_put16_le(pd->h_size, v);
+  stp_put16_le(pd->w_size, v);
+  stp_put16_le(pd->h_size, v);
   dyesub_nputc(v, 0, 4);
-  stp_zfwrite((privdata.laminate->seq).data, 1,
-	      (privdata.laminate->seq).bytes, v);
+  stp_zfwrite((pd->laminate->seq).data, 1,
+	      (pd->laminate->seq).bytes, v);
   stp_putc(0x00, v); /* Method -- 00 is normal, 02 is x2, 03 is x3 */    
   stp_putc(0x00, v); /* Reserved */
 }
@@ -2200,22 +2277,24 @@ LIST(laminate_list_t, kodak_7000_laminate_list, laminate_t, kodak_7000_laminate)
 
 static void kodak_70xx_printer_init(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   stp_zfwrite("\x01\x40\x0a\x00\x01", 1, 5, v);
   stp_put16_le(0x01, v); /* Actually, # of copies */
-  stp_put16_le(privdata.w_size, v);
-  stp_put16_le(privdata.h_size, v);
+  stp_put16_le(pd->w_size, v);
+  stp_put16_le(pd->h_size, v);
 
-  if (!strcmp(privdata.pagesize,"w288h432"))
+  if (!strcmp(pd->pagesize,"w288h432"))
 	  stp_putc(0x01, v);
-  else if (!strcmp(privdata.pagesize,"w432h576"))
+  else if (!strcmp(pd->pagesize,"w432h576"))
 	  stp_putc(0x03, v);
-  else if (!strcmp(privdata.pagesize,"w360h504"))
+  else if (!strcmp(pd->pagesize,"w360h504"))
 	  stp_putc(0x06, v);
   else
 	  stp_putc(0x01, v);
 
-  stp_zfwrite((privdata.laminate->seq).data, 1,
-			(privdata.laminate->seq).bytes, v);
+  stp_zfwrite((pd->laminate->seq).data, 1,
+			(pd->laminate->seq).bytes, v);
   stp_putc(0x00, v);
 }
 
@@ -2279,7 +2358,9 @@ LIST(laminate_list_t, kodak_8500_laminate_list, laminate_t, kodak_8500_laminate)
 
 static void kodak_8500_printer_init(stp_vars_t *v)
 {
-  /* Start with NULL block */
+  dyesub_privdata_t *pd = get_privdata(v);
+
+/* Start with NULL block */
   dyesub_nputc(v, 0x00, 64);
   /* Number of copies */
   stp_putc(0x1b, v);
@@ -2296,8 +2377,8 @@ static void kodak_8500_printer_init(stp_vars_t *v)
   stp_putc(0x1b, v);
   stp_putc(0x5a, v);
   stp_putc(0x53, v);
-  stp_put16_be(privdata.w_size, v);
-  stp_put16_be(privdata.h_size, v);
+  stp_put16_be(pd->w_size, v);
+  stp_put16_be(pd->h_size, v);
   dyesub_nputc(v, 0x00, 57);
   /* Sharpening -- XXX not exported. */
   stp_putc(0x1b, v);
@@ -2308,12 +2389,12 @@ static void kodak_8500_printer_init(stp_vars_t *v)
   /* Lamination */
   stp_putc(0x1b, v);
   stp_putc(0x59, v);
-  if (*((const char*)((privdata.laminate->seq).data)) == 0x02) { /* None */
+  if (*((const char*)((pd->laminate->seq).data)) == 0x02) { /* None */
     stp_putc(0x02, v);
     stp_putc(0x00, v);
   } else {
-    stp_zfwrite((const char*)((privdata.media->seq).data), 1, 
-		(privdata.media->seq).bytes, v);
+    stp_zfwrite((const char*)((pd->media->seq).data), 1, 
+		(pd->media->seq).bytes, v);
   }
   dyesub_nputc(v, 0x00, 60);
   /* Unknown */
@@ -2328,15 +2409,17 @@ static void kodak_8500_printer_init(stp_vars_t *v)
   stp_putc(0x54, v);
   dyesub_nputc(v, 0x00, 2);
   stp_put16_be(0, v); /* Starting row for this block */
-  stp_put16_be(privdata.w_size, v);
-  stp_put16_be(privdata.h_size, v); /* Number of rows in this block */
+  stp_put16_be(pd->w_size, v);
+  stp_put16_be(pd->h_size, v); /* Number of rows in this block */
   dyesub_nputc(v, 0x00, 53);
 }
 
 static void kodak_8500_printer_end(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   /* Pad data to 64-byte block */
-  unsigned int length = privdata.w_size * privdata.h_size * 3;
+  unsigned int length = pd->w_size * pd->h_size * 3;
   length %= 64;
   if (length) {
     length = 64 - length;
@@ -2368,6 +2451,8 @@ LIST(dyesub_printsize_list_t, mitsu_cp3020d_printsize_list, dyesub_printsize_t, 
 
 static void mitsu_cp3020d_printer_init(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   /* Start with NULL block */
   dyesub_nputc(v, 0x00, 64);
   /* Unknown */
@@ -2378,7 +2463,7 @@ static void mitsu_cp3020d_printer_init(stp_vars_t *v)
   stp_putc(0x1b, v);
   stp_putc(0x5a, v);
   stp_putc(0x46, v);
-  if (privdata.h_size == 3762)
+  if (pd->h_size == 3762)
     stp_putc(0x04, v);
   else
     stp_putc(0x00, v);
@@ -2407,8 +2492,8 @@ static void mitsu_cp3020d_printer_init(stp_vars_t *v)
   stp_putc(0x1b, v);
   stp_putc(0x5a, v);
   stp_putc(0x53, v);
-  stp_put16_be(privdata.w_size, v);
-  stp_put16_be(privdata.h_size, v);
+  stp_put16_be(pd->w_size, v);
+  stp_put16_be(pd->h_size, v);
   dyesub_nputc(v, 0x00, 57);
 }
 
@@ -2422,21 +2507,24 @@ static void mitsu_cp3020d_printer_end(stp_vars_t *v)
 
 static void mitsu_cp3020d_plane_init(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   /* Plane data header */
   stp_putc(0x1b, v);
   stp_putc(0x5a, v);
-  stp_putc(0x30 + 4 - privdata.plane, v); /* Y = x31, M = x32, C = x33 */
+  stp_putc(0x30 + 4 - pd->plane, v); /* Y = x31, M = x32, C = x33 */
   dyesub_nputc(v, 0x00, 2);
   stp_put16_be(0, v); /* Starting row for this block */
-  stp_put16_be(privdata.w_size, v);
-  stp_put16_be(privdata.h_size, v); /* Number of rows in this block */
+  stp_put16_be(pd->w_size, v);
+  stp_put16_be(pd->h_size, v); /* Number of rows in this block */
   dyesub_nputc(v, 0x00, 53);
 }
 
 static void mitsu_cp3020d_plane_end(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);	
   /* Pad data to 64-byte block */
-  unsigned int length = privdata.w_size * privdata.h_size;
+  unsigned int length = pd->w_size * pd->h_size;
   length %= 64;
   if (length) {
     length = 64 - length;
@@ -2447,6 +2535,8 @@ static void mitsu_cp3020d_plane_end(stp_vars_t *v)
 /* Mitsubishi CP3020DA/DAE */
 static void mitsu_cp3020da_printer_init(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   /* Init */
   stp_putc(0x1b, v);
   stp_putc(0x57, v);
@@ -2456,8 +2546,8 @@ static void mitsu_cp3020da_printer_init(stp_vars_t *v)
   stp_putc(0x0a, v);
   stp_putc(0x10, v);
   dyesub_nputc(v, 0x00, 7);
-  stp_put16_be(privdata.w_size, v);
-  stp_put16_be(privdata.h_size, v);
+  stp_put16_be(pd->w_size, v);
+  stp_put16_be(pd->h_size, v);
   dyesub_nputc(v, 0x00, 32);
   /* Page count */
   stp_putc(0x1b, v);
@@ -2506,15 +2596,17 @@ static void mitsu_cp3020da_printer_end(stp_vars_t *v)
 
 static void mitsu_cp3020da_plane_init(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   /* Plane data header */
   stp_putc(0x1b, v);
   stp_putc(0x5a, v);
   stp_putc(0x54, v);
-  stp_putc((privdata.bpp > 8) ? 0x10: 0x00, v);
+  stp_putc((pd->bpp > 8) ? 0x10: 0x00, v);
   dyesub_nputc(v, 0x00, 2);
   stp_put16_be(0, v); /* Starting row for this block */
-  stp_put16_be(privdata.w_size, v);
-  stp_put16_be(privdata.h_size, v); /* Number of rows in this block */
+  stp_put16_be(pd->w_size, v);
+  stp_put16_be(pd->h_size, v); /* Number of rows in this block */
 }
 
 /* Mitsubishi 9550D/DW */
@@ -2644,6 +2736,8 @@ static int mitsu9550_parse_parameters(stp_vars_t *v)
 
 static void mitsu_cp9550_printer_init(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   /* Init */
   stp_putc(0x1b, v);
   stp_putc(0x57, v);
@@ -2653,8 +2747,8 @@ static void mitsu_cp9550_printer_init(stp_vars_t *v)
   stp_putc(0x0a, v);
   stp_putc(0x10, v);
   dyesub_nputc(v, 0x00, 7);
-  stp_put16_be(privdata.w_size, v);
-  stp_put16_be(privdata.h_size, v);
+  stp_put16_be(pd->w_size, v);
+  stp_put16_be(pd->h_size, v);
   dyesub_nputc(v, 0x00, 32);
   /* Parameters 1 */
   stp_putc(0x1b, v);
@@ -2670,7 +2764,7 @@ static void mitsu_cp9550_printer_init(stp_vars_t *v)
   dyesub_nputc(v, 0x00, 18);
   stp_put16_be(1, v);  /* Copies */
   dyesub_nputc(v, 0x00, 2);
-  if (strcmp(privdata.pagesize,"w288h432-div2") == 0)
+  if (strcmp(pd->pagesize,"w288h432-div2") == 0)
     stp_putc(0x83, v);
   else
     stp_putc(0x00, v);
@@ -2766,6 +2860,8 @@ LIST(dyesub_printsize_list_t, mitsu_cp9600_printsize_list, dyesub_printsize_t, m
 
 static void mitsu_cp9600_printer_init(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   /* Parameters 1 */
   stp_putc(0x1b, v);
   stp_putc(0x57, v);
@@ -2790,8 +2886,8 @@ static void mitsu_cp9600_printer_init(stp_vars_t *v)
   stp_putc(0x0a, v);
   stp_putc(0x10, v);
   dyesub_nputc(v, 0x00, 7);
-  stp_put16_be(privdata.w_size, v);
-  stp_put16_be(privdata.h_size, v);
+  stp_put16_be(pd->w_size, v);
+  stp_put16_be(pd->h_size, v);
   dyesub_nputc(v, 0x00, 32);
   /* Parameters 3 */
   stp_putc(0x1b, v);
@@ -2901,6 +2997,8 @@ mitsu9810_load_parameters(const stp_vars_t *v, const char *name,
 
 static int mitsu9810_parse_parameters(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   const char *quality = stp_get_string_parameter(v, "PrintSpeed");
   mitsu9550_privdata.quality = 0;
 
@@ -2911,8 +3009,9 @@ static int mitsu9810_parse_parameters(stp_vars_t *v)
      mitsu9550_privdata.finedeep = 0x10;
   }
 
+  // XXXXFIXME, pd may be null!
   /* Matte lamination forces SuperFine mode */
-  if (*((const char*)((privdata.laminate->seq).data)) != 0x00) {
+  if (*((const char*)((pd->laminate->seq).data)) != 0x00) {
      mitsu9550_privdata.quality = 0x80;
   }
   
@@ -2922,6 +3021,8 @@ static int mitsu9810_parse_parameters(stp_vars_t *v)
 
 static void mitsu_cp98xx_printer_init(stp_vars_t *v, int model)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   /* Init */
   stp_putc(0x1b, v);
   stp_putc(0x57, v);
@@ -2931,11 +3032,11 @@ static void mitsu_cp98xx_printer_init(stp_vars_t *v, int model)
   stp_putc(0x0a, v);
   stp_putc(model, v);
   dyesub_nputc(v, 0x00, 7);
-  stp_put16_be(privdata.w_size, v);
-  stp_put16_be(privdata.h_size, v);
+  stp_put16_be(pd->w_size, v);
+  stp_put16_be(pd->h_size, v);
   if (model == 0x90) {
-	  stp_zfwrite((privdata.laminate->seq).data, 1,
-		      (privdata.laminate->seq).bytes, v); /* Lamination */
+	  stp_zfwrite((pd->laminate->seq).data, 1,
+		      (pd->laminate->seq).bytes, v); /* Lamination */
   } else {
 	  stp_putc(0x00, v);
   }
@@ -2982,14 +3083,16 @@ static void mitsu_cp9800_printer_init(stp_vars_t *v)
 
 static void mitsu_cp9810_printer_end(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   /* Job Footer */
   stp_putc(0x1b, v);
   stp_putc(0x50, v);
   stp_putc(0x4c, v);
   stp_putc(0x00, v);
 
-  if (privdata.laminate &&
-      *((const char*)((privdata.laminate->seq).data)) == 0x01) {
+  if (pd->laminate &&
+      *((const char*)((pd->laminate->seq).data)) == 0x01) {
 
     /* Generate a full plane of lamination data */
 
@@ -3006,8 +3109,8 @@ static void mitsu_cp9810_printer_end(stp_vars_t *v)
     mitsu_cp3020da_plane_init(v); /* First generate plane header */
 
     /* Now generate lamination pattern */
-    for (c = 0 ; c < privdata.w_size ; c++) {
-      for (r = 0 ; r < privdata.h_size ; r++) {
+    for (c = 0 ; c < pd->w_size ; c++) {
+      for (r = 0 ; r < pd->h_size ; r++) {
 	int i = xrand(&seed) & 0x1f;
 	if (i < 16)
 	  stp_put16_be(0x0202, v);
@@ -3199,6 +3302,8 @@ static int mitsu70x_parse_parameters(stp_vars_t *v)
 
 static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   /* Printer wakeup */
   stp_putc(0x1b, v);
   stp_putc(0x45, v);
@@ -3213,10 +3318,10 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
   stp_putc(model, v); /* k60 == x02, 305 == x90, d70x/d80 == x01 */
   dyesub_nputc(v, 0x00, 12);
 
-  stp_put16_be(privdata.w_size, v);
-  stp_put16_be(privdata.h_size, v);
-  if (*((const char*)((privdata.laminate->seq).data)) != 0x00) {
-    stp_put16_be(privdata.w_size, v);
+  stp_put16_be(pd->w_size, v);
+  stp_put16_be(pd->h_size, v);
+  if (*((const char*)((pd->laminate->seq).data)) != 0x00) {
+    stp_put16_be(pd->w_size, v);
     if (model == 0x02 || model == 0x90) {
       mitsu70x_privdata.laminate_offset = 0;
       if (!mitsu70x_privdata.quality)
@@ -3227,7 +3332,7 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
       if (!mitsu70x_privdata.quality)
         mitsu70x_privdata.quality = 3; /* Matte Lamination forces Superfine (or UltraFine) */
     }
-    stp_put16_be(privdata.h_size + mitsu70x_privdata.laminate_offset, v);    
+    stp_put16_be(pd->h_size + mitsu70x_privdata.laminate_offset, v);    
   } else {
     /* Glossy lamination here */
     stp_put16_be(0, v);
@@ -3244,16 +3349,16 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
   dyesub_nputc(v, 0x00, 7);
 
   stp_putc(0x00, v); /* Lamination always enabled */
-  stp_zfwrite((privdata.laminate->seq).data, 1,
-	      (privdata.laminate->seq).bytes, v); /* Lamination mode */
+  stp_zfwrite((pd->laminate->seq).data, 1,
+	      (pd->laminate->seq).bytes, v); /* Lamination mode */
   dyesub_nputc(v, 0x00, 6);
 
   /* Multi-cut control */
-  if (strcmp(privdata.pagesize,"w432h576-div2") == 0) {
+  if (strcmp(pd->pagesize,"w432h576-div2") == 0) {
     stp_putc(0x01, v);
-  } else if (strcmp(privdata.pagesize,"w360h504-div2") == 0) {
+  } else if (strcmp(pd->pagesize,"w360h504-div2") == 0) {
     stp_putc(0x01, v);
-  } else if (strcmp(privdata.pagesize,"w288h432-div2") == 0) {
+  } else if (strcmp(pd->pagesize,"w288h432-div2") == 0) {
     stp_putc(0x05, v);
   } else {
     stp_putc(0x00, v);
@@ -3277,15 +3382,17 @@ static void mitsu_cpd70x_printer_init(stp_vars_t *v)
 #ifndef MITSU70X_8BPP
 static void mitsu_cpd70x_printer_end(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+  
   /* If Matte lamination is enabled, generate a lamination plane */
-  if (*((const char*)((privdata.laminate->seq).data)) != 0x00) {
+  if (*((const char*)((pd->laminate->seq).data)) != 0x00) {
 
     int r, c;
     unsigned long seed = 1;
 
     /* Now generate lamination pattern */
-    for (c = 0 ; c < privdata.w_size ; c++) {
-      for (r = 0 ; r < privdata.h_size + mitsu70x_privdata.laminate_offset ; r++) {
+    for (c = 0 ; c < pd->w_size ; c++) {
+      for (r = 0 ; r < pd->h_size + mitsu70x_privdata.laminate_offset ; r++) {
 	int i = xrand(&seed) & 0x3f;
 	if (mitsu70x_privdata.laminate_offset) { /* D70x uses 0x384b, 0x286a, 0x6c22 */
 	  if (i < 42)
@@ -3305,7 +3412,7 @@ static void mitsu_cpd70x_printer_end(stp_vars_t *v)
       }
     }
     /* Pad up to a 512-byte block */
-    dyesub_nputc(v, 0x00, 512 - ((privdata.w_size * (privdata.h_size + mitsu70x_privdata.laminate_offset) * 2) % 512));
+    dyesub_nputc(v, 0x00, 512 - ((pd->w_size * (pd->h_size + mitsu70x_privdata.laminate_offset) * 2) % 512));
   }
 }
 #endif
@@ -3314,7 +3421,7 @@ static void mitsu_cpd70x_plane_end(stp_vars_t *v)
 {
 #ifndef MITSU70X_8BPP
   /* Pad up to a 512-byte block */
-  dyesub_nputc(v, 0x00, 512 - ((privdata.h_size * privdata.w_size * 2) % 512));
+  dyesub_nputc(v, 0x00, 512 - ((pd->h_size * pd->w_size * 2) % 512));
 #endif
 }
 
@@ -3615,6 +3722,8 @@ static int mitsu_d90_parse_parameters(stp_vars_t *v)
 
 static void mitsu_cpd90_printer_init(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   /* Start things going */
   stp_putc(0x1b, v);
   stp_putc(0x53, v);
@@ -3622,23 +3731,23 @@ static void mitsu_cpd90_printer_init(stp_vars_t *v)
   stp_putc(0x30, v);
   stp_putc(0x00, v);
   stp_putc(0x33, v);
-  stp_put16_be(privdata.w_size, v);  /* Columns */
-  stp_put16_be(privdata.h_size, v);  /* Rows */
+  stp_put16_be(pd->w_size, v);  /* Columns */
+  stp_put16_be(pd->h_size, v);  /* Rows */
   stp_putc(0x64, v);
   stp_putc(0x00, v);
   stp_putc(0x00, v);
   stp_putc(0x01, v);
   stp_putc(0x00, v);
-  if (strcmp(privdata.pagesize,"w432h576-div2") == 0)
+  if (strcmp(pd->pagesize,"w432h576-div2") == 0)
     stp_putc(0x01, v);  
   else
     stp_putc(0x00, v);
 
-  if (strcmp(privdata.pagesize,"w432h576-div2") == 0) {
+  if (strcmp(pd->pagesize,"w432h576-div2") == 0) {
     stp_putc(0x04, v);
     stp_putc(0xbe, v);
     dyesub_nputc(v, 0x00, 14);
-  } else if (strcmp(privdata.pagesize,"w288h432-div2") == 0) {
+  } else if (strcmp(pd->pagesize,"w288h432-div2") == 0) {
     stp_putc(0x02, v);
     stp_putc(0x65, v);
     stp_putc(0x01, v);
@@ -3652,8 +3761,8 @@ static void mitsu_cpd90_printer_init(stp_vars_t *v)
 
   dyesub_nputc(v, 0x00, 16);
 
-  stp_zfwrite((privdata.laminate->seq).data, 1,
-	      (privdata.laminate->seq).bytes, v); /* Lamination mode */  
+  stp_zfwrite((pd->laminate->seq).data, 1,
+	      (pd->laminate->seq).bytes, v); /* Lamination mode */  
   stp_putc(mitsu70x_privdata.quality, v);
 #ifdef MITSU70X_8BPP
   stp_putc(mitsu70x_privdata.use_lut, v);
@@ -3674,8 +3783,8 @@ static void mitsu_cpd90_printer_init(stp_vars_t *v)
   stp_putc(0x00, v);
   stp_putc(0x09, v);  
   dyesub_nputc(v, 0x00, 4);
-  stp_put16_be(privdata.w_size, v);  /* Columns */
-  stp_put16_be(privdata.h_size, v);  /* Rows */
+  stp_put16_be(pd->w_size, v);  /* Columns */
+  stp_put16_be(pd->h_size, v);  /* Rows */
   dyesub_nputc(v, 0x00, 2);
   
   dyesub_nputc(v, 0x00, 512 - 32);
@@ -3756,21 +3865,23 @@ LIST(dyesub_printsize_list_t, shinko_chcs9045_printsize_list, dyesub_printsize_t
 
 static void shinko_chcs9045_printer_init(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   char pg = '\0';
   char sticker = '\0';
 
   stp_zprintf(v, "\033CHC\n");
   stp_put16_be(1, v);
   stp_put16_be(1, v);
-  stp_put16_be(privdata.w_size, v);
-  stp_put16_be(privdata.h_size, v);
-  if (strcmp(privdata.pagesize,"B7") == 0)
+  stp_put16_be(pd->w_size, v);
+  stp_put16_be(pd->h_size, v);
+  if (strcmp(pd->pagesize,"B7") == 0)
     pg = '\1';
-  else if (strcmp(privdata.pagesize,"w360h504") == 0)
+  else if (strcmp(pd->pagesize,"w360h504") == 0)
     pg = '\3';
-  else if (strcmp(privdata.pagesize,"w432h576") == 0)
+  else if (strcmp(pd->pagesize,"w432h576") == 0)
     pg = '\5';
-  else if (strcmp(privdata.pagesize,"w283h425") == 0)
+  else if (strcmp(pd->pagesize,"w283h425") == 0)
     sticker = '\3';
   stp_putc(pg, v);
   stp_putc('\0', v);
@@ -3830,23 +3941,25 @@ LIST(laminate_list_t, shinko_chcs2145_laminate_list, laminate_t, shinko_chcs2145
 
 static void shinko_chcs2145_printer_init(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   int media = 0;
 
-  if (strcmp(privdata.pagesize,"w288h432") == 0)
+  if (strcmp(pd->pagesize,"w288h432") == 0)
     media = '\0';
-  else if (strcmp(privdata.pagesize,"w288h432-div2") == 0)
+  else if (strcmp(pd->pagesize,"w288h432-div2") == 0)
     media = '\0';
-  else if (strcmp(privdata.pagesize,"B7") == 0)
+  else if (strcmp(pd->pagesize,"B7") == 0)
     media = '\1';
-  else if (strcmp(privdata.pagesize,"w360h504") == 0)
+  else if (strcmp(pd->pagesize,"w360h504") == 0)
     media = '\3';
-  else if (strcmp(privdata.pagesize,"w432h576") == 0)
+  else if (strcmp(pd->pagesize,"w432h576") == 0)
     media = '\6';
-  else if (strcmp(privdata.pagesize,"w432h648") == 0)
+  else if (strcmp(pd->pagesize,"w432h648") == 0)
     media = '\5';
-  else if (strcmp(privdata.pagesize,"w432h576-div2") == 0)
+  else if (strcmp(pd->pagesize,"w432h576-div2") == 0)
     media = '\5';
-  else if (strcmp(privdata.pagesize,"w144h432") == 0)
+  else if (strcmp(pd->pagesize,"w144h432") == 0)
     media = '\7';
 
   stp_put32_le(0x10, v);
@@ -3859,22 +3972,22 @@ static void shinko_chcs2145_printer_init(stp_vars_t *v)
   stp_put32_le(media, v);  /* Media Type */
   stp_put32_le(0x00, v);
 
-  if (strcmp(privdata.pagesize,"w432h576-div2") == 0) {
+  if (strcmp(pd->pagesize,"w432h576-div2") == 0) {
     stp_put32_le(0x02, v);
-  } else if (strcmp(privdata.pagesize,"w288h432-div2") == 0) {
+  } else if (strcmp(pd->pagesize,"w288h432-div2") == 0) {
     stp_put32_le(0x04, v);
   } else {
     stp_put32_le(0x00, v);  /* Print Method */
   }
 
-  stp_zfwrite((privdata.laminate->seq).data, 1,
-	      (privdata.laminate->seq).bytes, v); /* Print Mode */
+  stp_zfwrite((pd->laminate->seq).data, 1,
+	      (pd->laminate->seq).bytes, v); /* Print Mode */
   stp_put32_le(0x00, v);
   stp_put32_le(0x00, v);
 
   stp_put32_le(0x00, v);
-  stp_put32_le(privdata.w_size, v); /* Columns */
-  stp_put32_le(privdata.h_size, v); /* Rows */
+  stp_put32_le(pd->w_size, v); /* Columns */
+  stp_put32_le(pd->h_size, v); /* Rows */
   stp_put32_le(0x01, v);            /* Copies */
 
   stp_put32_le(0x00, v);
@@ -3884,7 +3997,7 @@ static void shinko_chcs2145_printer_init(stp_vars_t *v)
 
   stp_put32_le(0x00, v);
   stp_put32_le(0xffffffce, v);
-  stp_put32_le(privdata.w_dpi, v);  /* Dots Per Inch */
+  stp_put32_le(pd->w_dpi, v);  /* Dots Per Inch */
   stp_put32_le(0xffffffce, v);
 
   stp_put32_le(0x00, v);
@@ -3951,29 +4064,31 @@ LIST(laminate_list_t, shinko_chcs1245_laminate_list, laminate_t, shinko_chcs1245
 
 static void shinko_chcs1245_printer_init(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   int media = 0;
 
-  if (strcmp(privdata.pagesize,"w288h576") == 0)
+  if (strcmp(pd->pagesize,"w288h576") == 0)
     media = 5;
-  else if (strcmp(privdata.pagesize,"w360h576") == 0)
+  else if (strcmp(pd->pagesize,"w360h576") == 0)
     media = 4;
-  else if (strcmp(privdata.pagesize,"w432h576") == 0)
+  else if (strcmp(pd->pagesize,"w432h576") == 0)
     media = 6;
-  else if (strcmp(privdata.pagesize,"w576h576") == 0)
+  else if (strcmp(pd->pagesize,"w576h576") == 0)
     media = 9;
-  else if (strcmp(privdata.pagesize,"w576h576-div2") == 0)
+  else if (strcmp(pd->pagesize,"w576h576-div2") == 0)
     media = 2;    
-  else if (strcmp(privdata.pagesize,"c8x10") == 0)
+  else if (strcmp(pd->pagesize,"c8x10") == 0)
     media = 0;
-  else if (strcmp(privdata.pagesize,"c8x10-w576h432_w576h288") == 0)
+  else if (strcmp(pd->pagesize,"c8x10-w576h432_w576h288") == 0)
     media = 3;    
-  else if (strcmp(privdata.pagesize,"c8x10-div2") == 0)
+  else if (strcmp(pd->pagesize,"c8x10-div2") == 0)
     media = 1;  
-  else if (strcmp(privdata.pagesize,"w576h864") == 0)
+  else if (strcmp(pd->pagesize,"w576h864") == 0)
     media = 0;
-  else if (strcmp(privdata.pagesize,"w576h864-div2") == 0)
+  else if (strcmp(pd->pagesize,"w576h864-div2") == 0)
     media = 7;  
-  else if (strcmp(privdata.pagesize,"w576h864-div3") == 0)
+  else if (strcmp(pd->pagesize,"w576h864-div3") == 0)
     media = 8;  
 
   stp_put32_le(0x10, v);
@@ -3987,19 +4102,19 @@ static void shinko_chcs1245_printer_init(stp_vars_t *v)
   stp_put32_le(0x00, v);
 
   stp_put32_le(media, v);
-  stp_zfwrite((privdata.laminate->seq).data, 1,
-	      (privdata.laminate->seq).bytes, v); /* Print Mode */  
+  stp_zfwrite((pd->laminate->seq).data, 1,
+	      (pd->laminate->seq).bytes, v); /* Print Mode */  
   stp_put32_le(0x00, v);
-  if (((const unsigned char*)(privdata.laminate->seq).data)[0] == 0x02 ||
-      ((const unsigned char*)(privdata.laminate->seq).data)[0] == 0x03) {
+  if (((const unsigned char*)(pd->laminate->seq).data)[0] == 0x02 ||
+      ((const unsigned char*)(pd->laminate->seq).data)[0] == 0x03) {
 	  stp_put32_le(0x07fffffff, v);  /* Glossy */
   } else {
 	  stp_put32_le(0x0, v);  /* XXX matte intensity -25>0>+25 */
   }
 
   stp_put32_le(0x00, v); /* XXX "dust removal mode" -- 0x00 printer default, 0x02 on, 0x01 for off. */
-  stp_put32_le(privdata.w_size, v); /* Columns */
-  stp_put32_le(privdata.h_size, v); /* Rows */
+  stp_put32_le(pd->w_size, v); /* Columns */
+  stp_put32_le(pd->h_size, v); /* Rows */
   stp_put32_le(0x01, v);            /* Copies */
 
   stp_put32_le(0x00, v);
@@ -4009,7 +4124,7 @@ static void shinko_chcs1245_printer_init(stp_vars_t *v)
 
   stp_put32_le(0x00, v);
   stp_put32_le(0xffffffce, v);
-  stp_put32_le(privdata.w_dpi, v);  /* Dots Per Inch */
+  stp_put32_le(pd->w_dpi, v);  /* Dots Per Inch */
   stp_put32_le(0xffffffce, v);
 
   stp_put32_le(0x00, v);
@@ -4064,27 +4179,28 @@ LIST(laminate_list_t, shinko_chcs6245_laminate_list, laminate_t, shinko_chcs6245
 
 static void shinko_chcs6245_printer_init(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
   int media = 0;
 
-  if (strcmp(privdata.pagesize,"w288h576") == 0)
+  if (strcmp(pd->pagesize,"w288h576") == 0)
     media = 0x20;
-  else if (strcmp(privdata.pagesize,"w360h576") == 0)
+  else if (strcmp(pd->pagesize,"w360h576") == 0)
     media = 0x21;
-  else if (strcmp(privdata.pagesize,"w432h576") == 0)
+  else if (strcmp(pd->pagesize,"w432h576") == 0)
     media = 0x22;
-  else if (strcmp(privdata.pagesize,"w576h576") == 0)
+  else if (strcmp(pd->pagesize,"w576h576") == 0)
     media = 0x23;
-  else if (strcmp(privdata.pagesize,"c8x10") == 0)
+  else if (strcmp(pd->pagesize,"c8x10") == 0)
     media = 0x10;
-  else if (strcmp(privdata.pagesize,"w576h864") == 0)
+  else if (strcmp(pd->pagesize,"w576h864") == 0)
     media = 0x11;
-  else if (strcmp(privdata.pagesize,"w576h576-div2") == 0)
+  else if (strcmp(pd->pagesize,"w576h576-div2") == 0)
     media = 0x30;
-  else if (strcmp(privdata.pagesize,"c8x10-div2") == 0)
+  else if (strcmp(pd->pagesize,"c8x10-div2") == 0)
     media = 0x31;
-  else if (strcmp(privdata.pagesize,"w576h864-div2") == 0)
+  else if (strcmp(pd->pagesize,"w576h864-div2") == 0)
     media = 0x32;
-  else if (strcmp(privdata.pagesize,"w576h864-div3") == 0)
+  else if (strcmp(pd->pagesize,"w576h864-div3") == 0)
     media = 0x40;
 
   stp_put32_le(0x10, v);
@@ -4099,13 +4215,13 @@ static void shinko_chcs6245_printer_init(stp_vars_t *v)
 
   stp_put32_le(0x00, v);
   stp_put32_le(0x00, v);
-  stp_zfwrite((privdata.laminate->seq).data, 1,
-	      (privdata.laminate->seq).bytes, v); /* Lamination */
+  stp_zfwrite((pd->laminate->seq).data, 1,
+	      (pd->laminate->seq).bytes, v); /* Lamination */
   stp_put32_le(0x00, v);
 
   stp_put32_le(0x00, v);
-  stp_put32_le(privdata.w_size, v); /* Columns */
-  stp_put32_le(privdata.h_size, v); /* Rows */
+  stp_put32_le(pd->w_size, v); /* Columns */
+  stp_put32_le(pd->h_size, v); /* Rows */
   stp_put32_le(0x01, v);            /* Copies */
 
   stp_put32_le(0x00, v);
@@ -4115,7 +4231,7 @@ static void shinko_chcs6245_printer_init(stp_vars_t *v)
 
   stp_put32_le(0x00, v);
   stp_put32_le(0xffffffce, v);
-  stp_put32_le(privdata.w_dpi, v);  /* Dots Per Inch */
+  stp_put32_le(pd->w_dpi, v);  /* Dots Per Inch */
   stp_put32_le(0xffffffce, v);
 
   stp_put32_le(0x00, v);
@@ -4181,33 +4297,35 @@ LIST(laminate_list_t, shinko_chcs6145_laminate_list, laminate_t, shinko_chcs6145
 
 static void shinko_chcs6145_printer_init(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   int media = 0;
 
-  if (strcmp(privdata.pagesize,"w288h432") == 0)
+  if (strcmp(pd->pagesize,"w288h432") == 0)
     media = 0x00;
-  else if (strcmp(privdata.pagesize,"w288h432-div2") == 0)
+  else if (strcmp(pd->pagesize,"w288h432-div2") == 0)
     media = 0x00;
-  else if (strcmp(privdata.pagesize,"w360h360") == 0)
+  else if (strcmp(pd->pagesize,"w360h360") == 0)
     media = 0x08;
-  else if (strcmp(privdata.pagesize,"w360h504") == 0)
+  else if (strcmp(pd->pagesize,"w360h504") == 0)
     media = 0x03;
-  else if (strcmp(privdata.pagesize,"w432h432") == 0)
+  else if (strcmp(pd->pagesize,"w432h432") == 0)
     media = 0x06;
-  else if (strcmp(privdata.pagesize,"w432h576") == 0)
+  else if (strcmp(pd->pagesize,"w432h576") == 0)
     media = 0x06;
-  else if (strcmp(privdata.pagesize,"w144h432") == 0)
+  else if (strcmp(pd->pagesize,"w144h432") == 0)
     media = 0x07;
-  else if (strcmp(privdata.pagesize,"w432h576-w432h432_w432h144") == 0)
+  else if (strcmp(pd->pagesize,"w432h576-w432h432_w432h144") == 0)
     media = 0x06;
-  else if (strcmp(privdata.pagesize,"w432h576-div2") == 0)
+  else if (strcmp(pd->pagesize,"w432h576-div2") == 0)
     media = 0x06;
-  else if (strcmp(privdata.pagesize,"w432h648") == 0)
+  else if (strcmp(pd->pagesize,"w432h648") == 0)
     media = 0x05;
 
   stp_put32_le(0x10, v);
   stp_put32_le(6145, v);  /* Printer Model */
-  if (!strcmp(privdata.pagesize,"w360h360") ||
-      !strcmp(privdata.pagesize,"w360h504"))
+  if (!strcmp(pd->pagesize,"w360h360") ||
+      !strcmp(pd->pagesize,"w360h504"))
 	  stp_put32_le(0x02, v); /* 5" media */
   else
 	  stp_put32_le(0x03, v); /* 6" media */
@@ -4218,23 +4336,23 @@ static void shinko_chcs6145_printer_init(stp_vars_t *v)
   stp_put32_le(media, v);  /* Media Type */
   stp_put32_le(0x00, v);
 
-  if (strcmp(privdata.pagesize,"w432h576-w432h432_w432h144") == 0) {
+  if (strcmp(pd->pagesize,"w432h576-w432h432_w432h144") == 0) {
     stp_put32_le(0x05, v);
-  } else if (strcmp(privdata.pagesize,"w288h432-div2") == 0) {
+  } else if (strcmp(pd->pagesize,"w288h432-div2") == 0) {
     stp_put32_le(0x04, v);
-  } else if (strcmp(privdata.pagesize,"w432h576-div2") == 0) {
+  } else if (strcmp(pd->pagesize,"w432h576-div2") == 0) {
     stp_put32_le(0x02, v);
   } else {
     stp_put32_le(0x00, v);
   }
   stp_put32_le(0x00, v);  /* XXX quality; 00 == default, 0x01 == std */
-  stp_zfwrite((privdata.laminate->seq).data, 1,
-	      (privdata.laminate->seq).bytes, v); /* Lamination */
+  stp_zfwrite((pd->laminate->seq).data, 1,
+	      (pd->laminate->seq).bytes, v); /* Lamination */
   stp_put32_le(0x00, v);
 
   stp_put32_le(0x00, v);
-  stp_put32_le(privdata.w_size, v); /* Columns */
-  stp_put32_le(privdata.h_size, v); /* Rows */
+  stp_put32_le(pd->w_size, v); /* Columns */
+  stp_put32_le(pd->h_size, v); /* Rows */
   stp_put32_le(0x01, v);            /* Copies */
 
   stp_put32_le(0x00, v);
@@ -4244,7 +4362,7 @@ static void shinko_chcs6145_printer_init(stp_vars_t *v)
 
   stp_put32_le(0x00, v);
   stp_put32_le(0xffffffce, v);
-  stp_put32_le(privdata.w_dpi, v);  /* Dots Per Inch */
+  stp_put32_le(pd->w_dpi, v);  /* Dots Per Inch */
   stp_put32_le(0xffffffce, v);
 
   stp_put32_le(0x00, v);
@@ -4346,10 +4464,12 @@ LIST(laminate_list_t, dnpds40_laminate_list, laminate_t, dnpds40_laminate);
 
 static void dnp_printer_start_common(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   /* Configure Lamination */
   stp_zprintf(v, "\033PCNTRL OVERCOAT        0000000800000");
-  stp_zfwrite((privdata.laminate->seq).data, 1,
-	      (privdata.laminate->seq).bytes, v); /* Lamination mode */
+  stp_zfwrite((pd->laminate->seq).data, 1,
+	      (pd->laminate->seq).bytes, v); /* Lamination mode */
 
   /* Set quantity.. Backend overrides as needed. */
   stp_zprintf(v, "\033PCNTRL QTY             000000080000001\r");
@@ -4357,14 +4477,16 @@ static void dnp_printer_start_common(stp_vars_t *v)
 
 static void dnpds40_printer_start(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   /* Common code */
   dnp_printer_start_common(v);
 
   /* Set cutter option to "normal" */
   stp_zprintf(v, "\033PCNTRL CUTTER          0000000800000");
-  if (!strcmp(privdata.pagesize, "w288h432-div2")) {
+  if (!strcmp(pd->pagesize, "w288h432-div2")) {
     stp_zprintf(v, "120");
-  } else if (!strcmp(privdata.pagesize, "w432h576-div4")) {
+  } else if (!strcmp(pd->pagesize, "w432h576-div4")) {
     stp_zprintf(v, "120");
   } else {
     stp_zprintf(v, "000");
@@ -4373,23 +4495,23 @@ static void dnpds40_printer_start(stp_vars_t *v)
   /* Configure multi-cut/page size */
   stp_zprintf(v, "\033PIMAGE MULTICUT        00000008000000");
 
-  if (!strcmp(privdata.pagesize, "B7")) {
+  if (!strcmp(pd->pagesize, "B7")) {
     stp_zprintf(v, "01");
-  } else if (!strcmp(privdata.pagesize, "w288h432")) {
+  } else if (!strcmp(pd->pagesize, "w288h432")) {
     stp_zprintf(v, "02");
-  } else if (!strcmp(privdata.pagesize, "w360h504")) {
+  } else if (!strcmp(pd->pagesize, "w360h504")) {
     stp_zprintf(v, "03");
-  } else if (!strcmp(privdata.pagesize, "w360h504-div2")) {
+  } else if (!strcmp(pd->pagesize, "w360h504-div2")) {
     stp_zprintf(v, "22");
-  } else if (!strcmp(privdata.pagesize, "w432h576")) {
+  } else if (!strcmp(pd->pagesize, "w432h576")) {
     stp_zprintf(v, "04");
-  } else if (!strcmp(privdata.pagesize, "w432h648")) {
+  } else if (!strcmp(pd->pagesize, "w432h648")) {
     stp_zprintf(v, "05");
-  } else if (!strcmp(privdata.pagesize, "w432h576-div2")) {
+  } else if (!strcmp(pd->pagesize, "w432h576-div2")) {
     stp_zprintf(v, "12");
-  } else if (!strcmp(privdata.pagesize, "w288h432-div2")) {
+  } else if (!strcmp(pd->pagesize, "w288h432-div2")) {
     stp_zprintf(v, "02");
-  } else if (!strcmp(privdata.pagesize, "w432h576-div4")) {
+  } else if (!strcmp(pd->pagesize, "w432h576-div4")) {
     stp_zprintf(v, "04");
   } else {
     stp_zprintf(v, "00"); /* should be impossible. */
@@ -4403,12 +4525,14 @@ static void dnpds40_printer_end(stp_vars_t *v)
 
 static void dnpds40_plane_init(stp_vars_t *v)
 {
-  char p = (privdata.plane == 3 ? 'Y' :
-	    (privdata.plane == 2 ? 'M' :
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  char p = (pd->plane == 3 ? 'Y' :
+	    (pd->plane == 2 ? 'M' :
 	     'C' ));
 
   long PadSize = 10;
-  long FSize = (privdata.w_size*privdata.h_size) + 1024 + 54 + PadSize;
+  long FSize = (pd->w_size*pd->h_size) + 1024 + 54 + PadSize;
 
   /* Printer command plus length of data to follow */
   stp_zprintf(v, "\033PIMAGE %cPLANE          %08ld", p, FSize);
@@ -4423,13 +4547,13 @@ static void dnpds40_plane_init(stp_vars_t *v)
 
   /* DIB header */
   stp_put32_le(40, v); /* DIB header size */
-  stp_put32_le(privdata.w_size, v);
-  stp_put32_le(privdata.h_size, v);
+  stp_put32_le(pd->w_size, v);
+  stp_put32_le(pd->h_size, v);
   stp_put16_le(1, v); /* single channel */
   stp_put16_le(8, v); /* 8bpp */
   dyesub_nputc(v, '\0', 8); /* compression + image size are ignored */
   stp_put32_le(11808, v); /* horizontal pixels per meter, fixed at 300dpi */
-  if (privdata.h_dpi == 600)
+  if (pd->h_dpi == 600)
     stp_put32_le(23615, v); /* vertical pixels per meter @ 600dpi */
   else
     stp_put32_le(11808, v); /* vertical pixels per meter @ 300dpi */
@@ -4749,14 +4873,16 @@ LIST(dyesub_printsize_list_t, dnpsrx1_printsize_list, dyesub_printsize_t, dnpsrx
 
 static void dnpdsrx1_printer_start(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   /* Common code */
   dnp_printer_start_common(v);
 
   /* Set cutter option to "normal" */
   stp_zprintf(v, "\033PCNTRL CUTTER          0000000800000");
-  if (!strcmp(privdata.pagesize, "w288h432-div2")) {
+  if (!strcmp(pd->pagesize, "w288h432-div2")) {
     stp_zprintf(v, "120");
-  } else if (!strcmp(privdata.pagesize, "w432h576-div4")) {
+  } else if (!strcmp(pd->pagesize, "w432h576-div4")) {
     stp_zprintf(v, "120");
   } else {
     stp_zprintf(v, "000");
@@ -4765,21 +4891,21 @@ static void dnpdsrx1_printer_start(stp_vars_t *v)
   /* Configure multi-cut/page size */
   stp_zprintf(v, "\033PIMAGE MULTICUT        00000008000000");
 
-  if (!strcmp(privdata.pagesize, "B7")) {
+  if (!strcmp(pd->pagesize, "B7")) {
     stp_zprintf(v, "01");
-  } else if (!strcmp(privdata.pagesize, "w288h432")) {
+  } else if (!strcmp(pd->pagesize, "w288h432")) {
     stp_zprintf(v, "02");
-  } else if (!strcmp(privdata.pagesize, "w360h504")) {
+  } else if (!strcmp(pd->pagesize, "w360h504")) {
     stp_zprintf(v, "03");
-  } else if (!strcmp(privdata.pagesize, "w360h504-div2")) {
+  } else if (!strcmp(pd->pagesize, "w360h504-div2")) {
     stp_zprintf(v, "22");
-  } else if (!strcmp(privdata.pagesize, "w432h576")) {
+  } else if (!strcmp(pd->pagesize, "w432h576")) {
     stp_zprintf(v, "04");
-  } else if (!strcmp(privdata.pagesize, "w432h576-div2")) {
+  } else if (!strcmp(pd->pagesize, "w432h576-div2")) {
     stp_zprintf(v, "12");
-  } else if (!strcmp(privdata.pagesize, "w288h432-div2")) {
+  } else if (!strcmp(pd->pagesize, "w288h432-div2")) {
     stp_zprintf(v, "02");
-  } else if (!strcmp(privdata.pagesize, "w432h576-div4")) {
+  } else if (!strcmp(pd->pagesize, "w432h576-div4")) {
     stp_zprintf(v, "04");
   } else {
     stp_zprintf(v, "00");
@@ -4854,54 +4980,56 @@ LIST(dyesub_printsize_list_t, dnpds620_printsize_list, dyesub_printsize_t, dnpds
 
 static void dnpds620_printer_start(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   /* Common code */
   dnp_printer_start_common(v);
 
   /* Multicut when 8x6 media is in use */
-  if (!strcmp(privdata.pagesize, "w432h576") &&
-      !strcmp(privdata.pagesize, "w432h648")) {
+  if (!strcmp(pd->pagesize, "w432h576") &&
+      !strcmp(pd->pagesize, "w432h648")) {
     stp_zprintf(v, "\033PCNTRL FULL_CUTTER_SET 00000016");
     stp_zprintf(v, "0000000000000000");
-  } else if (!strcmp(privdata.pagesize, "w432h576-div4")) {
+  } else if (!strcmp(pd->pagesize, "w432h576-div4")) {
     stp_zprintf(v, "\033PCNTRL FULL_CUTTER_SET 00000016");
     stp_zprintf(v, "0200200200200000");
-  } else if (!strcmp(privdata.pagesize, "w432h576-w432h432_w432h144")) {
+  } else if (!strcmp(pd->pagesize, "w432h576-w432h432_w432h144")) {
     stp_zprintf(v, "\033PCNTRL FULL_CUTTER_SET 00000016");
     stp_zprintf(v, "0600200000000000");
-  } else if (!strcmp(privdata.pagesize, "w288h432-div2")) {
+  } else if (!strcmp(pd->pagesize, "w288h432-div2")) {
     stp_zprintf(v, "\033PCNTRL CUTTER          00000008");
     stp_zprintf(v, "00000120");
   }
 
   /* Configure multi-cut/page size */
   stp_zprintf(v, "\033PIMAGE MULTICUT        00000008000000");
-  if (!strcmp(privdata.pagesize, "B7")) {
+  if (!strcmp(pd->pagesize, "B7")) {
     stp_zprintf(v, "01");
-  } else if (!strcmp(privdata.pagesize, "w288h432")) {
+  } else if (!strcmp(pd->pagesize, "w288h432")) {
     stp_zprintf(v, "02");
-  } else if (!strcmp(privdata.pagesize, "w288h432-div2")) {
+  } else if (!strcmp(pd->pagesize, "w288h432-div2")) {
     stp_zprintf(v, "02");
-  } else if (!strcmp(privdata.pagesize, "w324h432")) {
+  } else if (!strcmp(pd->pagesize, "w324h432")) {
     stp_zprintf(v, "30");
-  } else if (!strcmp(privdata.pagesize, "w360h360")) {
+  } else if (!strcmp(pd->pagesize, "w360h360")) {
     stp_zprintf(v, "29");
-  } else if (!strcmp(privdata.pagesize, "w360h504")) {
+  } else if (!strcmp(pd->pagesize, "w360h504")) {
     stp_zprintf(v, "03");
-  } else if (!strcmp(privdata.pagesize, "w360h504-div2")) {
+  } else if (!strcmp(pd->pagesize, "w360h504-div2")) {
     stp_zprintf(v, "22");
-  } else if (!strcmp(privdata.pagesize, "w432h432")) {
+  } else if (!strcmp(pd->pagesize, "w432h432")) {
     stp_zprintf(v, "27");
-  } else if (!strcmp(privdata.pagesize, "w432h576")) {
+  } else if (!strcmp(pd->pagesize, "w432h576")) {
     stp_zprintf(v, "04");
-  } else if (!strcmp(privdata.pagesize, "w432h576-w432h432_w432h144")) {
+  } else if (!strcmp(pd->pagesize, "w432h576-w432h432_w432h144")) {
     stp_zprintf(v, "04");
-  } else if (!strcmp(privdata.pagesize, "w432h576-div4")) {
+  } else if (!strcmp(pd->pagesize, "w432h576-div4")) {
     stp_zprintf(v, "04");
-  } else if (!strcmp(privdata.pagesize, "w432h576-div2")) {
+  } else if (!strcmp(pd->pagesize, "w432h576-div2")) {
     stp_zprintf(v, "12");
-  } else if (!strcmp(privdata.pagesize, "w432h648")) {
+  } else if (!strcmp(pd->pagesize, "w432h648")) {
     stp_zprintf(v, "05");
-  } else if (!strcmp(privdata.pagesize, "w432h648-div2")) {
+  } else if (!strcmp(pd->pagesize, "w432h648-div2")) {
     stp_zprintf(v, "31");
   } else {
     stp_zprintf(v, "00"); /* Should be impossible */
@@ -4952,65 +5080,69 @@ LIST(dyesub_printsize_list_t, citizen_cw01_printsize_list, dyesub_printsize_t, c
 
 static void citizen_cw01_printer_start(stp_vars_t *v)
 {
-	int media = 0;
+  dyesub_privdata_t *pd = get_privdata(v);
 
-	if (strcmp(privdata.pagesize,"w252h338") == 0)
-		media = 0x00;
-	else if (strcmp(privdata.pagesize,"B7") == 0)
-		media = 0x01;
-	else if (strcmp(privdata.pagesize,"w288h432") == 0)
-		media = 0x02;
-	else if (strcmp(privdata.pagesize,"w338h504") == 0)
-		media = 0x03;
-	else if (strcmp(privdata.pagesize,"w360h504") == 0)
-		media = 0x04;
-	else if (strcmp(privdata.pagesize,"w432h576") == 0)
-		media = 0x05;
-	else if (strcmp(privdata.pagesize,"w432h576") == 0)
-		media = 0x06;
+  int media = 0;
 
-	stp_putc(media, v);
-	if (privdata.h_dpi == 600) {
-		stp_putc(0x01, v);
-	} else {
-		stp_putc(0x00, v);
-	}
-	stp_putc(0x01, v); /* This is actually number of copies */
-	stp_putc(0x00, v);
+  if (strcmp(pd->pagesize,"w252h338") == 0)
+	  media = 0x00;
+  else if (strcmp(pd->pagesize,"B7") == 0)
+	  media = 0x01;
+  else if (strcmp(pd->pagesize,"w288h432") == 0)
+	  media = 0x02;
+  else if (strcmp(pd->pagesize,"w338h504") == 0)
+	  media = 0x03;
+  else if (strcmp(pd->pagesize,"w360h504") == 0)
+	  media = 0x04;
+  else if (strcmp(pd->pagesize,"w432h576") == 0)
+	  media = 0x05;
+  else if (strcmp(pd->pagesize,"w432h576") == 0)
+	  media = 0x06;
 
-	/* Compute plane size */
-	media = (privdata.w_size * privdata.h_size) + 1024 + 40;
+  stp_putc(media, v);
+  if (pd->h_dpi == 600) {
+    stp_putc(0x01, v);
+  } else {
+    stp_putc(0x00, v);
+  }
+  stp_putc(0x01, v); /* This is actually number of copies */
+  stp_putc(0x00, v);
 
-	stp_put32_le(media, v);
-	stp_put32_le(0x0, v);
+  /* Compute plane size */
+  media = (pd->w_size * pd->h_size) + 1024 + 40;
+  
+  stp_put32_le(media, v);
+  stp_put32_le(0x0, v);
 }
 
 static void citizen_cw01_plane_init(stp_vars_t *v)
 {
-	int i;
+  dyesub_privdata_t *pd = get_privdata(v);
 
-	stp_put32_le(0x28, v);
-	stp_put32_le(0x0800, v);
-	stp_put16_le(privdata.h_size, v);  /* number of rows */
-	stp_put16_le(0x0, v);
-	stp_put32_le(0x080001, v);
-	stp_put32_le(0x00, v);
-	stp_put32_le(0x00, v);
-	stp_put32_le(0x335a, v);
-	if (privdata.h_dpi == 600) {
-		stp_put32_le(0x5c40, v);
-	} else {
-		stp_put32_le(0x335a, v);
-	}
-	stp_put32_le(0x0100, v);
-	stp_put32_le(0x00, v);
+  int i;
 
-	/* Write the color curve data. */
-	for (i = 0xff; i >= 0 ; i--) {
-		unsigned long tmp;
-		tmp = i | (i << 8) | (i << 16);
-		stp_put32_le(tmp, v);
-	}
+  stp_put32_le(0x28, v);
+  stp_put32_le(0x0800, v);
+  stp_put16_le(pd->h_size, v);  /* number of rows */
+  stp_put16_le(0x0, v);
+  stp_put32_le(0x080001, v);
+  stp_put32_le(0x00, v);
+  stp_put32_le(0x00, v);
+  stp_put32_le(0x335a, v);
+  if (pd->h_dpi == 600) {
+    stp_put32_le(0x5c40, v);
+  } else {
+    stp_put32_le(0x335a, v);
+  }
+  stp_put32_le(0x0100, v);
+  stp_put32_le(0x00, v);
+
+  /* Write the color curve data. */
+  for (i = 0xff; i >= 0 ; i--) {
+    unsigned long tmp;
+    tmp = i | (i << 8) | (i << 16);
+    stp_put32_le(tmp, v);
+  }
 }
 
 /* Model capabilities */
@@ -6741,12 +6873,14 @@ dyesub_describe_output(const stp_vars_t *v)
 static void
 dyesub_nputc(stp_vars_t *v, char byte, int count)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   if (count == 1)
     stp_putc(byte, v);
   else
     {
       int i;
-      char *buf = privdata.nputc_buf;
+      char *buf = pd->nputc_buf;
       int size = count;
       int blocks = size / NPUTC_BUFSIZE;
       int leftover = size % NPUTC_BUFSIZE;
@@ -6997,10 +7131,13 @@ dyesub_print_row(stp_vars_t *v,
 
 static int
 dyesub_print_plane(stp_vars_t *v,
-		dyesub_print_vars_t *pv,
-		const dyesub_cap_t *caps,
-		int plane)
+		   dyesub_print_vars_t *pv,
+		   dyesub_privdata_t *pd,		
+		   const dyesub_cap_t *caps,
+		   int plane)
 {
+
+
   int ret = 0;
   int h, row, p;
   int out_bytes = ((pv->plane_interlacing || pv->row_interlacing) ? 1 : pv->ink_channels)
@@ -7014,11 +7151,11 @@ dyesub_print_plane(stp_vars_t *v,
 
       if (h % caps->block_size == 0)
         { /* block init */
-	  privdata.block_min_h = h + pv->prnt_px;
-	  privdata.block_min_w = pv->prnl_px;
-	  privdata.block_max_h = MIN(h + pv->prnt_px + caps->block_size - 1,
+	  pd->block_min_h = h + pv->prnt_px;
+	  pd->block_min_w = pv->prnl_px;
+	  pd->block_max_h = MIN(h + pv->prnt_px + caps->block_size - 1,
 	  					pv->prnb_px);
-	  privdata.block_max_w = pv->prnr_px;
+	  pd->block_max_w = pv->prnr_px;
 
 	  dyesub_exec(v, caps->block_init_func, "caps->block_init");
 	}
@@ -7049,7 +7186,7 @@ dyesub_print_plane(stp_vars_t *v,
 	    }
 	}
 
-      if (h + pv->prnt_px == privdata.block_max_h)
+      if (h + pv->prnt_px == pd->block_max_h)
         { /* block end */
 	  dyesub_exec(v, caps->block_end_func, "caps->block_end");
 	}
@@ -7093,6 +7230,8 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
 
   int pl;
 
+  dyesub_privdata_t *pd;
+  
   if (!stp_verify(v))
     {
       stp_eprintf(v, _("Print options not verified; cannot print.\n"));
@@ -7101,7 +7240,10 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
 
   /* Clean up private state */
   (void) memset(&pv, 0, sizeof(pv));
-  (void) memset(&privdata, 0, sizeof(privdata));
+  
+  /* Allocate privdata structure */
+  pd = stp_zalloc(sizeof(dyesub_privdata_t));
+  stp_allocate_component_data(v, "Driver", NULL, NULL, pd);
   
   /* Parse any per-printer parameters *before* the generic ones */
   dyesub_exec_check(v, caps->parse_parameters, "caps->parse_parameters");
@@ -7114,16 +7256,16 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   dyesub_printsize(v, &max_print_px_width, &max_print_px_height);
 
   /* Duplex processing -- Rotate even pages for DuplexNoTumble */
-  privdata.duplex_mode = stp_get_string_parameter(v, "Duplex");
-  privdata.page_number = stp_get_int_parameter(v, "PageNumber");
-  if((privdata.page_number & 1) && privdata.duplex_mode && !strcmp(privdata.duplex_mode,"DuplexNoTumble"))
+  pd->duplex_mode = stp_get_string_parameter(v, "Duplex");
+  pd->page_number = stp_get_int_parameter(v, "PageNumber");
+  if((pd->page_number & 1) && pd->duplex_mode && !strcmp(pd->duplex_mode,"DuplexNoTumble"))
     image = stpi_buffer_image(image,BUFFER_FLAG_FLIP_X | BUFFER_FLAG_FLIP_Y);
 
-  privdata.pagesize = stp_get_string_parameter(v, "PageSize");
+  pd->pagesize = stp_get_string_parameter(v, "PageSize");
   if (caps->laminate)
-	  privdata.laminate = dyesub_get_laminate_pattern(v);
+	  pd->laminate = dyesub_get_laminate_pattern(v);
   if (caps->media)
-	  privdata.media = dyesub_get_mediatype(v);
+	  pd->media = dyesub_get_mediatype(v);
 
   dyesub_imageable_area_internal(v, 
   	(dyesub_feature(caps, DYESUB_FEATURE_WHITE_BORDER) ? 1 : 0),
@@ -7294,25 +7436,25 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
     }
 
   /* assign private data *after* swaping image dimensions */
-  privdata.w_dpi = w_dpi;
-  privdata.h_dpi = h_dpi;
-  privdata.w_size = pv.prnw_px;
-  privdata.h_size = pv.prnh_px;
-  privdata.print_mode = pv.print_mode;
-  privdata.bpp = pv.bits_per_ink_channel;
+  pd->w_dpi = w_dpi;
+  pd->h_dpi = h_dpi;
+  pd->w_size = pv.prnw_px;
+  pd->h_size = pv.prnh_px;
+  pd->print_mode = pv.print_mode;
+  pd->bpp = pv.bits_per_ink_channel;
   
   /* printer init */
   dyesub_exec(v, caps->printer_init_func, "caps->printer_init");
 
   for (pl = 0; pl < (pv.plane_interlacing ? pv.ink_channels : 1); pl++)
     {
-      privdata.plane = pv.ink_order[pl];
-      stp_deprintf(STP_DBG_DYESUB, "dyesub: plane %d\n", privdata.plane);
+      pd->plane = pv.ink_order[pl];
+      stp_deprintf(STP_DBG_DYESUB, "dyesub: plane %d\n", pd->plane);
 
       /* plane init */
       dyesub_exec(v, caps->plane_init_func, "caps->plane_init");
   
-      dyesub_print_plane(v, &pv, caps, (int) pv.ink_order[pl] - 1);
+      dyesub_print_plane(v, &pv, pd, caps, (int) pv.ink_order[pl] - 1);
 
       /* plane end */
       dyesub_exec(v, caps->plane_end_func, "caps->plane_end");
