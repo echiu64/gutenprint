@@ -173,8 +173,6 @@ typedef struct {
   size_t n_items;
 } dyesub_stringlist_t;
 
-#define NPUTC_BUFSIZE (4096)
-
 /* Private data for some of the major dyesub driver families */
 typedef struct
 {
@@ -218,7 +216,6 @@ typedef struct
    mitsu9550_privdata_t m9550;
    mitsu70x_privdata_t m70x;
   };
-  char nputc_buf[NPUTC_BUFSIZE];
 } dyesub_privdata_t;
 
 typedef struct {
@@ -6906,17 +6903,18 @@ dyesub_describe_output(const stp_vars_t *v)
   return dyesub_describe_output_internal(v, &ipv);
 }
 
+#define NPUTC_BUFSIZE (512)
+
 static void
 dyesub_nputc(stp_vars_t *v, char byte, int count)
 {
-  dyesub_privdata_t *pd = get_privdata(v);
+  char buf[NPUTC_BUFSIZE];	
 
   if (count == 1)
     stp_putc(byte, v);
   else
     {
       int i;
-      char *buf = pd->nputc_buf;
       int size = count;
       int blocks = size / NPUTC_BUFSIZE;
       int leftover = size % NPUTC_BUFSIZE;
