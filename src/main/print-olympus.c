@@ -2827,6 +2827,38 @@ static void mitsu_cp9550_printer_end(stp_vars_t *v)
   stp_putc(0x00, v);
 }
 
+/* Mitsubishi CP9550DW-S */
+
+static const dyesub_pagesize_t mitsu_cp9550s_page[] =
+{
+  { "w288h432", "4x6", PT(1416,346)+1, PT(2152,346)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE},
+  { "w288h432-div2", "2x6*2", PT(1416,346)+1, PT(2152,346)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE},  
+  { "w360h504", "5x7", PT(1812,346)+1, PT(2452,346)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+  { "w432h576", "6x8", PT(2152,346)+1, PT(2792,346)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+  { "w432h612", "6x8.5", PT(2152,346)+1, PT(2956,346)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+  { "w432h648", "6x9", PT(2152,346)+1, PT(3146,346)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+};
+
+LIST(dyesub_pagesize_list_t, mitsu_cp9550s_page_list, dyesub_pagesize_t, mitsu_cp9550s_page);
+
+static const dyesub_printsize_t mitsu_cp9550s_printsize[] =
+{
+  { "346x346", "w288h432", 1416, 2152},
+  { "346x346", "w288h432-div2", 1416, 2152},
+  { "346x346", "w360h504", 1812, 2452},
+  { "346x346", "w432h576", 2152, 2792},
+  { "346x346", "w432h612", 2152, 2956},
+  { "346x346", "w432h648", 2152, 3146},
+};
+
+LIST(dyesub_printsize_list_t, mitsu_cp9550s_printsize_list, dyesub_printsize_t, mitsu_cp9550s_printsize);
+
 static void mitsu_cp9550s_printer_end(stp_vars_t *v)
 {
   /* Page Footer */
@@ -6049,10 +6081,10 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Mitsubishi CP9550DW-S */
     4111,
-    &rgb_ink_list, /* Identical to 9550D except it's rgb instead of bgr */
+    &rgb_ink_list,
     &res_346dpi_list,
-    &mitsu_cp9550_page_list,
-    &mitsu_cp9550_printsize_list,
+    &mitsu_cp9550s_page_list,
+    &mitsu_cp9550s_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_PLANE_INTERLACE,
