@@ -3362,7 +3362,7 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
   stp_putc(pd->m70x.quality, v);
   dyesub_nputc(v, 0x00, 7);
 
-  if (model != 0x01) {
+  if (model == 0x01) {
     stp_putc(0x00, v);  /* D70x: 0x00 Auto deck selection, 0x01 for Lower, 0x02 for Upper. */
   } else {
     stp_putc(0x01, v); /* All others have a single "lower" deck */
@@ -3611,7 +3611,7 @@ LIST(dyesub_printsize_list_t, kodak305_printsize_list, dyesub_printsize_t, kodak
 
 static void kodak305_printer_init(stp_vars_t *v)
 {
-	mitsu_cpd70k60_printer_init(v, 0x90);
+  mitsu_cpd70k60_printer_init(v, 0x90);
 }
 
 /* Mitsubishi CP-D90D */
