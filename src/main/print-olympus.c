@@ -193,7 +193,7 @@ typedef struct
   char nputc_buf[NPUTC_BUFSIZE];
 } dyesub_privdata_t;
 
-static dyesub_privdata_t privdata;
+static dyesub_privdata_t privdata; /* XXXFIXME */
 
 typedef struct {
   int out_channels;
@@ -2566,7 +2566,7 @@ typedef struct
   int finedeep;
 } mitsu9550_privdata_t;
 
-static mitsu9550_privdata_t mitsu9550_privdata;
+static mitsu9550_privdata_t mitsu9550_privdata; /* XXXFIXME */
 
 static const dyesub_stringitem_t mitsu9550_qualities[] =
 {
@@ -3087,7 +3087,7 @@ typedef struct
   int sharpen;
 } mitsu70x_privdata_t;
 
-static mitsu70x_privdata_t mitsu70x_privdata;
+static mitsu70x_privdata_t mitsu70x_privdata; /* XXXFIXME */
 
 static const dyesub_stringitem_t mitsu70x_qualities[] =
 {
@@ -3607,7 +3607,7 @@ static int mitsu_d90_parse_parameters(stp_vars_t *v)
 
 #ifdef MITSU70X_8BPP
   mitsu70x_privdata.use_lut = stp_get_boolean_parameter(v, "UseLUT");
-  mitsu70x_privdata.sharpen = stp_get_int_parameter(v, "Sharpen"); // XXX
+  mitsu70x_privdata.sharpen = stp_get_int_parameter(v, "Sharpen");
 #endif
   
   return 1;
@@ -3689,7 +3689,7 @@ static void mitsu_cpd90_printer_end(stp_vars_t *v)
   stp_putc(0x51, v);
   stp_putc(0x31, v);
   stp_putc(0x00, v);
-  stp_putc(0x05, v); // XXX seconds to wait for second print
+  stp_putc(0x05, v); /* XXX seconds to wait for second print */
 }
 
 /* Fujifilm ASK-300 */
@@ -4446,7 +4446,7 @@ typedef struct
   int multicut;
 } dnp_privdata_t;
 
-static dnp_privdata_t dnp_privdata;
+static dnp_privdata_t dnp_privdata; /* XXXFIXME */
 
 /* Imaging area is wider than print size, we always must supply the 
    printer with the full imaging width. */
@@ -4509,35 +4509,37 @@ LIST(dyesub_printsize_list_t, dnpds80_printsize_list, dyesub_printsize_t, dnpds8
 
 static int dnpds80_parse_parameters(stp_vars_t *v)
 {
- if (!strcmp(privdata.pagesize, "c8x10")) {
+  const char *pagesize = stp_get_string_parameter(v, "PageSize");
+
+  if (!strcmp(pagesize, "c8x10")) {
     dnp_privdata.multicut = 6;
-  } else if (!strcmp(privdata.pagesize, "w576h864")) {
+  } else if (!strcmp(pagesize, "w576h864")) {
     dnp_privdata.multicut = 7;
-  } else if (!strcmp(privdata.pagesize, "w288h576")) {
+  } else if (!strcmp(pagesize, "w288h576")) {
     dnp_privdata.multicut = 8;
-  } else if (!strcmp(privdata.pagesize, "w360h576")) {
+  } else if (!strcmp(pagesize, "w360h576")) {
     dnp_privdata.multicut = 9;
-  } else if (!strcmp(privdata.pagesize, "w432h576")) {
+  } else if (!strcmp(pagesize, "w432h576")) {
     dnp_privdata.multicut = 10;
-  } else if (!strcmp(privdata.pagesize, "w576h576")) {
+  } else if (!strcmp(pagesize, "w576h576")) {
     dnp_privdata.multicut = 11;
-  } else if (!strcmp(privdata.pagesize, "w576h576-div2")) {
+  } else if (!strcmp(pagesize, "w576h576-div2")) {
     dnp_privdata.multicut = 13;
-  } else if (!strcmp(privdata.pagesize, "c8x10-div2")) {
+  } else if (!strcmp(pagesize, "c8x10-div2")) {
     dnp_privdata.multicut = 14;
-  } else if (!strcmp(privdata.pagesize, "w576h864-div2")) {
+  } else if (!strcmp(pagesize, "w576h864-div2")) {
     dnp_privdata.multicut = 15;
-  } else if (!strcmp(privdata.pagesize, "w576h648-w576h360_w576h288")) {
+  } else if (!strcmp(pagesize, "w576h648-w576h360_w576h288")) {
     dnp_privdata.multicut = 16;
-  } else if (!strcmp(privdata.pagesize, "c8x10-w576h432_w576h288")) {
+  } else if (!strcmp(pagesize, "c8x10-w576h432_w576h288")) {
     dnp_privdata.multicut = 17;
-  } else if (!strcmp(privdata.pagesize, "w576h792-w576h432_w576h360")) {
+  } else if (!strcmp(pagesize, "w576h792-w576h432_w576h360")) {
     dnp_privdata.multicut = 18;
-  } else if (!strcmp(privdata.pagesize, "w576h864-w576h576_w576h288")) {
+  } else if (!strcmp(pagesize, "w576h864-w576h576_w576h288")) {
     dnp_privdata.multicut = 19;
-  } else if (!strcmp(privdata.pagesize, "w576h864-div3")) {
+  } else if (!strcmp(pagesize, "w576h864-div3")) {
     dnp_privdata.multicut = 20;
-  } else if (!strcmp(privdata.pagesize, "A4")) {
+  } else if (!strcmp(pagesize, "A4")) {
     dnp_privdata.multicut = 21;
   } else {
     stp_eprintf(v, _("Illegal print size selected for roll media!\n"));
@@ -4570,11 +4572,20 @@ LIST(dyesub_media_list_t, dnpds80dx_media_list, dyesub_media_t, dnpds80dx_medias
 
 static int dnpds80dx_parse_parameters(stp_vars_t *v)
 {
-  if (!strcmp(privdata.media->name, "Roll")) {
-    if (strcmp(privdata.duplex_mode, "None")) {
+  const char *pagesize;
+  const dyesub_media_t* media = NULL;
+  const char* duplex_mode;
+  int page_number;
+  
+  pagesize = stp_get_string_parameter(v, "PageSize");
+  duplex_mode = stp_get_string_parameter(v, "Duplex");
+  media = dyesub_get_mediatype(v);
+  page_number = stp_get_int_parameter(v, "PageNumber");
+
+  if (!strcmp(media->name, "Roll")) {
+    if (strcmp(duplex_mode, "None")) {
       stp_eprintf(v, _("Duplex not supported on roll media, switching to sheet media!\n"));
       stp_set_string_parameter(v, "MediaType", "Sheet");
-      privdata.media = dyesub_get_mediatype(v);
     } else {
       /* If we're not using duplex and roll media, this is
 	 effectively a DS80 (non-DX) */
@@ -4582,29 +4593,29 @@ static int dnpds80dx_parse_parameters(stp_vars_t *v)
     }
   }
 
-  if (!strcmp(privdata.pagesize, "c8x10")) {
+  if (!strcmp(pagesize, "c8x10")) {
     dnp_privdata.multicut = 6;
-  } else if (!strcmp(privdata.pagesize, "w576h864")) {
+  } else if (!strcmp(pagesize, "w576h864")) {
     dnp_privdata.multicut = 7;
-  } else if (!strcmp(privdata.pagesize, "w288h576")) {
+  } else if (!strcmp(pagesize, "w288h576")) {
     dnp_privdata.multicut = 8;
-  } else if (!strcmp(privdata.pagesize, "w360h576")) {
+  } else if (!strcmp(pagesize, "w360h576")) {
     dnp_privdata.multicut = 9;
-  } else if (!strcmp(privdata.pagesize, "w432h576")) {
+  } else if (!strcmp(pagesize, "w432h576")) {
     dnp_privdata.multicut = 10;
-  } else if (!strcmp(privdata.pagesize, "w576h576")) {
+  } else if (!strcmp(pagesize, "w576h576")) {
     dnp_privdata.multicut = 11;
-  } else if (!strcmp(privdata.pagesize, "w576h774-w576h756")) {
+  } else if (!strcmp(pagesize, "w576h774-w576h756")) {
     dnp_privdata.multicut = 25;
-  } else if (!strcmp(privdata.pagesize, "w576h774")) {
+  } else if (!strcmp(pagesize, "w576h774")) {
     dnp_privdata.multicut = 26;
-  } else if (!strcmp(privdata.pagesize, "w576h576-div2")) {
+  } else if (!strcmp(pagesize, "w576h576-div2")) {
     dnp_privdata.multicut = 13;
-  } else if (!strcmp(privdata.pagesize, "c8x10-div2")) {
+  } else if (!strcmp(pagesize, "c8x10-div2")) {
     dnp_privdata.multicut = 14;
-  } else if (!strcmp(privdata.pagesize, "w576h864-div2")) {
+  } else if (!strcmp(pagesize, "w576h864-div2")) {
     dnp_privdata.multicut = 15;
-  } else if (!strcmp(privdata.pagesize, "w576h864-div3sheet")) {
+  } else if (!strcmp(pagesize, "w576h864-div3sheet")) {
     dnp_privdata.multicut = 28;
   } else {
     stp_eprintf(v, _("Illegal print size selected for sheet media!\n"));
@@ -4612,9 +4623,9 @@ static int dnpds80dx_parse_parameters(stp_vars_t *v)
   }
 
   /* Add correct offset to multicut mode based on duplex state */
-  if (!strcmp(privdata.duplex_mode, "None"))
+  if (!strcmp(duplex_mode, "None"))
      dnp_privdata.multicut += 100; /* Simplex */
-  else if (privdata.page_number & 1)
+  else if (page_number & 1)
      dnp_privdata.multicut += 300; /* Duplex, back */
   else
      dnp_privdata.multicut += 200; /* Duplex, front */
@@ -7087,7 +7098,13 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
       stp_eprintf(v, _("Print options not verified; cannot print.\n"));
       return 0;
     }
+
+  /* Clean up private state */
   (void) memset(&pv, 0, sizeof(pv));
+  (void) memset(&privdata, 0, sizeof(privdata));
+  
+  /* Parse any per-printer parameters *before* the generic ones */
+  dyesub_exec_check(v, caps->parse_parameters, "caps->parse_parameters");
 
   stp_image_init(image);
   pv.imgw_px = stp_image_width(image);
@@ -7107,12 +7124,6 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
 	  privdata.laminate = dyesub_get_laminate_pattern(v);
   if (caps->media)
 	  privdata.media = dyesub_get_mediatype(v);
-
-  /* Parse any per-printer parameters after we've done all generic ones */
-  status = dyesub_exec_check(v, caps->parse_parameters, "caps->parse_parameters");
-  if (status != 1) {
-     goto done;
-  }
 
   dyesub_imageable_area_internal(v, 
   	(dyesub_feature(caps, DYESUB_FEATURE_WHITE_BORDER) ? 1 : 0),
@@ -7310,7 +7321,6 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   /* printer end */
   dyesub_exec(v, caps->printer_end_func, "caps->printer_end");
 
-done:
   if (pv.image_data) {
     dyesub_free_image(&pv, image);
   }
@@ -7362,6 +7372,21 @@ dyesub_job_end(const stp_vars_t *v, stp_image_t *image)
   return 1;	
 }
 
+
+static int dyesub_verify_printer_params(stp_vars_t *v)
+{
+  const int model           = stp_get_model_id(v);
+  const dyesub_cap_t *caps  = dyesub_get_model_capabilities(model);
+  int result;
+  result = stp_verify_printer_params(v);
+  if (result != 1)
+    return result;
+
+  /* Sanity-check printer-specific parameters if a function exists */
+  result = dyesub_exec_check(v, caps->parse_parameters, "caps->parse_parameters");
+  return result;
+}
+
 static const stp_printfuncs_t print_dyesub_printfuncs =
 {
   dyesub_list_parameters,
@@ -7373,21 +7398,17 @@ static const stp_printfuncs_t print_dyesub_printfuncs =
   dyesub_print,
   dyesub_describe_resolution,
   dyesub_describe_output,
-  stp_verify_printer_params,
+  dyesub_verify_printer_params,
   dyesub_job_start,
   dyesub_job_end,
   NULL
 };
-
-
-
 
 static stp_family_t print_dyesub_module_data =
   {
     &print_dyesub_printfuncs,
     NULL
   };
-
 
 static int
 print_dyesub_module_init(void)
