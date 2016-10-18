@@ -265,7 +265,6 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	Fujifilm ASK-300      [*2] [experimental]
 	Mitsubishi CP-9600DW       [experimental]
 	Mitsubishi CP-9800DW       [experimental]
-	Mitsubishi CP-9800DW-S     [experimental]
 	Mitsubishi CP-D90DW        [experimental]
 	DNP DS-RX1HS
 
@@ -337,8 +336,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	DNP DS40/DS80/DS80DX/DS620/DS-RX1
 	Citizen CX/CX-W/CY
 	Kodak 305/605/6800/6850
-	Mitsubishi CP-D70DW/CP-D707DW/CP-K60DW-S
-	Mitsubishi CP-9550DW/CP-9800DW
+	Mitsubishi CP-D70DW/CP-D707DW/CP-K60DW-S/CP-D9550DW
 	Sinfonia CHC-S1245/CHC-S2145/CHC-S6145/CHC-S6245
 	Ciaat Brava 21
 
