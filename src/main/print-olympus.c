@@ -3054,12 +3054,14 @@ static int mitsu9810_parse_parameters(stp_vars_t *v)
 {
   const char *quality = stp_get_string_parameter(v, "PrintSpeed");
   dyesub_privdata_t *pd = get_privdata(v);
-  const laminate_t *laminate = dyesub_get_laminate_pattern(v);
+  const laminate_t *laminate = NULL;
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+		  				stp_get_model_id(v));
 
   /* No need to set global params if there's no privdata yet */  
   if (!pd)
     return 1;
-
+  
   pd->m9550.quality = 0;
 
   /* Parse options */
@@ -3070,8 +3072,11 @@ static int mitsu9810_parse_parameters(stp_vars_t *v)
   }
 
   /* Matte lamination forces SuperFine mode */
-  if (*((const char*)((laminate->seq).data)) != 0x00) {
-     pd->m9550.quality = 0x80;
+  if (caps->laminate) {
+    laminate = dyesub_get_laminate_pattern(v);	  
+    if (*((const char*)((laminate->seq).data)) != 0x00) {
+      pd->m9550.quality = 0x80;
+    }
   }
   
   return 1;
