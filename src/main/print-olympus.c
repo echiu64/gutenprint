@@ -5917,7 +5917,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Mitsubishi CP9810D */
     4104,
-    &bgr_ink_list,
+    &ymc_ink_list,
     &res_300dpi_list,
     &mitsu_cp9810_page_list,
     &mitsu_cp9810_printsize_list,
@@ -6144,7 +6144,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Mitsubishi CP9800D */
     4113,
-    &bgr_ink_list,
+    &ymc_ink_list,
     &res_300dpi_list,
     &mitsu_cp9810_page_list,
     &mitsu_cp9810_printsize_list,
