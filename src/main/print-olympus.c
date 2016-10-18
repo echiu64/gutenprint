@@ -3054,6 +3054,7 @@ static int mitsu9810_parse_parameters(stp_vars_t *v)
 {
   const char *quality = stp_get_string_parameter(v, "PrintSpeed");
   dyesub_privdata_t *pd = get_privdata(v);
+  const laminate_t *laminate = dyesub_get_laminate_pattern(v);
 
   /* No need to set global params if there's no privdata yet */  
   if (!pd)
@@ -3069,7 +3070,7 @@ static int mitsu9810_parse_parameters(stp_vars_t *v)
   }
 
   /* Matte lamination forces SuperFine mode */
-  if (*((const char*)((pd->laminate->seq).data)) != 0x00) {
+  if (*((const char*)((laminate->seq).data)) != 0x00) {
      pd->m9550.quality = 0x80;
   }
   
@@ -3364,6 +3365,8 @@ static int mitsu70x_parse_parameters(stp_vars_t *v)
 
 static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
 {
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+		  				stp_get_model_id(v));
   dyesub_privdata_t *pd = get_privdata(v);
 
   /* Printer wakeup */
@@ -3382,7 +3385,7 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
 
   stp_put16_be(pd->w_size, v);
   stp_put16_be(pd->h_size, v);
-  if (*((const char*)((pd->laminate->seq).data)) != 0x00) {
+  if (caps->laminate && *((const char*)((pd->laminate->seq).data)) != 0x00) {
     stp_put16_be(pd->w_size, v);
     if (model == 0x02 || model == 0x90) {
       pd->m70x.laminate_offset = 0;
@@ -3409,10 +3412,15 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
     stp_putc(0x01, v); /* All others have a single "lower" deck */
   }
   dyesub_nputc(v, 0x00, 7);
-
+  
   stp_putc(0x00, v); /* Lamination always enabled */
-  stp_zfwrite((pd->laminate->seq).data, 1,
-	      (pd->laminate->seq).bytes, v); /* Lamination mode */
+
+  if (caps->laminate) {
+    stp_zfwrite((pd->laminate->seq).data, 1,
+		(pd->laminate->seq).bytes, v); /* Lamination mode */
+  } else {
+    stp_putc(0x00, v);
+  }
   dyesub_nputc(v, 0x00, 6);
 
   /* Multi-cut control */
@@ -7564,6 +7572,8 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   }
 
   stp_image_conclude(image);
+  stp_free(pd);
+
   return status;
 }
 
