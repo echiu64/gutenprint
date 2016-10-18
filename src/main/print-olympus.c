@@ -4768,7 +4768,7 @@ static int dnpds80dx_parse_parameters(stp_vars_t *v)
   page_number = stp_get_int_parameter(v, "PageNumber");
 
   if (!strcmp(media->name, "Roll")) {
-    if (strcmp(duplex_mode, "None")) {
+    if (strcmp(duplex_mode, "None") && strcmp(duplex_mode, "Standard")) {
       stp_eprintf(v, _("Duplex not supported on roll media, switching to sheet media!\n"));
       stp_set_string_parameter(v, "MediaType", "Sheet");
     } else {
@@ -4808,7 +4808,7 @@ static int dnpds80dx_parse_parameters(stp_vars_t *v)
   }
 
   /* Add correct offset to multicut mode based on duplex state */
-  if (!strcmp(duplex_mode, "None"))
+  if (!strcmp(duplex_mode, "None") || !strcmp(duplex_mode, "Standard"))
      multicut += 100; /* Simplex */
   else if (page_number & 1)
      multicut += 300; /* Duplex, back */
