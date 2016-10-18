@@ -375,6 +375,13 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	Canon BJC-2100
 	Canon BJC-2110
 
+  7) Added duplex support for the following Canon inkjet printers:
+
+	Canon iB4000
+	Canon MB2000
+	Canon MB2300
+	Canon MB5000
+	Canon MB5300
 
 * Changes from 5.2.10
 
