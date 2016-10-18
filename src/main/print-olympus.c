@@ -3152,7 +3152,7 @@ static void mitsu_cp9810_printer_end(stp_vars_t *v)
   /* Job Footer */
   stp_putc(0x1b, v);
   stp_putc(0x50, v);
-  stp_putc(0x4c, v);
+  stp_putc(0x4c, v); /* XXX 9800DW-S uses 0x4e, backend corrects */
   stp_putc(0x00, v);
 
   if (pd->laminate &&
