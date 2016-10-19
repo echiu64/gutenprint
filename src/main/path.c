@@ -31,16 +31,16 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-static int stpi_path_check(const struct dirent *module);
+static int stpi_path_check(const struct dirent *module,
+			   const char *path,
+			   const char *suffix);
 static int stpi_scandir (const char *dir,
 			 struct dirent ***namelist,
-			 int (*sel) (const struct dirent *),
+			 const char *path,
+			 const char *suffix,
+			 int (*sel) (const struct dirent *, const char *,
+				     const char *),
 			 int (*cmp) (const void *, const void *));
-
-/* WARNING: This is not thread safe! -- rlk 20030721 */
-static const char *path_check_path;   /* Path for stpi_scandir() callback */
-static const char *path_check_suffix; /* Suffix for stpi_scandir() callback */
-
 
 static int
 dirent_sort(const void *a,
@@ -67,8 +67,6 @@ stp_path_search(stp_list_t *dirlist, /* List of directories to search */
   if (!dirlist)
     return NULL;
 
-  path_check_suffix = suffix;
-
   findlist = stp_list_create();
   if (!findlist)
     return NULL;
@@ -77,11 +75,12 @@ stp_path_search(stp_list_t *dirlist, /* List of directories to search */
   diritem = stp_list_get_start(dirlist);
   while (diritem)
     {
-      path_check_path = (const char *) stp_list_item_get_data(diritem);
+      const char *check_path = (const char *) stp_list_item_get_data(diritem);
       stp_deprintf(STP_DBG_PATH, "stp-path: directory: %s\n",
 		   (const char *) stp_list_item_get_data(diritem));
       n = stpi_scandir ((const char *) stp_list_item_get_data(diritem),
-			&module_dir, stpi_path_check, dirent_sort);
+			&module_dir, check_path, suffix,
+			stpi_path_check, dirent_sort);
       if (n >= 0)
 	{
 	  int idx;
@@ -105,7 +104,9 @@ stp_path_search(stp_list_t *dirlist, /* List of directories to search */
  * correct mode bits and suffix.
  */
 static int
-stpi_path_check(const struct dirent *module) /* File to check */
+stpi_path_check(const struct dirent *module, /* File to check */
+		const char *check_path,	     /* Path to search */
+		const char *check_suffix)    /* Suffix */
 {
   int namelen;                              /* Filename length */
   int status = 0;                           /* Error status */
@@ -116,21 +117,20 @@ stpi_path_check(const struct dirent *module) /* File to check */
   savederr = errno; /* since we are a callback, preserve
 		       stpi_scandir() state */
 
-  filename = stpi_path_merge(path_check_path, module->d_name);
+  filename = stpi_path_merge(check_path, module->d_name);
 
   namelen = strlen(filename);
   /* make sure we can take off suffix (e.g. .la)
      and still have a sane filename */
-  if (namelen >= strlen(path_check_suffix) + 1) 
+  if (namelen >= strlen(check_suffix) + 1) 
     {
       if (!stat (filename, &modstat))
 	{
 	  /* check file exists, and is a regular file */
 	  if (S_ISREG(modstat.st_mode))
 	    status = 1;
-	  if (strncmp(filename + (namelen - strlen(path_check_suffix)),
-		      path_check_suffix,
-		      strlen(path_check_suffix)))
+	  if (strncmp(filename + (namelen - strlen(check_suffix)),
+		      check_suffix, strlen(check_suffix)))
 	    {
 	      status = 0;
 	    }
@@ -267,7 +267,9 @@ stp_path_split(stp_list_t *list, /* List to add directories to */
 static int
 stpi_scandir (const char *dir,
 	      struct dirent ***namelist,
-	      int (*sel) (const struct dirent *),
+	      const char *path,
+	      const char *suffix,
+	      int (*sel) (const struct dirent *, const char *path, const char *suffix),
 	      int (*cmp) (const void *, const void *))
 {
   DIR *dp = opendir (dir);
@@ -284,7 +286,7 @@ stpi_scandir (const char *dir,
 
   i = 0;
   while ((d = readdir (dp)) != NULL)
-    if (sel == NULL || (*sel) (d))
+    if (sel == NULL || (*sel) (d, path, suffix))
       {
 	struct dirent *vnew;
 	size_t dsize;

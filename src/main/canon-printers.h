@@ -51,7 +51,7 @@ typedef struct canon_caps {
   int ESC_l_len; /* length of ESC (l command, in bytes */
   int ESC_P_len; /* length of ESC (P command, in bytes */
   int CassetteTray_Opts; /* upper/lower cassette tray option */
-  const char** control_cmdlist;
+  const char* const* control_cmdlist;
   const canon_modelist_t* modelist;
   const canon_paperlist_t* paperlist;
   const canon_modeuselist_t* modeuselist;
@@ -196,12 +196,12 @@ static const char MP450_hue_adjustment[] =
 "</curve>\n"
 "</gutenprint>\n";
 
-static const char* control_cmd_ackshort[] = {
+static const char* const control_cmd_ackshort[] = {
   "AckTime=Short",
   NULL
 };
 
-static const char* control_cmd_PIXMA_iP4000[] = {
+static const char* const control_cmd_PIXMA_iP4000[] = {
 /*"SetTime=20060722092503", */         /*what is this for?*/
   "SetSilent=OFF",
   "PEdgeDetection=ON",
@@ -209,44 +209,44 @@ static const char* control_cmd_PIXMA_iP4000[] = {
   NULL
 };
 
-static const char* control_cmd_BJC_i550[] = {
+static const char* const control_cmd_BJC_i550[] = {
 /*"SetTime=20060722092503", */         /*what is this for?*/
   "SetSilent=OFF",
   "SelectParallel=ECP",
   NULL
 };
 
-static const char* control_cmd_BJC_i6100[] = {
+static const char* const control_cmd_BJC_i6100[] = {
 /*"SetTime=20060722092503", */         /*what is this for?*/
   "SelectParallel=ECP",
   NULL
 };
 
-static const char* control_cmd_PIXMA_iP4200[] = {
+static const char* const control_cmd_PIXMA_iP4200[] = {
 /*"SetTime=20060722092503", */         /*original driver sends current time, is it needed?*/
   "SetSilent=OFF",
   "PEdgeDetection=ON",
   NULL
 };
 
-static const char* control_cmd_PIXMA_iP2700[] = {
+static const char* const control_cmd_PIXMA_iP2700[] = {
 /*"SetTime=20060722092503", */         /*what is this for?*/
   "SetSilent=OFF",
   NULL
 };
 
-static const char* control_cmd_PIXMA_MG5300[] = {
+static const char* const control_cmd_PIXMA_MG5300[] = {
 /*"SetTime=20060722092503", */         /*what is this for?*/
   NULL
 };
 
-static const char* control_cmd_PIXMA_MG3500[] = {
+static const char* const control_cmd_PIXMA_MG3500[] = {
 /*"SetTime=20060722092503", */         /*what is this for?*/
   "ForcePWDetection=OFF",
   NULL
 };
 
-static const char* control_cmd_PIXMA_MG5600[] = {
+static const char* const control_cmd_PIXMA_MG5600[] = {
 /*"SetTime=20060722092503", */         /*what is this for?*/
   "ForcePMDetection=OFF",
   NULL
@@ -3767,7 +3767,7 @@ static const canon_cap_t canon_model_capabilities[] =
     INCH(17/2), 1917,       /* max paper width and height assumed */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_MAXIFY_iB4000_slotlist,
-    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I|CANON_CAP_v|CANON_CAP_XML,0,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I|CANON_CAP_v|CANON_CAP_XML|CANON_CAP_DUPLEX,0,
     3,9, /* ESC (l and (P command lengths */
     0, /* Upper/Lower Cassette option */
     control_cmd_PIXMA_MG5300, /*features*/
@@ -3786,7 +3786,7 @@ static const canon_cap_t canon_model_capabilities[] =
     INCH(17/2), 1917,       /* max paper width and height assumed */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_MULTIPASS_MX7600_slotlist,
-    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I|CANON_CAP_v|CANON_CAP_XML,0,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I|CANON_CAP_v|CANON_CAP_XML|CANON_CAP_DUPLEX,0,
     3,9, /* ESC (l and (P command lengths */
     0, /* Upper/Lower Cassette option */
     control_cmd_PIXMA_MG5300, /*features*/
@@ -3805,7 +3805,7 @@ static const canon_cap_t canon_model_capabilities[] =
     INCH(17/2), 1917,       /* max paper width and height assumed */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_MAXIFY_iB4000_slotlist,
-    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I|CANON_CAP_v|CANON_CAP_XML,0,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I|CANON_CAP_v|CANON_CAP_XML|CANON_CAP_DUPLEX,0,
     3,9, /* ESC (l and (P command lengths */
     0, /* Upper/Lower Cassette option */
     control_cmd_PIXMA_MG5300, /*features*/

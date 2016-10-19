@@ -147,6 +147,12 @@
 # Mitsubishi CP-9550DZ/DW-S
 0x06d3 0x03a5 blacklist
 
+# Mitsubishi CP-9600D/DW
+0x06d3 0x03a9 blacklist
+
+# Mitsubishi CP-9800DW-S
+0x06d3 0x03ae blacklist
+
 # Citizen CW-01
 0x1343 0x0002 blacklist
 

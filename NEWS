@@ -262,6 +262,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	Fujifilm ASK-300      [*2] [experimental]
 	Mitsubishi CP-9600DW       [experimental]
 	Mitsubishi CP-9800DW       [experimental]
+	Mitsubishi CP-9800DW-S	   [experimental]
 	Mitsubishi CP-D90DW        [experimental]
 	DNP DS-RX1HS
 
@@ -279,7 +280,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	Kodak 6850
 	Mitsubishi CP-9550DW
 	Mitsubishi CP-9550DW-S
-	Mitsubishi CP-9810DW
+	Mitsubishi CP-9810DW       [experimental]
 	Mitsubishi CP-D70DW   [*2] [experimental]
 	Mitsubishi CP-D707DW  [*2] [experimental]
 	Mitsubishi CP-D80DW   [*2] [experimental]
@@ -333,7 +334,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	DNP DS40/DS80/DS80DX/DS620/DS-RX1
 	Citizen CX/CX-W/CY
 	Kodak 305/605/6800/6850
-	Mitsubishi CP-D70DW/CP-D707DW/CP-K60DW-S/CP-D9550DW
+	Mitsubishi CP-D70DW/CP-D707DW/CP-K60DW-S/CP-D9550DW/CP-9800DW
 	Sinfonia CHC-S1245/CHC-S2145/CHC-S6145/CHC-S6245
 	Ciaat Brava 21
 
@@ -388,6 +389,13 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	Canon BJC-2100
 	Canon BJC-2110
 
+  9) Added duplex support for the following Canon inkjet printers:
+
+	Canon iB4000
+	Canon MB2000
+	Canon MB2300
+	Canon MB5000
+	Canon MB5300
 
 * Changes from 5.2.10
 
