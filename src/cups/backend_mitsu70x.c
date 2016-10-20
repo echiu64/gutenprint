@@ -114,6 +114,9 @@ typedef int (*send_image_dataFN)(struct BandImage *out, void *context,
 //#define USB_VID_FUJIFILM    XXXXXX
 //#define USB_PID_FUJI_ASK300 XXXXXX
 
+/* Width of the laminate data file */
+#define LAMINATE_STRIDE 1864
+
 /* Private data stucture */
 struct mitsu70x_ctx {
 	struct libusb_device_handle *dev;
@@ -821,7 +824,8 @@ repeat:
 	remain = 3 * planelen + ctx->matte;
 
 	ctx->datalen = 0;
-	ctx->databuf = malloc(sizeof(mhdr) + remain);
+	ctx->databuf = malloc(sizeof(mhdr) + remain + LAMINATE_STRIDE*2);  /* Give us a bit extra */
+
 	if (!ctx->databuf) {
 		ERROR("Memory allocation failure!\n");
 		return CUPS_BACKEND_FAILED;
@@ -938,25 +942,37 @@ repeat:
 		/* Now that we've filled everything in, read matte from file */
 		if (ctx->matte) {
 			int fd;
-			DEBUG("Reading %d bytes of matte data from disk\n", ctx->matte);
+			uint32_t j;
+			DEBUG("Reading %d bytes of matte data from disk (%d/%d)\n", ctx->matte, ctx->cols, LAMINATE_STRIDE);
 			fd = open(ctx->laminatefname, O_RDONLY);
 			if (fd < 0) {
 				ERROR("Unable to open matte lamination data file '%s'\n", ctx->laminatefname);
 				return CUPS_BACKEND_CANCEL;
 			}
-			remain = ctx->matte;
-			while (remain) {
-				i = read(fd, ctx->databuf + ctx->datalen, remain);
-				if (i == 0) {
-					/* We hit EOF, restart from beginning */
-					lseek(fd, 0, SEEK_SET);
-					continue;
+
+			for (j = 0 ; j < be16_to_cpu(mhdr.lamrows) ; j++) {
+				remain = LAMINATE_STRIDE * 2;
+
+				/* Read one row of lamination data at a time */
+				while (remain) {
+					i = read(fd, ctx->databuf + ctx->datalen, remain);
+					if (i < 0)
+						return CUPS_BACKEND_CANCEL;
+					if (i == 0) {
+						/* We hit EOF, restart from beginning */
+						lseek(fd, 0, SEEK_SET);
+						continue;
+					}
+					ctx->datalen += i;
+					remain -= i;
 				}
-				if (i < 0)
-					return CUPS_BACKEND_CANCEL;
-				ctx->datalen += i;
-				remain -= i;
+				/* Back off the buffer so we "wrap" on the print row. */
+				ctx->datalen -= ((LAMINATE_STRIDE - ctx->cols) * 2);
 			}
+
+			/* Zero out the tail end of the buffer. */
+			j = be16_to_cpu(mhdr.lamcols) * be16_to_cpu(mhdr.lamrows) * 2;
+			memset(ctx->databuf + ctx->datalen, 0, ctx->matte - j);
 		}
 	}
 	return CUPS_BACKEND_OK;
@@ -1618,7 +1634,7 @@ static int mitsu70x_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend mitsu70x_backend = {
 	.name = "Mitsubishi CP-D70/D707/K60/D80",
-	.version = "0.47",
+	.version = "0.48",
 	.uri_prefix = "mitsu70x",
 	.cmdline_usage = mitsu70x_cmdline,
 	.cmdline_arg = mitsu70x_cmdline_arg,
