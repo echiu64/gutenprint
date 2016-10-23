@@ -93,7 +93,7 @@ typedef void (*Destroy3DColorTableFN)(struct CColorConv3D *this);
 typedef void (*DoColorConvFN)(struct CColorConv3D *this, uint8_t *data, uint16_t cols, uint16_t rows, uint32_t bytes_per_row, int rgb_bgr);
 typedef struct CPCData *(*get_CPCDataFN)(const char *filename);
 typedef void (*destroy_CPCDataFN)(struct CPCData *data);
-typedef int (*do_image_effectFN)(struct CPCData *cpc, struct BandImage *input, struct BandImage *output, int sharpen);
+typedef int (*do_image_effectFN)(struct CPCData *cpc, struct BandImage *input, struct BandImage *output, int sharpen, uint8_t rew[2]);
 typedef int (*send_image_dataFN)(struct BandImage *out, void *context,
 			       int (*callback_fn)(void *context, void *buffer, uint32_t len));
 
@@ -113,6 +113,9 @@ typedef int (*send_image_dataFN)(struct BandImage *out, void *context,
 #define USB_PID_KODAK305    0x404f
 //#define USB_VID_FUJIFILM    XXXXXX
 //#define USB_PID_FUJI_ASK300 XXXXXX
+
+/* Width of the laminate data file */
+#define LAMINATE_STRIDE 1864
 
 /* Private data stucture */
 struct mitsu70x_ctx {
@@ -158,6 +161,8 @@ struct mitsu70x_ctx {
 	int raw_format;
 	int sharpen; /* ie mhdr.sharpen - 1 */
 
+	uint8_t rew[2]; /* 1 for rewind ok */
+	
 	struct BandImage output;
 };
 
@@ -327,7 +332,8 @@ struct mitsu70x_memorystatus_resp {
 struct mitsu70x_hdr {
 	uint8_t  hdr[4]; /* 1b 5a 54 XX */
 	uint16_t jobid;
-	uint8_t  zero0[10];
+	uint8_t  rewind[2];  /* XXX K60/EK305/D80 only, 0 normally, 1 for "skip" ??? */
+	uint8_t  zero0[8];
 
 	uint16_t cols;
 	uint16_t rows;
@@ -339,7 +345,7 @@ struct mitsu70x_hdr {
 	uint8_t  deck; /* 0 = default, 1 = lower, 2 = upper */
 	uint8_t  zero2[7];
 	uint8_t  laminate; /* 00 == on, 01 == off */
-	uint8_t  laminate_mode;
+	uint8_t  laminate_mode; /* 00 == glossy, 02 == matte */
 	uint8_t  zero3[6];
 
 	uint8_t  multicut;
@@ -818,7 +824,8 @@ repeat:
 	remain = 3 * planelen + ctx->matte;
 
 	ctx->datalen = 0;
-	ctx->databuf = malloc(sizeof(mhdr) + remain);
+	ctx->databuf = malloc(sizeof(mhdr) + remain + LAMINATE_STRIDE*2);  /* Give us a bit extra */
+
 	if (!ctx->databuf) {
 		ERROR("Memory allocation failure!\n");
 		return CUPS_BACKEND_FAILED;
@@ -916,7 +923,7 @@ repeat:
 
 
 			DEBUG("Running print data through processing library\n");
-			if (ctx->DoImageEffect(ctx->cpcdata, &input, &ctx->output, ctx->sharpen)) {
+			if (ctx->DoImageEffect(ctx->cpcdata, &input, &ctx->output, ctx->sharpen, ctx->rew)) {
 				ERROR("Image Processing failed, aborting!\n");
 				return CUPS_BACKEND_CANCEL;
 			}
@@ -935,25 +942,37 @@ repeat:
 		/* Now that we've filled everything in, read matte from file */
 		if (ctx->matte) {
 			int fd;
-			DEBUG("Reading %d bytes of matte data from disk\n", ctx->matte);
+			uint32_t j;
+			DEBUG("Reading %d bytes of matte data from disk (%d/%d)\n", ctx->matte, ctx->cols, LAMINATE_STRIDE);
 			fd = open(ctx->laminatefname, O_RDONLY);
 			if (fd < 0) {
 				ERROR("Unable to open matte lamination data file '%s'\n", ctx->laminatefname);
 				return CUPS_BACKEND_CANCEL;
 			}
-			remain = ctx->matte;
-			while (remain) {
-				i = read(fd, ctx->databuf + ctx->datalen, remain);
-				if (i == 0) {
-					/* We hit EOF, restart from beginning */
-					lseek(fd, 0, SEEK_SET);
-					continue;
+
+			for (j = 0 ; j < be16_to_cpu(mhdr.lamrows) ; j++) {
+				remain = LAMINATE_STRIDE * 2;
+
+				/* Read one row of lamination data at a time */
+				while (remain) {
+					i = read(fd, ctx->databuf + ctx->datalen, remain);
+					if (i < 0)
+						return CUPS_BACKEND_CANCEL;
+					if (i == 0) {
+						/* We hit EOF, restart from beginning */
+						lseek(fd, 0, SEEK_SET);
+						continue;
+					}
+					ctx->datalen += i;
+					remain -= i;
 				}
-				if (i < 0)
-					return CUPS_BACKEND_CANCEL;
-				ctx->datalen += i;
-				remain -= i;
+				/* Back off the buffer so we "wrap" on the print row. */
+				ctx->datalen -= ((LAMINATE_STRIDE - ctx->cols) * 2);
 			}
+
+			/* Zero out the tail end of the buffer. */
+			j = be16_to_cpu(mhdr.lamcols) * be16_to_cpu(mhdr.lamrows) * 2;
+			memset(ctx->databuf + ctx->datalen, 0, ctx->matte - j);
 		}
 	}
 	return CUPS_BACKEND_OK;
@@ -1297,6 +1316,13 @@ skip_status:
 		hdr->deck = 1;  /* All others only have a "lower" deck. */
 	}
 
+
+	/* Twiddle rewind stuff if needed */
+	if (ctx->type != P_MITSU_D70X) {
+		hdr->rewind[0] = !ctx->rew[0];
+		hdr->rewind[1] = !ctx->rew[1];
+	}
+	
 	/* Matte operation requires Ultrafine/superfine */
 	if (ctx->matte) {
 		if (ctx->type != P_MITSU_D70X) {
@@ -1608,7 +1634,7 @@ static int mitsu70x_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend mitsu70x_backend = {
 	.name = "Mitsubishi CP-D70/D707/K60/D80",
-	.version = "0.46",
+	.version = "0.48",
 	.uri_prefix = "mitsu70x",
 	.cmdline_usage = mitsu70x_cmdline,
 	.cmdline_arg = mitsu70x_cmdline_arg,
@@ -1628,7 +1654,8 @@ struct dyesub_backend mitsu70x_backend = {
 	}
 };
 
-/* Mitsubish CP-D70DW/CP-D707DW/CP-K60DW-S/CP-D80DW/Kodak 305 data format 
+/* Mitsubish CP-D70DW/D707DW/K60DW-S/D80DW, Kodak 305, Fuji ASK-300
+   data format:
 
    Spool file consists of two headers followed by three image planes
    and an optional lamination data plane.  All blocks are rounded up to
@@ -1636,21 +1663,21 @@ struct dyesub_backend mitsu70x_backend = {
 
    All multi-byte numbers are big endian, ie MSB first.
 
-   Header 1:  (Init) (AKA Wake Up)
+   Header 1:  (AKA Wake Up)
 
    1b 45 57 55 00 00 00 00  00 00 00 00 00 00 00 00
    (padded by NULLs to a 512-byte boundary)
 
-   Header 2:  (Header)
+   Header 2:  (Print Header)
 
    1b 5a 54 PP JJ JJ 00 00  00 00 00 00 00 00 00 00
    XX XX YY YY QQ QQ ZZ ZZ  SS 00 00 00 00 00 00 00
-   UU 00 00 00 00 00 00 00  00 TT 00 00 00 00 00 00
+   UU 00 00 00 00 00 00 00  LL TT 00 00 00 00 00 00
    RR 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
 
    (padded by NULLs to a 512-byte boundary)
 
-   PP    == 0x01 on D70x/D80, 0x02 on K60, 0x90 on K305
+   PP    == 0x01 on D70x/D80/ASK300, 0x02 on K60, 0x90 on K305
    JJ JJ == Job ID, can leave at 00 00
    XX XX == columns
    YY YY == rows
@@ -1659,7 +1686,8 @@ struct dyesub_backend mitsu70x_backend = {
    SS    == Print mode: 00 = Fine, 03 = SuperFine (D70x/D80 only), 04 = UltraFine
             (Matte requires Superfine or Ultrafine)
    UU    == 00 = Auto, 01 = Lower Deck (required for !D70x), 02 = Upper Deck
-   TT    == lamination: 00 glossy, 02 matte.
+   LL    == lamination enable, 00 == on, 01 == off
+   TT    == lamination mode: 00 glossy, 02 matte.
    RR    == 00 (normal), 01 = (Double-cut 4x6), 05 = (double-cut 2x6)
 
    Data planes:
@@ -1668,151 +1696,4 @@ struct dyesub_backend mitsu70x_backend = {
    Lamination plane: (only present if QQ and ZZ are nonzero)
    16-byte data, rounded up to 512-byte block (QQ * ZZ * 2 bytes)
 
-   ********************************************************************
-
-   Command format:
-
-   -> 1b 56 32 30
-   <- [256 byte payload]
-
-    PRINTER STATUS
-
-    e4 56 32 30 00 00 00 00  00 00 00 00 00 00 00 00   .V20............
-    00 00 00 00 00 00 00 00  00 00 00 80 00 00 00 00   ................
-    44 80 00 00 5f 00 00 3d  43 00 50 00 44 00 37 00   D..._..=C.P.D.7.
-    30 00 44 00 30 00 30 00  31 00 31 00 31 00 37 00   0.D.0.0.1.1.1.7.
-    33 31 36 54 31 33 21 a3  33 31 35 42 31 32 f5 e5   316T13!.315B12..
-    33 31 39 42 31 31 a3 fb  33 31 38 45 31 32 50 0d   319B11..318E12P.
-    33 31 37 41 32 32 a3 82  44 55 4d 4d 59 40 00 00   317A22..DUMMY@..
-    44 55 4d 4d 59 40 00 00  00 00 00 00 00 00 00 00   DUMMY@..........
-
-    LOWER DECK STATUS
-
-    00 00 00 00 00 00 02 04  3f 00 00 04 96 00 00 00  MM MM: media capacity
-    ff 0f 01 00 MM MM NN NN  00 00 00 00 05 28 75 80  NN NN: prints remaining
-    80 00 80 00 80 00 80 00  80 00 80 00 80 00 80 00
-    80 00 80 00 80 00 80 00  80 00 80 00 80 00 80 00
-
-      alt (some sort of error state)
-
-    00 00 00 0a 05 05 01 d5  38 00 00 00 14 00 00 00 
-    ff ff ff ff ff ff ff ff  ff ff 00 00 00 27 72 80
-    80 00 80 00 80 00 80 00  80 00 80 00 80 00 80 00
-    80 00 80 00 80 00 80 00  80 00 80 00 80 00 80 00
-
-    UPPER DECK STATUS (if present)  
-
-    XX XX 00 00 00 00 01 ee  3d 00 00 06 39 00 00 00  MM MM: media capacity
-    ff 02 00 00 MM MM NN NN  00 00 00 00 06 67 78 00  NN NN: prints remaining
-    80 00 80 00 80 00 80 00  80 00 80 00 80 00 80 00  XX XX: 0x80 00 if no deck
-    80 00 80 00 80 00 80 00  80 00 80 00 80 00 80 00
-
-     alt (no deck present)
-
-    80 00 00 00 00 00 00 ff  ff 00 00 00 00 00 00 00
-    ff ff ff ff ff ff ff ff  ff ff 00 00 00 00 80 00
-    80 00 80 00 80 00 80 00  80 00 80 00 80 00 80 00
-    80 00 80 00 80 00 80 00  80 00 80 00 80 00 80 00
-
-   -> 1b 56 31 30  00 00
-   <- [26 byte payload]
-
-   CP-D707DW:
-
-    e4 56 31 30 00 00 00 XX  YY ZZ 00 00 TT 00 00 00
-    00 00 00 00 WW 00 00 00  00 00
-
-    XX/YY/ZZ and WW/TT are unknown.  Observed values:
-
-    00 00 00   00/00
-    40 80 a0   80/0f
-    80 80 a0
-    40 80 90
-    40 80 00
-
-     also seen:
-
-    e4 56 31 30 00 00 00 00  00 00 00 00 0f 00 00 00
-    00 0a 05 05 80 00 00 00  00 00
-
-    e4 56 31 30 00 00 00 40  80 90 10 00 0f 00 00 00 
-    00 0a 05 05 80 00 00 00  00 00
-
-    e4 56 31 30 00 00 00 00  40 80 00 00 00 ff 40 00 
-    00 00 00 00 80 00 00 00  00 00
-
-     print just submitted:
-
-    e4 56 31 30 00 00 00 00  40 20 00 00 00 8c 00 00 
-    00 00 00 00 80 00 00 00  00 00
-
-     prints running...
-
-    e4 56 31 30 00 00 00 00  40 20 00 00 00 cf 00 20 
-    00 00 00 00 80 00 00 00  00 00
-
-   CP-K60DW-S:
-
-    e4 56 31 30 00 00 00 XX  YY 00 00 00 0f 00 00 00
-    00 00 00 00 80 00 00 00  00 00
-
-    XX/YY are unknown, observed values:
-
-    40/80
-    00/00
-
-   Memory status query:
-
-   -> 1b 56 33 00 XX XX YY YY UU 00
-
-    XX XX == columns
-    YY YY == rows
-    UU    == 0x00 glossy, 0x80 matte
-
-   <- [ 6 byte payload ]
-
-    e4 56 33 00 00 00
-    e4 56 33 00 00 01
-    e4 56 33 ff 01 01
-
-                 |--- Size check, 00 ok, 01 fail
-              |------ Memory check, 00 ok, 01 fail, ff bad size
-
-   ** ** ** ** ** **
-
-   The windows drivers seem to send the id and status queries before
-   and in between each of the chunks sent to the printer.  There doesn't
-   appear to be any particular intelligence in the protocol, but it didn't
-   work when the raw dump was submitted as-is.
-
-   ** ** ** ** ** **
-
-Various deck status dumps:
-
-0080   00 00 00 00 00 00 01 d2  39 00 00 00 07 00 00 00  ........9.......
-0090   61 8f 00 00 01 40 01 36  00 00 00 00 00 17 79 80  a....@.6......y.
-
-0080   00 00 00 00 00 00 01 c6  39 00 00 00 08 00 00 00  ........9.......
-0090   61 8f 00 00 01 40 01 35  00 00 00 00 00 18 79 80  a....@.5......y.
-
-0080   00 00 00 00 00 00 02 19  50 00 00 00 19 00 00 01  ........P.......
-0090   6c 8f 00 00 01 40 01 22  00 00 00 00 00 27 83 80  l....@.".....'..
-
-0080   00 00 00 00 00 00 02 00  3e 00 00 04 96 00 00 00  ........>.......
-0090   ff 0f 01 00 00 c8 00 52  00 00 00 00 05 28 75 80  .......R.....(u.
-
-00c0   00 00 00 00 00 00 01 f3  3d 00 00 06 39 00 00 00  ........=...9...
-00d0   ff 02 00 00 01 90 00 c3  00 00 00 00 06 67 78 00  .............gx.
-
-0080   00 00 00 00 00 00 01 d0  38 00 00 03 70 00 00 00  ........8...p...
-0090   ff 02 00 00 01 90 00 1e  01 00 00 00 03 83 72 80  ..............r.
-
-0080   00 00 00 00 00 00 01 d6  39 00 00 00 20 00 00 00  ........9... ...
-0090   ff 02 00 00 01 90 01 7c  01 00 00 00 00 33 72 80  .......|.....3r.
-
-       00 00 00 0a 05 05 01 d5  38 00 00 00 14 00 00 00 
-       ff ff ff ff ff ff ff ff  ff ff 00 00 00 27 72 80   ?? Error ??
-
-       80 00 00 00 00 00 00 ff  ff 00 00 00 00 00 00 00
-       ff ff ff ff ff ff ff ff  ff ff 00 00 00 00 80 00   NO DECK PRESENT
  */
