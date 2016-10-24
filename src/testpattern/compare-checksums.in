@@ -51,9 +51,14 @@ sub load_file($\%\%) {
 	open(IN, "$file") or die("Can't open checksum file $file: $!\n");
     }
     my ($inline);
+    my ($last_sum) = "";
     while ($inline = <IN>) {
 	chomp $inline;
 	my ($sum, @okeys) = split(/ /, $inline);
+	if ($last_sum ne "" && ((length $sum) < (length $last_sum))) {
+	    $sum = substr($last_sum, 0, ((length $last_sum) - (length $sum))) . $sum;
+	}
+	$last_sum = $sum;
 	my @keys = map {
 	    s/\.prn$//;
 	    s/^\*//;
@@ -105,10 +110,21 @@ foreach my $old_printer (keys %old_printers) {
 
 my (@only_old_modes, @only_new_modes, @changed_modes);
 
+sub mode_ne($$) {
+    my ($new, $old) = @_;
+    if (length $new == length $old) {
+	return ($new ne $old);
+    } elsif (length $new < length $old) {
+	return ($new ne substr($old, 0, length $new));
+    } else {
+	return ($old ne substr($new, 0, length $old));
+    }
+}
+
 foreach my $old_mode (sort keys %old_modes) {
     next if defined $only_old_printers{get_printer($old_mode)};
     if (defined $new_modes{$old_mode}) {
-	if ($new_modes{$old_mode} ne $old_modes{$old_mode}) {
+	if (mode_ne($new_modes{$old_mode}, $old_modes{$old_mode})) {
 	    push @changed_modes, $old_mode;
 	}
     } else {

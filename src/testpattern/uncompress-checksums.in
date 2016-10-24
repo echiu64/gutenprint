@@ -19,9 +19,15 @@ use strict;
 
 my (%checksums);
 
+my ($last_sum) = "";
+
 while (<>) {
     chomp;
     my ($sum, @keys) = split;
+    if ($last_sum ne "" && ((length $sum) < (length $last_sum))) {
+	$sum = substr($last_sum, 0, ((length $last_sum) - (length $sum))) . $sum;
+    }
+    $last_sum = $sum;
     my (@pchunks) = ();
     foreach my $k (@keys) {
 	$k =~ s/=/________/g;

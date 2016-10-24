@@ -40,6 +40,30 @@ while (<>) {
     }
 }
 
+sub find_min_nonunique_prefix(@) {
+    my (@sums) = sort @_;
+    my ($last) = "";
+    my ($max_prefix) = 0;
+    my ($lc) = 0;
+
+    foreach my $sum (@sums) {
+	$lc++;
+	if ($last eq "") {
+	    $last = $sum;
+	    next;
+	}
+	foreach my $l ($max_prefix..length $sum) {
+	    if (substr($sum, 0, $l) eq substr($last, 0, $l)) {
+		$max_prefix++;
+	    } else {
+		next;
+	    }
+	}
+	$last = $sum;
+    }
+    return $max_prefix;
+}
+
 sub min($$) {
     my ($a, $b) = @_;
     if ($a < $b) {
@@ -61,8 +85,16 @@ sub get_mode($) {
     return $mode;
 }
 
+my $min_prefix = find_min_nonunique_prefix(keys %checksums);
+
+my ($last_sum) = "";
+
 foreach my $sum (sort keys %checksums) {
-    my ($out) = $sum;
+    my ($out) = substr($sum, 0, $min_prefix);
+    if ($last_sum ne "") {
+	$out = substr($out, find_min_nonunique_prefix($sum, $last_sum) - 1);
+    }
+    $last_sum = $sum;
     my ($prun) = "";
     my (@pchunks) = ();
     my ($plen) = 0;
