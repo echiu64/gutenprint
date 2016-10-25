@@ -6108,7 +6108,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Mitsubishi CP9600D */
     4110,
-    &bgr_ink_list,
+    &rgb_ink_list,
     &res_mitsu9600_dpi_list,
     &mitsu_cp9600_page_list,
     &mitsu_cp9600_printsize_list,

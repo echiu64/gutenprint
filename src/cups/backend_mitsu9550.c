@@ -1215,10 +1215,14 @@ struct dyesub_backend mitsu9550_backend = {
    00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00 :: SS = 0x01 on 9800S
    00 00  
 
-  ~~~~ Data follows:   Data is packed BGR (8bpp for 9550/9600, 16/12bpp for 98x0)
+  ~~~~ Data follows:
 
-   1b 5a 54 ?? 00 00 00 00  07 14 04 d8  :: 0714 == columns, 04d8 == rows
-                     ^^ ^^               :: 0000 == remaining rows
+   Format is:  planar YMC16 for 98x0 (only 12 bits used)
+               planar BGR for 9550DW
+               planar RGB for 9550DW-S and 9600DW
+
+   1b 5a 54 ?? RR RR 00 00  07 14 04 d8  :: 0714 == columns, 04d8 == rows
+                                         :: RRRR == row offset for data
 		                         :: ?? == 0x00 for 8bpp, 0x10 for 16/12bpp.
 
    Data follows immediately, no padding.
