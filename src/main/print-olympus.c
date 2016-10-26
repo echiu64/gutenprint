@@ -3414,7 +3414,7 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
   stp_put16_be(pd->h_size, v);
   if (caps->laminate && *((const char*)((pd->laminate->seq).data)) != 0x00) {
     stp_put16_be(pd->w_size, v);
-    if (model == 0x02 || model == 0x90) {
+    if (model == 0x00 || model == 0x90) {
       pd->m70x.laminate_offset = 0;
       if (!pd->m70x.quality)
 	pd->m70x.quality = 4;  /* Matte Lamination forces UltraFine on K60 or K305 */
@@ -3561,7 +3561,7 @@ LIST(dyesub_printsize_list_t, mitsu_cpk60_printsize_list, dyesub_printsize_t, mi
 
 static void mitsu_cpk60_printer_init(stp_vars_t *v)
 {
-  mitsu_cpd70k60_printer_init(v, 0x02);
+  mitsu_cpd70k60_printer_init(v, 0x00);
 }
 
 /* Identical to the D70 except for one fewer quality mode */
