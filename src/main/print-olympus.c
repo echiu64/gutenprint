@@ -5094,7 +5094,7 @@ static void dnpds620_printer_start(stp_vars_t *v)
   dnp_printer_start_common(v);
 
   /* Multicut when 8x6 media is in use */
-  if (!strcmp(pd->pagesize, "w432h576") &&
+  if (!strcmp(pd->pagesize, "w432h576") ||
       !strcmp(pd->pagesize, "w432h648")) {
     stp_zprintf(v, "\033PCNTRL FULL_CUTTER_SET 00000016");
     stp_zprintf(v, "0000000000000000");
