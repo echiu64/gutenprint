@@ -1215,10 +1215,14 @@ struct dyesub_backend mitsu9550_backend = {
    00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00 :: SS = 0x01 on 9800S
    00 00  
 
-  ~~~~ Data follows:   Data is packed BGR (8bpp for 9550/9600, 16/12bpp for 98x0)
+  ~~~~ Data follows:
 
-   1b 5a 54 ?? 00 00 00 00  07 14 04 d8  :: 0714 == columns, 04d8 == rows
-                     ^^ ^^               :: 0000 == remaining rows
+   Format is:  planar YMC16 for 98x0 (only 12 bits used)
+               planar BGR for 9550DW
+               planar RGB for 9550DW-S and 9600DW
+
+   1b 5a 54 ?? RR RR 00 00  07 14 04 d8  :: 0714 == columns, 04d8 == rows
+                                         :: RRRR == row offset for data
 		                         :: ?? == 0x00 for 8bpp, 0x10 for 16/12bpp.
 
    Data follows immediately, no padding.
@@ -1350,44 +1354,51 @@ struct dyesub_backend mitsu9550_backend = {
 
   [[ At this point, loop status/status b/media queries until printer idle ]]
 
-    MM, NN, QQ RR SS, TT UU
+    MM, QQ RR SS, TT UU
 
- <- 00  00  3e 00 00  8a 44  :: Idle.
-    00  00  7e 00 00  8a 44  :: Plane data submitted, pre "end data" cmd
-    00  00  7e 40 01  8a 44  :: "end data" sent
-    30  01  7e 40 01  8a 44
-    38  01  7e 40 01  8a 44
-    59  01  7e 40 01  8a 44
-    59  01  7e 40 00  8a 44
-    4d  01  7e 40 00  8a 44
+ <- 00  3e 00 00  8a 44  :: Idle.
+    00  7e 00 00  8a 44  :: Plane data submitted, pre "end data" cmd
+    00  7e 40 01  8a 44  :: "end data" sent
+    30  7e 40 01  8a 44
+    38  7e 40 01  8a 44
+    59  7e 40 01  8a 44
+    59  7e 40 00  8a 44
+    4d  7e 40 00  8a 44
      [...]
-    43  01  7e 40 00  82 44
+    43  7e 40 00  82 44
      [...]
-    50  01  7e 40 00  80 44
+    50  7e 40 00  80 44
      [...]
-    31  01  7e 40 00  7d 44
+    31  7e 40 00  7d 44
      [...]
-    00  00  3e 00 00  80 44  :: Idle.
+    00  3e 00 00  80 44  :: Idle.
 
   Also seen: 
 
-    00  00  3e 00 00  96 4b  :: Idle
-    00  00  be 00 00  96 4b  :: Data submitted, pre "start"
-    00  00  be 80 01  96 4b  :: print start sent
-    30  00  be 80 01  96 4c
+    00  3e 00 00  96 4b  :: Idle
+    00  be 00 00  96 4b  :: Data submitted, pre "start"
+    00  be 80 01  96 4b  :: print start sent
+    30  be 80 01  96 4c
      [...]
-    30  03  be 80 01  89 4b
-    38  03  be 80 01  8a 4b
-    59  03  be 80 01  8b 4b
+    30  be 80 01  89 4b
+    38  be 80 01  8a 4b
+    59  be 80 01  8b 4b
      [...]
-    4d  03  be 80 01  89 4b
+    4d  be 80 01  89 4b
      [...]
-    43  03  be 80 01  89 4b
+    43  be 80 01  89 4b
      [...]
-    50  03  be 80 01  82 4b
+    50  be 80 01  82 4b
      [...]
-    31  03  be 80 01  80 4b
+    31  be 80 01  80 4b
      [...]
+
+  Seen on 9600DW
+
+    ??  3e 00 00  8a 44  :: scrap bin?
+    ??  3e 00 00  8a 45  :: No scrap bin | no paper?
+    ??  3e 00 00  8a 46  :: no ribbon
+    ??  3e 00 00  8a 47  :: Cover open
 
  Working theory of interpreting the status flags:
 
@@ -1397,7 +1408,7 @@ struct dyesub_backend mitsu9550_backend = {
   RR :: ?? 0x00 is idle, 0x40 or 0x80 is "printing"?
   SS :: ?? 0x00 means "ready for another print" but 0x01 is "busy"
   TT :: ?? seen values between 0x7c through 0x96)
-  UU :: ?? seen values between 0x44 and 0x4c
+  UU :: ?? seen values between 0x43 and 0x4c -- temperature?
  
   *** 
 

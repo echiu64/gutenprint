@@ -496,7 +496,6 @@ C) CUPS
 	this option unless you are certain that you understand the
 	problem and how to work around it.
 
-
 ----------------
 
 D) CUPS dye-sublimation backend
@@ -507,33 +506,34 @@ D) CUPS dye-sublimation backend
     If you do not have a printer on this list, you may skip the remainder
     of this section.
 
-        Canon SELPHY ES series  (All models)
-        Canon SELPHY CP series  (All models except for CP820, CP910, and up)
-        Citizen CX
-        Citizen CX-W
-        Citizen CY
-	Citizen CW-01
-        DNP DS40
-        DNP DS80
-        DNP DS-RX1
-	DNP DS-SL10
-        Kodak Professional 1400
-        Kodak 805 Photo Printer
-        Kodak 6800 Photo Printer
-        Kodak 6850 Photo Printer
-        Kodak 605 Photo Printer
-        Kodak 305 Photo Printer (EXPERIMENTAL)
-	Mitsubishi CP-D70DW  (EXPERIMENTAL)
-	Mitsubishi CP-D707DW (EXPERIMENTAL)
-	Mitsubishi CP-K60DW-S (EXPERIMENTAL)
-	Mitsubishi CP-D80DW   (EXPERIMENTAL)
+	Canon SELPHY ES series
+	Canon SELPHY CP series (except CP820, CP910, CP1000, CP1200)
+	Ciaat Brava 21
+	Citizen CW-01 / Olmec OP900
+	Citizen CW-02
+	DNP DS40 / Citizen CX
+	DNP DS80 / Citizen CX-W
+	DNP DS80DX  (experimental)
+	DNP DS-RX1 / DS-RX1HS / Citizen CY 
+	DNP DS620
+	Kodak Professional 1400
+	Kodak 305 Photo Printer
+	Kodak 605 Photo Printer
+	Kodak 805 Photo Printer
+	Kodak 6800 Photo Printer
+	Kodak 6850 Photo Printer
 	Mitsubishi CP-3800DW
-	Mitsubihsi CP-9550DW/9550DW-S
-	Olmec OP900
-        Shinko CHC-S2145 / Sinfonia S2
-        Sony UP-DR150
-        Sony UP-DR200
-        Sony UP-CR10L
+	Mitsubishi CP-9550D/DW/DW-S/DZ/DZ-S
+	Mitsubishi CP-9600D/DW
+	Mitsubishi CP-K60DW-S
+	Mitsubishi CP-D70DW / CP-D707DW (experimental)
+	Shinko CHC-S1245 (aka Sinfonia E1) (experimental)
+	Shinko CHC-S6245 (aka Sinfonia CE1) (experimental)
+	Shinko CHC-S2145 (aka Sinfonia S2)
+	Shinko CHC-S6145 (aka Sinfonia CS2)
+	Sony UP-DR150
+	Sony UP-DR200
+	Sony UP-CR10L / DNP DS-SL10  (experimental)
 
     Although these printers advertise themselves as standard USB Printer
     Class devices, they do not actually obey those specifications, and
