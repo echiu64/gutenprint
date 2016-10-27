@@ -287,7 +287,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	Mitsubishi CP-D70DW   [*2] [experimental]
 	Mitsubishi CP-D707DW  [*2] [experimental]
 	Mitsubishi CP-D80DW   [*2] [experimental]
-	Mitsubishi CP-K60DW-S [*2] [experimental]
+	Mitsubishi CP-K60DW-S [*2]
 	Sinfonia S1245/CE          [experimental]
 	Sinfonia S2145/CS
 	Sinfonia S6145/CS2    [*1]
@@ -330,19 +330,11 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	  successfully print.  Work is underway on a crude fallback that will
 	  at least generate (very poor quality) output.
 
-  3) Backend now reports media status via standard CUPS marker attributes
-     for the following printers:
-
-        Canon Selphy CP/ES series  (except CP820, CP910, CP1000, CP1200)
-	DNP DS40/DS80/DS80DX/DS620/DS-RX1
-	Citizen CX/CX-W/CY
-	Kodak 305/605/6800/6850
-	Mitsubishi CP-D70DW/CP-D707DW/CP-K60DW-S/CP-D9550DW/CP-9800DW
-	Sinfonia CHC-S1245/CHC-S2145/CHC-S6145/CHC-S6245
-	Ciaat Brava 21
-
-	(All printers supported by the backend report status, excecpt for
-	 the Kodak 805 and Kodak 1400)
+  3) Dye-sublimation backend now reports media status via standard 
+     CUPS marker attributes.  This applies to all models except for:
+     
+	Kodak 805
+	Kodak 1400
 
   4) Added support for the following Epson inkjet printers:
 
