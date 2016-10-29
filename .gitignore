@@ -61,6 +61,7 @@ gutenprint.pot
 Rules-quot
 *.sed
 *.sin
+src/cups/catalog
 
 # TODO:  Clean this list up
 backend_gutenprint
