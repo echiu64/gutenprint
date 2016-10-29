@@ -161,7 +161,7 @@ struct mitsu70x_ctx {
 	int raw_format;
 	int sharpen; /* ie mhdr.sharpen - 1 */
 
-	uint8_t rew[2]; /* 1 for rewind ok */
+	uint8_t rew[2]; /* 1 for rewind ok (default!) */
 	
 	struct BandImage output;
 };
@@ -329,8 +329,10 @@ struct mitsu70x_memorystatus_resp {
 	uint8_t  rsvd;
 } __attribute__((packed));
 
+// XXX also seen commands 0x67, 0x72, 0x54, 0x6e 
+
 struct mitsu70x_hdr {
-	uint8_t  hdr[4]; /* 1b 5a 54 XX */
+	uint8_t  hdr[4]; /* 1b 5a 54 XX */  // XXX also, seen 1b 5a 43!
 	uint16_t jobid;
 	uint8_t  rewind[2];  /* XXX K60/EK305/D80 only, 0 normally, 1 for "skip" ??? */
 	uint8_t  zero0[8];
@@ -712,6 +714,8 @@ static int mitsu70x_read_parse(void *vctx, int data_fd) {
 	}
 
 	ctx->matte = 0;
+	ctx->rew[0] = 1;
+	ctx->rew[1] = 1;
 
 repeat:
 	/* Read in initial header */
@@ -755,6 +759,10 @@ repeat:
 		} else {
 			ctx->cpcfname = CORRTABLE_PATH "/CPD70N01.cpc";
 		}
+		if (mhdr.hdr[3] != 0x01) {
+			WARNING("Print job has wrong submodel specifier (%x)\n", mhdr.hdr[3]);
+			mhdr.hdr[3] = 0x01;
+		}
 	} else if (ctx->type == P_MITSU_D80) {
 		ctx->laminatefname = CORRTABLE_PATH "/D80MAT01.raw";
 		ctx->lutfname = CORRTABLE_PATH "/CPD80L01.lut";
@@ -767,6 +775,10 @@ repeat:
 			ctx->cpcfname = CORRTABLE_PATH "/CPD80N01.cpc";
 		}
 		// XXX what about CPD80**E**01?
+		if (mhdr.hdr[3] != 0x01) {
+			WARNING("Print job has wrong submodel specifier (%x)\n", mhdr.hdr[3]);
+			mhdr.hdr[3] = 0x01;
+		}
 	} else if (ctx->type == P_MITSU_K60) {
 		ctx->laminatefname = CORRTABLE_PATH "/S60MAT02.raw";
 		ctx->lutfname = CORRTABLE_PATH "/CPS60L01.lut";
@@ -776,6 +788,10 @@ repeat:
 			ctx->cpcfname = CORRTABLE_PATH "/CPS60T03.cpc";
 		} else {
 			ctx->cpcfname = CORRTABLE_PATH "/CPS60T01.cpc";
+		}
+		if (mhdr.hdr[3] != 0x00) {
+			WARNING("Print job has wrong submodel specifier (%x)\n", mhdr.hdr[3]);
+			mhdr.hdr[3] = 0x00;
 		}
 	} else if (ctx->type == P_KODAK_305) {
 		ctx->laminatefname = CORRTABLE_PATH "/EK305MAT.raw"; // Same as K60
@@ -788,6 +804,10 @@ repeat:
 			ctx->cpcfname = CORRTABLE_PATH "/EK305T01.cpc";
 		}
 		// XXX what about using K60 media if we read back the proper code?
+		if (mhdr.hdr[3] != 0x90) {
+			WARNING("Print job has wrong submodel specifier (%x)\n", mhdr.hdr[3]);
+			mhdr.hdr[3] = 0x90;
+		}
 	} else if (ctx->type == P_FUJI_ASK300) {
 		ctx->laminatefname = CORRTABLE_PATH "/ASK300M2.raw"; // Same as D70
 		ctx->lutfname = CORRTABLE_PATH "/CPD70L01.lut";  // XXX guess, driver did not come with external LUT!
@@ -796,6 +816,10 @@ repeat:
 			ctx->cpcfname = CORRTABLE_PATH "/ASK300T3.cpc";
 		} else {
 			ctx->cpcfname = CORRTABLE_PATH "/ASK300T1.cpc";
+		}
+		if (mhdr.hdr[3] != 0x01) {
+			WARNING("Print job has wrong submodel specifier (%x)\n", mhdr.hdr[3]);
+			mhdr.hdr[3] = 0x01;
 		}
 	}
 	if (!mhdr.use_lut)
@@ -1148,7 +1172,7 @@ static int mitsu70x_set_sleeptime(struct mitsu70x_ctx *ctx, uint8_t time)
 	memset(cmdbuf, 0, 4);
 	cmdbuf[0] = 0x1b;
 	cmdbuf[1] = 0x53;
-	cmdbuf[2] = 0x53;
+	cmdbuf[2] = 0x53; // XXX also, 0x4e and 0x50 are other params.
 	cmdbuf[3] = time;
 
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
@@ -1166,7 +1190,7 @@ static int mitsu70x_wakeup(struct mitsu70x_ctx *ctx)
 	memset(buf, 0, sizeof(buf));
 	buf[0] = 0x1b;
 	buf[1] = 0x45;
-	buf[2] = 0x57;
+	buf[2] = 0x57; // XXX also, 0x53, 0x54 seen.
 	buf[3] = 0x55;
 
 	INFO("Waking up printer...\n");
@@ -1353,7 +1377,7 @@ skip_status:
 			     sizeof(struct mitsu70x_hdr))))
 		return CUPS_BACKEND_FAILED;
 
-	if (ctx->dl_handle) {
+	if (ctx->dl_handle && !ctx->raw_format) {
 		if (ctx->SendImageData(&ctx->output, ctx, d70_library_callback))
 			return CUPS_BACKEND_FAILED;
 
@@ -1435,9 +1459,9 @@ skip_status:
 			    jobstatus.job_status[2] ||
 			    jobstatus.job_status[3]) {
 				ERROR("Abnormal exit: %02x/%02x/%02x\n",
-				      jobstatus.error_status[0],
-				      jobstatus.error_status[1],
-				      jobstatus.error_status[2]);
+				      jobstatus.job_status[1],
+				      jobstatus.job_status[2],
+				      jobstatus.job_status[3]);
 				return CUPS_BACKEND_STOP;
 			}
 			/* Job complete */
@@ -1634,7 +1658,7 @@ static int mitsu70x_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend mitsu70x_backend = {
 	.name = "Mitsubishi CP-D70/D707/K60/D80",
-	.version = "0.48",
+	.version = "0.51",
 	.uri_prefix = "mitsu70x",
 	.cmdline_usage = mitsu70x_cmdline,
 	.cmdline_arg = mitsu70x_cmdline_arg,
@@ -1670,19 +1694,20 @@ struct dyesub_backend mitsu70x_backend = {
 
    Header 2:  (Print Header)
 
-   1b 5a 54 PP JJ JJ 00 00  00 00 00 00 00 00 00 00
+   1b 5a 54 PP JJ JJ RR RR  00 00 00 00 00 00 00 00
    XX XX YY YY QQ QQ ZZ ZZ  SS 00 00 00 00 00 00 00
    UU 00 00 00 00 00 00 00  LL TT 00 00 00 00 00 00
    RR 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
 
    (padded by NULLs to a 512-byte boundary)
 
-   PP    == 0x01 on D70x/D80/ASK300, 0x02 on K60, 0x90 on K305
+   PP    == 0x01 on D70x/D80/ASK300, 0x00 on K60, 0x90 on K305
    JJ JJ == Job ID, can leave at 00 00
    XX XX == columns
    YY YY == rows
    QQ QQ == lamination columns (equal to XX XX)
-   ZZ ZZ == lamination rows (YY YY + 12)
+   ZZ ZZ == lamination rows (YY YY + 12 on D70x/D80/ASK300, YY YY on others)
+   RR RR == "rewind inhibit", 01 01 enabled, normally 00 00
    SS    == Print mode: 00 = Fine, 03 = SuperFine (D70x/D80 only), 04 = UltraFine
             (Matte requires Superfine or Ultrafine)
    UU    == 00 = Auto, 01 = Lower Deck (required for !D70x), 02 = Upper Deck

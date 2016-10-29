@@ -2970,11 +2970,11 @@
       <printer translate="name" name="Mitsubishi CP-9810DW" driver="mitsubishi-9810dw" manufacturer="Mitsubishi" model="4104" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-D70DW" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP60D70D707D;CLS:PRINTER;DES:MITSUBISHI CP60D70D707D" driver="mitsubishi-d70dw" manufacturer="Mitsubishi" model="4105" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-D707DW" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP60D70D707D;CLS:PRINTER;DES:MITSUBISHI CP60D70D707D" driver="mitsubishi-d707dw" manufacturer="Mitsubishi" model="4105" parameters="nativecopies">EXPERIMENTAL</printer>
-      <printer translate="name" name="Mitsubishi CP-K60DW-S" driver="mitsubishi-k60dw" manufacturer="Mitsubishi" model="4106" parameters="nativecopies">EXPERIMENTAL</printer>
+      <printer translate="name" name="Mitsubishi CP-K60DW-S" driver="mitsubishi-k60dw" manufacturer="Mitsubishi" model="4106" parameters="nativecopies" />
       <printer translate="name" name="Mitsubishi CP-D80DW" driver="mitsubishi-d80dw" manufacturer="Mitsubishi" model="4107" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Kodak 305" deviceid="MFG:KODAK;CMD:KODAK305;MDL:305 Photo Printer;CLS:PRINTER;DES:KODAK 305 Photo Printer" driver="kodak-305" manufacturer="Kodak" model="4108" parameters="nativecopies" />
       <printer translate="name" name="Mitsubishi CP-D90DW" driver="mitsubishi-d90dw" manufacturer="Mitsubishi" model="4109" parameters="nativecopies">EXPERIMENTAL</printer>
-      <printer translate="name" name="Mitsubishi CP-9600DW" driver="mitsubishi-9600dw" manufacturer="Mitsubishi" model="4110" parameters="nativecopies">EXPERIMENTAL</printer>
+      <printer translate="name" name="Mitsubishi CP-9600DW" driver="mitsubishi-9600dw" manufacturer="Mitsubishi" model="4110" parameters="nativecopies" />
       <printer translate="name" name="Mitsubishi CP-9550DZ" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP9550DZ;CLS:PRINTER;DES:MITSUBISHI CP9550DZ;" driver="mitsubishi-9550dz" manufacturer="Mitsubishi" model="4111" parameters="nativecopies" />
       <printer translate="name" name="Mitsubishi CP-9550DW-S" driver="mitsubishi-9550dw-s" manufacturer="Mitsubishi" model="4111" parameters="nativecopies" />
       <printer translate="name" name="Fujifilm ASK-300" driver="fujifilm-ask-300" manufacturer="Fujifilm" model="4112" parameters="nativecopies">EXPERIMENTAL</printer>

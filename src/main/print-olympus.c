@@ -3414,7 +3414,7 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
   stp_put16_be(pd->h_size, v);
   if (caps->laminate && *((const char*)((pd->laminate->seq).data)) != 0x00) {
     stp_put16_be(pd->w_size, v);
-    if (model == 0x02 || model == 0x90) {
+    if (model == 0x00 || model == 0x90) {
       pd->privdata.m70x.laminate_offset = 0;
       if (!pd->privdata.m70x.quality)
 	pd->privdata.m70x.quality = 4;  /* Matte Lamination forces UltraFine on K60 or K305 */
@@ -3561,7 +3561,7 @@ LIST(dyesub_printsize_list_t, mitsu_cpk60_printsize_list, dyesub_printsize_t, mi
 
 static void mitsu_cpk60_printer_init(stp_vars_t *v)
 {
-  mitsu_cpd70k60_printer_init(v, 0x02);
+  mitsu_cpd70k60_printer_init(v, 0x00);
 }
 
 /* Identical to the D70 except for one fewer quality mode */
@@ -5094,7 +5094,7 @@ static void dnpds620_printer_start(stp_vars_t *v)
   dnp_printer_start_common(v);
 
   /* Multicut when 8x6 media is in use */
-  if (!strcmp(pd->pagesize, "w432h576") &&
+  if (!strcmp(pd->pagesize, "w432h576") ||
       !strcmp(pd->pagesize, "w432h648")) {
     stp_zprintf(v, "\033PCNTRL FULL_CUTTER_SET 00000016");
     stp_zprintf(v, "0000000000000000");
@@ -6107,7 +6107,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Mitsubishi CP9600D */
     4110,
-    &bgr_ink_list,
+    &rgb_ink_list,
     &res_mitsu9600_dpi_list,
     &mitsu_cp9600_page_list,
     &mitsu_cp9600_printsize_list,
