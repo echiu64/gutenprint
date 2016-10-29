@@ -333,6 +333,24 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
   5) Added support for the following Epson inkjet printers:
 
+	Epson L1300
+	Epson ME Office 82WD
+	Epson ME Office 85ND
+	Epson ME Office 900WD
+	Epson ME Office 960FWD
+	Epson PX 203
+	Epson PX 503A
+	Epson PX 603F
+	Epson Stylus Office B42WD
+	Epson Stylus Office BX525WD
+	Epson Stylus Office BX625WD
+	Epson Stylus Office NX625
+	Epson Stylus Office SX620FW
+	Epson Stylus Office T42WD
+	Epson Stylus Office TX560WD
+	Epson WorkForce 60
+	Epson WorkForce 625
+	Epson WorkForce 633
 	Epson Stylus XP100 	     	   	  [experimental]
 	Epson SureColor P400 	     	   	  [experimental]
 	Epson SureColor P600 	     	   	  [experimental]
