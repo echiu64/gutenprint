@@ -1416,7 +1416,7 @@
       <printer translate="name" name="Epson Stylus Office B30" driver="escp2-of-b30" manufacturer="Epson" model="85" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Office B33" driver="escp2-of-b33" manufacturer="Epson" model="85" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Office B40W" driver="escp2-of-b40w" manufacturer="Epson" model="92" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Office B42WD" driver="escp2-of-b40w" manufacturer="Epson" model="92" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Office B42WD" driver="escp2-of-b42wd" manufacturer="Epson" model="92" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Office B1100" driver="escp2-of-b1100" manufacturer="Epson" model="99" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Office T30" driver="escp2-of-t30" manufacturer="Epson" model="85" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Office T33" driver="escp2-of-t33" manufacturer="Epson" model="85" parameters="standard_params" />
