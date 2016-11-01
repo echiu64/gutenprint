@@ -130,7 +130,7 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 		<h2> Headlines </h2>
 
 		<p>
-			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.11 is released!</span>
+			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.12-pre4 is released!</span>
 			<br>
 			<a href="MacOSX.php#5.2.12-pre4">November 1, 2016</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.12-pre4, a pre-release of Gutenprint 5.2.12.  This release adds support for many new printers and other improvements over 5.2.11. <b>NOTE: Users of many dye sublimation printers must follow a special installation procedure.  Please read the release notes very carefully!</b>  See the <a href="MacOSX.php#5.2.11">Release notes</a> for more detail.  See the <b>Downloads</b> section for download links.
 		</p>
