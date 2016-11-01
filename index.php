@@ -35,6 +35,13 @@ page for OS X</a> that answers most questions on how to use Gutenprint
 and Gimp-Print with OS X 10.2 "Jaguar" and beyond, and provides direct
 download links.</p>
 
+<H2><font color="#ff0000">Gutenprint 5.2.12-pre4 is available!</font></h2>
+
+<P><strong><em><font color="#ff0000">New as of November 1,
+2016!</strong></em></font>The Gutenprint project is pleased to announce Gutenprint 5.2.12-pre4.  This pre-release adds support for many new printers and other improvements over 5.2.10.  <b>Note that the Foomatic data generator and the Ghostscript IJS driver have been removed</b> as CUPS support is ubiquitous and Foomatic is not needed with CUPS.  This package is available in source form, and also in binary installer form for Macintosh OS X (10.6 and above; 10.5 and below are no longer supported).  <a
+href="https://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.12-pre4/">You
+can read the release notes and download it here</a>.  </p>
+
 <H2><font color="#ff0000">Gutenprint 5.2.11 is available!</font></h2>
 
 <P><strong><em><font color="#ff0000">New as of January 15,
