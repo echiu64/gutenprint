@@ -1,13 +1,11 @@
-Welcome to Gutenprint 5.2.12-pre4, a pre-release of Gutenprint
-5.2.12. Please read these release notes carefully.
+Welcome to Gutenprint 5.2.12-pre4, a pre-release of Gutenprint 5.2.12.
+Please read these release notes carefully.
 
-Gutenprint is a suite of printer drivers that may be used with most
-common UNIX print spooling systems, including CUPS, lpr, LPRng, or
-others.  Gutenprint currently supports over 2500 printer models.
-These drivers provide high quality printing for UNIX, Linux, and
-Macintosh OS X (10.6 and above) systems.  Gutenprint includes a CUPS
-driver, and an enhanced Print plug-in for GIMP that replaces the print
-plug-in packaged with the GIMP distribution.
+Gutenprint is a suite of printer drivers for UNIX, Linux, and
+Macintosh OS X systems (10.6 and above) that use CUPS as their
+printing system.  Gutenprint currently supports over 2600 printers.
+It also includes an enhanced Print plug-in for GIMP that replaces the
+print plug-in packaged with the GIMP distribution.
 
 As of 5.2.10, Gutenprint no longer supports Macintosh OS X 10.4 or
 earlier; as of 5.2.11, Gutenprint no longer supports Macintosh OS X

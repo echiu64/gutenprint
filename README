@@ -8,23 +8,15 @@ Welcome to Gutenprint 5.2.12-pre4!  Please read these notes carefully.
 
 I) INTRODUCTION
 
-    Gutenprint is a suite of printer drivers that may be used with
-    most common UNIX print spooling systems, including CUPS, lpr,
-    LPRng, or others.  Gutenprint currently supports over 2500 printer
-    models.  These drivers provide high quality printing for UNIX,
-    Linux, and Macintosh OS X (10.6 and above) systems.  Gutenprint
-    includes a CUPS driver and an enhanced Print plug-in for GIMP that
-    replaces the print plug-in packaged with the GIMP distribution.
+    Gutenprint is a suite of printer drivers for UNIX, Linux, and
+    Macintosh OS X systems (10.6 and above) that use CUPS as their
+    printing system.  Gutenprint currently supports over 2600
+    printers.  It also includes an enhanced Print plug-in for GIMP
+    that replaces the print plug-in packaged with the GIMP
+    distribution.
 
-    This is Gutenprint version 5.2.12-pre4, a pre-release of
-    Gutenprint 5.2.12.  Gutenprint, formerly named Gimp-Print, is a
-    suite of printer drivers that may be used with most common UNIX
-    print spooling systems, including CUPS, lpr, LPRng, or others.
-    Gutenprint also includes an enhanced print plug-in for the GIMP
-    image editor, replacing the Gimp-Print 4.2-based plugin supplied
-    with GIMP 1.2, 2.0, and 2.2, and offering an alternative with
-    additional capabilities to the GtkPrint-based plugin supplied with
-    GIMP 2.4 and beyond.
+    Gutenprint 5.2.12-pre4 is a pre-release of the forthcoming
+    Gutenprint 5.2.12.
 
     Gutenprint was renamed from its original name of Gimp-Print in
     order to clearly distinguish it from GIMP.  While this package
@@ -35,11 +27,10 @@ I) INTRODUCTION
     the inventor of the movable type printing press.  Finally, the
     word "guten" means "good" in German.
 
-    Please read the user's manual (in ODF format as
-    doc/gutenprint-users-manual.odt or PDF format as
-    doc/gutenprint-users-manual.pdf) carefully, as it covers much more
-    information than this README file.  In addition, please read the
-    release notes (NEWS), as it has information on the latest changes.
+    Please read the user's manual (doc/gutenprint-users-manual.pdf)
+    carefully, as it covers much more information than this README
+    file.  In addition, please read the release notes (NEWS), as it
+    has information on the latest changes.
 
     Gutenprint supports only the printer part of multi-function
     devices (devices that typically include scanning, copying, and fax
