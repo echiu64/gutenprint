@@ -1041,6 +1041,8 @@ and reporting the results!</p>
 <tr><td>Epson B-510DN</td><td>escp2-b510dn</td><td></td></tr>
 <tr><td>Epson L120</td><td>escp2-l120</td><td></td></tr>
 <tr><td>Epson L210</td><td>escp2-l210</td><td></td></tr>
+<tr><td>Epson L1300</td><td>escp2-l1300</td><td></td></tr>
+<tr><td>Epson L1800</td><td>escp2-l1800</td><td></td></tr>
 <tr><td>Epson Stylus C20</td><td>escp2-c20</td><td></td></tr>
 <tr><td>Epson Stylus C20SX</td><td>escp2-c20sx</td><td></td></tr>
 <tr><td>Epson Stylus C20UX</td><td>escp2-c20ux</td><td></td></tr>
@@ -1118,6 +1120,7 @@ and reporting the results!</p>
 <tr><td>Epson Stylus Office B30</td><td>escp2-of-b30</td><td></td></tr>
 <tr><td>Epson Stylus Office B33</td><td>escp2-of-b33</td><td></td></tr>
 <tr><td>Epson Stylus Office B40W</td><td>escp2-of-b40w</td><td></td></tr>
+<tr><td>Epson Stylus Office B42WD</td><td>escp2-of-b42wd</td><td></td></tr>
 <tr><td>Epson Stylus Office B1100</td><td>escp2-of-b1100</td><td></td></tr>
 <tr><td>Epson Stylus Office T30</td><td>escp2-of-t30</td><td></td></tr>
 <tr><td>Epson Stylus Office T33</td><td>escp2-of-t33</td><td></td></tr>
@@ -1125,11 +1128,14 @@ and reporting the results!</p>
 <tr><td>Epson Stylus Office T1100</td><td>escp2-of-t1100</td><td></td></tr>
 <tr><td>Epson Stylus Office T1110</td><td>escp2-of-t1110</td><td></td></tr>
 <tr><td>Epson Stylus Office BX300F</td><td>escp2-of-bx300f</td><td></td></tr>
+<tr><td>Epson Stylus Office BX525WD</td><td>escp2-of-bx525wd</td><td></td></tr>
 <tr><td>Epson Stylus Office BX535WD</td><td>escp2-of-bx535wd</td><td></td></tr>
 <tr><td>Epson Stylus Office BX600FW</td><td>escp2-of-bx600fw</td><td></td></tr>
+<tr><td>Epson Stylus Office BX625FWD</td><td>escp2-of-bx625fwd</td><td></td></tr>
 <tr><td>Epson Stylus Office BX630FW</td><td>escp2-of-bx630fw</td><td></td></tr>
 <tr><td>Epson Stylus Office BX635FWD</td><td>escp2-of-bx635fwd</td><td></td></tr>
 <tr><td>Epson Stylus Office SX600FW</td><td>escp2-of-sx600fw</td><td></td></tr>
+<tr><td>Epson Stylus Office SX620FW</td><td>escp2-of-sx620fw</td><td></td></tr>
 <tr><td>Epson Stylus Office TX300F</td><td>escp2-of-tx300f</td><td></td></tr>
 <tr><td>Epson Stylus Office TX600FW</td><td>escp2-of-tx600fw</td><td></td></tr>
 <tr><td>Epson Stylus Office TX620FWD</td><td>escp2-of-tx620fwd</td><td></td></tr>
@@ -1328,6 +1334,7 @@ and reporting the results!</p>
 <tr><td>Epson Stylus NX420</td><td>escp2-nx420</td><td></td></tr>
 <tr><td>Epson Stylus NX515</td><td>escp2-nx515</td><td></td></tr>
 <tr><td>Epson Stylus NX530</td><td>escp2-nx530</td><td></td></tr>
+<tr><td>Epson Stylus NX625</td><td>escp2-nx625</td><td></td></tr>
 <tr><td>Epson Stylus NX630</td><td>escp2-nx630</td><td></td></tr>
 <tr><td>Epson Stylus NX635</td><td>escp2-nx635</td><td></td></tr>
 <tr><td>Epson Stylus NX645</td><td>escp2-nx645</td><td></td></tr>
@@ -1372,6 +1379,7 @@ and reporting the results!</p>
 <tr><td>Epson Stylus T26</td><td>escp2-t26</td><td></td></tr>
 <tr><td>Epson Stylus T30</td><td>escp2-t30</td><td></td></tr>
 <tr><td>Epson Stylus T40W</td><td>escp2-t40w</td><td></td></tr>
+<tr><td>Epson Stylus T42WD</td><td>escp2-t42wd</td><td></td></tr>
 <tr><td>Epson Stylus T50</td><td>escp2-t50</td><td></td></tr>
 <tr><td>Epson Stylus T59</td><td>escp2-t59</td><td></td></tr>
 <tr><td>Epson Stylus T60</td><td>escp2-t60</td><td></td></tr>
@@ -1393,6 +1401,7 @@ and reporting the results!</p>
 <tr><td>Epson Stylus TX420</td><td>escp2-tx420</td><td></td></tr>
 <tr><td>Epson Stylus TX510FN</td><td>escp2-tx510fn</td><td></td></tr>
 <tr><td>Epson Stylus TX550W</td><td>escp2-tx550w</td><td></td></tr>
+<tr><td>Epson Stylus TX560WD</td><td>escp2-tx560wd</td><td></td></tr>
 <tr><td>Epson Stylus TX610FW</td><td>escp2-tx610fw</td><td></td></tr>
 <tr><td>Epson Stylus TX615</td><td>escp2-tx615</td><td></td></tr>
 <tr><td>Epson Stylus TX630</td><td>escp2-tx630</td><td></td></tr>
@@ -1400,6 +1409,18 @@ and reporting the results!</p>
 <tr><td>Epson Stylus TX645</td><td>escp2-tx645</td><td></td></tr>
 <tr><td>Epson Stylus TX650</td><td>escp2-tx650</td><td></td></tr>
 <tr><td>Epson Stylus TX659</td><td>escp2-tx659</td><td></td></tr>
+<tr><td>Epson Stylus XP100</td><td>escp2-xp100</td><td></td></tr>
+<tr><td>Epson SureColor P400</td><td>escp2-p400</td><td></td></tr>
+<tr><td>Epson SureColor P600</td><td>escp2-p600</td><td></td></tr>
+<tr><td>Epson SureColor P800</td><td>escp2-p800</td><td></td></tr>
+<tr><td>Epson SureColor P6000</td><td>escp2-p6000</td><td></td></tr>
+<tr><td>Epson SureColor P7000</td><td>escp2-p7000</td><td></td></tr>
+<tr><td>Epson SureColor P7000 Commercial Edition</td><td>escp2-p7000c</td><td></td></tr>
+<tr><td>Epson SureColor P8000</td><td>escp2-p8000</td><td></td></tr>
+<tr><td>Epson SureColor P9000</td><td>escp2-p9000</td><td></td></tr>
+<tr><td>Epson SureColor P9000 Commercial Edition</td><td>escp2-p9000c</td><td></td></tr>
+<tr><td>Epson SureColor P10000</td><td>escp2-p10000</td><td></td></tr>
+<tr><td>Epson SureColor P20000</td><td>escp2-p20000</td><td></td></tr>
 <tr><td>Epson PictureMate</td><td>escp2-picmate</td><td></td></tr>
 <tr><td>Epson PictureMate Dash</td><td>escp2-picmatedash</td><td></td></tr>
 <tr><td>Epson PictureMate Deluxe</td><td>escp2-picmated</td><td></td></tr>
@@ -1420,6 +1441,7 @@ and reporting the results!</p>
 <tr><td>Epson PictureMate 2005</td><td>escp2-picmate2005</td><td></td></tr>
 <tr><td>Epson WorkForce 30</td><td>escp2-wf30</td><td></td></tr>
 <tr><td>Epson WorkForce 40</td><td>escp2-wf40</td><td></td></tr>
+<tr><td>Epson WorkForce 60</td><td>escp2-wf60</td><td></td></tr>
 <tr><td>Epson WorkForce 310</td><td>escp2-wf310</td><td></td></tr>
 <tr><td>Epson WorkForce 315</td><td>escp2-wf315</td><td></td></tr>
 <tr><td>Epson WorkForce 500</td><td>escp2-wf500</td><td></td></tr>
@@ -1427,7 +1449,9 @@ and reporting the results!</p>
 <tr><td>Epson WorkForce 600</td><td>escp2-wf600</td><td></td></tr>
 <tr><td>Epson WorkForce 610</td><td>escp2-wf610</td><td></td></tr>
 <tr><td>Epson WorkForce 615</td><td>escp2-wf615</td><td></td></tr>
+<tr><td>Epson WorkForce 625</td><td>escp2-wf625</td><td></td></tr>
 <tr><td>Epson WorkForce 630</td><td>escp2-wf630</td><td></td></tr>
+<tr><td>Epson WorkForce 633</td><td>escp2-wf633</td><td></td></tr>
 <tr><td>Epson WorkForce 635</td><td>escp2-wf636</td><td></td></tr>
 <tr><td>Epson WorkForce 645</td><td>escp2-wf645</td><td></td></tr>
 <tr><td>Epson WorkForce 1100</td><td>escp2-wf1100</td><td></td></tr>
@@ -1468,11 +1492,15 @@ and reporting the results!</p>
 <tr><td>Epson ME 320</td><td>escp2-me320</td><td></td></tr>
 <tr><td>Epson ME Office 70</td><td>escp2-meof70</td><td></td></tr>
 <tr><td>Epson ME Office 80W</td><td>escp2-meof80w</td><td></td></tr>
+<tr><td>Epson ME Office 82WD</td><td>escp2-meof82wd</td><td></td></tr>
+<tr><td>Epson ME Office 85ND</td><td>escp2-meof85nd</td><td></td></tr>
 <tr><td>Epson ME Office 360</td><td>escp2-meof360</td><td></td></tr>
 <tr><td>Epson ME Office 600F</td><td>escp2-meof600f</td><td></td></tr>
 <tr><td>Epson ME Office 620F</td><td>escp2-meof620f</td><td></td></tr>
 <tr><td>Epson ME Office 700FW</td><td>escp2-meof700fw</td><td></td></tr>
+<tr><td>Epson ME Office 900WD</td><td>escp2-meof900wd</td><td></td></tr>
 <tr><td>Epson ME Office 940FW</td><td>escp2-meof940fw</td><td></td></tr>
+<tr><td>Epson ME Office 960FWD</td><td>escp2-meof960fwd</td><td></td></tr>
 <tr><td>Epson ME Office 1100</td><td>escp2-meof1100</td><td></td></tr>
 <tr><td>Epson MJ 930C</td><td>escp2-mj930c</td><td></td></tr>
 <tr><td>Epson MJ 5100C</td><td>escp2-mj5100c</td><td></td></tr>
@@ -1534,10 +1562,13 @@ and reporting the results!</p>
 <tr><td>Epson PX 7V</td><td>escp2-px7v</td><td></td></tr>
 <tr><td>Epson PX 101</td><td>escp2-px101</td><td></td></tr>
 <tr><td>Epson PX 201</td><td>escp2-px201</td><td></td></tr>
+<tr><td>Epson PX 203</td><td>escp2-px203</td><td></td></tr>
 <tr><td>Epson PX 204</td><td>escp2-px204</td><td></td></tr>
 <tr><td>Epson PX 401A</td><td>escp2-px401a</td><td></td></tr>
+<tr><td>Epson PX 503A</td><td>escp2-px503a</td><td></td></tr>
 <tr><td>Epson PX 504A</td><td>escp2-px504a</td><td></td></tr>
 <tr><td>Epson PX 601F</td><td>escp2-px601f</td><td></td></tr>
+<tr><td>Epson PX 603F</td><td>escp2-px603f</td><td></td></tr>
 <tr><td>Epson PX 1001</td><td>escp2-px1001</td><td></td></tr>
 <tr><td>Epson PX 1200</td><td>escp2-px1200</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Epson PX 1600F</td><td>escp2-px1600f</td><td>EXPERIMENTAL</td></tr>
@@ -1554,6 +1585,7 @@ and reporting the results!</p>
 <tr><td>Epson PX G5600</td><td>escp2-pxg5600</td><td></td></tr>
 <tr><td>Epson PX 7000</td><td>escp2-px7000</td><td></td></tr>
 <tr><td>Epson PX 9000</td><td>escp2-px9000</td><td></td></tr>
+<tr><td>Epson XP-820</td><td>escp2-xp820</td><td></td></tr>
 <tr><td>Apollo P-2100</td><td>pcl-apollo-p2100</td><td></td></tr>
 <tr><td>Apollo P-2150</td><td>pcl-apollo-p2150</td><td></td></tr>
 <tr><td>Apollo P-2200</td><td>pcl-apollo-p2200</td><td></td></tr>
@@ -2083,6 +2115,7 @@ and reporting the results!</p>
 <tr><td>Kyocera FS-1030D</td><td>kyocera-fs-1030d</td><td></td></tr>
 <tr><td>Kyocera FS-1050</td><td>kyocera-fs-1050</td><td></td></tr>
 <tr><td>Kyocera FS-1118MFP</td><td>kyocera-fs-1118mfp</td><td></td></tr>
+<tr><td>Kyocera FS-1135MFP</td><td>kyocera-fs-1135mfp</td><td></td></tr>
 <tr><td>Kyocera FS-1200</td><td>kyocera-fs-1200</td><td></td></tr>
 <tr><td>Kyocera FS-1600</td><td>kyocera-fs-1600</td><td></td></tr>
 <tr><td>Kyocera FS-1600+</td><td>kyocera-fs-1600plus</td><td></td></tr>
@@ -2270,6 +2303,7 @@ and reporting the results!</p>
 <tr><td>NRG MP 7500</td><td>nrg-mp_7500</td><td></td></tr>
 <tr><td>NRG MP 9000</td><td>nrg-mp_9000</td><td></td></tr>
 <tr><td>Oki B401d</td><td>oki-b401d</td><td></td></tr>
+<tr><td>Oki B430</td><td>oki-b430</td><td></td></tr>
 <tr><td>Oki B4350</td><td>oki-b4350</td><td></td></tr>
 <tr><td>Oki OL400</td><td>okidata-ol400</td><td></td></tr>
 <tr><td>Oki OL400e</td><td>okidata-ol400e</td><td></td></tr>
@@ -2519,6 +2553,19 @@ and reporting the results!</p>
 <tr><td>Xerox Phaser 8560DN</td><td>xerox-phaser_8560dn</td><td></td></tr>
 <tr><td>Xerox WorkCentre 7345</td><td>xerox-workcentre_7345</td><td></td></tr>
 <tr><td>Xerox WorkCentre M118</td><td>xerox-wc_m118</td><td></td></tr>
+<tr><td>Datamax-ONeil I4212e Mark II</td><td>datamax_oneil_I4212e</td><td></td></tr>
+<tr><td>Datamax-ONeil I4310e Mark II</td><td>datamax_oneil_I4310e</td><td></td></tr>
+<tr><td>Datamax-ONeil I4606e Mark II</td><td>datamax_oneil_I4606e</td><td></td></tr>
+<tr><td>Datamax-ONeil E4204B Mark III</td><td>datamax_oneil_E4204B</td><td></td></tr>
+<tr><td>Datamax-ONeil E4304B Mark III</td><td>datamax_oneil_E4304B</td><td></td></tr>
+<tr><td>Datamax-ONeil E4205A Mark III</td><td>datamax_oneil_E4205A</td><td></td></tr>
+<tr><td>Datamax-ONeil E4305A Mark III</td><td>datamax_oneil_E4305A</td><td></td></tr>
+<tr><td>Datamax-ONeil E4206P Mark III</td><td>datamax_oneil_E4206P</td><td></td></tr>
+<tr><td>Datamax-ONeil E4305P Mark III</td><td>datamax_oneil_E4305P</td><td></td></tr>
+<tr><td>Datamax-ONeil E4206L Mark III</td><td>datamax_oneil_E4206L</td><td></td></tr>
+<tr><td>Datamax-ONeil E4305L Mark III</td><td>datamax_oneil_E4305L</td><td></td></tr>
+<tr><td>Datamax-ONeil RL3e</td><td>datamax_oneil_RL3e</td><td></td></tr>
+<tr><td>Datamax-ONeil RL4e</td><td>datamax_oneil_RL4e</td><td></td></tr>
 <tr><td>Compaq IJ1200</td><td>compaq-ij1200</td><td></td></tr>
 <tr><td>Lexmark X73</td><td>lexmark-x73</td><td></td></tr>
 <tr><td>Lexmark Z42</td><td>lexmark-z42</td><td></td></tr>
@@ -2562,6 +2609,8 @@ and reporting the results!</p>
 <tr><td>Canon SELPHY CP820</td><td>canon-cp820</td><td></td></tr>
 <tr><td>Canon SELPHY CP900</td><td>canon-cp900</td><td></td></tr>
 <tr><td>Canon SELPHY CP910</td><td>canon-cp910</td><td></td></tr>
+<tr><td>Canon SELPHY CP1000</td><td>canon-cp1000</td><td></td></tr>
+<tr><td>Canon SELPHY CP1200</td><td>canon-cp1200</td><td></td></tr>
 <tr><td>Canon SELPHY ES1</td><td>canon-es1</td><td></td></tr>
 <tr><td>Canon SELPHY ES2</td><td>canon-es2</td><td></td></tr>
 <tr><td>Canon SELPHY ES3</td><td>canon-es3</td><td></td></tr>
@@ -2605,15 +2654,22 @@ and reporting the results!</p>
 <tr><td>Mitsubishi CP-3020DAE</td><td>mitsubishi-3020dae</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Mitsubishi CP-9550D</td><td>mitsubishi-9550d</td><td></td></tr>
 <tr><td>Mitsubishi CP-9550DW</td><td>mitsubishi-9550dw</td><td></td></tr>
-<tr><td>Mitsubishi CP-9550DZ</td><td>mitsubishi-9550dz</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Mitsubishi CP-9550DW-S</td><td>mitsubishi-9550dw-s</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Mitsubishi CP-9810D</td><td>mitsubishi-9810d</td><td></td></tr>
-<tr><td>Mitsubishi CP-9810DW</td><td>mitsubishi-9810dw</td><td></td></tr>
+<tr><td>Mitsubishi CP-9810D</td><td>mitsubishi-9810d</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Mitsubishi CP-9810DW</td><td>mitsubishi-9810dw</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Mitsubishi CP-D70DW</td><td>mitsubishi-d70dw</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Mitsubishi CP-D707DW</td><td>mitsubishi-d707dw</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Mitsubishi CP-K60DW-S</td><td>mitsubishi-k60dw</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Mitsubishi CP-K60DW-S</td><td>mitsubishi-k60dw</td><td></td></tr>
 <tr><td>Mitsubishi CP-D80DW</td><td>mitsubishi-d80dw</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Kodak 305</td><td>kodak-305</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kodak 305</td><td>kodak-305</td><td></td></tr>
+<tr><td>Mitsubishi CP-D90DW</td><td>mitsubishi-d90dw</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Mitsubishi CP-9600DW</td><td>mitsubishi-9600dw</td><td></td></tr>
+<tr><td>Mitsubishi CP-9550DZ</td><td>mitsubishi-9550dz</td><td></td></tr>
+<tr><td>Mitsubishi CP-9550DW-S</td><td>mitsubishi-9550dw-s</td><td></td></tr>
+<tr><td>Fujifilm ASK-300</td><td>fujifilm-ask-300</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Mitsubishi CP-9800D</td><td>mitsubishi-9800d</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Mitsubishi CP-9800DW</td><td>mitsubishi-9800dw</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Mitsubishi CP-9800DZ</td><td>mitsubishi-9800dz</td><td></td></tr>
+<tr><td>Mitsubishi CP-9800DW-S</td><td>mitsubishi-9800dw-s</td><td></td></tr>
 <tr><td>Shinko CHC-S9045</td><td>shinko-chcs9045</td><td></td></tr>
 <tr><td>Shinko CHC-S2145</td><td>shinko-chcs2145</td><td></td></tr>
 <tr><td>Sinfonia S2145/S2</td><td>sinfonia-chcs2145</td><td></td></tr>
@@ -2621,9 +2677,9 @@ and reporting the results!</p>
 <tr><td>Sinfonia CHC-S1245/E1</td><td>sinfonia-chcs1245</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Shinko CHC-S6245</td><td>shinko-chcs6245</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Sinfonia CHC-S6245/CE1</td><td>sinfonia-chcs6245</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Shinko CHC-S6145</td><td>shinko-chcs6145</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Sinfonia CHC-S6145/CS2</td><td>sinfonia-chcs6145</td><td>EXPERIMENTAL</td></tr>
-<tr><td>CIAAT Brava 21</td><td>ciaat-brava-21</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Shinko CHC-S6145</td><td>shinko-chcs6145</td><td></td></tr>
+<tr><td>Sinfonia CHC-S6145/CS2</td><td>sinfonia-chcs6145</td><td></td></tr>
+<tr><td>CIAAT Brava 21</td><td>ciaat-brava-21</td><td></td></tr>
 <tr><td>Dai Nippon Printing DS40</td><td>dnp-ds40</td><td></td></tr>
 <tr><td>Dai Nippon Printing DS80</td><td>dnp-ds80</td><td></td></tr>
 <tr><td>Dai Nippon Printing DSRX1</td><td>dnp-dsrx1</td><td></td></tr>
