@@ -1409,18 +1409,18 @@ and reporting the results!</p>
 <tr><td>Epson Stylus TX645</td><td>escp2-tx645</td><td></td></tr>
 <tr><td>Epson Stylus TX650</td><td>escp2-tx650</td><td></td></tr>
 <tr><td>Epson Stylus TX659</td><td>escp2-tx659</td><td></td></tr>
-<tr><td>Epson Stylus XP100</td><td>escp2-xp100</td><td></td></tr>
-<tr><td>Epson SureColor P400</td><td>escp2-p400</td><td></td></tr>
-<tr><td>Epson SureColor P600</td><td>escp2-p600</td><td></td></tr>
-<tr><td>Epson SureColor P800</td><td>escp2-p800</td><td></td></tr>
-<tr><td>Epson SureColor P6000</td><td>escp2-p6000</td><td></td></tr>
-<tr><td>Epson SureColor P7000</td><td>escp2-p7000</td><td></td></tr>
-<tr><td>Epson SureColor P7000 Commercial Edition</td><td>escp2-p7000c</td><td></td></tr>
-<tr><td>Epson SureColor P8000</td><td>escp2-p8000</td><td></td></tr>
-<tr><td>Epson SureColor P9000</td><td>escp2-p9000</td><td></td></tr>
-<tr><td>Epson SureColor P9000 Commercial Edition</td><td>escp2-p9000c</td><td></td></tr>
-<tr><td>Epson SureColor P10000</td><td>escp2-p10000</td><td></td></tr>
-<tr><td>Epson SureColor P20000</td><td>escp2-p20000</td><td></td></tr>
+<tr><td>Epson Stylus XP100</td><td>escp2-xp100</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Epson SureColor P400</td><td>escp2-p400</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Epson SureColor P600</td><td>escp2-p600</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Epson SureColor P800</td><td>escp2-p800</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Epson SureColor P6000</td><td>escp2-p6000</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Epson SureColor P7000</td><td>escp2-p7000</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Epson SureColor P7000 Commercial Edition</td><td>escp2-p7000c</td><td>EXPERIMENTAL; violet ink not supported</td></tr>
+<tr><td>Epson SureColor P8000</td><td>escp2-p8000</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Epson SureColor P9000</td><td>escp2-p9000</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Epson SureColor P9000 Commercial Edition</td><td>escp2-p9000c</td><td>EXPERIMENTAL; violet ink not supported</td></tr>
+<tr><td>Epson SureColor P10000</td><td>escp2-p10000</td><td>EXPERIMENTAL; only three levels of gray supported</td></tr>
+<tr><td>Epson SureColor P20000</td><td>escp2-p20000</td><td>EXPERIMENTAL; only three levels of gray supported</td></tr>
 <tr><td>Epson PictureMate</td><td>escp2-picmate</td><td></td></tr>
 <tr><td>Epson PictureMate Dash</td><td>escp2-picmatedash</td><td></td></tr>
 <tr><td>Epson PictureMate Deluxe</td><td>escp2-picmated</td><td></td></tr>
