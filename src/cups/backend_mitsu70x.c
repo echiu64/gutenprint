@@ -288,9 +288,9 @@ struct mitsu70x_jobs {
 
 struct mitsu70x_status_deck {
 	uint8_t  mecha_status[2];
-	uint8_t  temperature;
+	uint8_t  temperature;   /* D70 family only, K60 no */
 	uint8_t  error_status[3];
-	uint8_t  rsvd_a[10];
+	uint8_t  rsvd_a[10];    /* K60 family [1] == temperature? [3:6] == lifetime prints in BCD */
 
 	uint8_t  media_brand;
 	uint8_t  media_type;
@@ -298,9 +298,7 @@ struct mitsu70x_status_deck {
 	uint16_t capacity; /* media capacity */
 	uint16_t remain;   /* media remaining */
 	uint8_t  rsvd_c[2];
-
-	uint16_t rsvd_d;
-	uint16_t prints; /* lifetime prints on deck? */
+	uint8_t  lifetime_prints[4]; /* lifetime prints on deck + 10, in BCD! */
 	uint16_t rsvd_e[17];
 } __attribute__((packed));
 
@@ -1489,7 +1487,7 @@ skip_status:
 
 static void mitsu70x_dump_printerstatus(struct mitsu70x_printerstatus_resp *resp)
 {
-	unsigned int i;
+	uint32_t i;
 
 	INFO("Model         : ");
 	for (i = 0 ; i < 6 ; i++) {
@@ -1526,7 +1524,11 @@ static void mitsu70x_dump_printerstatus(struct mitsu70x_printerstatus_resp *resp
 	INFO("Lower Prints remaining:  %03d/%03d\n",
 	     be16_to_cpu(resp->lower.remain),
 	     be16_to_cpu(resp->lower.capacity));
-//	INFO("Lower Lifetime prints:  %d\n", be16_to_cpu(resp->lower.prints));
+
+	i = packed_bcd_to_uint32((char*)resp->lower.lifetime_prints, 4);
+	if (i)
+		i-= 10;
+	INFO("Lower Lifetime prints:  %u\n", i);
 
 	if (resp->upper.mecha_status[0] != MECHA_STATUS_INIT) {
 		INFO("Upper Mechanical Status: %s\n",
@@ -1544,6 +1546,11 @@ static void mitsu70x_dump_printerstatus(struct mitsu70x_printerstatus_resp *resp
 		INFO("Upper Prints remaining:  %03d/%03d\n",
 		     be16_to_cpu(resp->upper.remain),
 		     be16_to_cpu(resp->upper.capacity));
+
+		i = packed_bcd_to_uint32((char*)resp->upper.lifetime_prints, 4);
+		if (i)
+			i-= 10;
+		INFO("Upper Lifetime prints:  %u\n", i);
 	}
 }
 
@@ -1658,7 +1665,7 @@ static int mitsu70x_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend mitsu70x_backend = {
 	.name = "Mitsubishi CP-D70/D707/K60/D80",
-	.version = "0.51",
+	.version = "0.52",
 	.uri_prefix = "mitsu70x",
 	.cmdline_usage = mitsu70x_cmdline,
 	.cmdline_arg = mitsu70x_cmdline_arg,
