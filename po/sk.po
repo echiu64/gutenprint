@@ -3,21 +3,22 @@
 # Copyright (C) 2002 Free Software Foundation, Inc.
 # This file is distributed under the same license as the gutenprint package.
 # Zdenko Podobný <zdpo@mailbox.sk>, 2002.
-# Dušan Kazik <prescott66@gmail.com>, 2015.
+# Dušan Kazik <prescott66@gmail.com>, 2015-2016.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gutenprint 5.2.10-pre2\n"
 "Report-Msgid-Bugs-To: gimp-print-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2014-01-22 08:53-0500\n"
-"PO-Revision-Date: 2016-03-06 13:32+0100\n"
+"PO-Revision-Date: 2016-11-11 13:53-0500\n"
 "Last-Translator: Dušan Kazik <prescott66@gmail.com>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.7\n"
+"X-Bugs: Report translation errors to the Language-Team address.\n"
+"X-Generator: Poedit 1.8.9\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SearchPath-0: .\n"
 
@@ -125,15 +126,15 @@ msgstr ""
 
 #: src/main/module.c:52
 msgid "Miscellaneous (unclassified)"
-msgstr ""
+msgstr "Rôzne (neklasifikované)"
 
 #: src/main/module.c:53
 msgid "Family driver"
-msgstr ""
+msgstr "Ovládač rodiny"
 
 #: src/main/module.c:54
 msgid "Color conversion module"
-msgstr ""
+msgstr "Modul konverzie farieb"
 
 #: src/main/module.c:55
 #, fuzzy
@@ -162,7 +163,7 @@ msgstr "Typ média"
 #: src/main/print-lexmark.c:273 src/main/print-olympus.c:3752
 #: src/main/print-pcl.c:1353
 msgid "Type of media (plain paper, photo paper, etc.)"
-msgstr ""
+msgstr "Typ média (obyčajný papier, fotografický papier, atď.)"
 
 #: src/main/print-canon.c:297 src/main/print-escp2.c:180
 #: src/main/print-lexmark.c:278 src/main/print-olympus.c:3757
@@ -178,23 +179,23 @@ msgstr "Zdroj (vstupné miesto) média"
 
 #: src/main/print-canon.c:303 src/main/print-escp2.c:192
 msgid "CD Hub Size"
-msgstr ""
+msgstr "Veľkosť otvoru CD"
 
 #: src/main/print-canon.c:304 src/main/print-escp2.c:193
 msgid "Print only outside of the hub of the CD, or all the way to the hole"
-msgstr ""
+msgstr "Tlačiť iba mimo otvoru disku CD alebo na celú plochu"
 
 #: src/main/print-canon.c:309 src/main/print-escp2.c:198
 msgid "CD Size (Custom)"
-msgstr ""
+msgstr "Veľkosť disku CD (vlastná)"
 
 #: src/main/print-canon.c:310 src/main/print-escp2.c:199
 msgid "Variable adjustment for the outer diameter of CD"
-msgstr ""
+msgstr "Premenlivá úprava vonkajšieho priemeru disku CD"
 
 #: src/main/print-canon.c:315 src/main/print-escp2.c:204
 msgid "CD Hub Size (Custom)"
-msgstr ""
+msgstr "Veľkosť otvoru disku CD (vlastná)"
 
 #: src/main/print-canon.c:316 src/main/print-escp2.c:205
 #, fuzzy
@@ -273,12 +274,12 @@ msgstr "Bez okrajov"
 #: src/main/print-canon.c:379 src/main/print-escp2.c:264
 #: src/main/print-olympus.c:3786
 msgid "Print without borders"
-msgstr ""
+msgstr "Tlač bez okrajov"
 
 #: src/main/print-canon.c:384 src/main/print-escp2.c:186
 #: src/main/print-pcl.c:1394
 msgid "Double-Sided Printing"
-msgstr ""
+msgstr "Obojstranná tlač"
 
 #: src/main/print-canon.c:385 src/main/print-escp2.c:187
 #: src/main/print-pcl.c:1395
@@ -360,11 +361,11 @@ msgstr "Vypnuté"
 #: src/main/print-canon.c:481 src/main/print-escp2.c:2514
 #: src/main/print-pcl.c:1684
 msgid "Long Edge (Standard)"
-msgstr ""
+msgstr "Dlhý okraj (štandard)"
 
 #: src/main/print-canon.c:482 src/main/print-pcl.c:1685
 msgid "Short Edge (Flip)"
-msgstr ""
+msgstr "Krátky okraj (prevrátiť)"
 
 #: src/main/print-canon.c:3018 src/main/print-escp2.c:2228
 #: src/xml/xmli18n-tmp.h:3312
@@ -385,11 +386,11 @@ msgstr "CD - Vlastné"
 #: src/cups/genppd.c:1452 src/cups/genppd.c:2313 src/cups/genppd.c:2511
 #: src/cups/genppd.c:2603
 msgid "Normal"
-msgstr ""
+msgstr "Normálna"
 
 #: src/main/print-canon.c:3062 src/main/print-escp2.c:2268
 msgid "Print To Hub"
-msgstr ""
+msgstr "Tlačiť do otvoru"
 
 #: src/main/print-canon.c:3240 src/main/print-canon.c:3256
 #: src/main/print-canon.c:3273 src/main/print-canon.c:3303
@@ -510,7 +511,7 @@ msgstr "Fotografia"
 #: src/cups/genppd.c:1803 src/cups/genppd.c:1823 src/cups/genppd.c:1845
 #: src/cups/genppd.c:1862
 msgid "None"
-msgstr ""
+msgstr "Nič"
 
 #: src/main/print-canon.c:3403 src/main/print-escp2.c:2321
 #: src/main/print-pcl.c:1890 src/main/generic-options.c:213
@@ -666,7 +667,7 @@ msgstr "Kontrast tlače (0 znamená jednoliatu šedú)"
 
 #: src/main/print-color.c:240
 msgid "Linear Contrast Adjustment"
-msgstr ""
+msgstr "Lineárna úprava kontrastu"
 
 #: src/main/print-color.c:241
 msgid "Use linear vs. fixed end point contrast adjustment"
@@ -1029,11 +1030,11 @@ msgstr ""
 
 #: src/main/print-color.c:365 src/main/print-escp2.c:878
 msgid "GCR Transition"
-msgstr ""
+msgstr "Prechod GCR"
 
 #: src/main/print-color.c:366 src/main/print-escp2.c:879
 msgid "Adjust the gray component transition rate"
-msgstr ""
+msgstr "Upraviť pomer prechodu šedej zložky"
 
 #: src/main/print-color.c:373 src/main/print-escp2.c:886
 msgid "GCR Lower Bound"
@@ -1426,27 +1427,27 @@ msgstr "Upraví úroveň lesku"
 
 #: src/main/print-escp2.c:518
 msgid "Drop Size Small"
-msgstr ""
+msgstr "Malá veľkosť kvapky"
 
 #: src/main/print-escp2.c:519
 msgid "Drop Size 1 (small)"
-msgstr ""
+msgstr "Veľkosť kvapky 1 (malá)"
 
 #: src/main/print-escp2.c:526
 msgid "Drop Size Medium"
-msgstr ""
+msgstr "Stredná veľkosť kvapky"
 
 #: src/main/print-escp2.c:527
 msgid "Drop Size 2 (medium)"
-msgstr ""
+msgstr "Veľkosť kvapky 2 (stredná)"
 
 #: src/main/print-escp2.c:534
 msgid "Drop Size Large"
-msgstr ""
+msgstr "Veľká veľkosť kvapky"
 
 #: src/main/print-escp2.c:535
 msgid "Drop Size 3 (large)"
-msgstr ""
+msgstr "Veľkosť kvapky 3 (veľká)"
 
 #: src/main/print-escp2.c:542 src/main/print-escp2.c:543
 msgid "Light Cyan Value"
@@ -1470,7 +1471,7 @@ msgstr "Hodnota tmavo žltej farby"
 
 #: src/main/print-escp2.c:598 src/main/print-escp2.c:599
 msgid "Dark Yellow Transition"
-msgstr ""
+msgstr "Prechod tmavej žltej"
 
 #: src/main/print-escp2.c:606 src/main/print-escp2.c:607
 msgid "Dark Yellow Density Scale"
@@ -2214,11 +2215,11 @@ msgstr "Automatický podávač papiera"
 
 #: src/main/print-lexmark.c:1118
 msgid "Manual with Pause"
-msgstr "Manuálne s prerušením"
+msgstr "Ručne s prerušením"
 
 #: src/main/print-lexmark.c:1119
 msgid "Manual without Pause"
-msgstr "Manuálne bez prerušenia"
+msgstr "Ručne bez prerušenia"
 
 #: src/main/print-olympus.c:312 src/main/print-olympus.c:1523
 #: src/main/print-olympus.c:1596 src/main/print-olympus.c:1731
@@ -2372,7 +2373,7 @@ msgstr "Rýchloschnúce priesvit. fólie"
 
 #: src/main/print-pcl.c:238 src/xml/xmli18n-tmp.h:3333
 msgid "Manual"
-msgstr "Manuál"
+msgstr "Ručne"
 
 #: src/main/print-pcl.c:239
 msgid "Manual - Movable Guides"
@@ -2464,7 +2465,7 @@ msgstr "2400x600 DPI"
 #: src/xml/xmli18n-tmp.h:3274 src/xml/xmli18n-tmp.h:3283
 #: src/xml/xmli18n-tmp.h:3292 src/xml/xmli18n-tmp.h:3300
 msgid "Draft"
-msgstr ""
+msgstr "Koncept"
 
 #: src/main/print-pcl.c:282 src/main/generic-options.c:37
 #: src/xml/xmli18n-tmp.h:3260 src/xml/xmli18n-tmp.h:3268
@@ -2495,7 +2496,7 @@ msgstr "Názov modelu"
 
 #: src/main/print-ps.c:81
 msgid "PPD File Model Name"
-msgstr ""
+msgstr "Názov modelu súboru PPD"
 
 #: src/main/print-ps.c:316
 msgid "None; please provide a PPD file"
@@ -2717,7 +2718,7 @@ msgstr "Štandardný príkaz"
 
 #: src/gutenprintui2/panel.c:305
 msgid "Use standard print command"
-msgstr ""
+msgstr "Použiť štandardný príkaz tlače"
 
 #: src/gutenprintui2/panel.c:306
 msgid "Custom Command"
@@ -2725,7 +2726,7 @@ msgstr "Vlastný príkaz"
 
 #: src/gutenprintui2/panel.c:306
 msgid "Use custom print command"
-msgstr ""
+msgstr "Použiť vlastný príkaz tlače"
 
 #: src/gutenprintui2/panel.c:307 src/gutenprintui2/plist.c:704
 #: src/gutenprintui2/plist.c:787
@@ -3292,7 +3293,7 @@ msgstr "Hodnota"
 
 #: src/cups/genppd.c:1662 src/cups/genppd.c:1830
 msgid "Fine Adjustment"
-msgstr "Jemné upravenie"
+msgstr "- jemné upravenie"
 
 #: src/cups/genppd.c:1705 src/cups/genppd.c:1850
 #, c-format
@@ -3301,7 +3302,7 @@ msgstr "%.1f mm"
 
 #: src/cups/genppd.c:2314 src/cups/genppd.c:2604
 msgid "Reverse"
-msgstr ""
+msgstr "Obrátiť"
 
 #: src/cups/genppd.c:2335 src/cups/genppd.c:2620
 msgid "2-Sided Printing"
@@ -3309,7 +3310,7 @@ msgstr "Dvojstranová tlač"
 
 #: src/cups/genppd.c:2360 src/cups/genppd.c:2637
 msgid "Shrink Page If Necessary to Fit Borders"
-msgstr ""
+msgstr "Zmenšiť stránku, ak je potreba prispôsobiť sa stránke"
 
 #: src/cups/genppd.c:2365 src/cups/genppd.c:2638
 msgid "Shrink (print the whole page)"
@@ -3593,7 +3594,7 @@ msgstr "Nie je možné poslať príkaz na tlačiareň\n"
 #: src/escputil/escputil.c:595
 #, c-format
 msgid "Read from printer timed out\n"
-msgstr ""
+msgstr "Vypršal čas čítania z tlačiarne\n"
 
 #: src/escputil/escputil.c:600
 #, c-format
@@ -3601,9 +3602,9 @@ msgid "Cannot read from %s: %s\n"
 msgstr "Nie je možné čítať z %s: %s\n"
 
 #: src/escputil/escputil.c:780
-#, fuzzy, c-format
+#, c-format
 msgid "Please specify a raw device\n"
-msgstr "Stav tlačiarne vyžaduje používanie základného zariadenia.\n"
+msgstr "Prosím, určte základné zariadenie\n"
 
 #: src/escputil/escputil.c:787
 #, c-format
@@ -3971,7 +3972,7 @@ msgstr "Upozornenie: Odpadový zásobník je takmer plný\n"
 #: src/escputil/escputil.c:1239
 #, c-format
 msgid "Warning: Maintenance request pending\n"
-msgstr ""
+msgstr "Upozornenie: Požiadavky údržby čaká na uskutočnenie\n"
 
 #: src/escputil/escputil.c:1242
 #, c-format
@@ -4052,9 +4053,9 @@ msgid "Printer identification requires using a raw device.\n"
 msgstr "Identifikácia tlačiarne vyžaduje používanie základného zariadenia.\n"
 
 #: src/escputil/escputil.c:1880
-#, fuzzy, c-format
+#, c-format
 msgid "Cannot identify printer model.\n"
-msgstr "Je možné zvoliť len jeden model tlačiarne."
+msgstr "Nedá sa identifikovať model tlačiarne.\n"
 
 #: src/escputil/escputil.c:1902
 #, c-format
@@ -4315,7 +4316,7 @@ msgid "Final command was not confirmed.\n"
 msgstr "Záverečný príkaz nebol potvrdený.\n"
 
 #: src/escputil/escputil.c:2099
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "This procedure assumes that your printer is an %s.\n"
 "If this is not your printer model, please type control-C now and\n"
@@ -4324,7 +4325,7 @@ msgid ""
 "Please place a sheet of paper in your printer to begin the head\n"
 "alignment procedure.\n"
 msgstr ""
-"Táto procedúra prepokladá, že vaša tlačiareň je Epson %s.\n"
+"Táto procedúra predpokladá, že vaša tlačiareň je %s.\n"
 "Ak toto nie je model vašej tlačiarne, stlačte teraz prosím control-C\n"
 "a zvoľte váš súčasný model tlačiarne.\n"
 "\n"
@@ -4507,9 +4508,8 @@ msgstr ""
 #: src/xml/xmli18n-tmp.h:748 src/xml/xmli18n-tmp.h:772
 #: src/xml/xmli18n-tmp.h:794 src/xml/xmli18n-tmp.h:815
 #: src/xml/xmli18n-tmp.h:836 src/xml/xmli18n-tmp.h:855
-#, fuzzy
 msgid "Matte Paper Heavyweight"
-msgstr "Matný papier"
+msgstr "Matný papier ťažký"
 
 #: src/xml/xmli18n-tmp.h:11 src/xml/xmli18n-tmp.h:34 src/xml/xmli18n-tmp.h:148
 #: src/xml/xmli18n-tmp.h:174
@@ -4765,9 +4765,8 @@ msgstr "180 DPI ekonomické"
 #: src/xml/xmli18n-tmp.h:2328 src/xml/xmli18n-tmp.h:2340
 #: src/xml/xmli18n-tmp.h:2352 src/xml/xmli18n-tmp.h:2364
 #: src/xml/xmli18n-tmp.h:2376 src/xml/xmli18n-tmp.h:2382
-#, fuzzy
 msgid "360 x 180 DPI Draft"
-msgstr "150x150 DPI"
+msgstr "360 x 180 DPI koncept"
 
 #: src/xml/xmli18n-tmp.h:873 src/xml/xmli18n-tmp.h:886
 #: src/xml/xmli18n-tmp.h:899 src/xml/xmli18n-tmp.h:910
@@ -5015,9 +5014,8 @@ msgstr "360 x 120 DPI ekonomicky"
 #: src/xml/xmli18n-tmp.h:1898 src/xml/xmli18n-tmp.h:1913
 #: src/xml/xmli18n-tmp.h:1987 src/xml/xmli18n-tmp.h:2002
 #: src/xml/xmli18n-tmp.h:2147
-#, fuzzy
 msgid "360 x 240 DPI Draft"
-msgstr "600x600 DPI"
+msgstr "360 x 240 DPI koncept"
 
 #: src/xml/xmli18n-tmp.h:914 src/xml/xmli18n-tmp.h:927
 #: src/xml/xmli18n-tmp.h:940 src/xml/xmli18n-tmp.h:953
@@ -5295,9 +5293,8 @@ msgstr "1440 x 720 DPI"
 #: src/xml/xmli18n-tmp.h:2119 src/xml/xmli18n-tmp.h:2215
 #: src/xml/xmli18n-tmp.h:2233 src/xml/xmli18n-tmp.h:2414
 #: src/xml/xmli18n-tmp.h:2431 src/xml/xmli18n-tmp.h:2448
-#, fuzzy
 msgid "720 x 360 DPI Enhanced"
-msgstr "720 x 360 DPI"
+msgstr "720 x 360 DPI vylepšené"
 
 #: src/xml/xmli18n-tmp.h:2009 src/xml/xmli18n-tmp.h:2206
 #: src/xml/xmli18n-tmp.h:2224
@@ -5313,9 +5310,8 @@ msgstr "Čierna 2"
 #: src/xml/xmli18n-tmp.h:2117 src/xml/xmli18n-tmp.h:2213
 #: src/xml/xmli18n-tmp.h:2231 src/xml/xmli18n-tmp.h:2412
 #: src/xml/xmli18n-tmp.h:2429 src/xml/xmli18n-tmp.h:2446
-#, fuzzy
 msgid "360 DPI Enhanced"
-msgstr "600 DPI"
+msgstr "360 DPI vylepšené"
 
 #: src/xml/xmli18n-tmp.h:2046
 msgid "1440 x 720 DPI High Quality"
@@ -5389,9 +5385,8 @@ msgstr "Manuál"
 
 #: src/xml/xmli18n-tmp.h:2493 src/xml/xmli18n-tmp.h:2504
 #: src/xml/xmli18n-tmp.h:2509 src/xml/xmli18n-tmp.h:2513
-#, fuzzy
 msgid "Manual Feed (Front)"
-msgstr "Manuál"
+msgstr "Ručné podávanie (spredu)"
 
 #: src/xml/xmli18n-tmp.h:2499
 msgid "Roll Feed (borderless with single cut)"
@@ -5694,7 +5689,7 @@ msgstr "Jas:"
 
 #: src/xml/xmli18n-tmp.h:3255
 msgid "On"
-msgstr ""
+msgstr "Zapnuté"
 
 #: src/xml/xmli18n-tmp.h:3308
 msgid "Legal"
