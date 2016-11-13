@@ -369,18 +369,34 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      [*2] Only three levels of gray are supported in the Epson
      	  SureColor P10000 and P20000.
 
-  6) Added support for the following laser printer:
+  6) Added support for most of the Datamax-O'Neil DPL printers:
+
+	Datamax O'Neil I4212e
+	Datamax O'Neil I4310e
+	Datamax O'Neil I4606e
+	Datamax O'Neil E4204B
+	Datamax O'Neil E4304B
+	Datamax O'Neil E4205A
+	Datamax O'Neil E4305A
+	Datamax O'Neil E4206P
+	Datamax O'Neil E4305P
+	Datamax O'Neil E4206L
+	Datamax O'Neil E4305L
+	Datamax O'Neil RL3e			[experimental]
+	Datamax O'Neil RL4e			[experimental]
+
+  7) Added support for the following laser printer:
 
 	OKI B430
 
-  7) Improved support for the following Canon inkjet printers:
+  8) Improved support for the following Canon inkjet printers:
 
 	Canon BJC-2000
 	Canon BJC-2010
 	Canon BJC-2100
 	Canon BJC-2110
 
-  8) Added duplex support for the following Canon inkjet printers:
+  9) Added duplex support for the following Canon inkjet printers:
 
 	Canon iB4000
 	Canon MB2000
