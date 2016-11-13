@@ -5,7 +5,7 @@
   <para>
     Gutenprint is the print facility of the GNU Image Manipulation
     Program (GIMP). It is in addition a suite of drivers that may be
-    used with common UNIX spooling systems using Ghostscript or CUPS.
+    used with CUPS.
     These drivers provide printing quality for Linux, MacOS X and UNIX
     on a par with proprietary vendor-supplied drivers in many cases,
     and can be used for many of the most demanding printing tasks,
@@ -29,8 +29,7 @@
     For the end-user, there is a separate manual documenting
     programs that come with Gutenprint, including the
     <application>GIMP</application> <command>print</command> plugin,
-    and the <application>CUPS</application> and
-    <application>Ghostscript</application> drivers.
+    and the <application>CUPS</application> driver.
   </para>
   <para>
     To learn how to use libgutenprint in your own programs is to look

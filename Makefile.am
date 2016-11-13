@@ -94,10 +94,6 @@ install-cups: all
 	cd src/cups ; \
 	$(MAKE) install
 
-install-ghost: all
-	cd src/ghost ; \
-	$(MAKE) install
-
 install-gimp: all
 	cd src/gimp ; \
 	$(MAKE) install
@@ -182,5 +178,5 @@ MAINTAINERCLEANFILES = \
 
 EXTRA_DIST = autogen.sh README.package
 
-.PHONY: deb html install-cups install-gimp install-ghost snapshot ChangeLog Phony dist-time-check
+.PHONY: deb html install-cups install-gimp snapshot ChangeLog Phony dist-time-check
 

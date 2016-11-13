@@ -44,7 +44,7 @@ to look for the Gimp and fail.
 </ul>
 
 <p><li><h3>What is the difference between B/W, Line art, solid color and
-Photo mode (or ImageType in Ghostscript)?</h3>
+Photo mode?</h3>
 
 <p>Photo mode does a lot of work to make colors as similar to screen
 presentation as possible.  This takes time.  Line art is faster, but
@@ -148,15 +148,6 @@ papers made by other vendors).  This isn't a conspiracy to lock you
 into their paper, it's because they've formulated the paper and ink to
 work well together.
 
-<p>If you use Ghostscript, make sure the Ghostscript resolution is not
-set higher than the driver resolution. If it is higher, the driver has
-to throw away part of the pixels, leading to uneven strokes in text
-and slanted lines with interruptions.
-
-<p><li><h3>How do I start setting options for Ghostscript?</h3>
-
-<p>Please see src/ghost/README for more information.
-
 <p><li><h3><tt>escputil -i</tt> or <tt>escputil -d</tt> fails as follows:</h3>
 
 <p><pre>
@@ -188,7 +179,7 @@ you know it's working (although if you're unable to read status out of
 the printer, you might have a different problem; see above).
 
 <p>Printing to your printer from Gutenprint, whether you use the Print
-plugin, the CUPS driver, or the Ghostscript driver, will also take the
+plugin or the CUPS driver, will also take the
 printer out of packet mode.  But then again, if you successfully print
 to your printer, you know it's working, so why worry?  If you're
 trying to test your spooler, though, the escputil trick above will do

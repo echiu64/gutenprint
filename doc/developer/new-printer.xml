@@ -479,8 +479,8 @@ const paperlist_t *paperlist;
         black) is printed.  So if the density is
         <constant>0.5</constant>, solid black actually prints only
         half the possible dots.  &ldquo;Base density&rdquo; refers to
-        the fact that the density value can be scaled in the GUI or on
-        the Ghostscript command line.  The density value specified
+        the fact that the density value can be scaled in the GUI or via 
+	CUPS options.  The density value specified
         (which is not made visible to the user) is multiplied by the
         base density to obtain the effective density value.  All other
         things (such as ink drop size) remaining the same, doubling
@@ -640,7 +640,7 @@ const paperlist_t *paperlist;
         Make sure that all the color adjustments are set to defaults
         (1.0).  Use the highest quality version of the print mode
         you're testing to reduce banding and other artifacts.  This is
-        much easier to do with the Gimp than with Ghostscript.
+        much easier to do with the Gimp than with CUPS.
       </para>
       <para>
         At this stage, you want to look for four things:

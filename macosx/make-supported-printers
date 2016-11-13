@@ -6,7 +6,7 @@ require 'pp'
 #
 # parse the 'printers.xml' document and get the info for each printer
 #
-#   <printer translate="name" name="Apollo P-2100" driver="pcl-apollo-p2100" manufacturer="Apollo" model="690" parameters="pcl_inkjet_params" foomaticid="Apollo-P-2100" />
+#   <printer translate="name" name="Apollo P-2100" driver="pcl-apollo-p2100" manufacturer="Apollo" model="690" parameters="pcl_inkjet_params" />
 #
 
 printers = []
@@ -17,7 +17,6 @@ xml.xpath('/gutenprint//printer').each do |printer|
   printers << {
     model: printer['name'],
     driver: printer['driver'],
-    foomatic: printer['foomaticid'],
     notes: '',  ##FIXME
   }
 end
@@ -52,14 +51,12 @@ and reporting the results!
       html.tr do
         html.td { html.b('Printer Model') }
         html.td { html.b('Driver Name') }
-        html.td { html.b('Foomatic Name') }
         html.td { html.b('Notes') }
       end
       printers.sort_by { |p| p[:model] }.each do |printer|
         html.tr do
           html.td(printer[:model])
           html.td(printer[:driver])
-          html.td(printer[:foomatic])
           html.td(printer[:notes])
         end
       end
