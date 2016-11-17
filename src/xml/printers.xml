@@ -2971,7 +2971,7 @@
       <printer translate="name" name="Mitsubishi CP-D70DW" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP60D70D707D;CLS:PRINTER;DES:MITSUBISHI CP60D70D707D" driver="mitsubishi-d70dw" manufacturer="Mitsubishi" model="4105" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-D707DW" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP60D70D707D;CLS:PRINTER;DES:MITSUBISHI CP60D70D707D" driver="mitsubishi-d707dw" manufacturer="Mitsubishi" model="4105" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-K60DW-S" driver="mitsubishi-k60dw" manufacturer="Mitsubishi" model="4106" parameters="nativecopies" />
-      <printer translate="name" name="Mitsubishi CP-D80DW" driver="mitsubishi-d80dw" manufacturer="Mitsubishi" model="4107" parameters="nativecopies">EXPERIMENTAL</printer>
+      <printer translate="name" name="Mitsubishi CP-D80DW" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CPD80D;CLS:PRINTER;DES:MITSUBISHI_CPD80D" driver="mitsubishi-d80dw" manufacturer="Mitsubishi" model="4107" parameters="nativecopies" />
       <printer translate="name" name="Kodak 305" deviceid="MFG:KODAK;CMD:KODAK305;MDL:305 Photo Printer;CLS:PRINTER;DES:KODAK 305 Photo Printer" driver="kodak-305" manufacturer="Kodak" model="4108" parameters="nativecopies" />
       <printer translate="name" name="Mitsubishi CP-D90DW" driver="mitsubishi-d90dw" manufacturer="Mitsubishi" model="4109" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-9600DW" driver="mitsubishi-9600dw" manufacturer="Mitsubishi" model="4110" parameters="nativecopies" />
