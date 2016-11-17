@@ -27,7 +27,7 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.69G"
+#define BACKEND_VERSION "0.70G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
@@ -361,9 +361,14 @@ static int print_scan_output(struct libusb_device *device,
 	char buf[256];
 	char *product = NULL, *serial = NULL, *manuf = NULL, *descr = NULL;
 	int iface = 0; // XXX loop through interfaces
+	int altset = 0; // XXX loop through altsetting
+	struct libusb_config_descriptor *config = NULL;
 	int dlen = 0;
 	struct deviceid_dict dict[MAX_DICT];
 	char *ieee_id = NULL;
+	int i;
+
+	uint8_t endp_up = 0, endp_down = 0;
 
 	DEBUG("Probing VID: %04X PID: %04x\n", desc->idVendor, desc->idProduct);
 
@@ -381,8 +386,27 @@ static int print_scan_output(struct libusb_device *device,
 		goto abort_close;
 	}
 
+	if (libusb_get_active_config_descriptor(device, &config)) {
+		found  = -1;
+		goto abort_release;
+	}
+
+	/* Find the endpoints */
+	for (i = 0 ; i < config->interface[iface].altsetting[altset].bNumEndpoints ; i++) {
+		if ((config->interface[iface].altsetting[altset].endpoint[i].bmAttributes & LIBUSB_TRANSFER_TYPE_MASK) == LIBUSB_TRANSFER_TYPE_BULK) {
+			if (config->interface[iface].altsetting[altset].endpoint[i].bEndpointAddress & LIBUSB_ENDPOINT_IN)
+				endp_up = config->interface[iface].altsetting[altset].endpoint[i].bEndpointAddress;
+			else
+				endp_down = config->interface[iface].altsetting[altset].endpoint[i].bEndpointAddress;
+		}
+		if (endp_up && endp_down)
+			break;
+	}
+
 	/* Query IEEE1284 info only if it's a PRINTER class */	
-	if (desc->bDeviceClass == LIBUSB_CLASS_PRINTER) {
+	if (desc->bDeviceClass == LIBUSB_CLASS_PRINTER ||
+	    (desc->bDeviceClass == LIBUSB_CLASS_PER_INTERFACE &&
+	     config->interface[iface].altsetting[altset].bInterfaceClass == LIBUSB_CLASS_PRINTER)) {
 		ieee_id = get_device_id(dev, iface);
 		dlen = parse1284_data(ieee_id, dict);
 	}
@@ -462,30 +486,10 @@ static int print_scan_output(struct libusb_device *device,
 		sanitize_string(buf);
 		serial = url_encode(buf);
 	} else if (backend->query_serno) { /* Get from backend hook */
-		struct libusb_config_descriptor *config = NULL;
-
-		int i;
-		uint8_t endp_up = 0, endp_down = 0;
-		libusb_get_active_config_descriptor(device, &config);
-		// XXX loop through altsettings!
-		for (i = 0 ; i < config->interface[0].altsetting[0].bNumEndpoints ; i++) {
-			if ((config->interface[0].altsetting[0].endpoint[i].bmAttributes & LIBUSB_TRANSFER_TYPE_MASK) == LIBUSB_TRANSFER_TYPE_BULK) {
-				if (config->interface[0].altsetting[0].endpoint[i].bEndpointAddress & LIBUSB_ENDPOINT_IN)
-					endp_up = config->interface[0].altsetting[0].endpoint[i].bEndpointAddress;
-				else
-					endp_down = config->interface[0].altsetting[0].endpoint[i].bEndpointAddress;
-			}
-			if (endp_up && endp_down)
-				break;
-		}
-
 		buf[0] = 0;
 		/* Ignore result since a failure isn't critical here */
 		backend->query_serno(dev, endp_up, endp_down, buf, STR_LEN_MAX);
 		serial = url_encode(buf);
-
-		if (config)
-			libusb_free_config_descriptor(config);
 	}
 
 	if (!serial || !strlen(serial)) {  /* Last-ditch */
@@ -529,8 +533,14 @@ static int print_scan_output(struct libusb_device *device,
 	if(descr) free(descr);
 	if(ieee_id) free(ieee_id);
 
+	if (config) libusb_free_config_descriptor(config);
+
+abort_release:
+
 	libusb_release_interface(dev, iface);
+
 abort_close:
+
 	libusb_close(dev);
 abort:
 	/* Clean up the dictionary */
@@ -739,13 +749,16 @@ int main (int argc, char **argv)
 	uint8_t endp_up = 0;
 	uint8_t endp_down = 0;
 
+	int iface = 0; // XXX loop through interfaces
+	int altset = 0; // XXX loop through altsetting
+
 	int data_fd = fileno(stdin);
 
 	int i;
 	int claimed;
 
 	int ret = CUPS_BACKEND_OK;
-	int iface = 0; // XXX loop through interfaces
+
 	int found = -1;
 	int jobid = 0;
 	int current_page = 0;
@@ -916,13 +929,12 @@ int main (int argc, char **argv)
 		goto done_close;
 	}
 
-	// XXX loop through altsettings!
-	for (i = 0 ; i < config->interface[0].altsetting[0].bNumEndpoints ; i++) {
-		if ((config->interface[0].altsetting[0].endpoint[i].bmAttributes & LIBUSB_TRANSFER_TYPE_MASK) == LIBUSB_TRANSFER_TYPE_BULK) {
-			if (config->interface[0].altsetting[0].endpoint[i].bEndpointAddress & LIBUSB_ENDPOINT_IN)
-				endp_up = config->interface[0].altsetting[0].endpoint[i].bEndpointAddress;
+	for (i = 0 ; i < config->interface[iface].altsetting[altset].bNumEndpoints ; i++) {
+		if ((config->interface[iface].altsetting[altset].endpoint[i].bmAttributes & LIBUSB_TRANSFER_TYPE_MASK) == LIBUSB_TRANSFER_TYPE_BULK) {
+			if (config->interface[iface].altsetting[altset].endpoint[i].bEndpointAddress & LIBUSB_ENDPOINT_IN)
+				endp_up = config->interface[iface].altsetting[altset].endpoint[i].bEndpointAddress;
 			else
-				endp_down = config->interface[0].altsetting[0].endpoint[i].bEndpointAddress;				
+				endp_down = config->interface[iface].altsetting[altset].endpoint[i].bEndpointAddress;
 		}
 		if (endp_up && endp_down)
 			break;		
