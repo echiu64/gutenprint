@@ -108,7 +108,7 @@ typedef int (*send_image_dataFN)(struct BandImage *out, void *context,
 #define USB_VID_MITSU       0x06D3
 #define USB_PID_MITSU_D70X  0x3B30
 #define USB_PID_MITSU_K60   0x3B31
-//#define USB_PID_MITSU_D80   XXXXXX
+#define USB_PID_MITSU_D80   0x3B36
 #define USB_VID_KODAK       0x040a
 #define USB_PID_KODAK305    0x404f
 //#define USB_VID_FUJIFILM    XXXXXX
@@ -136,8 +136,6 @@ struct mitsu70x_ctx {
 	uint16_t last_donor_l;
 	uint16_t last_donor_u;
 	int num_decks;
-
-	int supports_jobs_query;
 
 	char *laminatefname;
 	char *lutfname;
@@ -180,14 +178,16 @@ struct mitsu70x_jobstatus {
 	uint8_t  reserved[6];
 } __attribute__((packed));
 
+struct mitsu70x_job {
+	uint16_t id; /* BE */
+	uint8_t status[4];
+} __attribute__((packed));;
+
+#define NUM_JOBS 170
+
 struct mitsu70x_jobs {
 	uint8_t  hdr[4]; /* E4 56 31 31 */
-	uint16_t dummy;
-	uint16_t jobid_0;  /* BE */
-	uint8_t  job0_status[4];
-	uint16_t jobid_1;  /* BE */
-	uint8_t  job1_status[4];
-	// XXX are there more?
+	struct mitsu70x_job jobs[NUM_JOBS];
 } __attribute__((packed));
 
 #define TEMPERATURE_NORMAL  0x00
@@ -586,14 +586,24 @@ static char *mitsu70x_errors(uint8_t *err)
 
 static const char *mitsu70x_media_types(uint8_t brand, uint8_t type)
 {
-	if (brand == 0xff && type == 0x02)
-		return "CKD746 (4x6)";
+	if (brand == 0xff && type == 0x01)
+		return "CK-D735 (3.5x5)";
+	else if (brand == 0xff && type == 0x02)
+		return "CK-D746 (4x6)";
+	else if (brand == 0xff && type == 0x04)
+		return "CK-D757 (5x7)";
+	else if (brand == 0xff && type == 0x05)
+		return "CK-D769 (6x9)";
 	else if (brand == 0xff && type == 0x0f)
-		return "CKD768 (6x8)";
+		return "CK-D768 (6x8)";
+	else if (brand == 0x6c && type == 0x84)
+		return "Kodak 5R (5x7)";
 	else if (brand == 0x6c && type == 0x8f)
 		return "Kodak 6R (6x8)";
+	else if (brand == 0x61 && type == 0x84)
+		return "CK-K57R (5x7)";
 	else if (brand == 0x61 && type == 0x8f)
-		return "CKK76R (6x8)";
+		return "CK-K76R (6x8)";
 	else
 		return "Unknown";
 }
@@ -637,12 +647,6 @@ static void mitsu70x_attach(void *vctx, struct libusb_device_handle *dev,
 					desc.idVendor, desc.idProduct);
 
 	ctx->last_donor_l = ctx->last_donor_u = 65535;
-
-	if (ctx->type == P_KODAK_305 ||
-	    ctx->type == P_MITSU_K60)
-		ctx->supports_jobs_query = 0;
-	else
-		ctx->supports_jobs_query = 1;
 
 	/* Attempt to open the library */
 #if defined(WITH_DYNAMIC)
@@ -1034,6 +1038,7 @@ static int mitsu70x_get_jobstatus(struct mitsu70x_ctx *ctx, struct mitsu70x_jobs
 	return 0;
 }
 
+#if 0
 static int mitsu70x_get_jobs(struct mitsu70x_ctx *ctx, struct mitsu70x_jobs *resp)
 {
 	uint8_t cmdbuf[CMDBUF_LEN];
@@ -1066,6 +1071,7 @@ static int mitsu70x_get_jobs(struct mitsu70x_ctx *ctx, struct mitsu70x_jobs *res
 
 	return 0;
 }
+#endif
 
 static int mitsu70x_get_memorystatus(struct mitsu70x_ctx *ctx, struct mitsu70x_memorystatus_resp *resp)
 {
@@ -1211,7 +1217,6 @@ static int mitsu70x_main_loop(void *vctx, int copies)
 	struct mitsu70x_ctx *ctx = vctx;
 	struct mitsu70x_jobstatus jobstatus;
 	struct mitsu70x_printerstatus_resp resp;
-	struct mitsu70x_jobs jobs;
 	struct mitsu70x_hdr *hdr;
 
 	int ret;
@@ -1311,21 +1316,29 @@ skip_status:
 		}
 	}
 
+#if 0
 	/* Make sure we don't have any jobid collisions */
-	if (ctx->supports_jobs_query) {
+	{
+		int i;
+		struct mitsu70x_jobs jobs;
+		
 		ret = mitsu70x_get_jobs(ctx, &jobs);
 		if (ret)
 			return CUPS_BACKEND_FAILED;
-		while (ctx->jobid == be16_to_cpu(jobs.jobid_0) ||
-		       ctx->jobid == be16_to_cpu(jobs.jobid_1)) {
-			ctx->jobid++;
-			if (!ctx->jobid)
+		for (i = 0 ; i < NUM_JOBS ; i++) {
+			if (jobs.jobs[0].id == 0)
+				break;
+			if (ctx->jobid == be16_to_cpu(jobs.jobs[0].id)) {
 				ctx->jobid++;
+				if (!ctx->jobid)
+					ctx->jobid++;
+				i = -1;
+			}
 		}
-	} else {
-		while(!ctx->jobid || ctx->jobid == be16_to_cpu(jobstatus.jobid))
-			ctx->jobid++;
 	}
+#endif
+	while(!ctx->jobid || ctx->jobid == be16_to_cpu(jobstatus.jobid))
+		ctx->jobid++;
 
 	/* Set jobid */
 	hdr->jobid = cpu_to_be16(ctx->jobid);
@@ -1557,7 +1570,9 @@ static void mitsu70x_dump_printerstatus(struct mitsu70x_printerstatus_resp *resp
 static int mitsu70x_query_status(struct mitsu70x_ctx *ctx)
 {
 	struct mitsu70x_printerstatus_resp resp;
+#if 0
 	struct mitsu70x_jobs jobs;
+#endif	
 	struct mitsu70x_jobstatus jobstatus;
 
 	int ret;
@@ -1581,19 +1596,21 @@ top:
 	if (!ret)
 		mitsu70x_dump_printerstatus(&resp);
 
-	if (ctx->supports_jobs_query) {
-		ret = mitsu70x_get_jobs(ctx, &jobs);
-		if (!ret) {
-			INFO("JOB0 ID     : %06u\n", jobs.jobid_0);
-			INFO("JOB0 status : %s\n", mitsu70x_jobstatuses(jobs.job0_status));
-			INFO("JOB1 ID     : %06u\n", jobs.jobid_1);
-			INFO("JOB1 status : %s\n", mitsu70x_jobstatuses(jobs.job1_status));
-			// XXX are there more?
+	INFO("JOB00 ID     : %06u\n", jobstatus.jobid);
+	INFO("JOB00 status : %s\n", mitsu70x_jobstatuses(jobstatus.job_status));
+
+#if 0
+	ret = mitsu70x_get_jobs(ctx, &jobs);
+	if (!ret) {
+		int i;
+		for (i = 0 ; i < NUM_JOBS ; i++) {
+			if (jobs.jobs[i].id == 0)
+				break;
+			INFO("JOB%02d ID     : %06u\n", i, jobs.jobs[i].id);
+			INFO("JOB%02d status : %s\n", i, mitsu70x_jobstatuses(jobs.jobs[i].status));
 		}
-	} else {
-		INFO("JOB0 ID     : %06u\n", jobstatus.jobid);
-		INFO("JOB0 status : %s\n", mitsu70x_jobstatuses(jobstatus.job_status));
 	}
+#endif
 
 done:
 	return ret;
@@ -1665,7 +1682,7 @@ static int mitsu70x_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend mitsu70x_backend = {
 	.name = "Mitsubishi CP-D70/D707/K60/D80",
-	.version = "0.52",
+	.version = "0.54",
 	.uri_prefix = "mitsu70x",
 	.cmdline_usage = mitsu70x_cmdline,
 	.cmdline_arg = mitsu70x_cmdline_arg,
@@ -1678,7 +1695,7 @@ struct dyesub_backend mitsu70x_backend = {
 	.devices = {
 		{ USB_VID_MITSU, USB_PID_MITSU_D70X, P_MITSU_D70X, ""},
 		{ USB_VID_MITSU, USB_PID_MITSU_K60, P_MITSU_K60, ""},
-//	{ USB_VID_MITSU, USB_PID_MITSU_D80, P_MITSU_D80, ""},
+		{ USB_VID_MITSU, USB_PID_MITSU_D80, P_MITSU_D80, ""},
 		{ USB_VID_KODAK, USB_PID_KODAK305, P_KODAK_305, ""},
 //	{ USB_VID_FUJIFILM, USB_PID_FUJI_ASK300, P_FUJI_ASK300, ""},
 	{ 0, 0, 0, ""}
