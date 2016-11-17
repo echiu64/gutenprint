@@ -135,11 +135,21 @@
 # Sony UP-CR10L
 0x054c 0x0226 blacklist
 
-# Mitsubishi CP-D70/CP-D707
+# Mitsubishi CP-D70DW/CP-D707DW
 0x06d3 0x3b30 blacklist
+
+# Mitsubishi CP-D80DW
+0x06d3 0x3b36 blacklist
 
 # Mitsubishi CP-K60DW-S
 0x06d3 0x3b31 blacklist
+
+# Mitsubishi CP-9000D/DW/AM
+0x06d3 0x0394 blacklist
+0x06d3 0x0395 blacklist
+
+# Mitsubishi CP-9500D
+0x06d3 0x0393 blacklist
 
 # Mitsubishi CP-9550D/DW
 0x06d3 0x03a1 blacklist
@@ -150,8 +160,14 @@
 # Mitsubishi CP-9600D/DW
 0x06d3 0x03a9 blacklist
 
+# Mitsubishi CP-9800D/DW
+0x06d3 0x03ad blacklist
+
 # Mitsubishi CP-9800DW-S
 0x06d3 0x03ae blacklist
+
+# Mitsubishi CP-9810D/DW
+0x06d3 0x3b21 blacklist
 
 # Citizen CW-01
 0x1343 0x0002 blacklist
