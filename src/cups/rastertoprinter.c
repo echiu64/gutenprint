@@ -1096,6 +1096,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   struct timeval	t1, t2;
   char			*page_size_name = NULL;
   int			aborted = 0;
+  int			copies;
 #ifdef ENABLE_CUPS_LOAD_SAVE_OPTIONS
   stp_vars_t		*loaded_settings = NULL;
 #endif /* ENABLE_CUPS_LOAD_SAVE_OPTIONS */
@@ -1152,7 +1153,11 @@ main(int  argc,				/* I - Number of command-line arguments */
 	      argc >= 7 ? "'" : "");
     }
 
- /*
+  copies = atoi(argv[4]);
+  if (copies < 1)
+    copies = 1;
+
+  /*
   * Get the PPD file...
   */
 
@@ -1352,11 +1357,24 @@ main(int  argc,				/* I - Number of command-line arguments */
 	  fprintf(stderr, "DEBUG: Gutenprint: Interim page settings:\n");
 	  stpi_vars_print_error(v, "DEBUG");
 	}
+
       stp_merge_printvars(v, stp_printer_get_defaults(printer));
+
+      /* Only set NumCopies if the printer supports NativeCopies */
+      if (stp_check_boolean_parameter(v, "NativeCopies", STP_PARAMETER_ACTIVE) &&
+	  stp_get_boolean_parameter(v, "NativeCopies"))
+        {
+	  stp_set_int_parameter(v, "NumCopies", copies);
+	  stp_set_int_parameter_active(v, "NumCopies", STP_PARAMETER_ACTIVE);
+	}
+
       stp_set_int_parameter(v, "PageNumber", cups.page);
       cups.row = 0;
       if (! suppress_messages)
 	print_debug_block(v, &cups);
+      if (copies != cups.header.NumCopies) {
+        stp_i18n_printf(po, _("WARNING: NumCopies in raster header (%d) does not match copies on cmdline (%d), using cmdline value\n"), cups.header.NumCopies, copies);
+      }
       print_messages_as_errors = 1;
       if (!stp_verify(v))
 	{
