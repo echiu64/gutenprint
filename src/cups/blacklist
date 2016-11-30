@@ -175,6 +175,9 @@
 # Mitsubishi CP-9810D/DW
 0x06d3 0x3b21 blacklist
 
+# Mitsubishi P95D
+0x06d3 0x3b10 blacklist
+
 # Citizen CW-01
 0x1343 0x0002 blacklist
 

@@ -36,7 +36,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <limits.h>
-
+#include <time.h>  /* For strftime() and localtime_r() */
 #ifdef __GNUC__
 #define inline __inline__
 #endif
@@ -55,6 +55,7 @@
 #define DYESUB_FEATURE_BIGENDIAN         0x00000400
 #define DYESUB_FEATURE_RGBtoYCBCR        0x00000800
 #define DYESUB_FEATURE_DUPLEX            0x00001000
+#define DYESUB_FEATURE_MONOCHROME        0x00002000  /* Monochrome only..? */
 
 #define DYESUB_PORTRAIT  0
 #define DYESUB_LANDSCAPE 1
@@ -212,6 +213,17 @@ typedef struct
   int dust_removal;
 } shinko1245_privdata_t;
 
+typedef struct
+{
+  int clear_mem;
+  int cont_print;
+  int gamma;
+  int flags;
+  int comment;
+  char usercomment[34];
+  char commentbuf[19];  /* With one extra byte for null termination */
+} mitsu_p95d_privdata_t;
+
 /* Private data for dyesub driver as a whole */
 typedef struct
 {
@@ -236,6 +248,7 @@ typedef struct
    kodak9810_privdata_t k9810;
    kodak8500_privdata_t k8500;
    shinko1245_privdata_t s1245; 
+   mitsu_p95d_privdata_t m95d;
   } privdata;
 } dyesub_privdata_t;
 
@@ -326,6 +339,13 @@ static const ink_t bgr_inks[] =
 };
 
 LIST(ink_list_t, bgr_ink_list, ink_t, bgr_inks);
+
+static const ink_t w_inks[] =
+{
+  { "Whitescale", 1, "BW", "\1" },
+};
+
+LIST(ink_list_t, w_ink_list, ink_t, w_inks);
 
 /* Olympus P-10 */
 static const dyesub_resolution_t res_310dpi[] =
@@ -2600,6 +2620,469 @@ static void kodak_8500_printer_end(stp_vars_t *v)
   stp_putc(0x1b, v);
   stp_putc(0x50, v);
   dyesub_nputc(v, 0x00, 62);
+}
+
+/* Mitsubishi P95D/DW */
+static const dyesub_resolution_t res_325dpi[] =
+{
+  { "325x325", 325, 325},
+};
+
+LIST(dyesub_resolution_list_t, res_325dpi_list, dyesub_resolution_t, res_325dpi);
+
+/* All are "custom" page sizes..  bleh.. */
+static const dyesub_pagesize_t mitsu_p95d_page[] =
+{
+  { "w213h284", "1280x960", PT(960,325)+1, PT(1280,325)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE},
+  { "w227h284", "1280x1024", PT(1024,325)+1, PT(1280,325)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE},  
+  { "w284h284", "1280x1280", PT(1280,325)+1, PT(1280,325)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+  { "w284h426", "1280x1920", PT(1280,325)+1, PT(1920,325)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+  { "w284h1277", "1280x5760", PT(1280,325)+1, PT(5760,325)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+  /* A true "custom" size, printer will cut at the image boundary */
+  { "Custom", NULL, PT(1280,325)+1, -1, 0, 0, 0, 0,
+    DYESUB_PORTRAIT},
+};
+
+LIST(dyesub_pagesize_list_t, mitsu_p95d_page_list, dyesub_pagesize_t, mitsu_p95d_page);
+
+static const dyesub_printsize_t mitsu_p95d_printsize[] =
+{
+  { "325x325", "w213h284", 960, 1280},
+  { "325x325", "w227h284", 1024, 1280},
+  { "325x325", "w284h284", 1280, 1280},
+  { "325x325", "w284h426", 1280, 1920},
+  { "325x325", "w284h1277", 1280, 5760},
+  { "325x325", "Custom", 1280, 5760}, /* Maximum */
+};
+
+LIST(dyesub_printsize_list_t, mitsu_p95d_printsize_list, dyesub_printsize_t, mitsu_p95d_printsize);
+
+static const dyesub_media_t mitsu_p95d_medias[] =
+{
+  {"Standard",  N_("Standard (KP61B)"), {1, "\x00"}},
+  {"HighDensity", N_("High Density (KP65HM)"), {1, "\x01"}},
+  {"HighGlossy", N_("High Glossy (KP91HG)"), {1, "\x02"}},
+  {"HighGlossyK95HG", N_("High Glosy (K95HG)"), {1, "\x03"}},
+};
+
+LIST(dyesub_media_list_t, mitsu_p95d_media_list, dyesub_media_t, mitsu_p95d_medias);
+
+static const dyesub_stringitem_t mitsu_p95d_gammas[] =
+{
+  { "Printer",      N_ ("Printer-Defined Setting") },
+  { "T1", N_ ("Table 1") },
+  { "T2", N_ ("Table 2") },
+  { "T3", N_ ("Table 3") },
+  { "T4", N_ ("Table 4") },
+  { "T5", N_ ("Table 5") },
+  { "LUT", N_ ("Use LUT") },
+};
+LIST(dyesub_stringlist_t, mitsu_p95d_gamma_list, dyesub_stringitem_t, mitsu_p95d_gammas);
+
+static const dyesub_stringitem_t mitsu_p95d_buzzers[] =
+{
+  { "Off",      N_ ("Off") },
+  { "Low", N_ ("Low") },
+  { "High", N_ ("High") },
+};
+LIST(dyesub_stringlist_t, mitsu_p95d_buzzer_list, dyesub_stringitem_t, mitsu_p95d_buzzers);
+
+static const dyesub_stringitem_t mitsu_p95d_cutters[] =
+{
+  { "PaperSave",      N_ ("Paper Save") },
+  { "4mm", N_ ("4mm") },
+  { "5mm", N_ ("5mm") },
+  { "6mm", N_ ("6mm") },
+  { "7mm", N_ ("7mm") },  
+  { "8mm", N_ ("8mm") },
+};
+LIST(dyesub_stringlist_t, mitsu_p95d_cutter_list, dyesub_stringitem_t, mitsu_p95d_cutters);
+
+static const dyesub_stringitem_t mitsu_p95d_comments[] =
+{
+  { "Off",      N_ ("Off") },
+  { "Settings", N_ ("Printer Settings") },
+  { "Date", N_ ("Date") },
+  { "DateTime", N_ ("Date and Time") },
+};
+LIST(dyesub_stringlist_t, mitsu_p95d_comment_list, dyesub_stringitem_t, mitsu_p95d_comments);
+
+static const stp_parameter_t mitsu_p95d_parameters[] =
+{
+  {
+    "P95Gamma", N_("Printer Gamma Correction"), "Color=No,Category=Advanced Printer Setup",
+    N_("Printer Gamma Correction"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "Buzzer", N_("Printer Buzzer"), "Color=No,Category=Advanced Printer Setup",
+    N_("Printer Buzzer"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "MediaCut", N_("Media Cut Length"), "Color=No,Category=Advanced Printer Setup",
+    N_("Media Cut Length"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "Comment", N_("Generate Comment"), "Color=No,Category=Advanced Printer Setup",
+    N_("Generate Comment"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "ClearMemory", N_("Clear Memory"), "Color=No,Category=Advanced Printer Setup",
+    N_("Clear Memory"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "ContinuousPrint", N_("Continuous Printing"), "Color=No,Category=Advanced Printer Setup",
+    N_("Continuous Printing"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "P95Brightness", N_("Brightness"), "Color=No,Category=Advanced Printer Setup",
+    N_("Printer Brightness Adjustment"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "P95Contrast", N_("Contrast"), "Color=No,Category=Advanced Printer Setup",
+    N_("Printer Contrast Adjustment"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "UserComment", N_("User Comment"), "Color=No,Category=Advanced Printer Setup",
+    N_("User-specified comment (0-34 characters from 0x20->0x7E), null terminated if under 34 characters long"),
+    STP_PARAMETER_TYPE_RAW, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 0, 1, STP_CHANNEL_NONE, 1, 0
+  },
+};
+#define mitsu_p95d_parameter_count (sizeof(mitsu_p95d_parameters) / sizeof(const stp_parameter_t))
+
+static int
+mitsu_p95d_load_parameters(const stp_vars_t *v, const char *name,
+			 stp_parameter_t *description)
+{
+  int	i;
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+		  				stp_get_model_id(v));
+ 
+  if (caps->parameter_count && caps->parameters)
+    {
+      for (i = 0; i < caps->parameter_count; i++)
+        if (strcmp(name, caps->parameters[i].name) == 0)
+          {
+	    stp_fill_parameter_settings(description, &(caps->parameters[i]));
+	    break;
+          }
+    }
+
+    if (strcmp(name, "P95Gamma") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+
+      const dyesub_stringlist_t *mlist = &mitsu_p95d_gamma_list;
+      for (i = 0; i < mlist->n_items; i++)
+        {
+	  const dyesub_stringitem_t *m = &(mlist->item[i]);
+	  stp_string_list_add_string(description->bounds.str,
+				       m->name, m->text); /* Do *not* want this translated, otherwise use gettext(m->text) */
+	}
+      description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
+      description->is_active = 1;
+    } else if (strcmp(name, "Buzzer") == 0) {
+      description->bounds.str = stp_string_list_create();
+
+      const dyesub_stringlist_t *mlist = &mitsu_p95d_buzzer_list;
+      for (i = 0; i < mlist->n_items; i++)
+        {
+	  const dyesub_stringitem_t *m = &(mlist->item[i]);
+	  stp_string_list_add_string(description->bounds.str,
+				       m->name, m->text); /* Do *not* want this translated, otherwise use gettext(m->text) */
+	}
+      description->deflt.str = stp_string_list_param(description->bounds.str, 2)->name;
+      description->is_active = 1;
+    } else if (strcmp(name, "MediaCut") == 0) {
+      description->bounds.str = stp_string_list_create();
+
+      const dyesub_stringlist_t *mlist = &mitsu_p95d_cutter_list;
+      for (i = 0; i < mlist->n_items; i++)
+        {
+	  const dyesub_stringitem_t *m = &(mlist->item[i]);
+	  stp_string_list_add_string(description->bounds.str,
+				       m->name, m->text); /* Do *not* want this translated, otherwise use gettext(m->text) */
+	}
+      description->deflt.str = stp_string_list_param(description->bounds.str, 2)->name;
+      description->is_active = 1;
+    } else if (strcmp(name, "Comment") == 0) {
+      description->bounds.str = stp_string_list_create();
+
+      const dyesub_stringlist_t *mlist = &mitsu_p95d_comment_list;
+      for (i = 0; i < mlist->n_items; i++)
+        {
+	  const dyesub_stringitem_t *m = &(mlist->item[i]);
+	  stp_string_list_add_string(description->bounds.str,
+				       m->name, m->text); /* Do *not* want this translated, otherwise use gettext(m->text) */
+	}
+      description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
+      description->is_active = 1;
+    } else if (strcmp(name, "ClearMemory") == 0) {
+      description->is_active = 1;
+      description->deflt.boolean = 0;
+    } else if (strcmp(name, "ContinuousPrint") == 0) {
+      description->is_active = 1;
+      description->deflt.boolean = 0;
+    } else if (strcmp(name, "P95Brightness") == 0) {
+      description->deflt.integer = 0;
+      description->bounds.integer.lower = -127;
+      description->bounds.integer.upper = 127;
+      description->is_active = 1;      
+    } else if (strcmp(name, "P95Contrast") == 0) {
+      description->deflt.integer = 0;
+      description->bounds.integer.lower = -127;
+      description->bounds.integer.upper = 127;
+      description->is_active = 1;      
+    } else if (strcmp(name, "UserComment") == 0) {
+      description->is_active = 1;
+    }
+  else
+  {
+     return 0;
+  }
+  return 1;
+}
+
+static int mitsu_p95d_parse_parameters(stp_vars_t *v)
+{
+  dyesub_privdata_t *pd = get_privdata(v);
+  const char *gamma = stp_get_string_parameter(v, "P95Gamma");
+  const char *buzzer = stp_get_string_parameter(v, "Buzzer");
+  const char *cutter = stp_get_string_parameter(v, "MediaCut");
+  const char *comment = stp_get_string_parameter(v, "Comment");
+  const stp_raw_t *usercomment = NULL;
+
+  /* Sanity check */
+  if (stp_check_raw_parameter(v, "UserComment", STP_PARAMETER_ACTIVE)) {
+    usercomment = stp_get_raw_parameter(v, "UserComment");
+    if (usercomment->bytes > 34) {
+      stp_eprintf(v, _("StpUserComment must be between 0 and 34 bytes!\n"));
+      return 0;
+    }
+  }
+
+  /* No need to set global params if there's no privdata yet */  
+  if (!pd)
+    return 1;
+
+  /* Parse options */
+  pd->privdata.m95d.clear_mem = stp_get_boolean_parameter(v, "ClearMemory");
+  pd->privdata.m95d.cont_print = stp_get_boolean_parameter(v, "ContinuousPrint");
+
+  if (pd->copies > 200)
+    pd->copies = 200;
+  
+  if (!strcmp(gamma, "Printer")) {
+    pd->privdata.m95d.gamma = 0x00;
+  } else if (!strcmp(gamma, "T1")) {
+    pd->privdata.m95d.gamma = 0x01;
+  } else if (!strcmp(gamma, "T2")) {
+    pd->privdata.m95d.gamma = 0x02;
+  } else if (!strcmp(gamma, "T3")) {
+    pd->privdata.m95d.gamma = 0x03;
+  } else if (!strcmp(gamma, "T4")) {
+    pd->privdata.m95d.gamma = 0x04;
+  } else if (!strcmp(gamma, "T5")) {
+    pd->privdata.m95d.gamma = 0x05;
+  } else if (!strcmp(gamma, "LUT")) {
+    pd->privdata.m95d.gamma = 0x10;
+  } 
+
+  if (!strcmp(buzzer, "Off")) {
+    pd->privdata.m95d.flags |= 0x00;
+  } else if (!strcmp(buzzer, "Low")) {
+    pd->privdata.m95d.flags |= 0x02;
+  } else if (!strcmp(buzzer, "High")) {
+    pd->privdata.m95d.flags |= 0x03;
+  }
+
+  if (!strcmp(cutter, "PaperSave")) {
+    pd->privdata.m95d.flags |= 0x54;
+  } else if (!strcmp(cutter, "4mm")) {
+    pd->privdata.m95d.flags |= 0x40;
+  } else if (!strcmp(cutter, "5mm")) {
+    pd->privdata.m95d.flags |= 0x50;
+  } else if (!strcmp(cutter, "6mm")) {
+    pd->privdata.m95d.flags |= 0x60;
+  } else if (!strcmp(cutter, "7mm")) {
+    pd->privdata.m95d.flags |= 0x70;
+  } else if (!strcmp(cutter, "8mm")) {
+    pd->privdata.m95d.flags |= 0x80;
+  }
+
+  if (!strcmp(comment, "Off")) {
+    memset(pd->privdata.m95d.commentbuf, 0, sizeof(pd->privdata.m95d.commentbuf));
+    pd->privdata.m95d.comment = 0;
+  } else if (!strcmp(comment, "Settings")) {
+    memset(pd->privdata.m95d.commentbuf, 0, sizeof(pd->privdata.m95d.commentbuf));    
+    pd->privdata.m95d.comment = 1;
+  } else if (!strcmp(comment, "Date")) {
+    struct tm tmp;
+    time_t t;
+    t = time(NULL);
+    localtime_r(&t, &tmp);
+    strftime(pd->privdata.m95d.commentbuf, sizeof(pd->privdata.m95d.commentbuf), "        %F", &tmp);
+    pd->privdata.m95d.comment = 2;    
+  } else if (!strcmp(comment, "DateTime")) {
+    struct tm tmp;
+    time_t t;
+    t = time(NULL);
+    localtime_r(&t, &tmp);
+    strftime(pd->privdata.m95d.commentbuf, sizeof(pd->privdata.m95d.commentbuf), "  %F %R", &tmp);
+    pd->privdata.m95d.comment = 3;
+  }
+
+  if (usercomment) {
+    if (strncmp("None", usercomment->data, usercomment->bytes)) {
+      int i;
+      memcpy(pd->privdata.m95d.usercomment, usercomment->data, usercomment->bytes);
+      if (usercomment->bytes < 34)
+        pd->privdata.m95d.usercomment[usercomment->bytes] = 0;
+      for (i = 0 ; i < usercomment->bytes ; i++) {
+        if (pd->privdata.m95d.usercomment[i] < 0x20 ||
+	    pd->privdata.m95d.usercomment[i] > 0x7F)
+	  pd->privdata.m95d.usercomment[i] = 0x20;
+      }
+    }
+  } else {
+    memset(pd->privdata.m95d.usercomment, 0x20, sizeof(pd->privdata.m95d.usercomment));
+  }
+
+  return 1;
+}
+
+static const char *p95d_lut = "\x00\x12\x01\x5e\x03\x52\x05\xdc\x08\x66\x0a\x96\x0c\x3a\x0d\x70\x0e\x42\x0e\xce\x0f\x32\x0f\x78\x0f\xa0\x0f\xb4\x0f\xc8\x0f\xd8\x0f\xff";  /* Taken from "P95D.lut" dated 2016-05-25 */
+
+static void mitsu_p95d_printer_init(stp_vars_t *v)
+{
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  /* Header */
+  stp_putc(0x1b, v);
+  stp_putc(0x51, v);
+  
+  /* Clear memory */
+  if (pd->privdata.m95d.clear_mem) {
+    stp_putc(0x1b, v);
+    stp_putc(0x5a, v);
+    stp_putc(0x43, v);
+    stp_putc(0x00, v);
+  }
+
+  /* Page Setup */
+  stp_putc(0x1b, v);
+  stp_putc(0x57, v);
+  stp_putc(0x20, v);
+  stp_putc(0x2e, v);
+  stp_putc(0x00, v);
+  stp_putc(0x0a, v);
+  stp_putc(0x00, v);
+  stp_putc(0x02, v);  
+  dyesub_nputc(v, 0x00, 6);
+  stp_put16_be(pd->w_size, v);  /* Columns */
+  stp_put16_be(pd->h_size, v);  /* Rows */
+
+  /* This is only set under Windows if a "custom" size is selected,
+     but the USB comms always show it set to 1... */
+  if (!strcmp(pd->pagesize,"Custom"))
+   stp_putc(0x01, v);
+  else
+    stp_putc(0x00, v);
+  dyesub_nputc(v, 0x00, 31);
+
+  /* Print Options */
+  stp_putc(0x1b, v);
+  stp_putc(0x57, v);
+  stp_putc(0x21, v);
+  stp_putc(0x2e, v);
+  stp_putc(0x00, v);
+  stp_putc(0x4a, v);
+  stp_putc(0xaa, v);
+  stp_putc(0x00, v);
+  stp_putc(0x20, v);
+  stp_zfwrite((pd->media->seq).data, 1, 1, v);  /* Media Type */  
+  stp_putc(0x00, v);
+  stp_putc(0x00, v);
+  stp_putc(0x64, v);
+  if (pd->privdata.m95d.cont_print)
+    stp_putc(0xff, v);
+  else 
+    stp_putc(pd->copies, v);
+  stp_putc(0x00, v);
+  stp_putc(pd->privdata.m95d.comment, v);
+  stp_zfwrite(pd->privdata.m95d.commentbuf, 1, sizeof(pd->privdata.m95d.commentbuf) -1, v);
+  dyesub_nputc(v, 0x00, 3);
+  stp_putc(0x02, v);
+  dyesub_nputc(v, 0x00, 11);
+  stp_putc(pd->privdata.m95d.flags, v);
+
+  /* Gamma */
+  stp_putc(0x1b, v);
+  stp_putc(0x57, v);
+  stp_putc(0x22, v);
+  stp_putc(0x2e, v);
+  stp_putc(0x00, v);
+  stp_putc(0x15, v);
+  if (pd->privdata.m95d.gamma == 0x10)
+    stp_putc(0x01, v);
+  else
+    stp_putc(0x00, v);	  
+  dyesub_nputc(v, 0x00, 5);
+  stp_putc(pd->privdata.m95d.gamma, v);
+  dyesub_nputc(v, 0x00, 3);
+  if (pd->privdata.m95d.gamma == 0x10) {
+    stp_zfwrite(p95d_lut, 1, sizeof(p95d_lut), v); /* XXX only for K95HG? */
+  } else {
+    dyesub_nputc(v, 0x00, 34);
+  }
+
+  /* User Comment */
+  stp_putc(0x1b, v);
+  stp_putc(0x58, v);
+  stp_zfwrite(pd->privdata.m95d.usercomment, 1, sizeof(pd->privdata.m95d.usercomment), v);
+}
+
+static void mitsu_p95d_plane_start(stp_vars_t *v)
+{
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  /* Plane header */
+  stp_putc(0x1b, v);
+  stp_putc(0x5a, v);
+  stp_putc(0x74, v);
+  stp_putc(0x00, v);
+  stp_put16_be(0, v);  /* Column Offset */
+  stp_put16_be(0, v);  /* Row Offset */
+  stp_put16_be(pd->w_size, v);  /* Columns */
+  stp_put16_be(pd->h_size, v);  /* Rows */  
+}
+
+static void mitsu_p95d_printer_end(stp_vars_t *v)
+{
+  /* Kick off the actual print */
+  stp_putc(0x1b, v);
+  stp_putc(0x50, v);
 }
 
 /* Mitsubishi CP3020D/DU/DE */
@@ -6407,6 +6890,26 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     mitsu9810_load_parameters,
     mitsu9810_parse_parameters,
   },
+  { /* Mitsubishi P95D/DW */
+    4114,
+    &w_ink_list,
+    &res_325dpi_list,
+    &mitsu_p95d_page_list,
+    &mitsu_p95d_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_MONOCHROME,
+    &mitsu_p95d_printer_init, &mitsu_p95d_printer_end,
+    &mitsu_p95d_plane_start, NULL,
+    NULL, NULL, /* No block funcs */
+    NULL,
+    NULL, &mitsu_p95d_media_list,
+    NULL, NULL,
+    mitsu_p95d_parameters,
+    mitsu_p95d_parameter_count,
+    mitsu_p95d_load_parameters,
+    mitsu_p95d_parse_parameters,
+  },
   { /* Shinko CHC-S9045 (experimental) */
     5000, 		
     &rgb_ink_list,
@@ -6980,8 +7483,12 @@ dyesub_parameters(const stp_vars_t *v, const char *name,
   else if (strcmp(name, "PrintingMode") == 0)
     {
       description->bounds.str = stp_string_list_create();
-      stp_string_list_add_string
-	(description->bounds.str, "Color", _("Color"));
+      if (dyesub_feature(caps, DYESUB_FEATURE_MONOCHROME))
+        stp_string_list_add_string(description->bounds.str,
+				   "BW", _("Black and White"));
+      else
+        stp_string_list_add_string(description->bounds.str,
+				   "Color", _("Color"));
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
     }
@@ -7696,7 +8203,7 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
 		  pv.empty_byte[0] = 0xff; /* Y */
 		  pv.empty_byte[1] = 0x80; /* Cb */
 		  pv.empty_byte[2] = 0x80; /* Cr */
-	  } else if (strcmp(ink_type, "RGB") == 0 || strcmp(ink_type, "BGR") == 0) {
+	  } else if (strcmp(ink_type, "RGB") == 0 || strcmp(ink_type, "BGR") == 0 || strcmp(ink_type, "Whitescale") == 0) {
 		  pv.empty_byte[0] = 0xff;
 		  pv.empty_byte[1] = 0xff;
 		  pv.empty_byte[2] = 0xff;
