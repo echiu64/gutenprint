@@ -1352,7 +1352,16 @@ main(int  argc,				/* I - Number of command-line arguments */
 	  fprintf(stderr, "DEBUG: Gutenprint: Interim page settings:\n");
 	  stpi_vars_print_error(v, "DEBUG");
 	}
+
       stp_merge_printvars(v, stp_printer_get_defaults(printer));
+
+      /* Pass along Collation settings */
+      stp_set_boolean_parameter(v, "Collate", cups.header.Collate);
+      stp_set_boolean_parameter_active(v, "Collate", STP_PARAMETER_ACTIVE);
+      /* Pass along Copy settings */
+      stp_set_int_parameter(v, "NumCopies", cups.header.NumCopies);
+      stp_set_int_parameter_active(v, "NumCopies", STP_PARAMETER_ACTIVE);
+      /* Pass along the page number */
       stp_set_int_parameter(v, "PageNumber", cups.page);
       cups.row = 0;
       if (! suppress_messages)

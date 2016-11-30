@@ -79,7 +79,19 @@ static const stp_parameter_t the_parameters[] =
     "PageNumber", N_("Page Number"), "Color=No,Category=Job Mode",
     N_("Page number"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_CORE,
-    STP_PARAMETER_LEVEL_BASIC, 0, 1, STP_CHANNEL_NONE, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "NumCopies", N_("Number of Copies"), "Color=No,Category=Job Mode",
+    N_("Number of Copies"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_CORE,
+    STP_PARAMETER_LEVEL_INTERNAL, 1, 0, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "Collate", N_("Collate the Job"), "Color=No,Category=Job Mode",
+    N_("Collate the Job"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_CORE,
+    STP_PARAMETER_LEVEL_INTERNAL, 1, 0, STP_CHANNEL_NONE, 1, 0
   },
 };
 
@@ -251,6 +263,16 @@ stpi_describe_generic_parameter(const stp_vars_t *v, const char *name,
       description->deflt.integer = 0;
       description->bounds.integer.lower = 0;
       description->bounds.integer.upper = INT_MAX;
+    }
+  else if (strcmp(name, "NumCopies") == 0)
+    {
+      description->deflt.integer = 1;
+      description->bounds.integer.lower = 1;
+      description->bounds.integer.upper = INT_MAX;
+    }
+  else if (strcmp(name, "Collate") == 0)
+    {
+      description->deflt.boolean = 0;
     }
 }
 
