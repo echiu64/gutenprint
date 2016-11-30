@@ -211,6 +211,7 @@ typedef struct
   int bpp;
   const char* duplex_mode;
   int page_number;
+  int copies;
   union {
    dnp_privdata_t dnp;
    mitsu9550_privdata_t m9550;
@@ -802,7 +803,7 @@ static void ps100_printer_init_func(stp_vars_t *v)
   stp_put16_be(pd->h_size, v);	/* paper height (px) */
   stp_put16_be(pd->w_size, v);	/* paper width (px) */
   dyesub_nputc(v, '\0', 3);
-  stp_putc('\1', v);	/* number of copies */
+  stp_putc(pd->copies, v);	/* number of copies */
   dyesub_nputc(v, '\0', 8);
   stp_putc('\1', v);
   dyesub_nputc(v, '\0', 15);
@@ -1513,7 +1514,7 @@ static void updr150_200_printer_init_func(stp_vars_t *v, int updr200)
 	      "\x1b\xee\x00\x00\x00\x02\x00"
 	      "\x02\x00\x00\x00"
 	      "\x00", 1, 43, v);
-  stp_putc(1, v); /* Copies */
+  stp_putc(pd->copies, v);
 
   if (updr200) { /* UP-DR200-specific! */
     stp_zfwrite("\x07\x00\x00\x00"
@@ -1680,7 +1681,7 @@ static void upcr10_printer_end_func(stp_vars_t *v)
   stp_zfwrite("\xfa\xff\xff\xff"
 	      "\x09\x00\x00\x00"
 	      "\x1b\xee\x00\x00\x00\x02\x00\x00", 1, 16, v);
-  stp_putc(1, v); /* Copies */
+  stp_putc(pd->copies, v);
   stp_zfwrite("\x07\x00\x00\x00"
 	      "\x1b\x17\x00\x00\x00\x00\x00", 1, 11, v);
   stp_zfwrite("\xf9\xff\xff\xff"
@@ -1870,12 +1871,33 @@ static const dyesub_printsize_t kodak_6850_printsize[] =
 
 LIST(dyesub_printsize_list_t, kodak_6850_printsize_list, dyesub_printsize_t, kodak_6850_printsize);
 
+static unsigned short short_to_packed_bcd(unsigned short val)
+{
+  unsigned short bcd;
+  unsigned short i;
+
+  /* Handle from 0-9999 */
+  i = val % 10;
+  bcd = i;
+  val /= 10;
+  i = val % 10;
+  bcd |= (i << 4);
+  val /= 10;
+  i = val % 10;
+  bcd |= (i << 8);
+  val /= 10;
+  i = val % 10;
+  bcd |= (i << 12);
+
+  return bcd;
+}
+
 static void kodak_68xx_printer_init(stp_vars_t *v)
 {
   dyesub_privdata_t *pd = get_privdata(v);
 
   stp_zfwrite("\x03\x1b\x43\x48\x43\x0a\x00\x01", 1, 8, v);
-  stp_put16_be(0x01, v); /* Number of copies in BCD */
+  stp_put16_be(short_to_packed_bcd(pd->copies), v); /* Number of copies in BCD */
   stp_put16_be(pd->w_size, v);
   stp_put16_be(pd->h_size, v);
 
@@ -1920,7 +1942,7 @@ static void kodak_605_printer_init(stp_vars_t *v)
   dyesub_privdata_t *pd = get_privdata(v);
 
   stp_zfwrite("\x01\x40\x0a\x00\x01", 1, 5, v);
-  stp_putc(0x01, v); /* Number of copies */
+  stp_put16_be(short_to_packed_bcd(pd->copies), v); /* Number of copies in BCD */  
   stp_putc(0x00, v);
   stp_put16_le(pd->w_size, v);
   stp_put16_le(pd->h_size, v);
@@ -2182,7 +2204,7 @@ static void kodak_9810_printer_init(stp_vars_t *v)
   stp_zfwrite("FlsPgCopies        ", 1, 19, v);
   dyesub_nputc(v, 0x00, 4);
   stp_put32_be(4, v);
-  stp_put32_be(1, v);  /* Number of copies, at least 1 */
+  stp_put32_be(pd->copies, v);
 
   /* Mirroring */
   stp_putc(0x1b, v);
@@ -2293,7 +2315,7 @@ static void kodak_8810_printer_init(stp_vars_t *v)
   stp_putc(0x12, v);
   stp_putc(0x00, v);
   stp_putc(0x01, v);
-  stp_put16_le(0x01, v); /* Actually, # of copies */
+  stp_put16_le(pd->copies, v);
   stp_put16_le(pd->w_size, v);
   stp_put16_le(pd->h_size, v);
   stp_put16_le(pd->w_size, v);
@@ -2336,7 +2358,7 @@ static void kodak_70xx_printer_init(stp_vars_t *v)
   dyesub_privdata_t *pd = get_privdata(v);
 
   stp_zfwrite("\x01\x40\x0a\x00\x01", 1, 5, v);
-  stp_put16_le(0x01, v); /* Actually, # of copies */
+  stp_put16_le(pd->copies, v);
   stp_put16_le(pd->w_size, v);
   stp_put16_le(pd->h_size, v);
 
@@ -2421,7 +2443,7 @@ static void kodak_8500_printer_init(stp_vars_t *v)
   /* Number of copies */
   stp_putc(0x1b, v);
   stp_putc(0x4e, v);
-  stp_putc(1, v); /* 1-50 */
+  stp_putc(pd->copies > 50 ? 50 : pd->copies, v); /* 1-50 */
   dyesub_nputc(v, 0x00, 61);
   /* Paper type.  Fixed. */
   stp_putc(0x1b, v);
@@ -2527,7 +2549,7 @@ static void mitsu_cp3020d_printer_init(stp_vars_t *v)
   /* Number of copies */
   stp_putc(0x1b, v);
   stp_putc(0x4e, v);
-  stp_putc(1, v); /* 1-50 */
+  stp_putc(pd->copies > 50 ? 50 : pd->copies, v); /* 1-50 */
   dyesub_nputc(v, 0x00, 61);
   /* Unknown */
   stp_putc(0x1b, v);
@@ -2617,7 +2639,7 @@ static void mitsu_cp3020da_printer_init(stp_vars_t *v)
   stp_putc(0x00, v);
   stp_putc(0x02, v);
   dyesub_nputc(v, 0x00, 19);
-  stp_putc(0x01, v);  /* Copies -- 01-50d */
+  stp_putc(pd->copies > 50 ? 50 : pd->copies, v);  /* 1-50 */
   dyesub_nputc(v, 0x00, 20);
   /* Contrast ? */
   stp_putc(0x1b, v);
@@ -2816,7 +2838,7 @@ static void mitsu_cp9550_printer_init(stp_vars_t *v)
   stp_putc(0x08, v);
   stp_putc(0x03, v);
   dyesub_nputc(v, 0x00, 18);
-  stp_put16_be(1, v);  /* Copies */
+  stp_put16_be(pd->copies, v);
   dyesub_nputc(v, 0x00, 2);
   if (strcmp(pd->pagesize,"w288h432-div2") == 0)
     stp_putc(0x83, v);
@@ -2960,7 +2982,7 @@ static void mitsu_cp9600_printer_init(stp_vars_t *v)
   stp_putc(0x00, v);
   stp_putc(0x03, v);
   dyesub_nputc(v, 0x00, 18);
-  stp_put16_be(1, v);  /* Copies */
+  stp_put16_be(pd->copies, v);
   dyesub_nputc(v, 0x00, 19);
   stp_putc(0x01, v);
   /* Parameters 2 */
@@ -3148,7 +3170,7 @@ static void mitsu_cp98xx_printer_init(stp_vars_t *v, int model)
   stp_putc(0x08, v);
   stp_putc(0x01, v);
   dyesub_nputc(v, 0x00, 18);
-  stp_put16_be(1, v);  /* Copies */
+  stp_put16_be(pd->copies, v);
   dyesub_nputc(v, 0x00, 8);
   stp_putc(pd->privdata.m9550.quality, v);
   dyesub_nputc(v, 0x00, 10);
@@ -4090,7 +4112,7 @@ static void shinko_chcs2145_printer_init(stp_vars_t *v)
   stp_put32_le(0x00, v);
   stp_put32_le(pd->w_size, v); /* Columns */
   stp_put32_le(pd->h_size, v); /* Rows */
-  stp_put32_le(0x01, v);            /* Copies */
+  stp_put32_le(pd->copies, v); /* Copies */
 
   stp_put32_le(0x00, v);
   stp_put32_le(0x00, v);
@@ -4217,7 +4239,7 @@ static void shinko_chcs1245_printer_init(stp_vars_t *v)
   stp_put32_le(0x00, v); /* XXX "dust removal mode" -- 0x00 printer default, 0x02 on, 0x01 for off. */
   stp_put32_le(pd->w_size, v); /* Columns */
   stp_put32_le(pd->h_size, v); /* Rows */
-  stp_put32_le(0x01, v);            /* Copies */
+  stp_put32_le(pd->copies, v); /* Copies */
 
   stp_put32_le(0x00, v);
   stp_put32_le(0x00, v);
@@ -4324,7 +4346,7 @@ static void shinko_chcs6245_printer_init(stp_vars_t *v)
   stp_put32_le(0x00, v);
   stp_put32_le(pd->w_size, v); /* Columns */
   stp_put32_le(pd->h_size, v); /* Rows */
-  stp_put32_le(0x01, v);            /* Copies */
+  stp_put32_le(pd->copies, v); /* Copies */
 
   stp_put32_le(0x00, v);
   stp_put32_le(0x00, v);
@@ -4455,7 +4477,7 @@ static void shinko_chcs6145_printer_init(stp_vars_t *v)
   stp_put32_le(0x00, v);
   stp_put32_le(pd->w_size, v); /* Columns */
   stp_put32_le(pd->h_size, v); /* Rows */
-  stp_put32_le(0x01, v);            /* Copies */
+  stp_put32_le(pd->copies, v); /* Copies */
 
   stp_put32_le(0x00, v);
   stp_put32_le(0x00, v);
@@ -4574,7 +4596,7 @@ static void dnp_printer_start_common(stp_vars_t *v)
 	      (pd->laminate->seq).bytes, v); /* Lamination mode */
 
   /* Set quantity.. Backend overrides as needed. */
-  stp_zprintf(v, "\033PCNTRL QTY             000000080000001\r");
+  stp_zprintf(v, "\033PCNTRL QTY             00000008%07d\r", pd->copies);
 }
 
 static void dnpds40_printer_start(stp_vars_t *v)
@@ -4802,14 +4824,12 @@ static int dnpds80dx_parse_parameters(stp_vars_t *v)
   const char *pagesize;
   const dyesub_media_t* media = NULL;
   const char* duplex_mode;
-  int page_number;
   dyesub_privdata_t *pd = get_privdata(v);
   int multicut = 0;
   
   pagesize = stp_get_string_parameter(v, "PageSize");
   duplex_mode = stp_get_string_parameter(v, "Duplex");
   media = dyesub_get_mediatype(v);
-  page_number = stp_get_int_parameter(v, "PageNumber");
 
   if (!strcmp(media->name, "Roll")) {
     if (strcmp(duplex_mode, "None") && strcmp(duplex_mode, "Standard")) {
@@ -4858,7 +4878,7 @@ static int dnpds80dx_parse_parameters(stp_vars_t *v)
   /* Add correct offset to multicut mode based on duplex state */
   if (!strcmp(duplex_mode, "None") || !strcmp(duplex_mode, "Standard"))
      multicut += 100; /* Simplex */
-  else if (page_number & 1)
+  else if (pd->page_number & 1)
      multicut += 300; /* Duplex, back */
   else
      multicut += 200; /* Duplex, front */
@@ -5215,7 +5235,7 @@ static void citizen_cw01_printer_start(stp_vars_t *v)
   } else {
     stp_putc(0x00, v);
   }
-  stp_putc(0x01, v); /* This is actually number of copies */
+  stp_putc(pd->copies, v);
   stp_putc(0x00, v);
 
   /* Compute plane size */
@@ -7372,6 +7392,15 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   if((pd->page_number & 1) && pd->duplex_mode && !strcmp(pd->duplex_mode,"DuplexNoTumble"))
     image = stpi_buffer_image(image,BUFFER_FLAG_FLIP_X | BUFFER_FLAG_FLIP_Y);
 
+  /* Check to see if we're to generate more than one copy */
+  if (stp_check_boolean_parameter(v, "NativeCopies", STP_PARAMETER_ACTIVE) &&
+      stp_get_boolean_parameter(v, "NativeCopies") &&
+      stp_check_int_parameter(v, "NumCopies", STP_PARAMETER_ACTIVE))
+    pd->copies = stp_get_int_parameter(v, "NumCopies");
+  else
+    pd->copies = 1;
+  /* FIXME: What about Collation? Any special handling here? */
+  
   pd->pagesize = stp_get_string_parameter(v, "PageSize");
   if (caps->laminate)
 	  pd->laminate = dyesub_get_laminate_pattern(v);
