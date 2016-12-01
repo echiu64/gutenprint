@@ -5594,8 +5594,8 @@ static const dyesub_printsize_t citizen_cw01_printsize[] =
   { "334x600", "w360h504", 2048, 4276},
   { "334x334", "w432h576", 2048, 2710},
   { "334x600", "w432h576", 2048, 4870},
-  { "334x334", "w432h576", 2048, 3050},
-  { "334x600", "w432h576", 2048, 5480},
+  { "334x334", "w432h648", 2048, 3050},
+  { "334x600", "w432h648", 2048, 5480},
 };
 
 LIST(dyesub_printsize_list_t, citizen_cw01_printsize_list, dyesub_printsize_t, citizen_cw01_printsize);
