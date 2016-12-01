@@ -278,41 +278,6 @@
 <!--
     Other common photographic paper sizes
 -->
-    <paper name="w213h284">
-      <description translate="value" value="1280x960"/>
-      <comment value="Only used by Mitsubishi P95DW"/>
-      <width value="213"/>
-      <height value="284"/>
-      <unit value="english-extended"/>
-    </paper>
-    <paper name="w227h284">
-      <description translate="value" value="1280x1024"/>
-      <comment value="Only used by Mitsubishi P95DW"/>
-      <width value="227"/>
-      <height value="284"/>
-      <unit value="english-extended"/>
-    </paper>
-    <paper name="w284h284">
-      <description translate="value" value="1280x1280"/>
-      <comment value="Only used by Mitsubishi P95DW"/>
-      <width value="284"/>
-      <height value="284"/>
-      <unit value="english-extended"/>
-    </paper>
-    <paper name="w284h426">
-      <description translate="value" value="1280x1920"/>
-      <comment value="Only used by Mitsubishi P95DW"/>
-      <width value="284"/>
-      <height value="426"/>
-      <unit value="english-extended"/>
-    </paper>
-    <paper name="w284h1277">
-      <description translate="value" value="1280x5760"/>
-      <comment value="Only used by Mitsubishi P95DW"/>
-      <width value="284"/>
-      <height value="1277"/>
-      <unit value="english-extended"/>
-    </paper>
     <paper name="w360h360">
       <description translate="value" value="5x5"/>
       <comment value="Only used by certain dyesub models"/>
