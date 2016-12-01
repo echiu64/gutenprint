@@ -5265,6 +5265,10 @@ static int dnpds80dx_parse_parameters(stp_vars_t *v)
     return 0;
   }
 
+  /* No need to set global params if there's no privdata yet */    
+  if (!pd)
+    return 1;
+  
   /* Add correct offset to multicut mode based on duplex state */
   if (!strcmp(duplex_mode, "None") || !strcmp(duplex_mode, "Standard"))
      multicut += 100; /* Simplex */
@@ -5273,9 +5277,7 @@ static int dnpds80dx_parse_parameters(stp_vars_t *v)
   else
      multicut += 200; /* Duplex, front */
 
-  /* No need to set global params if there's no privdata yet */  
-  if (pd)
-    pd->privdata.dnp.multicut = multicut;
+  pd->privdata.dnp.multicut = multicut;
   
   return 1;
 }
