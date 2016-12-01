@@ -1988,8 +1988,11 @@ write_ppd(
     }
   stp_parameter_description_destroy(&desc);
 
-  if (stp_check_boolean_parameter(v, "NativeCopies", STP_PARAMETER_ACTIVE))
+  stp_describe_parameter(v, "NativeCopies", &desc);
+  if (desc.p_type == STP_PARAMETER_TYPE_BOOLEAN)
     nativecopies = stp_get_boolean_parameter(v, "NativeCopies");
+
+  stp_parameter_description_destroy(&desc);
 
   if (nativecopies)
     gpputs(fp, "*cupsManualCopies: False\n");
