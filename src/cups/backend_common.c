@@ -561,6 +561,7 @@ extern struct dyesub_backend shinkos2145_backend;
 extern struct dyesub_backend shinkos6145_backend;
 extern struct dyesub_backend shinkos6245_backend;
 extern struct dyesub_backend canonselphy_backend;
+extern struct dyesub_backend canonselphyneo_backend;
 extern struct dyesub_backend mitsu70x_backend;
 extern struct dyesub_backend mitsu9550_backend;
 extern struct dyesub_backend dnpds40_backend;
@@ -568,6 +569,7 @@ extern struct dyesub_backend cw01_backend;
 
 static struct dyesub_backend *backends[] = {
 	&canonselphy_backend,
+	&canonselphyneo_backend,	
 	&kodak6800_backend,
 	&kodak605_backend,
 	&kodak1400_backend,

@@ -255,7 +255,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
   2) Added support for the following dye sublimation printers:
 
-        Canon SELPHY CP1000
+        Canon SELPHY CP1000   [*3]
 	Canon SELPHY CP1200
 	Fujifilm ASK-300      [*2] [experimental]
 	Mitsubishi CP-9600DW
@@ -267,6 +267,8 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
   3) Improved support (and bugfixes) for the following dye sublimation
      printers:
 
+        Canon SELPHY CP820    [*3]
+        Canon SELPHY CP910
 	Ciaat Brava 21        [*1]
 	Citizen CW-02              [experimental]
 	DNP DS620
@@ -325,11 +327,15 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	  successfully print.  Work is underway on a crude fallback that will
 	  at least generate (very poor quality) output.
 
+     [*3] The USB PIDs for the CP820 and CP1000 are unknown at this time,
+          so will not be claimed by the improved backend.
+
   4) Dye-sublimation backend now reports media status via standard 
      CUPS marker attributes.  This applies to all models except for:
      
 	Kodak 805
 	Kodak 1400
+        Canon SELPHY CP820, CP910, CP1000, and CP1200
 
   5) Added support for the following Epson inkjet printers:
 

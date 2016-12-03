@@ -498,7 +498,7 @@ D) CUPS dye-sublimation backend
     of this section.
 
 	Canon SELPHY ES series
-	Canon SELPHY CP series (except CP820, CP910, CP1000, CP1200)
+	Canon SELPHY CP series
 	Ciaat Brava 21
 	Citizen CW-01 / Olmec OP900
 	Citizen CW-02
@@ -516,8 +516,10 @@ D) CUPS dye-sublimation backend
 	Mitsubishi CP-3800DW
 	Mitsubishi CP-9550D/DW/DW-S/DZ/DZ-S
 	Mitsubishi CP-9600D/DW
+	Mitsubishi CP-9800DW/DW-S (experimental)
+	Mitsubishi CP-9810DW (experimental)
 	Mitsubishi CP-K60DW-S
-	Mitsubishi CP-D70DW / CP-D707DW (experimental)
+	Mitsubishi CP-D70DW / CP-D707DW
 	Shinko CHC-S1245 (aka Sinfonia E1) (experimental)
 	Shinko CHC-S6245 (aka Sinfonia CE1) (experimental)
 	Shinko CHC-S2145 (aka Sinfonia S2)
