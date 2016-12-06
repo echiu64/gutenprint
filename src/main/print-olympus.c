@@ -319,7 +319,6 @@ static const dyesub_pagesize_t p10_page[] =
 {
   { "w288h432", "4x6", 298, 430, 0, 0, 0, 0, DYESUB_PORTRAIT}, /* 4x6" */
   { "B7", "3.5x5", 266, 370, 0, 0, 0, 0, DYESUB_PORTRAIT},	 /* 3.5x5" */
-  { "Custom", NULL, 298, 430, 28, 28, 48, 48, DYESUB_PORTRAIT},
 };
 
 LIST(dyesub_pagesize_list_t, p10_page_list, dyesub_pagesize_t, p10_page);
@@ -328,7 +327,6 @@ static const dyesub_printsize_t p10_printsize[] =
 {
   { "310x310", "w288h432", 1280, 1848},
   { "310x310", "B7",  1144,  1591},
-  { "310x310", "Custom", 1280, 1848},
 };
 
 LIST(dyesub_printsize_list_t, p10_printsize_list, dyesub_printsize_t, p10_printsize);
@@ -378,7 +376,6 @@ LIST(dyesub_resolution_list_t, res_320dpi_list, dyesub_resolution_t, res_320dpi)
 static const dyesub_pagesize_t p200_page[] =
 {
   { "ISOB7", "80x125mm", -1, -1, 16, 17, 33, 33, DYESUB_PORTRAIT},
-  { "Custom", NULL, -1, -1, 16, 17, 33, 33, DYESUB_PORTRAIT},
 };
 
 LIST(dyesub_pagesize_list_t, p200_page_list, dyesub_pagesize_t, p200_page);
@@ -386,7 +383,6 @@ LIST(dyesub_pagesize_list_t, p200_page_list, dyesub_pagesize_t, p200_page);
 static const dyesub_printsize_t p200_printsize[] =
 {
   { "320x320", "ISOB7", 960, 1280},
-  { "320x320", "Custom", 960, 1280},
 };
 
 LIST(dyesub_printsize_list_t, p200_printsize_list, dyesub_printsize_t, p200_printsize);
@@ -442,7 +438,6 @@ LIST(dyesub_resolution_list_t, p300_res_list, dyesub_resolution_t, p300_res);
 static const dyesub_pagesize_t p300_page[] =
 {
   { "A6", "A6", -1, -1, 28, 28, 48, 48, DYESUB_PORTRAIT},
-  { "Custom", NULL, -1, -1, 28, 28, 48, 48, DYESUB_PORTRAIT},
 };
 
 LIST(dyesub_pagesize_list_t, p300_page_list, dyesub_pagesize_t, p300_page);
@@ -451,8 +446,6 @@ static const dyesub_printsize_t p300_printsize[] =
 {
   { "306x306", "A6", 1024, 1376},
   { "153x153", "A6",  512,  688},
-  { "306x306", "Custom", 1024, 1376},
-  { "153x153", "Custom", 512, 688},
 };
 
 LIST(dyesub_printsize_list_t, p300_printsize_list, dyesub_printsize_t, p300_printsize);
@@ -552,7 +545,6 @@ static const dyesub_pagesize_t p400_page[] =
   { "A4", "A4", -1, -1, 22, 22, 54, 54, DYESUB_PORTRAIT},
   { "c8x10", "A5 wide", -1, -1, 58, 59, 84, 85, DYESUB_PORTRAIT},
   { "C6", "2 Postcards (A4)", -1, -1, 9, 9, 9, 9, DYESUB_PORTRAIT},
-  { "Custom", NULL, -1, -1, 22, 22, 54, 54, DYESUB_PORTRAIT},
 };
 
 LIST(dyesub_pagesize_list_t, p400_page_list, dyesub_pagesize_t, p400_page);
@@ -562,7 +554,6 @@ static const dyesub_printsize_t p400_printsize[] =
   { "314x314", "A4", 2400, 3200},
   { "314x314", "c8x10", 2000, 2400},
   { "314x314", "C6", 1328, 1920},
-  { "314x314", "Custom", 2400, 3200},
 };
 
 LIST(dyesub_printsize_list_t, p400_printsize_list, dyesub_printsize_t, p400_printsize);
@@ -679,7 +670,6 @@ static const dyesub_pagesize_t p440_page[] =
   { "c8x10", "A5 wide", -1, -1, 58, 59, 72, 72, DYESUB_PORTRAIT},
   { "C6", "2 Postcards (A4)", -1, -1, 9, 9, 9, 9, DYESUB_PORTRAIT},
   { "w255h581", "A6 wide", -1, -1, 25, 25, 25, 24, DYESUB_PORTRAIT},
-  { "Custom", NULL, -1, -1, 22, 22, 54, 54, DYESUB_PORTRAIT},
 };
 
 LIST(dyesub_pagesize_list_t, p440_page_list, dyesub_pagesize_t, p440_page);
@@ -690,7 +680,6 @@ static const dyesub_printsize_t p440_printsize[] =
   { "314x314", "c8x10", 2000, 2508},
   { "314x314", "C6", 1328, 1920},
   { "314x314", "w255h581", 892, 2320},
-  { "314x314", "Custom", 2508, 3200},
 };
 
 LIST(dyesub_printsize_list_t, p440_printsize_list, dyesub_printsize_t, p440_printsize);
@@ -698,8 +687,7 @@ LIST(dyesub_printsize_list_t, p440_printsize_list, dyesub_printsize_t, p440_prin
 static void p440_printer_init_func(stp_vars_t *v)
 {
   dyesub_privdata_t *pd = get_privdata(v);
-  int wide = ! (strcmp(pd->pagesize, "A4") == 0
-		  || strcmp(pd->pagesize, "Custom") == 0);
+  int wide = strcmp(pd->pagesize, "A4") != 0;
 
   stp_zprintf(v, "\033FP"); dyesub_nputc(v, '\0', 61);
   stp_zprintf(v, "\033Y");
@@ -735,8 +723,7 @@ static void p440_printer_end_func(stp_vars_t *v)
 static void p440_block_init_func(stp_vars_t *v)
 {
   dyesub_privdata_t *pd = get_privdata(v);
-  int wide = ! (strcmp(pd->pagesize, "A4") == 0
-		  || strcmp(pd->pagesize, "Custom") == 0);
+  int wide = strcmp(pd->pagesize, "A4") != 0;
 
   stp_zprintf(v, "\033ZT");
   if (wide)
@@ -775,7 +762,6 @@ static const dyesub_pagesize_t ps100_page[] =
 {
   { "w288h432", "4x6", 296, 426, 0, 0, 0, 0, DYESUB_PORTRAIT},/* 4x6" */
   { "B7", "3.5x5", 264, 366, 0, 0, 0, 0, DYESUB_PORTRAIT},	/* 3.5x5" */
-  { "Custom", NULL, 296, 426, 0, 0, 0, 0, DYESUB_PORTRAIT},
 };
 
 LIST(dyesub_pagesize_list_t, ps100_page_list, dyesub_pagesize_t, ps100_page);
@@ -784,7 +770,6 @@ static const dyesub_printsize_t ps100_printsize[] =
 {
   { "306x306", "w288h432", 1254, 1808},
   { "306x306", "B7", 1120, 1554},
-  { "306x306", "Custom", 1254, 1808},
 };
 
 LIST(dyesub_printsize_list_t, ps100_printsize_list, dyesub_printsize_t, ps100_printsize);
@@ -1193,8 +1178,6 @@ static const dyesub_pagesize_t dppex5_page[] =
 {
   { "w288h432", "Postcard", PT(1664,403)+1, PT(2466,403)+1, 13, 14, 18, 17,
   							DYESUB_PORTRAIT},
-  { "Custom", NULL, PT(1664,403)+1, PT(2466,403)+1, 13, 14, 18, 17,
-  							DYESUB_PORTRAIT},
 };
 
 LIST(dyesub_pagesize_list_t, dppex5_page_list, dyesub_pagesize_t, dppex5_page);
@@ -1202,7 +1185,6 @@ LIST(dyesub_pagesize_list_t, dppex5_page_list, dyesub_pagesize_t, dppex5_page);
 static const dyesub_printsize_t dppex5_printsize[] =
 {
   { "403x403", "w288h432", 1664, 2466},
-  { "403x403", "Custom", 1664, 2466},
 };
 
 LIST(dyesub_printsize_list_t, dppex5_printsize_list, dyesub_printsize_t, dppex5_printsize);
@@ -1264,11 +1246,6 @@ static const dyesub_pagesize_t updp10_page[] =
 {
   { "w288h432", "UPC-10P23 (4x6)", -1, -1, 12, 12, 18, 18, DYESUB_LANDSCAPE},
   { "w288h387", "UPC-10P34 (4x5)", -1, 384, 12, 12, 16, 16, DYESUB_LANDSCAPE},
-#if 0
-  /* We can't have two paper sizes that are the same size --rlk 20080813 */
-  { "w288h432", "UPC-10S01 (Sticker)", -1, -1, 12, 12, 18, 18, DYESUB_LANDSCAPE},
-#endif
-  { "Custom", NULL, -1, -1, 12, 12, 0, 0, DYESUB_LANDSCAPE},
 };
 
 LIST(dyesub_pagesize_list_t, updp10_page_list, dyesub_pagesize_t, updp10_page);
@@ -1277,7 +1254,6 @@ static const dyesub_printsize_t updp10_printsize[] =
 {
   { "300x300", "w288h432", 1200, 1800},
   { "300x300", "w288h387", 1200, 1600},
-  { "300x300", "Custom", 1200, 1800},
 };
 
 LIST(dyesub_printsize_list_t, updp10_printsize_list, dyesub_printsize_t, updp10_printsize);
@@ -1697,7 +1673,6 @@ static const dyesub_pagesize_t cx400_page[] =
   { "w288h432", "4x6", 295, 428, 24, 24, 23, 22, DYESUB_PORTRAIT},
   { "w288h387", "4x5 3/8", 295, 386, 24, 24, 23, 23, DYESUB_PORTRAIT},
   { "w288h504", "4x7", 295, 513, 24, 24, 23, 22, DYESUB_PORTRAIT},
-  { "Custom", NULL, 295, 428, 0, 0, 0, 0, DYESUB_PORTRAIT},
 };
 
 LIST(dyesub_pagesize_list_t, cx400_page_list, dyesub_pagesize_t, cx400_page);
@@ -1707,7 +1682,6 @@ static const dyesub_printsize_t cx400_printsize[] =
   { "310x310", "w288h387", 1268, 1658},
   { "310x310", "w288h432", 1268, 1842},
   { "310x310", "w288h504", 1268, 2208},
-  { "310x310", "Custom", 1268, 1842},
 };
 
 LIST(dyesub_printsize_list_t, cx400_printsize_list, dyesub_printsize_t, cx400_printsize);
@@ -1757,7 +1731,6 @@ LIST(dyesub_resolution_list_t, res_306dpi_list, dyesub_resolution_t, res_306dpi)
 static const dyesub_pagesize_t nx500_page[] =
 {
   { "Postcard", "Postcard", -1, -1, 21, 21, 29, 29, DYESUB_PORTRAIT},
-  { "Custom", NULL, -1, -1, 21, 21, 29, 29, DYESUB_PORTRAIT},
 };
 
 LIST(dyesub_pagesize_list_t, nx500_page_list, dyesub_pagesize_t, nx500_page);
@@ -1765,7 +1738,6 @@ LIST(dyesub_pagesize_list_t, nx500_page_list, dyesub_pagesize_t, nx500_page);
 static const dyesub_printsize_t nx500_printsize[] =
 {
   { "306x306", "Postcard", 1024, 1518},
-  { "306x306", "Custom", 1024, 1518},
 };
 
 LIST(dyesub_printsize_list_t, nx500_printsize_list, dyesub_printsize_t, nx500_printsize);
@@ -1792,8 +1764,6 @@ static const dyesub_pagesize_t kodak_dock_page[] =
 {
   { "w288h432", "4x6", PT(1248,300)+1, PT(1856,300)+1, 0, 0, 0, 0,
   						DYESUB_PORTRAIT}, /* 4x6 */
-  { "Custom", NULL, PT(1248,300)+1, PT(1856,300)+1, 0, 0, 0, 0,
-  						DYESUB_PORTRAIT}, /* 4x6 */
 };
 
 LIST(dyesub_pagesize_list_t, kodak_dock_page_list, dyesub_pagesize_t, kodak_dock_page);
@@ -1801,7 +1771,6 @@ LIST(dyesub_pagesize_list_t, kodak_dock_page_list, dyesub_pagesize_t, kodak_dock
 static const dyesub_printsize_t kodak_dock_printsize[] =
 {
   { "300x300", "w288h432", 1248, 1856},
-  { "300x300", "Custom", 1248, 1856},
 };
 
 LIST(dyesub_printsize_list_t, kodak_dock_printsize_list, dyesub_printsize_t, kodak_dock_printsize);
@@ -3969,8 +3938,6 @@ static const dyesub_pagesize_t shinko_chcs9045_page[] =
   							DYESUB_PORTRAIT},
   { "w283h425",	"Sticker paper", PT(1092,300)+1, PT(1726,300)+1, 0, 0, 0, 0,
   							DYESUB_LANDSCAPE},
-  { "Custom",   NULL, PT(1240,300)+1, PT(1844,300)+1, 0, 0, 0, 0,
-  							DYESUB_LANDSCAPE},
 };
 
 LIST(dyesub_pagesize_list_t, shinko_chcs9045_page_list, dyesub_pagesize_t, shinko_chcs9045_page);
@@ -3982,7 +3949,6 @@ static const dyesub_printsize_t shinko_chcs9045_printsize[] =
   { "300x300", "w360h504", 1548, 2140},
   { "300x300", "w432h648", 1844, 2740},
   { "300x300", "w283h425", 1092, 1726},
-  { "300x300", "Custom", 1240, 1844},
 };
 
 LIST(dyesub_printsize_list_t, shinko_chcs9045_printsize_list, dyesub_printsize_t, shinko_chcs9045_printsize);
