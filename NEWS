@@ -410,6 +410,11 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	Canon MB5000
 	Canon MB5300
 
+  10) Removed support for the following laser printer, as on further
+    investigation we have determined that it cannot be supported:
+
+	Brother HL-1430
+
 
 * Changes from 5.2.10
 

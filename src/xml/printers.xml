@@ -1921,7 +1921,6 @@
       <printer translate="name" name="Brother HL-1250" deviceid="MFG:Brother;MDL:HL-1250 series;CMD:PCL5,PJL,PCLXL;" driver="brother-hl-1250" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-1260" deviceid="MFG:Brother;MDL:HL-1250 series;CMD:PCL5,PJL,PCLXL;" driver="brother-hl-1260" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-1270N" driver="brother-hl-1270n" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-1430" deviceid="MFG:Brother;MDL:HL-1430 series;CMD:PJL;" driver="brother-hl-1430" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-1440" deviceid="MFG:Brother;MDL:HL-1440 series;CMD:PCL4,PJL;" driver="brother-hl-1440" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-1450" deviceid="MFG:Brother;MDL:Brother HL-1450 series;" driver="brother-hl-1450" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-1470N" deviceid="MFG:Brother;MDL:Brother HL-1470N series;" driver="brother-hl-1470n" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
