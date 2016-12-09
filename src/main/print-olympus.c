@@ -1103,11 +1103,11 @@ static void cp900_printer_end_func(stp_vars_t *v)
   dyesub_nputc(v, 0x0, 4);
 }
 
-/* Canon CP820/CP910 */
+/* Canon CP820/CP910/CP1000/CP1200 and beynod */
 static const dyesub_pagesize_t cp910_page[] =
 {
   { "Postcard", "Postcard 100x148mm", PT(1248,300)+1, PT(1872,300)+1, 13, 13, 16, 19, DYESUB_PORTRAIT},
-  { "w253h337", "CP_L 89x119mm", PT(1104,300)+1, PT(1536,300)+1, 13, 13, 15, 15, DYESUB_PORTRAIT},
+  { "w253h337", "CP_L 89x119mm", PT(1152,300)+1, PT(1472,300)+1, 13, 13, 15, 15, DYESUB_PORTRAIT},
   { "w155h244", "Card 54x86mm", PT(1088,300)+1, PT(668,300)+1, 13, 13, 15, 15, DYESUB_LANDSCAPE},
 };
 
@@ -1116,7 +1116,7 @@ LIST(dyesub_pagesize_list_t, cp910_page_list, dyesub_pagesize_t, cp910_page);
 static const dyesub_printsize_t cp910_printsize[] =
 {
   { "300x300", "Postcard", 1248, 1872},
-  { "300x300", "w253h337", 1104, 1536},
+  { "300x300", "w253h337", 1152, 1472},
   { "300x300", "w155h244", 668, 1088},
 };
 
@@ -1141,28 +1141,8 @@ static void cp910_printer_init_func(stp_vars_t *v)
 
   dyesub_nputc(v, '\0', 5);
 
-  pg = (strcmp(pd->pagesize, "Postcard") == 0 ? 0xe0 :
-                (strcmp(pd->pagesize, "w253h337") == 0 ? 0x80 :
-                (strcmp(pd->pagesize, "w155h244") == 0 ? 0x40 :
-                 0xe0 )));
-  stp_putc(pg, v);
-
-  stp_putc(0x04, v);
-  dyesub_nputc(v, '\0', 2);
-
-  pg = (strcmp(pd->pagesize, "Postcard") == 0 ? 0x50 :
-                (strcmp(pd->pagesize, "w253h337") == 0 ? 0xc0 :
-                (strcmp(pd->pagesize, "w155h244") == 0 ? 0x9c :
-                 0x50 )));
-  stp_putc(pg, v);
-
-  pg = (strcmp(pd->pagesize, "Postcard") == 0 ? 0x07 :
-                (strcmp(pd->pagesize, "w253h337") == 0 ? 0x05 :
-                (strcmp(pd->pagesize, "w155h244") == 0 ? 0x02 :
-                 0x07 )));
-  stp_putc(pg, v);
-
-  dyesub_nputc(v, '\0', 2);
+  stp_put32_le(pd->w_size, v);
+  stp_put32_le(pd->h_size, v);
 }
 
 /* Sony DPP-EX5, DPP-EX7 */

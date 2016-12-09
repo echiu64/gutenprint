@@ -48,7 +48,9 @@
 
 /* Header data structure */
 struct selphyneo_hdr {
-	uint8_t data[32];
+	uint8_t data[24];
+	uint32_t cols;  /* LE */
+	uint32_t rows;  /* LE */
 } __attribute((packed));
 
 /* Readback data structure */
@@ -169,18 +171,14 @@ static int selphyneo_read_parse(void *vctx, int data_fd)
 
 	/* Determine job length */
 	switch(hdr.data[18]) {
-	case 0x50:
-		remain = 1872 * 1248 * 3;
+	case 0x50:  /* P */
+	case 0x4c:  /* L */
+	case 0x43:  /* C */
+		remain = le32_to_cpu(hdr.cols) * le32_to_cpu(hdr.rows) * 3;
 		break;
-	case 0x4c:
-		remain = 1536 * 1104 * 3;
-		break;		
-	case 0x43:
-		remain = 1088 * 668 * 3;
-		break;		
 	default:
-		ERROR("Unknown print size! (%02x/%02x/%02x/%02x)\n",
-		      hdr.data[10], hdr.data[24], hdr.data[28], hdr.data[29]);
+		ERROR("Unknown print size! (%02x, %ux%u)\n",
+		      hdr.data[10], le32_to_cpu(hdr.cols), le32_to_cpu(hdr.rows));
 		return CUPS_BACKEND_CANCEL;
 	}
 	
@@ -344,7 +342,7 @@ static int selphyneo_cmdline_arg(void *vctx, int argc, char **argv)
 
 struct dyesub_backend canonselphyneo_backend = {
 	.name = "Canon SELPHY CPneo",
-	.version = "0.02",
+	.version = "0.03",
 	.uri_prefix = "canonselphyneo",
 	.cmdline_arg = selphyneo_cmdline_arg,
 	.init = selphyneo_init,
@@ -376,26 +374,21 @@ struct dyesub_backend canonselphyneo_backend = {
   32-byte header:
 
   0f 00 00 40 00 00 00 00  00 00 00 00 00 00 01 00
-  01 00 ?? 00 00 00 00 00  XX 04 00 00 WW ZZ 00 00
+  01 00 TT 00 00 00 00 00  XX XX XX XX YY YY YY YY
 
-  ?? == 50  (P)
+                           cols (le32) rows (le32)
+        50                 e0 04       50 07          1248 * 1872  (P)
+        4c                 80 04       c0 05          1152 * 1472  (L)
+        43                 40 04       9c 02          1088 * 668   (C)
+
+  TT == 50  (P)
      == 4c  (L)
      == 43  (C)
 
-  XX == e0  (P)
-        80  (L)
-        40  (C)
-
-  WW == 50  (P)
-        c0  (L)
-        9c  (C)
-
-  ZZ == 07  (P)
-        05  (L)
-        02  (C)
+  Followed by three planes of image data.
 
   P == 7008800  == 2336256 * 3 + 32 (1872*1248)
-  L == 5087264  == 1695744 * 3 + 32 (1536*1104)
+  L == 5087264  == 1695744 * 3 + 32 (1472*1152)
   C == 2180384  == 726784 * 3 + 32  (1088*668)
 
   It is worth mentioning that the image payload is Y'CbCr rather than the
@@ -405,6 +398,10 @@ struct dyesub_backend canonselphyneo_backend = {
 
   It is hoped that the printers do support YMC data, but as of yet we
   have no way of determining if this is possible.
+
+  Other questions:
+
+    * Printer supports different lamination types, how to control?
 
  Data Readback:
 
