@@ -3266,7 +3266,7 @@ static const stp_parameter_t mitsu70x_parameters[] =
   },
 #ifdef MITSU70X_8BPP
   {
-    "UseLUT", N_("Internal Color Correction"), "Color=No,Category=Advanced Printer Setup",
+    "UseLUT", N_("Internal Color Correction"), "Color=Yes,Category=Advanced Printer Setup",
     N_("Use Internal Color Correction"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
@@ -6398,7 +6398,7 @@ static const stp_parameter_t the_parameters[] =
     /* better durability of output by covering it with transparent */
     /* laminate surface. This surface can be of different patterns: */
     /* common are matte, glossy or texture. */
-    "Laminate", N_("Laminate Pattern"), "Color=Yes,Category=Advanced Printer Setup",
+    "Laminate", N_("Laminate Pattern"), "Color=No,Category=Advanced Printer Setup",
     N_("Laminate Pattern"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 0, STP_CHANNEL_NONE, 1, 0
