@@ -106,6 +106,20 @@ static char *selphyneo_errors(uint8_t err)
 	}
 }
 
+static int selphyneo_send_reset(struct selphyneo_ctx *ctx)
+{
+	uint8_t rstcmd[12] = { 0x40, 0x10, 0x00, 0x00,
+			       0x00, 0x00, 0x00, 0x00,
+			       0x00, 0x00, 0x00, 0x00 };
+	int ret;
+
+	if ((ret = send_data(ctx->dev, ctx->endp_down,
+			     rstcmd, sizeof(rstcmd))))
+		return CUPS_BACKEND_FAILED;
+
+	return CUPS_BACKEND_OK;
+}
+
 static void *selphyneo_init(void)
 {
 	struct selphyneo_ctx *ctx = malloc(sizeof(struct selphyneo_ctx));
@@ -215,7 +229,6 @@ static int selphyneo_main_loop(void *vctx, int copies) {
 	/* Read in the printer status to clear last state */
 	ret = read_data(ctx->dev, ctx->endp_up,
 			(uint8_t*) &rdback, sizeof(rdback), &num);
-
 
 top:	
 	INFO("Waiting for printer idle\n");
@@ -329,9 +342,12 @@ static int selphyneo_cmdline_arg(void *vctx, int argc, char **argv)
 	if (!ctx)
 		return -1;
 
-	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL)) >= 0) {
+	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "R")) >= 0) {
 		switch(i) {
 		GETOPT_PROCESS_GLOBAL
+		case 'R':
+			selphyneo_send_reset(ctx);
+			break;			
 		}
 
 		if (j) return j;
@@ -340,10 +356,16 @@ static int selphyneo_cmdline_arg(void *vctx, int argc, char **argv)
 	return 0;
 }
 
+static void selphyneo_cmdline(void)
+{
+	DEBUG("\t\t[ -R ]           # Reset printer\n");
+}
+
 struct dyesub_backend canonselphyneo_backend = {
 	.name = "Canon SELPHY CPneo",
-	.version = "0.03",
+	.version = "0.04",
 	.uri_prefix = "canonselphyneo",
+	.cmdline_usage = selphyneo_cmdline,
 	.cmdline_arg = selphyneo_cmdline_arg,
 	.init = selphyneo_init,
 	.attach = selphyneo_attach,
@@ -429,6 +451,8 @@ struct dyesub_backend canonselphyneo_backend = {
    01  
    10
    11
+    ^-- Ribbon
+   ^-- Paper
 
 Also, the first time a readback happens after plugging in the printer:
 
