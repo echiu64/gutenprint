@@ -2954,6 +2954,7 @@
       <printer translate="name" name="Kodak 805" deviceid="MFG:Eastman Kodak Company;CMD:EK2;MDL: KODAK 805 Photo Printer;CLS:Printer;DES:Kodak 805 Photo Printer;" driver="kodak-805" manufacturer="Kodak" model="4005" parameters="nativecopies" />
       <printer translate="name" name="Kodak 8500" driver="kodak-8500" manufacturer="Kodak" model="4100" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Kodak 9810" driver="kodak-9810" manufacturer="Kodak" model="4006" parameters="nativecopies">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kodak 8800" driver="kodak-8800" manufacturer="Kodak" model="4006" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Kodak 8810" driver="kodak-8810" manufacturer="Kodak" model="4007" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Kodak 7000" driver="kodak-7000" manufacturer="Kodak" model="4008" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Kodak 7010" driver="kodak-7010" manufacturer="Kodak" model="4008" parameters="nativecopies">EXPERIMENTAL</printer>

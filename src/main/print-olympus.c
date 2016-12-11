@@ -195,6 +195,23 @@ typedef struct
   int sharpen;
 } mitsu70x_privdata_t;
 
+typedef struct
+{
+  int sharpen;
+} kodak9810_privdata_t;
+
+typedef struct
+{
+  int sharpen;
+  int matte_intensity;
+} kodak8500_privdata_t;
+
+typedef struct
+{
+  int matte_intensity;
+  int dust_removal;
+} shinko1245_privdata_t;
+
 /* Private data for dyesub driver as a whole */
 typedef struct
 {
@@ -216,6 +233,9 @@ typedef struct
    dnp_privdata_t dnp;
    mitsu9550_privdata_t m9550;
    mitsu70x_privdata_t m70x;
+   kodak9810_privdata_t k9810;
+   kodak8500_privdata_t k8500;
+   shinko1245_privdata_t s1245; 
   } privdata;
 } dyesub_privdata_t;
 
@@ -2027,7 +2047,7 @@ static void kodak_805_printer_init(stp_vars_t *v)
   dyesub_nputc(v, 0x00, 12);
 }
 
-/* Kodak 9810 */
+/* Kodak 9810 / 8800 */
 static const dyesub_pagesize_t kodak_9810_page[] =
 {
   { "c8x10", "8x10", PT(2464,300)+1, PT(3024,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
@@ -2050,6 +2070,63 @@ static const laminate_t kodak_9810_laminate[] =
 };
 
 LIST(laminate_list_t, kodak_9810_laminate_list, laminate_t, kodak_9810_laminate);
+
+static const stp_parameter_t kodak_9810_parameters[] =
+{
+  {
+    "Sharpen", N_("Image Sharpening"), "Color=No,Category=Advanced Printer Setup",
+    N_("Sharpening to apply to image (0 is off, 18 is normal, 24 is max"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+};
+#define kodak_9810_parameter_count (sizeof(kodak_9810_parameters) / sizeof(const stp_parameter_t))
+
+static int
+kodak_9810_load_parameters(const stp_vars_t *v, const char *name,
+			   stp_parameter_t *description)
+{
+  int	i;
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+		  				stp_get_model_id(v));
+ 
+  if (caps->parameter_count && caps->parameters)
+    {
+      for (i = 0; i < caps->parameter_count; i++)
+        if (strcmp(name, caps->parameters[i].name) == 0)
+          {
+	    stp_fill_parameter_settings(description, &(caps->parameters[i]));
+	    break;
+          }
+    }
+
+  if (strcmp(name, "Sharpen") == 0)
+    {
+      description->deflt.integer = 18;
+      description->bounds.integer.lower = 0;
+      description->bounds.integer.upper = 24;
+      description->is_active = 1;      
+    }
+  else
+  {
+     return 0;
+  }
+  return 1;
+}
+
+static int kodak_9810_parse_parameters(stp_vars_t *v)
+{
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  /* No need to set global params if there's no privdata yet */  
+  if (!pd)
+    return 1;
+
+  /* Parse options */  
+  pd->privdata.k9810.sharpen = stp_get_int_parameter(v, "Sharpen");    
+
+  return 1;
+}
 
 static void kodak_9810_printer_init(stp_vars_t *v)
 {
@@ -2146,7 +2223,7 @@ static void kodak_9810_printer_init(stp_vars_t *v)
   dyesub_nputc(v, 0x00, 4);
   stp_put32_be(2, v);
   stp_putc(0xFF, v);
-  stp_putc(0x12, v);  /* SHARPENING -- 0 is off, 0x12 Normal, 0x19 is High */
+  stp_putc(pd->privdata.k9810.sharpen, v);
 
   /* Number of Copies */
   stp_putc(0x1b, v);
@@ -2360,18 +2437,8 @@ LIST(dyesub_printsize_list_t, kodak_8500_printsize_list, dyesub_printsize_t, kod
 
 static const dyesub_media_t kodak_8500_media[] =
 {
-  { "Glossy", N_("Glossy"), {2, "\x00\x00"}},
-  { "Matte+5",  N_("Matte +5"),  {2, "\x01\x05"}},
-  { "Matte+4",  N_("Matte +4"),  {2, "\x01\x04"}},
-  { "Matte+3",  N_("Matte +3"),  {2, "\x01\x03"}},
-  { "Matte+2",  N_("Matte +2"),  {2, "\x01\x02"}},
-  { "Matte+1",  N_("Matte +1"),  {2, "\x01\x01"}},
-  { "Matte",    N_("Matte"),     {2, "\x01\x00"}},
-  { "Matte-1",  N_("Matte -1"),  {2, "\x01\xff"}},
-  { "Matte-2",  N_("Matte -2"),  {2, "\x01\xfe"}},
-  { "Matte-3",  N_("Matte -3"),  {2, "\x01\xfd"}},
-  { "Matte-4",  N_("Matte -4"),  {2, "\x01\xfc"}},
-  { "Matte-5",  N_("Matte -5"),  {2, "\x01\xfb"}},
+  { "Glossy", N_("Glossy"), {1, "\x00"}},
+  { "Matte",  N_("Matte"), {1, "\x01"}},
 };
 LIST(dyesub_media_list_t, kodak_8500_media_list, dyesub_media_t, kodak_8500_media);
 
@@ -2382,6 +2449,77 @@ static const laminate_t kodak_8500_laminate[] =
 };
 
 LIST(laminate_list_t, kodak_8500_laminate_list, laminate_t, kodak_8500_laminate);
+
+static const stp_parameter_t kodak_8500_parameters[] =
+{
+  {
+    "Sharpen", N_("Image Sharpening"), "Color=No,Category=Advanced Printer Setup",
+    N_("Sharpening to apply to image (-5 through +5)"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "MatteIntensity", N_("Matte Intensity"), "Color=No,Category=Advanced Printer Setup",
+    N_("Strengh of matte lamination pattern (-5 through +5)"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },  
+};
+#define kodak_8500_parameter_count (sizeof(kodak_8500_parameters) / sizeof(const stp_parameter_t))
+
+static int
+kodak_8500_load_parameters(const stp_vars_t *v, const char *name,
+			   stp_parameter_t *description)
+{
+  int	i;
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+		  				stp_get_model_id(v));
+ 
+  if (caps->parameter_count && caps->parameters)
+    {
+      for (i = 0; i < caps->parameter_count; i++)
+        if (strcmp(name, caps->parameters[i].name) == 0)
+          {
+	    stp_fill_parameter_settings(description, &(caps->parameters[i]));
+	    break;
+          }
+    }
+
+  if (strcmp(name, "Sharpen") == 0)
+    {
+      description->deflt.integer = 0;
+      description->bounds.integer.lower = -5;
+      description->bounds.integer.upper = 5;
+      description->is_active = 1;      
+    }
+  else if (strcmp(name, "MatteIntensity") == 0)
+    {
+      description->deflt.integer = 0;
+      description->bounds.integer.lower = -5;
+      description->bounds.integer.upper = 5;
+      description->is_active = 1;      
+    }  
+  else
+  {
+     return 0;
+  }
+  return 1;
+}
+
+static int kodak_8500_parse_parameters(stp_vars_t *v)
+{
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  /* No need to set global params if there's no privdata yet */  
+  if (!pd)
+    return 1;
+
+  /* Parse options */  
+  pd->privdata.k8500.sharpen = stp_get_int_parameter(v, "Sharpen");
+  pd->privdata.k8500.matte_intensity = stp_get_int_parameter(v, "MatteIntensity");
+
+  return 1;
+}
 
 static void kodak_8500_printer_init(stp_vars_t *v)
 {
@@ -2407,22 +2545,27 @@ static void kodak_8500_printer_init(stp_vars_t *v)
   stp_put16_be(pd->w_size, v);
   stp_put16_be(pd->h_size, v);
   dyesub_nputc(v, 0x00, 57);
-  /* Sharpening -- XXX not exported. */
+  /* Sharpening */
   stp_putc(0x1b, v);
   stp_putc(0x46, v);
   stp_putc(0x50, v);
-  stp_putc(0, v);  /* 8-bit signed, range is +- 5.  IOW, 0xfb->0x5 */
+  stp_putc(pd->privdata.k8500.sharpen, v);
   dyesub_nputc(v, 0x00, 60);
   /* Lamination */
   stp_putc(0x1b, v);
   stp_putc(0x59, v);
-  if (*((const char*)((pd->laminate->seq).data)) == 0x02) { /* None */
+  if (*((const char*)((pd->laminate->seq).data)) == 0x02) { /* No lamination */
     stp_putc(0x02, v);
     stp_putc(0x00, v);
   } else {
     stp_zfwrite((const char*)((pd->media->seq).data), 1, 
 		(pd->media->seq).bytes, v);
-  }
+    if (*((const char*)((pd->media->seq).data)) == 0x01) { /* Matte */
+      stp_putc(pd->privdata.k8500.matte_intensity, v);
+    } else {
+      stp_putc(0x00, v);
+    }  
+  }  
   dyesub_nputc(v, 0x00, 60);
   /* Unknown */
   stp_putc(0x1b, v);
@@ -4132,6 +4275,103 @@ static const laminate_t shinko_chcs1245_laminate[] =
 
 LIST(laminate_list_t, shinko_chcs1245_laminate_list, laminate_t, shinko_chcs1245_laminate);
 
+static const dyesub_stringitem_t shinko_chcs1245_dusts[] =
+{
+  { "PrinterDefault",      N_ ("Printer Default") },
+  { "Off", N_ ("Off") },
+  { "On", N_ ("On") }
+};
+LIST(dyesub_stringlist_t, shinko_chcs1245_dust_list, dyesub_stringitem_t, shinko_chcs1245_dusts);
+
+static const stp_parameter_t shinko_chcs1245_parameters[] =
+{
+  {
+    "DustRemoval", N_("Dust Removal"), "Color=No,Category=Advanced Printer Setup",
+    N_("Print Speed"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "MatteIntensity", N_("Matte Intensity"), "Color=No,Category=Advanced Printer Setup",
+    N_("Strengh of matte lamination pattern (-25 through +25)"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },  
+};
+#define shinko_chcs1245_parameter_count (sizeof(shinko_chcs1245_parameters) / sizeof(const stp_parameter_t))
+
+static int
+shinko_chcs1245_load_parameters(const stp_vars_t *v, const char *name,
+			   stp_parameter_t *description)
+{
+  int	i;
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+		  				stp_get_model_id(v));
+ 
+  if (caps->parameter_count && caps->parameters)
+    {
+      for (i = 0; i < caps->parameter_count; i++)
+        if (strcmp(name, caps->parameters[i].name) == 0)
+          {
+	    stp_fill_parameter_settings(description, &(caps->parameters[i]));
+	    break;
+          }
+    }
+
+  if (strcmp(name, "DustRemoval") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+
+      const dyesub_stringlist_t *mlist = &shinko_chcs1245_dust_list;
+      for (i = 0; i < mlist->n_items; i++)
+        {
+	  const dyesub_stringitem_t *m = &(mlist->item[i]);
+	  stp_string_list_add_string(description->bounds.str,
+				       m->name, m->text); /* Do *not* want this translated, otherwise use gettext(m->text) */
+	}
+      description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "MatteIntensity") == 0)
+    {
+      description->deflt.integer = 0;
+      description->bounds.integer.lower = -25;
+      description->bounds.integer.upper = 25;
+      description->is_active = 1;      
+    }  
+  else
+  {
+     return 0;
+  }
+  return 1;
+}
+
+static int shinko_chcs1245_parse_parameters(stp_vars_t *v)
+{
+  const char *dust = stp_get_string_parameter(v, "DustRemoval");	
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  /* No need to set global params if there's no privdata yet */  
+  if (!pd)
+    return 1;
+
+  /* Parse options */
+
+  if (strcmp(dust, "PrinterDefault") == 0) {
+     pd->privdata.s1245.dust_removal = 3;
+  } else if (strcmp(dust, "Off") == 0) {
+     pd->privdata.s1245.dust_removal = 1;
+  } else if (strcmp(dust, "On") == 0) {
+     pd->privdata.s1245.dust_removal = 2;
+  } else {
+     pd->privdata.s1245.dust_removal = 0;
+  }
+  
+  pd->privdata.s1245.matte_intensity = stp_get_int_parameter(v, "MatteIntensity");
+  
+  return 1;
+}
+
 static void shinko_chcs1245_printer_init(stp_vars_t *v)
 {
   dyesub_privdata_t *pd = get_privdata(v);
@@ -4177,12 +4417,12 @@ static void shinko_chcs1245_printer_init(stp_vars_t *v)
   stp_put32_le(0x00, v);
   if (((const unsigned char*)(pd->laminate->seq).data)[0] == 0x02 ||
       ((const unsigned char*)(pd->laminate->seq).data)[0] == 0x03) {
-	  stp_put32_le(0x07fffffff, v);  /* Glossy */
+    stp_put32_le(0x07fffffff, v);  /* Glossy */
   } else {
-	  stp_put32_le(0x0, v);  /* XXX matte intensity -25>0>+25 */
+    stp_put32_le(pd->privdata.s1245.matte_intensity, v);  /* matte intensity */
   }
 
-  stp_put32_le(0x00, v); /* XXX "dust removal mode" -- 0x00 printer default, 0x02 on, 0x01 for off. */
+  stp_put32_le(pd->privdata.s1245.dust_removal, v); /* Dust Removal Mode */
   stp_put32_le(pd->w_size, v); /* Columns */
   stp_put32_le(pd->h_size, v); /* Rows */
   stp_put32_le(pd->copies, v); /* Copies */
@@ -5775,7 +6015,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
-  { /* Kodak Professional 9810 */
+  { /* Kodak Professional 9810 (and 8800) */
     4006,
     &ymc_ink_list,
     &res_300dpi_list,
@@ -5790,7 +6030,10 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL,
     &kodak_9810_laminate_list, NULL,
     NULL, NULL,
-    NULL, 0, NULL, NULL,
+    kodak_9810_parameters,
+    kodak_9810_parameter_count,
+    kodak_9810_load_parameters,
+    kodak_9810_parse_parameters,    
   },
   { /* Kodak 8810 */
     4007,
@@ -5857,7 +6100,10 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL,
     &kodak_8500_laminate_list, &kodak_8500_media_list,
     NULL, NULL,
-    NULL, 0, NULL, NULL,
+    kodak_8500_parameters,
+    kodak_8500_parameter_count,
+    kodak_8500_load_parameters,
+    kodak_8500_parse_parameters,    
   },
   { /* Mitsubishi CP3020D/DU/DE */
     4101,
@@ -6207,7 +6453,10 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL,
     &shinko_chcs1245_laminate_list, NULL,
     NULL, NULL,
-    NULL, 0, NULL, NULL,
+    shinko_chcs1245_parameters,
+    shinko_chcs1245_parameter_count,
+    shinko_chcs1245_load_parameters,
+    shinko_chcs1245_parse_parameters,
   },
   { /* Shinko/Sinfonia CHC-S6245 */
     5003,

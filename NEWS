@@ -263,6 +263,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	Mitsubishi CP-9800DW-S	   [experimental]
 	Mitsubishi CP-D90DW        [experimental]
 	DNP DS-RX1HS
+	Kodak Professional 8800    [experimental]
 
   3) Improved support (and bugfixes) for the following dye sublimation
      printers:
@@ -278,6 +279,8 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	DNP DS80DX                 [experimental]
 	Kodak 305             [*2]
 	Kodak 6850
+	Kodak 8500                 [experimental]
+	Kodak 9810		   [experimental]
 	Mitsubishi CP-9550DW
 	Mitsubishi CP-9550DW-S
 	Mitsubishi CP-9810DW       [experimental]
