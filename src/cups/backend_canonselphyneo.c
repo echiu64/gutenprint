@@ -99,10 +99,28 @@ static char *selphyneo_errors(uint8_t err)
 		return "No Paper";
 	case 0x07:
 		return "No Ink";
+	case 0x09:
+		return "No Paper and Ink";
 	case 0x0A:
 		return "Incorrect media for job";
 	default:
 		return "Unknown Error";
+	}
+}
+
+static char *selphynew_pgcodes(uint8_t type) {
+
+	switch (type & 0xf) {
+	case 0x01:
+		return "P";
+	case 0x02:
+		return "L";
+	case 0x03:
+		return "C";
+	case 0x00:
+		return "None";
+	default:
+		return "Unknown";
 	}
 }
 
@@ -230,6 +248,17 @@ static int selphyneo_main_loop(void *vctx, int copies) {
 	ret = read_data(ctx->dev, ctx->endp_up,
 			(uint8_t*) &rdback, sizeof(rdback), &num);
 
+	/* And again, for the markers */
+	ret = read_data(ctx->dev, ctx->endp_up,
+			(uint8_t*) &rdback, sizeof(rdback), &num);
+
+	ATTR("marker-colors=#00FFFF#FF00FF#FFFF00\n");
+	ATTR("marker-high-levels=100\n");
+	ATTR("marker-low-levels=10\n");
+	ATTR("marker-names='%s'\n", selphynew_pgcodes(rdback.data[6]));
+
+	ATTR("marker-types=ribbonWax\n");
+
 top:	
 	INFO("Waiting for printer idle\n");
 
@@ -249,25 +278,19 @@ top:
 		case 0x00:
 			break;
 		case 0x0A:
-			ERROR("Printer error: %s (%02x)\n", selphyneo_errors(rdback.data[2]), rdback.data[2]);			
+			ERROR("Printer error: %s (%02x)\n", selphyneo_errors(rdback.data[2]), rdback.data[2]);
+			ATTR("marker-levels=%d\n", 0);
 			return CUPS_BACKEND_CANCEL;
 		default:
 			ERROR("Printer error: %s (%02x)\n", selphyneo_errors(rdback.data[2]), rdback.data[2]);
+			ATTR("marker-levels=%d\n", 0);
 			return CUPS_BACKEND_STOP;
 		}
 
 		sleep(1);
 	} while(1);
 
-	// XXX dump over markers
-#if 0
-	ATTR("marker-colors=#00FFFF#FF00FF#FFFF00\n");
-	ATTR("marker-high-levels=100\n");
-	ATTR("marker-low-levels=10\n");
-	ATTR("marker-names='%s'\n", ctx->printer->pgcode_names? ctx->printer->pgcode_names(rdbuf[ctx->printer->paper_code_offset]) : "Unknown");
-	ATTR("marker-types=ribbonWax\n");
 	ATTR("marker-levels=%d\n", -3); /* ie Unknown but OK */
-#endif
 
 	INFO("Sending spool data\n");	
 	/* Send the data over in 256K chunks */
@@ -306,10 +329,12 @@ top:
 		case 0x00:
 			break;
 		case 0x0A:
-			ERROR("Printer error: %s (%02x)\n", selphyneo_errors(rdback.data[2]), rdback.data[2]);			
+			ERROR("Printer error: %s (%02x)\n", selphyneo_errors(rdback.data[2]), rdback.data[2]);
+			ATTR("marker-levels=%d\n", 0);
 			return CUPS_BACKEND_CANCEL;
 		default:
 			ERROR("Printer error: %s (%02x)\n", selphyneo_errors(rdback.data[2]), rdback.data[2]);
+			ATTR("marker-levels=%d\n", 0);
 			return CUPS_BACKEND_STOP;
 		}
 
@@ -363,7 +388,7 @@ static void selphyneo_cmdline(void)
 
 struct dyesub_backend canonselphyneo_backend = {
 	.name = "Canon SELPHY CPneo",
-	.version = "0.04",
+	.version = "0.05",
 	.uri_prefix = "canonselphyneo",
 	.cmdline_usage = selphyneo_cmdline,
 	.cmdline_arg = selphyneo_cmdline_arg,
@@ -444,6 +469,7 @@ struct dyesub_backend canonselphyneo_backend = {
    02  No Paper (?)
    03  No Paper
    07  No Ink
+   09  No Paper and Ink
    0A  Media/Job mismatch
 
  ZZ == Media?
@@ -453,6 +479,10 @@ struct dyesub_backend canonselphyneo_backend = {
    11
     ^-- Ribbon
    ^-- Paper
+
+   1 == P
+   2 == L ??
+   3 == C
 
 Also, the first time a readback happens after plugging in the printer:
 
