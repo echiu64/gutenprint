@@ -258,6 +258,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
         Canon SELPHY CP1000   [*3]
 	Canon SELPHY CP1200
 	Fujifilm ASK-300      [*2] [experimental]
+	Mitsubishi CP-9500DW       [experimental]
 	Mitsubishi CP-9600DW
 	Mitsubishi CP-9800DW       [experimental]
 	Mitsubishi CP-9800DW-S	   [experimental]
@@ -336,8 +337,8 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
   4) Dye-sublimation backend now reports media status via standard 
      CUPS marker attributes.  This applies to all models except for:
      
-	Kodak 805
-	Kodak 1400
+	Kodak 805 and 1400
+	Sony UP-DR150, UP-DR200, and UP-SL10
 
   5) Added support for the following Epson inkjet printers:
 

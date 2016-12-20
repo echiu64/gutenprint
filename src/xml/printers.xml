@@ -2984,6 +2984,7 @@
       <printer translate="name" name="Mitsubishi CP-9800DW-S" driver="mitsubishi-9800dw-s" manufacturer="Mitsubishi" model="4113" parameters="nativecopies" />
       <printer translate="name" name="Mitsubishi P95D" driverid="MFG:MITSUBISHI;CMD:MEL;MDL:P95D    ;CLS:PRINTER;DES:MITSUBISHI P95D    ;" driver="mitsubishi-p95d" manufacturer="Mitsubishi" model="4114" parameters="nativecopies" />
       <printer translate="name" name="Shinko CHC-S9045" driver="shinko-chcs9045" manufacturer="Shinko" model="5000" />
+      <printer translate="name" name="Mitsubishi CP-9500DW" driver="mitsubishi-9500dw" manufacturer="Mitsubishi" model="4115" parameters="nativecopies" />
       <printer translate="name" name="Shinko CHC-S2145" deviceid="MFG:SHINKO;CMD:SUPCC;MDL:CHC-S2145;CLS:PRINTER;DES:SHINKO CHC-S2145;" driver="shinko-chcs2145" manufacturer="Shinko" model="5001" parameters="nativecopies" />
       <printer translate="name" name="Sinfonia S2145/S2" driver="sinfonia-chcs2145" manufacturer="Sinfonia" model="5001" parameters="nativecopies" />
       <printer translate="name" name="Shinko CHC-S1245" driver="shinko-chcs1245" manufacturer="Shinko" model="5002" parameters="nativecopies">EXPERIMENTAL</printer>

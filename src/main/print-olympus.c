@@ -184,6 +184,7 @@ typedef struct
 {
   int quality;
   int finedeep;
+  int contrast;
 } mitsu9550_privdata_t;
 
 typedef struct
@@ -3260,6 +3261,185 @@ static void mitsu_cp3020da_plane_init(stp_vars_t *v)
   stp_put16_be(0, v); /* Starting row for this block */
   stp_put16_be(pd->w_size, v);
   stp_put16_be(pd->h_size, v); /* Number of rows in this block */
+}
+
+/* Mitsubishi 9500D/DW */
+static const dyesub_resolution_t res_m9500[] =
+{
+  { "346x346", 346, 346},
+  { "346x792", 346, 792},
+};
+
+LIST(dyesub_resolution_list_t, res_m9500_list, dyesub_resolution_t, res_m9500);
+
+static const dyesub_pagesize_t mitsu_cp9500_page[] =
+{
+  { "B7", "3.5x5", PT(1240,346)+1, PT(1812,346)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE},
+  { "w288h432", "4x6", PT(1416,346)+1, PT(2152,346)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE},
+  { "w360h504", "5x7", PT(1812,346)+1, PT(2452,346)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+  { "w432h576", "6x8", PT(2152,346)+1, PT(2792,346)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+  { "w432h648", "6x9", PT(2152,346)+1, PT(3146,346)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+};
+
+LIST(dyesub_pagesize_list_t, mitsu_cp9500_page_list, dyesub_pagesize_t, mitsu_cp9500_page);
+
+static const dyesub_printsize_t mitsu_cp9500_printsize[] =
+{
+  { "346x346", "B7", 1240, 1812},
+  { "346x792", "B7", 2480, 1812}, 
+  { "346x346", "w288h432", 1416, 2152},
+  { "346x792", "w288h432", 2832, 2152},
+  { "346x346", "w360h504", 1812, 2452},
+  { "346x792", "w360h504", 1812, 4904},
+  { "346x346", "w432h576", 2152, 2792},
+  { "346x792", "w432h576", 2152, 5584},
+  { "346x346", "w432h648", 2152, 3146},
+  { "346x792", "w432h648", 2152, 6292},
+};
+
+LIST(dyesub_printsize_list_t, mitsu_cp9500_printsize_list, dyesub_printsize_t, mitsu_cp9500_printsize);
+
+static void mitsu_cp9500_printer_init(stp_vars_t *v)
+{
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  /* Init */
+  stp_putc(0x1b, v);
+  stp_putc(0x57, v);
+  stp_putc(0x21, v);
+  stp_putc(0x2e, v);
+  stp_putc(0x00, v);
+  stp_putc(0x80, v);
+  stp_putc(0x00, v);
+  stp_putc(0x22, v);
+  stp_putc(0xa8, v);
+  stp_putc(0x03, v);
+  dyesub_nputc(v, 0x00, 18);
+  stp_put16_be(pd->copies, v);
+  dyesub_nputc(v, 0x00, 19);
+  stp_putc(0x01, v);
+  /* Parameters 1 */
+  stp_putc(0x1b, v);
+  stp_putc(0x57, v);
+  stp_putc(0x20, v);
+  stp_putc(0x2e, v);
+  stp_putc(0x00, v);
+  stp_putc(0x0a, v);
+  stp_putc(0x10, v);
+  dyesub_nputc(v, 0x00, 7);
+  stp_put16_be(pd->w_size, v);
+  stp_put16_be(pd->h_size, v);
+  dyesub_nputc(v, 0x00, 32);
+  /* Parameters 2 */
+  stp_putc(0x1b, v);
+  stp_putc(0x57, v);
+  stp_putc(0x22, v);
+  stp_putc(0x2e, v);
+  stp_putc(0x00, v);
+  stp_putc(0xf0, v);
+  dyesub_nputc(v, 0x00, 5);
+  stp_putc(0x00, v); //  XXX 0x01 for "High Contrast" mode
+  dyesub_nputc(v, 0x00, 38);
+  /* Unknown */
+  stp_putc(0x1b, v);
+  stp_putc(0x57, v);
+  stp_putc(0x26, v);
+  stp_putc(0x2e, v);
+  stp_putc(0x00, v);
+  stp_putc(0x70, v);
+  dyesub_nputc(v, 0x00, 6);
+  stp_putc(0x01, v);
+  stp_putc(0x01, v);
+  dyesub_nputc(v, 0x00, 36);
+}
+
+static void mitsu_cp9500_printer_end(stp_vars_t *v)
+{
+  /* Page Footer */
+  stp_putc(0x1b, v);
+  stp_putc(0x50, v);
+  stp_putc(0x57, v);
+  stp_putc(0x00, v);
+}
+
+static const dyesub_stringitem_t mitsu9500_contrasts[] =
+{
+  { "Photo",      N_ ("Photo") },
+  { "HighContrast", N_ ("High Contrast") },
+};
+LIST(dyesub_stringlist_t, mitsu9500_contrast_list, dyesub_stringitem_t, mitsu9500_contrasts);
+
+static const stp_parameter_t mitsu9500_parameters[] =
+{
+  {
+    "CP9500Contrast", N_("Printer Contrast"), "Color=No,Category=Advanced Printer Setup",
+    N_("Printer Contrast"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+};
+#define mitsu9500_parameter_count (sizeof(mitsu9500_parameters) / sizeof(const stp_parameter_t))
+
+static int
+mitsu9500_load_parameters(const stp_vars_t *v, const char *name,
+			 stp_parameter_t *description)
+{
+  int	i;
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+		  				stp_get_model_id(v));
+ 
+  if (caps->parameter_count && caps->parameters)
+    {
+      for (i = 0; i < caps->parameter_count; i++)
+        if (strcmp(name, caps->parameters[i].name) == 0)
+          {
+	    stp_fill_parameter_settings(description, &(caps->parameters[i]));
+	    break;
+          }
+    }
+
+  if (strcmp(name, "CP9500Contrast") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+
+      const dyesub_stringlist_t *mlist = &mitsu9500_contrast_list;
+      for (i = 0; i < mlist->n_items; i++)
+        {
+	  const dyesub_stringitem_t *m = &(mlist->item[i]);
+	  stp_string_list_add_string(description->bounds.str,
+				       m->name, m->text); /* Do *not* want this translated, otherwise use gettext(m->text) */
+	}
+      description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
+      description->is_active = 1;
+    }
+  else
+  {
+     return 0;
+  }
+  return 1;
+}
+
+static int mitsu9500_parse_parameters(stp_vars_t *v)
+{
+  const char *contrast = stp_get_string_parameter(v, "CP9500Contrast");
+  dyesub_privdata_t *pd = get_privdata(v);
+  
+  /* No need to set global params if there's no privdata yet */
+  if (!pd)
+    return 1;
+
+  if (strcmp(contrast, "HighContrast") == 0) {
+    pd->privdata.m9550.contrast = 1;
+  } else {
+    pd->privdata.m9550.contrast = 0;
+  }
+
+  return 1;
 }
 
 /* Mitsubishi 9550D/DW */
@@ -6910,6 +7090,26 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     mitsu_p95d_load_parameters,
     mitsu_p95d_parse_parameters,
   },
+  { /* Mitsubishi CP9500D */
+    4103,
+    &bgr_ink_list,
+    &res_m9500_list,
+    &mitsu_cp9500_page_list,
+    &mitsu_cp9500_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_PLANE_INTERLACE,
+    &mitsu_cp9500_printer_init, &mitsu_cp9500_printer_end,
+    &mitsu_cp3020da_plane_init, NULL,
+    NULL, NULL, /* No block funcs */
+    NULL,
+    NULL, NULL,
+    NULL, NULL,
+    mitsu9500_parameters,
+    mitsu9500_parameter_count,
+    mitsu9500_load_parameters,
+    mitsu9500_parse_parameters,
+  },  
   { /* Shinko CHC-S9045 (experimental) */
     5000, 		
     &rgb_ink_list,
