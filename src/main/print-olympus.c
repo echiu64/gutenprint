@@ -195,6 +195,7 @@ typedef struct
   int use_lut;
 #endif
   int sharpen;
+  int delay;
 } mitsu70x_privdata_t;
 
 typedef struct
@@ -4521,6 +4522,37 @@ static const dyesub_stringitem_t mitsu_d90_qualities[] =
 };
 LIST(dyesub_stringlist_t, mitsu_d90_quality_list, dyesub_stringitem_t, mitsu_d90_qualities);
 
+static const stp_parameter_t mitsu_d90_parameters[] =
+{
+  {
+    "PrintSpeed", N_("Print Speed"), "Color=No,Category=Advanced Printer Setup",
+    N_("Print Speed"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+#ifdef MITSU90X_8BPP
+  {
+    "UseLUT", N_("Internal Color Correction"), "Color=Yes,Category=Advanced Printer Setup",
+    N_("Use Internal Color Correction"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+#endif
+  {
+    "Sharpen", N_("Image Sharpening"), "Color=No,Category=Advanced Printer Setup",
+    N_("Sharpening to apply to image (0 is off, 1 is min, 9 is max"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "ComboWait", N_("Combo Print Wait Time"), "Color=No,Category=Advanced Printer Setup",
+    N_("How many seconds to wait for a second print before starting"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+};
+#define mitsu_d90_parameter_count (sizeof(mitsu_d90_parameters) / sizeof(const stp_parameter_t))
+
 static int
 mitsu_d90_load_parameters(const stp_vars_t *v, const char *name,
 			  stp_parameter_t *description)
@@ -4558,6 +4590,7 @@ mitsu_d90_load_parameters(const stp_vars_t *v, const char *name,
     {
       description->is_active = 1;
     }
+#endif
   else if (strcmp(name, "Sharpen") == 0)
     {
       description->deflt.integer = 4;
@@ -4565,7 +4598,13 @@ mitsu_d90_load_parameters(const stp_vars_t *v, const char *name,
       description->bounds.integer.upper = 9;
       description->is_active = 1;
     }
-#endif
+  else if (strcmp(name, "ComboWait") == 0)
+    {
+      description->deflt.integer = 5;
+      description->bounds.integer.lower = 1;
+      description->bounds.integer.upper = 25;
+      description->is_active = 1;
+    }
   else
   {
      return 0;
@@ -4593,8 +4632,10 @@ static int mitsu_d90_parse_parameters(stp_vars_t *v)
 
 #ifdef MITSU70X_8BPP
   pd->privdata.m70x.use_lut = stp_get_boolean_parameter(v, "UseLUT");
-  pd->privdata.m70x.sharpen = stp_get_int_parameter(v, "Sharpen");
 #endif
+  pd->privdata.m70x.sharpen = stp_get_int_parameter(v, "Sharpen");
+
+  pd->privdata.m70x.delay = stp_get_int_parameter(v, "ComboWait");
   
   return 1;
 }
@@ -4671,13 +4712,15 @@ static void mitsu_cpd90_printer_init(stp_vars_t *v)
 
 static void mitsu_cpd90_printer_end(stp_vars_t *v)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   /* Wrap it up */
   stp_putc(0x1b, v);
   stp_putc(0x42, v);
   stp_putc(0x51, v);
   stp_putc(0x31, v);
   stp_putc(0x00, v);
-  stp_putc(0x05, v); /* XXX seconds to wait for second print */
+  stp_putc(pd->privdata.m70x.delay, v);
 }
 
 /* Fujifilm ASK-300 */
@@ -6977,8 +7020,8 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL,
     &mitsu_cpd70x_laminate_list, NULL,
     NULL, NULL,
-    mitsu70x_parameters,
-    mitsu70x_parameter_count,
+    mitsu_d90_parameters,
+    mitsu_d90_parameter_count,
     mitsu_d90_load_parameters,
     mitsu_d90_parse_parameters,
   },
