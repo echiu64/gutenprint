@@ -7134,7 +7134,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     mitsu_p95d_parse_parameters,
   },
   { /* Mitsubishi CP9500D */
-    4103,
+    4115,
     &bgr_ink_list,
     &res_m9500_list,
     &mitsu_cp9500_page_list,
