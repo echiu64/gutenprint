@@ -5939,6 +5939,7 @@ static const laminate_t dnpds620_laminate[] =
 {
   {"Glossy",  N_("Glossy"),  {3, "000"}},
   {"Matte", N_("Matte"), {3, "001"}},
+  {"MatteFine", N_("Matte Fine"), {3, "021"}},
   {"MatteLuster", N_("Matte Luster"), {3, "022"}},
 };
 

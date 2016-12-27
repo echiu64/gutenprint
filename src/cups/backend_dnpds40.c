@@ -99,6 +99,7 @@ struct dnpds40_ctx {
 	int supports_2x6;
 	int supports_3x5x2;
 	int supports_matte;
+	int supports_finematte;
 	int supports_luster;	
 	int supports_fullcut;
 	int supports_rewind;
@@ -640,7 +641,7 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
 		if (FW_VER_CHECK(1,20))
 			ctx->supports_adv_fullcut = 1;
 		if (FW_VER_CHECK(1,30))
-			ctx->supports_luster = 1;
+			ctx->supports_luster = ctx->supports_finematte = 1;
 		break;
 	default:
 		ERROR("Unknown vid/pid %04x/%04x (%d)\n", desc.idVendor, desc.idProduct, ctx->type);
@@ -955,12 +956,15 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 	/* Sanity check matte mode */
 	if (ctx->matte == 22 && !ctx->supports_luster) {
 		WARNING("Printer FW does not support Luster mode, downgrading to normal matte\n");
-		ctx->matte -= 21;
+		ctx->matte = 1;
+	} else if (ctx->matte == 21 && !ctx->supports_finematte) {
+		WARNING("Printer FW does not support Fine Matte mode, downgrading to normal matte\n");
+		ctx->matte = 1;
 	} else if (ctx->matte > 1) {
 		WARNING("Unknown matte mode selected, downgrading to normal matte\n");
-		ctx->matte -= 21;
+		ctx->matte = 1;
 	}
-	
+
 	/* Make sure MULTICUT is sane, most validation needs this */
 	if (!ctx->multicut) {
 		WARNING("Missing or illegal MULTICUT command!\n");
@@ -2232,7 +2236,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS40/DS80/DSRX1/DS620",
-	.version = "0.89",
+	.version = "0.90",
 	.uri_prefix = "dnpds40",
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
