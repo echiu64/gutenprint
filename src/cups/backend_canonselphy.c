@@ -561,6 +561,20 @@ struct canonselphy_ctx {
 	uint8_t cp900;
 };
 
+static int canonselphy_send_reset(struct canonselphy_ctx *ctx)
+{
+	uint8_t rstcmd[12] = { 0x40, 0x10, 0x00, 0x00,
+			       0x00, 0x00, 0x00, 0x00,
+			       0x00, 0x00, 0x00, 0x00 };
+	int ret;
+
+	if ((ret = send_data(ctx->dev, ctx->endp_down,
+			     rstcmd, sizeof(rstcmd))))
+		return CUPS_BACKEND_FAILED;
+
+	return CUPS_BACKEND_OK;
+}
+
 static void *canonselphy_init(void)
 {
 	struct canonselphy_ctx *ctx = malloc(sizeof(struct canonselphy_ctx));
@@ -1016,9 +1030,12 @@ static int canonselphy_cmdline_arg(void *vctx, int argc, char **argv)
 	if (!ctx)
 		return -1;
 
-	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL)) >= 0) {
+	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "R")) >= 0) {
 		switch(i) {
 		GETOPT_PROCESS_GLOBAL
+		case 'R':
+			canonselphy_send_reset(ctx);
+			break;
 		}
 
 		if (j) return j;
@@ -1027,10 +1044,16 @@ static int canonselphy_cmdline_arg(void *vctx, int argc, char **argv)
 	return 0;
 }
 
+static void canonselphy_cmdline(void)
+{
+	DEBUG("\t\t[ -R ]           # Reset printer\n");
+}
+
 struct dyesub_backend canonselphy_backend = {
 	.name = "Canon SELPHY CP/ES",
-	.version = "0.91",
+	.version = "0.92",
 	.uri_prefix = "canonselphy",
+	.cmdline_usage = canonselphy_cmdline,
 	.cmdline_arg = canonselphy_cmdline_arg,
 	.init = canonselphy_init,
 	.attach = canonselphy_attach,

@@ -255,14 +255,16 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
   2) Added support for the following dye sublimation printers:
 
-        Canon SELPHY CP1000   [*3]
+        Canon SELPHY CP1000
 	Canon SELPHY CP1200
 	Fujifilm ASK-300      [*2] [experimental]
+	Mitsubishi CP-9500DW       [experimental]
 	Mitsubishi CP-9600DW
 	Mitsubishi CP-9800DW       [experimental]
 	Mitsubishi CP-9800DW-S	   [experimental]
 	Mitsubishi CP-D90DW        [experimental]
 	DNP DS-RX1HS
+	Kodak Professional 8800    [experimental]
 
   3) Improved support (and bugfixes) for the following dye sublimation
      printers:
@@ -278,6 +280,8 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	DNP DS80DX                 [experimental]
 	Kodak 305             [*2]
 	Kodak 6850
+	Kodak 8500                 [experimental]
+	Kodak 9810		   [experimental]
 	Mitsubishi CP-9550DW
 	Mitsubishi CP-9550DW-S
 	Mitsubishi CP-9810DW       [experimental]
@@ -327,15 +331,14 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	  successfully print.  Work is underway on a crude fallback that will
 	  at least generate (very poor quality) output.
 
-     [*3] The USB PIDs for the CP820 and CP1000 are unknown at this time,
+     [*3] The USB PID for the CP820 is unknown at this time,
           so will not be claimed by the improved backend.
 
   4) Dye-sublimation backend now reports media status via standard 
      CUPS marker attributes.  This applies to all models except for:
      
-	Kodak 805
-	Kodak 1400
-        Canon SELPHY CP820, CP910, CP1000, and CP1200
+	Kodak 805 and 1400
+	Sony UP-DR150, UP-DR200, and UP-SL10
 
   5) Added support for the following Epson inkjet printers:
 
@@ -415,6 +418,9 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
 	Brother HL-1430
 
+  11) Added support for the following thermal transfer printer:
+
+	Mitsubishi P95DW
 
 * Changes from 5.2.10
 

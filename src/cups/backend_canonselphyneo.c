@@ -43,12 +43,14 @@
 #define USB_VID_CANON        0x04a9
 #define USB_PID_CANON_CP820  XXX
 #define USB_PID_CANON_CP910  0x327a
-#define USB_PID_CANON_CP1000 XXX
+#define USB_PID_CANON_CP1000 0x32ae
 #define USB_PID_CANON_CP1200 0x32b1
 
 /* Header data structure */
 struct selphyneo_hdr {
-	uint8_t data[32];
+	uint8_t data[24];
+	uint32_t cols;  /* LE */
+	uint32_t rows;  /* LE */
 } __attribute((packed));
 
 /* Readback data structure */
@@ -97,11 +99,43 @@ static char *selphyneo_errors(uint8_t err)
 		return "No Paper";
 	case 0x07:
 		return "No Ink";
+	case 0x09:
+		return "No Paper and Ink";
 	case 0x0A:
 		return "Incorrect media for job";
 	default:
 		return "Unknown Error";
 	}
+}
+
+static char *selphynew_pgcodes(uint8_t type) {
+
+	switch (type & 0xf) {
+	case 0x01:
+		return "P";
+	case 0x02:
+		return "L";
+	case 0x03:
+		return "C";
+	case 0x00:
+		return "None";
+	default:
+		return "Unknown";
+	}
+}
+
+static int selphyneo_send_reset(struct selphyneo_ctx *ctx)
+{
+	uint8_t rstcmd[12] = { 0x40, 0x10, 0x00, 0x00,
+			       0x00, 0x00, 0x00, 0x00,
+			       0x00, 0x00, 0x00, 0x00 };
+	int ret;
+
+	if ((ret = send_data(ctx->dev, ctx->endp_down,
+			     rstcmd, sizeof(rstcmd))))
+		return CUPS_BACKEND_FAILED;
+
+	return CUPS_BACKEND_OK;
 }
 
 static void *selphyneo_init(void)
@@ -169,18 +203,14 @@ static int selphyneo_read_parse(void *vctx, int data_fd)
 
 	/* Determine job length */
 	switch(hdr.data[18]) {
-	case 0x50:
-		remain = 1872 * 1248 * 3;
+	case 0x50:  /* P */
+	case 0x4c:  /* L */
+	case 0x43:  /* C */
+		remain = le32_to_cpu(hdr.cols) * le32_to_cpu(hdr.rows) * 3;
 		break;
-	case 0x4c:
-		remain = 1536 * 1104 * 3;
-		break;		
-	case 0x43:
-		remain = 1088 * 668 * 3;
-		break;		
 	default:
-		ERROR("Unknown print size! (%02x/%02x/%02x/%02x)\n",
-		      hdr.data[10], hdr.data[24], hdr.data[28], hdr.data[29]);
+		ERROR("Unknown print size! (%02x, %ux%u)\n",
+		      hdr.data[10], le32_to_cpu(hdr.cols), le32_to_cpu(hdr.rows));
 		return CUPS_BACKEND_CANCEL;
 	}
 	
@@ -218,6 +248,16 @@ static int selphyneo_main_loop(void *vctx, int copies) {
 	ret = read_data(ctx->dev, ctx->endp_up,
 			(uint8_t*) &rdback, sizeof(rdback), &num);
 
+	/* And again, for the markers */
+	ret = read_data(ctx->dev, ctx->endp_up,
+			(uint8_t*) &rdback, sizeof(rdback), &num);
+
+	ATTR("marker-colors=#00FFFF#FF00FF#FFFF00\n");
+	ATTR("marker-high-levels=100\n");
+	ATTR("marker-low-levels=10\n");
+	ATTR("marker-names='%s'\n", selphynew_pgcodes(rdback.data[6]));
+
+	ATTR("marker-types=ribbonWax\n");
 
 top:	
 	INFO("Waiting for printer idle\n");
@@ -238,25 +278,19 @@ top:
 		case 0x00:
 			break;
 		case 0x0A:
-			ERROR("Printer error: %s (%02x)\n", selphyneo_errors(rdback.data[2]), rdback.data[2]);			
+			ERROR("Printer error: %s (%02x)\n", selphyneo_errors(rdback.data[2]), rdback.data[2]);
+			ATTR("marker-levels=%d\n", 0);
 			return CUPS_BACKEND_CANCEL;
 		default:
 			ERROR("Printer error: %s (%02x)\n", selphyneo_errors(rdback.data[2]), rdback.data[2]);
+			ATTR("marker-levels=%d\n", 0);
 			return CUPS_BACKEND_STOP;
 		}
 
 		sleep(1);
 	} while(1);
 
-	// XXX dump over markers
-#if 0
-	ATTR("marker-colors=#00FFFF#FF00FF#FFFF00\n");
-	ATTR("marker-high-levels=100\n");
-	ATTR("marker-low-levels=10\n");
-	ATTR("marker-names='%s'\n", ctx->printer->pgcode_names? ctx->printer->pgcode_names(rdbuf[ctx->printer->paper_code_offset]) : "Unknown");
-	ATTR("marker-types=ribbonWax\n");
 	ATTR("marker-levels=%d\n", -3); /* ie Unknown but OK */
-#endif
 
 	INFO("Sending spool data\n");	
 	/* Send the data over in 256K chunks */
@@ -295,10 +329,12 @@ top:
 		case 0x00:
 			break;
 		case 0x0A:
-			ERROR("Printer error: %s (%02x)\n", selphyneo_errors(rdback.data[2]), rdback.data[2]);			
+			ERROR("Printer error: %s (%02x)\n", selphyneo_errors(rdback.data[2]), rdback.data[2]);
+			ATTR("marker-levels=%d\n", 0);
 			return CUPS_BACKEND_CANCEL;
 		default:
 			ERROR("Printer error: %s (%02x)\n", selphyneo_errors(rdback.data[2]), rdback.data[2]);
+			ATTR("marker-levels=%d\n", 0);
 			return CUPS_BACKEND_STOP;
 		}
 
@@ -331,9 +367,12 @@ static int selphyneo_cmdline_arg(void *vctx, int argc, char **argv)
 	if (!ctx)
 		return -1;
 
-	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL)) >= 0) {
+	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "R")) >= 0) {
 		switch(i) {
 		GETOPT_PROCESS_GLOBAL
+		case 'R':
+			selphyneo_send_reset(ctx);
+			break;			
 		}
 
 		if (j) return j;
@@ -342,10 +381,16 @@ static int selphyneo_cmdline_arg(void *vctx, int argc, char **argv)
 	return 0;
 }
 
+static void selphyneo_cmdline(void)
+{
+	DEBUG("\t\t[ -R ]           # Reset printer\n");
+}
+
 struct dyesub_backend canonselphyneo_backend = {
 	.name = "Canon SELPHY CPneo",
-	.version = "0.02",
+	.version = "0.06",
 	.uri_prefix = "canonselphyneo",
+	.cmdline_usage = selphyneo_cmdline,
 	.cmdline_arg = selphyneo_cmdline_arg,
 	.init = selphyneo_init,
 	.attach = selphyneo_attach,
@@ -353,9 +398,9 @@ struct dyesub_backend canonselphyneo_backend = {
 	.read_parse = selphyneo_read_parse,
 	.main_loop = selphyneo_main_loop,
 	.devices = {
-//	{ USB_VID_CANON, USB_PID_CANON_CP820, P_CP910, ""},		
+//	{ USB_VID_CANON, USB_PID_CANON_CP820, P_CP910, ""},
 	{ USB_VID_CANON, USB_PID_CANON_CP910, P_CP910, ""},
-//	{ USB_VID_CANON, USB_PID_CANON_CP1000, P_CP910, ""},		
+	{ USB_VID_CANON, USB_PID_CANON_CP1000, P_CP910, ""},
 	{ USB_VID_CANON, USB_PID_CANON_CP1200, P_CP910, ""},
 	{ 0, 0, 0, ""}
 	}
@@ -376,26 +421,21 @@ struct dyesub_backend canonselphyneo_backend = {
   32-byte header:
 
   0f 00 00 40 00 00 00 00  00 00 00 00 00 00 01 00
-  01 00 ?? 00 00 00 00 00  XX 04 00 00 WW ZZ 00 00
+  01 00 TT 00 00 00 00 00  XX XX XX XX YY YY YY YY
 
-  ?? == 50  (P)
+                           cols (le32) rows (le32)
+        50                 e0 04       50 07          1248 * 1872  (P)
+        4c                 80 04       c0 05          1152 * 1472  (L)
+        43                 40 04       9c 02          1088 * 668   (C)
+
+  TT == 50  (P)
      == 4c  (L)
      == 43  (C)
 
-  XX == e0  (P)
-        80  (L)
-        40  (C)
-
-  WW == 50  (P)
-        c0  (L)
-        9c  (C)
-
-  ZZ == 07  (P)
-        05  (L)
-        02  (C)
+  Followed by three planes of image data.
 
   P == 7008800  == 2336256 * 3 + 32 (1872*1248)
-  L == 5087264  == 1695744 * 3 + 32 (1536*1104)
+  L == 5087264  == 1695744 * 3 + 32 (1472*1152)
   C == 2180384  == 726784 * 3 + 32  (1088*668)
 
   It is worth mentioning that the image payload is Y'CbCr rather than the
@@ -405,6 +445,10 @@ struct dyesub_backend canonselphyneo_backend = {
 
   It is hoped that the printers do support YMC data, but as of yet we
   have no way of determining if this is possible.
+
+  Other questions:
+
+    * Printer supports different lamination types, how to control?
 
  Data Readback:
 
@@ -425,6 +469,7 @@ struct dyesub_backend canonselphyneo_backend = {
    02  No Paper (?)
    03  No Paper
    07  No Ink
+   09  No Paper and Ink
    0A  Media/Job mismatch
 
  ZZ == Media?
@@ -432,6 +477,12 @@ struct dyesub_backend canonselphyneo_backend = {
    01  
    10
    11
+    ^-- Ribbon
+   ^-- Paper
+
+   1 == P
+   2 == L ??
+   3 == C
 
 Also, the first time a readback happens after plugging in the printer:
 

@@ -2920,7 +2920,7 @@
       <printer translate="name" name="Canon SELPHY CP820" driver="canon-cp820" manufacturer="Canon" model="1011" parameters="nativecopies"/>
       <printer translate="name" name="Canon SELPHY CP900" deviceid="MFG:Canon;CMD:Raster3;MDL:CP900;CLS:PRINTER;DES:Canon CP900;VER:5.77;" driver="canon-cp900" manufacturer="Canon" model="1010" parameters="nativecopies" />
       <printer translate="name" name="Canon SELPHY CP910" deviceid="MFG:Canon;CMD:Raster3;MDL:CP910;CLS:PRINTER;DES:Canon CP910;VER:1.00;CID:CA_YCC_ICP;" driver="canon-cp910" manufacturer="Canon" model="1011" parameters="nativecopies" />
-      <printer translate="name" name="Canon SELPHY CP1000" driver="canon-cp1000" manufacturer="Canon" model="1011" parameters="nativecopies" /> 
+      <printer translate="name" name="Canon SELPHY CP1000" deviceid="MFG:Canon;CMD:Raster3;MDL:CP1000;CLS:PRINTER;DES:Canon CP1000;VER:1.00;CID:CA_YCC_ICP;" driver="canon-cp1000" manufacturer="Canon" model="1011" parameters="nativecopies" />
       <printer translate="name" name="Canon SELPHY CP1200" deviceid="MFG:Canon;CMD:Raster3;MDL:SELPHY CP1200;CLS:PRINTER;DES:Canon SELPHY CP1200;VER:1.00;CID:CA_YCC_ICP;" driver="canon-cp1200" manufacturer="Canon" model="1011" parameters="nativecopies"/>
       <printer translate="name" name="Canon SELPHY ES1" deviceid="MFG:Canon;CMD:Raster3;MDL:ES1;CLS:PRINTER;DES:Canon SELPHY ES1;VER:1.00;" driver="canon-es1" manufacturer="Canon" model="1003" parameters="nativecopies" />
       <printer translate="name" name="Canon SELPHY ES2" deviceid="MFG:Canon;CMD:Raster3;MDL:ES2;CLS:PRINTER;DES:Canon SELPHY ES2;VER:1.00;" driver="canon-es2" manufacturer="Canon" model="1005" parameters="nativecopies" />
@@ -2954,6 +2954,7 @@
       <printer translate="name" name="Kodak 805" deviceid="MFG:Eastman Kodak Company;CMD:EK2;MDL: KODAK 805 Photo Printer;CLS:Printer;DES:Kodak 805 Photo Printer;" driver="kodak-805" manufacturer="Kodak" model="4005" parameters="nativecopies" />
       <printer translate="name" name="Kodak 8500" driver="kodak-8500" manufacturer="Kodak" model="4100" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Kodak 9810" driver="kodak-9810" manufacturer="Kodak" model="4006" parameters="nativecopies">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kodak 8800" driver="kodak-8800" manufacturer="Kodak" model="4006" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Kodak 8810" driver="kodak-8810" manufacturer="Kodak" model="4007" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Kodak 7000" driver="kodak-7000" manufacturer="Kodak" model="4008" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Kodak 7010" driver="kodak-7010" manufacturer="Kodak" model="4008" parameters="nativecopies">EXPERIMENTAL</printer>
@@ -2981,7 +2982,9 @@
       <printer translate="name" name="Mitsubishi CP-9800DW" driver="mitsubishi-9800dw" manufacturer="Mitsubishi" model="4113" >EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-9800DZ" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP9800DZ;CLS:PRINTER;DES:MITSUBISHI CP9800DZ;" driver="mitsubishi-9800dz" manufacturer="Mitsubishi" model="4113" parameters="nativecopies" />
       <printer translate="name" name="Mitsubishi CP-9800DW-S" driver="mitsubishi-9800dw-s" manufacturer="Mitsubishi" model="4113" parameters="nativecopies" />
+      <printer translate="name" name="Mitsubishi P95D" driverid="MFG:MITSUBISHI;CMD:MEL;MDL:P95D    ;CLS:PRINTER;DES:MITSUBISHI P95D    ;" driver="mitsubishi-p95d" manufacturer="Mitsubishi" model="4114" parameters="nativecopies" />
       <printer translate="name" name="Shinko CHC-S9045" driver="shinko-chcs9045" manufacturer="Shinko" model="5000" />
+      <printer translate="name" name="Mitsubishi CP-9500DW" driver="mitsubishi-9500dw" manufacturer="Mitsubishi" model="4115" parameters="nativecopies" />
       <printer translate="name" name="Shinko CHC-S2145" deviceid="MFG:SHINKO;CMD:SUPCC;MDL:CHC-S2145;CLS:PRINTER;DES:SHINKO CHC-S2145;" driver="shinko-chcs2145" manufacturer="Shinko" model="5001" parameters="nativecopies" />
       <printer translate="name" name="Sinfonia S2145/S2" driver="sinfonia-chcs2145" manufacturer="Sinfonia" model="5001" parameters="nativecopies" />
       <printer translate="name" name="Shinko CHC-S1245" driver="shinko-chcs1245" manufacturer="Shinko" model="5002" parameters="nativecopies">EXPERIMENTAL</printer>
