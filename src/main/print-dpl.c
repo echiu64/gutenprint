@@ -799,9 +799,11 @@ pcx_header (stp_vars_t * v, stp_image_t * image)
   unsigned short top;		/* y = 0 is at bottom */
   unsigned short bytes;
   short xdpi;
-  int *xdpi_p = (int *) (&xdpi);
+  int i_xdpi;
+  int *xdpi_p = (&i_xdpi);
   short ydpi;
-  int *ydpi_p = (int *) (&ydpi);
+  int i_ydpi;
+  int *ydpi_p = (&i_ydpi);
   int n;
   const short zero = 0;
 
@@ -812,6 +814,9 @@ pcx_header (stp_vars_t * v, stp_image_t * image)
 
   /* Get resolutions */
   dpl_describe_resolution (v, xdpi_p, ydpi_p);
+
+  xdpi = (short) i_xdpi;
+  ydpi = (short) i_ydpi;
 
   bytes = (xdpi * 4 + 7 ) / 8;	/* must be an even number */
   if (bytes != (bytes & 0xfffe))
