@@ -36,7 +36,7 @@
 #include <gutenprintui2/gutenprintui.h>
 
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-pedantic"
+#pragma GCC diagnostic ignored "-Wpedantic"
 #include <libgimp/gimp.h>
 #include <libgimp/gimpui.h>
 #pragma GCC diagnostic pop

@@ -50,7 +50,7 @@ typedef void (*StpuiBasicCallback) (GObject *object,
 
 /*  local callbacks of dialog_new ()  */
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-pedantic"
+#pragma GCC diagnostic ignored "-Wpedantic"
 static gint
 dialog_delete_callback (GtkWidget *widget,
 			GdkEvent  *event,
@@ -82,7 +82,7 @@ dialog_delete_callback (GtkWidget *widget,
  *
  */
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-pedantic"
+#pragma GCC diagnostic ignored "-Wpedantic"
 static void
 dialog_create_action_areav (GtkDialog *dialog,
 			    va_list    args)

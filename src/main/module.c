@@ -46,6 +46,9 @@ static int stp_module_register(stp_module_t *module);
 static void *stp_dlsym(void *handle, const char *symbol, const char *modulename);
 #endif
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-const-variable"
+
 static const stpi_internal_module_class_t module_classes[] =
   {
     {STP_MODULE_CLASS_MISC, N_("Miscellaneous (unclassified)")},
@@ -54,6 +57,7 @@ static const stpi_internal_module_class_t module_classes[] =
     {STP_MODULE_CLASS_DITHER, N_("Dither algorithm")},
     {STP_MODULE_CLASS_INVALID, NULL} /* Must be last */
   };
+#pragma GCC diagnostic pop
 
 #if !defined(MODULE)
 extern stp_module_t print_canon_LTX_stp_module_data;

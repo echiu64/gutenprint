@@ -85,9 +85,6 @@ static const char *const stpi_wrap_mode_names[] =
     "wrap"
   };
 
-static const int stpi_wrap_mode_count =
-(sizeof(stpi_wrap_mode_names) / sizeof(const char *));
-
 /*
  * Get the total number of points in the base sequence class
  */

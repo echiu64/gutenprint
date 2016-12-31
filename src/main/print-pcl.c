@@ -369,12 +369,6 @@ static const short standard_papersizes[] =
   -1,
 };
 
-static const short letter_only_papersizes[] =
-{
-  PCL_PAPERSIZE_LETTER,
-  -1
-};
-
 static const short letter_a4_papersizes[] =
 {
   PCL_PAPERSIZE_A4,
@@ -1403,6 +1397,8 @@ static const pcl_cap_t pcl_model_capabilities[] =
   },
 };
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-const-variable"
 
 static const char standard_sat_adjustment[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -1418,6 +1414,7 @@ static const char standard_sat_adjustment[] =
 "</sequence>\n"
 "</curve>\n"
 "</gutenprint>\n";
+#pragma GCC diagnostic pop
 
 static const char standard_lum_adjustment[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -2566,8 +2563,6 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
 		the_left_margin;	/* Corrected left margin */
   int		manual_feed_left_adjust = 0;
   int		extra_left_margin = 0;
-  stp_curve_t   *lum_adjustment;
-  stp_curve_t   *hue_adjustment;
   double        density;
   int           label = 0;
 
@@ -3226,13 +3221,30 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
 
   if (!stp_check_curve_parameter(v, "HueMap", STP_PARAMETER_ACTIVE))
     {
-      hue_adjustment = stp_curve_create_from_string(standard_hue_adjustment);
+      stp_curve_t *hue_adjustment = 
+	stp_curve_create_from_string(standard_hue_adjustment);
       stp_set_curve_parameter(v, "HueMap", hue_adjustment);
       stp_curve_destroy(hue_adjustment);
     }
   if (!stp_check_curve_parameter(v, "LumMap", STP_PARAMETER_ACTIVE))
     {
-      lum_adjustment = stp_curve_create_from_string(standard_lum_adjustment);
+      stp_curve_t *lum_adjustment = 
+	stp_curve_create_from_string(standard_lum_adjustment);
+#if 0
+      /*
+       * This would represent a change to the PCL driver in 5.2.12
+       *
+       * This call was missing and has represented a bug (if a clearly
+       * non-fatal one) in the PCL driver since time immemorial.  The
+       * non-use of the variable was finally called out by gcc6.  In my
+       * judgment, fixing the bug and changing the output of many PCL
+       * printers (even if it were for the better) would be more problematic
+       * than leaving the output as-is.
+       *
+       * - Robert Krawitz 2016-12-29
+       */
+      stp_set_curve_parameter(v, "LumMap", lum_adjustment);
+#endif
       stp_curve_destroy(lum_adjustment);
     }
 

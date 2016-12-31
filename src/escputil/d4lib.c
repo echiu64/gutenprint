@@ -690,7 +690,7 @@ static int _readData(int fd, unsigned char *buf, int len)
 
    if ( total == 6 )
    {
-      toGet = (header[2] >> 8) + header[3] - 6;
+      toGet = (header[2] << 8) + header[3] - 6;
       if (debugD4)
 	printf("+++toGet: %i\n", toGet);
       total = 0;

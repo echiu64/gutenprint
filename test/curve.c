@@ -660,7 +660,7 @@ main(int argc, char **argv)
   TEST("creation of XML string from curve");
   curve1 = stp_curve_create(STP_CURVE_WRAP_AROUND);
   stp_curve_set_bounds(curve1, 0.0, 4.0);
-  stp_curve_set_data(curve1, 48, standard_sat_adjustment);
+  stp_curve_set_data(curve1, 48, reverse_sat_adjustment);
   tmp = stp_curve_write_string(curve1);
   stp_curve_destroy(curve1);
   curve1 = NULL;
@@ -1017,7 +1017,7 @@ main(int argc, char **argv)
   stp_curve_set_bounds(curve1, 0.0, 4.0);
 
   SIMPLE_TEST_CHECK(stp_curve_set_data_points
-		    (curve1, 48, standard_piecewise_sat_adjustment));
+		    (curve1, 48, reverse_piecewise_sat_adjustment));
 
   TEST("Writing piecewise wrap-around curve to string");
   tmp = stp_curve_write_string(curve1);
