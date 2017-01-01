@@ -58,9 +58,14 @@ endif
 ## Generate checksums
 
 if BUILD_TESTPATTERN
+
 checksums: testpattern run-testpattern-2 ./compress-checksums
 	$(MKDIR_P) Checksums
-	./run-testpattern-2 -q -M Checksums/sums.@GUTENPRINT_VERSION@.in
+	if [ -n "$(PARALLEL)" ] ; then \
+	    echo PARALLEL; ./run-testpattern-2 -t $(PARALLEL) -q -M Checksums/sums.$(SPREFIX)@GUTENPRINT_VERSION@.in ; \
+	else \
+	    echo SERIAL; ./run-testpattern-2 -q -M Checksums/sums.$(SPREFIX)@GUTENPRINT_VERSION@.in ; \
+	fi; \
 	./compress-checksums < Checksums/sums.@GUTENPRINT_VERSION@.in |$(BZIP2) -c > Checksums/sums.@GUTENPRINT_VERSION@.bz2
 	rm -f Checksums/sums.@GUTENPRINT_VERSION@.in
 endif
