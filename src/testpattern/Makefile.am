@@ -25,12 +25,12 @@ include $(top_srcdir)/scripts/global.mk
 
 pkgdatadir = $(datadir)/$(PACKAGE)/samples
 
-TESTS = run-testpattern-1 run-testpattern-2
-
-
 ## Programs
 
 if BUILD_TESTPATTERN
+
+TESTS = run-testpattern-1 run-testpattern-2
+
 bin_PROGRAMS = testpattern
 noinst_PROGRAMS = printers printer_options
 noinst_SCRIPTS = run-testpattern-2 compare-checksums compress-checksums uncompress-checksums
@@ -61,11 +61,7 @@ if BUILD_TESTPATTERN
 
 checksums: testpattern run-testpattern-2 ./compress-checksums
 	$(MKDIR_P) Checksums
-	if [ -n "$(PARALLEL)" ] ; then \
-	    echo PARALLEL; ./run-testpattern-2 -t $(PARALLEL) -q -M Checksums/sums.$(SPREFIX)@GUTENPRINT_VERSION@.in ; \
-	else \
-	    echo SERIAL; ./run-testpattern-2 -q -M Checksums/sums.$(SPREFIX)@GUTENPRINT_VERSION@.in ; \
-	fi; \
+	./run-testpattern-2 -q -M Checksums/sums.$(SPREFIX)@GUTENPRINT_VERSION@.in
 	./compress-checksums < Checksums/sums.@GUTENPRINT_VERSION@.in |$(BZIP2) -c > Checksums/sums.@GUTENPRINT_VERSION@.bz2
 	rm -f Checksums/sums.@GUTENPRINT_VERSION@.in
 endif

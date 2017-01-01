@@ -79,6 +79,13 @@ my %stp_float_values;
 my %stp_int_values;
 my %rerun_cases;
 
+if (defined $ENV{"STP_PARALLEL"}) {
+    $proc_count = $ENV{"STP_PARALLEL"};
+    if ($proc_count > 1) {
+	$quiet = 1;
+    }
+}
+
 GetOptions("C=s" => \$csum_type,
 	   "G=s" => \$geometry,
 	   "H!"  => \$halt_on_error,
