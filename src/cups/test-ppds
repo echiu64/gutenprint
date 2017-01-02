@@ -14,7 +14,11 @@ cupstestppdopts='-I profiles -W sizes -I filters'
 
 ppd_count=`find ppd \( -name '*.ppd.gz' -o -name '*.ppd' \) -print | wc -l`
 
-failures="`find ppd -name '*.ppd*' -print | sort | xargs cupstestppd $cupstestppdopts |grep 'FAIL$' | awk -F: '{print $1}'`"
+if [ -n "$STP_PARALLEL" ] ; then
+    PARALLEL="-P $STP_PARALLEL"
+fi
+
+failures="`find ppd -name '*.ppd*' -print | sort -t/ -k3 -k2 | xargs $PARALLEL cupstestppd $cupstestppdopts |grep 'FAIL$' | awk -F: '{print $1}'`"
 
 if [ -z "$failures" ] ; then
     echo "All $ppd_count PPD files pass"

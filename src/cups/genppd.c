@@ -56,6 +56,8 @@
 #include <errno.h>
 #include <libgen.h>
 #include <strings.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #if defined(HAVE_VARARGS_H) && !defined(HAVE_STDARG_H)
 #include <varargs.h>
 #else
@@ -454,6 +456,10 @@ main(int  argc,			    /* I - Number of command-line arguments */
   int           opt_printmodels = 0;/* Print available models */
   int           which_ppds = 2;	    /* Simplified PPD's = 1, full = 2,
 				       no color opts = 4 */
+  unsigned      parallel = 1;	    /* Generate PPD files in parallel */
+  unsigned      rotor = 0;	    /* Rotor for generating PPD files in parallel */
+  pid_t         *subprocesses = NULL;
+  int		parent = 1;
 
  /*
   * Parse command-line args...
@@ -598,6 +604,32 @@ main(int  argc,			    /* I - Number of command-line arguments */
   * Write PPD files...
   */
 
+  if (getenv("STP_PARALLEL"))
+    {
+      parallel = atoi(getenv("STP_PARALLEL"));
+      if (parallel < 1 || parallel > 256)
+	parallel = 1;
+    }
+  if (parallel)
+    {
+      subprocesses = stp_malloc(sizeof(pid_t) * parallel);
+      for (rotor = 0; rotor < parallel; rotor++)
+	{
+	  pid_t pid = fork();
+	  if (pid == 0)		/* Child */
+	    {
+	      parent = 0;
+	      break;
+	    }
+	  else if (pid > 0)
+	    subprocesses[rotor] = pid;
+	  else
+	    {
+	      fprintf(stderr, "Cannot fork: %s\n", strerror(errno));
+	      return 1;
+	    }
+	}
+    }
   if (models)
     {
       int n;
@@ -607,16 +639,19 @@ main(int  argc,			    /* I - Number of command-line arguments */
 	  if (!printer)
 	    printer = stp_get_printer_by_long_name(models[n]);
 
-	  if (printer)
+	  if (n % parallel == rotor && printer)
 	    {
-	      if (generate_model_ppds(prefix, verbose, printer, language,
-				      which_ppds))
-		return 1;
-	    }
-	  else
-	    {
-	      printf("Driver not found: %s\n", models[n]);
-	      return (1);
+	      if (printer)
+		{
+		  if (generate_model_ppds(prefix, verbose, printer, language,
+					  which_ppds))
+		    return 1;
+		}
+	      else
+		{
+		  printf("Driver not found: %s\n", models[n]);
+		  return (1);
+		}
 	    }
 	}
       stp_free(models);
@@ -626,16 +661,32 @@ main(int  argc,			    /* I - Number of command-line arguments */
       for (i = 0; i < stp_printer_model_count(); i++)
 	{
 	  printer = stp_get_printer_by_index(i);
-
-	  if (printer)
+	  
+	  if (i % parallel == rotor && printer)
 	    {
+	      if (! verbose && (i % 50) == 0)
+		fputc('.',stderr);
 	      if (generate_model_ppds(prefix, verbose, printer, language,
 				      which_ppds))
 		return 1;
 	    }
 	}
     }
-  if (!verbose)
+  if (subprocesses)
+    {
+      pid_t pid;
+      do
+	{
+	  int status;
+	  pid = waitpid(-1, &status, 0);
+	  if (pid > 0 && (!WIFEXITED(status) || WEXITSTATUS(status) != 0))
+	    {
+	      fprintf(stderr, "failed!\n");
+	      return 1;
+	    }
+	} while (pid > 0);
+    }
+  if (parent && !verbose)
     fprintf(stderr, " done.\n");
 
   return (0);
@@ -676,7 +727,6 @@ generate_ppd(
 		ppd_location[1024];	/* Installed location */
   struct stat   dir;                    /* Prefix dir status */
   const char    *ppd_infix;
-  static int	ppd_counter = 0; 	/* Notification counter */
 
  /*
   * Skip the PostScript drivers...
@@ -740,8 +790,6 @@ generate_ppd(
 
   if (verbose)
     fprintf(stderr, "Writing %s...\n", filename);
-  else if ((ppd_counter++ % 50) == 0)
-    fprintf(stderr, ".");
 
   snprintf(ppd_location, sizeof(ppd_location), "%s%s%s/%s",
 	   cups_modeldir,
