@@ -327,6 +327,13 @@
       <height value="576"/>
       <unit value="english-extended"/>
     </paper>
+    <paper name="w576h648">
+      <description translate="value" value="8x9"/>
+      <comment value="Only used by DS820 dyesub printer"/>
+      <width value="576"/>
+      <height value="648"/>
+      <unit value="english-extended"/>
+    </paper>
     <paper name="w576h774">
       <description translate="value" value="8x10.75"/>
       <comment value="Only used by DS80DX dyesub printer"/>
