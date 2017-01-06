@@ -341,6 +341,13 @@
       <height value="864"/>
       <unit value="english-extended"/>
     </paper>
+    <paper name="w576h842">
+      <description translate="value" value="8x11.7"/>
+      <comment value="Only used by DS80, DS80DX, DS820 dyesub printers"/>
+      <width value="595"/>
+      <height value="842"/>
+      <unit value="english-extended"/>
+    </paper>
     <paper name="w612h864">
       <description translate="value" value="8.5x12"/>
       <comment value="Only used by Kodak 1400 and 805 dyesub printers"/>
@@ -1698,6 +1705,55 @@
 
         They can be removed once we figure out a better paper API
     -->
+    <paper name="A4-div2">
+      <description translate="value" value="A5*2"/>
+      <comment value="Only used by DNP DS820"/>
+      <width value="595"/>
+      <height value="842"/>
+      <unit value="metric"/>
+    </paper>    
+    <paper name="A4x4inch">
+      <description translate="value" value="A4 width * 4inch"/>
+      <comment value="Only used by DNP DS820"/>
+      <width value="595"/>
+      <height value="288"/>
+      <unit value="metric"/>
+    </paper>    
+    <paper name="A4x5inch">
+      <description translate="value" value="A4 width * 5inch"/>
+      <comment value="Only used by DNP DS820"/>
+      <width value="595"/>
+      <height value="360"/>
+      <unit value="metric"/>
+    </paper>    
+    <paper name="A4x6inch">
+      <description translate="value" value="A4 width * 6inch"/>
+      <comment value="Only used by DNP DS820"/>
+      <width value="595"/>
+      <height value="432"/>
+      <unit value="metric"/>
+    </paper>    
+    <paper name="A4x8inch">
+      <description translate="value" value="A4 width * 8inch"/>
+      <comment value="Only used by DNP DS820"/>
+      <width value="595"/>
+      <height value="576"/>
+      <unit value="metric"/>
+    </paper>    
+    <paper name="A4x10inch">
+      <description translate="value" value="A4 width * 10inch"/>
+      <comment value="Only used by DNP DS820"/>
+      <width value="595"/>
+      <height value="720"/>
+      <unit value="metric"/>
+    </paper>    
+    <paper name="A4x10inch-div2">
+      <description translate="value" value="A4 width * 5 inch x2"/>
+      <comment value="Only used by DNP DS820"/>
+      <width value="595"/>
+      <height value="720"/>
+      <unit value="metric"/>
+    </paper>
     <paper name="w288h432-div2">
       <description translate="value" value="2x6*2"/>
       <width value="288"/>
@@ -1773,8 +1829,8 @@
       <width value="576"/>
       <height value="774"/>
       <unit value="english-extended"/>
-      <type value="special"/>      
-    </paper>    
+      <type value="special"/>
+    </paper>
     <paper name="w576h792-w576h432_w576h360">
       <description translate="value" value="8x6+8x5"/>
       <width value="576"/>

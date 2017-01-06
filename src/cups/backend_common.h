@@ -124,6 +124,7 @@ enum {
 	P_CITIZEN_CW01,
 	P_DNP_DSRX1,
 	P_DNP_DS620,
+	P_DNP_DS820,
 	P_FUJI_ASK300,
 	P_END,
 };
@@ -140,7 +141,7 @@ struct dyesub_backend {
 	char *name;
 	char *version;
 	char *uri_prefix;
-	void (*cmdline_usage)(void);
+	void (*cmdline_usage)(void);  /* Optional */
 	void *(*init)(void);
 	void (*attach)(void *ctx, struct libusb_device_handle *dev,
 		       uint8_t endp_up, uint8_t endp_down, uint8_t jobid);
@@ -148,7 +149,7 @@ struct dyesub_backend {
 	int  (*cmdline_arg)(void *ctx, int argc, char **argv);
 	int  (*read_parse)(void *ctx, int data_fd);
 	int  (*main_loop)(void *ctx, int copies);
-	int  (*query_serno)(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, char *buf, int buf_len);
+	int  (*query_serno)(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, char *buf, int buf_len); /* Optional */
 	struct device_id devices[];
 };
 

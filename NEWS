@@ -264,6 +264,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	Mitsubishi CP-9800DW-S	   [experimental]
 	Mitsubishi CP-D90DW        [experimental]
 	DNP DS-RX1HS
+	DNP DS820/DS820A
 	Kodak Professional 8800    [experimental]
 
   3) Improved support (and bugfixes) for the following dye sublimation
@@ -273,7 +274,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
         Canon SELPHY CP910
 	Ciaat Brava 21        [*1]
 	Citizen CW-02              [experimental]
-	DNP DS620
+	DNP DS620/DS620A
 	DNP DS40
 	DNP DS80
 	DNP RX1

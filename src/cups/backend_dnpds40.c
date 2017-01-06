@@ -62,6 +62,7 @@
 
 #define USB_VID_DNP       0x1452
 #define USB_PID_DNP_DS620 0x8b01
+#define USB_PID_DNP_DS820 0x9001
 
 /* Private data stucture */
 struct dnpds40_ctx {
@@ -91,16 +92,21 @@ struct dnpds40_ctx {
 	int matte;
 	int cutter;
 	int can_rewind;
+
+	int printspeed;
+
 	int mediaoffset;
 	int manual_copies;
 	int correct_count;
 
+	uint32_t native_width;
 	int supports_6x9;
 	int supports_2x6;
 	int supports_3x5x2;
 	int supports_matte;
 	int supports_finematte;
 	int supports_luster;	
+	int supports_advmatte;
 	int supports_fullcut;
 	int supports_rewind;
 	int supports_standby;
@@ -112,7 +118,11 @@ struct dnpds40_ctx {
 	int supports_counterp;
 	int supports_adv_fullcut;
 	int supports_mediaoffset;
-
+	int supports_media_ext;
+	int supports_printspeed;
+	int supports_lowspeed;
+	int supports_highdensity;
+	int supports_gamma;
 	uint8_t *databuf;
 	int datalen;
 };
@@ -155,6 +165,18 @@ struct dnpds40_cmd {
 #define MULTICUT_5x5      29
 #define MULTICUT_6x4_5    30
 #define MULTICUT_6x4_5X2  31
+#define MULTICUT_8x7      32
+#define MULTICUT_8x9      33
+#define MULTICUT_A5       34
+#define MULTICUT_A5X2     35
+#define MULTICUT_A4x4     36
+#define MULTICUT_A4x5     37
+#define MULTICUT_A4x6     38
+#define MULTICUT_A4x8     39
+#define MULTICUT_A4x10    40
+#define MULTICUT_A4       41
+#define MULTICUT_A4x5X2   43
+
 
 #define MULTICUT_S_SIMPLEX  100
 #define MULTICUT_S_FRONT    200
@@ -215,6 +237,7 @@ static char *dnpds40_printer_type(int type)
 	case P_DNP_DS80D: return "DS80DX";
 	case P_DNP_DSRX1: return "DSRX1";
 	case P_DNP_DS620: return "DS620";
+	case P_DNP_DS820: return "DS820";
 	default: break;
 	}
 	return "Unknown";
@@ -232,6 +255,32 @@ static char *dnpds40_media_types(int media)
 	case 400: return "6x9 (A5W)";
 	case 500: return "8x10";
 	case 510: return "8x12";
+	case 600: return "A4";
+	default:
+		break;
+	}
+
+	return "Unknown type";
+}
+
+static char *dnpds620_media_extension_code(int media)
+{
+	switch (media) {
+	case 00: return "Normal Paper";
+	case 01: return "Sticky Paper";
+	case 99: return "Unknown Paper";
+	default:
+		break;
+	}
+
+	return "Unknown type";
+}
+
+static char *dnpds820_media_subtypes(int media)
+{
+	switch (media) {
+	case 0001: return "SD";
+	case 0003: return "PP";
 	default:
 		break;
 	}
@@ -378,9 +427,10 @@ static int dnpds40_do_cmd(struct dnpds40_ctx *ctx,
 	return CUPS_BACKEND_OK;
 }
 
-static uint8_t * dnpds40_resp_cmd(struct dnpds40_ctx *ctx,
+static uint8_t *dnpds40_resp_cmd2(struct dnpds40_ctx *ctx,
 				  struct dnpds40_cmd *cmd,
-				  int *len)
+				  int *len,
+				  uint8_t *buf, uint32_t buf_len)
 {
 	char tmp[9];
 	uint8_t *respbuf;
@@ -389,7 +439,7 @@ static uint8_t * dnpds40_resp_cmd(struct dnpds40_ctx *ctx,
 
 	memset(tmp, 0, sizeof(tmp));
 
-	if ((ret = dnpds40_do_cmd(ctx, cmd, NULL, 0)))
+	if ((ret = dnpds40_do_cmd(ctx, cmd, buf, buf_len)))
 		return NULL;
 
 	/* Read in the response header */
@@ -427,6 +477,8 @@ static uint8_t * dnpds40_resp_cmd(struct dnpds40_ctx *ctx,
 	*len = num;
 	return respbuf;
 }
+
+#define dnpds40_resp_cmd(__ctx, __cmd, __len) dnpds40_resp_cmd2(__ctx, __cmd, __len, NULL, 0)
 
 static int dnpds40_query_serno(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, char *buf, int buf_len)
 {
@@ -592,6 +644,7 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
 	/* Per-printer options */
 	switch (ctx->type) {
 	case P_DNP_DS40:
+		ctx->native_width = 1920;
 		ctx->supports_6x9 = 1;
 		if (FW_VER_CHECK(1,04))
 			ctx->supports_counterp = 1;
@@ -602,12 +655,14 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
 		break;
 	case P_DNP_DS80:
 	case P_DNP_DS80D:
+		ctx->native_width = 2560;
 		if (FW_VER_CHECK(1,02))
 			ctx->supports_counterp = 1;
 		if (FW_VER_CHECK(1,30))
 			ctx->supports_matte = 1;
 		break;
 	case P_DNP_DSRX1:
+		ctx->native_width = 1920;
 		ctx->supports_counterp = 1;
 		ctx->supports_matte = 1;
 		if (FW_VER_CHECK(1,10))
@@ -620,6 +675,7 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
 		}
 		break;
 	case P_DNP_DS620:
+		ctx->native_width = 1920;
 		ctx->correct_count = 1;
 		ctx->supports_counterp = 1;
 		ctx->supports_matte = 1;
@@ -634,14 +690,40 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
 		ctx->supports_iserial = 1;
 		ctx->supports_6x6 = 1;
 		ctx->supports_5x5 = 1;
+		ctx->supports_lowspeed = 1;
 		if (FW_VER_CHECK(0,30))
 			ctx->supports_3x5x2 = 1;
 		if (FW_VER_CHECK(1,10))
 			ctx->supports_6x9 = ctx->supports_6x4_5 = 1;
 		if (FW_VER_CHECK(1,20))
-			ctx->supports_adv_fullcut = 1;
+			ctx->supports_adv_fullcut = ctx->supports_advmatte = 1;
 		if (FW_VER_CHECK(1,30))
 			ctx->supports_luster = ctx->supports_finematte = 1;
+		if (FW_VER_CHECK(1,33))
+			ctx->supports_media_ext = 1;
+		break;
+	case P_DNP_DS820:
+		ctx->native_width = 2560;
+		ctx->correct_count = 1;
+		ctx->supports_counterp = 1;
+		ctx->supports_matte = 1;
+		ctx->supports_fullcut = 1;
+		ctx->supports_mqty_default = 1;
+		if (strchr(ctx->version, 'A'))
+			ctx->supports_rewind = 0;
+		else
+			ctx->supports_rewind = 1;
+		ctx->supports_standby = 1;
+		ctx->supports_iserial = 1;
+		ctx->supports_adv_fullcut = 1;
+		ctx->supports_advmatte = 1;
+		ctx->supports_luster = 1;
+		ctx->supports_finematte = 1;
+		ctx->supports_printspeed = 1;
+		ctx->supports_lowspeed = 1;
+		ctx->supports_highdensity = 1;
+		if (FW_VER_CHECK(0,50))
+			ctx->supports_gamma = 1;
 		break;
 	default:
 		ERROR("Unknown vid/pid %04x/%04x (%d)\n", desc.idVendor, desc.idProduct, ctx->type);
@@ -781,7 +863,7 @@ static void dnpds40_teardown(void *vctx) {
 	free(ctx);
 }
 
-#define MAX_PRINTJOB_LEN (((2560*7536+1024+54))*3+1024) /* Worst-case */
+#define MAX_PRINTJOB_LEN (((2560*7536+1024+54))*3+1024) /* Worst-case, YMC */
 
 static int dnpds40_read_parse(void *vctx, int data_fd) {
 	struct dnpds40_ctx *ctx = vctx;
@@ -821,7 +903,9 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 	ctx->manual_copies = 0;
 	ctx->multicut = 0;
 	ctx->fullcut = 0;
+	ctx->printspeed = -1;
 	ctx->can_rewind = 0;
+	ctx->buf_needed = 0;
 
 	while (run) {
 		int remain, i, j;
@@ -903,6 +987,25 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 				WARNING("Printer FW does not support full cutter control!\n");
 				continue;
 			}
+
+			if (ctx->type == P_DNP_DS820) {
+				if (j != 24) {
+					WARNING("Full cutter argument length incorrect, ignoring!\n");
+					continue;
+				}
+			} else if (j != 16) {
+				WARNING("Full cutter argument length incorrect, ignoring!\n");
+				continue;
+			} else if (!ctx->supports_adv_fullcut) {
+				if (ctx->databuf[ctx->datalen + 32 + 12] != '0' ||
+				    ctx->databuf[ctx->datalen + 32 + 13] != '0' ||
+				    ctx->databuf[ctx->datalen + 32 + 14] != '0') {
+					WARNING("Full cutter scrap setting not supported on this firmware, ignoring!\n");
+					continue;
+				}
+			}
+			// XXX enforce cut counts/sizes?
+
 			ctx->fullcut = 1;
 		}
 		if(!memcmp("IMAGE YPLANE", ctx->databuf + ctx->datalen + 2, 12)) {
@@ -927,18 +1030,21 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 			/* Validate horizontal size */
 			memcpy(&y_ppm, ctx->databuf + ctx->datalen + 32 + 18, sizeof(y_ppm));
 			y_ppm = le32_to_cpu(y_ppm);
-			if (ctx->type == P_DNP_DS80 ||
-			    ctx->type == P_DNP_DS80D) {
-				if (y_ppm != 2560) {
-					ERROR("Incorrect horizontal resolution (%u), aborting!\n", y_ppm);
-					return CUPS_BACKEND_CANCEL;
-				}
-			} else {
-				if (y_ppm != 1920) {
-					ERROR("Incorrect horizontal resolution (%u), aborting!\n", y_ppm);
-					return CUPS_BACKEND_CANCEL;
-				}
+			if (y_ppm != ctx->native_width) {
+				ERROR("Incorrect horizontal resolution (%u), aborting!\n", y_ppm);
+				return CUPS_BACKEND_CANCEL;
 			}
+		}
+		if(!memcmp("CNTRL PRINTSPEED", ctx->databuf + ctx->datalen + 2, 16)) {
+			if (!ctx->supports_printspeed) {
+				WARNING("Printer does not support PRINTSPEED\n");
+				continue;
+			}
+			memcpy(buf, ctx->databuf + ctx->datalen + 32, 8);
+			ctx->printspeed = atoi(buf) / 10;
+
+			/* We'll insert this ourselves later. */
+			continue;
 		}
 
 		/* This is the last block.. */
@@ -954,15 +1060,30 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 		return CUPS_BACKEND_CANCEL;
 
 	/* Sanity check matte mode */
-	if (ctx->matte == 22 && !ctx->supports_luster) {
-		WARNING("Printer FW does not support Luster mode, downgrading to normal matte\n");
-		ctx->matte = 1;
-	} else if (ctx->matte == 21 && !ctx->supports_finematte) {
+	if (ctx->matte == 21 && !ctx->supports_finematte) {
 		WARNING("Printer FW does not support Fine Matte mode, downgrading to normal matte\n");
 		ctx->matte = 1;
-	} else if (ctx->matte > 1) {
-		WARNING("Unknown matte mode selected, downgrading to normal matte\n");
+	} else if (ctx->matte == 22 && !ctx->supports_luster) {
+		WARNING("Printer FW does not support Luster mode, downgrading to normal matte\n");
 		ctx->matte = 1;
+	} else if (ctx->matte > 1 && !ctx->supports_advmatte) {
+		WARNING("Printer FW does not support advanced matte modes, downgrading to normal matte\n");
+		ctx->matte = 1;
+	}
+
+	/* Pick a sane default value for printspeed if not specified */
+	if (ctx->printspeed == -1 || ctx->printspeed > 3)
+	{
+		if (dpi == 600)
+			ctx->printspeed = 1;
+		else
+			ctx->printspeed = 0;
+	}
+	/* And sanity-check whatever value is there */
+	if (ctx->printspeed == 0 && dpi == 600) {
+		ctx->printspeed = 1;
+	} else if (ctx->printspeed == 1 && dpi == 300) {
+		ctx->printspeed = 0;
 	}
 
 	/* Make sure MULTICUT is sane, most validation needs this */
@@ -985,19 +1106,23 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 
 	/* Figure out the number of buffers we need. */
 	ctx->buf_needed = 1;
+
 	if (dpi == 600) {
-		if (ctx->type == P_DNP_DS620) {
+		switch(ctx->type) {
+		case P_DNP_DS620:
 			if (ctx->multicut == MULTICUT_6x9 ||
 			    ctx->multicut == MULTICUT_6x4_5X2)
 				ctx->buf_needed = 2;
-		} else if (ctx->type == P_DNP_DS80) { /* DS80/CX-W */
+			break;
+		case P_DNP_DS80:  /* DS80/CX-W */
 			if (ctx->matte && (ctx->multicut == MULTICUT_8xA4LEN ||
 					   ctx->multicut == MULTICUT_8x4X3 ||
 					   ctx->multicut == MULTICUT_8x8_8x4 ||
 					   ctx->multicut == MULTICUT_8x6X2 ||
 					   ctx->multicut == MULTICUT_8x12))
 				ctx->buf_needed = 2;
-		} else if (ctx->type == P_DNP_DS80D) { /* DS80D */
+			break;
+		case P_DNP_DS80D:
 			if (ctx->matte) {
 				int mcut = ctx->multicut;
 				
@@ -1018,13 +1143,26 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 				    mcut == MULTICUT_S_8x4X3)
 					ctx->buf_needed = 2;
 			}
-		} else { /* DS40/CX/RX1/CY/etc */
-			if (ctx->multicut == MULTICUT_6x8 ||
-			    ctx->multicut == MULTICUT_6x9 ||
-			    ctx->multicut == MULTICUT_6x4X2 ||
-			    ctx->multicut == MULTICUT_5x7 ||
-			    ctx->multicut == MULTICUT_5x3_5X2)
-				ctx->buf_needed = 2;
+			break;
+		case P_DNP_DS820:
+			// Nothing; all sizes only need 1 buffer
+			break;
+		default: /* DS40/CX/RX1/CY/everything else */
+			if (ctx->matte) {
+				if (ctx->multicut == MULTICUT_6x8 ||
+				    ctx->multicut == MULTICUT_6x9 ||
+				    ctx->multicut == MULTICUT_6x4X2 ||
+				    ctx->multicut == MULTICUT_5x7 ||
+				    ctx->multicut == MULTICUT_5x3_5X2)
+					ctx->buf_needed = 2;
+
+			} else {
+				if (ctx->multicut == MULTICUT_6x8 ||
+				    ctx->multicut == MULTICUT_6x9 ||
+				    ctx->multicut == MULTICUT_6x4X2)
+					ctx->buf_needed = 1;
+			}
+			break;
 		}
 	}
 
@@ -1077,17 +1215,43 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 				ctx->can_rewind = 1;
 			break;
 		case 500: //"8x10"
-			if (ctx->multicut < MULTICUT_8x10 || ctx->multicut == MULTICUT_8x12 ||
+			if (ctx->type == P_DNP_DS820 &&
+			    (ctx->multicut == MULTICUT_8x7 || ctx->multicut == MULTICUT_8x9)) {
+				/* These are okay */
+			} else if (ctx->multicut < MULTICUT_8x10 || ctx->multicut == MULTICUT_8x12 ||
 			    ctx->multicut == MULTICUT_8x6X2 || ctx->multicut >= MULTICUT_8x6_8x5 ) {
 				ERROR("Incorrect media for job loaded (%u vs %u)\n", ctx->media, ctx->multicut);
 				return CUPS_BACKEND_CANCEL;
 			}
+
+			/* 8x4, 8x5 can be rewound */
+			if (ctx->multicut == MULTICUT_8x4 ||
+			    ctx->multicut == MULTICUT_8x5)
+				ctx->can_rewind = 1;
 			break;
 		case 510: //"8x12"
-			if (ctx->multicut < MULTICUT_8x10 || ctx->multicut > MULTICUT_8xA4LEN) {
+			if (ctx->multicut < MULTICUT_8x10 || (ctx->multicut > MULTICUT_8xA4LEN && !(ctx->multicut == MULTICUT_8x7 || ctx->multicut == MULTICUT_8x9))) {
 				ERROR("Incorrect media for job loaded (%u vs %u)\n", ctx->media, ctx->multicut);
 				return CUPS_BACKEND_CANCEL;
 			}
+
+			/* 8x4, 8x5, 8x6 can be rewound */
+			if (ctx->multicut == MULTICUT_8x4 ||
+			    ctx->multicut == MULTICUT_8x5 ||
+			    ctx->multicut == MULTICUT_8x6)
+				ctx->can_rewind = 1;
+			break;
+		case 600: //"A4"
+			if (ctx->multicut < MULTICUT_A5 || ctx->multicut > MULTICUT_A4x5X2) {
+				ERROR("Incorrect media for job loaded (%d vs %d)\n", ctx->media, ctx->multicut);
+				return CUPS_BACKEND_CANCEL;
+			}
+			/* A4xn and A5 can be rewound */
+			if (ctx->multicut == MULTICUT_A4x4 ||
+			    ctx->multicut == MULTICUT_A4x5 ||
+			    ctx->multicut == MULTICUT_A4x6 ||
+			    ctx->multicut == MULTICUT_A5)
+				ctx->can_rewind = 1;
 			break;
 		default:
 			ERROR("Unknown media (%u vs %u)!\n", ctx->media, ctx->multicut);
@@ -1174,8 +1338,8 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 	}
 
 skip_checks:
-	DEBUG("dpi %u matte %d mcut %u cutter %d, bufs %d\n",
-	      dpi, ctx->matte, ctx->multicut, ctx->cutter, ctx->buf_needed);
+	DEBUG("dpi %u matte %d mcut %u cutter %d, bufs %d spd %d\n",
+	      dpi, ctx->matte, ctx->multicut, ctx->cutter, ctx->buf_needed, ctx->printspeed);
 
 	return CUPS_BACKEND_OK;
 }
@@ -1208,6 +1372,7 @@ static int dnpds40_main_loop(void *vctx, int copies) {
 		ATTR("marker-names='%s'\n", dnpds40_media_types(ctx->media));
 		ATTR("marker-types=ribbonWax\n");
 	}
+
 top:
 
 	/* Query status */
@@ -1355,7 +1520,7 @@ top:
 		}
 	}
 
-	/* Set overcoat parameters */
+	/* Set overcoat parameters if appropriate */
 	if (ctx->supports_matte) {
 		snprintf(buf, sizeof(buf), "%08d", ctx->matte);
 		dnpds40_build_cmd(&cmd, "CNTRL", "OVERCOAT", 8);
@@ -1367,6 +1532,14 @@ top:
 	if (ctx->cutter) {
 		snprintf(buf, sizeof(buf), "%08d", ctx->cutter);
 		dnpds40_build_cmd(&cmd, "CNTRL", "CUTTER", 8);
+		if ((ret = dnpds40_do_cmd(ctx, &cmd, (uint8_t*)buf, 8)))
+			return CUPS_BACKEND_FAILED;
+	}
+
+	/* Send over the printspeed if appropriate */
+	if (ctx->supports_printspeed) {
+		snprintf(buf, sizeof(buf), "%08d", ctx->printspeed * 10);
+		dnpds40_build_cmd(&cmd, "CNTRL", "PRINTSPEED", 8);
 		if ((ret = dnpds40_do_cmd(ctx, &cmd, (uint8_t*)buf, 8)))
 			return CUPS_BACKEND_FAILED;
 	}
@@ -1688,7 +1861,7 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 
 	free(resp);
 
-	if (ctx->type == P_DNP_DS620) {
+	if (ctx->supports_lowspeed) {
 		/* "Low Speed" */
 		dnpds40_build_cmd(&cmd, "TBL_RD", "CWD610_Version", 0);
 
@@ -1714,10 +1887,56 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 
 		free(resp);
 	}
+	if (ctx->supports_highdensity) {
+		uint8_t buf[5];
+		int i = 0;
+
+		snprintf((char*)buf, sizeof(buf), "%04d", i);
+
+		/* "High Density" */
+		dnpds40_build_cmd(&cmd, "TBL_RD", "CWD620_Version", 4);
+
+		resp = dnpds40_resp_cmd2(ctx, &cmd, &len, buf, 4);
+		if (!resp)
+			return CUPS_BACKEND_FAILED;
+
+		dnpds40_cleanup_string((char*)resp, len);
+
+		INFO("High Density Color Data: %s ", (char*)resp);
+
+		free(resp);
+
+		dnpds40_build_cmd(&cmd, "TBL_RD", "CWD620_Checksum", 4);
+
+		resp = dnpds40_resp_cmd2(ctx, &cmd, &len, buf, 4);
+		if (!resp)
+			return CUPS_BACKEND_FAILED;
+
+		dnpds40_cleanup_string((char*)resp, len);
+
+		DEBUG2("(%s)\n", (char*)resp);
+
+		free(resp);
+	}
+	if (ctx->supports_gamma) {
+		/* "Low Speed" */
+		dnpds40_build_cmd(&cmd, "TBL_RD", "CTRLD_GAMMA16", 0);
+
+		resp = dnpds40_resp_cmd(ctx, &cmd, &len);
+		if (!resp)
+			return CUPS_BACKEND_FAILED;
+
+		dnpds40_cleanup_string((char*)resp, len);
+
+		INFO("Gamma Correction Data Checksum: %s\n", (char*)resp);
+
+		free(resp);
+	}
 
 	if (ctx->supports_standby) {
-		int i;
 		/* Get Standby stuff */
+		int i;
+
 		dnpds40_build_cmd(&cmd, "MNT_RD", "STANDBY_TIME", 0);
 
 		resp = dnpds40_resp_cmd(ctx, &cmd, &len);
@@ -1782,9 +2001,9 @@ static int dnpds40_get_status(struct dnpds40_ctx *ctx)
 		return CUPS_BACKEND_FAILED;
 
 	dnpds40_cleanup_string((char*)resp, len);
-	len = atoi((char*)resp);
+	count = atoi((char*)resp);
 
-	INFO("Printer Status: %s (%d)\n", dnpds40_statuses(len), len);
+	INFO("Printer Status: %s (%d)\n", dnpds40_statuses(count), count);
 
 	free(resp);
 
@@ -1797,9 +2016,9 @@ static int dnpds40_get_status(struct dnpds40_ctx *ctx)
 			return CUPS_BACKEND_FAILED;
 
 		dnpds40_cleanup_string((char*)resp, len);
-		len = atoi((char*)resp);
+		count = atoi((char*)resp);
 
-		INFO("Duplexer Status: %s\n", dnpds80_duplex_statuses(len));
+		INFO("Duplexer Status: %s\n", dnpds80_duplex_statuses(count));
 
 		free(resp);
 	}
@@ -1832,6 +2051,34 @@ static int dnpds40_get_status(struct dnpds40_ctx *ctx)
 
 	/* Report media */
 	INFO("Media Type: %s\n", dnpds40_media_types(ctx->media));
+
+	if (ctx->supports_media_ext) {
+		int type;
+		dnpds40_build_cmd(&cmd, "INFO", "MEDIA_EXT_CODE", 0);
+		resp = dnpds40_resp_cmd(ctx, &cmd, &len);
+		if (!resp)
+			return CUPS_BACKEND_FAILED;
+
+		dnpds40_cleanup_string((char*)resp, len);
+		*(resp+2) = 0;  // Only the first two chars are used.
+		type = atoi((char*)resp);
+		INFO("Media Code: %s\n", dnpds620_media_extension_code(type));
+		free(resp);
+	}
+
+	/* Try to figure out media subtype */
+	if (ctx->type == P_DNP_DS820) {
+		int type;
+		dnpds40_build_cmd(&cmd, "INFO", "MEDIA_CLASS_RFID", 0);
+		resp = dnpds40_resp_cmd(ctx, &cmd, &len);
+		if (!resp)
+			return CUPS_BACKEND_FAILED;
+
+		dnpds40_cleanup_string((char*)resp, len);
+		type = atoi((char*)resp);
+		INFO("Media Subtype: %s\n", dnpds820_media_subtypes(type));
+		free(resp);
+	}
 
 	/* Report Cut Media */
 	if (ctx->type == P_DNP_DS80D)
@@ -1900,7 +2147,8 @@ static int dnpds40_get_counters(struct dnpds40_ctx *ctx)
 
 	free(resp);
 
-	if (ctx->type == P_DNP_DS620) {
+	if (ctx->type == P_DNP_DS620 ||
+	    ctx->type == P_DNP_DS820) {
 		/* Generate command */
 		dnpds40_build_cmd(&cmd, "MNT_RD", "COUNTER_HEAD", 0);
 
@@ -2236,7 +2484,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS40/DS80/DSRX1/DS620",
-	.version = "0.90",
+	.version = "0.91",
 	.uri_prefix = "dnpds40",
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
@@ -2254,6 +2502,7 @@ struct dyesub_backend dnpds40_backend = {
 	{ USB_VID_DNP, USB_PID_DNP_DS620, P_DNP_DS620, ""},
 	{ USB_VID_DNP, USB_PID_DNP_DS80D, P_DNP_DS80D, ""},
 	{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW02, P_DNP_DS40, ""},
+	{ USB_VID_DNP, USB_PID_DNP_DS820, P_DNP_DS820, ""},
 	{ 0, 0, 0, ""}
 	}
 };

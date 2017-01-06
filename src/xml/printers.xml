@@ -3007,6 +3007,7 @@
       <printer translate="name" name="Citizen OP900II" driver="citizen-op900ii" manufacturer="Citizen" model="6000" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-3800DW" driver="mitsubishi-cp-3800dw" manufacturer="Mitsubishi" model="6001" parameters="nativecopies" />
       <printer translate="name" name="Dai Nippon Printing DS80DX" driver="dnp-ds80dx" manufacturer="Dai Nippon Printing" model="6006" parameters="nativecopies">EXPERIMENTAL</printer>
+      <printer translate="name" name="Dai Nippon Printing DS820" driver="dnp-ds820" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DP-DS820;" manufacturer="Dai Nippon Printing" model="6007" parameters="nativecopies" />
     </family>
     <family name="raw">
       <printer translate="name" name="RAW DATA 16 bit" driver="raw-data-16" manufacturer="" model="0" />
