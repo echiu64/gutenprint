@@ -320,7 +320,14 @@
       <height value="360"/>
       <unit value="english-extended"/>
     </paper>
-    <paper name="w576h576">
+    <paper name="w504h576">
+      <description translate="value" value="8x7"/>
+      <comment value="Only used by DS820 dyesub printer"/>
+      <width value="576"/>
+      <height value="504"/>
+      <unit value="english-extended"/>
+    </paper>
+    <paper name="w576h576">      
       <description translate="value" value="8x8"/>
       <comment value="Only used by certain dyesub models"/>
       <width value="576"/>
