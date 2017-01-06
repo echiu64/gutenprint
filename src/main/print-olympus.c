@@ -191,9 +191,7 @@ typedef struct
 {
   int quality;
   int laminate_offset;
-#ifdef MITSU70X_8BPP	
   int use_lut;
-#endif
   int sharpen;
   int delay;
 } mitsu70x_privdata_t;
@@ -4123,6 +4121,7 @@ mitsu70x_load_parameters(const stp_vars_t *v, const char *name,
 #ifdef MITSU70X_8BPP
   else if (strcmp(name, "UseLUT") == 0)
     {
+      description->deflt.boolean = 0;
       description->is_active = 1;
     }
   else if (strcmp(name, "Sharpen") == 0)
@@ -4385,6 +4384,7 @@ mitsu_k60_load_parameters(const stp_vars_t *v, const char *name,
 #ifdef MITSU70X_8BPP
   else if (strcmp(name, "UseLUT") == 0)
     {
+      description->deflt.boolean = 0;
       description->is_active = 1;
     }
   else if (strcmp(name, "Sharpen") == 0)
@@ -4530,14 +4530,12 @@ static const stp_parameter_t mitsu_d90_parameters[] =
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
-#ifdef MITSU90X_8BPP
   {
     "UseLUT", N_("Internal Color Correction"), "Color=Yes,Category=Advanced Printer Setup",
     N_("Use Internal Color Correction"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
-#endif
   {
     "Sharpen", N_("Image Sharpening"), "Color=No,Category=Advanced Printer Setup",
     N_("Sharpening to apply to image (0 is off, 1 is min, 9 is max"),
@@ -4585,12 +4583,11 @@ mitsu_d90_load_parameters(const stp_vars_t *v, const char *name,
       description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
       description->is_active = 1;
     }
-#ifdef MITSU70X_8BPP
   else if (strcmp(name, "UseLUT") == 0)
     {
+      description->deflt.boolean = 0;	    
       description->is_active = 1;
     }
-#endif
   else if (strcmp(name, "Sharpen") == 0)
     {
       description->deflt.integer = 4;
@@ -4630,11 +4627,8 @@ static int mitsu_d90_parse_parameters(stp_vars_t *v)
      pd->privdata.m70x.quality = 0;
   }
 
-#ifdef MITSU70X_8BPP
   pd->privdata.m70x.use_lut = stp_get_boolean_parameter(v, "UseLUT");
-#endif
   pd->privdata.m70x.sharpen = stp_get_int_parameter(v, "Sharpen");
-
   pd->privdata.m70x.delay = stp_get_int_parameter(v, "ComboWait");
   
   return 1;
