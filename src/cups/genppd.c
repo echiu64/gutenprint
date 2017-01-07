@@ -1587,9 +1587,17 @@ print_one_option(gpFile fp, stp_vars_t *v, const stp_string_list_t *po,
   int skip_color = (ppd_type == PPD_NO_COLOR_OPTS && is_color_opt);
   if (is_color_opt)
     gpprintf(fp, "*ColorKeyWords: \"Stp%s\"\n", desc->name);
-  gpprintf(fp, "*OpenUI *Stp%s/%s: PickOne\n",
-	   desc->name, stp_i18n_lookup(po, desc->text));
-  gpprintf(fp, "*OrderDependency: 10 AnySetup *Stp%s\n", desc->name);
+
+#ifndef FULL_RAW
+  if (desc->p_type != STP_PARAMETER_TYPE_RAW)
+    {
+#endif
+      gpprintf(fp, "*OpenUI *Stp%s/%s: PickOne\n",
+	       desc->name, stp_i18n_lookup(po, desc->text));
+      gpprintf(fp, "*OrderDependency: 10 AnySetup *Stp%s\n", desc->name);
+#ifndef FULL_RAW
+    }
+#endif
   switch (desc->p_type)
     {
     case STP_PARAMETER_TYPE_STRING_LIST:
@@ -1625,6 +1633,22 @@ print_one_option(gpFile fp, stp_vars_t *v, const stp_string_list_t *po,
 	    gpprintf(fp, "*Stp%s %s/%s: \"\"\n",
 		     desc->name, opt->name, stp_i18n_lookup(po, opt->text));
 	}
+      break;
+    case STP_PARAMETER_TYPE_RAW:
+      print_close_ui = 0;
+#ifdef FULL_RAW /* XXX not sure if the standalone Custom... bit is sufficient */
+      gpprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
+              desc->name, desc->p_type, desc->is_mandatory, desc->p_class,
+              desc->p_level, desc->channel, 0.0, 0.0, 0.0);
+      gpprintf(fp, "*DefaultStp%s: None\n", desc->name);
+      gpprintf(fp, "*StpDefaultStp%s: None\n", desc->name);
+      gpprintf(fp, "*Stp%s %s/%s: \"\"\n", desc->name, "None", _("None"));
+      gpprintf(fp, "*CloseUI: *Stp%s\n", desc->name);
+#endif
+      gpprintf(fp, "*CustomStp%s True: \"pop\"\n", desc->name);
+      gpprintf(fp, "*ParamCustomStp%s Text/%s: 1 string %d %d\n\n",
+              desc->name, _("Text"), 0, 0);
+
       break;
     case STP_PARAMETER_TYPE_BOOLEAN:
       gpprintf(fp, "*OPOptionHints Stp%s: \"checkbox\"\n", lparam->name);
@@ -2427,6 +2451,7 @@ write_ppd(
 	      if (lparam->p_class != j || lparam->p_level != k ||
 		  is_special_option(lparam->name) || lparam->read_only ||
 		  (lparam->p_type != STP_PARAMETER_TYPE_STRING_LIST &&
+		   lparam->p_type != STP_PARAMETER_TYPE_RAW &&
 		   lparam->p_type != STP_PARAMETER_TYPE_BOOLEAN &&
 		   lparam->p_type != STP_PARAMETER_TYPE_DIMENSION &&
 		   lparam->p_type != STP_PARAMETER_TYPE_INT &&
