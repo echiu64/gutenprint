@@ -181,7 +181,7 @@ struct mitsu70x_jobstatus {
 struct mitsu70x_job {
 	uint16_t id; /* BE */
 	uint8_t status[4];
-} __attribute__((packed));;
+} __attribute__((packed));
 
 #define NUM_JOBS 170
 
@@ -314,11 +314,14 @@ struct mitsu70x_printerstatus_resp {
 	uint8_t  unk[34];
 	int16_t  model[6]; /* LE, UTF-16 */
 	int16_t  serno[6]; /* LE, UTF-16 */
-	struct mitsu70x_status_ver vers[7]; // components are 'LMFTR??'
+	struct mitsu70x_status_ver vers[7]; // components are 'MLRTF'
 	uint8_t  null[8];
 	struct mitsu70x_status_deck lower;
 	struct mitsu70x_status_deck upper;
 } __attribute__((packed));
+
+#define EK305_0104_M_CSUM  0x2878  /* 1.04 316F8 3 2878 */
+#define MD70X_0112_M_CSUM  0x9FC3  /* 1.12 316W1 1 9FC3 */
 
 struct mitsu70x_memorystatus_resp {
 	uint8_t  hdr[3]; /* E4 56 33 */
@@ -1293,6 +1296,15 @@ top:
 		     mitsu70x_media_types(resp.lower.media_brand, resp.lower.media_type));
 		ATTR("marker-types=ribbonWax\n");
 	}
+	
+	/* FW sanity checking */
+	if (ctx->type == P_KODAK_305) {
+		if (be16_to_cpu(resp.vers[0].checksum) != EK305_0104_M_CSUM)
+			WARNING("Printer FW out of date. Highly recommend upgrading EK305 to v1.04!\n");
+	} else if (ctx->type == P_MITSU_D70X) {
+		if (be16_to_cpu(resp.vers[0].checksum) != MD70X_0112_M_CSUM)
+			WARNING("Printer FW out of date. Highly recommend upgrading D70/D707 to v1.12!\n");
+	}
 
 skip_status:
 	/* Perform memory status query */
@@ -1514,12 +1526,20 @@ static void mitsu70x_dump_printerstatus(struct mitsu70x_printerstatus_resp *resp
 	DEBUG2("\n");
 	for (i = 0 ; i < 7 ; i++) {
 		char buf[7];
+		char type;
 		if (resp->vers[i].ver[5] == '@')  /* "DUMMY@" */
 			continue;
 		memcpy(buf, resp->vers[i].ver, 6);
 		buf[6] = 0;
-		INFO("Component #%u ID: %s (checksum %04x)\n",
-		     i, buf, be16_to_cpu(resp->vers[i].checksum));
+		if (i == 0) type = 'M';
+		else if (i == 1) type = 'L';
+		else if (i == 2) type = 'R';
+		else if (i == 3) type = 'T';
+		else if (i == 4) type = 'F';
+		else type = i + 0x30;
+
+		INFO("FW Component: %c %s (%04x)\n",
+		     type, buf, be16_to_cpu(resp->vers[i].checksum));
 	}
 
 	INFO("Lower Mechanical Status: %s\n",
@@ -1682,7 +1702,7 @@ static int mitsu70x_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend mitsu70x_backend = {
 	.name = "Mitsubishi CP-D70/D707/K60/D80",
-	.version = "0.54",
+	.version = "0.55",
 	.uri_prefix = "mitsu70x",
 	.cmdline_usage = mitsu70x_cmdline,
 	.cmdline_arg = mitsu70x_cmdline_arg,
