@@ -1335,7 +1335,7 @@ main(int  argc,				/* I - Number of command-line arguments */
       if (! suppress_messages)
 	{
 	  fprintf(stderr, "DEBUG: Gutenprint: ================ Printing page %d      ================\n", cups.page + 1);
-	  fprintf(stderr, "PAGE: %d 1\n", cups.page + 1);
+	  fprintf(stderr, "PAGE: %d %d\n", cups.page + 1, cups.header.NumCopies);
 	}
       v = initialize_page(&cups, default_settings, page_size_name);
 #ifdef ENABLE_CUPS_LOAD_SAVE_OPTIONS
