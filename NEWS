@@ -316,12 +316,12 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	  Note that without the library, the printer will function but
 	  the output image quality will be quite poor.
 
-     [*2] Optimal quality requires use of an external image processing
-	  library.  Only one option is available:
+     [*2] Printing requires use of an external image processing library.
+	  Only one option is available:
 
 	  * libMitsuD70ImageReProcess -- A reverse-engineered implementation
 	    of the Mitsubishi algorithms, relased under the terms of the GNU
-	    GPLv3+.  Mitsubishi foes not support this in any way.
+	    GPLv3+.  Mitsubishi does not support this in any way.
 	    Unfortunately, at this time it cannot be bundled with Gutenprint.
 
           The backend will attempt to dynamically load the library at
