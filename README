@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.2.12-pre4!  Please read these notes carefully.
+Welcome to Gutenprint 5.2.12!  Please read these notes carefully.
 
 *** NOTE TO PACKAGERS: Please read the file README.package for issues
     that are of interest to distributors and packagers of Gutenprint.
@@ -15,8 +15,7 @@ I) INTRODUCTION
     that replaces the print plug-in packaged with the GIMP
     distribution.
 
-    Gutenprint 5.2.12-pre4 is a pre-release of the forthcoming
-    Gutenprint 5.2.12.
+    Gutenprint 5.2.12 is a stable release of Gutenprint 5.2.
 
     Gutenprint was renamed from its original name of Gimp-Print in
     order to clearly distinguish it from GIMP.  While this package

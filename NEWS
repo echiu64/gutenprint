@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.2.12-pre4, a pre-release of Gutenprint 5.2.12.
+Welcome to Gutenprint 5.2.12, a stable release of Gutenprint 5.2.
 Please read these release notes carefully.
 
 Gutenprint is a suite of printer drivers for UNIX, Linux, and
@@ -422,6 +422,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
   11) Added support for the following thermal transfer printer:
 
 	Mitsubishi P95DW
+
 
 * Changes from 5.2.10
 
