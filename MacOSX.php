@@ -186,7 +186,7 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 			<span style="background-color:#d0ffff;"><a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.12/gutenprint-5.2.12.dmg/download">gutenprint-5.2.12.dmg</a></span>&nbsp;&nbsp;(12.4 MB)
 		</p>
 		<p>
-The Gutenprint project is pleased to announce Gutenprint 5.2.12, a stable release of Gutenprint 5.2.  Gutenprint 5.2.12 provides full support for Macintosh OS X 10.12.&nbsp;&nbsp;(<a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.12/gutenprint-5.2.12.tar.bz2/download">source code</a>)
+The Gutenprint project is pleased to announce Gutenprint 5.2.12, a stable release of Gutenprint 5.2.  Gutenprint 5.2.12 provides full support for Macintosh OS X 10.12 (Sierra).&nbsp;&nbsp;(<a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.12/gutenprint-5.2.12.tar.bz2/download">source code</a>)
 </p>
 
 		<p>
