@@ -19,7 +19,6 @@ and reporting the results!</p>
 
 <table summary="Supported printers for Gutenrint 5.2.11">
 <caption style="font-size:135%;margin-bottom:0.50em;"><b>Gutenprint 5.2.11</b></caption>
-<tr><td><b>Printer Model</b></td><td><b>Driver Name</b></td><td><b>Notes</b></td></tr>
 <tr><td>Canon BJ-30</td><td>bjc-30</td><td></td></tr>
 <tr><td>Canon BJC-50</td><td>bjc-50</td><td></td></tr>
 <tr><td>Canon BJC-55</td><td>bjc-55</td><td></td></tr>
@@ -1610,7 +1609,6 @@ and reporting the results!</p>
 <tr><td>Brother HL-1250</td><td>brother-hl-1250</td><td></td></tr>
 <tr><td>Brother HL-1260</td><td>brother-hl-1260</td><td></td></tr>
 <tr><td>Brother HL-1270N</td><td>brother-hl-1270n</td><td></td></tr>
-<tr><td>Brother HL-1430</td><td>brother-hl-1430</td><td></td></tr>
 <tr><td>Brother HL-1440</td><td>brother-hl-1440</td><td></td></tr>
 <tr><td>Brother HL-1450</td><td>brother-hl-1450</td><td></td></tr>
 <tr><td>Brother HL-1470N</td><td>brother-hl-1470n</td><td></td></tr>
@@ -2643,6 +2641,7 @@ and reporting the results!</p>
 <tr><td>Kodak 805</td><td>kodak-805</td><td></td></tr>
 <tr><td>Kodak 8500</td><td>kodak-8500</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Kodak 9810</td><td>kodak-9810</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kodak 8800</td><td>kodak-8800</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Kodak 8810</td><td>kodak-8810</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Kodak 7000</td><td>kodak-7000</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Kodak 7010</td><td>kodak-7010</td><td>EXPERIMENTAL</td></tr>
@@ -2656,10 +2655,10 @@ and reporting the results!</p>
 <tr><td>Mitsubishi CP-9550DW</td><td>mitsubishi-9550dw</td><td></td></tr>
 <tr><td>Mitsubishi CP-9810D</td><td>mitsubishi-9810d</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Mitsubishi CP-9810DW</td><td>mitsubishi-9810dw</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Mitsubishi CP-D70DW</td><td>mitsubishi-d70dw</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Mitsubishi CP-D70DW</td><td>mitsubishi-d70dw</td><td></td></tr>
 <tr><td>Mitsubishi CP-D707DW</td><td>mitsubishi-d707dw</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Mitsubishi CP-K60DW-S</td><td>mitsubishi-k60dw</td><td></td></tr>
-<tr><td>Mitsubishi CP-D80DW</td><td>mitsubishi-d80dw</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Mitsubishi CP-D80DW</td><td>mitsubishi-d80dw</td><td></td></tr>
 <tr><td>Kodak 305</td><td>kodak-305</td><td></td></tr>
 <tr><td>Mitsubishi CP-D90DW</td><td>mitsubishi-d90dw</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Mitsubishi CP-9600DW</td><td>mitsubishi-9600dw</td><td></td></tr>
@@ -2670,7 +2669,9 @@ and reporting the results!</p>
 <tr><td>Mitsubishi CP-9800DW</td><td>mitsubishi-9800dw</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Mitsubishi CP-9800DZ</td><td>mitsubishi-9800dz</td><td></td></tr>
 <tr><td>Mitsubishi CP-9800DW-S</td><td>mitsubishi-9800dw-s</td><td></td></tr>
+<tr><td>Mitsubishi P95D</td><td>mitsubishi-p95d</td><td></td></tr>
 <tr><td>Shinko CHC-S9045</td><td>shinko-chcs9045</td><td></td></tr>
+<tr><td>Mitsubishi CP-9500DW</td><td>mitsubishi-9500dw</td><td></td></tr>
 <tr><td>Shinko CHC-S2145</td><td>shinko-chcs2145</td><td></td></tr>
 <tr><td>Sinfonia S2145/S2</td><td>sinfonia-chcs2145</td><td></td></tr>
 <tr><td>Shinko CHC-S1245</td><td>shinko-chcs1245</td><td>EXPERIMENTAL</td></tr>
@@ -2693,6 +2694,7 @@ and reporting the results!</p>
 <tr><td>Citizen OP900II</td><td>citizen-op900ii</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Mitsubishi CP-3800DW</td><td>mitsubishi-cp-3800dw</td><td></td></tr>
 <tr><td>Dai Nippon Printing DS80DX</td><td>dnp-ds80dx</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Dai Nippon Printing DS820</td><td>dnp-ds820</td><td></td></tr>
 </table>
 
 

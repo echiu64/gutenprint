@@ -130,9 +130,9 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 		<h2> Headlines </h2>
 
 		<p>
-			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.12-pre4 is released!</span>
+			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.12 is released!</span>
 			<br>
-			<a href="MacOSX.php#5.2.12-pre4">November 1, 2016</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.12-pre4, a pre-release of Gutenprint 5.2.12.  This release adds support for many new printers and other improvements over 5.2.11. <b>NOTE: Users of many dye sublimation printers must follow a special installation procedure.  Please read the release notes very carefully!</b>  See the <a href="MacOSX.php#5.2.11">Release notes</a> for more detail.  See the <b>Downloads</b> section for download links.
+			<a href="MacOSX.php#5.2.12">January 19, 2017</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.12, a stable release of Gutenprint 5.2.  This release adds support for many new printers and other improvements over 5.2.11. <b>NOTE: Users of many dye sublimation printers must follow a special installation procedure.  Please read the release notes very carefully!</b>  See the <a href="MacOSX.php#5.2.12">Release notes</a> for more detail.  See the <b>Downloads</b> section for download links.
 		</p>
 		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.11 is released!</span>
@@ -181,12 +181,12 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Downloads</h2>
 		<p>
-			<b>Gutenprint 5.2.12-pre4</b>
+			<b>Gutenprint 5.2.12</b>
 			<br>
-			<span style="background-color:#d0ffff;"><a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.12-pre4/gutenprint-5.2.12-pre4.dmg/download">gutenprint-5.2.12-pre4.dmg</a></span>&nbsp;&nbsp;(12.4 MB)
+			<span style="background-color:#d0ffff;"><a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.12/gutenprint-5.2.12.dmg/download">gutenprint-5.2.12.dmg</a></span>&nbsp;&nbsp;(12.4 MB)
 		</p>
 		<p>
-The Gutenprint project is pleased to announce Gutenprint 5.2.12-pre4, a pre-release of 5.2.12.&nbsp;&nbsp;(<a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.12-pre4/gutenprint-5.2.12-pre4.tar.bz2/download">source code</a>)
+The Gutenprint project is pleased to announce Gutenprint 5.2.12, a stable release of Gutenprint 5.2.  Gutenprint 5.2.12 provides full support for Macintosh OS X 10.12.&nbsp;&nbsp;(<a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.12/gutenprint-5.2.12.tar.bz2/download">source code</a>)
 </p>
 
 		<p>
@@ -279,24 +279,24 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.10, a stable releas
 <hr>
 <h3> News Items </h3>
 <!-- Yuk.  Have to use tables to get news item head formatting as it was before. Gecko browsers will not float text properly. Even IE Mac 5.2.3 does this right -->
-<a name="5.2.12-pre4"></a>
+<a name="5.2.12"></a>
 <table cellpadding="0" bgcolor="#d0d0d0" width="60%">
 	<tr>
 		<td align="left">
-			<b>Gutenprint 5.2.12-pre4</b>
+			<b>Gutenprint 5.2.12</b>
 		</td>
 		<td align="right">
-			<b>2016-01-22</b>
+			<b>2017-01-19</b>
 		</td>
 	</tr>
 </table>
 <p>
-<b>Gutenprint 5.2.12-pre4</b> is a pre-release of Gutenprint 5.2.12.  This release adds support for many new printers and other improvements over 5.2.11. <b>NOTE: Users of many dye sublimation printers must follow a special installation procedure.  Please read the release notes very carefully!</b>
+<b>Gutenprint 5.2.12</b> is a stable release of Gutenprint 5.2.  This release adds support for many new printers and other improvements over 5.2.11. <b>NOTE: Users of many dye sublimation printers must follow a special installation procedure.  Please read the release notes very carefully!</b>
 <ol style="margin-top:0.25em; list-style-type:decimal;">
 
 	<li> Support most Datamax-O'Neil DPL printers</li>
 
-	<li> Add support for additional dye sublimation printers</li>
+	<li> Add support and improvements for additional dye sublimation printers</li>
 
 	<li> Add support for additional Epson inkjet printers, including preliminary/experimental support for many SureColor P-series printers.  There are restrictions on the latter; please read the release notes for details.</li>
 
