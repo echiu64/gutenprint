@@ -87,7 +87,7 @@ query (void)
     { GIMP_PDB_DRAWABLE,	(BAD_CONST_CHAR) "drawable",	(BAD_CONST_CHAR) "Input drawable" },
     { GIMP_PDB_STRING,	(BAD_CONST_CHAR) "output_to",	(BAD_CONST_CHAR) "Print command or filename (| to pipe to command)" },
     { GIMP_PDB_STRING,	(BAD_CONST_CHAR) "driver",	(BAD_CONST_CHAR) "Printer driver short name" },
-    { GIMP_PDB_STRING,	(BAD_CONST_CHAR) "ppd_file",	(BAD_CONST_CHAR) "PPD file" },
+    { GIMP_PDB_STRING,	(BAD_CONST_CHAR) "printer_queue",	(BAD_CONST_CHAR) "CUPS Printer Queue" },
     { GIMP_PDB_INT32,	(BAD_CONST_CHAR) "output_type",	(BAD_CONST_CHAR) "Output type (0 = gray, 1 = color)" },
     { GIMP_PDB_STRING,	(BAD_CONST_CHAR) "resolution",	(BAD_CONST_CHAR) "Resolution (\"300\", \"720\", etc.)" },
     { GIMP_PDB_STRING,	(BAD_CONST_CHAR) "media_size",	(BAD_CONST_CHAR) "Media size (\"Letter\", \"A4\", etc.)" },
@@ -103,13 +103,19 @@ query (void)
     { GIMP_PDB_FLOAT,	(BAD_CONST_CHAR) "cyan",	(BAD_CONST_CHAR) "Cyan level" },
     { GIMP_PDB_FLOAT,	(BAD_CONST_CHAR) "magenta",	(BAD_CONST_CHAR) "Magenta level" },
     { GIMP_PDB_FLOAT,	(BAD_CONST_CHAR) "yellow",	(BAD_CONST_CHAR) "Yellow level" },
-    { GIMP_PDB_INT32,	(BAD_CONST_CHAR) "linear",	(BAD_CONST_CHAR) "Linear output (0 = normal, 1 = linear)" },
-    { GIMP_PDB_INT32,	(BAD_CONST_CHAR) "image_type",	(BAD_CONST_CHAR) "Image type (0 = line art, 1 = solid tones, 2 = continuous tone, 3 = monochrome)"},
+    { GIMP_PDB_STRING,	(BAD_CONST_CHAR) "color correction",	(BAD_CONST_CHAR) "Color Correction model" },
     { GIMP_PDB_FLOAT,	(BAD_CONST_CHAR) "saturation",	(BAD_CONST_CHAR) "Saturation (0-1000%)" },
     { GIMP_PDB_FLOAT,	(BAD_CONST_CHAR) "density",	(BAD_CONST_CHAR) "Density (0-200%)" },
     { GIMP_PDB_STRING,	(BAD_CONST_CHAR) "ink_type",	(BAD_CONST_CHAR) "Type of ink or cartridge" },
+    { GIMP_PDB_STRING,	(BAD_CONST_CHAR) "ink_set",	(BAD_CONST_CHAR) "Set of inks to use" },
     { GIMP_PDB_STRING,	(BAD_CONST_CHAR) "dither_algorithm", (BAD_CONST_CHAR) "Dither algorithm" },
+    { GIMP_PDB_STRING,	(BAD_CONST_CHAR) "weave", (BAD_CONST_CHAR) "Weave method" },
+    { GIMP_PDB_INT32, (BAD_CONST_CHAR) "full bleed", (BAD_CONST_CHAR) "Go to edge of page [0, 1]" },
     { GIMP_PDB_INT32,	(BAD_CONST_CHAR) "unit",	(BAD_CONST_CHAR) "Unit 0=Inches 1=Metric" },
+    { GIMP_PDB_STRING, (BAD_CONST_CHAR) "printing direction", (BAD_CONST_CHAR) "Bidirectional, Unidirectional, ..." },
+    { GIMP_PDB_FLOAT, (BAD_CONST_CHAR) "drop size small", (BAD_CONST_CHAR) "small drops (0.0 - 1.0)" },
+    { GIMP_PDB_FLOAT, (BAD_CONST_CHAR) "drop size medium", (BAD_CONST_CHAR) "medium drops (0.0 - 1.0)" },
+    { GIMP_PDB_FLOAT, (BAD_CONST_CHAR) "drop size large", (BAD_CONST_CHAR) "large drops (0.0 - 1.0)" },
   };
 
   static const gchar *blurb = "This plug-in prints images from The GIMP using Gutenprint directly.";
@@ -290,8 +296,18 @@ run (const char        *name,		/* I - Name of print program. */
 	  /* What do we do with old output_to?  Probably best ignore it. */
 	  stpui_plist_set_output_to(&gimp_vars, param[3].data.d_string);
 #endif
+    gdouble xres, yres;
+    gimp_image_get_resolution(image_ID, &xres, &yres);
+    gdouble pixwidth = gimp_drawable_width(drawable_ID);
+    gdouble pixheight = gimp_drawable_height(drawable_ID);
+    gdouble pointwidth = gimp_pixels_to_units(pixwidth, GIMP_UNIT_POINT, xres);
+    gdouble pointheight = gimp_pixels_to_units(pixheight, GIMP_UNIT_POINT, yres);
+
+    stp_set_height(gimp_vars.v, pointheight);
+    stp_set_width(gimp_vars.v, pointwidth);
+
 	  stp_set_driver(gimp_vars.v, param[4].data.d_string);
-	  stp_set_file_parameter(gimp_vars.v, "PPDFile", param[5].data.d_string);
+	  stpui_plist_set_queue_name(&gimp_vars, param[5].data.d_string);
 	  switch (param[6].data.d_int32)
 	    {
 	    case 0:
@@ -337,23 +353,41 @@ run (const char        *name,		/* I - Name of print program. */
 	    stp_set_float_parameter(gimp_vars.v, "Yellow", param[20].data.d_float);
 
           if (nparams > 21)
-	    stp_set_string_parameter(gimp_vars.v, "ImageOptimization", param[21].data.d_string);
+	    stp_set_string_parameter(gimp_vars.v, "ColorCorrection", param[21].data.d_string);
 
           if (nparams > 22)
-            stp_set_float_parameter(gimp_vars.v, "Saturation", param[23].data.d_float);
+            stp_set_float_parameter(gimp_vars.v, "Saturation", param[22].data.d_float);
 
           if (nparams > 23)
-            stp_set_float_parameter(gimp_vars.v, "Density", param[24].data.d_float);
+            stp_set_float_parameter(gimp_vars.v, "Density", param[23].data.d_float);
 
 	  if (nparams > 24)
-	    stp_set_string_parameter(gimp_vars.v, "InkType", param[25].data.d_string);
+	    stp_set_string_parameter(gimp_vars.v, "InkType", param[24].data.d_string);
 
-	  if (nparams > 25)
+    if (nparams > 25)
+      stp_set_string_parameter(gimp_vars.v, "InkSet", param[25].data.d_string);
+
+    if (nparams > 26)
 	    stp_set_string_parameter(gimp_vars.v, "DitherAlgorithm",
 			      param[26].data.d_string);
 
-          if (nparams > 26)
-	    gimp_vars.unit = param[27].data.d_int32;
+    if (nparams > 27)
+      stp_set_string_parameter(gimp_vars.v, "Weave", param[27].data.d_string);
+
+    if( nparams > 28)
+      stp_set_boolean_parameter(gimp_vars.v, "FullBleed", param[28].data.d_int32);
+    
+          if (nparams > 29)
+	    gimp_vars.unit = param[29].data.d_int32;
+
+          if (nparams > 30)
+            stp_set_string_parameter(gimp_vars.v, "PrintingDirection", param[30].data.d_string);
+          
+          if (nparams > 33) {
+            stp_set_float_parameter(gimp_vars.v, "DropSize1", param[31].data.d_float);
+            stp_set_float_parameter(gimp_vars.v, "DropSize2", param[32].data.d_float);
+            stp_set_float_parameter(gimp_vars.v, "DropSize3", param[33].data.d_float);
+          }
 	}
 
       break;
