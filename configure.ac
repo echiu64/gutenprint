@@ -403,13 +403,13 @@ dnl   [EXTRA_LIBREADLINE_DEPS]=""
 dnl fi
 
 # libusb-1.0 (For CUPS backends, but only bother if CUPS is enabled)
-if test "x$BUILD_CUPS" = "xyes" ; then
+AS_IF([test "x$BUILD_CUPS" = "xyes"], [
  PKG_CHECK_MODULES([LIBUSB], [libusb-1.0],
                    [HAVE_LIBUSB=yes
                     BUILD_LIBUSB_BACKENDS=yes],
                    [HAVE_LIBUSB=no
 	            BUILD_LIBUSB_BACKENDS=no])
-fi
+])
 
 AC_PATH_TOOL([GIMPTOOL2_CHECK], [gimptool-2.0 gimptool])
 if test -z "${GIMPTOOL2_CHECK}" ; then
@@ -440,9 +440,9 @@ PKG_CHECK_MODULES([GTK2], [gtk+-2.0],
                   [HAVE_GTK2=no
 	           BUILD_LIBGUTENPRINTUI2=no])
 # Require both gimptool and pkg-config to succeed
-if test x$BUILD_GIMP2 = xyes; then
+AS_IF([test "x$BUILD_GIMP2" = "xyes"], [
   PKG_CHECK_MODULES([GIMP2], [gimpui-2.0], [BUILD_GIMP2=yes], [BUILD_GIMP2=no])
-fi
+])
 
 STP_ARG_WITH([gimp2],
              [build GIMP 2.x Print plugin],
