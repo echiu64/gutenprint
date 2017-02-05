@@ -2893,7 +2893,10 @@ static int mitsu_p95d_parse_parameters(stp_vars_t *v)
 
   if (pd->copies > 200)
     pd->copies = 200;
-  
+
+  pd->privdata.m95d.brightness = stp_get_int_parameter(v, "P95Brightness");
+  pd->privdata.m95d.contrast = stp_get_int_parameter(v, "P95Contrast");
+
   if (!strcmp(gamma, "Printer")) {
     pd->privdata.m95d.gamma = 0x00;
   } else if (!strcmp(gamma, "T1")) {
@@ -3051,7 +3054,10 @@ static void mitsu_p95d_printer_init(stp_vars_t *v)
     stp_putc(0x00, v);	  
   dyesub_nputc(v, 0x00, 5);
   stp_putc(pd->privdata.m95d.gamma, v);
-  dyesub_nputc(v, 0x00, 3);
+  stp_putc(pd->privdata.m95d.brightness, v);
+  stp_putc(pd->privdata.m95d.contrast, v);
+  stp_putc(0x00, v);
+
   if (pd->privdata.m95d.gamma == 0x10) {
     stp_zfwrite(p95d_lut, 1, sizeof(p95d_lut), v); /* XXX only for K95HG? */
   } else {
