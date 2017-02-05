@@ -1,7 +1,7 @@
 /*
  *   CUPS Backend common code
  *
- *   (c) 2013-2016 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2017 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -117,6 +117,7 @@ enum {
 	P_MITSU_9800,
 	P_MITSU_9800S,
 	P_MITSU_9810,
+	P_MITSU_P93D,	
 	P_MITSU_P95D,
 	P_DNP_DS40,
 	P_DNP_DS80,
