@@ -3576,7 +3576,8 @@ canon_init_setPrintMode(const stp_vars_t *v, const canon_privdata_t *init)
   if (!arg_6d_a)
     arg_6d_b= 1;
 
-    arg_6d_1= 0x04;
+  arg_6d_1= 0x04;
+    
   if ((!strcmp(init->caps->name,"7000")) && (init->used_inks == CANON_INK_K || init->used_inks == CANON_INK_CcMmYK || init->used_inks == CANON_INK_CcMmYyK))
     arg_6d_1= 0x03;
 
