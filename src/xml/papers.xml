@@ -355,10 +355,10 @@
       <height value="864"/>
       <unit value="english-extended"/>
     </paper>
-    <paper name="w595h842">
+    <paper name="w576h842">
       <description translate="value" value="8x11.7"/>
       <comment value="Only used by DS80, DS80DX, DS820 dyesub printers"/>
-      <width value="595"/>
+      <width value="576"/>
       <height value="842"/>
       <unit value="english-extended"/>
     </paper>
