@@ -2531,9 +2531,13 @@ canon_size_type(const stp_vars_t *v, const canon_cap_t * caps)
 {
   const stp_papersize_t *pp = stp_get_papersize_by_size(stp_get_page_height(v),
 							stp_get_page_width(v));
+
+  stp_deprintf(STP_DBG_CANON,"canon: entered canon_size_type\n");
+  
   if (pp)
     {
       const char *name = pp->name;
+      stp_deprintf(STP_DBG_CANON,"canon: in canon_size_type is pp->name: '%s'\n",name);
       /* used internally: do not translate */
       /* built ins:                                  Japanese driver notation */
       if (!strcmp(name,"A5"))          return 0x01;
@@ -4259,6 +4263,7 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
     user_ESCP_9=0x00; /* fall-through setting, but this value is not used */
   
   arg_ESCP_1 = (init->pt) ? canon_size_type(v,init->caps): 0x03;
+  stp_deprintf(STP_DBG_CANON,"canon: ESCP (P code read paper size, resulting arg_ESCP_1: '%x'\n",arg_ESCP_1);
   arg_ESCP_2 = (init->pt) ? init->pt->media_code_P: 0x00;
 
   /* Code for last argument in 9-byte ESC (P printers with and upper and lower tray included in the cassette input source 
