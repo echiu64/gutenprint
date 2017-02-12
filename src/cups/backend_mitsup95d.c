@@ -170,16 +170,11 @@ top:
 		ptr = ctx->hdr4;
 		break;
 	case 0x5a: /* Plane header OR printer reset */
-		// XXX read in next character.
-
-		// buf[2] is 0x43 for reset, 0x74 for plane.
-//		remain = 4;
-//		ptr = ctx->mem_clr;
-//		ctx->mem_clr_present = 1;
-//		break;
-
-		remain = 12;
-		ptr = ctx->plane;
+		// reset memory: 1b 5a 43 ...  [len 04]
+		// plane header: 1b 5a 74 ...  [len 12]
+		// Read in the minimum length, and clean it up later */
+		ptr = tmphdr;
+		remain = 4;
 		break;
 	default:
 		ERROR("Unrecognized command! (%02x %02x)\n", buf[0], buf[1]);
@@ -198,6 +193,20 @@ top:
 			return CUPS_BACKEND_CANCEL;
 		remain -= i;
 		ptr_offset += i;
+
+		/* Handle the ambiguous 0x5a block */
+		if (buf[1] == 0x5a && remain == 0) {
+			if (tmphdr[2] == 0x74) { /* plane header */
+				ptr = ctx->plane;
+				remain = 12 - ptr_offset; /* Finish reading */
+			} else if (tmphdr[2] == 0x43) { /* reset memory */
+				ptr = ctx->mem_clr;
+				ctx->mem_clr_present = 1;
+				remain = 4 - ptr_offset;
+			}
+			memcpy(ptr, tmphdr, ptr_offset);
+			buf[1] = 0xff;
+		}
 	}
 
 	if (ptr == tmphdr) {
@@ -472,8 +481,8 @@ static int mitsup95d_cmdline_arg(void *vctx, int argc, char **argv)
 
 /* Exported */
 struct dyesub_backend mitsup95d_backend = {
-	.name = "Mitsubishi P95D",
-	.version = "0.04",
+	.name = "Mitsubishi P93D/P95D",
+	.version = "0.05",
 	.uri_prefix = "mitsup95d",
 	.cmdline_arg = mitsup95d_cmdline_arg,
 	.init = mitsup95d_init,
