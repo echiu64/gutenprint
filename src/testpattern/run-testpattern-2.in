@@ -25,7 +25,24 @@ my @special_options = ();
 my $include_pattern = '';
 my $exclude_pattern = '';
 my %exclude_list = ();
-my @standard_options = qw(InkType InkSet,RawChannels DitherAlgorithm Duplex MediaType InputSlot ColorCorrection ImageType FullBleed Quality UseGloss Weave PrintingDirection Density CyanDensity Orientation LabelSeparator);
+my @standard_options = ("InkType",
+			"InkSet,RawChannels",
+			"DitherAlgorithm",
+			"Duplex",
+			"MediaType",
+			"InputSlot",
+			"ColorCorrection",
+			"ImageType",
+			"FullBleed",
+			"Quality",
+			"UseGloss",
+			"Weave",
+			"PrintingDirection",
+			"Density",
+			"CyanDensity",
+			"Orientation", 
+			"LabelSeparator",
+			"PageSize,Resolution=MIN");
 my $global_status = 1;
 my $run_installed = 0;
 my $use_min_res = 0;
@@ -522,18 +539,34 @@ sub do_output($) {
     }
 }
 
-sub build_list($$) {
-    my ($keys, $printer) = @_;
+sub build_list($$$$) {
+    my ($keys, $printer, $min_res, $max_res) = @_;
     my (@keys) = split (/,/, $keys);
     my ($key) = $keys[0];
     my ($rest);
     my (@stuff);
     if ($#keys > 0) {
 	$rest = join ",", @keys[1..$#keys];
-	@stuff = build_list($rest, $printer);
+	@stuff = build_list($rest, $printer, $min_res, $max_res);
     }
     my (@tmp);
-    if ($param_types{$printer}{$key} == 3) {
+    if ($key =~ /=/) {
+	my (@values);
+	my ($vlist);
+	($key, $vlist) = split(/=/, $key);
+	@tmp = split(/;/, $vlist);
+	if ($key eq 'Resolution') {
+	    @tmp = map {
+		if ($_ eq 'MIN') {
+		    $min_res;
+		} elsif ($_ eq 'MAX') {
+		    $max_res;
+		} else {
+		    $_
+		}
+	    } @tmp;
+	}
+    } elsif ($param_types{$printer}{$key} == 3) {
 	my ($minv) = $stp_float_values{$printer}{'MINVAL'}{$key};
 	my ($defv) = $stp_float_values{$printer}{'DEFVAL'}{$key};
 	my ($maxv) = $stp_float_values{$printer}{'MAXVAL'}{$key};
@@ -571,7 +604,7 @@ sub build_list($$) {
 sub build_key($$) {
     my ($keys, $printer) = @_;
     my (@keys) = split (/,/, $keys);
-    my (@answer) = grep { defined $param_types{$printer}{$_} } @keys;
+    my (@answer) = grep { defined $param_types{$printer}{$_} || /=/ } @keys;
     return join ",", @answer;
 }
 
@@ -580,6 +613,8 @@ sub do_printer($$) {
     my $tmp;
     my $min_res_name;
     my $min_res_value = 0;
+    my $max_res_name;
+    my $max_res_value = 0;
     my $first_time = 1;
     my $key;
     my $skip_resolutions_local = $skip_resolutions;
@@ -600,23 +635,28 @@ sub do_printer($$) {
 	}
     }
 
-    foreach $key (@special_options) {
-	my (@subkeys) = split(/,/, $key);
-	if (grep { /^Resolution$/ } @subkeys) {
-	    $skip_resolutions_local = 1;
-	}
-	my $nkey = build_key($key, $printer);
-	if ($nkey ne "") {
-	    my (@vals) = build_list($nkey, $printer);
-	    $opt_vals{$nkey} = \@vals;
-	}
-    }
     foreach $tmp (sort @resolutions) {
 	my $res_value = ($stpdata{$printer}{'x_resolution'}{$tmp} *
 			 $stpdata{$printer}{'y_resolution'}{$tmp});
 	if ($min_res_value == 0 || $res_value < $min_res_value) {
 	    $min_res_value = $res_value;
 	    $min_res_name = $tmp;
+	}
+	if ($res_value > $min_res_value) {
+	    $max_res_value = $res_value;
+	    $max_res_name = $tmp;
+	}
+    }
+    foreach $key (@special_options) {
+	my (@subkeys) = (split(/,/, $key));
+	if (grep { /^Resolution$/ } @subkeys) {
+	    $skip_resolutions_local = 1;
+	}
+	my $nkey = build_key($key, $printer);
+	if ($nkey ne "") {
+	    my (@vals) = build_list($nkey, $printer, $min_res_name, $max_res_name);
+	    $nkey =~ s/=[^,]*//g;
+	    $opt_vals{$nkey} = \@vals;
 	}
     }
     if ($use_min_res > 1) {
