@@ -5826,11 +5826,11 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   /* Allocate compression buffer */
   if(caps->features & CANON_CAP_I)
     /*privdata.comp_buf = stp_zalloc(privdata.buf_length_max * 2 * caps->raster_lines_per_block * privdata.num_channels); */
-      privdata.comp_buf = stp_zalloc(privdata.buf_length_max * 2 * privdata.mode->raster_lines_per_block * privdata.num_channels); /* for multiraster we need to buffer 8 lines for every color */
+      privdata.comp_buf = stp_zalloc(stp_compute_tiff_linewidth(v, privdata.buf_length_max * 2 * privdata.mode->raster_lines_per_block * privdata.num_channels)); /* for multiraster we need to buffer 8 lines for every color */
   else
-      privdata.comp_buf = stp_zalloc(privdata.buf_length_max * 2);
+      privdata.comp_buf = stp_zalloc(stp_compute_tiff_linewidth(v, privdata.buf_length_max * 2));
   /* Allocate fold buffer */
-  privdata.fold_buf = stp_zalloc(privdata.buf_length_max);
+  privdata.fold_buf = stp_zalloc(stp_compute_tiff_linewidth(v, privdata.buf_length_max));
 
 
 

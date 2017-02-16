@@ -249,23 +249,30 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
 * Changes from 5.2.12
 
-  0) Critical bugfix
+  1) Critical bugfix
 
      * Correct mis-defined paper type that collided with standard
-       A4 paper.
+       A4 paper.  This resulted in some Canon and PCL printers
+       mishandling A4 paper.
 
-  1) Add support for the following printers:
+  2) Added support for the following dye sublimation printers:
 
-	Mitsubishi P93DW
+     Mitsubishi P93DW
 
-  2) Enhanced support or bugfixes for the following printers:
+  3) Added support for the following Epson inkjet printer:
 
-	Mitsubishi P95DW
+     EPSON L210
 
-  3) Improvements to the Gimp plugin
+  3) Enhanced support or bugfixes for the following printers:
+
+     Mitsubishi P95DW
+
+  4) Improvements to the Gimp plugin
 
      * Compilation fixes when CUPS is not enabled
+
      * Fix non-interactive plugin mode
+
 
 * Changes from 5.2.11
 
