@@ -1,0 +1,114 @@
+#!/bin/sh
+#
+# Copyright (C) 2017 Robert Krawitz
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+
+usage() {
+    echo "Usage: $cmd default [info] [version]"
+    echo "       info can be empty, or one of major, minor, micro, extra, git"
+    echo "       info can also be extra-git, core-version (major.minor),"
+    echo "            base-version (major.minor.micro),"
+    echo "            full-version (major.minor.micro[-extra]), or all"
+    exit 1
+}
+
+cmd="$0"
+
+if [ "$#" -lt 1 -o "$#" -gt 3 ] ; then
+    echo "+$#+"
+    usage
+fi
+
+description="${3:-`git describe --dirty --always --first-parent 2>/dev/null | sed 's/^[^0-9]*-//'`}"
+
+# If we don't have git or this is not a repository, simply return the default value
+if [ -z "$description" ] ; then
+    echo "$1"
+    exit 0
+fi
+
+get_major() {
+    echo "$1" | sed -e 's/[-_\.].*//'
+}
+
+get_minor() {
+    echo "$1" | sed -e 's/^[0-9]*[-_\.]//' \
+		    -e 's/[-_\.].*//'
+}
+
+get_micro() {
+    echo "$1" | sed -e 's/^[0-9]*[-_\.][0-9]*[-_\.]//' \
+		    -e 's/[-_\.].*//'
+}
+
+get_extra() {
+    echo "$1" | sed -e 's/^[0-9]*[-_\.][0-9]*[-_\.][0-9]*\([a-zA-Z]\|\)//' \
+		    -e 's/-\([0-9]*-\|\)g[0-9a-zA-Z]*\(-dirty\|\)$//' \
+    		    -e 's/^_/-/'
+}
+
+get_git() {
+    echo "$1" | sed -e 's/^[0-9]*[-_\.][0-9]*[-_\.][0-9]*\([a-zA-Z]\|\)//' \
+		    -e 's/^[-_\.][a-zA-Z][a-zA-Z]*[0-9]*\([a-zA-Z]\|\)//' \
+		    -e 's/^[-_\.]/-/'
+}
+
+get_extra_git() {
+    echo "$1" | sed -e 's/^[0-9]*[-_\.][0-9]*[-_\.][0-9]*\([a-zA-Z]\|\)//' \
+		    -e 's/^[-_\.]/-/'
+}
+
+get_core_version() {
+    echo "$1" | sed -e 's/^\([0-9]*[-_\.][0-9]*\).*/\1/' \
+		    -e 's/[-_\.]/./g'
+}
+
+get_base_version() {
+    echo "$1" | sed -e 's/^\([0-9]*[-_\.][0-9]*[-_\.][0-9]*\([a-zA-Z]\|\)\).*/\1/' \
+		    -e 's/[-_\.]/./g'
+}
+
+get_full_version() {
+    echo "$1" | sed -e 's/-[0-9]*-g[0-9a-z]*\(-dirty\|\)$//' \
+		    -e 's/[-_\.]/=/g' \
+		    -e 's/=/./' \
+		    -e 's/=/./' \
+		    -e 's/=/-/'
+}
+
+get_all() {
+    echo "$1" | sed -e 's/[-_\.]/=/g' \
+		    -e 's/=/./' \
+		    -e 's/=/./' \
+		    -e 's/=/-/g'
+}
+
+case "$2" in
+    major)        get_major        "$description" ;;
+    minor)        get_minor        "$description" ;;
+    micro)        get_micro        "$description" ;;
+    extra)        get_extra        "$description" ;;
+    git)          get_git          "$description" ;;
+    extra-git)    get_extra_git    "$description" ;;
+    core-version) get_core_version "$description" ;;
+    base-version) get_base_version "$description" ;;
+    full-version) get_full_version "$description" ;;
+    ''|all)       get_all          "$description" ;;
+    *)            usage                           ;;
+esac
+
+exit 0
