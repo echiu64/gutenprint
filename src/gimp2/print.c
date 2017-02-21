@@ -296,7 +296,6 @@ run (const char        *name,		/* I - Name of print program. */
 	  /* What do we do with old output_to?  Probably best ignore it. */
 	  stpui_plist_set_output_to(&gimp_vars, param[3].data.d_string);
 #endif
-    gdouble xres, yres;
     gimp_image_get_resolution(image_ID, &xres, &yres);
     gdouble pixwidth = gimp_drawable_width(drawable_ID);
     gdouble pixheight = gimp_drawable_height(drawable_ID);
