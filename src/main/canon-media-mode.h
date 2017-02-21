@@ -7808,7 +7808,7 @@ static const char* canon_MULTIPASS_MP630_modeuses_plain[] = {
   "600x600dpi",
   "600x600dpi_draft",/*untested*/
   "300x300dpi",
-  "300x300dpi_draft",/*untested*/
+  "300x300dpi_draft",
   NULL
   };
 

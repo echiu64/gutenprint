@@ -2246,7 +2246,7 @@ static const canon_cap_t canon_model_capabilities[] =
     3,4, /* ESC (l and (P command lengths */
     0, /* Upper/Lower Cassette option */
     control_cmd_PIXMA_iP4200,  /*features */
-    &canon_MULTIPASS_MP640_modelist,
+    &canon_MULTIPASS_MP630_modelist,
     &canon_MULTIPASS_MP630_paperlist,
     &canon_MULTIPASS_MP630_modeuselist,
     NULL,
