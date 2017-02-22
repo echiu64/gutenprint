@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.2.12, a stable release of Gutenprint 5.2.
+Welcome to Gutenprint 5.2.13-pre1, a development release of Gutenprint 5.2.
 Please read these release notes carefully.
 
 Gutenprint is a suite of printer drivers for UNIX, Linux, and
@@ -255,7 +255,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        A4 paper.  This resulted in some Canon and PCL printers
        mishandling A4 paper.
 
-  2) Added support for the following dye sublimation printers:
+  2) Added support for the following thermal transfer printers:
 
      Mitsubishi P93DW
 
