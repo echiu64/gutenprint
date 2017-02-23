@@ -3620,6 +3620,8 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
 {
   unsigned char arg_70_1,arg_70_2,arg_70_3,arg_70_4;
 
+  unsigned char arg_ESCP1;
+
   int border_left,border_right,border_top,border_bottom;
   int border_left2,border_top2;
   int border_right2;
@@ -4202,7 +4204,6 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
 	/* standard paper sizes, unchanged for borderless so use original borders */
 	if ( (init->caps->features & CANON_CAP_BORDERLESS) && 
 	     !(print_cd) && stp_get_boolean_parameter(v, "FullBleed") ) {
-	  stp_put32_be((init->page_width) * unit / 72,v); /* paper_width */
 	  stp_put32_be((init->page_height) * unit / 72,v); /* paper_length */
 	}
 	else {
@@ -4212,7 +4213,14 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
 	    stp_put32_be((init->page_height + border_top2 + border_bottom2) * unit / 72,v); /* paper_length */
 	  }
 	  else { /* not CD */
-	    stp_put32_be((init->page_width + border_left + border_right) * unit / 72,v); /* paper_width */
+	  /* discovered that paper_width needs to be same as Windows dimensions for Canon printer firmware to automatically determine which tray to pull paper from automatically. */
+		arg_ESCP1 = (init->pt) ? canon_size_type(v,init->caps): 0x0; /* hack---must always be set already */
+		if  (arg_ESCP1 == 0x3) { /* exception for A4 */
+	          stp_put32_be(4961,v); /* paper_width */
+                }
+	        else {
+	          stp_put32_be((init->page_width + border_left + border_right) * unit / 72,v); /* paper_width */
+                }
 	    stp_put32_be((init->page_height + border_top + border_bottom) * unit / 72,v); /* paper_length */
 	  }
 	}
