@@ -4227,70 +4227,74 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
 	    */
 	    switch(arg_ESCP_1)
 	      {
-	      case 0x01: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* A5 */
-	      case 0x03: paper_width = 4961; break;; /* A4 */
-	      case 0x05: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* A3 */
-	      case 0x08: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* B5 */
-	      case 0x0d: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* Letter */
+	      case 0x01: paper_width = 3497; /* l: 4961 */ break;; /* A5 */
+	      case 0x03: paper_width = 4961; /* l: 7016 */ break;; /* A4 */
+	      case 0x05: paper_width = 7016; /* l: 9922 */ break;; /* A3 */
+	      case 0x08: paper_width = 4300; /* l: 6071 */ break;; /* B5 */
+	      case 0x0a: paper_width = 6071; /* l: 8599 */ break;; /* B4 */
+	      case 0x0d: paper_width = 5100; /* l: 6600 */ break;; /* Letter */
 	      case 0x0f: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* Legal */
-	      case 0x11: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* Tabloid : 11x17" */
-	      case 0x2a: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* LetterExtra : Letter navi, Letter+ */
+	      case 0x11: paper_width = 6600; /* l: 10200 */ break;; /* Tabloid : 11x17" */
+		/* Check this: */
+	      case 0x2a: paper_width = 7772; /* l: 11410 */ break;; /* LetterExtra : Letter navi, Letter+ */
 	      case 0x2b: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* A4Extra : A4navi, A4+ */
-	      case 0x2c: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* A3Extra : A3navi, A3+ */
+		/* Check this: */
+	      case 0x2c: paper_width = 7772; /* l: 11410 */ break;; /* A3Extra : A3navi, A3+ */
 	      case 0x2d: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* w288h144 */
 		/* Hagaki media */
-	      case 0x14: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* w283h420 : Hagaki */
+	      case 0x14: paper_width = 2363; /* l: 3497 */ break;; /* w283h420 : Hagaki */
 	      case 0x39: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* w420h567 : Oufuku Hagaki */
-	      case 0x52: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* w288h512 : Wide101.6x180.6mm */
-		/* Missing so far: w283h566 Wide postcard 148mm x 200mm */
+		/* Correction: Oufuku Hagaki is w283h566 : Wide postcard 148mm x 200mm --- No idea what w420h567 is supposed to be */
+		/* paper_width = 4725 (200.0mm), paper_length = 3497 (148.0mm) */
+	      case 0x52: paper_width = 2400; /* l: 4267 */ break;; /* w288h512 : Wide101.6x180.6mm */
 		/* Envelope media */
-              case 0x16: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* COM10 : US Commercial #10 */
-              case 0x17: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* DL : Euro DL */
-	      case 0x2e: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* COM10 : US Commercial #10 */
-	      case 0x2f: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* DL : Euro DL */
-	      case 0x30: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* w297xh666 : Western Env #4 (you4) */
-	      case 0x31: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* w277xh538 : Western Env #6 (you6) */
-	      case 0x3a: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* w340xh666 : Japanese Long Env #3 (chou3) */
-	      case 0x3b: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* w255xh581 : Japanese Long Env #4 (chou4) */
+              case 0x16: paper_width = 2475; /* l: 5700 */ break;; /* COM10 : US Commercial #10 */
+              case 0x17: paper_width = 2599; /* l: 5197 */ break;; /* DL : Euro DL */
+	      case 0x2e: paper_width = 2475; /* l: 5700 */ break;; /* COM10 : US Commercial #10 */
+	      case 0x2f: paper_width = 2599; /* l: 5197 */ break;; /* DL : Euro DL */
+	      case 0x30: paper_width = 2481; /* l: 5552 */ break;; /* w297xh666 : Western Env #4 (you4) */
+	      case 0x31: paper_width = 2155; /* l: 4489 */  break;; /* w277xh538 : Western Env #6 (you6) */
+	      case 0x3a: paper_width = 2835; /* l: 5552 */ break;; /* w340xh666 : Japanese Long Env #3 (chou3) */
+	      case 0x3b: paper_width = 2126; /* l: 4843 */ break;; /* w255xh581 : Japanese Long Env #4 (chou4) */
 		/* Photo media */
-	      case 0x32: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* w252h360 : L --- similar to US 3.5x5" */
-	      case 0x33: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* w360h504 : 2L --- similar to US 5x7" */
-	      case 0x37: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* w360h504 : US 5x7" */
-	      case 0x34: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* w288h432J : KG --- same as US 4x6" */
+	      case 0x32: paper_width = 2103; /* l: 3000 */ break;; /* w252h360 : L --- similar to US 3.5x5" */
+	      case 0x33: paper_width = 3000; /* l: 4205 */ break;; /* w360h504 : 2L --- similar to US 5x7" */
+	      case 0x37: paper_width = 3000; /* l: 4200 */ break;; /* w360h504 : US 5x7" */
+	      case 0x34: paper_width = 2400; /* l: 3600 */ break;; /* w288h432J : KG --- same as US 4x6" */
+	      case 0x46: paper_width = 2400; /* l: 4800 */ break;; /* w288h576 : US 4x8" */
 		/* CD media */
-	      case 0x35: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;;  /* CD5Inch : CD Custom Tray */
-	      case 0x3f: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;;  /* CD5Inch : CD Tray A */
-	      case 0x40: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;;  /* CD5Inch : CD Tray B */
-	      case 0x4a: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;;  /* CD5Inch : CD Tray C */
-	      case 0x4b: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;;  /* CD5Inch : CD Tray D */
-	      case 0x4c: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;;  /* CD5Inch : CD Tray E */
-	      case 0x51: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;;  /* CD5Inch : CD Tray F */
-	      case 0x53: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;;  /* CD5Inch : CD Tray G */
-	      case 0x56: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;;  /* CD5Inch : CD Tray G late version */
-	      case 0x57: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;;  /* CD5Inch : CD Tray H */
-	      case 0x5b: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;;  /* CD5Inch : CD Tray J */
+	      case 0x35: paper_width = 3207; /* l: 6041 */ break;;  /* CD5Inch : CD Custom Tray */
+	      case 0x3f: paper_width = 3378; /* l: 6206 */ break;;  /* CD5Inch : CD Tray A */
+	      case 0x40: paper_width = 3095; /* l: 5640 */ break;;  /* CD5Inch : CD Tray B */
+	      case 0x4a: paper_width = 3095; /* l: 5640 */ break;;  /* CD5Inch : CD Tray C */
+	      case 0x4b: paper_width = 3095; /* l: 5640 */ break;;  /* CD5Inch : CD Tray D */
+	      case 0x4c: paper_width = 4063; /* l: 6497 */ break;;  /* CD5Inch : CD Tray E */
+	      case 0x51: paper_width = 3095; /* l: 5730 */ break;;  /* CD5Inch : CD Tray F */
+	      case 0x53: paper_width = 3095; /* l: 6008 */ break;;  /* CD5Inch : CD Tray G */
+	      case 0x56: paper_width = 3095; /* l: 6008 */ break;;  /* CD5Inch : CD Tray G late version */
+	      case 0x57: paper_width = 3572; /* l: 8953 */ break;;  /* CD5Inch : CD Tray H */
+	      case 0x5b: paper_width = 3071; /* l: 5311 */ break;;  /* CD5Inch : CD Tray J */
 	      case 0x62: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;;  /* CD5Inch : CD Tray L */
 		/* Business/Credit Card media */
 	      case 0x36: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* w155h257 : Japanese Business Card 55x91mm */
 	      case 0x41: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* w155h244 : Business/Credit Card 54x86mm */
 		/* Fine Art media */
-	      case 0x42: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* FineArt A4 35mm border */
-	      case 0x43: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* FineArt A3 35mm border */
-	      case 0x44: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* FineArt A3+ 35mm border */
-	      case 0x45: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* FineArt Letter 35mm border */
-	      case 0x4d: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* FineArt A4 35mm border */
-	      case 0x4e: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* FineArt A3 35mm border */
-	      case 0x4f: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* FineArt Letter 35mm border */
-	      case 0x50: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* FineArt A3+ 35mm border */
-	      case 0x58: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* FineArt A4 35mm border */
-	      case 0x59: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* FineArt A3 35mm border */
-	      case 0x5a: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* FineArt Letter 35mm border */
-	      case 0x5d: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* FineArt A3+ 35mm border */
+	      case 0x42: paper_width = 4961; /* l: 7016 */ break;; /* FineArt A4 35mm border */
+	      case 0x43: paper_width = 7016; /* l: 9922 */ break;; /* FineArt A3 35mm border */
+	      case 0x44: paper_width = 7772; /* l: 11410 */ break;; /* FineArt A3+ 35mm border */
+	      case 0x45: paper_width = 5100; /* l: 6600 */ break;; /* FineArt Letter 35mm border */
+	      case 0x4d: paper_width = 4961; /* l: 7016 */ break;; /* FineArt A4 35mm border */
+	      case 0x4e: paper_width = 7016; /* l: 9922 */ break;; /* FineArt A3 35mm border */
+	      case 0x4f: paper_width = 5100; /* l: 6600 */ break;; /* FineArt Letter 35mm border */
+	      case 0x50: paper_width = 7772; /* l: 11410 */ break;; /* FineArt A3+ 35mm border */
+	      case 0x58: paper_width = 4961; /* l: 7016 */ break;; /* FineArt A4 35mm border */
+	      case 0x59: paper_width = 7016; /* l: 9922 */ break;; /* FineArt A3 35mm border */
+	      case 0x5a: paper_width = 5100; /* l: 6600 */ break;; /* FineArt Letter 35mm border */
+	      case 0x5d: paper_width = 7772; /* l: 11410 */ break;; /* FineArt A3+ 35mm border */
 		/* Other media */
-	      case 0x46: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* w288h576 : US 4x8" */
-	      case 0x47: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* w1008h1224J : HanKire --- 14x17" */
-	      case 0x48: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* 720h864J : YonKire --- 10x12" */
-	      case 0x49: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* c8x10J : RokuKire --- same as 8x10" */
+	      case 0x47: paper_width = 8400; /* l: 10200 */ break;; /* w1008h1224J : HanKire --- 14x17" */
+	      case 0x48: paper_width = 6000; /* l: 7200 */ break;; /* 720h864J : YonKire --- 10x12" */
+	      case 0x49: paper_width = 4800; /* l: 6000 */ break;; /* c8x10J : RokuKire --- same as 8x10" */
 		/* default */
 	      default: paper_width=(init->page_width + border_left + border_right) * unit / 72; break;; /* custom */
 	      }
