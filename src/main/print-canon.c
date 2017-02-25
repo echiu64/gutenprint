@@ -2547,25 +2547,25 @@ canon_size_type(const stp_vars_t *v, const canon_cap_t * caps)
       if (!strcmp(name,"B4"))          return 0x0a;
       if (!strcmp(name,"Letter"))      return 0x0d;
       if (!strcmp(name,"Legal"))       return 0x0f;
-      if (!strcmp(name,"Tabloid"))     return 0x11; /* 11x17 */
+      if (!strcmp(name,"Tabloid"))     return 0x11; /* 11x17 inch */
       if (!strcmp(name,"w283h420"))    return 0x14; /* Hagaki */
       /*      if (!strcmp(name,"COM10"))       return 0x16;*/
       /*      if (!strcmp(name,"DL"))          return 0x17;*/
       if (!strcmp(name,"LetterExtra")) return 0x2a; /* Letter navi --- Letter+ */
       if (!strcmp(name,"A4Extra"))     return 0x2b; /* A4navi --- A4+ */
-      if (!strcmp(name,"A3plus"))      return 0x2c; /* A3navi --- A3+ */
-      if (!strcmp(name,"w288h144"))    return 0x2d; /* ??? */
+      if (!strcmp(name,"A3plus"))      return 0x2c; /* A3navi --- A3+ (13x19 inch) */
+      if (!strcmp(name,"w288h144"))    return 0x2d; /* 4x2 inch labels */
       if (!strcmp(name,"COM10"))       return 0x2e; /* US Comm #10 Env */
       if (!strcmp(name,"DL"))          return 0x2f; /* Euro DL Env */
       if (!strcmp(name,"w297h666"))    return 0x30; /* Western Env #4 (you4) */
       if (!strcmp(name,"w277h538"))    return 0x31; /* Western Env #6 (you6) */
-      if (!strcmp(name,"w252h360J"))   return 0x32; /* L --- similar to US 3.5x5 size */
-      if (!strcmp(name,"w360h504J"))   return 0x33; /* 2L --- similar to US5x7 */
-      if (!strcmp(name,"w288h432J"))   return 0x34; /* KG --- same size as US 4x6 */
+      if (!strcmp(name,"w252h360J"))   return 0x32; /* L --- similar to US 3.5x5 inch size */
+      if (!strcmp(name,"w360h504J"))   return 0x33; /* 2L --- similar to US5x7 inch */
+      if (!strcmp(name,"w288h432J"))   return 0x34; /* KG --- same size as US 4x6 inch */
       /* if (!strcmp(name,"CD5Inch"))  return 0x35; */ /* CD Custom Tray */
       if (!strcmp(name,"w155h257"))    return 0x36; /* Japanese Business Card 55mm x 91mm */
-      if (!strcmp(name,"w360h504"))    return 0x37; /* US5x7 */
-      if (!strcmp(name,"w420h567"))    return 0x39; /* Ofuku Hagaki */
+      if (!strcmp(name,"w360h504"))    return 0x37; /* US5x7 inch */
+      if (!strcmp(name,"w420h567"))    return 0x39; /* Oufuku Hagaki --- but should be w567h420 */
       if (!strcmp(name,"w340h666"))    return 0x3a; /* Japanese Long Env #3 (chou3) */
       if (!strcmp(name,"w255h581"))    return 0x3b; /* Japanese Long Env #4 (chou4) */
       /* if (!strcmp(name,"CD5Inch"))  return 0x3f; */ /* CD Tray A */
@@ -2584,9 +2584,9 @@ canon_size_type(const stp_vars_t *v, const canon_cap_t * caps)
       /* if (!strcmp(name,"Letter"))   return 0x45; */ /* FineArt Letter 35mm border */
 
       if (!strcmp(name,"w288h576"))    return 0x46; /* US4x8 */
-      if (!strcmp(name,"w1008h1224J")) return 0x47; /* HanKire --- 14in x 17in */
-      if (!strcmp(name,"720h864J"))    return 0x48; /* YonKire --- 10in x 12 in*/
-      if (!strcmp(name,"c8x10J"))      return 0x49; /* RokuKire --- same size as 8x10 */
+      if (!strcmp(name,"w1008h1224J")) return 0x47; /* HanKire --- 14in x 17 inch */
+      if (!strcmp(name,"720h864J"))    return 0x48; /* YonKire --- 10in x 12 inch */
+      if (!strcmp(name,"c8x10J"))      return 0x49; /* RokuKire --- same size as 8x10 inch */
 
       /* if (!strcmp(name,"CD5Inch"))  return 0x4a; */ /* CD Tray C */
       /* if (!strcmp(name,"CD5Inch"))  return 0x4b; */ /* CD Tray D */
@@ -2600,8 +2600,8 @@ canon_size_type(const stp_vars_t *v, const canon_cap_t * caps)
       /* if (!strcmp(name,"A3plus"))   return 0x50; */ /* FineArt A3plus 35mm border */
 
       /* if (!strcmp(name,"CD5Inch"))  return 0x51; */ /* CD Tray F */
-      if (!strcmp(name,"w288h512"))    return 0x52; /* Wide101.6x180.6 */
-      /* w283h566 Wide postcard 148mm x 200mm */
+      if (!strcmp(name,"w288h512"))    return 0x52; /* Wide 101.6x180.6mm */
+      /* w283h566 Wide postcard 100mm x 200mm */
 
       /* media size codes for CD (and other media depending on printer model */
 
@@ -4199,6 +4199,7 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
 	    stp_put32_be(init->page_height * unit / 72,v); /* area_length */
 	  }
 	  else { /* no CD */
+	    /* TODO: same as bordered --- set paper_width strictly */
 	    stp_put32_be((init->page_width) * unit / 72,v); /* area_width */
 	    stp_put32_be((init->page_height) * unit / 72,v); /* area_length */
 	  }
@@ -4227,25 +4228,24 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
 	    */
 	    switch(arg_ESCP_1)
 	      {
+		/* TODO: move to function */
 	      case 0x01: paper_width = 3497; /* l: 4961 */ break;; /* A5 */
 	      case 0x03: paper_width = 4961; /* l: 7016 */ break;; /* A4 */
 	      case 0x05: paper_width = 7016; /* l: 9922 */ break;; /* A3 */
 	      case 0x08: paper_width = 4300; /* l: 6071 */ break;; /* B5 */
 	      case 0x0a: paper_width = 6071; /* l: 8599 */ break;; /* B4 */
 	      case 0x0d: paper_width = 5100; /* l: 6600 */ break;; /* Letter */
-	      case 0x0f: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* Legal */
+	      case 0x0f: paper_width = 5100; /* l: 8400 */ break;; /* Legal */
 	      case 0x11: paper_width = 6600; /* l: 10200 */ break;; /* Tabloid : 11x17" */
-		/* Check this: */
-	      case 0x2a: paper_width = 7772; /* l: 11410 */ break;; /* LetterExtra : Letter navi, Letter+ */
+		/* Leter+, A4+ only seem to be available in shirink-to-fit */
+	      case 0x2a: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* LetterExtra : Letter navi, Letter+ */
 	      case 0x2b: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* A4Extra : A4navi, A4+ */
-		/* Check this: */
-	      case 0x2c: paper_width = 7772; /* l: 11410 */ break;; /* A3Extra : A3navi, A3+ */
-	      case 0x2d: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* w288h144 */
+	      case 0x2c: paper_width = 7772; /* l: 11410 */ break;; /* A3Extra : A3navi, A3+ (13x19") */
+	      case 0x2d: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* w288h144 : 4x2" labels */
 		/* Hagaki media */
 	      case 0x14: paper_width = 2363; /* l: 3497 */ break;; /* w283h420 : Hagaki */
-	      case 0x39: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* w420h567 : Oufuku Hagaki */
-		/* Correction: Oufuku Hagaki is w283h566 : Wide postcard 148mm x 200mm --- No idea what w420h567 is supposed to be */
-		/* paper_width = 4725 (200.0mm), paper_length = 3497 (148.0mm) */
+		/* Oufuku Hagaki should be swapped: w567h420, same height as Hagaki */
+	      case 0x39: paper_width = 4725; /* l: 3497 */ break;; /* w420h567 : Oufuku Hagaki */
 	      case 0x52: paper_width = 2400; /* l: 4267 */ break;; /* w288h512 : Wide101.6x180.6mm */
 		/* Envelope media */
               case 0x16: paper_width = 2475; /* l: 5700 */ break;; /* COM10 : US Commercial #10 */
@@ -4276,8 +4276,8 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
 	      case 0x5b: paper_width = 3071; /* l: 5311 */ break;;  /* CD5Inch : CD Tray J */
 	      case 0x62: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;;  /* CD5Inch : CD Tray L */
 		/* Business/Credit Card media */
-	      case 0x36: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* w155h257 : Japanese Business Card 55x91mm */
-	      case 0x41: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* w155h244 : Business/Credit Card 54x86mm */
+	      case 0x36: paper_width = 1300; /* l: 2150 */ break;; /* w155h257 : Japanese Business Card 55x91mm */
+	      case 0x41: paper_width = 1276; /* l: 2032 */ break;; /* w155h244 : Business/Credit Card 54x86mm */
 		/* Fine Art media */
 	      case 0x42: paper_width = 4961; /* l: 7016 */ break;; /* FineArt A4 35mm border */
 	      case 0x43: paper_width = 7016; /* l: 9922 */ break;; /* FineArt A3 35mm border */
