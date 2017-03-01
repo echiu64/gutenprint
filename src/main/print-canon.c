@@ -3169,11 +3169,12 @@ internal_imageable_area(const stp_vars_t *v,   /* I */
 
   if (media_size)
     pt = stp_get_papersize_by_name(media_size);
-
+  
   if(input_slot && !strcmp(input_slot,"CD"))
     cd = 1;
 
   stp_default_media_size(v, &width, &length);
+  
   if (cd) {
     /* ignore printer margins for the cd print, margins get adjusted in do_print for now */
     if (pt) {
@@ -3655,7 +3656,8 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
      values, rather than calculated.
      Currently, only done for bordered printing.
   */
-  unsigned char arg_ESCP_1 = (init->pt) ? canon_size_type(v,init->caps): 0x0; /* set to custom if none found */
+  unsigned char arg_ESCP_1 = (init->pt) ? canon_size_type(v,init->caps) : 0x03; /* default size A4 */
+  stp_dprintf(STP_DBG_CANON, v,"setPageMargins2: arg_ESCP_1 = '%x'\n",arg_ESCP_1);
 
   /* TOFIX: what exactly is to be sent?
    * Is it the printable length or the bottom border?
@@ -4245,7 +4247,9 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
 		/* Hagaki media */
 	      case 0x14: paper_width = 2363; /* l: 3497 */ break;; /* w283h420 : Hagaki */
 		/* Oufuku Hagaki should be swapped: w567h420, same height as Hagaki */
-	      case 0x39: paper_width = 4725; /* l: 3497 */ break;; /* w420h567 : Oufuku Hagaki */
+		/* case 0x39: paper_width = 4725;  l: 3497 */
+		/* w420h567 : Oufuku Hagaki */
+	      case 0x39: paper_width=(init->page_width + border_left + border_right) * unit / 72; break;; /* leave untouched since orientation wrong */
 	      case 0x52: paper_width = 2400; /* l: 4267 */ break;; /* w288h512 : Wide101.6x180.6mm */
 		/* Envelope media */
               case 0x16: paper_width = 2475; /* l: 5700 */ break;; /* COM10 : US Commercial #10 */
@@ -4348,7 +4352,7 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
   else
     user_ESCP_9=0x00; /* fall-through setting, but this value is not used */
   
-  arg_ESCP_1 = (init->pt) ? canon_size_type(v,init->caps): 0x03;
+  arg_ESCP_1 = (init->pt) ? canon_size_type(v,init->caps): 0x03; /* set to A4 size as default */
   stp_deprintf(STP_DBG_CANON,"canon: ESCP (P code read paper size, resulting arg_ESCP_1: '%x'\n",arg_ESCP_1);
   arg_ESCP_2 = (init->pt) ? init->pt->media_code_P: 0x00;
 
@@ -5531,47 +5535,61 @@ static void canon_setup_channels(stp_vars_t *v,canon_privdata_t* privdata){
 #define CANON_CD_Y 405
 
 static void setup_page(stp_vars_t* v,canon_privdata_t* privdata){
-  const char    *media_source = stp_get_string_parameter(v, "InputSlot");
+  const char *media_source = stp_get_string_parameter(v, "InputSlot");
   const char *cd_type = stp_get_string_parameter(v, "PageSize");
-  int print_cd= (media_source && (!strcmp(media_source, "CD")));
-  int           page_left,
-                page_top,
-                page_right,
-                page_bottom;
+  int print_cd = (media_source && (!strcmp(media_source, "CD")));
+  int page_left, page_top, page_right, page_bottom;
   int hub_size = 0;
 
- 
-  if (cd_type && (strcmp(cd_type, "CDCustom") == 0 ))
-     {
-	int outer_diameter = stp_get_dimension_parameter(v, "CDOuterDiameter");
-	stp_set_page_width(v, outer_diameter);
-	stp_set_page_height(v, outer_diameter);
-	stp_set_width(v, outer_diameter);
-	stp_set_height(v, outer_diameter);
-	hub_size = stp_get_dimension_parameter(v, "CDInnerDiameter");
-     }
- else
+#if 0
+  /* needed in workaround for Oufuku Hagaki */
+  const stp_papersize_t *pp = stp_get_papersize_by_size(stp_get_page_height(v),
+							stp_get_page_width(v));
+  
+  if (pp)
     {
-	const char *inner_radius_name = stp_get_string_parameter(v, "CDInnerRadius");
-  	hub_size = 43 * 10 * 72 / 254;		/* 43 mm standard CD hub */
-
-  	if (inner_radius_name && strcmp(inner_radius_name, "Small") == 0)
-   	  hub_size = 16 * 10 * 72 / 254;		/* 15 mm prints to the hole - play it
-				   safe and print 16 mm */
+      const char *name = pp->name;
+      if (!strcmp(name,"w420h567")) {
+	/* workaround for Oufuku Hagaki: wrong orientation */
+	privdata->page_width = stp_get_width(v);
+	privdata->page_height = stp_get_height(v);
+	stp_set_page_width(v, privdata->page_height);
+	stp_set_page_height(v, privdata->page_width);
+      }
     }
-
+#endif
+  
+  if (cd_type && (strcmp(cd_type, "CDCustom") == 0 ))
+    {
+      int outer_diameter = stp_get_dimension_parameter(v, "CDOuterDiameter");
+      stp_set_page_width(v, outer_diameter);
+      stp_set_page_height(v, outer_diameter);
+      stp_set_width(v, outer_diameter);
+      stp_set_height(v, outer_diameter);
+      hub_size = stp_get_dimension_parameter(v, "CDInnerDiameter");
+    }
+  else
+    {
+      const char *inner_radius_name = stp_get_string_parameter(v, "CDInnerRadius");
+      hub_size = 43 * 10 * 72 / 254;		/* 43 mm standard CD hub */
+      
+      if (inner_radius_name && strcmp(inner_radius_name, "Small") == 0)
+	hub_size = 16 * 10 * 72 / 254;		/* 15 mm prints to the hole - play it
+						   safe and print 16 mm */
+    }
+  
   privdata->top = stp_get_top(v);
   privdata->left = stp_get_left(v);
   privdata->out_width = stp_get_width(v); /* check Epson: page_true_width */
   privdata->out_height = stp_get_height(v); /* check Epson: page_true_height */
-
+  
   stp_deprintf(STP_DBG_CANON,"stp_get_width: privdata->out_width is %i\n",privdata->out_width);
-  stp_deprintf(STP_DBG_CANON,"stp_get_height: privdata->out_height is %i\n",privdata->out_height);
-
+  stp_deprintf(STP_DBG_CANON,"stp_get_height: privdata->out_height is %i\n",privdata->out_height);  
+  
   /* Don't use full bleed mode if the paper itself has a margin */
   if (privdata->left > 0 || privdata->top > 0)
     stp_set_boolean_parameter(v, "FullBleed", 0);
-
+  
   internal_imageable_area(v, 0, 0, &page_left, &page_right,
                           &page_bottom, &page_top);
   if (print_cd) {
@@ -5666,9 +5684,9 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   int		status = 1;
   const char	*media_source = stp_get_string_parameter(v, "InputSlot");
   const char    *ink_type = stp_get_string_parameter(v, "InkType");
-  const char    *duplex_mode =stp_get_string_parameter(v, "Duplex");
+  const char    *duplex_mode = stp_get_string_parameter(v, "Duplex");
   int           page_number = stp_get_int_parameter(v, "PageNumber");
-  const canon_cap_t * caps= canon_get_model_capabilities(v);
+  const canon_cap_t * caps = canon_get_model_capabilities(v);
   const canon_modeuselist_t* mlist = caps->modeuselist;
 #if 0
   const canon_modeuse_t* muse;
@@ -5686,7 +5704,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
 		out_channels;	/* Output bytes per pixel */
 #endif
   unsigned	zero_mask;
-  int           print_cd= (media_source && (!strcmp(media_source, "CD")));
+  int           print_cd = (media_source && (!strcmp(media_source, "CD")));
   int           image_height;
 #if 0
   int           image_width;

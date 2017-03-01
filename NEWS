@@ -273,6 +273,17 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
      * Fix non-interactive plugin mode
 
+  4) Improvements to the Canon backend:
+
+     * Added duplex support to Canon MP530
+
+     * Changed paper width from calculated to constant value, to
+       enable printer firmware to detect papersize correctly for
+       automatic paper source selection (Autofeed).
+
+     * TO ACTIVATE: changed Oufuku Hagaki handling in driver to be
+       200mm width by 148mm height for compatibility with printer
+       firmware.
 
 * Changes from 5.2.11
 
