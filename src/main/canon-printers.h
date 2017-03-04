@@ -3081,11 +3081,12 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon PIXMA MG5700 */
     /* no support for Esc (s and ESC (u commands yet for duplex */
+    /* TESTING ESC (s */	
     "PIXMA MG5700", 3,          /*model, model_id*/
     INCH(17/2), INCH(14),       /* max paper width and height */ /* not confirmed yet */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_MULTIPASS_MX7600_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_v|CANON_CAP_w|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML|CANON_CAP_BORDERLESS,0,
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_v|CANON_CAP_s|CANON_CAP_w|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML|CANON_CAP_BORDERLESS,0,
     3,9, /* ESC (l and (P command lengths */
     0, /* Upper/Lower Cassette option */
     control_cmd_PIXMA_MG5600,

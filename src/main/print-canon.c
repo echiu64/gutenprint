@@ -190,6 +190,8 @@ pack_pixels3_6(unsigned char* buf,int len)
 #define CANON_CAP_NOBLACK    0x2000000ul /* no Black cartridge selection */
 #define CANON_CAP_v          0x4000000ul /* not sure of this yet */
 #define CANON_CAP_w          0x8000000ul /* related to media type selection */
+#define CANON_CAP_s          0x10000000ul /* not sure of this yet: duplex-related? */
+#define CANON_CAP_u          0x20000000ul /* not sure of this yet: duplex-related? */
 
 #define CANON_CAP_STD0 (CANON_CAP_b|CANON_CAP_c|CANON_CAP_d|\
                         CANON_CAP_l|CANON_CAP_q|CANON_CAP_t)
@@ -4747,9 +4749,9 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 		 "ESC_P_len=%d!!\n",init->caps->ESC_P_len);
 }
 
-#if 0
 /* ESC (s -- 0x73 -- used in some newer printers for duplex pages except last one -- */
 /* When capability available, used for non-tumble and tumble (unlike Esc (u which is non-tumble only) */
+/* Limitation: outputs on every page */
 static void
 canon_init_setESC_s(const stp_vars_t *v, const canon_privdata_t *init)
 {
@@ -4760,7 +4762,6 @@ canon_init_setESC_s(const stp_vars_t *v, const canon_privdata_t *init)
 
   canon_cmd(v,ESC28,0x73, 1, 0x00);
 }
-#endif
 
 /* ESC (S -- 0x53 -- unknown -- :
    Required by iP90/iP90v and iP100 printers.
@@ -5229,6 +5230,7 @@ canon_init_printer(const stp_vars_t *v, canon_privdata_t *init)
   canon_init_setPageMargins2(v,init);    /* ESC (p */
   canon_init_setESC_P(v,init);           /* ESC (P */
   canon_init_setCartridge(v,init);       /* ESC (T */
+  canon_init_setESC_s(v,init);           /* ESC (s */
   canon_init_setESC_S(v,init);           /* ESC (S */
   canon_init_setTray(v,init);            /* ESC (l */
   canon_init_setX72(v,init);             /* ESC (r */

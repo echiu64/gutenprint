@@ -285,6 +285,9 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        200mm width by 148mm height for compatibility with printer
        firmware.
 
+     * TESTING: Added support for ESC (s command in duplex printing
+       on some models.
+
 * Changes from 5.2.11
 
   1) The Ghostscript IJS driver and Foomatic data generator have been
