@@ -126,8 +126,8 @@ typedef struct stp_image
 
 extern void stp_image_init(stp_image_t *image);
 extern void stp_image_reset(stp_image_t *image);
-extern int stp_image_width(stp_image_t *image);
-extern int stp_image_height(stp_image_t *image);
+extern int stp_image_width(stp_image_t *image); /* In pixels */
+extern int stp_image_height(stp_image_t *image); /* In pixels */
 extern stp_image_status_t stp_image_get_row(stp_image_t *image,
 					    unsigned char *data,
 					    size_t limit, int row);
