@@ -160,15 +160,15 @@ stp_get_papersize_by_index(int idx)
 }
 
 static int
-paper_size_mismatch(int l, int w, const stp_papersize_t *val)
+paper_size_mismatch(stp_dimension_t l, stp_dimension_t w, const stp_papersize_t *val)
 {
-  int hdiff = abs(l - (int) val->height);
-  int vdiff = abs(w - (int) val->width);
+  stp_dimension_t hdiff = abs(l - (stp_dimension_t) val->height);
+  stp_dimension_t vdiff = abs(w - (stp_dimension_t) val->width);
   return hdiff > vdiff ? hdiff : vdiff;
 }
 
 const stp_papersize_t *
-stp_get_papersize_by_size(int l, int w)
+stp_get_papersize_by_size(stp_dimension_t l, stp_dimension_t w)
 {
   int score = INT_MAX;
   const stp_papersize_t *ref = NULL;
@@ -201,7 +201,7 @@ stp_get_papersize_by_size(int l, int w)
 }
 
 const stp_papersize_t *
-stp_get_papersize_by_size_exact(int l, int w)
+stp_get_papersize_by_size_exact(stp_dimension_t l, stp_dimension_t w)
 {
   const stp_papersize_t *ref = NULL;
   const stp_papersize_t *val = NULL;
@@ -225,8 +225,8 @@ stp_get_papersize_by_size_exact(int l, int w)
 
 void
 stp_default_media_size(const stp_vars_t *v,	/* I */
-		       int  *width,		/* O - Width in points */
-		       int  *height) 		/* O - Height in points */
+		       stp_dimension_t  *width,		/* O - Width in points */
+		       stp_dimension_t  *height) 	/* O - Height in points */
 {
   if (stp_get_page_width(v) > 0 && stp_get_page_height(v) > 0)
     {
@@ -326,7 +326,7 @@ stp_xml_process_paper(stp_mxml_node_t *paper) /* The paper node */
 	      stmp = stp_mxmlElementGetAttr(prop, "value");
 	      if (stmp)
 		{
-		  outpaper->width = stp_xmlstrtoul(stmp);
+		  outpaper->width = stp_xmlstrtodim(stmp);
 		  width = 1;
 		}
 	    }
@@ -335,29 +335,29 @@ stp_xml_process_paper(stp_mxml_node_t *paper) /* The paper node */
 	      stmp = stp_mxmlElementGetAttr(prop, "value");
 	      if (stmp)
 		{
-		  outpaper->height = stp_xmlstrtoul(stmp);
+		  outpaper->height = stp_xmlstrtodim(stmp);
 		  height = 1;
 		}
 	    }
 	  if (!strcmp(prop_name, "left"))
 	    {
 	      stmp = stp_mxmlElementGetAttr(prop, "value");
-	      outpaper->left = stp_xmlstrtoul(stmp);
+	      outpaper->left = stp_xmlstrtodim(stmp);
 	    }
 	  if (!strcmp(prop_name, "right"))
 	    {
 	      stmp = stp_mxmlElementGetAttr(prop, "value");
-	      outpaper->right = stp_xmlstrtoul(stmp);
+	      outpaper->right = stp_xmlstrtodim(stmp);
 	    }
 	  if (!strcmp(prop_name, "bottom"))
 	    {
 	      stmp = stp_mxmlElementGetAttr(prop, "value");
-	      outpaper->bottom = stp_xmlstrtoul(stmp);
+	      outpaper->bottom = stp_xmlstrtodim(stmp);
 	    }
 	  if (!strcmp(prop_name, "top"))
 	    {
 	      stmp = stp_mxmlElementGetAttr(prop, "value");
-	      outpaper->top = stp_xmlstrtoul(stmp);
+	      outpaper->top = stp_xmlstrtodim(stmp);
 	    }
 	  if (!strcmp(prop_name, "unit"))
 	    {

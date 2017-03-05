@@ -565,26 +565,26 @@ typedef struct
   int extra_vertical_passes;	/* Quality enhancement */
 
   /* page parameters */		/* Indexed from top left */
-  int page_left;		/* Left edge of page (points) */
-  int page_right;		/* Right edge of page (points) */
-  int page_top;			/* Top edge of page (points) */
-  int page_bottom;		/* Bottom edge of page (points) */
-  int page_width;		/* Page width (points) */
-  int page_height;		/* Page height (points) */
-  int page_true_height;		/* Physical page height (points) */
+  stp_dimension_t page_left;		/* Left edge of page (points) */
+  stp_dimension_t page_right;		/* Right edge of page (points) */
+  stp_dimension_t page_top;			/* Top edge of page (points) */
+  stp_dimension_t page_bottom;		/* Bottom edge of page (points) */
+  stp_dimension_t page_width;		/* Page width (points) */
+  stp_dimension_t page_height;		/* Page height (points) */
+  stp_dimension_t page_true_height;		/* Physical page height (points) */
   int page_extra_height;	/* Extra height for set_form_factor (rows) */
   int paper_extra_bottom;	/* Extra bottom for set_page_size (rows) */
-  int page_true_width;		/* Physical page height (points) */
+  stp_dimension_t page_true_width;		/* Physical page height (points) */
   int cd_x_offset;		/* CD X offset (micro units) */
   int cd_y_offset;		/* CD Y offset (micro units) */
   int cd_outer_radius;		/* CD radius (micro units) */
   int cd_inner_radius;		/* CD radius (micro units) */
 
   /* Image parameters */	/* Indexed from top left */
-  int image_height;		/* Height of printed region (points) */
-  int image_width;		/* Width of printed region (points) */
-  int image_top;		/* First printed row (points) */
-  int image_left;		/* Left edge of image (points) */
+  stp_dimension_t image_height;		/* Height of printed region (points) */
+  stp_dimension_t image_width;		/* Width of printed region (points) */
+  stp_dimension_t image_top;		/* First printed row (points) */
+  stp_dimension_t image_left;		/* Left edge of image (points) */
   int image_scaled_width;	/* Width of physical printed region (dots) */
   int image_printed_width;	/* Width of printed region (dots) */
   int image_scaled_height;	/* Height of physical printed region (dots) */

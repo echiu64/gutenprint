@@ -94,6 +94,16 @@ typedef struct
   int			bottom_trim;
   int			adjusted_width;
   int			adjusted_height;
+  stp_dimension_t	d_left;
+  stp_dimension_t	d_right;
+  stp_dimension_t	d_bottom;
+  stp_dimension_t	d_top;
+  stp_dimension_t	d_width;
+  stp_dimension_t	d_height;
+  stp_dimension_t	d_left_trim;
+  stp_dimension_t	d_right_trim;
+  stp_dimension_t	d_bottom_trim;
+  stp_dimension_t	d_top_trim;
   int			last_percent;
   int			shrink_to_fit;
   CUPS_HEADER_T		header;		/* Page header from file */
@@ -312,7 +322,7 @@ validate_options(stp_vars_t *v, cups_image_t *cups)
 		      if (ps->width > 0)
 			{
 			  if (! suppress_messages)
-			    fprintf(stderr, "DEBUG: Gutenprint:     Setting page width to %d\n",
+			    fprintf(stderr, "DEBUG: Gutenprint:     Setting page width to %.3f\n",
 				    ps->width);
 			  if (ps->width < stp_get_page_width(v))
 			    stp_set_page_width(v, ps->width);
@@ -320,7 +330,7 @@ validate_options(stp_vars_t *v, cups_image_t *cups)
 		      if (ps->height > 0)
 			{
 			  if (! suppress_messages)
-			    fprintf(stderr, "DEBUG: Gutenprint:     Setting page height to %d\n",
+			    fprintf(stderr, "DEBUG: Gutenprint:     Setting page height to %.3f\n",
 				    ps->height);
 			  if (ps->height < stp_get_page_height(v))
 			    stp_set_page_height(v, ps->height);
@@ -340,7 +350,7 @@ static stp_vars_t *
 initialize_page(cups_image_t *cups, const stp_vars_t *default_settings,
 		const char *page_size_name)
 {
-  int tmp_left, tmp_right, tmp_top, tmp_bottom;
+  stp_dimension_t tmp_left, tmp_right, tmp_top, tmp_bottom;
   stp_vars_t *v = stp_vars_create_copy(default_settings);
 
   if (! suppress_messages)
@@ -417,7 +427,7 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings,
 	}
       else if (stp_get_papersize_by_name(page_size_name))
 	{
-	  int width, height;
+	  stp_dimension_t width, height;
 	  if (!suppress_messages)
 	    fprintf(stderr, "DEBUG: Gutenprint:   Using page size %s with (%d, %d)\n",
 		    page_size_name, cups->header.PageSize[1], cups->header.PageSize[0]);
@@ -469,16 +479,16 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings,
 
   set_string_parameter(v, "JobMode", "Job");
   validate_options(v, cups);
-  stp_get_media_size(v, &(cups->width), &(cups->height));
+  stp_get_media_size(v, &(cups->d_width), &(cups->d_height));
   stp_get_maximum_imageable_area(v, &tmp_left, &tmp_right,
 				 &tmp_bottom, &tmp_top);
-  stp_get_imageable_area(v, &(cups->left), &(cups->right),
-			 &(cups->bottom), &(cups->top));
+  stp_get_imageable_area(v, &(cups->d_left), &(cups->d_right),
+			 &(cups->d_bottom), &(cups->d_top));
   if (! suppress_messages)
     {
-      fprintf(stderr, "DEBUG: Gutenprint:   limits w %d l %d r %d  h %d t %d b %d\n",
-	      cups->width, cups->left, cups->right, cups->height, cups->top, cups->bottom);
-      fprintf(stderr, "DEBUG: Gutenprint:   max limits l %d r %d t %d b %d\n",
+      fprintf(stderr, "DEBUG: Gutenprint:   limits w %.3f l %.3f r %.3f  h %.3f t %.3f b %.3f\n",
+	      cups->d_width, cups->d_left, cups->d_right, cups->d_height, cups->d_top, cups->d_bottom);
+      fprintf(stderr, "DEBUG: Gutenprint:   max limits l %.3f r %.3f t %.3f b %.3f\n",
 	      tmp_left, tmp_right, tmp_top, tmp_bottom);
     }
 
@@ -486,94 +496,94 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings,
     tmp_left = 0;
   if (tmp_top < 0)
     tmp_top = 0;
-  if (tmp_right > tmp_left + cups->width)
-    tmp_right = cups->width;
-  if (tmp_bottom > tmp_top + cups->height)
-    tmp_bottom = cups->height;
-  if (tmp_left < cups->left)
+  if (tmp_right > tmp_left + cups->d_width)
+    tmp_right = cups->d_width;
+  if (tmp_bottom > tmp_top + cups->d_height)
+    tmp_bottom = cups->d_height;
+  if (tmp_left < cups->d_left)
     {
       if (cups->shrink_to_fit != 1)
 	{
-	  cups->left_trim = cups->left - tmp_left;
-	  tmp_left = cups->left;
+	  cups->d_left_trim = cups->d_left - tmp_left;
+	  tmp_left = cups->d_left;
 	}
       else
-	cups->left_trim = 0;
+	cups->d_left_trim = 0;
       if (! suppress_messages)
-	fprintf(stderr, "DEBUG: Gutenprint:   left margin %d\n", cups->left_trim);
+	fprintf(stderr, "DEBUG: Gutenprint:   left margin %.3f\n", cups->d_left_trim);
     }
   else
     {
-      cups->left_trim = 0;
+      cups->d_left_trim = 0;
       if (! suppress_messages)
-	fprintf(stderr, "DEBUG: Gutenprint:   Adjusting left margin from %d to %d\n",
-		cups->left, tmp_left);
-      cups->left = tmp_left;
+	fprintf(stderr, "DEBUG: Gutenprint:   Adjusting left margin from %.3f to %.3f\n",
+		cups->d_left, tmp_left);
+      cups->d_left = tmp_left;
     }
-  if (tmp_right > cups->right)
+  if (tmp_right > cups->d_right)
     {
       if (cups->shrink_to_fit != 1)
 	{
-	  cups->right_trim = tmp_right - cups->right;
-	  tmp_right = cups->right;
+	  cups->d_right_trim = tmp_right - cups->d_right;
+	  tmp_right = cups->d_right;
 	}
       else
-	cups->right_trim = 0;
+	cups->d_right_trim = 0;
       if (! suppress_messages)
-	fprintf(stderr, "DEBUG: Gutenprint:   right margin %d\n", cups->right_trim);
+	fprintf(stderr, "DEBUG: Gutenprint:   right margin %.3f\n", cups->d_right_trim);
     }
   else
     {
-      cups->right_trim = 0;
+      cups->d_right_trim = 0;
       if (! suppress_messages)
-	fprintf(stderr, "DEBUG: Gutenprint:   Adjusting right margin from %d to %d\n",
-		cups->right, tmp_right);
-      cups->right = tmp_right;
+	fprintf(stderr, "DEBUG: Gutenprint:   Adjusting right margin from %.3f to %.3f\n",
+		cups->d_right, tmp_right);
+      cups->d_right = tmp_right;
     }
-  if (tmp_top < cups->top)
+  if (tmp_top < cups->d_top)
     {
       if (cups->shrink_to_fit != 1)
 	{
-	  cups->top_trim = cups->top - tmp_top;
-	  tmp_top = cups->top;
+	  cups->d_top_trim = cups->d_top - tmp_top;
+	  tmp_top = cups->d_top;
 	}
       else
-	cups->top_trim = 0;
+	cups->d_top_trim = 0;
       if (! suppress_messages)
-	fprintf(stderr, "DEBUG: Gutenprint:   top margin %d\n", cups->top_trim);
+	fprintf(stderr, "DEBUG: Gutenprint:   top margin %.3f\n", cups->d_top_trim);
     }
   else
     {
-      cups->top_trim = 0;
+      cups->d_top_trim = 0;
       if (! suppress_messages)
-	fprintf(stderr, "DEBUG: Gutenprint:   Adjusting top margin from %d to %d\n",
-		cups->top, tmp_top);
-      cups->top = tmp_top;
+	fprintf(stderr, "DEBUG: Gutenprint:   Adjusting top margin from %.3f to %.3f\n",
+		cups->d_top, tmp_top);
+      cups->d_top = tmp_top;
     }
-  if (tmp_bottom > cups->bottom)
+  if (tmp_bottom > cups->d_bottom)
     {
       if (cups->shrink_to_fit != 1)
 	{
-	  cups->bottom_trim = tmp_bottom - cups->bottom;
-	  tmp_bottom = cups->bottom;
+	  cups->d_bottom_trim = tmp_bottom - cups->d_bottom;
+	  tmp_bottom = cups->d_bottom;
 	}
       else
-	cups->bottom_trim = 0;
+	cups->d_bottom_trim = 0;
       if (! suppress_messages)
-	fprintf(stderr, "DEBUG: Gutenprint:   bottom margin %d\n", cups->bottom_trim);
+	fprintf(stderr, "DEBUG: Gutenprint:   bottom margin %.3f\n", cups->d_bottom_trim);
     }
   else
     {
-      cups->bottom_trim = 0;
+      cups->d_bottom_trim = 0;
       if (! suppress_messages)
-	fprintf(stderr, "DEBUG: Gutenprint:   Adjusting bottom margin from %d to %d\n",
-		cups->bottom, tmp_bottom);
-      cups->bottom = tmp_bottom;
+	fprintf(stderr, "DEBUG: Gutenprint:   Adjusting bottom margin from %.3f to %.3f\n",
+		cups->d_bottom, tmp_bottom);
+      cups->d_bottom = tmp_bottom;
     }
 
   if (cups->shrink_to_fit == 2)
     {
-      int t_left, t_right, t_bottom, t_top;
+      stp_dimension_t t_left, t_right, t_bottom, t_top;
       stp_get_imageable_area(v, &(t_left), &(t_right), &(t_bottom), &(t_top));
       stp_set_width(v, t_right - t_left);
       stp_set_height(v, t_bottom - t_top);
@@ -582,36 +592,36 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings,
     }
   else
     {
-      stp_set_width(v, cups->right - cups->left);
-      stp_set_height(v, cups->bottom - cups->top);
-      stp_set_left(v, cups->left);
-      stp_set_top(v, cups->top);
+      stp_set_width(v, cups->d_right - cups->d_left);
+      stp_set_height(v, cups->d_bottom - cups->d_top);
+      stp_set_left(v, cups->d_left);
+      stp_set_top(v, cups->d_top);
     }
 
-  cups->right = cups->width - cups->right;
+  cups->d_right = cups->d_width - cups->d_right;
   if (cups->shrink_to_fit == 1)
-    cups->width = tmp_right - tmp_left;
+    cups->d_width = tmp_right - tmp_left;
   else
-    cups->width = cups->width - cups->left - cups->right;
-  cups->width = cups->header.HWResolution[0] * cups->width / 72;
-  cups->left = cups->header.HWResolution[0] * cups->left / 72;
-  cups->right = cups->header.HWResolution[0] * cups->right / 72;
-  cups->left_trim = cups->header.HWResolution[0] * cups->left_trim / 72;
-  cups->right_trim = cups->header.HWResolution[0] * cups->right_trim / 72;
+    cups->d_width = cups->d_width - cups->d_left - cups->d_right;
+  cups->width = cups->header.HWResolution[0] * cups->d_width / 72;
+  cups->left = cups->header.HWResolution[0] * cups->d_left / 72;
+  cups->right = cups->header.HWResolution[0] * cups->d_right / 72;
+  cups->left_trim = cups->header.HWResolution[0] * cups->d_left_trim / 72;
+  cups->right_trim = cups->header.HWResolution[0] * cups->d_right_trim / 72;
   cups->adjusted_width = cups->width;
   if (cups->adjusted_width > cups->header.cupsWidth)
     cups->adjusted_width = cups->header.cupsWidth;
 
-  cups->bottom = cups->height - cups->bottom;
+  cups->d_bottom = cups->d_height - cups->d_bottom;
   if (cups->shrink_to_fit == 1)
-    cups->height = tmp_bottom - tmp_top;
+    cups->d_height = tmp_bottom - tmp_top;
   else
-    cups->height = cups->height - cups->top - cups->bottom;
-  cups->height = cups->header.HWResolution[1] * cups->height / 72;
-  cups->top = cups->header.HWResolution[1] * cups->top / 72;
-  cups->bottom = cups->header.HWResolution[1] * cups->bottom / 72;
-  cups->top_trim = cups->header.HWResolution[1] * cups->top_trim / 72;
-  cups->bottom_trim = cups->header.HWResolution[1] * cups->bottom_trim / 72;
+    cups->d_height = cups->d_height - cups->d_top - cups->d_bottom;
+  cups->height = cups->header.HWResolution[1] * cups->d_height / 72;
+  cups->top = cups->header.HWResolution[1] * cups->d_top / 72;
+  cups->bottom = cups->header.HWResolution[1] * cups->d_bottom / 72;
+  cups->top_trim = cups->header.HWResolution[1] * cups->d_top_trim / 72;
+  cups->bottom_trim = cups->header.HWResolution[1] * cups->d_bottom_trim / 72;
   cups->adjusted_height = cups->height;
   if (cups->adjusted_height > cups->header.cupsHeight)
     cups->adjusted_height = cups->header.cupsHeight;

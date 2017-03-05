@@ -2843,7 +2843,7 @@ stp_escp2_find_resolution(const stp_vars_t *v)
 }
 
 static inline int
-imax(int a, int b)
+smax(stp_dimension_t a, stp_dimension_t b)
 {
   if (a > b)
     return a;
@@ -2853,8 +2853,8 @@ imax(int a, int b)
 
 static void
 escp2_media_size(const stp_vars_t *v,	/* I */
-		 int  *width,		/* O - Width in points */
-		 int  *height) 		/* O - Height in points */
+		 stp_dimension_t  *width,		/* O - Width in points */
+		 stp_dimension_t  *height) 		/* O - Height in points */
 {
   if (stp_get_page_width(v) > 0 && stp_get_page_height(v) > 0)
     {
@@ -2919,17 +2919,18 @@ escp2_media_size(const stp_vars_t *v,	/* I */
 static void
 internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
 			int use_maximum_area,
-			int *left, int *right, int *bottom, int *top)
+			stp_dimension_t *left, stp_dimension_t *right, 
+			stp_dimension_t *bottom, stp_dimension_t *top)
 {
-  int	width, height;			/* Size of page */
+  stp_dimension_t	width, height;			/* Size of page */
   int	rollfeed = 0;			/* Roll feed selected */
   int	cd = 0;			/* CD selected */
   const char *media_size = stp_get_string_parameter(v, "PageSize");
   const char *duplex = stp_get_string_parameter(v, "Duplex");
-  int left_margin = 0;
-  int right_margin = 0;
-  int bottom_margin = 0;
-  int top_margin = 0;
+  stp_dimension_t left_margin = 0;
+  stp_dimension_t right_margin = 0;
+  stp_dimension_t bottom_margin = 0;
+  stp_dimension_t top_margin = 0;
   const stp_papersize_t *pt = NULL;
   const input_slot_t *input_slot = NULL;
 
@@ -2971,10 +2972,10 @@ internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
 	  top_margin = pt->top;
 	}
 
-      left_margin = imax(left_margin, escp2_left_margin(v, rollfeed));
-      right_margin = imax(right_margin, escp2_right_margin(v, rollfeed));
-      bottom_margin = imax(bottom_margin, escp2_bottom_margin(v, rollfeed));
-      top_margin = imax(top_margin, escp2_top_margin(v, rollfeed));
+      left_margin = smax(left_margin, escp2_left_margin(v, rollfeed));
+      right_margin = smax(right_margin, escp2_right_margin(v, rollfeed));
+      bottom_margin = smax(bottom_margin, escp2_bottom_margin(v, rollfeed));
+      top_margin = smax(top_margin, escp2_top_margin(v, rollfeed));
     }
   if (supports_borderless(v) &&
       (use_maximum_area ||
@@ -3019,10 +3020,10 @@ internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
     }
   if (!use_maximum_area && duplex && strcmp(duplex, "None") != 0)
     {
-      left_margin = imax(left_margin, escp2_duplex_left_margin(v));
-      right_margin = imax(right_margin, escp2_duplex_right_margin(v));
-      bottom_margin = imax(bottom_margin, escp2_duplex_bottom_margin(v));
-      top_margin = imax(top_margin, escp2_duplex_top_margin(v));
+      left_margin = smax(left_margin, escp2_duplex_left_margin(v));
+      right_margin = smax(right_margin, escp2_duplex_right_margin(v));
+      bottom_margin = smax(bottom_margin, escp2_duplex_bottom_margin(v));
+      top_margin = smax(top_margin, escp2_duplex_top_margin(v));
     }
 
   if (width > escp2_max_imageable_width(v))
@@ -3041,28 +3042,28 @@ internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
 
 static void
 escp2_imageable_area(const stp_vars_t *v,   /* I */
-		     int  *left,	/* O - Left position in points */
-		     int  *right,	/* O - Right position in points */
-		     int  *bottom,	/* O - Bottom position in points */
-		     int  *top)		/* O - Top position in points */
+		     stp_dimension_t  *left,	/* O - Left position in points */
+		     stp_dimension_t  *right,	/* O - Right position in points */
+		     stp_dimension_t  *bottom,	/* O - Bottom position in points */
+		     stp_dimension_t  *top)		/* O - Top position in points */
 {
   internal_imageable_area(v, 1, 0, left, right, bottom, top);
 }
 
 static void
 escp2_maximum_imageable_area(const stp_vars_t *v,   /* I */
-			     int  *left,   /* O - Left position in points */
-			     int  *right,  /* O - Right position in points */
-			     int  *bottom, /* O - Bottom position in points */
-			     int  *top)    /* O - Top position in points */
+			     stp_dimension_t  *left,   /* O - Left position in points */
+			     stp_dimension_t  *right,  /* O - Right position in points */
+			     stp_dimension_t  *bottom, /* O - Bottom position in points */
+			     stp_dimension_t  *top)    /* O - Top position in points */
 {
   internal_imageable_area(v, 1, 1, left, right, bottom, top);
 }
 
 static void
 escp2_limit(const stp_vars_t *v,			/* I */
-	    int *width, int *height,
-	    int *min_width, int *min_height)
+	    stp_dimension_t *width, stp_dimension_t *height,
+	    stp_dimension_t *min_width, stp_dimension_t *min_height)
 {
   *width =	escp2_max_paper_width(v);
   *height =	escp2_max_paper_height(v);
@@ -3071,7 +3072,7 @@ escp2_limit(const stp_vars_t *v,			/* I */
 }
 
 static void
-escp2_describe_resolution(const stp_vars_t *v, int *x, int *y)
+escp2_describe_resolution(const stp_vars_t *v, stp_resolution_t *x, stp_resolution_t *y)
 {
   const res_t *res = stp_escp2_find_resolution(v);
   if (res && verify_resolution(v, res))

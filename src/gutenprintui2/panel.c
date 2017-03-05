@@ -167,12 +167,12 @@ static gint preview_x, preview_y, preview_w, preview_h;
 
 static gint physical_orientation = -2; /* Actual orientation */
 
-static gint paper_width, paper_height; /* Physical width */
-static gint printable_width, printable_height;	/* Size of printable area */
-static gint print_width, print_height; /* Printed area of image */
-static gint left, right, top, bottom; /* Imageable region */
-static gint image_width, image_height; /* Image size (possibly rotated) */
-static gint image_true_width, image_true_height; /* Original image */
+static gdouble paper_width, paper_height; /* Physical width */
+static gdouble printable_width, printable_height;	/* Size of printable area */
+static gdouble print_width, print_height; /* Printed area of image */
+static gdouble left, right, top, bottom; /* Imageable region */
+static gdouble image_width, image_height; /* Image size (possibly rotated) */
+static gdouble image_true_width, image_true_height; /* Original image */
 static gdouble image_xres, image_yres; /* Original image resolution */
 static gint do_update_thumbnail = 0;
 static gint saveme = 0;		/* True if printrc should be saved */
@@ -3488,8 +3488,8 @@ static void
 custom_media_size_callback(GtkWidget *widget,
 			   gpointer data)
 {
-  gint width_limit, height_limit;
-  gint min_width_limit, min_height_limit;
+  gdouble width_limit, height_limit;
+  gdouble min_width_limit, min_height_limit;
   gdouble new_printed_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
   gint new_value = SCALE(new_printed_value, units[pv->unit].scale);
   invalidate_frame ();
@@ -3563,7 +3563,7 @@ set_media_size(const gchar *new_media_size)
 
       if (pap->width == 0)
 	{
-	  int max_w, max_h, min_w, min_h;
+	  gdouble max_w, max_h, min_w, min_h;
 	  stp_get_size_limit(pv->v, &max_w, &max_h, &min_w, &min_h);
 	  size = old_width;
 	  if (size < min_w)
@@ -3589,11 +3589,11 @@ set_media_size(const gchar *new_media_size)
       setup_auto_paper_size();
       if (pap->height == 0)
 	{
-	  int max_w, max_h, min_w, min_h;
+	  gdouble max_w, max_h, min_w, min_h;
 	  stp_get_size_limit(pv->v, &max_w, &max_h, &min_w, &min_h);
 	  if (auto_paper_size)
 	    {
-	      int l, r, b, t;
+	      gdouble l, r, b, t;
 	      stp_set_page_height(pv->v, 0);
 	      old_height = 0;
 	      stp_get_imageable_area(pv->v, &l, &r, &b, &t);

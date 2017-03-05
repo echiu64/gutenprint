@@ -123,7 +123,7 @@ typedef struct				/**** Media size values ****/
 {
   const char	*name,			/* Media size name */
 		*text;			/* Media size text */
-  int		width,			/* Media width */
+  stp_dimension_t	width,			/* Media width */
 		height,			/* Media height */
 		left,			/* Media left margin */
 		right,			/* Media right margin */
@@ -200,7 +200,8 @@ static gpFile	gpopen(const char *path, const char *mode);
 static int	gpclose(gpFile f);
 #endif /* !CUPS_DRIVER_INTERFACE */
 static int	gpputs(gpFile f, const char *s);
-static int	gpprintf(gpFile f, const char *format, ...);
+static int	gpprintf(gpFile f, const char *format, ...)
+       __attribute__((format(__printf__, 2, 3)));
 static char	**getlangs(void);
 static int	is_special_option(const char *name);
 static void	print_group_close(gpFile fp, stp_parameter_class_t p_class,
@@ -1244,10 +1245,10 @@ print_page_sizes(gpFile fp, stp_vars_t *v, int simplified,
   int num_opts;
   paper_t *the_papers;
   int i;
-  int		width, height,		/* Page information */
+  stp_dimension_t	width, height,		/* Page information */
 		bottom, left,
 		top, right;
-  int		min_width,		/* Min/max custom size */
+  stp_dimension_t	min_width,		/* Min/max custom size */
 		min_height,
 		max_width,
 		max_height;
@@ -1332,7 +1333,7 @@ print_page_sizes(gpFile fp, stp_vars_t *v, int simplified,
   for (i = 0; i < cur_opt; i ++)
     {
       gpprintf(fp,  "*PageSize %s", the_papers[i].name);
-      gpprintf(fp, "/%s:\t\"<</PageSize[%d %d]/ImagingBBox null>>setpagedevice\"\n",
+      gpprintf(fp, "/%s:\t\"<</PageSize[%.3f %.3f]/ImagingBBox null>>setpagedevice\"\n",
 	       the_papers[i].text, the_papers[i].width, the_papers[i].height);
     }
   gpputs(fp, "*CloseUI: *PageSize\n\n");
@@ -1347,7 +1348,7 @@ print_page_sizes(gpFile fp, stp_vars_t *v, int simplified,
   for (i = 0; i < cur_opt; i ++)
     {
       gpprintf(fp,  "*PageRegion %s", the_papers[i].name);
-      gpprintf(fp, "/%s:\t\"<</PageSize[%d %d]/ImagingBBox null>>setpagedevice\"\n",
+      gpprintf(fp, "/%s:\t\"<</PageSize[%.3f %.3f]/ImagingBBox null>>setpagedevice\"\n",
 	       the_papers[i].text, the_papers[i].width, the_papers[i].height);
     }
   gpputs(fp, "*CloseUI: *PageRegion\n\n");
@@ -1357,7 +1358,7 @@ print_page_sizes(gpFile fp, stp_vars_t *v, int simplified,
   for (i = 0; i < cur_opt; i ++)
     {
       gpprintf(fp,  "*ImageableArea %s", the_papers[i].name);
-      gpprintf(fp, "/%s:\t\"%d %d %d %d\"\n", the_papers[i].text,
+      gpprintf(fp, "/%s:\t\"%.3f %.3f %.3f %.3f\"\n", the_papers[i].text,
 	       the_papers[i].left, the_papers[i].bottom,
 	       the_papers[i].right, the_papers[i].top);
     }
@@ -1369,7 +1370,7 @@ print_page_sizes(gpFile fp, stp_vars_t *v, int simplified,
   for (i = 0; i < cur_opt; i ++)
     {
       gpprintf(fp, "*PaperDimension %s", the_papers[i].name);
-      gpprintf(fp, "/%s:\t\"%d %d\"\n",
+      gpprintf(fp, "/%s:\t\"%.3f %.3f\"\n",
 	       the_papers[i].text, the_papers[i].width, the_papers[i].height);
     }
   gpputs(fp, "\n");
@@ -1389,14 +1390,14 @@ print_page_sizes(gpFile fp, stp_vars_t *v, int simplified,
       if (right > width)
 	width = right;
 
-      gpprintf(fp, "*MaxMediaWidth:  \"%d\"\n", max_width);
-      gpprintf(fp, "*MaxMediaHeight: \"%d\"\n", max_height);
-      gpprintf(fp, "*HWMargins:      %d %d %d %d\n",
+      gpprintf(fp, "*MaxMediaWidth:  \"%.3f\"\n", max_width);
+      gpprintf(fp, "*MaxMediaHeight: \"%.3f\"\n", max_height);
+      gpprintf(fp, "*HWMargins:      %.3f %.3f %.3f %.3f\n",
 	       left, height - bottom, width - right, top);
       gpputs(fp, "*CustomPageSize True: \"pop pop pop <</PageSize[5 -2 roll]/ImagingBBox null>>setpagedevice\"\n");
-      gpprintf(fp, "*ParamCustomPageSize Width:        1 points %d %d\n",
+      gpprintf(fp, "*ParamCustomPageSize Width:        1 points %.3f %.3f\n",
 	       min_width, max_width);
-      gpprintf(fp, "*ParamCustomPageSize Height:       2 points %d %d\n",
+      gpprintf(fp, "*ParamCustomPageSize Height:       2 points %.3f %.3f\n",
 	       min_height, max_height);
       gpputs(fp, "*ParamCustomPageSize WidthOffset:  3 points 0 0\n");
       gpputs(fp, "*ParamCustomPageSize HeightOffset: 4 points 0 0\n");
@@ -1750,9 +1751,9 @@ print_one_option(gpFile fp, stp_vars_t *v, const stp_string_list_t *po,
 	       (double) desc->deflt.dimension);
       if (desc->is_mandatory)
 	{
-	  gpprintf(fp, "*DefaultStp%s: %d\n",
+	  gpprintf(fp, "*DefaultStp%s: %.3f\n",
 		   desc->name, desc->deflt.dimension);
-	  gpprintf(fp, "*StpDefaultStp%s: %d\n",
+	  gpprintf(fp, "*StpDefaultStp%s: %.3f\n",
 		   desc->name, desc->deflt.dimension);
 	}
       else

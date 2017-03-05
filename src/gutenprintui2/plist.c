@@ -1082,7 +1082,7 @@ stpui_printrc_save(void)
       fprintf(stderr, "Number of printers: %d\n", stpui_plist_count);
 #endif
 
-      fputs("#PRINTRCv4 written by Gutenprint " PLUG_IN_VERSION "\n\n", fp);
+      fputs("#PRINTRCv5 written by Gutenprint " PLUG_IN_VERSION "\n\n", fp);
 
       fprintf(fp, "Global-Settings:\n");
       fprintf(fp, "  Current-Printer: \"%s\"\n",
@@ -1114,10 +1114,10 @@ stpui_printrc_save(void)
 	  fprintf(fp, "  Autosize-Roll-Paper: %d\n", p->auto_size_roll_feed_paper);
 	  fprintf(fp, "  Unit: %d\n", p->unit);
 
-	  fprintf(fp, "  Left: %d\n", stp_get_left(p->v));
-	  fprintf(fp, "  Top: %d\n", stp_get_top(p->v));
-	  fprintf(fp, "  Custom_Page_Width: %d\n", stp_get_page_width(p->v));
-	  fprintf(fp, "  Custom_Page_Height: %d\n", stp_get_page_height(p->v));
+	  fprintf(fp, "  Left: %f\n", stp_get_left(p->v));
+	  fprintf(fp, "  Top: %f\n", stp_get_top(p->v));
+	  fprintf(fp, "  Custom_Page_Width: %f\n", stp_get_page_width(p->v));
+	  fprintf(fp, "  Custom_Page_Height: %f\n", stp_get_page_height(p->v));
 	  fprintf(fp, "  Parameter %s Int True %d\n", copy_count_name,
 		  stpui_plist_get_copy_count(p));
 
@@ -1159,7 +1159,7 @@ stpui_printrc_save(void)
 		case STP_PARAMETER_TYPE_DIMENSION:
 		  if (stp_check_dimension_parameter(p->v, param->name,
 						    STP_PARAMETER_INACTIVE))
-		    fprintf(fp, "  Parameter %s Dimension %s %d\n", param->name,
+		    fprintf(fp, "  Parameter %s Dimension %s %f\n", param->name,
 			    ((stp_get_dimension_parameter_active
 			      (p->v, param->name) == STP_PARAMETER_ACTIVE) ?
 			     "True" : "False"),

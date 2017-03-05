@@ -429,6 +429,10 @@ mxml_load_data(stp_mxml_node_t *top,	/* I - Top node */
             node = stp_mxmlNewReal(parent, strtod(buffer, &bufptr));
 	    break;
 
+	case STP_MXML_DIMENSION :
+            node = stp_mxmlNewDimension(parent, strtod(buffer, &bufptr));
+	    break;
+
 	case STP_MXML_TEXT :
             node = stp_mxmlNewText(parent, whitespace, buffer);
 	    break;
@@ -1242,6 +1246,7 @@ mxml_write_node(stp_mxml_node_t *node,	/* I - Node to write */
           break;
 
       case STP_MXML_REAL :
+      case STP_MXML_DIMENSION :
 	  if (node->prev)
 	  {
 	    if (col > STP_MXML_WRAP)

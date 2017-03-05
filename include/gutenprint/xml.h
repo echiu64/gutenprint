@@ -51,6 +51,7 @@ extern int stp_xml_parse_file(const char *file);
 extern long stp_xmlstrtol(const char *value);
 extern unsigned long stp_xmlstrtoul(const char *value);
 extern double stp_xmlstrtod(const char *textval);
+extern stp_dimension_t stp_xmlstrtodim(const char *textval);
 extern stp_raw_t *stp_xmlstrtoraw(const char *textval);
 extern char *stp_rawtoxmlstr(const stp_raw_t *raw);
 extern char *stp_strtoxmlstr(const char *raw);

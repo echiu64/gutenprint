@@ -2624,14 +2624,14 @@ canon_size_type(const stp_vars_t *v, const canon_cap_t * caps)
 
       stp_deprintf(STP_DBG_CANON,"canon: Unknown paper size '%s' - using custom\n",name);
     } else {
-      stp_deprintf(STP_DBG_CANON,"canon: Couldn't look up paper size %dx%d - "
+      stp_deprintf(STP_DBG_CANON,"canon: Couldn't look up paper size %fx%f - "
 	      "using custom\n",stp_get_page_height(v), stp_get_page_width(v));
     }
   return 0;
 }
 
 static void
-canon_describe_resolution(const stp_vars_t *v, int *x, int *y)
+canon_describe_resolution(const stp_vars_t *v, stp_resolution_t *x, stp_resolution_t *y)
 {
   const canon_mode_t* mode = NULL;
   const canon_cap_t * caps = canon_get_model_capabilities(v);
@@ -3150,18 +3150,18 @@ static void
 internal_imageable_area(const stp_vars_t *v,   /* I */
 			int  use_paper_margins,
 			int use_maximum_area,
-			int  *left,	/* O - Left position in points */
-			int  *right,	/* O - Right position in points */
-			int  *bottom,	/* O - Bottom position in points */
-			int  *top)	/* O - Top position in points */
+			stp_dimension_t  *left,	/* O - Left position in points */
+			stp_dimension_t  *right,	/* O - Right position in points */
+			stp_dimension_t  *bottom,	/* O - Bottom position in points */
+			stp_dimension_t  *top)	/* O - Top position in points */
 {
-  int width, length;			/* Size of page */
+  stp_dimension_t width, length;	/* Size of page */
   int cd = 0;                           /* CD selected */
   const char *media_size = stp_get_string_parameter(v, "PageSize");
-  int left_margin = 0;
-  int right_margin = 0;
-  int bottom_margin = 0;
-  int top_margin = 0;
+  stp_dimension_t left_margin = 0;
+  stp_dimension_t right_margin = 0;
+  stp_dimension_t bottom_margin = 0;
+  stp_dimension_t top_margin = 0;
   const stp_papersize_t *pt = NULL;
   const char* input_slot = stp_get_string_parameter(v, "InputSlot");
 
@@ -3244,49 +3244,49 @@ internal_imageable_area(const stp_vars_t *v,   /* I */
     }
   }
 
-  stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: left_margin %d\n",left_margin);
-  stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: right_margin %d\n",right_margin);
-  stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: top_margin %d\n",top_margin);
-  stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: bottom_margin %d\n",bottom_margin);
+  stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: left_margin %f\n",left_margin);
+  stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: right_margin %f\n",right_margin);
+  stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: top_margin %f\n",top_margin);
+  stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: bottom_margin %f\n",bottom_margin);
 
   *left =	left_margin;
   *right =	width - right_margin;
   *top =	top_margin;
   *bottom =	length - bottom_margin;
 
-  stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: page_left %d\n",*left);
-  stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: page_right %d\n",*right);
-  stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: page_top %d\n",*top);
-  stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: page_bottom %d\n",*bottom);
+  stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: page_left %f\n",*left);
+  stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: page_right %f\n",*right);
+  stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: page_top %f\n",*top);
+  stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: page_bottom %f\n",*bottom);
 
 }
 
 static void
 canon_imageable_area(const stp_vars_t *v,   /* I */
-                     int  *left,	/* O - Left position in points */
-                     int  *right,	/* O - Right position in points */
-                     int  *bottom,	/* O - Bottom position in points */
-                     int  *top)		/* O - Top position in points */
+                     stp_dimension_t  *left,	/* O - Left position in points */
+                     stp_dimension_t  *right,	/* O - Right position in points */
+                     stp_dimension_t  *bottom,	/* O - Bottom position in points */
+                     stp_dimension_t  *top)		/* O - Top position in points */
 {
   internal_imageable_area(v, 1, 0, left, right, bottom, top);
 }
 
 static void
 canon_maximum_imageable_area(const stp_vars_t *v,   /* I */
-                     int  *left,	/* O - Left position in points */
-                     int  *right,	/* O - Right position in points */
-                     int  *bottom,	/* O - Bottom position in points */
-                     int  *top)		/* O - Top position in points */
+                     stp_dimension_t  *left,	/* O - Left position in points */
+                     stp_dimension_t  *right,	/* O - Right position in points */
+                     stp_dimension_t  *bottom,	/* O - Bottom position in points */
+                     stp_dimension_t  *top)		/* O - Top position in points */
 {
   internal_imageable_area(v, 1, 1, left, right, bottom, top);
 }
 
 static void
 canon_limit(const stp_vars_t *v,  		/* I */
-	    int *width,
-	    int *height,
-	    int *min_width,
-	    int *min_height)
+	    stp_dimension_t *width,
+	    stp_dimension_t *height,
+	    stp_dimension_t *min_width,
+	    stp_dimension_t *min_height)
 {
   const canon_cap_t * caps=
     canon_get_model_capabilities(v);
@@ -4233,7 +4233,7 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 {
   unsigned char arg_ESCP_1, arg_ESCP_2, arg_ESCP_9;
 
-  int width, length;
+  stp_dimension_t width, length;
   /*  const char *media_size = stp_get_string_parameter(v, "PageSize");
       const stp_papersize_t *pt = NULL; */
   const char* input_slot = stp_get_string_parameter(v, "InputSlot");
@@ -5448,10 +5448,10 @@ static void setup_page(stp_vars_t* v,canon_privdata_t* privdata){
   const char    *media_source = stp_get_string_parameter(v, "InputSlot");
   const char *cd_type = stp_get_string_parameter(v, "PageSize");
   int print_cd= (media_source && (!strcmp(media_source, "CD")));
-  int           page_left,
-                page_top,
-                page_right,
-                page_bottom;
+  stp_dimension_t page_left,
+                  page_top,
+                  page_right,
+                  page_bottom;
   int hub_size = 0;
 
  
@@ -5502,10 +5502,10 @@ static void setup_page(stp_vars_t* v,canon_privdata_t* privdata){
     privdata->page_height = page_bottom - page_top; /* checked in Epson: matches */
   }
   
-  stp_dprintf(STP_DBG_CANON, v, "setup_page page_top = %i\n",page_top);
-  stp_dprintf(STP_DBG_CANON, v, "setup_page page_bottom = %i\n",page_bottom);
-  stp_dprintf(STP_DBG_CANON, v, "setup_page page_left = %i\n",page_left);
-  stp_dprintf(STP_DBG_CANON, v, "setup_page page_right = %i\n",page_right);
+  stp_dprintf(STP_DBG_CANON, v, "setup_page page_top = %f\n",page_top);
+  stp_dprintf(STP_DBG_CANON, v, "setup_page page_bottom = %f\n",page_bottom);
+  stp_dprintf(STP_DBG_CANON, v, "setup_page page_left = %f\n",page_left);
+  stp_dprintf(STP_DBG_CANON, v, "setup_page page_right = %f\n",page_right);
   stp_dprintf(STP_DBG_CANON, v, "setup_page top = %i\n",privdata->top);
   stp_dprintf(STP_DBG_CANON, v, "setup_page left = %i\n",privdata->left);
   stp_dprintf(STP_DBG_CANON, v, "setup_page out_height = %i\n",privdata->out_height);

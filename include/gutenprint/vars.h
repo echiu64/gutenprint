@@ -27,6 +27,7 @@
 #ifndef GUTENPRINT_VARS_H
 #define GUTENPRINT_VARS_H
 
+#include <gutenprint/types.h>
 #include <gutenprint/array.h>
 #include <gutenprint/curve.h>
 #include <gutenprint/string-list.h>
@@ -144,6 +145,13 @@ typedef struct
   int upper; /*!< Upper bound. */
 } stp_int_bound_t;
 
+/** dimension_bound (range) parameter. */
+typedef struct
+{
+  stp_dimension_t lower; /*!< Lower bound. */
+  stp_dimension_t upper; /*!< Upper bound. */
+} stp_dimension_bound_t;
+
 #define STP_CHANNEL_NONE ((unsigned char) -1)
 
 /** Parameter description. */
@@ -166,7 +174,7 @@ typedef struct
     stp_curve_t *curve;       /*!< curve parameter value. */
     stp_double_bound_t dbl;  /*!< double_bound parameter value. */
     stp_int_bound_t integer; /*!< int_bound parameter value. */
-    stp_int_bound_t dimension; /*!< int_bound parameter value. */
+    stp_dimension_bound_t dimension; /*!< dimension_bound parameter value. */
     stp_string_list_t *str;   /*!< string_list parameter value. */
     stp_array_t *array;      /*!< array parameter value. */
   } bounds; /*!< Limits on the values the parameter may take. */
@@ -174,7 +182,7 @@ typedef struct
   {
     stp_curve_t *curve; /*!< Default curve parameter value. */
     double dbl;         /*!< Default double parameter value. */
-    int dimension;      /*!< Default dimension parameter value. */
+    stp_dimension_t dimension;      /*!< Default dimension parameter value. */
     int integer;        /*!< Default int parameter value. */
     int boolean;        /*!< Default boolean parameter value. */
     const char *str;    /*!< Default string parameter value. */
@@ -287,52 +295,52 @@ extern const char *stp_get_color_conversion(const stp_vars_t *v);
  * @param v the vars to use.
  * @param val the value to set.
  */
-extern void stp_set_left(stp_vars_t *v, int val);
+extern void stp_set_left(stp_vars_t *v, stp_dimension_t val);
 
 /**
  * Get the left edge of the image.
  * @returns the left edge.
  */
-extern int stp_get_left(const stp_vars_t *v);
+extern stp_dimension_t stp_get_left(const stp_vars_t *v);
 
 /**
  * Set the top edge of the image.
  * @param v the vars to use.
  * @param val the value to set.
  */
-extern void stp_set_top(stp_vars_t *v, int val);
+extern void stp_set_top(stp_vars_t *v, stp_dimension_t val);
 
 /**
  * Get the top edge of the image.
  * @returns the left edge.
  */
-extern int stp_get_top(const stp_vars_t *v);
+extern stp_dimension_t stp_get_top(const stp_vars_t *v);
 
 /**
  * Set the width of the image.
  * @param v the vars to use.
  * @param val the value to set.
  */
-extern void stp_set_width(stp_vars_t *v, int val);
+extern void stp_set_width(stp_vars_t *v, stp_dimension_t val);
 
 /**
  * Get the width edge of the image.
  * @returns the left edge.
  */
-extern int stp_get_width(const stp_vars_t *v);
+extern stp_dimension_t stp_get_width(const stp_vars_t *v);
 
 /**
  * Set the height of the image.
  * @param v the vars to use.
  * @param val the value to set.
  */
-extern void stp_set_height(stp_vars_t *v, int val);
+extern void stp_set_height(stp_vars_t *v, stp_dimension_t val);
 
 /**
  * Get the height of the image.
  * @returns the left edge.
  */
-extern int stp_get_height(const stp_vars_t *v);
+extern stp_dimension_t stp_get_height(const stp_vars_t *v);
 
 /*
  * For custom page widths, these functions may be used.
@@ -343,26 +351,26 @@ extern int stp_get_height(const stp_vars_t *v);
  * @param v the vars to use.
  * @param val the value to set.
  */
-extern void stp_set_page_width(stp_vars_t *v, int val);
+extern void stp_set_page_width(stp_vars_t *v, stp_dimension_t val);
 
 /**
  * Get the page width.
  * @returns the page width.
  */
-extern int stp_get_page_width(const stp_vars_t *v);
+extern stp_dimension_t stp_get_page_width(const stp_vars_t *v);
 
 /**
  * Set the page height.
  * @param v the vars to use.
  * @param val the value to set.
  */
-extern void stp_set_page_height(stp_vars_t *v, int val);
+extern void stp_set_page_height(stp_vars_t *v, stp_dimension_t val);
 
 /**
  * Get the page height.
  * @returns the page height.
  */
-extern int stp_get_page_height(const stp_vars_t *v);
+extern stp_dimension_t stp_get_page_height(const stp_vars_t *v);
 
 /**
  * Set the function used to print output information.
@@ -626,7 +634,7 @@ extern void stp_set_int_parameter(stp_vars_t *v, const char *parameter,
  * @param value the value to set.
  */
 extern void stp_set_dimension_parameter(stp_vars_t *v, const char *parameter,
-					int value);
+					stp_dimension_t value);
 
 /**
  * Set a boolean parameter.
@@ -765,7 +773,7 @@ extern void stp_set_default_int_parameter(stp_vars_t *v,
  */
 extern void stp_set_default_dimension_parameter(stp_vars_t *v,
 						const char *parameter,
-						int value);
+						stp_dimension_t value);
 
 /**
  * Set a default boolean parameter.
@@ -862,7 +870,7 @@ extern int stp_get_int_parameter(const stp_vars_t *v,
  * @param parameter the name of the parameter.
  * @returns the dimension (integer) value.
  */
-extern int stp_get_dimension_parameter(const stp_vars_t *v,
+extern stp_dimension_t stp_get_dimension_parameter(const stp_vars_t *v,
 				       const char *parameter);
 
 /**
@@ -1363,10 +1371,11 @@ stp_get_parameter_active(const stp_vars_t *v, const char *parameter,
  * In this case, the size limit should be used to determine maximum and
  * minimum values permitted.
  * @param v the vars to use.
- * @param width a pointer to an int to store the media width in.
- * @param height a pointer to an int to store the media height in.
+ * @param width a pointer to an stp_dimension_t to store the media width in.
+ * @param height a pointer to an stp_dimension_t to store the media height in.
  */
-extern void stp_get_media_size(const stp_vars_t *v, int *width, int *height);
+extern void stp_get_media_size(const stp_vars_t *v, 
+			       stp_dimension_t *width, stp_dimension_t *height);
 
 /**
  * Get the imagable area of the page.
@@ -1386,13 +1395,14 @@ extern void stp_get_media_size(const stp_vars_t *v, int *width, int *height);
  * If the media size stored in V is invalid, the return values
  * will be indeterminate.  It is up to the user to specify legal values.
  * @param v the vars to use.
- * @param left a pointer to a int to store the left edge in.
- * @param right a pointer to a int to store the right edge in.
- * @param bottom a pointer to a int to store the bottom edge in.
- * @param top a pointer to a int to store the top edge in.
+ * @param left a pointer to a stp_dimension_t to store the left edge in.
+ * @param right a pointer to a stp_dimension_t to store the right edge in.
+ * @param bottom a pointer to a stp_dimension_t to store the bottom edge in.
+ * @param top a pointer to a stp_dimension_t to store the top edge in.
  */
-extern void stp_get_imageable_area(const stp_vars_t *v, int *left, int *right,
-				   int *bottom, int *top);
+extern void stp_get_imageable_area(const stp_vars_t *v,
+				   stp_dimension_t *left, stp_dimension_t *right,
+				   stp_dimension_t *bottom, stp_dimension_t *top);
 
 /**
  * Get the maximum imagable area of the page.
@@ -1413,37 +1423,42 @@ extern void stp_get_imageable_area(const stp_vars_t *v, int *left, int *right,
  * If the media size stored in V is invalid, the return values
  * will be indeterminate.  It is up to the user to specify legal values.
  * @param v the vars to use.
- * @param left a pointer to a int to store the left edge in.
- * @param right a pointer to a int to store the right edge in.
- * @param bottom a pointer to a int to store the bottom edge in.
- * @param top a pointer to a int to store the top edge in.
+ * @param left a pointer to a stp_dimension_t to store the left edge in.
+ * @param right a pointer to a stp_dimension_t to store the right edge in.
+ * @param bottom a pointer to a stp_dimension_t to store the bottom edge in.
+ * @param top a pointer to a stp_dimension_t to store the top edge in.
  */
-extern void stp_get_maximum_imageable_area(const stp_vars_t *v, int *left,
-					   int *right, int *bottom, int *top);
+extern void stp_get_maximum_imageable_area(const stp_vars_t *v,
+					   stp_dimension_t *left,
+					   stp_dimension_t *right, 
+					   stp_dimension_t *bottom, 
+					   stp_dimension_t *top);
 
 /**
  * Get the media size limits.
  * Retrieve the minimum and maximum size limits for custom media sizes
  * with the current printer settings.
  * @param v the vars to use.
- * @param max_width a pointer to a int to store the maximum width in.
- * @param max_height a pointer to a int to store the maximum height in.
- * @param min_width a pointer to a int to store the minimum width in.
- * @param min_height a pointer to a int to store the minimum height in.
+ * @param max_width a pointer to a stp_dimension_t to store the maximum width in.
+ * @param max_height a pointer to a stp_dimension_t to store the maximum height in.
+ * @param min_width a pointer to a stp_dimension_t to store the minimum width in.
+ * @param min_height a pointer to a stp_dimension_t to store the minimum height in.
  */
 extern void
-stp_get_size_limit(const stp_vars_t *v, int *max_width, int *max_height,
-		   int *min_width, int *min_height);
+stp_get_size_limit(const stp_vars_t *v, 
+		   stp_dimension_t *max_width, stp_dimension_t *max_height,
+		   stp_dimension_t *min_width, stp_dimension_t *min_height);
 
 
 /**
  * Retrieve the printing resolution of the selected resolution.  If the
  * resolution is invalid, -1 will be returned in both x and y.
  * @param v the vars to use.
- * @param x a pointer to a int to store the horizontal resolution in.
- * @param y a pointer to a int to store the vertical resolution in.
+ * @param x a pointer to a stp_resolution_t to store the horizontal resolution in.
+ * @param y a pointer to a stp_resolution_t to store the vertical resolution in.
  */
-extern void stp_describe_resolution(const stp_vars_t *v, int *x, int *y);
+extern void stp_describe_resolution(const stp_vars_t *v,
+				    stp_resolution_t *x, stp_resolution_t *y);
 
 /**
  * Verify parameters.

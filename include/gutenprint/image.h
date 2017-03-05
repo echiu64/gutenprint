@@ -27,6 +27,8 @@
 #ifndef GUTENPRINT_IMAGE_H
 #define GUTENPRINT_IMAGE_H
 
+#include <gutenprint/types.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -1727,7 +1727,7 @@ pcl_get_model_capabilities(int model)	/* I: Model */
  */
 
 static void
-pcl_describe_resolution(const stp_vars_t *v, int *x, int *y)
+pcl_describe_resolution(const stp_vars_t *v, stp_resolution_t *x, stp_resolution_t *y)
 {
   int i;
   int model = stp_get_model_id(v);
@@ -1757,8 +1757,8 @@ pcl_describe_resolution(const stp_vars_t *v, int *x, int *y)
 	  if ((caps->resolutions & pcl_qualities[i].pcl_code) &&
 	      !strcmp(quality, pcl_qualities[i].pcl_name))
 	    {
-	      *x = pcl_qualities[i].p0;
-	      *y = pcl_qualities[i].p1;
+	      *x = (stp_dimension_t) pcl_qualities[i].p0;
+	      *y = (stp_dimension_t) pcl_qualities[i].p1;
 	      return;
 	    }
 	}
@@ -2272,20 +2272,20 @@ pcl_parameters(const stp_vars_t *v, const char *name,
 static void
 internal_imageable_area(const stp_vars_t *v,     /* I */
 			int  use_paper_margins,
-			int  *left,	/* O - Left position in points */
-			int  *right,	/* O - Right position in points */
-			int  *bottom,	/* O - Bottom position in points */
-			int  *top)	/* O - Top position in points */
+			stp_dimension_t  *left,	/* O - Left position in points */
+			stp_dimension_t  *right,	/* O - Right position in points */
+			stp_dimension_t  *bottom,	/* O - Bottom position in points */
+			stp_dimension_t  *top)	/* O - Top position in points */
 {
-  int	width, height;			/* Size of page */
+  stp_dimension_t	width, height;			/* Size of page */
   const pcl_cap_t *caps;		/* Printer caps */
   int	pcl_media_size;			/* Converted media size */
   const char *media_size = stp_get_string_parameter(v, "PageSize");
   const stp_papersize_t *pp = NULL;
-  int left_margin = 0;
-  int right_margin = 0;
-  int bottom_margin = 0;
-  int top_margin = 0;
+  stp_dimension_t left_margin = 0;
+  stp_dimension_t right_margin = 0;
+  stp_dimension_t bottom_margin = 0;
+  stp_dimension_t top_margin = 0;
 
   caps = pcl_get_model_capabilities(stp_get_model_id(v));
 
@@ -2339,20 +2339,20 @@ internal_imageable_area(const stp_vars_t *v,     /* I */
 
 static void
 pcl_imageable_area(const stp_vars_t *v,     /* I */
-                   int  *left,		/* O - Left position in points */
-                   int  *right,		/* O - Right position in points */
-                   int  *bottom,	/* O - Bottom position in points */
-                   int  *top)		/* O - Top position in points */
+                   stp_dimension_t  *left,		/* O - Left position in points */
+                   stp_dimension_t  *right,		/* O - Right position in points */
+                   stp_dimension_t  *bottom,	/* O - Bottom position in points */
+                   stp_dimension_t  *top)		/* O - Top position in points */
 {
   internal_imageable_area(v, 1, left, right, bottom, top);
 }
 
 static void
 pcl_limit(const stp_vars_t *v,  		/* I */
-	  int *width,
-	  int *height,
-	  int *min_width,
-	  int *min_height)
+	  stp_dimension_t *width,
+	  stp_dimension_t *height,
+	  stp_dimension_t *min_width,
+	  stp_dimension_t *min_height)
 {
   const pcl_cap_t *caps= pcl_get_model_capabilities(stp_get_model_id(v));
   *width =	caps->custom_max_width;
@@ -2368,7 +2368,7 @@ pcl_describe_output(const stp_vars_t *v)
   int model = stp_get_model_id(v);
   const pcl_cap_t *caps = pcl_get_model_capabilities(model);
   const char *print_mode = stp_get_string_parameter(v, "PrintingMode");
-  int xdpi, ydpi;
+  stp_resolution_t xdpi, ydpi;
 
   pcl_describe_resolution(v, &xdpi, &ydpi);
   if (!print_mode || strcmp(print_mode, "Color") == 0)
@@ -2534,18 +2534,18 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
   int		top = stp_get_top(v);
   int		left = stp_get_left(v);
   int		y;		/* Looping vars */
-  int		xdpi, ydpi;	/* Resolution */
+  stp_resolution_t	xdpi, ydpi;	/* Resolution */
   unsigned char *black,		/* Black bitmap data */
 		*cyan,		/* Cyan bitmap data */
 		*magenta,	/* Magenta bitmap data */
 		*yellow,	/* Yellow bitmap data */
 		*lcyan,		/* Light Cyan bitmap data */
 		*lmagenta;	/* Light Magenta bitmap data */
-  int		page_left,
-		page_top,
-		page_right,
-		page_bottom,
-		out_width,	/* Width of image on page */
+  stp_dimension_t	page_left,
+			page_top,
+			page_right,
+			page_bottom;
+  int		out_width,	/* Width of image on page */
 		out_height,	/* Height of image on page */
 		errdiv,		/* Error dividend */
 		errmod,		/* Error modulus */
@@ -2800,7 +2800,7 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
         stp_zprintf(v, "\033&l%dA", pcl_media_size);	/* Set media size we calculated above */
       }
 
-      stp_zprintf(v, "\033&l%dP", stp_get_page_height(v) / 12);
+      stp_zprintf(v, "\033&l%dP", ((int) stp_get_page_height(v)) / 12);
 						/* Length of "forms" in "lines" */
       stp_puts("\033&l0L", v);			/* Turn off perforation skip */
       if (! label) {

@@ -27,11 +27,12 @@
 #ifndef GUTENPRINT_PAPER_H
 #define GUTENPRINT_PAPER_H
 
+#include <gutenprint/types.h>
+#include <gutenprint/vars.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include <gutenprint/vars.h>
 
 /**
  * The papersize describes the dimensions of a paper.
@@ -77,17 +78,17 @@ typedef struct
   /** Comment. */
   char *comment;
   /** Paper width. */
-  unsigned width;
+  stp_dimension_t width;
   /** Paper height. */
-  unsigned height;
+  stp_dimension_t height;
   /** Top margin. */
-  unsigned top;
+  stp_dimension_t top;
   /** Left margin. */
-  unsigned left;
+  stp_dimension_t left;
   /** Bottom margin. */
-  unsigned bottom;
+  stp_dimension_t bottom;
   /** Right margin. */
-  unsigned right;
+  stp_dimension_t right;
   /** Units of measurement. */
   stp_papersize_unit_t paper_unit;
   /** Paper size type. */
@@ -115,8 +116,8 @@ extern const stp_papersize_t *stp_get_papersize_by_name(const char *name);
  * @param width the width of the paper
  * @returns a static pointer to the papersize, or NULL on failure.
  */
-extern const stp_papersize_t *stp_get_papersize_by_size(int length,
-							int width);
+extern const stp_papersize_t *stp_get_papersize_by_size(stp_dimension_t length,
+							stp_dimension_t width);
 
 /**
  * Get a papersize by size if an exact match is found.
@@ -124,8 +125,8 @@ extern const stp_papersize_t *stp_get_papersize_by_size(int length,
  * @param width the width of the paper
  * @returns a static pointer to the papersize, or NULL on failure.
  */
-extern const stp_papersize_t *stp_get_papersize_by_size_exact(int length,
-							      int width);
+extern const stp_papersize_t *stp_get_papersize_by_size_exact(stp_dimension_t length,
+							      stp_dimension_t width);
 
 /**
  * Get a papersize by its index number.
@@ -145,7 +146,7 @@ extern const stp_papersize_t *stp_get_papersize_by_index(int idx);
  * @param height pointer to storage that the height will be returned in.
  */
 extern void stp_default_media_size(const stp_vars_t *v,
-				   int *width, int *height);
+				   stp_dimension_t *width, stp_dimension_t *height);
 
 /** @} */
 

@@ -217,11 +217,11 @@ main(int argc, char **argv)
 		  if (desc.bounds.dimension.lower <= desc.deflt.dimension &&
 		      desc.bounds.dimension.upper >= desc.deflt.dimension)
 		    {
-		      printf("$stp_dimension_values{'%s'}{'MINVAL'}{'%s'} = %d;\n",
+		      printf("$stp_dimension_values{'%s'}{'MINVAL'}{'%s'} = %f;\n",
 			     driver, desc.name, desc.bounds.dimension.lower);
-		      printf("$stp_dimension_values{'%s'}{'MAXVAL'}{'%s'} = %d;\n",
+		      printf("$stp_dimension_values{'%s'}{'MAXVAL'}{'%s'} = %f;\n",
 			     driver, desc.name, desc.bounds.dimension.upper);
-		      printf("$stp_dimension_values{'%s'}{'DEFVAL'}{'%s'} = %d;\n",
+		      printf("$stp_dimension_values{'%s'}{'DEFVAL'}{'%s'} = %f;\n",
 			     driver, desc.name, desc.deflt.dimension);
 		      /* printf("$stp_dimension_values{'%s'}{'LONG_NAME'}{'%s'} = '%s';\n",
 			 driver, desc.name, gettext(desc.text)); */

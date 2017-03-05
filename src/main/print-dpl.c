@@ -457,7 +457,7 @@ dpl_get_model_capabilities (int model)	/* I: Model */
  */
 
 static void
-dpl_describe_resolution (const stp_vars_t * v, int *x, int *y)
+dpl_describe_resolution (const stp_vars_t * v, stp_resolution_t *x, stp_resolution_t *y)
 {
   int i;
   const char *resolution = stp_get_string_parameter (v, "Resolution");
@@ -487,7 +487,8 @@ dpl_describe_resolution (const stp_vars_t * v, int *x, int *y)
 int
 dpl_get_multiplier (const stp_vars_t * v)
 {
-  int x, y, multiplier;
+  stp_resolution_t x, y;
+  int multiplier;
   int i;
   int max_dpi;
   int model = stp_get_model_id (v);
@@ -749,12 +750,12 @@ dpl_parameters (const stp_vars_t * v, const char *name,
  */
 static void
 internal_imageable_area (const stp_vars_t * v,	/* I */
-			 int *left,	/* O - Left position in points */
-			 int *right,	/* O - Right position in points */
-			 int *bottom,	/* O - Bottom position in points */
-			 int *top)	/* O - Top position in points */
+			 stp_dimension_t *left,	/* O - Left position in points */
+			 stp_dimension_t *right,	/* O - Right position in points */
+			 stp_dimension_t *bottom,	/* O - Bottom position in points */
+			 stp_dimension_t *top)	/* O - Top position in points */
 {
-  int width, height;		/* Size of page */
+  stp_dimension_t width, height;		/* Size of page */
 
   stp_default_media_size (v, &width, &height);
 
@@ -766,17 +767,17 @@ internal_imageable_area (const stp_vars_t * v,	/* I */
 
 static void
 dpl_imageable_area (const stp_vars_t * v,	/* I */
-		    int *left,	/* O - Left position in points */
-		    int *right,	/* O - Right position in points */
-		    int *bottom,	/* O - Bottom position in points */
-		    int *top)	/* O - Top position in points */
+		    stp_dimension_t *left,	/* O - Left position in points */
+		    stp_dimension_t *right,	/* O - Right position in points */
+		    stp_dimension_t *bottom,	/* O - Bottom position in points */
+		    stp_dimension_t *top)	/* O - Top position in points */
 {
   internal_imageable_area (v, left, right, bottom, top);
 }
 
 static void
 dpl_limit (const stp_vars_t * v,	/* I */
-	   int *width, int *height, int *min_width, int *min_height)
+	   stp_dimension_t *width, stp_dimension_t *height, stp_dimension_t *min_width, stp_dimension_t *min_height)
 {
   const dpl_cap_t *caps = dpl_get_model_capabilities (stp_get_model_id (v));
   *width = caps->custom_max_width;
@@ -799,11 +800,11 @@ pcx_header (stp_vars_t * v, stp_image_t * image)
   unsigned short top;		/* y = 0 is at bottom */
   unsigned short bytes;
   short xdpi;
-  int i_xdpi;
-  int *xdpi_p = (&i_xdpi);
+  stp_resolution_t r_xdpi;
+  stp_resolution_t *xdpi_p = (&r_xdpi);
   short ydpi;
-  int i_ydpi;
-  int *ydpi_p = (&i_ydpi);
+  stp_resolution_t r_ydpi;
+  stp_resolution_t *ydpi_p = (&r_ydpi);
   int n;
   const short zero = 0;
 
@@ -815,8 +816,8 @@ pcx_header (stp_vars_t * v, stp_image_t * image)
   /* Get resolutions */
   dpl_describe_resolution (v, xdpi_p, ydpi_p);
 
-  xdpi = (short) i_xdpi;
-  ydpi = (short) i_ydpi;
+  xdpi = (short) r_xdpi;
+  ydpi = (short) r_ydpi;
 
   bytes = (xdpi * 4 + 7 ) / 8;	/* must be an even number */
   if (bytes != (bytes & 0xfffe))
@@ -899,7 +900,7 @@ dpl_do_print (stp_vars_t * v, stp_image_t * image)
   double v_offset = get_double_param (v, "VertOffset");
   double present = get_double_param (v, "Present");
   int y;			/* Looping vars */
-  int xdpi, ydpi;		/* Resolution */
+  stp_resolution_t xdpi, ydpi;		/* Resolution */
   int multiplier;
   unsigned char *black;		/* Black bitmap data */
   unsigned zero_mask;
@@ -1035,7 +1036,7 @@ dpl_do_print (stp_vars_t * v, stp_image_t * image)
   if (image_height / ydpi > 4)
     {
       stp_zprintf (v, "\002M%04i\r",
-		   300 * image_height / ydpi + (3 * privdata.v_offset));
+		   300 * image_height / ((int) ydpi) + (3 * privdata.v_offset));
     }
   else
     {
@@ -1043,7 +1044,7 @@ dpl_do_print (stp_vars_t * v, stp_image_t * image)
     }
   /* set Label Width */
   stp_zprintf (v, "\002KcLW%04i\r",
-	       100 * image_width / xdpi + privdata.h_offset);
+	       100 * image_width / ((int) xdpi) + privdata.h_offset);
   if (0 != privdata.label_separator)
     {
       if (1 == privdata.label_separator)
@@ -1057,7 +1058,7 @@ dpl_do_print (stp_vars_t * v, stp_image_t * image)
       else
 	{
 	  stp_zprintf (v, "\002c%04i\r", 100 *	/* Continuous mode */
-		       image_height / ydpi + privdata.v_offset);
+		       image_height / ((int) ydpi) + privdata.v_offset);
 	}
     }
   if (privdata.darkness > -1)
@@ -1178,7 +1179,7 @@ dpl_pcx (stp_vars_t * v,	/* I - Print file or command */
   int count = 0;
   int in = 0;
   int out = 0;
-  int xdpi, ydpi;
+  stp_resolution_t xdpi, ydpi;
   int model = stp_get_model_id (v);
   const dpl_cap_t *caps = dpl_get_model_capabilities (model);
   int i;
