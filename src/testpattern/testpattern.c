@@ -446,6 +446,11 @@ do_print(void)
       height *= global_vsize;
       break;
     }
+  if (width < 1)
+    width = 1;
+  if (height < 1)
+    height = 1;
+
   stp_set_width(v, width);
   stp_set_height(v, height);
 #if 0
