@@ -8931,7 +8931,8 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(model);
   int max_print_px_width = 0;
   int max_print_px_height = 0;
-  stp_resolution_t w_dpi, h_dpi;	/* Resolution */
+  int w_dpi, h_dpi;
+  stp_resolution_t wr_dpi, hr_dpi;	/* Resolution */
 
   /* output in 1/72" */
   stp_dimension_t out_pt_width  = stp_get_width(v);
@@ -8972,7 +8973,9 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   pv.imgw_px = stp_image_width(image);
   pv.imgh_px = stp_image_height(image);
 
-  stp_describe_resolution(v, &w_dpi, &h_dpi);
+  stp_describe_resolution(v, &wr_dpi, &hr_dpi);
+  w_dpi = (int) wr_dpi;
+  h_dpi = (int) hr_dpi;
   dyesub_printsize(v, &max_print_px_width, &max_print_px_height);
 
   /* Duplex processing -- Rotate even pages for DuplexNoTumble */

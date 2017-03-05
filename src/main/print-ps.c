@@ -606,7 +606,13 @@ ps_describe_resolution_internal(const stp_vars_t *v, stp_resolution_t *x, stp_re
   *x = -1;
   *y = -1;
   if (resolution)
-    sscanf(resolution, "%dx%d", x, y);
+    {
+      int tx = -1;
+      int ty = -1;
+      sscanf(resolution, "%dx%d", &tx, &ty);
+      *x = (stp_resolution_t) tx;
+      *y = (stp_resolution_t) ty;
+    }
   return;
 }
 

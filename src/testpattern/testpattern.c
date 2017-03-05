@@ -267,7 +267,7 @@ do_print(void)
   stp_vars_t *v;
   const stp_printer_t *the_printer;
   stp_dimension_t left, right, top, bottom;
-  int x, y;
+  stp_resolution_t x, y;
   stp_dimension_t width, height;
   int retval;
   stp_parameter_list_t params;

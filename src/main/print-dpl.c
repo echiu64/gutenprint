@@ -934,7 +934,7 @@ dpl_do_print (stp_vars_t * v, stp_image_t * image)
 
   dpl_describe_resolution (v, &xdpi, &ydpi);
 
-  stp_deprintf (STP_DBG_DPL, "dpl: resolution=%dx%d\n", xdpi, ydpi);
+  stp_deprintf (STP_DBG_DPL, "dpl: resolution=%dx%d\n", (int) xdpi, (int) ydpi);
   if (xdpi <= 0 || ydpi <= 0)
     {
       stp_eprintf (v, "No resolution found; cannot print.\n");

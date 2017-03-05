@@ -1993,7 +1993,7 @@ write_ppd(
 {
   int		i, j, k, l;		/* Looping vars */
   int		num_opts;		/* Number of printer options */
-  int		xdpi, ydpi;		/* Resolution info */
+  stp_resolution_t	xdpi, ydpi;	/* Resolution info */
   stp_vars_t	*v;			/* Variable info */
   const char	*driver;		/* Driver name */
   const char	*family;		/* Printer family */
@@ -2223,7 +2223,7 @@ write_ppd(
 	    }
 	  gpprintf(fp, "*%sStpQuality %s/%s:\t\"<</HWResolution[%d %d]/cupsRowFeed %d>>setpagedevice\"\n",
 		   nocolor && strcmp(opt->name, desc.deflt.str) != 0 ? "?" : "",
-		   opt->name, stp_i18n_lookup(po, opt->text), xdpi, ydpi, i + 1);
+		   opt->name, stp_i18n_lookup(po, opt->text), (int) xdpi, (int) ydpi, i + 1);
 	}
       gpputs(fp, "*CloseUI: *StpQuality\n\n");
     }
@@ -2247,7 +2247,7 @@ write_ppd(
 	  stp_string_list_t *res_list = stp_string_list_create();
 	  char res_name[64];	/* Plenty long enough for XXXxYYYdpi */
 	  int resolution_ok;
-	  int tmp_xdpi, tmp_ydpi;
+	  stp_resolution_t tmp_xdpi, tmp_ydpi;
 
 	  if (is_color_opt)
 	    gpprintf(fp, "*ColorKeyWords: \"Resolution\"\n");
@@ -2283,13 +2283,13 @@ write_ppd(
 		excess resolution.  However, make the hardware resolution
 		match the printer default.
 	      */
-	      (void) snprintf(res_name, 63, "%dx%ddpi", tmp_xdpi + 1, tmp_xdpi);
+	      (void) snprintf(res_name, 63, "%dx%ddpi", (int) tmp_xdpi + 1, (int) tmp_xdpi);
 	      default_resolution = stp_strdup(res_name);
 	      stp_string_list_add_string(res_list, res_name, res_name);
 	      gpprintf(fp, "*DefaultResolution: %s\n", res_name);
 	      gpprintf(fp, "*StpDefaultResolution: %s\n", res_name);
 	      gpprintf(fp, "*Resolution %s/%s:\t\"<</HWResolution[%d %d]>>setpagedevice\"\n",
-		       res_name, _("Automatic"), xdpi, ydpi);
+		       res_name, _("Automatic"), (int) xdpi, (int) ydpi);
 	      gpprintf(fp, "*StpResolutionMap: %s %s\n", res_name, "None");
 	    }
 	  else
@@ -2298,9 +2298,9 @@ write_ppd(
 	      stp_describe_resolution(v, &xdpi, &ydpi);
 
 	      if (xdpi == ydpi)
-		(void) snprintf(res_name, 63, "%ddpi", xdpi);
+		(void) snprintf(res_name, 63, "%ddpi", (int) xdpi);
 	      else
-		(void) snprintf(res_name, 63, "%dx%ddpi", xdpi, ydpi);
+		(void) snprintf(res_name, 63, "%dx%ddpi", (int) xdpi, (int) ydpi);
 	      gpprintf(fp, "*DefaultResolution: %s\n", res_name);
 	      gpprintf(fp, "*StpDefaultResolution: %s\n", res_name);
 	      /*
@@ -2335,9 +2335,9 @@ write_ppd(
 	      do
 		{
 		  if (tmp_xdpi == tmp_ydpi)
-		    (void) snprintf(res_name, 63, "%ddpi", tmp_xdpi);
+		    (void) snprintf(res_name, 63, "%ddpi", (int) tmp_xdpi);
 		  else
-		    (void) snprintf(res_name, 63, "%dx%ddpi", tmp_xdpi, tmp_ydpi);
+		    (void) snprintf(res_name, 63, "%dx%ddpi", (int) tmp_xdpi, (int) tmp_ydpi);
 		  if ((!has_quality_parameter &&
 		       strcmp(opt->name, desc.deflt.str) == 0) ||
 		      !stp_string_list_is_present(res_list, res_name))
@@ -2359,7 +2359,7 @@ write_ppd(
 	      stp_string_list_add_string(resolutions, res_name, opt->text);
 	      gpprintf(fp, "*%sResolution %s/%s:\t\"<</HWResolution[%d %d]/cupsCompression %d>>setpagedevice\"\n",
 		       nocolor && strcmp(opt->name, desc.deflt.str) != 0 ? "?" : "",
-		       res_name, stp_i18n_lookup(po, opt->text), xdpi, ydpi, i + 1);
+		       res_name, stp_i18n_lookup(po, opt->text), (int) xdpi, (int) ydpi, i + 1);
 	      if (strcmp(res_name, opt->name) != 0)
 		gpprintf(fp, "*StpResolutionMap: %s %s\n", res_name, opt->name);
 	    }

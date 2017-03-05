@@ -134,16 +134,16 @@ main(int argc, char **argv)
 				 driver, desc.name, param->name, param->text);
 			  if (strcmp(desc.name, "Resolution") == 0)
 			    {
-			      int x, y;
+			      stp_resolution_t x, y;
 			      stp_set_string_parameter(pv, "Resolution",
 						       param->name);
 			      stp_describe_resolution(pv, &x, &y);
 			      if (x > 0 && y > 0)
 				{
 				  printf("$stpdata{'%s'}{'%s'}{'%s'} = '%d';\n",
-					 driver, "x_resolution", param->name, x);
+					 driver, "x_resolution", param->name, (int) x);
 				  printf("$stpdata{'%s'}{'%s'}{'%s'} = '%d';\n",
-					 driver, "y_resolution", param->name, y);
+					 driver, "y_resolution", param->name, (int) y);
 				}
 			    }
 			  stp_clear_string_parameter(pv, "Resolution");

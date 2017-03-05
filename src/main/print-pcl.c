@@ -2589,7 +2589,7 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
 
   pcl_describe_resolution(v, &xdpi, &ydpi);
 
-  stp_deprintf(STP_DBG_PCL,"pcl: resolution=%dx%d\n",xdpi,ydpi);
+  stp_deprintf(STP_DBG_PCL,"pcl: resolution=%dx%d\n",(int)xdpi,(int)ydpi);
   if (xdpi <= 0 || ydpi <= 0)
     {
       stp_eprintf(v, "No resolution found; cannot print.\n");
@@ -2770,7 +2770,7 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
                        "@PJL SET PAPERLENGTH=%d\n"
                        "@PJL SET VERTICALOFFSET=%d\n"
                        "@PJL SET HORIZONTALOFFSET=%d\n"
-                       "@PJL ENTER LANGUAGE=PCL\n", xdpi, out_width*10,
+                       "@PJL ENTER LANGUAGE=PCL\n", (int) xdpi, out_width*10,
                        out_height*10, privdata.v_offset, privdata.h_offset);
 
 	if ( privdata.label_separator != 0) {
@@ -2978,7 +2978,7 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
   }
   else
   {
-    stp_zprintf(v, "\033*t%dR", xdpi);		/* Simple resolution */
+    stp_zprintf(v, "\033*t%dR", (int) xdpi);		/* Simple resolution */
     if (printing_color)
     {
       if ((caps->color_type & PCL_COLOR_CMY) == PCL_COLOR_CMY)

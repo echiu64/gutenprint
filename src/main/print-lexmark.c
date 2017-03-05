@@ -1714,7 +1714,7 @@ lexmark_do_print(stp_vars_t *v, stp_image_t *image)
    */
 
   stp_describe_resolution(v, &xdpi, &ydpi);
-  stp_dprintf(STP_DBG_LEXMARK, v, "lexmark: resolution=%dx%d\n",xdpi,ydpi);
+  stp_dprintf(STP_DBG_LEXMARK, v, "lexmark: resolution=%dx%d\n",(int)xdpi,(int)ydpi);
 
   switch (res_para_ptr->resid) {
   case DPI300:
@@ -1753,7 +1753,7 @@ densityDivisor /= 1.2;
 
   horizontal_passes = xdpi / physical_xdpi;
   stp_dprintf(STP_DBG_LEXMARK, v, "lexmark: horizontal_passes %i, xdpi %d, physical_xdpi %i\n",
-	       horizontal_passes, xdpi, physical_xdpi);
+	      horizontal_passes, (int)xdpi, physical_xdpi);
 
 
 
