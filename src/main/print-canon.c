@@ -190,6 +190,8 @@ pack_pixels3_6(unsigned char* buf,int len)
 #define CANON_CAP_NOBLACK    0x2000000ul /* no Black cartridge selection */
 #define CANON_CAP_v          0x4000000ul /* not sure of this yet */
 #define CANON_CAP_w          0x8000000ul /* related to media type selection */
+#define CANON_CAP_s          0x10000000ul /* not sure of this yet: duplex-related? */
+#define CANON_CAP_u          0x20000000ul /* not sure of this yet: duplex-related? */
 
 #define CANON_CAP_STD0 (CANON_CAP_b|CANON_CAP_c|CANON_CAP_d|\
                         CANON_CAP_l|CANON_CAP_q|CANON_CAP_t)
@@ -2547,25 +2549,25 @@ canon_size_type(const stp_vars_t *v, const canon_cap_t * caps)
       if (!strcmp(name,"B4"))          return 0x0a;
       if (!strcmp(name,"Letter"))      return 0x0d;
       if (!strcmp(name,"Legal"))       return 0x0f;
-      if (!strcmp(name,"Tabloid"))     return 0x11; /* 11x17 */
+      if (!strcmp(name,"Tabloid"))     return 0x11; /* 11x17 inch */
       if (!strcmp(name,"w283h420"))    return 0x14; /* Hagaki */
       /*      if (!strcmp(name,"COM10"))       return 0x16;*/
       /*      if (!strcmp(name,"DL"))          return 0x17;*/
       if (!strcmp(name,"LetterExtra")) return 0x2a; /* Letter navi --- Letter+ */
       if (!strcmp(name,"A4Extra"))     return 0x2b; /* A4navi --- A4+ */
-      if (!strcmp(name,"A3plus"))      return 0x2c; /* A3navi --- A3+ */
-      if (!strcmp(name,"w288h144"))    return 0x2d; /* ??? */
+      if (!strcmp(name,"A3plus"))      return 0x2c; /* A3navi --- A3+ (13x19 inch) */
+      if (!strcmp(name,"w288h144"))    return 0x2d; /* 4x2 inch labels */
       if (!strcmp(name,"COM10"))       return 0x2e; /* US Comm #10 Env */
       if (!strcmp(name,"DL"))          return 0x2f; /* Euro DL Env */
       if (!strcmp(name,"w297h666"))    return 0x30; /* Western Env #4 (you4) */
       if (!strcmp(name,"w277h538"))    return 0x31; /* Western Env #6 (you6) */
-      if (!strcmp(name,"w252h360J"))   return 0x32; /* L --- similar to US 3.5x5 size */
-      if (!strcmp(name,"w360h504J"))   return 0x33; /* 2L --- similar to US5x7 */
-      if (!strcmp(name,"w288h432J"))   return 0x34; /* KG --- same size as US 4x6 */
+      if (!strcmp(name,"w252h360J"))   return 0x32; /* L --- similar to US 3.5x5 inch size */
+      if (!strcmp(name,"w360h504J"))   return 0x33; /* 2L --- similar to US5x7 inch */
+      if (!strcmp(name,"w288h432J"))   return 0x34; /* KG --- same size as US 4x6 inch */
       /* if (!strcmp(name,"CD5Inch"))  return 0x35; */ /* CD Custom Tray */
       if (!strcmp(name,"w155h257"))    return 0x36; /* Japanese Business Card 55mm x 91mm */
-      if (!strcmp(name,"w360h504"))    return 0x37; /* US5x7 */
-      if (!strcmp(name,"w420h567"))    return 0x39; /* Ofuku Hagaki */
+      if (!strcmp(name,"w360h504"))    return 0x37; /* US5x7 inch */
+      if (!strcmp(name,"w420h567"))    return 0x39; /* Oufuku Hagaki --- but should be w567h420 */
       if (!strcmp(name,"w340h666"))    return 0x3a; /* Japanese Long Env #3 (chou3) */
       if (!strcmp(name,"w255h581"))    return 0x3b; /* Japanese Long Env #4 (chou4) */
       /* if (!strcmp(name,"CD5Inch"))  return 0x3f; */ /* CD Tray A */
@@ -2584,9 +2586,9 @@ canon_size_type(const stp_vars_t *v, const canon_cap_t * caps)
       /* if (!strcmp(name,"Letter"))   return 0x45; */ /* FineArt Letter 35mm border */
 
       if (!strcmp(name,"w288h576"))    return 0x46; /* US4x8 */
-      if (!strcmp(name,"w1008h1224J")) return 0x47; /* HanKire --- 14in x 17in */
-      if (!strcmp(name,"720h864J"))    return 0x48; /* YonKire --- 10in x 12 in*/
-      if (!strcmp(name,"c8x10J"))      return 0x49; /* RokuKire --- same size as 8x10 */
+      if (!strcmp(name,"w1008h1224J")) return 0x47; /* HanKire --- 14in x 17 inch */
+      if (!strcmp(name,"720h864J"))    return 0x48; /* YonKire --- 10in x 12 inch */
+      if (!strcmp(name,"c8x10J"))      return 0x49; /* RokuKire --- same size as 8x10 inch */
 
       /* if (!strcmp(name,"CD5Inch"))  return 0x4a; */ /* CD Tray C */
       /* if (!strcmp(name,"CD5Inch"))  return 0x4b; */ /* CD Tray D */
@@ -2600,8 +2602,8 @@ canon_size_type(const stp_vars_t *v, const canon_cap_t * caps)
       /* if (!strcmp(name,"A3plus"))   return 0x50; */ /* FineArt A3plus 35mm border */
 
       /* if (!strcmp(name,"CD5Inch"))  return 0x51; */ /* CD Tray F */
-      if (!strcmp(name,"w288h512"))    return 0x52; /* Wide101.6x180.6 */
-      /* w283h566 Wide postcard 148mm x 200mm */
+      if (!strcmp(name,"w288h512"))    return 0x52; /* Wide 101.6x180.6mm */
+      /* w283h566 Wide postcard 100mm x 200mm */
 
       /* media size codes for CD (and other media depending on printer model */
 
@@ -3169,11 +3171,12 @@ internal_imageable_area(const stp_vars_t *v,   /* I */
 
   if (media_size)
     pt = stp_get_papersize_by_name(media_size);
-
+  
   if(input_slot && !strcmp(input_slot,"CD"))
     cd = 1;
 
   stp_default_media_size(v, &width, &length);
+  
   if (cd) {
     /* ignore printer margins for the cd print, margins get adjusted in do_print for now */
     if (pt) {
@@ -3619,7 +3622,7 @@ static void
 canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
 {
   unsigned char arg_70_1,arg_70_2,arg_70_3,arg_70_4;
-
+		
   int border_left,border_right,border_top,border_bottom;
   int border_left2,border_top2;
   int border_right2;
@@ -3646,7 +3649,17 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
   int adjust_tray_H_left, adjust_tray_H_right, adjust_tray_H_top, adjust_tray_H_bottom;
   int adjust_tray_J_left, adjust_tray_J_right, adjust_tray_J_top, adjust_tray_J_bottom;
   int adjust_tray_L_left, adjust_tray_L_right, adjust_tray_L_top, adjust_tray_L_bottom;
+  int paper_width, paper_length;
 
+  /* Canon printer firmware requires paper_width (and paper_length?)
+     to be exact matches in units of 1/600 inch.
+     To this end, papersize code is used to find the papersize for the
+     printjob, and paper_width (and paper_length?) set to exact
+     values, rather than calculated.
+     Currently, only done for bordered printing.
+  */
+  unsigned char arg_ESCP_1 = (init->pt) ? canon_size_type(v,init->caps) : 0x03; /* default size A4 */
+  stp_dprintf(STP_DBG_CANON, v,"setPageMargins2: arg_ESCP_1 = '%x'\n",arg_ESCP_1);
 
   /* TOFIX: what exactly is to be sent?
    * Is it the printable length or the bottom border?
@@ -3659,7 +3672,7 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
 
   const char* input_slot = stp_get_string_parameter(v, "InputSlot");  
   int print_cd= (input_slot && (!strcmp(input_slot, "CD")));
-
+		
   stp_dprintf(STP_DBG_CANON, v,"setPageMargins2: print_cd = %d\n",print_cd);
 
   test_cd = 1;
@@ -4190,6 +4203,7 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
 	    stp_put32_be(init->page_height * unit / 72,v); /* area_length */
 	  }
 	  else { /* no CD */
+	    /* TODO: same as bordered --- set paper_width strictly */
 	    stp_put32_be((init->page_width) * unit / 72,v); /* area_width */
 	    stp_put32_be((init->page_height) * unit / 72,v); /* area_length */
 	  }
@@ -4202,7 +4216,6 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
 	/* standard paper sizes, unchanged for borderless so use original borders */
 	if ( (init->caps->features & CANON_CAP_BORDERLESS) && 
 	     !(print_cd) && stp_get_boolean_parameter(v, "FullBleed") ) {
-	  stp_put32_be((init->page_width) * unit / 72,v); /* paper_width */
 	  stp_put32_be((init->page_height) * unit / 72,v); /* paper_length */
 	}
 	else {
@@ -4212,7 +4225,86 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
 	    stp_put32_be((init->page_height + border_top2 + border_bottom2) * unit / 72,v); /* paper_length */
 	  }
 	  else { /* not CD */
-	    stp_put32_be((init->page_width + border_left + border_right) * unit / 72,v); /* paper_width */
+	    /* discovered that paper_width needs to be same as Windows
+	       dimensions for Canon printer firmware to automatically
+	       determine which tray to pull paper from
+	       automatically.
+	    */
+	    switch(arg_ESCP_1)
+	      {
+		/* TODO: move to function */
+	      case 0x01: paper_width = 3497; /* l: 4961 */ break;; /* A5 */
+	      case 0x03: paper_width = 4961; /* l: 7016 */ break;; /* A4 */
+	      case 0x05: paper_width = 7016; /* l: 9922 */ break;; /* A3 */
+	      case 0x08: paper_width = 4300; /* l: 6071 */ break;; /* B5 */
+	      case 0x0a: paper_width = 6071; /* l: 8599 */ break;; /* B4 */
+	      case 0x0d: paper_width = 5100; /* l: 6600 */ break;; /* Letter */
+	      case 0x0f: paper_width = 5100; /* l: 8400 */ break;; /* Legal */
+	      case 0x11: paper_width = 6600; /* l: 10200 */ break;; /* Tabloid : 11x17" */
+		/* Leter+, A4+ only seem to be available in shirink-to-fit */
+	      case 0x2a: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* LetterExtra : Letter navi, Letter+ */
+	      case 0x2b: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* A4Extra : A4navi, A4+ */
+	      case 0x2c: paper_width = 7772; /* l: 11410 */ break;; /* A3Extra : A3navi, A3+ (13x19") */
+	      case 0x2d: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; /* w288h144 : 4x2" labels */
+		/* Hagaki media */
+	      case 0x14: paper_width = 2363; /* l: 3497 */ break;; /* w283h420 : Hagaki */
+		/* Oufuku Hagaki should be swapped: w567h420, same height as Hagaki */
+		/* case 0x39: paper_width = 4725;  l: 3497 */
+		/* w420h567 : Oufuku Hagaki */
+	      case 0x39: paper_width=(init->page_width + border_left + border_right) * unit / 72; break;; /* leave untouched since orientation wrong */
+	      case 0x52: paper_width = 2400; /* l: 4267 */ break;; /* w288h512 : Wide101.6x180.6mm */
+		/* Envelope media */
+              case 0x16: paper_width = 2475; /* l: 5700 */ break;; /* COM10 : US Commercial #10 */
+              case 0x17: paper_width = 2599; /* l: 5197 */ break;; /* DL : Euro DL */
+	      case 0x2e: paper_width = 2475; /* l: 5700 */ break;; /* COM10 : US Commercial #10 */
+	      case 0x2f: paper_width = 2599; /* l: 5197 */ break;; /* DL : Euro DL */
+	      case 0x30: paper_width = 2481; /* l: 5552 */ break;; /* w297xh666 : Western Env #4 (you4) */
+	      case 0x31: paper_width = 2155; /* l: 4489 */  break;; /* w277xh538 : Western Env #6 (you6) */
+	      case 0x3a: paper_width = 2835; /* l: 5552 */ break;; /* w340xh666 : Japanese Long Env #3 (chou3) */
+	      case 0x3b: paper_width = 2126; /* l: 4843 */ break;; /* w255xh581 : Japanese Long Env #4 (chou4) */
+		/* Photo media */
+	      case 0x32: paper_width = 2103; /* l: 3000 */ break;; /* w252h360 : L --- similar to US 3.5x5" */
+	      case 0x33: paper_width = 3000; /* l: 4205 */ break;; /* w360h504 : 2L --- similar to US 5x7" */
+	      case 0x37: paper_width = 3000; /* l: 4200 */ break;; /* w360h504 : US 5x7" */
+	      case 0x34: paper_width = 2400; /* l: 3600 */ break;; /* w288h432J : KG --- same as US 4x6" */
+	      case 0x46: paper_width = 2400; /* l: 4800 */ break;; /* w288h576 : US 4x8" */
+		/* CD media */
+	      case 0x35: paper_width = 3207; /* l: 6041 */ break;;  /* CD5Inch : CD Custom Tray */
+	      case 0x3f: paper_width = 3378; /* l: 6206 */ break;;  /* CD5Inch : CD Tray A */
+	      case 0x40: paper_width = 3095; /* l: 5640 */ break;;  /* CD5Inch : CD Tray B */
+	      case 0x4a: paper_width = 3095; /* l: 5640 */ break;;  /* CD5Inch : CD Tray C */
+	      case 0x4b: paper_width = 3095; /* l: 5640 */ break;;  /* CD5Inch : CD Tray D */
+	      case 0x4c: paper_width = 4063; /* l: 6497 */ break;;  /* CD5Inch : CD Tray E */
+	      case 0x51: paper_width = 3095; /* l: 5730 */ break;;  /* CD5Inch : CD Tray F */
+	      case 0x53: paper_width = 3095; /* l: 6008 */ break;;  /* CD5Inch : CD Tray G */
+	      case 0x56: paper_width = 3095; /* l: 6008 */ break;;  /* CD5Inch : CD Tray G late version */
+	      case 0x57: paper_width = 3572; /* l: 8953 */ break;;  /* CD5Inch : CD Tray H */
+	      case 0x5b: paper_width = 3071; /* l: 5311 */ break;;  /* CD5Inch : CD Tray J */
+	      case 0x62: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;;  /* CD5Inch : CD Tray L */
+		/* Business/Credit Card media */
+	      case 0x36: paper_width = 1300; /* l: 2150 */ break;; /* w155h257 : Japanese Business Card 55x91mm */
+	      case 0x41: paper_width = 1276; /* l: 2032 */ break;; /* w155h244 : Business/Credit Card 54x86mm */
+		/* Fine Art media */
+	      case 0x42: paper_width = 4961; /* l: 7016 */ break;; /* FineArt A4 35mm border */
+	      case 0x43: paper_width = 7016; /* l: 9922 */ break;; /* FineArt A3 35mm border */
+	      case 0x44: paper_width = 7772; /* l: 11410 */ break;; /* FineArt A3+ 35mm border */
+	      case 0x45: paper_width = 5100; /* l: 6600 */ break;; /* FineArt Letter 35mm border */
+	      case 0x4d: paper_width = 4961; /* l: 7016 */ break;; /* FineArt A4 35mm border */
+	      case 0x4e: paper_width = 7016; /* l: 9922 */ break;; /* FineArt A3 35mm border */
+	      case 0x4f: paper_width = 5100; /* l: 6600 */ break;; /* FineArt Letter 35mm border */
+	      case 0x50: paper_width = 7772; /* l: 11410 */ break;; /* FineArt A3+ 35mm border */
+	      case 0x58: paper_width = 4961; /* l: 7016 */ break;; /* FineArt A4 35mm border */
+	      case 0x59: paper_width = 7016; /* l: 9922 */ break;; /* FineArt A3 35mm border */
+	      case 0x5a: paper_width = 5100; /* l: 6600 */ break;; /* FineArt Letter 35mm border */
+	      case 0x5d: paper_width = 7772; /* l: 11410 */ break;; /* FineArt A3+ 35mm border */
+		/* Other media */
+	      case 0x47: paper_width = 8400; /* l: 10200 */ break;; /* w1008h1224J : HanKire --- 14x17" */
+	      case 0x48: paper_width = 6000; /* l: 7200 */ break;; /* 720h864J : YonKire --- 10x12" */
+	      case 0x49: paper_width = 4800; /* l: 6000 */ break;; /* c8x10J : RokuKire --- same as 8x10" */
+		/* default */
+	      default: paper_width=(init->page_width + border_left + border_right) * unit / 72; break;; /* custom */
+	      }
+	    stp_put32_be(paper_width,v); /* paper_width */	      
 	    stp_put32_be((init->page_height + border_top + border_bottom) * unit / 72,v); /* paper_length */
 	  }
 	}
@@ -4262,7 +4354,7 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
   else
     user_ESCP_9=0x00; /* fall-through setting, but this value is not used */
   
-  arg_ESCP_1 = (init->pt) ? canon_size_type(v,init->caps): 0x03;
+  arg_ESCP_1 = (init->pt) ? canon_size_type(v,init->caps): 0x03; /* set to A4 size as default */
   stp_deprintf(STP_DBG_CANON,"canon: ESCP (P code read paper size, resulting arg_ESCP_1: '%x'\n",arg_ESCP_1);
   arg_ESCP_2 = (init->pt) ? init->pt->media_code_P: 0x00;
 
@@ -4657,9 +4749,9 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 		 "ESC_P_len=%d!!\n",init->caps->ESC_P_len);
 }
 
-#if 0
 /* ESC (s -- 0x73 -- used in some newer printers for duplex pages except last one -- */
 /* When capability available, used for non-tumble and tumble (unlike Esc (u which is non-tumble only) */
+/* Limitation: outputs on every page */
 static void
 canon_init_setESC_s(const stp_vars_t *v, const canon_privdata_t *init)
 {
@@ -4670,7 +4762,6 @@ canon_init_setESC_s(const stp_vars_t *v, const canon_privdata_t *init)
 
   canon_cmd(v,ESC28,0x73, 1, 0x00);
 }
-#endif
 
 /* ESC (S -- 0x53 -- unknown -- :
    Required by iP90/iP90v and iP100 printers.
@@ -5139,6 +5230,7 @@ canon_init_printer(const stp_vars_t *v, canon_privdata_t *init)
   canon_init_setPageMargins2(v,init);    /* ESC (p */
   canon_init_setESC_P(v,init);           /* ESC (P */
   canon_init_setCartridge(v,init);       /* ESC (T */
+  canon_init_setESC_s(v,init);           /* ESC (s */
   canon_init_setESC_S(v,init);           /* ESC (S */
   canon_init_setTray(v,init);            /* ESC (l */
   canon_init_setX72(v,init);             /* ESC (r */
@@ -5445,47 +5537,64 @@ static void canon_setup_channels(stp_vars_t *v,canon_privdata_t* privdata){
 #define CANON_CD_Y 405
 
 static void setup_page(stp_vars_t* v,canon_privdata_t* privdata){
-  const char    *media_source = stp_get_string_parameter(v, "InputSlot");
+  const char *media_source = stp_get_string_parameter(v, "InputSlot");
   const char *cd_type = stp_get_string_parameter(v, "PageSize");
-  int print_cd= (media_source && (!strcmp(media_source, "CD")));
+  int print_cd = (media_source && (!strcmp(media_source, "CD")));
   stp_dimension_t page_left,
                   page_top,
                   page_right,
                   page_bottom;
   int hub_size = 0;
 
- 
-  if (cd_type && (strcmp(cd_type, "CDCustom") == 0 ))
-     {
-	int outer_diameter = stp_get_dimension_parameter(v, "CDOuterDiameter");
-	stp_set_page_width(v, outer_diameter);
-	stp_set_page_height(v, outer_diameter);
-	stp_set_width(v, outer_diameter);
-	stp_set_height(v, outer_diameter);
-	hub_size = stp_get_dimension_parameter(v, "CDInnerDiameter");
-     }
- else
+#if 0
+  /* needed in workaround for Oufuku Hagaki */
+  const stp_papersize_t *pp = stp_get_papersize_by_size(stp_get_page_height(v),
+							stp_get_page_width(v));
+  
+  if (pp)
     {
-	const char *inner_radius_name = stp_get_string_parameter(v, "CDInnerRadius");
-  	hub_size = 43 * 10 * 72 / 254;		/* 43 mm standard CD hub */
-
-  	if (inner_radius_name && strcmp(inner_radius_name, "Small") == 0)
-   	  hub_size = 16 * 10 * 72 / 254;		/* 15 mm prints to the hole - play it
-				   safe and print 16 mm */
+      const char *name = pp->name;
+      if (!strcmp(name,"w420h567")) {
+	/* workaround for Oufuku Hagaki: wrong orientation */
+	privdata->page_width = stp_get_width(v);
+	privdata->page_height = stp_get_height(v);
+	stp_set_page_width(v, privdata->page_height);
+	stp_set_page_height(v, privdata->page_width);
+      }
     }
-
+#endif
+  
+  if (cd_type && (strcmp(cd_type, "CDCustom") == 0 ))
+    {
+      int outer_diameter = stp_get_dimension_parameter(v, "CDOuterDiameter");
+      stp_set_page_width(v, outer_diameter);
+      stp_set_page_height(v, outer_diameter);
+      stp_set_width(v, outer_diameter);
+      stp_set_height(v, outer_diameter);
+      hub_size = stp_get_dimension_parameter(v, "CDInnerDiameter");
+    }
+  else
+    {
+      const char *inner_radius_name = stp_get_string_parameter(v, "CDInnerRadius");
+      hub_size = 43 * 10 * 72 / 254;		/* 43 mm standard CD hub */
+      
+      if (inner_radius_name && strcmp(inner_radius_name, "Small") == 0)
+	hub_size = 16 * 10 * 72 / 254;		/* 15 mm prints to the hole - play it
+						   safe and print 16 mm */
+    }
+  
   privdata->top = stp_get_top(v);
   privdata->left = stp_get_left(v);
   privdata->out_width = stp_get_width(v); /* check Epson: page_true_width */
   privdata->out_height = stp_get_height(v); /* check Epson: page_true_height */
-
+  
   stp_deprintf(STP_DBG_CANON,"stp_get_width: privdata->out_width is %i\n",privdata->out_width);
-  stp_deprintf(STP_DBG_CANON,"stp_get_height: privdata->out_height is %i\n",privdata->out_height);
-
+  stp_deprintf(STP_DBG_CANON,"stp_get_height: privdata->out_height is %i\n",privdata->out_height);  
+  
   /* Don't use full bleed mode if the paper itself has a margin */
   if (privdata->left > 0 || privdata->top > 0)
     stp_set_boolean_parameter(v, "FullBleed", 0);
-
+  
   internal_imageable_area(v, 0, 0, &page_left, &page_right,
                           &page_bottom, &page_top);
   if (print_cd) {
@@ -5580,9 +5689,9 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   int		status = 1;
   const char	*media_source = stp_get_string_parameter(v, "InputSlot");
   const char    *ink_type = stp_get_string_parameter(v, "InkType");
-  const char    *duplex_mode =stp_get_string_parameter(v, "Duplex");
+  const char    *duplex_mode = stp_get_string_parameter(v, "Duplex");
   int           page_number = stp_get_int_parameter(v, "PageNumber");
-  const canon_cap_t * caps= canon_get_model_capabilities(v);
+  const canon_cap_t * caps = canon_get_model_capabilities(v);
   const canon_modeuselist_t* mlist = caps->modeuselist;
 #if 0
   const canon_modeuse_t* muse;
@@ -5600,7 +5709,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
 		out_channels;	/* Output bytes per pixel */
 #endif
   unsigned	zero_mask;
-  int           print_cd= (media_source && (!strcmp(media_source, "CD")));
+  int           print_cd = (media_source && (!strcmp(media_source, "CD")));
   int           image_height;
 #if 0
   int           image_width;

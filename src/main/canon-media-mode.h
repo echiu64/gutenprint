@@ -7888,9 +7888,7 @@ static const char* canon_MULTIPASS_MP640_modeuses_plain[] = {
   "600x600dpi_high2",
   "600x600dpi_high",/* duplex */
   "600x600dpi",
-  "600x600dpi_draft",/*untested*/
   "300x300dpi",
-  "300x300dpi_draft",/*untested*/
   NULL
   };
 
@@ -7898,21 +7896,18 @@ static const char* canon_MULTIPASS_MP640_modeuses_plain[] = {
 static const char* canon_MULTIPASS_MP640_modeuses_PPpro[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
-  "600x600dpi_photodraft",/*untested*/
   NULL
 };
 
 static const char* canon_MULTIPASS_MP640_modeuses_PPplusG2[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
-  "600x600dpi_photodraft",/*untested*/
   NULL
 };
 
 static const char* canon_MULTIPASS_MP640_modeuses_PPmatte[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo2",
-  "600x600dpi_photodraft",/*untested*/
   NULL
 };
 
@@ -7941,7 +7936,6 @@ static const char* canon_MULTIPASS_MP640_modeuses_TShirt[] = {
 
 static const char* canon_MULTIPASS_MP640_modeuses_PPother[] = {
   "600x600dpi_photo",
-  "600x600dpi_photodraft",/*untested*/
   NULL
 };
 
