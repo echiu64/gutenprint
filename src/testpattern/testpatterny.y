@@ -129,6 +129,7 @@ find_color(const char *name)
 %token WHITE
 %token MODE
 %token PAGESIZE
+%token ROUND
 %token MESSAGE
 %token OUTPUT
 %token START_JOB
@@ -229,6 +230,13 @@ modespec2: modespec1 tINT
 
 modespec: modespec1 | modespec2
 ;
+
+round: ROUND
+	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>round\n");
+	  global_round_size = 1;
+	}
 
 inputspec: MODE modespec
 ;
@@ -625,7 +633,7 @@ end_job: END_JOB
 A_Rule: gamma | channel_gamma | level | channel_level | global_gamma | steps
 	| ink_limit | printer | parameter | density | top | left | hsize
 	| vsize | blackline | noscale | inputspec | page_size | message
-	| output | start_job | end_job | size_mode
+	| output | start_job | end_job | size_mode | round
 ;
 
 Rule: A_Rule SEMI

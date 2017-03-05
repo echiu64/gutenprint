@@ -85,6 +85,7 @@ my $list_options = 0;
 my $verbose = 0;
 my $use_unused_options = 0;
 my $proc_count = 1;
+my $round = 0;
 
 my @default_options = ();
 my %base_settings = ("DitherAlgorithm" => "Fast");
@@ -133,6 +134,7 @@ GetOptions("C=s" => \$csum_type,
 	   "v+"  => \$valgrind,
 	   "x=s" => \@exclude_list,
 	   "y=s" => \@exclude_patterns,
+	   "u"   => \$round,
 	   "t:i" => \$proc_count);
 
 sub print_help_and_exit() {
@@ -370,6 +372,9 @@ sub print_one_testpattern($;$) {
 	$stuff .= sprintf("top %f;\n", $top);
 	$stuff .= "blackline 0;\n";
 	$stuff .= "steps 16;\n";
+	if ($round) {
+	    $stuff .= "round;\n";
+	}
 	if ($raw > 0) {
 	    $stuff .= "mode extended $raw 16;\n";
 	    $stuff .= "xpattern ";

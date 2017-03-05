@@ -89,6 +89,7 @@ extern int global_channel_depth;
 extern int global_did_something;
 extern int global_invert_data;
 extern int global_noscale;
+extern int global_round_size;
 extern char *global_output;
 extern int global_quiet;
 extern FILE *output;
