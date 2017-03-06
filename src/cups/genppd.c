@@ -1746,15 +1746,15 @@ print_one_option(gpFile fp, stp_vars_t *v, const stp_string_list_t *po,
       gpprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
 	       desc->name, desc->p_type, desc->is_mandatory,
 	       desc->p_class, desc->p_level, desc->channel,
-	       (double) desc->bounds.dimension.lower,
-	       (double) desc->bounds.dimension.upper,
-	       (double) desc->deflt.dimension);
+	       desc->bounds.dimension.lower,
+	       desc->bounds.dimension.upper,
+	       desc->deflt.dimension);
       if (desc->is_mandatory)
 	{
-	  gpprintf(fp, "*DefaultStp%s: %.3f\n",
-		   desc->name, desc->deflt.dimension);
-	  gpprintf(fp, "*StpDefaultStp%s: %.3f\n",
-		   desc->name, desc->deflt.dimension);
+	  gpprintf(fp, "*DefaultStp%s: %d\n",
+		   desc->name, (int) desc->deflt.dimension);
+	  gpprintf(fp, "*StpDefaultStp%s: %d\n",
+		   desc->name, (int) desc->deflt.dimension);
 	}
       else
 	{
@@ -1764,8 +1764,8 @@ print_one_option(gpFile fp, stp_vars_t *v, const stp_string_list_t *po,
 	}
       if (!skip_color)
 	{
-	  for (i = desc->bounds.dimension.lower;
-	       i <= desc->bounds.dimension.upper; i++)
+	  for (i = (int) desc->bounds.dimension.lower;
+	       i <= (int) desc->bounds.dimension.upper; i++)
 	    {
 	      snprintf(dimstr, sizeof(dimstr), _("%.1f mm"),
 		       (double)i * 25.4 / 72.0);
@@ -1776,7 +1776,6 @@ print_one_option(gpFile fp, stp_vars_t *v, const stp_string_list_t *po,
       print_close_ui = 0;
       gpprintf(fp, "*CloseUI: *Stp%s\n\n", desc->name);
 
-#if 0
       /* This needs to be enabled if/when dimensions become floating point */
       /*
        * Add custom option code and value parameter...
@@ -1784,9 +1783,8 @@ print_one_option(gpFile fp, stp_vars_t *v, const stp_string_list_t *po,
 
       gpprintf(fp, "*CustomStp%s True: \"pop\"\n", desc->name);
       gpprintf(fp, "*ParamCustomStp%s Value/%s: 1 points %d %d\n\n",
-	       desc->name, _("Value"), desc->bounds.dimension.lower,
-	       desc->bounds.dimension.upper);
-#endif
+	       desc->name, _("Value"), (int) desc->bounds.dimension.lower,
+	       (int) desc->bounds.dimension.upper);
 
       break;
     case STP_PARAMETER_TYPE_INT:
@@ -1903,19 +1901,17 @@ print_one_localization(gpFile fp, const stp_string_list_t *po,
 	gpprintf(fp, "*%s.Stp%s %s/%s: \"\"\n", lang, desc->name,
 		 "None", _("None"));
       /* Unlike the other fields, dimensions are not strictly numbers */
-      for (i = desc->bounds.dimension.lower;
-	   i <= desc->bounds.dimension.upper; i++)
+      for (i = (int) desc->bounds.dimension.lower;
+	   i <= (int) desc->bounds.dimension.upper; i++)
 	{
 	  snprintf(dimstr, sizeof(dimstr), _("%.1f mm"),
 		   (double)i * 25.4 / 72.0);
 	  gpprintf(fp, "*%s.Stp%s %d/%s: \"\"\n", lang,
 		   desc->name, i, dimstr);
 	}
-#if 0
       /* This needs to be enabled if/when dimensions are floating point */
       gpprintf(fp, "*%s.ParamCustomStp%s Value/%s: \"\"\n", lang,
 	       desc->name, _("Value"));
-#endif
       break;
 
     case STP_PARAMETER_TYPE_INT:
