@@ -35,6 +35,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "print-intl.h"
 
@@ -82,34 +83,15 @@ query (void)
 {
   static GimpParamDef args[] =
   {
-    { GIMP_PDB_INT32,	(BAD_CONST_CHAR) "run_mode",	(BAD_CONST_CHAR) "Interactive, non-interactive" },
-    { GIMP_PDB_IMAGE,	(BAD_CONST_CHAR) "image",	(BAD_CONST_CHAR) "Input image" },
-    { GIMP_PDB_DRAWABLE,	(BAD_CONST_CHAR) "drawable",	(BAD_CONST_CHAR) "Input drawable" },
-    { GIMP_PDB_STRING,	(BAD_CONST_CHAR) "output_to",	(BAD_CONST_CHAR) "Print command or filename (| to pipe to command)" },
+    { GIMP_PDB_INT32,	  (BAD_CONST_CHAR) "run_mode",(BAD_CONST_CHAR) "Interactive, non-interactive" },
+    { GIMP_PDB_IMAGE,	  (BAD_CONST_CHAR) "image",   (BAD_CONST_CHAR) "Input image" },
+    { GIMP_PDB_DRAWABLE,(BAD_CONST_CHAR) "drawable",(BAD_CONST_CHAR) "Input drawable" },
     { GIMP_PDB_STRING,	(BAD_CONST_CHAR) "driver",	(BAD_CONST_CHAR) "Printer driver short name" },
-    { GIMP_PDB_STRING,	(BAD_CONST_CHAR) "ppd_file",	(BAD_CONST_CHAR) "PPD file" },
-    { GIMP_PDB_INT32,	(BAD_CONST_CHAR) "output_type",	(BAD_CONST_CHAR) "Output type (0 = gray, 1 = color)" },
-    { GIMP_PDB_STRING,	(BAD_CONST_CHAR) "resolution",	(BAD_CONST_CHAR) "Resolution (\"300\", \"720\", etc.)" },
-    { GIMP_PDB_STRING,	(BAD_CONST_CHAR) "media_size",	(BAD_CONST_CHAR) "Media size (\"Letter\", \"A4\", etc.)" },
-    { GIMP_PDB_STRING,	(BAD_CONST_CHAR) "media_type",	(BAD_CONST_CHAR) "Media type (\"Plain\", \"Glossy\", etc.)" },
-    { GIMP_PDB_STRING,	(BAD_CONST_CHAR) "media_source",	(BAD_CONST_CHAR) "Media source (\"Tray1\", \"Manual\", etc.)" },
-    { GIMP_PDB_FLOAT,	(BAD_CONST_CHAR) "brightness",	(BAD_CONST_CHAR) "Brightness (0-400%)" },
-    { GIMP_PDB_FLOAT,	(BAD_CONST_CHAR) "scaling",	(BAD_CONST_CHAR) "Output scaling (0-100%, -PPI)" },
-    { GIMP_PDB_INT32,	(BAD_CONST_CHAR) "orientation",	(BAD_CONST_CHAR) "Output orientation (-1 = auto, 0 = portrait, 1 = landscape)" },
-    { GIMP_PDB_INT32,	(BAD_CONST_CHAR) "left",	(BAD_CONST_CHAR) "Left offset (points, -1 = centered)" },
-    { GIMP_PDB_INT32,	(BAD_CONST_CHAR) "top",		(BAD_CONST_CHAR) "Top offset (points, -1 = centered)" },
-    { GIMP_PDB_FLOAT,	(BAD_CONST_CHAR) "gamma",	(BAD_CONST_CHAR) "Output gamma (0.1 - 3.0)" },
-    { GIMP_PDB_FLOAT,	(BAD_CONST_CHAR) "contrast",	(BAD_CONST_CHAR) "Contrast" },
-    { GIMP_PDB_FLOAT,	(BAD_CONST_CHAR) "cyan",	(BAD_CONST_CHAR) "Cyan level" },
-    { GIMP_PDB_FLOAT,	(BAD_CONST_CHAR) "magenta",	(BAD_CONST_CHAR) "Magenta level" },
-    { GIMP_PDB_FLOAT,	(BAD_CONST_CHAR) "yellow",	(BAD_CONST_CHAR) "Yellow level" },
-    { GIMP_PDB_INT32,	(BAD_CONST_CHAR) "linear",	(BAD_CONST_CHAR) "Linear output (0 = normal, 1 = linear)" },
-    { GIMP_PDB_INT32,	(BAD_CONST_CHAR) "image_type",	(BAD_CONST_CHAR) "Image type (0 = line art, 1 = solid tones, 2 = continuous tone, 3 = monochrome)"},
-    { GIMP_PDB_FLOAT,	(BAD_CONST_CHAR) "saturation",	(BAD_CONST_CHAR) "Saturation (0-1000%)" },
-    { GIMP_PDB_FLOAT,	(BAD_CONST_CHAR) "density",	(BAD_CONST_CHAR) "Density (0-200%)" },
-    { GIMP_PDB_STRING,	(BAD_CONST_CHAR) "ink_type",	(BAD_CONST_CHAR) "Type of ink or cartridge" },
-    { GIMP_PDB_STRING,	(BAD_CONST_CHAR) "dither_algorithm", (BAD_CONST_CHAR) "Dither algorithm" },
-    { GIMP_PDB_INT32,	(BAD_CONST_CHAR) "unit",	(BAD_CONST_CHAR) "Unit 0=Inches 1=Metric" },
+    { GIMP_PDB_STRING,	(BAD_CONST_CHAR) "printer_queue",(BAD_CONST_CHAR) "CUPS Printer Queue" },
+    { GIMP_PDB_INT32,   (BAD_CONST_CHAR) "left",    (BAD_CONST_CHAR) "Left offset (points, -1 = centered)" },
+    { GIMP_PDB_INT32,   (BAD_CONST_CHAR) "top",     (BAD_CONST_CHAR) "Top offset (points, -1 = centered)" },
+    { GIMP_PDB_INT32,   (BAD_CONST_CHAR) "length_key_value_array", (BAD_CONST_CHAR) "Length of the key-value array" },
+    { GIMP_PDB_STRINGARRAY, (BAD_CONST_CHAR) "keys", (BAD_CONST_CHAR) "Key-value pairs for Gutenprint Settings" },
   };
 
   static const gchar *blurb = "This plug-in prints images from The GIMP using Gutenprint directly.";
@@ -161,6 +143,7 @@ run (const char        *name,		/* I - Name of print program. */
   stpui_image_t *image;
   gint32 image_ID;
   gint32 base_type;
+  stp_parameter_t desc;
   if (getenv("STP_DEBUG_STARTUP"))
     while (SDEBUG)
       ;
@@ -216,25 +199,25 @@ run (const char        *name,		/* I - Name of print program. */
 
   /*  eventually export the image */
   switch (run_mode)
-    {
-    case GIMP_RUN_INTERACTIVE:
+  {
+  case GIMP_RUN_INTERACTIVE:
     case GIMP_RUN_WITH_LAST_VALS:
       gimp_ui_init ("print", TRUE);
       export = gimp_export_image (&image_ID, &drawable_ID, "Print",
-				  (GIMP_EXPORT_CAN_HANDLE_RGB |
-				   GIMP_EXPORT_CAN_HANDLE_GRAY |
-				   GIMP_EXPORT_CAN_HANDLE_INDEXED |
-				   GIMP_EXPORT_CAN_HANDLE_ALPHA));
+                                  (GIMP_EXPORT_CAN_HANDLE_RGB |
+                                   GIMP_EXPORT_CAN_HANDLE_GRAY |
+                                   GIMP_EXPORT_CAN_HANDLE_INDEXED |
+                                   GIMP_EXPORT_CAN_HANDLE_ALPHA));
       if (export == GIMP_EXPORT_CANCEL)
-	{
-	  *nreturn_vals = 1;
-	  values[0].data.d_status = GIMP_PDB_EXECUTION_ERROR;
-	  return;
-	}
+      {
+        values[0].data.d_status = GIMP_PDB_EXECUTION_ERROR;
+        fprintf(stderr,"Cannot handle image type\n");
+        return;
+      }
       break;
-    default:
-      break;
-    }
+  default:
+    break;
+  }
 
   /*
    * Get drawable...
@@ -247,17 +230,17 @@ run (const char        *name,		/* I - Name of print program. */
   stpui_set_image_channel_depth(8);
   base_type = gimp_image_base_type(image_ID);
   switch (base_type)
-    {
-    case GIMP_INDEXED:
-    case GIMP_RGB:
-      stpui_set_image_type("RGB");
-      break;
-    case GIMP_GRAY:
-      stpui_set_image_type("Whitescale");
-      break;
-    default:
-      break;
-    }
+  {
+  case GIMP_INDEXED:
+  case GIMP_RGB:
+    stpui_set_image_type("RGB");
+    break;
+  case GIMP_GRAY:
+    stpui_set_image_type("Whitescale");
+    break;
+  default:
+    break;
+  }
 
   image = Image_GimpDrawable_new(drawable, image_ID);
   stp_set_float_parameter(gimp_vars.v, "AppGamma", gimp_gamma());
@@ -267,105 +250,240 @@ run (const char        *name,		/* I - Name of print program. */
    */
 
   switch (run_mode)
+  {
+  case GIMP_RUN_INTERACTIVE:
+    /*
+     * Get information from the dialog...
+     */
+
+    if (!do_print_dialog (name, image_ID))
     {
-    case GIMP_RUN_INTERACTIVE:
-      /*
-       * Get information from the dialog...
-       */
-
-      if (!do_print_dialog (name, image_ID))
-	goto cleanup;
-      stpui_plist_copy(&gimp_vars, stpui_get_current_printer());
-      break;
-
-    case GIMP_RUN_NONINTERACTIVE:
-      /*
-       * Make sure all the arguments are present...
-       */
-      if (nparams < 11)
-	values[0].data.d_status = GIMP_PDB_CALLING_ERROR;
-      else
-	{
-#if 0
-	  /* What do we do with old output_to?  Probably best ignore it. */
-	  stpui_plist_set_output_to(&gimp_vars, param[3].data.d_string);
-#endif
-	  stp_set_driver(gimp_vars.v, param[4].data.d_string);
-	  stp_set_file_parameter(gimp_vars.v, "PPDFile", param[5].data.d_string);
-	  switch (param[6].data.d_int32)
-	    {
-	    case 0:
-	    default:
-	      stp_set_string_parameter(gimp_vars.v, "PrintingMode", "BW");
-	      break;
-	    case 1:
-	      stp_set_string_parameter(gimp_vars.v, "PrintingMode", "Color");
-	    }
-	  stp_set_string_parameter(gimp_vars.v, "Resolution", param[7].data.d_string);
-	  stp_set_string_parameter(gimp_vars.v, "PageSize", param[8].data.d_string);
-	  stp_set_string_parameter(gimp_vars.v, "MediaType", param[9].data.d_string);
-	  stp_set_string_parameter(gimp_vars.v, "InputSlot", param[10].data.d_string);
-
-          if (nparams > 11)
-	    stp_set_float_parameter(gimp_vars.v, "Brightness", param[11].data.d_float);
-
-          if (nparams > 12)
-	    gimp_vars.scaling = param[12].data.d_float;
-
-          if (nparams > 13)
-	    gimp_vars.orientation = param[13].data.d_int32;
-
-          if (nparams > 14)
-            stp_set_left(gimp_vars.v, param[14].data.d_int32);
-
-          if (nparams > 15)
-            stp_set_top(gimp_vars.v, param[15].data.d_int32);
-
-          if (nparams > 16)
-            stp_set_float_parameter(gimp_vars.v, "Gamma", param[16].data.d_float);
-
-          if (nparams > 17)
-	    stp_set_float_parameter(gimp_vars.v, "Contrast", param[17].data.d_float);
-
-          if (nparams > 18)
-	    stp_set_float_parameter(gimp_vars.v, "Cyan", param[18].data.d_float);
-
-          if (nparams > 19)
-	    stp_set_float_parameter(gimp_vars.v, "Magenta", param[19].data.d_float);
-
-          if (nparams > 20)
-	    stp_set_float_parameter(gimp_vars.v, "Yellow", param[20].data.d_float);
-
-          if (nparams > 21)
-	    stp_set_string_parameter(gimp_vars.v, "ImageOptimization", param[21].data.d_string);
-
-          if (nparams > 22)
-            stp_set_float_parameter(gimp_vars.v, "Saturation", param[23].data.d_float);
-
-          if (nparams > 23)
-            stp_set_float_parameter(gimp_vars.v, "Density", param[24].data.d_float);
-
-	  if (nparams > 24)
-	    stp_set_string_parameter(gimp_vars.v, "InkType", param[25].data.d_string);
-
-	  if (nparams > 25)
-	    stp_set_string_parameter(gimp_vars.v, "DitherAlgorithm",
-			      param[26].data.d_string);
-
-          if (nparams > 26)
-	    gimp_vars.unit = param[27].data.d_int32;
-	}
-
-      break;
-
-    case GIMP_RUN_WITH_LAST_VALS:
-      values[0].data.d_status = GIMP_PDB_CALLING_ERROR;
-      break;
-
-    default:
-      values[0].data.d_status = GIMP_PDB_CALLING_ERROR;
-      break;
+      values[0].data.d_status = GIMP_PDB_EXECUTION_ERROR;
     }
+    else
+    {
+      stpui_plist_copy(&gimp_vars, stpui_get_current_printer());
+    }
+    break;
+
+  case GIMP_RUN_NONINTERACTIVE:
+    /*
+     * Make sure all the arguments are present...
+     */
+    if (nparams < 9)
+      values[0].data.d_status = GIMP_PDB_CALLING_ERROR;
+    else
+    {
+      gimp_image_get_resolution(image_ID, &xres, &yres);
+      gdouble pixwidth = gimp_drawable_width(drawable_ID);
+      gdouble pixheight = gimp_drawable_height(drawable_ID);
+      gdouble pointwidth = gimp_pixels_to_units(pixwidth, GIMP_UNIT_POINT, xres);
+      gdouble pointheight = gimp_pixels_to_units(pixheight, GIMP_UNIT_POINT, yres);
+
+      stp_set_height(gimp_vars.v, pointheight);
+      stp_set_width(gimp_vars.v, pointwidth);
+
+      /*
+       * Avoid calling stpui_print with an invalid driver (SEGFAULT)
+       */
+
+      if (! stp_get_printer_by_driver(param[3].data.d_string) )
+      {
+        values[0].data.d_status = GIMP_PDB_CALLING_ERROR;
+        fprintf(stderr, "Unknown driver %s\n", stp_get_driver(gimp_vars.v));
+        break;
+      }
+
+      stp_set_driver(gimp_vars.v, param[3].data.d_string);
+
+      stpui_plist_set_queue_name(&gimp_vars, param[4].data.d_string);
+
+      /*
+       * Left offset (points, -1 = centered)
+       */
+
+      stp_set_left(gimp_vars.v, param[6].data.d_int32);
+
+      /*
+       * Top offset (points, -1 = centered)
+       */
+
+      stp_set_top(gimp_vars.v, param[5].data.d_int32);
+
+      /*
+       * Parse remaining parameters from key-value string array
+       */
+
+      int kv_arr_len = param[7].data.d_int32;
+
+      if (kv_arr_len % 2 != 0)
+      {
+        /*
+         * Key with no Value
+         */
+
+        values[0].data.d_status = GIMP_PDB_CALLING_ERROR;
+        fprintf(stderr,"Key with no value provided\n");
+      } else {
+
+        for( int k=0; k<kv_arr_len && values[0].data.d_status == GIMP_PDB_SUCCESS; k+=2 )
+        {
+          char *key = param[8].data.d_stringarray[k];
+          char *value = param[8].data.d_stringarray[k + 1];
+          char *endptr = NULL;
+          float float_value = 0;
+
+          stp_describe_parameter(gimp_vars.v, key, &desc);
+
+          switch(desc.p_type)
+          {
+          case STP_PARAMETER_TYPE_STRING_LIST:
+
+            /*
+             * Some useful string stp parameters
+             *
+             * "PrintingMode": BW, Color 
+             * "Resolution": "300", "720", etc. 
+             * "PageSize": "Letter", "A4", etc. TODO: Support Custom 
+             * "MediaType": "Plain", "Glossy", etc. 
+             * "InputSlot": "Tray1", "Manual", etc. 
+             * "ColorCorrection": Color Correction model 
+             * "InkType": Type of ink or cartridge 
+             * "InkSet": Set of inks to use 
+             * "DitherAlgorithm": Dither algorithm 
+             * "Weave": Weave method 
+             * "PrintingDirection": "Bidirectional", "Unidirectional" 
+             */
+
+            stp_set_string_parameter(gimp_vars.v, key, value);
+            break;
+
+          case STP_PARAMETER_TYPE_INT:
+            stp_set_int_parameter(gimp_vars.v, key, atoi(value));
+            break;
+
+          case STP_PARAMETER_TYPE_BOOLEAN:
+            stp_set_boolean_parameter(gimp_vars.v, key, atoi(value));
+            break;
+
+          case STP_PARAMETER_TYPE_DOUBLE:
+
+            /*
+             * Some useful floating point stp parameters
+             *
+             * "Brightness"  0-400% 
+             * "Gamma"  Output gamma 0.1 - 3.0 
+             * "Contrast" 0.1 - 3.0
+             * "Saturation"  0-1000% 
+             * "Density"  0-200% 
+             * "DropSize1"  0.0-1.0 
+             * "DropSize2"  0.0-1.0 
+             * "DropSize3"  0.0-1.0 
+             */
+
+            float_value = strtof(value, &endptr);
+            if (float_value == 0 && endptr == value)
+            {
+              /*
+               * No conversion was performed -- invalid floating point number
+               */
+              *nreturn_vals = 1;
+              values[0].data.d_status = GIMP_PDB_CALLING_ERROR;
+              fprintf(stderr,"Invalid floating point value provided for key: %s\n", key);
+            }
+            else
+            {
+              stp_set_float_parameter(gimp_vars.v, key, float_value);
+            }
+            break;
+
+          case STP_PARAMETER_TYPE_CURVE:
+          case STP_PARAMETER_TYPE_FILE:
+          case STP_PARAMETER_TYPE_RAW:
+          case STP_PARAMETER_TYPE_ARRAY:
+          case STP_PARAMETER_TYPE_DIMENSION:
+            values[0].data.d_status = GIMP_PDB_CALLING_ERROR;
+            fprintf(stderr,"Parameter type unsupported in gimp2 plugin for parameter %s\n", key);
+            break;
+            
+          case STP_PARAMETER_TYPE_INVALID:
+
+            /*
+             * Output scaling (0-100%, -PPI)
+             */
+
+            if (strncmp("Scaling", key, 7) == 0)
+            {
+              float_value = strtof(value, &endptr);
+              if (float_value == 0 && endptr == value)
+              {
+                /*
+                 * No conversion was performed -- invalid floating point number
+                 */
+
+                values[0].data.d_status = GIMP_PDB_CALLING_ERROR;
+                fprintf(stderr,"Invalid floating point value provided for key: Scaling\n");
+              }
+              else
+              {
+                gimp_vars.scaling = float_value;
+
+                if (gimp_vars.scaling == 0) {
+                  values[0].data.d_status = GIMP_PDB_CALLING_ERROR;
+                  fprintf(stderr,"Scaling cannot be 0\n");
+                }
+                else if (gimp_vars.scaling > 0)
+                {
+                  /*
+                   * Scaling > 0 in %
+                   */
+                  
+                  stp_set_width(gimp_vars.v, pointwidth * gimp_vars.scaling / 100.);
+                  stp_set_height(gimp_vars.v, pointheight * gimp_vars.scaling / 100.);
+                }
+                else /* gimp_vars < 0 */
+                {
+                  /*
+                   * Scaling < 0 in DPI
+                   */
+
+                  pointwidth = gimp_pixels_to_units(pixwidth, GIMP_UNIT_POINT, -gimp_vars.scaling);
+                  pointheight = gimp_pixels_to_units(pixheight, GIMP_UNIT_POINT, -gimp_vars.scaling);
+                  stp_set_width(gimp_vars.v, pointwidth);
+                  stp_set_height(gimp_vars.v, pointheight);
+                }
+              }
+              break;
+            }
+
+            /* 
+             * Output orientation (-1 = auto, 0 = portrait, 1 = landscape)
+             */
+
+            else if (strncmp("Orientation", key, 11) == 0)
+            {
+              gimp_vars.orientation = atoi(value);
+              break;
+            }
+
+          default:
+            values[0].data.d_status = GIMP_PDB_CALLING_ERROR;
+            fprintf(stderr,"Parameter unsupported in gimp2 plugin for parameter %s\n", key);
+            break;
+          }
+        }
+      }
+    }
+    break;
+
+  case GIMP_RUN_WITH_LAST_VALS:
+    values[0].data.d_status = GIMP_PDB_CALLING_ERROR;
+    break;
+
+  default:
+    values[0].data.d_status = GIMP_PDB_CALLING_ERROR;
+    break;
+  }
 
   if (gimp_thumbnail_data)
     g_free(gimp_thumbnail_data);
@@ -374,40 +492,42 @@ run (const char        *name,		/* I - Name of print program. */
    * Print the image...
    */
   if (values[0].data.d_status == GIMP_PDB_SUCCESS)
+  {
+    /*
+     * Set the tile cache size...
+     */
+
+    if (drawable->height > drawable->width)
+      gimp_tile_cache_ntiles ((drawable->height + gimp_tile_width () - 1) /
+                              gimp_tile_width () + 1);
+    else
+      gimp_tile_cache_ntiles ((drawable->width + gimp_tile_width () - 1) /
+                              gimp_tile_width () + 1);
+
+    if (! stpui_print(&gimp_vars, image))
     {
-      /*
-       * Set the tile cache size...
-       */
+      values[0].data.d_status = GIMP_PDB_EXECUTION_ERROR;
+    }
 
-      if (drawable->height > drawable->width)
-	gimp_tile_cache_ntiles ((drawable->height + gimp_tile_width () - 1) /
-				gimp_tile_width () + 1);
-      else
-	gimp_tile_cache_ntiles ((drawable->width + gimp_tile_width () - 1) /
-				gimp_tile_width () + 1);
-
-      if (! stpui_print(&gimp_vars, image))
-	  values[0].data.d_status = GIMP_PDB_EXECUTION_ERROR;
-
-      /*
-       * Store data...
-       * FIXME! This is broken!
-       */
+    /*
+     * Store data...
+     * FIXME! This is broken!
+     */
 
 #if 0
-      if (run_mode == GIMP_RUN_INTERACTIVE)
-	gimp_set_data (PLUG_IN_NAME, vars, sizeof (vars));
+    if (run_mode == GIMP_RUN_INTERACTIVE)
+      gimp_set_data (PLUG_IN_NAME, vars, sizeof (vars));
 #endif
-    }
+  }
 
   /*
    * Detach from the drawable...
    */
   gimp_drawable_detach (drawable);
 
- cleanup:
   if (export == GIMP_EXPORT_EXPORT)
     gimp_image_delete (image_ID);
+  stp_parameter_description_destroy(&desc);
   stp_vars_destroy(gimp_vars.v);
 }
 
