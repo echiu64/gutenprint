@@ -3649,7 +3649,8 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
   int adjust_tray_H_left, adjust_tray_H_right, adjust_tray_H_top, adjust_tray_H_bottom;
   int adjust_tray_J_left, adjust_tray_J_right, adjust_tray_J_top, adjust_tray_J_bottom;
   int adjust_tray_L_left, adjust_tray_L_right, adjust_tray_L_top, adjust_tray_L_bottom;
-  int paper_width, paper_length;
+  int paper_width;
+  /* int paper_length; May be required in near future */
 
   /* Canon printer firmware requires paper_width (and paper_length?)
      to be exact matches in units of 1/600 inch.
