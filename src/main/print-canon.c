@@ -278,7 +278,7 @@ static void canon_advance_paper(stp_vars_t *, int);
 static void canon_flush_pass(stp_vars_t *, int, int);
 static void canon_write_multiraster(stp_vars_t *v,canon_privdata_t* pd,int y);
 
-/* void fix_papersize(unsigned int *v, int *paper_width, int *paper_length); */
+static void fix_papersize(unsigned char arg_ESCP_1, int *paper_width, int *paper_length);
 
 static const stp_parameter_t the_parameters[] =
 {
@@ -2634,9 +2634,9 @@ canon_size_type(const stp_vars_t *v, const canon_cap_t * caps)
   return 0;
 }
 
-#if 0
+#if 1
 /* fix paper_width and paper_length for known papersizes in ESC (p command */
-void fix_papersize(unsigned char arg_ESCP_1, int *paper_width, int *paper_length){
+static void fix_papersize(unsigned char arg_ESCP_1, int *paper_width, int *paper_length){
 
 	    switch(arg_ESCP_1)
 	      {
@@ -4317,9 +4317,10 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
             /* set by calculation first, then correct if necessary */
 	    paper_width=(init->page_width + border_left + border_right) * unit / 72; /* paper_width */
 	    paper_length=(init->page_height + border_top + border_bottom) * unit / 72; /* paper_length */
-#if 0 
+#if 1 
             fix_papersize(arg_ESCP_1, &paper_width, &paper_length);
-#endif	    
+#endif
+#if 0	    
 	    switch(arg_ESCP_1)
 	      {
 	      case 0x01: paper_width = 3497; /* l: 4961 */ break;; /* A5 */
@@ -4393,7 +4394,7 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
 		/* default */
 	      default: paper_width=(init->page_width + border_left + border_right) * unit / 72; break;; /* custom */
 	      }
-
+#endif
 	    stp_put32_be(paper_width,v); /* paper_width */	      
 	    stp_put32_be(paper_length,v); /* paper_length */
 	  }
