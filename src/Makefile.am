@@ -23,8 +23,8 @@ include $(top_srcdir)/scripts/global.mk
 SUBDIRS = 					\
 	main					\
 	xml					\
-	gutenprintui2				\
 	escputil				\
+	gutenprintui2				\
 	gimp2					\
 	cups					\
 	testpattern

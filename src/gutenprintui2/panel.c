@@ -1158,20 +1158,10 @@ populate_option_table(GtkWidget *table, int p_class)
 		  digits = 3;
 		  minor_increment = .001;
 		}
-	      else if (unit_scaler > 10)
+	      else
 		{
 		  digits = 2;
 		  minor_increment = .01;
-		}
-	      else if (unit_scaler > 1)
-		{
-		  digits = 1;
-		  minor_increment = .1;
-		}
-	      else
-		{
-		  digits = 0;
-		  minor_increment = 1;
 		}
 	      add_reset_button(opt, table, 4, vpos[desc->p_level][desc->p_type]);
 	      stpui_create_scale_entry(opt, GTK_TABLE(table), 0,
@@ -1180,7 +1170,7 @@ populate_option_table(GtkWidget *table, int p_class)
 				       opt->info.flt.deflt / unit_scaler,
 				       opt->info.flt.lower / unit_scaler,
 				       opt->info.flt.upper / unit_scaler,
-				       minor_increment, minor_increment * 10,
+				       minor_increment, 1.0,
 				       digits, TRUE, 0, 0, NULL,
 				       !(desc->is_mandatory));
 	      stpui_set_adjustment_tooltip(opt->info.flt.adjustment,
@@ -2198,7 +2188,7 @@ create_scaling_frame (void)
   scaling_adjustment =
     stpui_scale_entry_new (GTK_TABLE (table), 0, 0, _("Scaling:"), 100, 75,
 			   100.0, minimum_image_percent, 100.0,
-			   1.0, 10.0, 1, TRUE, 0, 0, NULL);
+			   1.0, 10.0, 2, TRUE, 0, 0, NULL);
   stpui_set_adjustment_tooltip(scaling_adjustment,
 			       _("Set the scale (size) of the image"));
   g_signal_connect (G_OBJECT (scaling_adjustment), "value_changed",
@@ -2893,8 +2883,8 @@ plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
 void
 stpui_set_image_dimensions(gint width, gint height)
 {
-  image_true_width = width;
-  image_true_height = height;
+  image_true_width = (gdouble) width;
+  image_true_height = (gdouble) height;
 }
 
 void
@@ -2969,7 +2959,7 @@ static void
 position_callback (GtkWidget *widget)
 {
   gdouble new_printed_value = atof (gtk_entry_get_text (GTK_ENTRY (widget)));
-  gint new_value = SCALE(new_printed_value, units[pv->unit].scale);
+  gdouble new_value = SCALE(new_printed_value, units[pv->unit].scale);
 
   reset_preview ();
   suppress_preview_update++;
@@ -3491,7 +3481,7 @@ custom_media_size_callback(GtkWidget *widget,
   gdouble width_limit, height_limit;
   gdouble min_width_limit, min_height_limit;
   gdouble new_printed_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
-  gint new_value = SCALE(new_printed_value, units[pv->unit].scale);
+  gdouble new_value = SCALE(new_printed_value, units[pv->unit].scale);
   invalidate_frame ();
   invalidate_preview_thumbnail ();
   reset_preview ();
@@ -3534,9 +3524,9 @@ set_media_size(const gchar *new_media_size)
 
   if (pap)
     {
-      gint size;
-      int old_width = stp_get_page_width(pv->v);
-      int old_height = stp_get_page_height(pv->v);
+      gdouble size;
+      gdouble old_width = stp_get_page_width(pv->v);
+      gdouble old_height = stp_get_page_height(pv->v);
       int need_preview_update = 0;
 
       if (! stpui_show_all_paper_sizes &&
@@ -5126,10 +5116,10 @@ preview_motion_callback (GtkWidget      *widget,
 			 gpointer        data)
 {
 
-  gint old_top  = stp_get_top (pv->v);
-  gint old_left = stp_get_left (pv->v);
-  gint new_top  = old_top;
-  gint new_left = old_left;
+  gdouble old_top  = stp_get_top (pv->v);
+  gdouble old_left = stp_get_left (pv->v);
+  gdouble new_top  = old_top;
+  gdouble new_left = old_left;
   gint steps;
   if (preview_active != 1 || event->type != GDK_MOTION_NOTIFY)
     return;
@@ -5162,10 +5152,10 @@ preview_motion_callback (GtkWidget      *widget,
     case 2:
       if (move_constraint & MOVE_HORIZONTAL)
 	{
-	  gint increment_width =
+	  gdouble increment_width =
 	    ((move_constraint & MOVE_GRID) && pv->scaling > 0) ?
 	    printable_width * pv->scaling / 100 : print_width;
-	  gint x_threshold = MAX (1, (preview_ppi * increment_width) / INCH);
+	  gdouble x_threshold = MAX (1, (preview_ppi * increment_width) / FINCH);
 	  if (event->x > mouse_x)
 	    steps = MIN((event->x - mouse_x) / x_threshold,
 			((right - orig_left) / increment_width) - 1);
@@ -5176,10 +5166,10 @@ preview_motion_callback (GtkWidget      *widget,
 	}
       if (move_constraint & MOVE_VERTICAL)
 	{
-	  gint increment_height =
+	  gdouble increment_height =
 	    ((move_constraint & MOVE_GRID) && pv->scaling > 0) ?
 	    printable_height * pv->scaling / 100 : print_height;
-	  gint y_threshold = MAX (1, (preview_ppi * increment_height) / INCH);
+	  gdouble y_threshold = MAX (1, (preview_ppi * increment_height) / FINCH);
 	  if (event->y > mouse_y)
 	    steps = MIN((event->y - mouse_y) / y_threshold,
 			((bottom - orig_top) / increment_height) - 1);

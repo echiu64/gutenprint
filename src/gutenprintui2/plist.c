@@ -913,6 +913,9 @@ stpui_printrc_load_v1(FILE *fp)
 	    case STP_PARAMETER_TYPE_DOUBLE:
 	      stp_set_float_parameter(key.v, keyword, atof(value));
 	      break;
+	    case STP_PARAMETER_TYPE_DIMENSION:
+	      stp_set_dimension_parameter(key.v, keyword, atof(value));
+	      break;
 	    case STP_PARAMETER_TYPE_INT:
 	      stp_set_int_parameter(key.v, keyword, atoi(value));
 	      break;
