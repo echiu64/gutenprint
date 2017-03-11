@@ -399,6 +399,12 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 0, 0
   },
+  {
+    "Orientation", N_("Orientation"), "Color=No,Category=Basic Printer Setup",
+    N_("Orientation, Portrait, Landscape, Upside Down, Seascape"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0,
+  },
 };
 
 static const int the_parameter_count =
@@ -489,6 +495,20 @@ static const stp_param_string_t duplex_types[] =
   { "DuplexTumble",     N_ ("Short Edge (Flip)") }
 };
 #define NUM_DUPLEX (sizeof (duplex_types) / sizeof (stp_param_string_t))
+
+/*
+ * Orientation support - modes available
+ * Note that the internal names MUST match those in cups/genppd.c else the
+ * PPD files will not be generated correctly
+ */
+
+static const stp_param_string_t orientation_types[] = {
+  {"Portrait", N_("Portrait")},
+  {"Landscape", N_("Landscape")},
+  {"UpsideDown", N_("Reverse Portrait")},
+  {"Seascape", N_("Reverse Landscape")},
+};
+#define NUM_ORIENTATION (sizeof (orientation_types) / sizeof (stp_param_string_t))
 
 static const canon_paper_t *
 get_media_type(const canon_cap_t* caps,const char *name)
@@ -3183,6 +3203,16 @@ canon_parameters(const stp_vars_t *v, const char *name,
     else
       description->is_active = 0;
   }
+  else if (strcmp(name, "Orientation") == 0)
+  {
+    description->bounds.str = stp_string_list_create();
+    description->deflt.str = orientation_types[0].name;
+    for (i=0; i < NUM_ORIENTATION; i++)
+      {
+        stp_string_list_add_string(description->bounds.str,
+				   orientation_types[i].name,gettext(orientation_types[i].text));
+      }
+  }  
   else if (strcmp(name, "Quality") == 0)
   {
 #if 0
@@ -4332,16 +4362,24 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
 }
 
 /* ESC (P -- 0x50 -- unknown -- :
-    pt = stp_get_papersize_by_name(media_size);
-   seems to set media and page information. Different byte lengths depending on printer model. */
+   Seems to set media and page information. Different byte lengths
+   depending on printer model.
+   Page rotation option in driver [ESC (v] influences ESC (P command
+   parameters 5 and 6:
+       none: 1 0
+     90 deg: 2 0
+    180 deg: 1 1
+    270 deg: 2 1
+*/
 static void
 canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 {
-  unsigned char arg_ESCP_1, arg_ESCP_2, arg_ESCP_9;
+  unsigned char arg_ESCP_1, arg_ESCP_2, arg_ESCP_5, arg_ESCP_6, arg_ESCP_9;
 
   int width, length;
   /*  const char *media_size = stp_get_string_parameter(v, "PageSize");
       const stp_papersize_t *pt = NULL; */
+  const char* orientation_type = stp_get_string_parameter(v, "Orientation");
   const char* input_slot = stp_get_string_parameter(v, "InputSlot");
   const char* input_tray = stp_get_string_parameter(v, "CassetteTray");
   /* const canon_cap_t * caps= canon_get_model_capabilities(v); */
@@ -4371,7 +4409,27 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
   arg_ESCP_1 = (init->pt) ? canon_size_type(v,init->caps): 0x03; /* set to A4 size as default */
   stp_deprintf(STP_DBG_CANON,"canon: ESCP (P code read paper size, resulting arg_ESCP_1: '%x'\n",arg_ESCP_1);
   arg_ESCP_2 = (init->pt) ? init->pt->media_code_P: 0x00;
+  arg_ESCP_5 = 0x01; /* default for portrait orientation */
+  arg_ESCP_6 = 0x00; /* default for portrait orientation */
 
+  if( orientation_type && !strcmp(orientation_type,"Portrait")) { /* none */
+    arg_ESCP_5 = 0x01;
+    arg_ESCP_6 = 0x00;
+  }
+  else if( orientation_type && !strcmp(orientation_type,"Landscape")) { /* 90 deg */
+    arg_ESCP_5 = 0x02;
+    arg_ESCP_6 = 0x00;
+  }
+  else if( orientation_type && !strcmp(orientation_type,"UpsideDown")) { /* 180 deg */
+    arg_ESCP_5 = 0x01;
+    arg_ESCP_6 = 0x01;
+  } 
+  else if( orientation_type && !strcmp(orientation_type,"Seascape")) { /* 270 deg */
+    arg_ESCP_5 = 0x02;
+    arg_ESCP_6 = 0x01;
+  }
+
+  
   /* Code for last argument in 9-byte ESC (P printers with and upper and lower tray included in the cassette input source 
      The intention appears to be to allow printing of photos and non-photo paper without needing to change trays.
      Note, envelopes are printed from the lower tray.
@@ -4723,14 +4781,14 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 
       if ( !(strcmp(init->caps->name,"PIXMA MG7700")) ) {
 	/* output with 3 extra 0s at the end */
-	canon_cmd( v,ESC28,0x50,12,0x00,arg_ESCP_1,0x00,arg_ESCP_2,0x01,0x00,0x01,0x00,arg_ESCP_9,0x00,0x00,0x00);
+	canon_cmd( v,ESC28,0x50,12,0x00,arg_ESCP_1,0x00,arg_ESCP_2,arg_ESCP_5,arg_ESCP_6,0x01,0x00,arg_ESCP_9,0x00,0x00,0x00 );
       }
       else {
       
       /* arg_ESCP_1 = 0x03; */ /* A4 size */
       /* arg_ESCP_2 = 0x00; */ /* plain media */
-      /*                             size                media                      tray */
-      canon_cmd( v,ESC28,0x50,9,0x00,arg_ESCP_1,0x00,arg_ESCP_2,0x01,0x00,0x01,0x00,arg_ESCP_9);
+      /*                             size                media                                  tray */
+      canon_cmd( v,ESC28,0x50,9,0x00,arg_ESCP_1,0x00,arg_ESCP_2,arg_ESCP_5,arg_ESCP_6,0x01,0x00,arg_ESCP_9 );
 
       }
     }
@@ -4740,7 +4798,7 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
       /* arg_ESCP_1 = 0x03; */ /* A4 size */
       /* arg_ESCP_2 = 0x00; */ /* plain media */
       /*                             size                media             */
-      canon_cmd( v,ESC28,0x50,8,0x00,arg_ESCP_1,0x00,arg_ESCP_2,0x01,0x00,0x01,0x00);
+      canon_cmd( v,ESC28,0x50,8,0x00,arg_ESCP_1,0x00,arg_ESCP_2,arg_ESCP_5,arg_ESCP_6,0x01,0x00 );
     }
   else if ( init->caps->ESC_P_len == 6 ) /* first devices with XML header and ender */
     {/* the 4th of the 6 bytes is the media type. 2nd byte is media size. Both read from canon-media array. */
@@ -4748,7 +4806,7 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
       /* arg_ESCP_1 = 0x03; */ /* A4 size */
       /* arg_ESCP_2 = 0x00; */ /* plain media */
       /*                             size                media             */
-      canon_cmd( v,ESC28,0x50,6,0x00,arg_ESCP_1,0x00,arg_ESCP_2,0x01,0x00);
+      canon_cmd( v,ESC28,0x50,6,0x00,arg_ESCP_1,0x00,arg_ESCP_2,arg_ESCP_5,arg_ESCP_6 );
     }
   else if ( init->caps->ESC_P_len == 4 )  {/* 4 bytes */
     /*                             size            media       */
@@ -4763,9 +4821,10 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 		 "ESC_P_len=%d!!\n",init->caps->ESC_P_len);
 }
 
-/* ESC (s -- 0x73 -- used in some newer printers for duplex pages except last one -- */
-/* When capability available, used for non-tumble and tumble (unlike Esc (u which is non-tumble only) */
-/* Limitation: outputs on every page */
+/* ESC (s -- 0x73 -- :
+   used in some newer printers for duplex pages except last one.
+   When capability available, used for non-tumble and tumble (unlike Esc (u which is non-tumble only)
+   Limitation: outputs on every page */
 static void
 canon_init_setESC_s(const stp_vars_t *v, const canon_privdata_t *init)
 {
@@ -5193,32 +5252,54 @@ canon_init_setESC_u(const stp_vars_t *v, const canon_privdata_t *init)
   if (!(init->caps->features & CANON_CAP_DUPLEX))
     return;
 
-  canon_cmd(v,ESC28,0x75, 1, 0x01);
+  canon_cmd( v,ESC28,0x75, 1, 0x01 );
 }
 
 /* ESC (v -- 0x76 -- */
+/* page rotation in Windows driver settings: */
+/*      none: 0x0 */
+/*    90 deg: 0x1 */
+/*   180 deg: 0x2 */
+/*   270 deg: 0x3 */
+/* also influences ESC (P command parameters 5 and 6 */
+/*      none: 1 0 */
+/*    90 deg: 2 0 */
+/*   180 deg: 1 1 */
+/*   270 deg: 2 1 */
 static void
 canon_init_setESC_v(const stp_vars_t *v, const canon_privdata_t *init)
 {
+  const char  *orientation_type =stp_get_string_parameter(v, "Orientation");
+  unsigned char arg_ESCv_1 = 0x00;
+  
   if (!(init->caps->features & CANON_CAP_v))
     return;
-
-  canon_cmd(v,ESC28,0x76, 1, 0x00);
+  
+  if( orientation_type && !strcmp(orientation_type,"Portrait")) /* none */
+    arg_ESCv_1 = 0x00;
+  else if( orientation_type && !strcmp(orientation_type,"Landscape")) /* 90 deg */
+    arg_ESCv_1 = 0x01;
+  else if( orientation_type && !strcmp(orientation_type,"UpsideDown")) /* 180 deg */
+    arg_ESCv_1 = 0x02;
+  else if( orientation_type && !strcmp(orientation_type,"Seascape")) /* 270 deg */
+    arg_ESCv_1 = 0x03;
+  
+  canon_cmd( v,ESC28,0x76, 1, arg_ESCv_1 );
 }
 
-/* ESC (w -- 0x77 -- */
+/* ESC (w -- 0x77 -- :
+   Unknown.
+  new September 2015, currently only 1 byte.
+*/
 static void
 canon_init_setESC_w(const stp_vars_t *v, const canon_privdata_t *init)
 {
   unsigned char arg_ESCw_1;
-
-  /* new September 2015, currently only 1 byte */
   if (!(init->caps->features & CANON_CAP_w))
     return;
 
   arg_ESCw_1 = (init->pt) ? init->pt->media_code_w: 0x00;
-  
-  canon_cmd(v,ESC28,0x77, 1, arg_ESCw_1);
+  canon_cmd( v,ESC28,0x77, 1, arg_ESCw_1 );
 }
 
 static void
@@ -5226,12 +5307,12 @@ canon_init_printer(const stp_vars_t *v, canon_privdata_t *init)
 {
   unsigned int mytop;
   int          page_number = stp_get_int_parameter(v, "PageNumber");
-  const char  *duplex_mode =stp_get_string_parameter(v, "Duplex");
+  const char  *duplex_mode = stp_get_string_parameter(v, "Duplex");
   /* init printer */
   if (init->is_first_page) {
-    canon_init_resetPrinter(v,init);       /* ESC [K */
-    canon_init_setESC_M(v,init);           /* ESC (M */
-    canon_init_setDuplex(v,init);          /* ESC ($ */
+    canon_init_resetPrinter(v,init);     /* ESC [K */
+    canon_init_setESC_M(v,init);         /* ESC (M */
+    canon_init_setDuplex(v,init);        /* ESC ($ */
   }
   canon_init_setPageMode(v,init);        /* ESC (a */
   canon_init_setDataCompression(v,init); /* ESC (b */
@@ -5244,14 +5325,16 @@ canon_init_printer(const stp_vars_t *v, canon_privdata_t *init)
   canon_init_setPageMargins2(v,init);    /* ESC (p */
   canon_init_setESC_P(v,init);           /* ESC (P */
   canon_init_setCartridge(v,init);       /* ESC (T */
-  canon_init_setESC_s(v,init);           /* ESC (s */
   canon_init_setESC_S(v,init);           /* ESC (S */
   canon_init_setTray(v,init);            /* ESC (l */
   canon_init_setX72(v,init);             /* ESC (r */
   canon_init_setESC_v(v,init);           /* ESC (v */
-  canon_init_setESC_w(v,init);           /* ESC (w */
+    if (init->is_first_page)
+      canon_init_setESC_w(v,init);       /* ESC (w */
   if((page_number & 1) && duplex_mode && !strcmp(duplex_mode,"DuplexNoTumble"))
-    canon_init_setESC_u(v,init);       /* ESC (u 0x1 */
+    canon_init_setESC_u(v,init);         /* ESC (u 0x1 */
+  if(duplex_mode)
+    canon_init_setESC_s(v,init);         /* ESC (s 0x0 */
   canon_init_setMultiRaster(v,init);     /* ESC (I (J (L */
 
   /* some linefeeds */
