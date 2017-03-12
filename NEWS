@@ -303,6 +303,8 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      * In those printers using this command, corrected ESC (w command
        to output on on first page only.
 
+     * Corrected 300 DPI modes on iP100
+
      * TO ACTIVATE: changed Oufuku Hagaki handling in driver to be
        200mm width by 148mm height for compatibility with printer
        firmware.
