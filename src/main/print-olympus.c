@@ -68,8 +68,8 @@
 #ifndef MAX
 #  define MAX(a, b)	(((a) > (b)) ? (a) : (b))
 #endif /* !MAX */
-#define PX(pt,dpi)	((pt) * (dpi) / 72)
-#define PT(px,dpi)	((px) * 72 / (dpi))
+#define PX(pt,dpi)	(int)(((stp_dimension_t)(pt) * (stp_resolution_t)(dpi) / (stp_resolution_t)72) + 0.5f)
+#define PT(px,dpi)	((stp_resolution_t)(px) * (stp_resolution_t)72 / (stp_dimension_t)(dpi))
 #define LIST(list_t, list_name, items_t, items_name) \
 	static const list_t list_name = \
 	{ \
@@ -104,8 +104,8 @@ typedef struct {
 
 typedef struct {
   const char* name;
-  int w_dpi;
-  int h_dpi;
+  stp_resolution_t w_dpi;
+  stp_resolution_t h_dpi;
 } dyesub_resolution_t;
 
 typedef struct {
@@ -116,12 +116,12 @@ typedef struct {
 typedef struct {
   const char* name;
   const char* text;
-  int width_pt;
-  int height_pt;
-  int border_pt_left;
-  int border_pt_right;
-  int border_pt_top;
-  int border_pt_bottom;
+  stp_dimension_t width_pt;
+  stp_dimension_t height_pt;
+  stp_dimension_t border_pt_left;
+  stp_dimension_t border_pt_right;
+  stp_dimension_t border_pt_top;
+  stp_dimension_t border_pt_bottom;
   int print_mode;
 } dyesub_pagesize_t;
 
@@ -231,8 +231,8 @@ typedef struct
 /* Private data for dyesub driver as a whole */
 typedef struct
 {
-  int w_dpi, h_dpi;
-  int w_size, h_size;
+  stp_resolution_t w_dpi, h_dpi;
+  stp_dimension_t w_size, h_size;
   char plane;
   int block_min_w, block_min_h;
   int block_max_w, block_max_h;
@@ -1150,9 +1150,9 @@ static void cp900_printer_end_func(stp_vars_t *v)
 /* Canon CP820/CP910/CP1000/CP1200 and beynod */
 static const dyesub_pagesize_t cp910_page[] =
 {
-  { "Postcard", "Postcard 100x148mm", PT(1248,300)+1, PT(1872,300)+1, 13, 13, 16, 19, DYESUB_PORTRAIT},
-  { "w253h337", "CP_L 89x119mm", PT(1152,300)+1, PT(1472,300)+1, 13, 13, 15, 15, DYESUB_PORTRAIT},
-  { "w155h244", "Card 54x86mm", PT(1088,300)+1, PT(668,300)+1, 13, 13, 15, 15, DYESUB_LANDSCAPE},
+  { "Postcard", "Postcard 100x148mm", PT(1248,300), PT(1872,300), 13, 13, 16, 19, DYESUB_PORTRAIT},
+  { "w253h337", "CP_L 89x119mm", PT(1152,300), PT(1472,300), 13, 13, 15, 15, DYESUB_PORTRAIT},
+  { "w155h244", "Card 54x86mm", PT(1088,300), PT(668,300), 13, 13, 15, 15, DYESUB_LANDSCAPE},
 };
 
 LIST(dyesub_pagesize_list_t, cp910_page_list, dyesub_pagesize_t, cp910_page);
@@ -1200,7 +1200,7 @@ LIST(dyesub_resolution_list_t, res_403dpi_list, dyesub_resolution_t, res_403dpi)
 /* only Postcard pagesize is supported */
 static const dyesub_pagesize_t dppex5_page[] =
 {
-  { "w288h432", "Postcard", PT(1664,403)+1, PT(2466,403)+1, 13, 14, 18, 17,
+  { "w288h432", "Postcard", PT(1664,403), PT(2466,403), 13, 14, 18, 17,
   							DYESUB_PORTRAIT},
 };
 
@@ -1439,10 +1439,10 @@ LIST(dyesub_resolution_list_t, res_334dpi_list, dyesub_resolution_t, res_334dpi)
 
 static const dyesub_pagesize_t updr150_page[] =
 {
-  { "w288h432", "4x6", PT(1382,334)+1, PT(2048,334)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
-  { "B7", "3.5x5", PT(1210,334)+1, PT(1728,334)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
-  { "w360h504", "5x7", PT(1728,334)+1, PT(2380,334)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
-  { "w432h576", "6x8", PT(2048,334)+1, PT(2724,334)+1, 0, 0, 0, DYESUB_PORTRAIT},
+  { "w288h432", "4x6", PT(1382,334), PT(2048,334), 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "B7", "3.5x5", PT(1210,334), PT(1728,334), 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "w360h504", "5x7", PT(1728,334), PT(2380,334), 0, 0, 0, 0, DYESUB_PORTRAIT},
+  { "w432h576", "6x8", PT(2048,334), PT(2724,334), 0, 0, 0, DYESUB_PORTRAIT},
 };
 
 LIST(dyesub_pagesize_list_t, updr150_page_list, dyesub_pagesize_t, updr150_page);
@@ -1588,13 +1588,13 @@ static void updr150_printer_end_func(stp_vars_t *v)
 /* Sony UP-DR200 */
 static const dyesub_pagesize_t updr200_page[] =
 {
-  { "w288h432", "4x6", PT(1382,334)+1, PT(2048,334)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
-  { "w288h432-div2", "2x6*2", PT(1382,334)+1, PT(2048,334)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},  
-  { "B7", "3.5x5", PT(1210,334)+1, PT(1728,334)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
-  { "w360h504", "5x7", PT(1728,334)+1, PT(2380,334)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
-  { "w360h504-div2", "3.5x5*2", PT(1728,334)+1, PT(2420,334)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
-  { "w432h576", "6x8", PT(2048,334)+1, PT(2724,334)+1, 0, 0, 0, DYESUB_PORTRAIT},
-  { "w432h576-div2", "4x6*2", PT(2048,334)+1, PT(2764,334)+1, 0, 0, 0, DYESUB_PORTRAIT},
+  { "w288h432", "4x6", PT(1382,334), PT(2048,334), 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "w288h432-div2", "2x6*2", PT(1382,334), PT(2048,334), 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "B7", "3.5x5", PT(1210,334), PT(1728,334), 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "w360h504", "5x7", PT(1728,334), PT(2380,334), 0, 0, 0, 0, DYESUB_PORTRAIT},
+  { "w360h504-div2", "3.5x5*2", PT(1728,334), PT(2420,334), 0, 0, 0, 0, DYESUB_PORTRAIT},
+  { "w432h576", "6x8", PT(2048,334), PT(2724,334), 0, 0, 0, DYESUB_PORTRAIT},
+  { "w432h576-div2", "4x6*2", PT(2048,334), PT(2764,334), 0, 0, 0, DYESUB_PORTRAIT},
 };
 
 LIST(dyesub_pagesize_list_t, updr200_page_list, dyesub_pagesize_t, updr200_page);
@@ -1630,9 +1630,9 @@ static void updr200_printer_init_func(stp_vars_t *v)
 /* Sony UP-CR10L / DNP SL10 */
 static const dyesub_pagesize_t upcr10_page[] =
 {
-  { "w288h432", "4x6", PT(1248,300)+1, PT(1848,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
-  { "B7", "3.5x5", PT(1100,300)+1, PT(1536,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
-  { "w360h504", "5x7", PT(1536,300)+1, PT(2148,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
+  { "w288h432", "4x6", PT(1248,300), PT(1848,300), 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "B7", "3.5x5", PT(1100,300), PT(1536,300), 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "w360h504", "5x7", PT(1536,300), PT(2148,300), 0, 0, 0, 0, DYESUB_PORTRAIT},
 };
 
 LIST(dyesub_pagesize_list_t, upcr10_page_list, dyesub_pagesize_t, upcr10_page);
@@ -1786,7 +1786,7 @@ static void nx500_printer_init_func(stp_vars_t *v)
 /* Kodak Easyshare Dock family */
 static const dyesub_pagesize_t kodak_dock_page[] =
 {
-  { "w288h432", "4x6", PT(1248,300)+1, PT(1856,300)+1, 0, 0, 0, 0,
+  { "w288h432", "4x6", PT(1248,300), PT(1856,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT}, /* 4x6 */
 };
 
@@ -1818,9 +1818,9 @@ static void kodak_dock_plane_init(stp_vars_t *v)
 /* Kodak 6800 */
 static const dyesub_pagesize_t kodak_6800_page[] =
 {
-  { "w288h432", "4x6", PT(1240,300)+1, PT(1844,300)+1, 0, 0, 0, 0,
+  { "w288h432", "4x6", PT(1240,300), PT(1844,300), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE}, /* 4x6 */
-  { "w432h576", "6x8", PT(1844,300)+1, PT(2434,300)+1, 0, 0, 0, 0,
+  { "w432h576", "6x8", PT(1844,300), PT(2434,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT}, /* 6x8 */
 };
 
@@ -1845,11 +1845,11 @@ LIST(laminate_list_t, kodak_6800_laminate_list, laminate_t, kodak_6800_laminate)
 /* Kodak 6850 */
 static const dyesub_pagesize_t kodak_6850_page[] =
 {
-  { "w288h432", "4x6", PT(1240,300)+1, PT(1844,300)+1, 0, 0, 0, 0,
+  { "w288h432", "4x6", PT(1240,300), PT(1844,300), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE}, /* 4x6 */
-  { "w360h504", "5x7", PT(1548,300)+1, PT(2140,300)+1, 0, 0, 0, 0,
+  { "w360h504", "5x7", PT(1548,300), PT(2140,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT}, /* 5x7 */
-  { "w432h576", "6x8", PT(1844,300)+1, PT(2434,300)+1, 0, 0, 0, 0,
+  { "w432h576", "6x8", PT(1844,300), PT(2434,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT}, /* 6x8 */
 };
 
@@ -1911,11 +1911,11 @@ static void kodak_68xx_printer_init(stp_vars_t *v)
 /* Kodak 605 */
 static const dyesub_pagesize_t kodak_605_page[] =
 {
-  { "w288h432", "4x6", PT(1240,300)+1, PT(1844,300)+1, 0, 0, 0, 0,
+  { "w288h432", "4x6", PT(1240,300), PT(1844,300), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE}, /* 4x6 */
-  { "w360h504", "5x7", PT(1500,300)+1, PT(2100,300)+1, 0, 0, 0, 0,
+  { "w360h504", "5x7", PT(1500,300), PT(2100,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT}, /* 5x7 */
-  { "w432h576", "6x8", PT(1844,300)+1, PT(2434,300)+1, 0, 0, 0, 0,
+  { "w432h576", "6x8", PT(1844,300), PT(2434,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT}, /* 6x8 */
 };
 
@@ -1982,9 +1982,9 @@ static const dyesub_pagesize_t kodak_1400_page[] =
      The printer can technically print a little wider but these dimensions are
      defined by the lamination area, which is fixed.
   */
-  { "w612h864", "8.5x12", PT(2560,301)+1, PT(3010,301)+72*2, PT(76,301)+1, PT(76,301), 72, 72, DYESUB_PORTRAIT}, /* 8x12 */
-  { "Legal", "8.5x14", PT(2560,301)+1, PT(3612,301)+72*2, PT(35,301)+1, PT(35,301)+1, 72, 72, DYESUB_PORTRAIT}, /* 8x14 */
-  { "A4", "A4",       PT(2560,301)+1, PT(3010,301)+72*2, PT(76,301)+1, PT(76,301), 0, 0, DYESUB_PORTRAIT}, /* A4, indentical to 8x12 */
+  { "w612h864", "8.5x12", PT(2560,301), PT(3010,301)+72*2, PT(76,301), PT(76,301), 72, 72, DYESUB_PORTRAIT}, /* 8x12 */
+  { "Legal", "8.5x14", PT(2560,301), PT(3612,301)+72*2, PT(35,301), PT(35,301), 72, 72, DYESUB_PORTRAIT}, /* 8x14 */
+  { "A4", "A4",       PT(2560,301), PT(3010,301)+72*2, PT(76,301), PT(76,301), 0, 0, DYESUB_PORTRAIT}, /* A4, indentical to 8x12 */
 };
 
 LIST(dyesub_pagesize_list_t, kodak_1400_page_list, dyesub_pagesize_t, kodak_1400_page);
@@ -2039,8 +2039,8 @@ static const dyesub_pagesize_t kodak_805_page[] =
 {
   /* Identical to the Kodak 1400 except for the lack of A4 support.
      See the 1400 comments for explanations of this. */
-  { "w612h864", "8.5x12", PT(2560,301)+1, PT(3010,301)+72*2, PT(76,301)+1, PT(76,301), 72, 72, DYESUB_PORTRAIT}, /* 8x12 */
-  { "Legal", "8.5x14", PT(2560,301)+1, PT(3612,301)+72*2, PT(35,301)+1, PT(35,301)+1, 72, 72, DYESUB_PORTRAIT}, /* 8x14 */
+  { "w612h864", "8.5x12", PT(2560,301), PT(3010,301)+72*2, PT(76,301), PT(76,301), 72, 72, DYESUB_PORTRAIT}, /* 8x12 */
+  { "Legal", "8.5x14", PT(2560,301), PT(3612,301)+72*2, PT(35,301), PT(35,301), 72, 72, DYESUB_PORTRAIT}, /* 8x14 */
 };
 
 LIST(dyesub_pagesize_list_t, kodak_805_page_list, dyesub_pagesize_t, kodak_805_page);
@@ -2074,8 +2074,8 @@ static void kodak_805_printer_init(stp_vars_t *v)
 /* Kodak 9810 / 8800 */
 static const dyesub_pagesize_t kodak_9810_page[] =
 {
-  { "c8x10", "8x10", PT(2464,300)+1, PT(3024,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
-  { "w576h864", "8x12", PT(2464,300)+1, PT(3624,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
+  { "c8x10", "8x10", PT(2464,300), PT(3024,300), 0, 0, 0, 0, DYESUB_PORTRAIT},
+  { "w576h864", "8x12", PT(2464,300), PT(3624,300), 0, 0, 0, 0, DYESUB_PORTRAIT},
 };
 LIST(dyesub_pagesize_list_t, kodak_9810_page_list, dyesub_pagesize_t, kodak_9810_page);
 
@@ -2330,10 +2330,10 @@ static void kodak_9810_plane_init(stp_vars_t *v)
 /* Kodak 8810 */
 static const dyesub_pagesize_t kodak_8810_page[] =
 {
-  { "w288h576", "8x4", PT(1208,300)+1, PT(2464,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
-  { "c8x10", "8x10", PT(2464,300)+1, PT(3024,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
-  { "A4", "203x297mm", PT(2464,300)+1, PT(3531,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
-  { "w576h864", "8x12", PT(2464,300)+1, PT(3624,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
+  { "w288h576", "8x4", PT(1208,300), PT(2464,300), 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "c8x10", "8x10", PT(2464,300), PT(3024,300), 0, 0, 0, 0, DYESUB_PORTRAIT},
+  { "A4", "203x297mm", PT(2464,300), PT(3531,300), 0, 0, 0, 0, DYESUB_PORTRAIT},
+  { "w576h864", "8x12", PT(2464,300), PT(3624,300), 0, 0, 0, 0, DYESUB_PORTRAIT},
 };
 LIST(dyesub_pagesize_list_t, kodak_8810_page_list, dyesub_pagesize_t, kodak_8810_page);
 
@@ -2380,9 +2380,9 @@ static void kodak_8810_printer_init(stp_vars_t *v)
 /* Kodak 7000/7010 */
 static const dyesub_pagesize_t kodak_7000_page[] =
 {
-  { "w288h432", "4x6", PT(1240,300)+1, PT(1844,300)+1, 0, 0, 0, 0,
+  { "w288h432", "4x6", PT(1240,300), PT(1844,300), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE}, /* 4x6 */
-  { "w432h576", "6x8", PT(1844,300)+1, PT(2434,300)+1, 0, 0, 0, 0,
+  { "w432h576", "6x8", PT(1844,300), PT(2434,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT}, /* 6x8 */
 };
 
@@ -2429,7 +2429,7 @@ static void kodak_70xx_printer_init(stp_vars_t *v)
 /* Kodak 7015/7015 */
 static const dyesub_pagesize_t kodak_7015_page[] =
 {
-  { "w360h504", "5x7", PT(1548,300)+1, PT(2140,300)+1, 0, 0, 0, 0,
+  { "w360h504", "5x7", PT(1548,300), PT(2140,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT}, /* 5x7 */
 };
 
@@ -2445,8 +2445,8 @@ LIST(dyesub_printsize_list_t, kodak_7015_printsize_list, dyesub_printsize_t, kod
 /* Kodak Professional 8500 */
 static const dyesub_pagesize_t kodak_8500_page[] =
 {
-  { "w612h864", "8.5x12", PT(2508,314)+1, PT(3134,314)+1, 0, 0, 0, 0, DYESUB_PORTRAIT}, /* 8.5x12 & A4 */
-  { "Letter", "8.5x11", PT(2508,314)+1, PT(2954,314)+1, 0, 0, 0, 0, DYESUB_PORTRAIT}, /* Letter */
+  { "w612h864", "8.5x12", PT(2508,314), PT(3134,314), 0, 0, 0, 0, DYESUB_PORTRAIT}, /* 8.5x12 & A4 */
+  { "Letter", "8.5x11", PT(2508,314), PT(2954,314), 0, 0, 0, 0, DYESUB_PORTRAIT}, /* Letter */
 };
 
 LIST(dyesub_pagesize_list_t, kodak_8500_page_list, dyesub_pagesize_t, kodak_8500_page);
@@ -2637,18 +2637,18 @@ LIST(dyesub_resolution_list_t, res_325dpi_list, dyesub_resolution_t, res_325dpi)
 /* All are "custom" page sizes..  bleh.. */
 static const dyesub_pagesize_t mitsu_p95d_page[] =
 {
-  { "w213h284", "1280x960", PT(960,325)+1, PT(1280,325)+1, 0, 0, 0, 0,
+  { "w213h284", "1280x960", PT(960,325), PT(1280,325), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
-  { "w227h284", "1280x1024", PT(1024,325)+1, PT(1280,325)+1, 0, 0, 0, 0,
+  { "w227h284", "1280x1024", PT(1024,325), PT(1280,325), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},  
-  { "w284h284", "1280x1280", PT(1280,325)+1, PT(1280,325)+1, 0, 0, 0, 0,
+  { "w284h284", "1280x1280", PT(1280,325), PT(1280,325), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w284h426", "1280x1920", PT(1280,325)+1, PT(1920,325)+1, 0, 0, 0, 0,
+  { "w284h426", "1280x1920", PT(1280,325), PT(1920,325), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w284h1277", "1280x5760", PT(1280,325)+1, PT(5760,325)+1, 0, 0, 0, 0,
+  { "w284h1277", "1280x5760", PT(1280,325), PT(5760,325), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
   /* A true "custom" size, printer will cut at the image boundary */
-  { "Custom", NULL, PT(1280,325)+1, -1, 0, 0, 0, 0,
+  { "Custom", NULL, PT(1280,325), -1, 0, 0, 0, 0,
     DYESUB_PORTRAIT},
 };
 
@@ -3455,8 +3455,8 @@ static void mitsu_p93d_printer_init(stp_vars_t *v)
 /* Mitsubishi CP3020D/DU/DE */
 static const dyesub_pagesize_t mitsu_cp3020d_page[] =
 {
-  { "A4", "A4", PT(2508,314)+1, PT(3134,314)+1, 0, 0, 0, 0, DYESUB_PORTRAIT}, /* A4 */
-  { "Legal", "Letter Long", PT(2508,314)+1, PT(3762,314)+1, 0, 0, 0, 0, DYESUB_PORTRAIT}, /* Letter */
+  { "A4", "A4", PT(2508,314), PT(3134,314), 0, 0, 0, 0, DYESUB_PORTRAIT}, /* A4 */
+  { "Legal", "Letter Long", PT(2508,314), PT(3762,314), 0, 0, 0, 0, DYESUB_PORTRAIT}, /* Letter */
 };
 
 LIST(dyesub_pagesize_list_t, mitsu_cp3020d_page_list, dyesub_pagesize_t, mitsu_cp3020d_page);
@@ -3640,15 +3640,15 @@ LIST(dyesub_resolution_list_t, res_m9500_list, dyesub_resolution_t, res_m9500);
 
 static const dyesub_pagesize_t mitsu_cp9500_page[] =
 {
-  { "B7", "3.5x5", PT(1240,346)+1, PT(1812,346)+1, 0, 0, 0, 0,
+  { "B7", "3.5x5", PT(1240,346), PT(1812,346), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
-  { "w288h432", "4x6", PT(1416,346)+1, PT(2152,346)+1, 0, 0, 0, 0,
+  { "w288h432", "4x6", PT(1416,346), PT(2152,346), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
-  { "w360h504", "5x7", PT(1812,346)+1, PT(2452,346)+1, 0, 0, 0, 0,
+  { "w360h504", "5x7", PT(1812,346), PT(2452,346), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h576", "6x8", PT(2152,346)+1, PT(2792,346)+1, 0, 0, 0, 0,
+  { "w432h576", "6x8", PT(2152,346), PT(2792,346), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h648", "6x9", PT(2152,346)+1, PT(3146,346)+1, 0, 0, 0, 0,
+  { "w432h648", "6x9", PT(2152,346), PT(3146,346), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
 };
 
@@ -3818,19 +3818,19 @@ LIST(dyesub_resolution_list_t, res_346dpi_list, dyesub_resolution_t, res_346dpi)
 
 static const dyesub_pagesize_t mitsu_cp9550_page[] =
 {
-  { "B7", "3.5x5", PT(1240,346)+1, PT(1812,346)+1, 0, 0, 0, 0,
+  { "B7", "3.5x5", PT(1240,346), PT(1812,346), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
-  { "w288h432", "4x6", PT(1416,346)+1, PT(2152,346)+1, 0, 0, 0, 0,
+  { "w288h432", "4x6", PT(1416,346), PT(2152,346), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
-  { "w288h432-div2", "2x6*2", PT(1416,346)+1, PT(2152,346)+1, 0, 0, 0, 0,
+  { "w288h432-div2", "2x6*2", PT(1416,346), PT(2152,346), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},  
-  { "w360h504", "5x7", PT(1812,346)+1, PT(2452,346)+1, 0, 0, 0, 0,
+  { "w360h504", "5x7", PT(1812,346), PT(2452,346), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h576", "6x8", PT(2152,346)+1, PT(2792,346)+1, 0, 0, 0, 0,
+  { "w432h576", "6x8", PT(2152,346), PT(2792,346), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h612", "6x8.5", PT(2152,346)+1, PT(2956,346)+1, 0, 0, 0, 0,
+  { "w432h612", "6x8.5", PT(2152,346), PT(2956,346), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h648", "6x9", PT(2152,346)+1, PT(3146,346)+1, 0, 0, 0, 0,
+  { "w432h648", "6x9", PT(2152,346), PT(3146,346), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
   /* XXX also 3.3x6 and 3.5x6!
      XXX also 4x6*2, 4.4*6*2, 3x6*3, 2x6*4!  (Built on 6x9 media) */
@@ -4005,17 +4005,17 @@ static void mitsu_cp9550_printer_end(stp_vars_t *v)
 
 static const dyesub_pagesize_t mitsu_cp9550s_page[] =
 {
-  { "w288h432", "4x6", PT(1416,346)+1, PT(2152,346)+1, 0, 0, 0, 0,
+  { "w288h432", "4x6", PT(1416,346), PT(2152,346), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
-  { "w288h432-div2", "2x6*2", PT(1416,346)+1, PT(2152,346)+1, 0, 0, 0, 0,
+  { "w288h432-div2", "2x6*2", PT(1416,346), PT(2152,346), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},  
-  { "w360h504", "5x7", PT(1812,346)+1, PT(2452,346)+1, 0, 0, 0, 0,
+  { "w360h504", "5x7", PT(1812,346), PT(2452,346), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h576", "6x8", PT(2152,346)+1, PT(2792,346)+1, 0, 0, 0, 0,
+  { "w432h576", "6x8", PT(2152,346), PT(2792,346), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h612", "6x8.5", PT(2152,346)+1, PT(2956,346)+1, 0, 0, 0, 0,
+  { "w432h612", "6x8.5", PT(2152,346), PT(2956,346), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h648", "6x9", PT(2152,346)+1, PT(3146,346)+1, 0, 0, 0, 0,
+  { "w432h648", "6x9", PT(2152,346), PT(3146,346), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
 };
 
@@ -4053,17 +4053,17 @@ LIST(dyesub_resolution_list_t, res_mitsu9600_dpi_list, dyesub_resolution_t, res_
 
 static const dyesub_pagesize_t mitsu_cp9600_page[] =
 {
-  { "B7", "3.5x5", PT(1076,300)+1, PT(1572,300)+1, 0, 0, 0, 0,
+  { "B7", "3.5x5", PT(1076,300), PT(1572,300), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
-  { "w288h432", "4x6", PT(1228,300)+1, PT(1868,300)+1, 0, 0, 0, 0,
+  { "w288h432", "4x6", PT(1228,300), PT(1868,300), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
-  { "w360h504", "5x7", PT(1572,300)+1, PT(2128,300)+1, 0, 0, 0, 0,
+  { "w360h504", "5x7", PT(1572,300), PT(2128,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h576", "6x8", PT(1868,300)+1, PT(2442,300)+1, 0, 0, 0, 0,
+  { "w432h576", "6x8", PT(1868,300), PT(2442,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h612", "6x8.5", PT(1868,300)+1, PT(2564,300)+1, 0, 0, 0, 0,
+  { "w432h612", "6x8.5", PT(1868,300), PT(2564,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h648", "6x9", PT(1868,300)+1, PT(2730,300)+1, 0, 0, 0, 0,
+  { "w432h648", "6x9", PT(1868,300), PT(2730,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
 };
 
@@ -4142,17 +4142,17 @@ static void mitsu_cp9600_printer_end(stp_vars_t *v)
 /* Mitsubishi 9810D/DW */
 static const dyesub_pagesize_t mitsu_cp9810_page[] =
 {
-  { "B7", "3.5x5", PT(1076,300)+1, PT(1572,300)+1, 0, 0, 0, 0,
+  { "B7", "3.5x5", PT(1076,300), PT(1572,300), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
-  { "w288h432", "4x6", PT(1228,300)+1, PT(1868,300)+1, 0, 0, 0, 0,
+  { "w288h432", "4x6", PT(1228,300), PT(1868,300), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
-  { "w360h504", "5x7", PT(1572,300)+1, PT(2128,300)+1, 0, 0, 0, 0,
+  { "w360h504", "5x7", PT(1572,300), PT(2128,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h576", "6x8", PT(1868,300)+1, PT(2442,300)+1, 0, 0, 0, 0,
+  { "w432h576", "6x8", PT(1868,300), PT(2442,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h612", "6x8.5", PT(1868,300)+1, PT(2564,300)+1, 0, 0, 0, 0,
+  { "w432h612", "6x8.5", PT(1868,300), PT(2564,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h648", "6x9", PT(1868,300)+1, PT(2730,300)+1, 0, 0, 0, 0,
+  { "w432h648", "6x9", PT(1868,300), PT(2730,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
 };
 
@@ -4372,25 +4372,25 @@ static void mitsu_cp9810_printer_end(stp_vars_t *v)
 /* Mitsubishi CP-D70D/CP-D707 */
 static const dyesub_pagesize_t mitsu_cpd70x_page[] =
 {
-  { "B7", "3.5x5", PT(1076,300)+1, PT(1568,300)+1, 0, 0, 0, 0,
+  { "B7", "3.5x5", PT(1076,300), PT(1568,300), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
-  { "w288h432", "4x6", PT(1228,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
+  { "w288h432", "4x6", PT(1228,300), PT(1864,300), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
-  { "w288h432-div2", "2x6*2", PT(1228,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
+  { "w288h432-div2", "2x6*2", PT(1228,300), PT(1864,300), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
-  { "w360h504", "5x7", PT(1568,300)+1, PT(2128,300)+1, 0, 0, 0, 0,
+  { "w360h504", "5x7", PT(1568,300), PT(2128,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w360h504-div2", "3.5x5*2", PT(1568,300)+1, PT(2128,300)+1, 0, 0, 0, 0,
+  { "w360h504-div2", "3.5x5*2", PT(1568,300), PT(2128,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h432", "6x6", PT(1820,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
+  { "w432h432", "6x6", PT(1820,300), PT(1864,300), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
-  { "w432h576", "6x8", PT(1864,300)+1, PT(2422,300)+1, 0, 0, 0, 0,
+  { "w432h576", "6x8", PT(1864,300), PT(2422,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h612", "6x8.5", PT(1864,300)+1, PT(2564,300)+1, 0, 0, 0, 0,
+  { "w432h612", "6x8.5", PT(1864,300), PT(2564,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h648", "6x9", PT(1864,300)+1, PT(2730,300)+1, 0, 0, 0, 0,
+  { "w432h648", "6x9", PT(1864,300), PT(2730,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h576-div2", "4x6*2", PT(1864,300)+1, PT(2730,300)+1, 0, 0, 0, 0,
+  { "w432h576-div2", "4x6*2", PT(1864,300), PT(2730,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
 };
 
@@ -4669,21 +4669,21 @@ static void mitsu_cpd70x_plane_end(stp_vars_t *v)
 /* Mitsubishi CP-K60D */
 static const dyesub_pagesize_t mitsu_cpk60_page[] =
 {
-  { "B7", "3.5x5", PT(1076,300)+1, PT(1568,300)+1, 0, 0, 0, 0,
+  { "B7", "3.5x5", PT(1076,300), PT(1568,300), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
-  { "w288h432", "4x6", PT(1218,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
+  { "w288h432", "4x6", PT(1218,300), PT(1864,300), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
-  { "w288h432-div2", "2x6*2", PT(1218,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
+  { "w288h432-div2", "2x6*2", PT(1218,300), PT(1864,300), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
-  { "w360h504", "5x7", PT(1568,300)+1, PT(2128,300)+1, 0, 0, 0, 0,
+  { "w360h504", "5x7", PT(1568,300), PT(2128,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w360h504-div2", "3.5x5*2", PT(1568,300)+1, PT(2190,300)+1, 0, 0, 0, 0,
+  { "w360h504-div2", "3.5x5*2", PT(1568,300), PT(2190,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h432", "6x6", PT(1820,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
+  { "w432h432", "6x6", PT(1820,300), PT(1864,300), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
-  { "w432h576", "6x8", PT(1864,300)+1, PT(2422,300)+1, 0, 0, 0, 0,
+  { "w432h576", "6x8", PT(1864,300), PT(2422,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h576-div2", "4x6*2", PT(1864,300)+1, PT(2454,300)+1, 0, 0, 0, 0,
+  { "w432h576-div2", "4x6*2", PT(1864,300), PT(2454,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
 };
 
@@ -4771,19 +4771,19 @@ mitsu_k60_load_parameters(const stp_vars_t *v, const char *name,
 
 static const dyesub_pagesize_t mitsu_cpd80_page[] =
 {
-  { "w288h432", "4x6", PT(1228,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
+  { "w288h432", "4x6", PT(1228,300), PT(1864,300), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
-  { "w288h432-div2", "2x6*2", PT(1228,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
+  { "w288h432-div2", "2x6*2", PT(1228,300), PT(1864,300), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
-  { "w360h360", "5x5", PT(1524,300)+1, PT(1568,300)+1, 0, 0, 0, 0,
+  { "w360h360", "5x5", PT(1524,300), PT(1568,300), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
-  { "w360h504", "5x7", PT(1568,300)+1, PT(2128,300)+1, 0, 0, 0, 0,
+  { "w360h504", "5x7", PT(1568,300), PT(2128,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h432", "6x6", PT(1864,300)+1, PT(1820,300)+1, 0, 0, 0, 0,
+  { "w432h432", "6x6", PT(1864,300), PT(1820,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h576", "6x8", PT(1864,300)+1, PT(2422,300)+1, 0, 0, 0, 0,
+  { "w432h576", "6x8", PT(1864,300), PT(2422,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h576-div2", "4x6*2", PT(1864,300)+1, PT(2730,300)+1, 0, 0, 0, 0,
+  { "w432h576-div2", "4x6*2", PT(1864,300), PT(2730,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
 };
 
@@ -4805,15 +4805,15 @@ LIST(dyesub_printsize_list_t, mitsu_cpd80_printsize_list, dyesub_printsize_t, mi
 /* Kodak 305 */
 static const dyesub_pagesize_t kodak305_page[] =
 {
-  { "w288h432", "4x6", PT(1218,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
+  { "w288h432", "4x6", PT(1218,300), PT(1864,300), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
-  { "w288h432-div2", "2x6*2", PT(1218,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
+  { "w288h432-div2", "2x6*2", PT(1218,300), PT(1864,300), 0, 0, 0, 0,
 						DYESUB_LANDSCAPE},
-  { "w432h432", "6x6", PT(1820,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
+  { "w432h432", "6x6", PT(1820,300), PT(1864,300), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
-  { "w432h576", "6x8", PT(1864,300)+1, PT(2422,300)+1, 0, 0, 0, 0,
+  { "w432h576", "6x8", PT(1864,300), PT(2422,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h576-div2", "4x6*2", PT(1864,300)+1, PT(2454,300)+1, 0, 0, 0, 0,
+  { "w432h576-div2", "4x6*2", PT(1864,300), PT(2454,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
 };
 
@@ -4838,27 +4838,27 @@ static void kodak305_printer_init(stp_vars_t *v)
 /* Mitsubishi CP-D90D */
 static const dyesub_pagesize_t mitsu_cpd90_page[] =
 {
-  { "w144h432", "2x6", PT(625,300)+1, PT(1852,300)+1, 0, 0, 0, 0,
+  { "w144h432", "2x6", PT(625,300), PT(1852,300), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
-  { "B7", "3.5x5", PT(1076,300)+1, PT(1550,300)+1, 0, 0, 0, 0,
+  { "B7", "3.5x5", PT(1076,300), PT(1550,300), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
-  { "w288h432", "4x6", PT(1226,300)+1, PT(1852,300)+1, 0, 0, 0, 0,
+  { "w288h432", "4x6", PT(1226,300), PT(1852,300), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
-  { "w288h432-div2", "2x6*2", PT(1226,300)+1, PT(1852,300)+1, 0, 0, 0, 0,
+  { "w288h432-div2", "2x6*2", PT(1226,300), PT(1852,300), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
-  { "w360h504", "5x7", PT(1550,300)+1, PT(2128,300)+1, 0, 0, 0, 0,
+  { "w360h504", "5x7", PT(1550,300), PT(2128,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w360h360", "5x5", PT(1527,300)+1, PT(1550,300)+1, 0, 0, 0, 0,
+  { "w360h360", "5x5", PT(1527,300), PT(1550,300), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
-  { "w432h432", "6x6", PT(1827,300)+1, PT(1852,300)+1, 0, 0, 0, 0,
+  { "w432h432", "6x6", PT(1827,300), PT(1852,300), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
-  { "w432h576", "6x8", PT(1852,300)+1, PT(2428,300)+1, 0, 0, 0, 0,
+  { "w432h576", "6x8", PT(1852,300), PT(2428,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h576-div2", "4x6*2", PT(1852,300)+1, PT(2488,300)+1, 0, 0, 0, 0,
+  { "w432h576-div2", "4x6*2", PT(1852,300), PT(2488,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h612", "6x8.5", PT(1852,300)+1, PT(2568,300)+1, 0, 0, 0, 0,
+  { "w432h612", "6x8.5", PT(1852,300), PT(2568,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h648", "6x9", PT(1852,300)+1, PT(2729,300)+1, 0, 0, 0, 0,
+  { "w432h648", "6x9", PT(1852,300), PT(2729,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
 };
 
@@ -5087,17 +5087,17 @@ static void mitsu_cpd90_printer_end(stp_vars_t *v)
 /* Fujifilm ASK-300 */
 static const dyesub_pagesize_t fuji_ask300_page[] =
 {
-  { "B7", "3.5x5", PT(1076,300)+1, PT(1568,300)+1, 0, 0, 0, 0,
+  { "B7", "3.5x5", PT(1076,300), PT(1568,300), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
-  { "w288h432", "4x6", PT(1228,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
+  { "w288h432", "4x6", PT(1228,300), PT(1864,300), 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
-  { "w360h504", "5x7", PT(1568,300)+1, PT(2128,300)+1, 0, 0, 0, 0,
+  { "w360h504", "5x7", PT(1568,300), PT(2128,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w360h504-div2", "3.5x5*2", PT(1568,300)+1, PT(2128,300)+1, 0, 0, 0, 0,
+  { "w360h504-div2", "3.5x5*2", PT(1568,300), PT(2128,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h576", "6x8", PT(1864,300)+1, PT(2422,300)+1, 0, 0, 0, 0,
+  { "w432h576", "6x8", PT(1864,300), PT(2422,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h648", "6x9", PT(1864,300)+1, PT(2730,300)+1, 0, 0, 0, 0,
+  { "w432h648", "6x9", PT(1864,300), PT(2730,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
 };
 
@@ -5118,15 +5118,15 @@ LIST(dyesub_printsize_list_t, fuji_ask300_printsize_list, dyesub_printsize_t, fu
 /* Shinko CHC-S9045 (experimental) */
 static const dyesub_pagesize_t shinko_chcs9045_page[] =
 {
-  { "w288h432",	"4x6", PT(1240,300)+1, PT(1844,300)+1, 0, 0, 0, 0,
+  { "w288h432",	"4x6", PT(1240,300), PT(1844,300), 0, 0, 0, 0,
   							DYESUB_LANDSCAPE},
-  { "B7",	"3.5x5", PT(1088,300)+1, PT(1548,300)+1, 0, 0, 0, 0,
+  { "B7",	"3.5x5", PT(1088,300), PT(1548,300), 0, 0, 0, 0,
   							DYESUB_LANDSCAPE},
-  { "w360h504",	"5x7", PT(1548,300)+1, PT(2140,300)+1, 0, 0, 0, 0,
+  { "w360h504",	"5x7", PT(1548,300), PT(2140,300), 0, 0, 0, 0,
   							DYESUB_PORTRAIT},
-  { "w432h648",	"6x9", PT(1844,300)+1, PT(2740,300)+1, 0, 0, 0, 0,
+  { "w432h648",	"6x9", PT(1844,300), PT(2740,300), 0, 0, 0, 0,
   							DYESUB_PORTRAIT},
-  { "w283h425",	"Sticker paper", PT(1092,300)+1, PT(1726,300)+1, 0, 0, 0, 0,
+  { "w283h425",	"Sticker paper", PT(1092,300), PT(1726,300), 0, 0, 0, 0,
   							DYESUB_LANDSCAPE},
 };
 
@@ -5172,21 +5172,21 @@ static void shinko_chcs9045_printer_init(stp_vars_t *v)
 /* Shinko CHC-S2145 */
 static const dyesub_pagesize_t shinko_chcs2145_page[] =
 {
-  { "w144h432",	"2x6", PT(634,300)+1, PT(1844,300)+1, 0, 0, 0, 0,
+  { "w144h432",	"2x6", PT(634,300), PT(1844,300), 0, 0, 0, 0,
   							DYESUB_LANDSCAPE},
-  { "w288h432",	"4x6", PT(1240,300)+1, PT(1844,300)+1, 0, 0, 0, 0,
+  { "w288h432",	"4x6", PT(1240,300), PT(1844,300), 0, 0, 0, 0,
   							DYESUB_LANDSCAPE},
-  { "w288h432-div2",	"2x6*2", PT(1240,300)+1, PT(1844,300)+1, 0, 0, 0, 0,
+  { "w288h432-div2",	"2x6*2", PT(1240,300), PT(1844,300), 0, 0, 0, 0,
   							DYESUB_LANDSCAPE},
-  { "B7",	"3.5x5", PT(1088,300)+1, PT(1548,300)+1, 0, 0, 0, 0,
+  { "B7",	"3.5x5", PT(1088,300), PT(1548,300), 0, 0, 0, 0,
   							DYESUB_LANDSCAPE},
-  { "w360h504",	"5x7", PT(1548,300)+1, PT(2140,300)+1, 0, 0, 0, 0,
+  { "w360h504",	"5x7", PT(1548,300), PT(2140,300), 0, 0, 0, 0,
   							DYESUB_PORTRAIT},
-  { "w432h576",	"6x8", PT(1844,300)+1, PT(2434,300)+1, 0, 0, 0, 0,
+  { "w432h576",	"6x8", PT(1844,300), PT(2434,300), 0, 0, 0, 0,
   							DYESUB_PORTRAIT},
-  { "w432h576-div2",	"4x6*2", PT(1844,300)+1, PT(2492,300)+1, 0, 0, 0, 0,
+  { "w432h576-div2",	"4x6*2", PT(1844,300), PT(2492,300), 0, 0, 0, 0,
   							DYESUB_PORTRAIT},
-  { "w432h648",	"6x9", PT(1844,300)+1, PT(2740,300)+1, 0, 0, 0, 0,
+  { "w432h648",	"6x9", PT(1844,300), PT(2740,300), 0, 0, 0, 0,
   							DYESUB_PORTRAIT},
 };
 
@@ -5299,17 +5299,17 @@ static void shinko_chcs2145_printer_end(stp_vars_t *v)
 /* Shinko CHC-S1245 */
 static const dyesub_pagesize_t shinko_chcs1245_page[] =
 {
-  { "w288h576", "8x4", PT(1229,300)+1, PT(2446,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
-  { "w360h576", "8x5", PT(1530,300)+1, PT(2446,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
-  { "w432h576", "8x6", PT(1831,300)+1, PT(2446,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
-  { "w576h576", "8x8", PT(2436,300)+1, PT(2446,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
-  { "w576h576-div2", "8x4*2", PT(2446,300)+1, PT(2468,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
-  { "c8x10", "8x10", PT(2446,300)+1, PT(3036,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
-  { "c8x10-w576h432_w576h288", "8x6+8x4", PT(2446,300)+1, PT(3070,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
-  { "c8x10-div2", "8x5*2", PT(2446,300)+1, PT(3070,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
-  { "w576h864", "8x12", PT(2446,300)+1, PT(3636,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
-  { "w576h864-div2", "8x6*2", PT(2446,300)+1, PT(3672,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},  
-  { "w576h864-div3", "8x4*3", PT(2446,300)+1, PT(3707,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
+  { "w288h576", "8x4", PT(1229,300), PT(2446,300), 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "w360h576", "8x5", PT(1530,300), PT(2446,300), 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "w432h576", "8x6", PT(1831,300), PT(2446,300), 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "w576h576", "8x8", PT(2436,300), PT(2446,300), 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "w576h576-div2", "8x4*2", PT(2446,300), PT(2468,300), 0, 0, 0, 0, DYESUB_PORTRAIT},
+  { "c8x10", "8x10", PT(2446,300), PT(3036,300), 0, 0, 0, 0, DYESUB_PORTRAIT},
+  { "c8x10-w576h432_w576h288", "8x6+8x4", PT(2446,300), PT(3070,300), 0, 0, 0, 0, DYESUB_PORTRAIT},
+  { "c8x10-div2", "8x5*2", PT(2446,300), PT(3070,300), 0, 0, 0, 0, DYESUB_PORTRAIT},
+  { "w576h864", "8x12", PT(2446,300), PT(3636,300), 0, 0, 0, 0, DYESUB_PORTRAIT},
+  { "w576h864-div2", "8x6*2", PT(2446,300), PT(3672,300), 0, 0, 0, 0, DYESUB_PORTRAIT},
+  { "w576h864-div3", "8x4*3", PT(2446,300), PT(3707,300), 0, 0, 0, 0, DYESUB_PORTRAIT},
 };
 
 LIST(dyesub_pagesize_list_t, shinko_chcs1245_page_list, dyesub_pagesize_t, shinko_chcs1245_page);
@@ -5515,16 +5515,16 @@ static void shinko_chcs1245_printer_init(stp_vars_t *v)
 /* Shinko CHC-S6245 */
 static const dyesub_pagesize_t shinko_chcs6245_page[] =
 {
-  { "w288h576", "8x4", PT(1236,300)+1, PT(2464,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
-  { "w360h576", "8x5", PT(1536,300)+1, PT(2464,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
-  { "w432h576", "8x6", PT(1836,300)+1, PT(2464,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
-  { "w576h576", "8x8", PT(2436,300)+1, PT(2464,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
-  { "w576h576-div2", "8x4*2", PT(2464,300)+1, PT(2494,300)+1, 0, 0, PT(0,300), PT(0,300), DYESUB_PORTRAIT},
-  { "c8x10", "8x10", PT(2464,300)+1, PT(3036,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
-  { "c8x10-div2", "8x5*2", PT(2464,300)+1, PT(3094,300)+1, 0, 0, PT(0,300), PT(0,300), DYESUB_PORTRAIT},
-  { "w576h864", "8x12", PT(2464,300)+1, PT(3636,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
-  { "w576h864-div2", "8x6*2", PT(2464,300)+1, PT(3694,300)+1, 0, 0, PT(0,300), PT(0,300), DYESUB_PORTRAIT},
-  { "w576h864-div3", "8x4*3", PT(2464,300)+1, PT(3742,300)+1, 0, 0, PT(0,300), PT(0,300), DYESUB_PORTRAIT},
+  { "w288h576", "8x4", PT(1236,300), PT(2464,300), 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "w360h576", "8x5", PT(1536,300), PT(2464,300), 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "w432h576", "8x6", PT(1836,300), PT(2464,300), 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "w576h576", "8x8", PT(2436,300), PT(2464,300), 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "w576h576-div2", "8x4*2", PT(2464,300), PT(2494,300), 0, 0, PT(0,300), PT(0,300), DYESUB_PORTRAIT},
+  { "c8x10", "8x10", PT(2464,300), PT(3036,300), 0, 0, 0, 0, DYESUB_PORTRAIT},
+  { "c8x10-div2", "8x5*2", PT(2464,300), PT(3094,300), 0, 0, PT(0,300), PT(0,300), DYESUB_PORTRAIT},
+  { "w576h864", "8x12", PT(2464,300), PT(3636,300), 0, 0, 0, 0, DYESUB_PORTRAIT},
+  { "w576h864-div2", "8x6*2", PT(2464,300), PT(3694,300), 0, 0, PT(0,300), PT(0,300), DYESUB_PORTRAIT},
+  { "w576h864-div3", "8x4*3", PT(2464,300), PT(3742,300), 0, 0, PT(0,300), PT(0,300), DYESUB_PORTRAIT},
 };
 
 LIST(dyesub_pagesize_list_t, shinko_chcs6245_page_list, dyesub_pagesize_t, shinko_chcs6245_page);
@@ -5622,25 +5622,25 @@ static void shinko_chcs6245_printer_init(stp_vars_t *v)
 /* Shinko CHC-S6145 */
 static const dyesub_pagesize_t shinko_chcs6145_page[] =
 {
-  { "w144h432",	"2x6", PT(634,300)+1, PT(1844,300)+1, 0, 0, 0, 0,
+  { "w144h432",	"2x6", PT(634,300), PT(1844,300), 0, 0, 0, 0,
   							DYESUB_LANDSCAPE},
-  { "w288h432",	"4x6", PT(1240,300)+1, PT(1844,300)+1, 0, 0, 0, 0,
+  { "w288h432",	"4x6", PT(1240,300), PT(1844,300), 0, 0, 0, 0,
   							DYESUB_LANDSCAPE},
-  { "w288h432-div2", "2x6*2", PT(1240,300)+1, PT(1844,300)+1, 0, 0, 0, 0,
+  { "w288h432-div2", "2x6*2", PT(1240,300), PT(1844,300), 0, 0, 0, 0,
   							DYESUB_LANDSCAPE},
-  { "w360h360",	"5x5", PT(1536,300)+1, PT(1548,300)+1, 0, 0, 0, 0,
+  { "w360h360",	"5x5", PT(1536,300), PT(1548,300), 0, 0, 0, 0,
   							DYESUB_LANDSCAPE},
-  { "w360h504",	"5x7", PT(1548,300)+1, PT(2140,300)+1, 0, 0, 0, 0,
+  { "w360h504",	"5x7", PT(1548,300), PT(2140,300), 0, 0, 0, 0,
   							DYESUB_PORTRAIT},
-  { "w432h432",	"6x6", PT(1832,300)+1, PT(1844,300)+1, 0, 0, 0, 0,
+  { "w432h432",	"6x6", PT(1832,300), PT(1844,300), 0, 0, 0, 0,
   							DYESUB_LANDSCAPE},
-  { "w432h576",	"6x8", PT(1844,300)+1, PT(2434,300)+1, 0, 0, 0, 0,
+  { "w432h576",	"6x8", PT(1844,300), PT(2434,300), 0, 0, 0, 0,
   							DYESUB_PORTRAIT},
-  { "w432h576-w432h432_w432h144", "6x6+2x6", PT(1844,300)+1, PT(2434,300)+1, 0, 0, 0, 0,
+  { "w432h576-w432h432_w432h144", "6x6+2x6", PT(1844,300), PT(2434,300), 0, 0, 0, 0,
   							DYESUB_PORTRAIT},
-  { "w432h576-div2", "4x6*2", PT(1844,300)+1, PT(2492,300)+1, 0, 0, 0, 0,
+  { "w432h576-div2", "4x6*2", PT(1844,300), PT(2492,300), 0, 0, 0, 0,
   							DYESUB_PORTRAIT},
-  { "w432h648", "6x9", PT(1844,300)+1, PT(2740,300)+1, 0, 0, 0, 0,
+  { "w432h648", "6x9", PT(1844,300), PT(2740,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},  
 };
 
@@ -5753,17 +5753,17 @@ static void shinko_chcs6145_printer_init(stp_vars_t *v)
 /* Ciaat Brava 21 */
 static const dyesub_pagesize_t ciaat_brava21_page[] =
 {
-  { "w144h432",	"2x6", PT(634,300)+1, PT(1844,300)+1, 0, 0, 0, 0,
+  { "w144h432",	"2x6", PT(634,300), PT(1844,300), 0, 0, 0, 0,
   							DYESUB_LANDSCAPE},
-  { "w288h432",	"4x6", PT(1240,300)+1, PT(1844,300)+1, 0, 0, 0, 0,
+  { "w288h432",	"4x6", PT(1240,300), PT(1844,300), 0, 0, 0, 0,
   							DYESUB_LANDSCAPE},
-  { "w288h432-div2",	"2x6*2", PT(1240,300)+1, PT(1844,300)+1, 0, 0, 0, 0,
+  { "w288h432-div2",	"2x6*2", PT(1240,300), PT(1844,300), 0, 0, 0, 0,
   							DYESUB_LANDSCAPE},
-  { "w360h504",	"5x7", PT(1548,300)+1, PT(2140,300)+1, 0, 0, 0, 0,
+  { "w360h504",	"5x7", PT(1548,300), PT(2140,300), 0, 0, 0, 0,
   							DYESUB_PORTRAIT},
-  { "w432h576",	"6x8", PT(1844,300)+1, PT(2434,300)+1, 0, 0, 0, 0,
+  { "w432h576",	"6x8", PT(1844,300), PT(2434,300), 0, 0, 0, 0,
   							DYESUB_PORTRAIT},
-  { "w432h576-div2",	"4x6*2", PT(1844,300)+1, PT(2492,300)+1, 0, 0, 0, 0,
+  { "w432h576-div2",	"4x6*2", PT(1844,300), PT(2492,300), 0, 0, 0, 0,
   							DYESUB_PORTRAIT},
 };
 
@@ -5793,15 +5793,15 @@ LIST(dyesub_resolution_list_t, res_dnpds40_dpi_list, dyesub_resolution_t, res_dn
 /* Imaging area is wider than print size, we always must supply the printer with the full imaging width. */
 static const dyesub_pagesize_t dnpds40_page[] =
 {
-  { "B7", "3.5x5", PT(1088,300)+1, PT(1920,300)+1, 0, 0, PT(186,300), PT(186,300), DYESUB_LANDSCAPE},
-  { "w288h432", "4x6", PT(1240,300)+1, PT(1920,300)+1, 0, 0, PT(38,300), PT(38,300), DYESUB_LANDSCAPE},
-  { "w288h432-div2", "2x6*2", PT(1240,300)+1, PT(1920,300)+1, 0, 0, PT(38,300), PT(38,300), DYESUB_LANDSCAPE},
-  { "w360h504",	"5x7", PT(1920,300)+1, PT(2138,300)+1, PT(186,300), PT(186,300), 0, 0, DYESUB_PORTRAIT},
-  { "w360h504-div2",	"3.5x5*2", PT(1920,300)+1, PT(2176,300)+1, PT(186,300), PT(186,300), 0, 0, DYESUB_PORTRAIT},
-  { "w432h576", "6x8", PT(1920,300)+1, PT(2436,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
-  { "w432h576-div4", "2x6*4", PT(1920,300)+1, PT(2436,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},  
-  { "w432h576-div2", "4x6*2", PT(1920,300)+1, PT(2498,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
-  { "w432h648", "6x9", PT(1920,300)+1, PT(2740,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
+  { "B7", "3.5x5", PT(1088,300), PT(1920,300), 0, 0, PT(186,300), PT(186,300), DYESUB_LANDSCAPE},
+  { "w288h432", "4x6", PT(1240,300), PT(1920,300), 0, 0, PT(38,300), PT(38,300), DYESUB_LANDSCAPE},
+  { "w288h432-div2", "2x6*2", PT(1240,300), PT(1920,300), 0, 0, PT(38,300), PT(38,300), DYESUB_LANDSCAPE},
+  { "w360h504",	"5x7", PT(1920,300), PT(2138,300), PT(186,300), PT(186,300), 0, 0, DYESUB_PORTRAIT},
+  { "w360h504-div2",	"3.5x5*2", PT(1920,300), PT(2176,300), PT(186,300), PT(186,300), 0, 0, DYESUB_PORTRAIT},
+  { "w432h576", "6x8", PT(1920,300), PT(2436,300), PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
+  { "w432h576-div4", "2x6*4", PT(1920,300), PT(2436,300), PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
+  { "w432h576-div2", "4x6*2", PT(1920,300), PT(2498,300), PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
+  { "w432h648", "6x9", PT(1920,300), PT(2740,300), PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
 };
 
 LIST(dyesub_pagesize_list_t, dnpds40_page_list, dyesub_pagesize_t, dnpds40_page);
@@ -5946,21 +5946,21 @@ static void dnpds40_plane_init(stp_vars_t *v)
    printer with the full imaging width. */
 static const dyesub_pagesize_t dnpds80_page[] =
 {
-  { "w288h576", "8x4", PT(1236,300)+1, PT(2560,300)+1, 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
-  { "w360h576", "8x5", PT(1536,300)+1, PT(2560,300)+1, 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
-  { "w432h576", "8x6", PT(1836,300)+1, PT(2560,300)+1, 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
-  { "w576h576", "8x8", PT(2436,300)+1, PT(2560,300)+1, 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
-  { "w576h576-div2", "8x4*2", PT(2502,300)+1, PT(2560,300)+1, 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
-  { "w576h648-w576h360_w576h288", "8x5+8x4", PT(2560,300)+1, PT(2802,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "c8x10", "8x10", PT(2560,300)+1, PT(3036,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "c8x10-div2", "8x5*2", PT(2560,300)+1, PT(3102,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "c8x10-w576h432_w576h288", "8x6+8x4", PT(2560,300)+1, PT(3102,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "w576h792-w576h432_w576h360", "8x6+8x5", PT(2560,300)+1, PT(3402,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "w576h842", "8x11.7", PT(2560,300)+1, PT(3544,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "w576h864", "8x12", PT(2560,300)+1, PT(3636,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "w576h864-div2", "8x6*2", PT(2560,300)+1, PT(3702,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "w576h864-w576h576_w576h288", "8x8+8x4", PT(2560,300)+1, PT(3702,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "w576h864-div3", "8x4*3", PT(2560,300)+1, PT(3768,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "w288h576", "8x4", PT(1236,300), PT(2560,300), 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
+  { "w360h576", "8x5", PT(1536,300), PT(2560,300), 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
+  { "w432h576", "8x6", PT(1836,300), PT(2560,300), 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
+  { "w576h576", "8x8", PT(2436,300), PT(2560,300), 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
+  { "w576h576-div2", "8x4*2", PT(2502,300), PT(2560,300), 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
+  { "w576h648-w576h360_w576h288", "8x5+8x4", PT(2560,300), PT(2802,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "c8x10", "8x10", PT(2560,300), PT(3036,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "c8x10-div2", "8x5*2", PT(2560,300), PT(3102,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "c8x10-w576h432_w576h288", "8x6+8x4", PT(2560,300), PT(3102,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "w576h792-w576h432_w576h360", "8x6+8x5", PT(2560,300), PT(3402,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "w576h842", "8x11.7", PT(2560,300), PT(3544,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "w576h864", "8x12", PT(2560,300), PT(3636,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "w576h864-div2", "8x6*2", PT(2560,300), PT(3702,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "w576h864-w576h576_w576h288", "8x8+8x4", PT(2560,300), PT(3702,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "w576h864-div3", "8x4*3", PT(2560,300), PT(3768,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
 };
 
 LIST(dyesub_pagesize_list_t, dnpds80_page_list, dyesub_pagesize_t, dnpds80_page);
@@ -6151,24 +6151,24 @@ static int dnpds80dx_parse_parameters(stp_vars_t *v)
 
 static const dyesub_pagesize_t dnpds80dx_page[] =
 {
-  { "w288h576", "8x4", PT(1236,300)+1, PT(2560,300)+1, 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
-  { "w360h576", "8x5", PT(1536,300)+1, PT(2560,300)+1, 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
-  { "w432h576", "8x6", PT(1836,300)+1, PT(2560,300)+1, 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
-  { "w576h576", "8x8", PT(2436,300)+1, PT(2560,300)+1, 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
-  { "w576h576-div2", "8x4*2", PT(2502,300)+1, PT(2560,300)+1, 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
-  { "w576h648-w576h360_w576h288", "8x5+8x4", PT(2560,300)+1, PT(2802,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "c8x10", "8x10", PT(2560,300)+1, PT(3036,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "c8x10-div2", "8x5*2", PT(2560,300)+1, PT(3102,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "c8x10-w576h432_w576h288", "8x6+8x4", PT(2560,300)+1, PT(3102,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "w576h774-w576h756", "8x10.5", PT(2560,300)+1, PT(3186,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "w576h774", "8x10.75", PT(2560,300)+1, PT(3186,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "w576h792-w576h432_w576h360", "8x6+8x5", PT(2560,300)+1, PT(3402,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "w576h842", "8x11.7", PT(2560,300)+1, PT(3544,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "w576h864", "8x12", PT(2560,300)+1, PT(3636,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "w576h864-div2", "8x6*2", PT(2560,300)+1, PT(3702,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "w576h864-w576h576_w576h288", "8x8+8x4", PT(2560,300)+1, PT(3702,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "w576h864-div3", "8x4*3", PT(2560,300)+1, PT(3768,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "w576h864-div3sheet", "8x4*3 SHEET", PT(2560,300)+1, PT(3702,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "w288h576", "8x4", PT(1236,300), PT(2560,300), 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
+  { "w360h576", "8x5", PT(1536,300), PT(2560,300), 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
+  { "w432h576", "8x6", PT(1836,300), PT(2560,300), 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
+  { "w576h576", "8x8", PT(2436,300), PT(2560,300), 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
+  { "w576h576-div2", "8x4*2", PT(2502,300), PT(2560,300), 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
+  { "w576h648-w576h360_w576h288", "8x5+8x4", PT(2560,300), PT(2802,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "c8x10", "8x10", PT(2560,300), PT(3036,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "c8x10-div2", "8x5*2", PT(2560,300), PT(3102,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "c8x10-w576h432_w576h288", "8x6+8x4", PT(2560,300), PT(3102,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "w576h774-w576h756", "8x10.5", PT(2560,300), PT(3186,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "w576h774", "8x10.75", PT(2560,300), PT(3186,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "w576h792-w576h432_w576h360", "8x6+8x5", PT(2560,300), PT(3402,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "w576h842", "8x11.7", PT(2560,300), PT(3544,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "w576h864", "8x12", PT(2560,300), PT(3636,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "w576h864-div2", "8x6*2", PT(2560,300), PT(3702,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "w576h864-w576h576_w576h288", "8x8+8x4", PT(2560,300), PT(3702,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "w576h864-div3", "8x4*3", PT(2560,300), PT(3768,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "w576h864-div3sheet", "8x4*3 SHEET", PT(2560,300), PT(3702,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
 };
 
 LIST(dyesub_pagesize_list_t, dnpds80dx_page_list, dyesub_pagesize_t, dnpds80dx_page);
@@ -6220,14 +6220,14 @@ LIST(dyesub_printsize_list_t, dnpds80dx_printsize_list, dyesub_printsize_t, dnpd
    printer with the full imaging width. */
 static const dyesub_pagesize_t dnpsrx1_page[] =
 {
-  { "B7", "3.5x5", PT(1088,300)+1, PT(1920,300)+1, 0, 0, PT(186,300), PT(186,300), DYESUB_LANDSCAPE},
-  { "w288h432", "4x6", PT(1240,300)+1, PT(1920,300)+1, 0, 0, PT(38,300), PT(38,300), DYESUB_LANDSCAPE},
-  { "w288h432-div2", "2x6*2", PT(1240,300)+1, PT(1920,300)+1, 0, 0, PT(38,300), PT(38,300), DYESUB_LANDSCAPE},
-  { "w360h504",	"5x7", PT(1920,300)+1, PT(2138,300)+1, PT(186,300), PT(186,300), 0, 0, DYESUB_PORTRAIT},
-  { "w360h504-div2",	"3.5x5*2", PT(1920,300)+1, PT(2176,300)+1, PT(186,300), PT(186,300), 0, 0, DYESUB_PORTRAIT},
-  { "w432h576", "6x8", PT(1920,300)+1, PT(2436,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
-  { "w432h576-div4", "2x6*4", PT(1920,300)+1, PT(2436,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},  
-  { "w432h576-div2", "4x6*2", PT(1920,300)+1, PT(2498,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
+  { "B7", "3.5x5", PT(1088,300), PT(1920,300), 0, 0, PT(186,300), PT(186,300), DYESUB_LANDSCAPE},
+  { "w288h432", "4x6", PT(1240,300), PT(1920,300), 0, 0, PT(38,300), PT(38,300), DYESUB_LANDSCAPE},
+  { "w288h432-div2", "2x6*2", PT(1240,300), PT(1920,300), 0, 0, PT(38,300), PT(38,300), DYESUB_LANDSCAPE},
+  { "w360h504",	"5x7", PT(1920,300), PT(2138,300), PT(186,300), PT(186,300), 0, 0, DYESUB_PORTRAIT},
+  { "w360h504-div2",	"3.5x5*2", PT(1920,300), PT(2176,300), PT(186,300), PT(186,300), 0, 0, DYESUB_PORTRAIT},
+  { "w432h576", "6x8", PT(1920,300), PT(2436,300), PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
+  { "w432h576-div4", "2x6*4", PT(1920,300), PT(2436,300), PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
+  { "w432h576-div2", "4x6*2", PT(1920,300), PT(2498,300), PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
 };
 
 LIST(dyesub_pagesize_list_t, dnpsrx1_page_list, dyesub_pagesize_t, dnpsrx1_page);
@@ -6310,20 +6310,20 @@ LIST(laminate_list_t, dnpds620_laminate_list, laminate_t, dnpds620_laminate);
    printer with the full imaging width. */
 static const dyesub_pagesize_t dnpds620_page[] =
 {
-  { "B7", "3.5x5", PT(1088,300)+1, PT(1920,300)+1, 0, 0, PT(186,300), PT(186,300), DYESUB_LANDSCAPE},
-  { "w288h432", "4x6", PT(1240,300)+1, PT(1920,300)+1, 0, 0, PT(38,300), PT(38,300), DYESUB_LANDSCAPE},
-  { "w288h432-div2", "2x6*2", PT(1240,300)+1, PT(1920,300)+1, 0, 0, PT(38,300), PT(38,300), DYESUB_LANDSCAPE},
-  { "w324h432", "4.5x6", PT(1386,300)+1, PT(1920,300)+1, 0, 0, PT(38,300), PT(38,300), DYESUB_LANDSCAPE},
-  { "w360h360",	"5x5", PT(1540,300)+1, PT(1920,300)+1, 0, 0, PT(186,300), PT(186,300), DYESUB_LANDSCAPE},
-  { "w360h504",	"5x7", PT(1920,300)+1, PT(2138,300)+1, PT(186,300), PT(186,300), 0, 0, DYESUB_PORTRAIT},
-  { "w360h504-div2",	"3.5x5*2", PT(1920,300)+1, PT(2176,300)+1, PT(186,300), PT(186,300), 0, 0, DYESUB_PORTRAIT},
-  { "w432h432",	"6x6", PT(1836,300)+1, PT(1920,300)+1, 0, 0, PT(38,300), PT(38,300), DYESUB_LANDSCAPE},  
-  { "w432h576", "6x8", PT(1920,300)+1, PT(2436,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
-  { "w432h576-w432h432_w432h144", "6x6+2x6", PT(1920,300)+1, PT(2436,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
-  { "w432h576-div4", "2x6*4", PT(1920,300)+1, PT(2436,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
-  { "w432h576-div2", "4x6*2", PT(1920,300)+1, PT(2498,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
-  { "w432h648", "6x9", PT(1920,300)+1, PT(2740,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
-  { "w432h648-div2", "4.5x6*2", PT(1920,300)+1, PT(2802,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
+  { "B7", "3.5x5", PT(1088,300), PT(1920,300), 0, 0, PT(186,300), PT(186,300), DYESUB_LANDSCAPE},
+  { "w288h432", "4x6", PT(1240,300), PT(1920,300), 0, 0, PT(38,300), PT(38,300), DYESUB_LANDSCAPE},
+  { "w288h432-div2", "2x6*2", PT(1240,300), PT(1920,300), 0, 0, PT(38,300), PT(38,300), DYESUB_LANDSCAPE},
+  { "w324h432", "4.5x6", PT(1386,300), PT(1920,300), 0, 0, PT(38,300), PT(38,300), DYESUB_LANDSCAPE},
+  { "w360h360",	"5x5", PT(1540,300), PT(1920,300), 0, 0, PT(186,300), PT(186,300), DYESUB_LANDSCAPE},
+  { "w360h504",	"5x7", PT(1920,300), PT(2138,300), PT(186,300), PT(186,300), 0, 0, DYESUB_PORTRAIT},
+  { "w360h504-div2",	"3.5x5*2", PT(1920,300), PT(2176,300), PT(186,300), PT(186,300), 0, 0, DYESUB_PORTRAIT},
+  { "w432h432",	"6x6", PT(1836,300), PT(1920,300), 0, 0, PT(38,300), PT(38,300), DYESUB_LANDSCAPE},
+  { "w432h576", "6x8", PT(1920,300), PT(2436,300), PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
+  { "w432h576-w432h432_w432h144", "6x6+2x6", PT(1920,300), PT(2436,300), PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
+  { "w432h576-div4", "2x6*4", PT(1920,300), PT(2436,300), PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
+  { "w432h576-div2", "4x6*2", PT(1920,300), PT(2498,300), PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
+  { "w432h648", "6x9", PT(1920,300), PT(2740,300), PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
+  { "w432h648-div2", "4.5x6*2", PT(1920,300), PT(2802,300), PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
 };
 
 LIST(dyesub_pagesize_list_t, dnpds620_page_list, dyesub_pagesize_t, dnpds620_page);
@@ -6426,33 +6426,33 @@ static void dnpds620_printer_start(stp_vars_t *v)
    printer with the full imaging width. */
 static const dyesub_pagesize_t dnpds820_page[] =
 {
-  { "w288h576", "8x4", PT(1236,300)+1, PT(2560,300)+1, 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
-  { "w360h576", "8x5", PT(1536,300)+1, PT(2560,300)+1, 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
-  { "w432h576", "8x6", PT(1836,300)+1, PT(2560,300)+1, 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
-  { "w504h576", "8x7", PT(2136,300)+1, PT(2560,300)+1, 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
-  { "w576h576", "8x8", PT(2436,300)+1, PT(2560,300)+1, 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
-  { "w576h576-div2", "8x4*2", PT(2502,300)+1, PT(2560,300)+1, 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
-  { "w576h648", "8x9", PT(2560,300)+1, PT(2736,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "w576h648-w576h360_w576h288", "8x5+8x4", PT(2560,300)+1, PT(2802,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "c8x10", "8x10", PT(2560,300)+1, PT(3036,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "c8x10-div2", "8x5*2", PT(2560,300)+1, PT(3102,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "c8x10-w576h432_w576h288", "8x6+8x4", PT(2560,300)+1, PT(3102,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "w576h792-w576h432_w576h360", "8x6+8x5", PT(2560,300)+1, PT(3402,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "w576h842", "8x11.7", PT(2560,300)+1, PT(3544,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "w576h864", "8x12", PT(2560,300)+1, PT(3636,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "w576h864-div2", "8x6*2", PT(2560,300)+1, PT(3702,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "w576h864-w576h576_w576h288", "8x8+8x4", PT(2560,300)+1, PT(3702,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "w576h864-div3", "8x4*3", PT(2560,300)+1, PT(3768,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "w288h576", "8x4", PT(1236,300), PT(2560,300), 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
+  { "w360h576", "8x5", PT(1536,300), PT(2560,300), 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
+  { "w432h576", "8x6", PT(1836,300), PT(2560,300), 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
+  { "w504h576", "8x7", PT(2136,300), PT(2560,300), 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
+  { "w576h576", "8x8", PT(2436,300), PT(2560,300), 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
+  { "w576h576-div2", "8x4*2", PT(2502,300), PT(2560,300), 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
+  { "w576h648", "8x9", PT(2560,300), PT(2736,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "w576h648-w576h360_w576h288", "8x5+8x4", PT(2560,300), PT(2802,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "c8x10", "8x10", PT(2560,300), PT(3036,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "c8x10-div2", "8x5*2", PT(2560,300), PT(3102,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "c8x10-w576h432_w576h288", "8x6+8x4", PT(2560,300), PT(3102,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "w576h792-w576h432_w576h360", "8x6+8x5", PT(2560,300), PT(3402,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "w576h842", "8x11.7", PT(2560,300), PT(3544,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "w576h864", "8x12", PT(2560,300), PT(3636,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "w576h864-div2", "8x6*2", PT(2560,300), PT(3702,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "w576h864-w576h576_w576h288", "8x8+8x4", PT(2560,300), PT(3702,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "w576h864-div3", "8x4*3", PT(2560,300), PT(3768,300), PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
 
-  { "A4x4inch", "A4x4inch", PT(1236,300)+1, PT(2560,300)+1, PT(16,300), PT(16,300), 0, 0, DYESUB_LANDSCAPE},
-  { "A4x5inch", "A4x5inch", PT(1536,300)+1, PT(2560,300)+1, PT(16,300), PT(16,300), 0, 0, DYESUB_LANDSCAPE},  
-  { "A5", "A5", PT(1784,300)+1, PT(2560,300)+1, PT(16,300), PT(16,300), 0, 0, DYESUB_LANDSCAPE},
-  { "A4x6inch", "A4x6inch", PT(1836,300)+1, PT(2560,300)+1, PT(16,300), PT(16,300), 0, 0, DYESUB_LANDSCAPE},  
-  { "A4x8inch", "A4x8inch", PT(2436,300)+1, PT(2560,300)+1, PT(16,300), PT(16,300), 0, 0, DYESUB_LANDSCAPE},  
-  { "A4x10inch", "A4x10inch", PT(2560,300)+1, PT(3036,300)+1, PT(16,300), PT(16,300), 0, 0, DYESUB_PORTRAIT},
-  { "A4x10inch-div2", "A4x5inch*2", PT(2560,300)+1, PT(3102,300)+1, PT(16,300), PT(16,300), 0, 0, DYESUB_PORTRAIT},
-  { "A4", "A4", PT(2560,300)+1, PT(3544,300)+1, PT(16,300), PT(16,300), 0, 0, DYESUB_PORTRAIT},
-  { "A4-div2", "A5*2", PT(2560,300)+1, PT(3598,300)+1, PT(16,300), PT(16,300), 0, 0, DYESUB_PORTRAIT},
+  { "A4x4inch", "A4x4inch", PT(1236,300), PT(2560,300), PT(16,300), PT(16,300), 0, 0, DYESUB_LANDSCAPE},
+  { "A4x5inch", "A4x5inch", PT(1536,300), PT(2560,300), PT(16,300), PT(16,300), 0, 0, DYESUB_LANDSCAPE},
+  { "A5", "A5", PT(1784,300), PT(2560,300), PT(16,300), PT(16,300), 0, 0, DYESUB_LANDSCAPE},
+  { "A4x6inch", "A4x6inch", PT(1836,300), PT(2560,300), PT(16,300), PT(16,300), 0, 0, DYESUB_LANDSCAPE},
+  { "A4x8inch", "A4x8inch", PT(2436,300), PT(2560,300), PT(16,300), PT(16,300), 0, 0, DYESUB_LANDSCAPE},
+  { "A4x10inch", "A4x10inch", PT(2560,300), PT(3036,300), PT(16,300), PT(16,300), 0, 0, DYESUB_PORTRAIT},
+  { "A4x10inch-div2", "A4x5inch*2", PT(2560,300), PT(3102,300), PT(16,300), PT(16,300), 0, 0, DYESUB_PORTRAIT},
+  { "A4", "A4", PT(2560,300), PT(3544,300), PT(16,300), PT(16,300), 0, 0, DYESUB_PORTRAIT},
+  { "A4-div2", "A5*2", PT(2560,300), PT(3598,300), PT(16,300), PT(16,300), 0, 0, DYESUB_PORTRAIT},
 };
 
 LIST(dyesub_pagesize_list_t, dnpds820_page_list, dyesub_pagesize_t, dnpds820_page);
@@ -6672,13 +6672,13 @@ LIST(dyesub_resolution_list_t, res_citizen_cw01_dpi_list, dyesub_resolution_t,re
 
 static const dyesub_pagesize_t citizen_cw01_page[] =
 {
-  { "w252h338", "3.5x4.7", PT(1210,334)+1, PT(2048,334)+1, 0, 0, PT(225,334), PT(225,334), DYESUB_LANDSCAPE},
-  { "B7", "3.5x5", PT(1210,334)+1, PT(2048,334)+1, 0, 0, PT(169,334), PT(169,334), DYESUB_LANDSCAPE},
-  { "w288h432", "4x6", PT(1380,334)+1, PT(2048,334)+1, 0, 0, PT(5,334), PT(5,334), DYESUB_LANDSCAPE},
-  { "w338h504",	"4.7x7", PT(2048,334)+1, PT(2380,334)+1, PT(225,334), PT(225,334), 0, 0, DYESUB_PORTRAIT},
-  { "w360h504",	"5x7", PT(2048,334)+1, PT(2380,334)+1, PT(169,334), PT(169,334), 0, 0, DYESUB_PORTRAIT},
-  { "w432h576", "6x8", PT(2048,334)+1, PT(2710,300)+1, PT(5,334), PT(5,334), 0, 0, DYESUB_PORTRAIT},
-  { "w432h648", "6x9", PT(2048,334)+1, PT(3050,334)+1, PT(5,334), PT(5,334), 0, 0, DYESUB_PORTRAIT},
+  { "w252h338", "3.5x4.7", PT(1210,334), PT(2048,334), 0, 0, PT(225,334), PT(225,334), DYESUB_LANDSCAPE},
+  { "B7", "3.5x5", PT(1210,334), PT(2048,334), 0, 0, PT(169,334), PT(169,334), DYESUB_LANDSCAPE},
+  { "w288h432", "4x6", PT(1380,334), PT(2048,334), 0, 0, PT(5,334), PT(5,334), DYESUB_LANDSCAPE},
+  { "w338h504",	"4.7x7", PT(2048,334), PT(2380,334), PT(225,334), PT(225,334), 0, 0, DYESUB_PORTRAIT},
+  { "w360h504",	"5x7", PT(2048,334), PT(2380,334), PT(169,334), PT(169,334), 0, 0, DYESUB_PORTRAIT},
+  { "w432h576", "6x8", PT(2048,334), PT(2710,300), PT(5,334), PT(5,334), 0, 0, DYESUB_PORTRAIT},
+  { "w432h648", "6x9", PT(2048,334), PT(3050,334), PT(5,334), PT(5,334), 0, 0, DYESUB_PORTRAIT},
 };
 
 LIST(dyesub_pagesize_list_t, citizen_cw01_page_list, dyesub_pagesize_t, citizen_cw01_page);
@@ -9037,7 +9037,7 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   stp_deprintf(STP_DBG_DYESUB,
 	      "paper (pt)   %f x %f\n"
 	      "image (px)   %d x %d\n"
-	      "image (pt)   %d x %d\n"
+	      "image (pt)   %f x %f\n"
 	      "* out (pt)   %f x %f\n"
 	      "* out (px)   %d x %d\n"
 	      "* left x top (pt) %f x %f\n"
