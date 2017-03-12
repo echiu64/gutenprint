@@ -2531,8 +2531,8 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
   double        v_offset = get_double_param(v, "VertOffset");
   int		page_number = stp_get_int_parameter(v, "PageNumber");
   int		printing_color = 0;
-  int		top = stp_get_top(v);
-  int		left = stp_get_left(v);
+  int		top = (int) stp_get_top(v) + .5;
+  int		left = (int) stp_get_left(v) + .5;
   int		y;		/* Looping vars */
   stp_resolution_t	xdpi, ydpi;	/* Resolution */
   unsigned char *black,		/* Black bitmap data */
@@ -2633,8 +2633,8 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
   * Compute the output size...
   */
 
-  out_width = stp_get_width(v);
-  out_height = stp_get_height(v);
+  out_width = (int) stp_get_width(v) + .5;
+  out_height = (int) stp_get_height(v) + .5;
 
   internal_imageable_area(v, 0, &page_left, &page_right,
 			  &page_bottom, &page_top);

@@ -83,6 +83,12 @@ print_remote_float_param(stp_vars_t *v, const char *param, double value)
 }
 
 static void
+print_remote_dim_param(stp_vars_t *v, const char *param, double value)
+{
+  print_remote_float_param(v, param, value);
+}
+
+static void
 print_debug_params(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
@@ -93,10 +99,10 @@ print_debug_params(stp_vars_t *v)
   print_remote_param(v, "Version", VERSION);
   print_remote_param(v, "Release Date", RELEASE_DATE);
   print_remote_param(v, "Driver", stp_get_driver(v));
-  print_remote_int_param(v, "Left", stp_get_left(v));
-  print_remote_int_param(v, "Top", stp_get_top(v));
-  print_remote_int_param(v, "Page Width", stp_get_page_width(v));
-  print_remote_int_param(v, "Page Height", stp_get_page_height(v));
+  print_remote_dim_param(v, "Left", stp_get_left(v));
+  print_remote_dim_param(v, "Top", stp_get_top(v));
+  print_remote_dim_param(v, "Page Width", stp_get_page_width(v));
+  print_remote_dim_param(v, "Page Height", stp_get_page_height(v));
   print_remote_int_param(v, "Model", stp_get_model_id(v));
   print_remote_int_param(v, "Ydpi", pd->res->vres);
   print_remote_int_param(v, "Xdpi", pd->res->hres);
@@ -108,19 +114,23 @@ print_debug_params(stp_vars_t *v)
 */
   print_remote_int_param(v, "Use_printer_weave", pd->use_printer_weave);
   print_remote_int_param(v, "Duplex", pd->duplex);
-  print_remote_int_param(v, "Page_left", pd->page_left);
-  print_remote_int_param(v, "Page_right", pd->page_right);
-  print_remote_int_param(v, "Page_top", pd->page_top);
-  print_remote_int_param(v, "Page_bottom", pd->page_bottom);
-  print_remote_int_param(v, "Page_width", pd->page_width);
-  print_remote_int_param(v, "Page_height", pd->page_height);
-  print_remote_int_param(v, "Page_true_height", pd->page_true_height);
-  print_remote_int_param(v, "Page_extra_height", pd->page_extra_height);
-  print_remote_int_param(v, "Paper_extra_bottom", pd->paper_extra_bottom);
-  print_remote_int_param(v, "Image_left", pd->image_left);
-  print_remote_int_param(v, "Image_top", pd->image_top);
-  print_remote_int_param(v, "Image_width", pd->image_width);
-  print_remote_int_param(v, "Image_height", pd->image_height);
+  print_remote_dim_param(v, "Page_left", pd->page_left);
+  print_remote_dim_param(v, "Page_right", pd->page_right);
+  print_remote_dim_param(v, "Page_top", pd->page_top);
+  print_remote_dim_param(v, "Page_bottom", pd->page_bottom);
+  print_remote_dim_param(v, "Page_width", pd->page_width);
+  print_remote_dim_param(v, "Page_height", pd->page_height);
+  print_remote_dim_param(v, "Page_true_height", pd->page_true_height);
+  print_remote_dim_param(v, "Page_extra_height", pd->page_extra_height);
+  print_remote_dim_param(v, "Paper_extra_bottom", pd->paper_extra_bottom);
+  print_remote_dim_param(v, "Image_left", pd->image_left);
+  print_remote_dim_param(v, "Image_top", pd->image_top);
+  print_remote_dim_param(v, "Image_width", pd->image_width);
+  print_remote_dim_param(v, "Image_height", pd->image_height);
+  print_remote_dim_param(v, "CD_X_offset", pd->cd_x_offset);
+  print_remote_dim_param(v, "CD_Y_offset", pd->cd_y_offset);
+  print_remote_dim_param(v, "CD_inner_radius", pd->cd_inner_radius);
+  print_remote_dim_param(v, "CD_outer_radius", pd->cd_outer_radius);
   print_remote_int_param(v, "Image_scaled_width", pd->image_scaled_width);
   print_remote_int_param(v, "Image_scaled_height", pd->image_scaled_height);
   print_remote_int_param(v, "Image_printed_width", pd->image_printed_width);

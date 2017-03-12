@@ -52,9 +52,7 @@ static stpui_plist_t *current_printer = NULL;
 
 %}
 
-%token <ival> tINT
-%token <dval> tDOUBLE
-%token <ival> tDIMENSION
+%token <dval> tNUMBER
 %token <sval> tBOOLEAN
 %token <sval> tSTRING
 %token <sval> tWORD
@@ -154,60 +152,60 @@ Custom_Command: CUSTOM_COMMAND tSTRING
 	}
 ;
 
-Command_Type: COMMAND_TYPE tINT
+Command_Type: COMMAND_TYPE tNUMBER
 	{
 	  if (current_printer)
-	    stpui_plist_set_command_type(current_printer, $2);
+	    stpui_plist_set_command_type(current_printer, (int) $2);
 	}
 ;
 
-Scaling: SCALING tDOUBLE
+Scaling: SCALING tNUMBER
 	{
 	  if (current_printer)
 	    current_printer->scaling = $2; 
 	}
 ;
 
-Orientation: ORIENTATION tINT
+Orientation: ORIENTATION tNUMBER
 	{
 	  if (current_printer)
-	    current_printer->orientation = $2;
+	    current_printer->orientation = (int) $2;
 	}
 ;
 
-Autosize_Roll_Paper: AUTOSIZE_ROLL_PAPER tINT
+Autosize_Roll_Paper: AUTOSIZE_ROLL_PAPER tNUMBER
 	{
 	  if (current_printer)
-	    current_printer->auto_size_roll_feed_paper = $2;
+	    current_printer->auto_size_roll_feed_paper = (int) $2;
 	}
 ;
 
-Unit: UNIT tINT
+Unit: UNIT tNUMBER
 	{
 	  if (current_printer)
-	    current_printer->unit = $2; 
+	    current_printer->unit = (int) $2;
 	}
 ;
 
-Left: LEFT tINT
+Left: LEFT tNUMBER
 	{
 	  if (current_printer)
 	    stp_set_left(current_printer->v, $2);
 	}
 ;
 
-Top: TOP tINT
+Top: TOP tNUMBER
 	{
 	  if (current_printer)
 	    stp_set_top(current_printer->v, $2);
 	}
 ;
 
-Output_Type: OUTPUT_TYPE tINT
+Output_Type: OUTPUT_TYPE tNUMBER
 	{
 	  if (current_printer)
 	    {
-	      switch ($2)
+	      switch ((int) $2)
 		{
 		case 0:
 		  stp_set_string_parameter
@@ -224,14 +222,14 @@ Output_Type: OUTPUT_TYPE tINT
 	}
 ;
 
-Custom_Page_Width: CUSTOM_PAGE_WIDTH tINT
+Custom_Page_Width: CUSTOM_PAGE_WIDTH tNUMBER
 	{
 	  if (current_printer)
 	    stp_set_page_width(current_printer->v, $2);
 	}
 ;
 
-Custom_Page_Height: CUSTOM_PAGE_HEIGHT tINT
+Custom_Page_Height: CUSTOM_PAGE_HEIGHT tNUMBER
 	{
 	  if (current_printer)
 	    stp_set_page_height(current_printer->v, $2);
@@ -241,11 +239,11 @@ Custom_Page_Height: CUSTOM_PAGE_HEIGHT tINT
 Empty:
 ;
 
-Int_Param: tWORD pINT tBOOLEAN tINT
+Int_Param: tWORD pINT tBOOLEAN tNUMBER
 	{
 	  if (current_printer)
 	    {
-	      stp_set_int_parameter(current_printer->v, $1, $4);
+	      stp_set_int_parameter(current_printer->v, $1, (int) $4);
 	      if (strcmp($3, "False") == 0)
 		stp_set_int_parameter_active(current_printer->v, $1,
 					     STP_PARAMETER_INACTIVE);
@@ -294,7 +292,7 @@ File_Param: tWORD pFILE tBOOLEAN tSTRING
 	}
 ;
 
-Double_Param: tWORD pDOUBLE tBOOLEAN tDOUBLE
+Double_Param: tWORD pDOUBLE tBOOLEAN tNUMBER
 	{
 	  if (current_printer)
 	    {
@@ -311,7 +309,7 @@ Double_Param: tWORD pDOUBLE tBOOLEAN tDOUBLE
 	}
 ;
 
-Dimension_Param: tWORD pDIMENSION tBOOLEAN tINT
+Dimension_Param: tWORD pDIMENSION tBOOLEAN tNUMBER
 	{
 	  if (current_printer)
 	    {

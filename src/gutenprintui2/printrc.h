@@ -30,7 +30,6 @@
 
 #if ! defined (YYSTYPE) && ! defined (YYSTYPE_IS_DECLARED)
 typedef union yylv {
-  int ival;
   double dval;
   char *sval;
 } YYSTYPE;

@@ -29,7 +29,7 @@
 #define INCH 72
 #define FINCH ((gdouble) INCH)
 #define ROUNDUP(x, y) (((x) + ((y) - 1)) / (y))
-#define SCALE(x, y) (((x) + (1.0 / (2.0 * (y)))) * (y))
+#define SCALE(x, y) ((x) * (y))
 
 #include <gutenprint/gutenprint-intl-internal.h>
 #include <gutenprintui2/gutenprintui.h>
@@ -273,15 +273,15 @@ static int current_option_count = 0;
 static unit_t units[] =
   {
     { N_("Inch"), N_("Set the base unit of measurement to inches"),
-      72.0, NULL, "%.2f" },
+      72.0, NULL, "%.4f" },
     { N_("cm"), N_("Set the base unit of measurement to centimetres"),
-      72.0 / 2.54, NULL, "%.2f" },
+      72.0 / 2.54, NULL, "%.4f" },
     { N_("Points"), N_("Set the base unit of measurement to points (1/72\")"),
-      1.0, NULL, "%.0f" },
+      1.0, NULL, "%.2f" },
     { N_("mm"), N_("Set the base unit of measurement to millimetres"),
-      72.0 / 25.4, NULL, "%.1f" },
+      72.0 / 25.4, NULL, "%.3f" },
     { N_("Pica"), N_("Set the base unit of measurement to picas (1/12\")"),
-      72.0 / 12.0, NULL, "%.1f" },
+      72.0 / 12.0, NULL, "%.3f" },
   };
 static const gint unit_count = sizeof(units) / sizeof(unit_t);
 
@@ -2739,7 +2739,7 @@ scaling_callback (GtkWidget *widget)
        */
       current_scale = GTK_ADJUSTMENT (scaling_adjustment)->value;
       GTK_ADJUSTMENT (scaling_adjustment)->value =
-	min_ppi_scaling / (current_scale / 100);
+	min_ppi_scaling / (current_scale / 100.0);
       pv->scaling = 0.0;
     }
   else if (widget == scaling_percent)
@@ -2753,7 +2753,7 @@ scaling_callback (GtkWidget *widget)
       GTK_ADJUSTMENT (scaling_adjustment)->lower = minimum_image_percent;
       GTK_ADJUSTMENT (scaling_adjustment)->upper = 100.0;
 
-      new_percent = 100 * min_ppi_scaling / current_scale;
+      new_percent = 100.0 * min_ppi_scaling / current_scale;
 
       if (new_percent > 100)
 	new_percent = 100;
@@ -2988,6 +2988,10 @@ position_callback (GtkWidget *widget)
 	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (scaling_ppi), TRUE);
 	  scaling_callback (scaling_ppi);
 	}
+      fprintf(stderr, "width %f height %f iw %f nv %f FINCH %f\n", 
+	      ((gdouble) image_width) / (new_value / FINCH),
+	      ((gdouble) image_height) / (new_value / FINCH),
+	      image_width, new_value, FINCH);
       if  (widget == width_entry)
 	GTK_ADJUSTMENT (scaling_adjustment)->value =
 	  ((gdouble) image_width) / (new_value / FINCH);
@@ -4751,8 +4755,8 @@ do_preview_thumbnail (void)
   gint printable_display_left, printable_display_top;
   gint paper_display_width, paper_display_height;
   gint printable_display_width, printable_display_height;
-  int l_bottom = stp_get_top(pv->v) + stp_get_height(pv->v);
-  int l_right = stp_get_left(pv->v) + stp_get_width(pv->v);
+  gdouble l_bottom = stp_get_top(pv->v) + stp_get_height(pv->v);
+  gdouble l_right = stp_get_left(pv->v) + stp_get_width(pv->v);
 
   preview_ppi = preview_size_horiz * FINCH / (gdouble) paper_width;
 
@@ -4969,8 +4973,8 @@ preview_update (void)
 	pv->scaling = -min_ppi_scaling;
 
       twidth = (FINCH * (gdouble) image_width / -pv->scaling);
-      print_width = twidth + .5;
-      print_height = (twidth * (gdouble) image_height / image_width) + .5;
+      print_width = twidth;
+      print_height = (twidth * (gdouble) image_height / image_width);
       GTK_ADJUSTMENT (scaling_adjustment)->lower = min_ppi_scaling;
       GTK_ADJUSTMENT (scaling_adjustment)->upper = max_ppi_scaling;
       GTK_ADJUSTMENT (scaling_adjustment)->value = -pv->scaling;
@@ -4990,9 +4994,9 @@ preview_update (void)
     {
       gdouble twidth = printable_width * pv->scaling / 100;
 
-      print_width = twidth + .5;
+      print_width = twidth;
       print_height =
-	(twidth * (gdouble) image_height / (gdouble) image_width) + .5;
+	(twidth * (gdouble) image_height / (gdouble) image_width);
     }
   else
     {
@@ -5003,19 +5007,19 @@ preview_update (void)
 	/* i.e. if image is wider relative to its height than the width
 	   of the printable area relative to its height */
 	{
-	  gdouble twidth = printable_width * pv->scaling / 100;
+	  gdouble twidth = printable_width * pv->scaling / 100.0;
 
-	  print_width = twidth + .5;
+	  print_width = twidth;
 	  print_height =
-	    (twidth * (gdouble) image_height / (gdouble) image_width) + .5;
+	    (twidth * (gdouble) image_height / (gdouble) image_width);
 	}
       else
 	{
-	  gdouble theight = printable_height * pv->scaling /100;
+	  gdouble theight = printable_height * pv->scaling /100.0;
 
-	  print_height = theight + .5;
+	  print_height = theight;
 	  print_width =
-	    (theight * (gdouble) image_width / (gdouble) image_height) + .5;
+	    (theight * (gdouble) image_width / (gdouble) image_height);
 	}
     }
 
@@ -5235,7 +5239,7 @@ dimension_update (GtkAdjustment *adjustment)
 	  opt->info.flt.adjustment &&
 	  adjustment == GTK_ADJUSTMENT(opt->info.flt.adjustment))
 	{
-	  int new_value = (adjustment->value + (.5 / unit_scaler)) * unit_scaler;
+	  gdouble new_value = adjustment->value * unit_scaler;
 	  invalidate_preview_thumbnail ();
 	  if (stp_get_dimension_parameter(pv->v, opt->fast_desc->name) !=
 	      new_value)

@@ -1048,6 +1048,7 @@ stpui_printrc_load(void)
 	case 2:
 	case 3:
 	case 4:
+	case 5:
 	  stpui_printrc_load_v2(fp);
 	  break;
 	}
@@ -1112,7 +1113,7 @@ stpui_printrc_save(void)
 	  fprintf(fp, "  Output-Filename: \"%s\"\n", p->output_filename);
 	  fprintf(fp, "  Extra-Printer-Options: \"%s\"\n", p->extra_printer_options);
 	  fprintf(fp, "  Custom-Command: \"%s\"\n", p->custom_command);
-	  fprintf(fp, "  Scaling: %.3f\n", p->scaling);
+	  fprintf(fp, "  Scaling: %.6f\n", p->scaling);
 	  fprintf(fp, "  Orientation: %d\n", p->orientation);
 	  fprintf(fp, "  Autosize-Roll-Paper: %d\n", p->auto_size_roll_feed_paper);
 	  fprintf(fp, "  Unit: %d\n", p->unit);

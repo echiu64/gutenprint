@@ -1161,6 +1161,14 @@ DEF_RAW_ACCESSOR(postinit_remote_sequence, const stp_raw_t *)
 
 DEF_RAW_ACCESSOR(vertical_borderless_sequence, const stp_raw_t *)
 
+/* froundto( 500.5 points, 180 dpi, 72 points/inch) */
+static double
+froundto(double value, double numerator, double denominator)
+{
+  double multiplier = (double) ((int) ((numerator + (denominator / 2)) / denominator));
+  return ((double) ((int) ((value * multiplier) + .5))) / multiplier;
+}
+
 static const resolution_list_t *
 escp2_reslist(const stp_vars_t *v)
 {
@@ -4156,6 +4164,11 @@ setup_page(stp_vars_t *v)
     }
   internal_imageable_area(v, 0, 0, &pd->page_left, &pd->page_right,
 			  &pd->page_bottom, &pd->page_top);
+
+  stp_set_left(v, froundto(stp_get_left(v), pd->res->hres, 72));
+  stp_set_width(v, froundto(stp_get_width(v), pd->res->hres, 72));
+  stp_set_top(v, froundto(stp_get_top(v), pd->res->hres, 72));
+  stp_set_height(v, froundto(stp_get_height(v), pd->res->hres, 72));
 
   if (input_slot && input_slot->is_cd && escp2_cd_x_offset(v) > 0)
     {
