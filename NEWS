@@ -305,6 +305,8 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
      * Corrected 300 DPI modes on iP100
 
+     * Added several resolution modes for Pro9500
+
      * TO ACTIVATE: changed Oufuku Hagaki handling in driver to be
        200mm width by 148mm height for compatibility with printer
        firmware.
