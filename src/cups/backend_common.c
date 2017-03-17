@@ -1,7 +1,7 @@
 /*
  *   CUPS Backend common code
  *
- *   Copyright (c) 2007-2016 Solomon Peachy <pizza@shaftnet.org>
+ *   Copyright (c) 2007-2017 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -27,7 +27,7 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.70G"
+#define BACKEND_VERSION "0.71G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
@@ -168,7 +168,7 @@ static int parse1284_data(const char *device_id, struct deviceid_dict* dict)
 			break;
 	}
 	return num;
-};
+}
 
 static char *dict_find(const char *key, int dlen, struct deviceid_dict* dict)
 {
@@ -368,7 +368,7 @@ static int print_scan_output(struct libusb_device *device,
 	char *ieee_id = NULL;
 	int i;
 
-	uint8_t endp_up = 0, endp_down = 0;
+	uint8_t endp_up, endp_down;
 
 	DEBUG("Probing VID: %04X PID: %04x\n", desc->idVendor, desc->idProduct);
 
@@ -392,6 +392,7 @@ static int print_scan_output(struct libusb_device *device,
 	}
 
 	/* Find the endpoints */
+	endp_up = endp_down = 0;
 	for (i = 0 ; i < config->interface[iface].altsetting[altset].bNumEndpoints ; i++) {
 		if ((config->interface[iface].altsetting[altset].endpoint[i].bmAttributes & LIBUSB_TRANSFER_TYPE_MASK) == LIBUSB_TRANSFER_TYPE_BULK) {
 			if (config->interface[iface].altsetting[altset].endpoint[i].bEndpointAddress & LIBUSB_ENDPOINT_IN)
@@ -428,7 +429,7 @@ static int print_scan_output(struct libusb_device *device,
 	}
 	if (!manuf || !strlen(manuf)) {  /* Last-ditch */
 		if (manuf) free(manuf);
-		manuf = url_encode("Unknown");
+		manuf = url_encode("Unknown"); // XXX use USB VID?
 	}
 
 	/* Look up model number */
@@ -445,7 +446,7 @@ static int print_scan_output(struct libusb_device *device,
 
 	if (!product || !strlen(product)) { /* Last-ditch */
 		if (!product) free(product);
-		product = url_encode("Unknown");
+		product = url_encode("Unknown"); // XXX Use USB PID?
 	}
 
 	/* Look up description */
@@ -662,7 +663,7 @@ static struct dyesub_backend *find_backend(char *uri_prefix)
 void print_license_blurb(void)
 {
 	const char *license = "\n\
-Copyright 2007-2016 Solomon Peachy <pizza AT shaftnet DOT org>\n\
+Copyright 2007-2017 Solomon Peachy <pizza AT shaftnet DOT org>\n\
 \n\
 This program is free software; you can redistribute it and/or modify it\n\
 under the terms of the GNU General Public License as published by the Free\n\
@@ -750,8 +751,7 @@ int main (int argc, char **argv)
 	struct dyesub_backend *backend = NULL;
 	void * backend_ctx = NULL;
 
-	uint8_t endp_up = 0;
-	uint8_t endp_down = 0;
+	uint8_t endp_up, endp_down;
 
 	int iface = 0; // XXX loop through interfaces
 	int altset = 0; // XXX loop through altsetting
@@ -933,6 +933,7 @@ int main (int argc, char **argv)
 		goto done_close;
 	}
 
+	endp_up = endp_down = 0;
 	for (i = 0 ; i < config->interface[iface].altsetting[altset].bNumEndpoints ; i++) {
 		if ((config->interface[iface].altsetting[altset].endpoint[i].bmAttributes & LIBUSB_TRANSFER_TYPE_MASK) == LIBUSB_TRANSFER_TYPE_BULK) {
 			if (config->interface[iface].altsetting[altset].endpoint[i].bEndpointAddress & LIBUSB_ENDPOINT_IN)
@@ -1015,7 +1016,8 @@ newpage:
 		goto done_claimed;
 
 	/* Log the completed page */
-	PAGE("%d %d\n", current_page, copies);
+	if (!uri)
+		PAGE("%d %d\n", current_page, copies);
 
 	/* Since we have no way of telling if there's more data remaining
 	   to be read (without actually trying to read it), always assume
@@ -1026,7 +1028,8 @@ done_multiple:
 	close(data_fd);
 
 	/* Done printing, log the total number of pages */
-	PAGE("total %d\n", current_page * copies);
+	if (!uri)
+		PAGE("total %d\n", current_page * copies);
 	ret = CUPS_BACKEND_OK;
 
 done_claimed:
