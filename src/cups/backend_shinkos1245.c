@@ -1,7 +1,7 @@
 /*
  *   Shinko/Sinfonia CHC-S1245 CUPS backend -- libusb-1.0 version
  *
- *   (c) 2015-2016 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2015-2017 Solomon Peachy <pizza@shaftnet.org>
  *
  *   Low-level documentation was provided by Sinfonia, Inc.  Thank you!
  *
@@ -135,7 +135,7 @@ struct shinkos1245_resp_status {
 		uint8_t  status1;
 		uint32_t status2; /* BE */
 		uint8_t  error;
-	} state;
+	} __attribute__((packed)) state;
 	struct {
 		uint32_t lifetime;  /* BE */
 		uint32_t maint;     /* BE */
@@ -145,13 +145,13 @@ struct shinkos1245_resp_status {
 		uint8_t  ver_boot;
 		uint8_t  ver_ctrl;
 		uint8_t  control_flag; // 0x00 == epson, 0x01 == cypress
-	} counters;
+	} __attribute__((packed)) counters;
 	struct {
 		uint16_t main_boot;
 		uint16_t main_control;
 		uint16_t dsp_boot;
 		uint16_t dsp_control;
-	} versions;
+	} __attribute__((packed)) versions;
 	struct {
 		uint8_t  bank1_id;
 		uint8_t  bank2_id;
@@ -161,7 +161,7 @@ struct shinkos1245_resp_status {
 		uint16_t bank2_remain;   /* BE */
 		uint16_t bank2_complete; /* BE */
 		uint16_t bank2_spec;     /* BE */
-	} counters2;
+	} __attribute__((packed)) counters2;
 	uint8_t curve_status;
 } __attribute__((packed));
 
@@ -191,14 +191,15 @@ enum {
 	WAIT_STATUS2_BUSY = 4,
 };
 
-#define ERROR_STATUS2_CTRL_CIRCUIT   (1<<31)
-#define ERROR_STATUS2_MECHANISM_CTRL (1<<30)
-#define ERROR_STATUS2_SENSOR         (1<<13)
-#define ERROR_STATUS2_COVER_OPEN     (1<<12)
-#define ERROR_STATUS2_TEMP_SENSOR    (1<<9)
-#define ERROR_STATUS2_PAPER_JAM      (1<<8)
-#define ERROR_STATUS2_PAPER_EMPTY    (1<<6)
-#define ERROR_STATUS2_RIBBON_ERR     (1<<4)
+
+#define ERROR_STATUS2_CTRL_CIRCUIT   (0x80000000)
+#define ERROR_STATUS2_MECHANISM_CTRL (0x40000000)
+#define ERROR_STATUS2_SENSOR         (0x00002000)
+#define ERROR_STATUS2_COVER_OPEN     (0x00001000)
+#define ERROR_STATUS2_TEMP_SENSOR    (0x00000200)
+#define ERROR_STATUS2_PAPER_JAM      (0x00000100)
+#define ERROR_STATUS2_PAPER_EMPTY    (0x00000040)
+#define ERROR_STATUS2_RIBBON_ERR     (0x00000010)
 
 enum {
 	CTRL_CIR_ERROR_EEPROM1  = 0x01,
@@ -291,7 +292,7 @@ struct shinkos1245_mediadesc {
 
 struct shinkos1245_resp_media {
 	uint8_t  code;
-	uint8_t  reserved[5];
+	uint8_t  reserved[6];
 	uint8_t  count;  /* 1-5? */
 	struct shinkos1245_mediadesc data[NUM_MEDIAS];
 } __attribute__((packed));
@@ -1639,7 +1640,7 @@ static int shinkos1245_query_serno(struct libusb_device_handle *dev, uint8_t end
 
 struct dyesub_backend shinkos1245_backend = {
 	.name = "Shinko/Sinfonia CHC-S1245",
-	.version = "0.11WIP",
+	.version = "0.13WIP",
 	.uri_prefix = "shinkos1245",
 	.cmdline_usage = shinkos1245_cmdline,
 	.cmdline_arg = shinkos1245_cmdline_arg,

@@ -1,7 +1,7 @@
 /*
  *   Kodak 6800/6850 Photo Printer CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013-2016 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2017 Solomon Peachy <pizza@shaftnet.org>
  *
  *   Development of this backend was sponsored by:
  *
@@ -113,14 +113,14 @@ enum {
         WAIT_STATUS2_BUSY = 4,
 };
 
-#define ERROR_STATUS2_CTRL_CIRCUIT   (1<<31)
-#define ERROR_STATUS2_MECHANISM_CTRL (1<<30)
-#define ERROR_STATUS2_SENSOR         (1<<13)
-#define ERROR_STATUS2_COVER_OPEN     (1<<12)
-#define ERROR_STATUS2_TEMP_SENSOR    (1<<9)
-#define ERROR_STATUS2_PAPER_JAM      (1<<8)
-#define ERROR_STATUS2_PAPER_EMPTY    (1<<6)
-#define ERROR_STATUS2_RIBBON_ERR     (1<<4)
+#define ERROR_STATUS2_CTRL_CIRCUIT   (0x80000000)
+#define ERROR_STATUS2_MECHANISM_CTRL (0x40000000)
+#define ERROR_STATUS2_SENSOR         (0x00002000)
+#define ERROR_STATUS2_COVER_OPEN     (0x00001000)
+#define ERROR_STATUS2_TEMP_SENSOR    (0x00000200)
+#define ERROR_STATUS2_PAPER_JAM      (0x00000100)
+#define ERROR_STATUS2_PAPER_EMPTY    (0x00000040)
+#define ERROR_STATUS2_RIBBON_ERR     (0x00000010)
 
 enum {
         CTRL_CIR_ERROR_EEPROM1  = 0x01,
@@ -1257,7 +1257,7 @@ static int kodak6800_main_loop(void *vctx, int copies) {
 /* Exported */
 struct dyesub_backend kodak6800_backend = {
 	.name = "Kodak 6800/6850",
-	.version = "0.57",
+	.version = "0.58",
 	.uri_prefix = "kodak6800",
 	.cmdline_usage = kodak6800_cmdline,
 	.cmdline_arg = kodak6800_cmdline_arg,

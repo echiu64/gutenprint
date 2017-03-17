@@ -1,7 +1,7 @@
 /*
  *   Mitsubishi CP-D70/D707 Photo Printer CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013-2016 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2017 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -84,9 +84,12 @@ struct BandImage {
 };
 #endif
 
+#define MIN_LIB_APIVERSION 2
+
 /* Image processing library function prototypes */
 #define LIB_NAME_RE "libMitsuD70ImageReProcess.so" // Reimplemented library
 
+typedef int (*lib70x_getapiversionFN)(void);
 typedef int (*Get3DColorTableFN)(uint8_t *buf, const char *filename);
 typedef struct CColorConv3D *(*Load3DColorTableFN)(const uint8_t *ptr);
 typedef void (*Destroy3DColorTableFN)(struct CColorConv3D *this);
@@ -117,6 +120,9 @@ typedef int (*send_image_dataFN)(struct BandImage *out, void *context,
 /* Width of the laminate data file */
 #define LAMINATE_STRIDE 1864
 
+/* Max size of data chunk sent over */
+#define CHUNK_LEN (256*1024)
+
 /* Private data stucture */
 struct mitsu70x_ctx {
 	struct libusb_device_handle *dev;
@@ -142,6 +148,7 @@ struct mitsu70x_ctx {
 	char *cpcfname;
 
 	void *dl_handle;
+	lib70x_getapiversionFN GetAPIVersion;
 	Get3DColorTableFN Get3DColorTable;
 	Load3DColorTableFN Load3DColorTable;
 	Destroy3DColorTableFN Destroy3DColorTable;
@@ -609,6 +616,13 @@ static const char *mitsu70x_media_types(uint8_t brand, uint8_t type)
 		return "CK-K76R (6x8)";
 	else
 		return "Unknown";
+
+// Also CK-D715, CK-D718, CK-D720, CK-D723 (4x6,5x8,6x8,6x9) for D70-S model
+//      CK-D746-U for D70-U model
+//      CK-D820 (6x8) for D80-S model
+//      CK-D868 (6x8) for D80 (non-S)
+// D90 can use _all_ of htese types except for the -U!
+
 }
 
 #define CMDBUF_LEN 512
@@ -653,11 +667,25 @@ static void mitsu70x_attach(void *vctx, struct libusb_device_handle *dev,
 
 	/* Attempt to open the library */
 #if defined(WITH_DYNAMIC)
-	INFO("Attempting to load image processing library\n");
+	DEBUG("Attempting to load image processing library\n");
 	ctx->dl_handle = DL_OPEN(LIB_NAME_RE);
 	if (!ctx->dl_handle)
 		WARNING("Image processing library not found, using internal fallback code\n");
 	if (ctx->dl_handle) {
+		ctx->GetAPIVersion = DL_SYM(ctx->dl_handle, "lib70x_getapiversion");
+		if (!ctx->GetAPIVersion) {
+			WARNING("Problem resolving API Version symbol in imaging processing library, too old or not installed?\n");
+			DL_CLOSE(ctx->dl_handle);
+			ctx->dl_handle = NULL;
+			return;
+		}
+		if (ctx->GetAPIVersion() < MIN_LIB_APIVERSION) {
+			ERROR("Image processing library API version too old!\n");
+			DL_CLOSE(ctx->dl_handle);
+			ctx->dl_handle = NULL;
+			return;
+		}
+		
 		ctx->Get3DColorTable = DL_SYM(ctx->dl_handle, "CColorConv3D_Get3DColorTable");
 		ctx->Load3DColorTable = DL_SYM(ctx->dl_handle, "CColorConv3D_Load3DColorTable");
 		ctx->Destroy3DColorTable = DL_SYM(ctx->dl_handle, "CColorConv3D_Destroy3DColorTable");
@@ -674,7 +702,7 @@ static void mitsu70x_attach(void *vctx, struct libusb_device_handle *dev,
 			DL_CLOSE(ctx->dl_handle);
 			ctx->dl_handle = NULL;
 		} else {
-			INFO("Image processing library successfully loaded\n");
+			DEBUG("Image processing library successfully loaded\n");
 		}
 	}
 #else
@@ -774,12 +802,12 @@ repeat:
 
 		if (mhdr.speed == 3) {
 			ctx->cpcfname = CORRTABLE_PATH "/CPD80S01.cpc";
+			// XXX ctx->cpcfname = CORRTABLE_PATH "/CPD80E01.cpc"; for Superfine w/ Rewind, "depending on contents of image"
 		} else if (mhdr.speed == 4) {
 			ctx->cpcfname = CORRTABLE_PATH "/CPD80U01.cpc";
 		} else {
 			ctx->cpcfname = CORRTABLE_PATH "/CPD80N01.cpc";
 		}
-		// XXX what about CPD80**E**01?
 		if (mhdr.hdr[3] != 0x01) {
 			WARNING("Print job has wrong submodel specifier (%x)\n", mhdr.hdr[3]);
 			mhdr.hdr[3] = 0x01;
@@ -1210,9 +1238,25 @@ static int mitsu70x_wakeup(struct mitsu70x_ctx *ctx)
 
 static int d70_library_callback(void *context, void *buffer, uint32_t len)
 {
+	uint32_t chunk = len;
+	uint32_t offset = 0;
+	int ret = 0;
+
 	struct mitsu70x_ctx *ctx = context;
 
-	return send_data(ctx->dev, ctx->endp_down, buffer, len);
+	while (chunk > 0) {
+		if (chunk > CHUNK_LEN)
+			chunk = CHUNK_LEN;
+
+		ret = send_data(ctx->dev, ctx->endp_down, buffer + offset, chunk);
+		if (ret < 0)
+			break;
+
+		offset += chunk;
+		chunk = len - offset;
+	}
+
+	return ret;
 }
 
 static int mitsu70x_main_loop(void *vctx, int copies)
@@ -1411,7 +1455,7 @@ skip_status:
                /* K60 and 305 need data sent in 256K chunks, but the first
                   chunk needs to subtract the length of the 512-byte header */
 
-		int chunk = 256*1024 - sizeof(struct mitsu70x_hdr);
+		int chunk = CHUNK_LEN - sizeof(struct mitsu70x_hdr);
 		int sent = 512;
 		while (chunk > 0) {
 			if ((ret = send_data(ctx->dev, ctx->endp_down,
@@ -1419,8 +1463,8 @@ skip_status:
 				return CUPS_BACKEND_FAILED;
 			sent += chunk;
 			chunk = ctx->datalen - sent;
-			if (chunk > 256*1024)
-				chunk = 256*1024;
+			if (chunk > CHUNK_LEN)
+				chunk = CHUNK_LEN;
 		}
        }
 
@@ -1702,7 +1746,7 @@ static int mitsu70x_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend mitsu70x_backend = {
 	.name = "Mitsubishi CP-D70/D707/K60/D80",
-	.version = "0.55",
+	.version = "0.57",
 	.uri_prefix = "mitsu70x",
 	.cmdline_usage = mitsu70x_cmdline,
 	.cmdline_arg = mitsu70x_cmdline_arg,
