@@ -1705,6 +1705,9 @@ stpi_color_traditional_describe_parameter(const stp_vars_t *v,
 		      else
 			description->is_active = 0;
 		    }
+		  else
+		    description->is_active = 0;
+
 		  stp_parameter_description_destroy(&ink_limit_desc);
 		}
 	      break;

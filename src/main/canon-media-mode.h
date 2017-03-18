@@ -12821,15 +12821,18 @@ DECLARE_MODEUSES(canon_PIXMA_Pro9000mk2);
 /* ----------------------------------- Canon Pro9500 ----------------------------------- */
 
 static const char* canon_PIXMA_Pro9500_modeuses_plain[] = {
-  "600x600dpi_high",
-  "600x600dpi",
-  "600x600dpi_draft",
+  "600x600dpi_high",/* untested */
+  "600x600dpi",/* untested */
+  "300x600dpi_high",
+  "300x600dpi",
+  "75x600dpi",
   /* Mono */
   "600x600dpi_highmono2",
-  "600x600dpi_highmono", /*untested*/
-  "600x600dpi_mono",
-  "600x600dpi_draftmono",
-  "600x600dpi_draftmono2",/*untested*/
+  "600x600dpi_highmono",
+  "600x600dpi_mono",/* untested */
+  "300x600dpi_mono",
+  "300x600dpi_draftmono",
+  "75x600dpi_mono",
   NULL
   };
 
@@ -12879,12 +12882,18 @@ static const char* canon_PIXMA_Pro9500_modeuses_inkjetHagaki[] = {
 
 /* modes not yet supported (R,G inks) */
 static const char* canon_PIXMA_Pro9500_modeuses_Hagaki[] = {
+  "600x600dpi_high",/* untested */
+  "600x600dpi",/* untested */
+  "300x600dpi_high",/* untested */
+  "300x600dpi",/* untested */
+  "75x600dpi",/* untested */
    /* Mono */
   "600x600dpi_highmono2",
   "600x600dpi_highmono",
-  "600x600dpi_mono", /*untested*/
-  "600x600dpi_draftmono",/*untested*/
-  "600x600dpi_draftmono2",/*untested*/
+  "600x600dpi_mono",
+  "300x600dpi_mono",/* untested */
+  "300x600dpi_draftmono",
+  "75x600dpi_mono",
   NULL
 };
 

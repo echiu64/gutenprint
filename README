@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.2.12!  Please read these notes carefully.
+Welcome to Gutenprint 5.2.13-pre1!  Please read these notes carefully.
 
 *** NOTE TO PACKAGERS: Please read the file README.package for issues
     that are of interest to distributors and packagers of Gutenprint.
@@ -490,9 +490,9 @@ C) CUPS
 
 D) CUPS dye-sublimation backend
 
-    A new CUPS backend was added to support USB specific dye-sublimation
+    A new CUPS backend was added to support specific dye-sublimation USB
     printers that require a special communications protocol. This backend is
-    called 'gutenprint52usb' and currently supports the models listed below.
+    called 'gutenprint52+usb' and currently supports the models listed below.
     If you do not have a printer on this list, you may skip the remainder
     of this section.
 
@@ -506,6 +506,7 @@ D) CUPS dye-sublimation backend
 	DNP DS80DX  (experimental)
 	DNP DS-RX1 / DS-RX1HS / Citizen CY 
 	DNP DS620
+	DNP DS820
 	Kodak Professional 1400
 	Kodak 305 Photo Printer
 	Kodak 605 Photo Printer
@@ -519,6 +520,7 @@ D) CUPS dye-sublimation backend
 	Mitsubishi CP-9810DW (experimental)
 	Mitsubishi CP-K60DW-S
 	Mitsubishi CP-D70DW / CP-D707DW
+	Mitsubishi P93DW
 	Mitsubishi P95DW
 	Shinko CHC-S1245 (aka Sinfonia E1) (experimental)
 	Shinko CHC-S6245 (aka Sinfonia CE1) (experimental)
@@ -648,7 +650,7 @@ D) CUPS dye-sublimation backend
     After changing the user string, you will need to remove and re-create
     the CUPS queue.
 
-  Note on Mitsubishi Dye-Sublimation models with an '-S' suffix
+  Note on Mitsubishi Dye-Sublimation models with an '-S' and '-U' suffixes
 
     As well as manufacturing standalone photo printers, Mitsubishi also
     manufactures photo lab and kiosk solutions which use their printers.
@@ -665,10 +667,11 @@ D) CUPS dye-sublimation backend
       Supported/Compatible   |   Unsupported/Incompatible
       ---------------------------------------------------
 		 CP-D70DW    |   CP-D70DW-S
-		CP-D707DW    |   CP-D707DW-S
+		 CP9600DW    |   CP9600DW-S
+		 CP9550DW    |   CP9550DW-U
 
     The exceptions to this rule are the CP-K60DW-S, which is sold as a 
-    standalone "event" printer, and the CP-9550DW-S, which has been
+    standalone "event" printer, and the CP9550DW-S, which has been
     successfully reverse-engineered.
 
 ----------------
