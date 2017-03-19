@@ -1328,6 +1328,7 @@
       <printer translate="name" name="Epson Artisan 800" driver="escp2-artisan800" manufacturer="Epson" model="96" parameters="claria_params" />
       <printer translate="name" name="Epson Artisan 810" driver="escp2-artisan810" manufacturer="Epson" model="96" parameters="claria_params" />
       <printer translate="name" name="Epson Artisan 835" driver="escp2-artisan835" manufacturer="Epson" model="96" parameters="claria_params" />
+      <printer translate="name" name="Epson Artisan 1430" driver="escp2-artisan1430" manufacturer="Epson" model="82" parameters="claria_params" />
       <printer translate="name" name="Epson B-300" driver="escp2-b300" manufacturer="Epson" model="87" parameters="standard_params" />
       <printer translate="name" name="Epson B-308" driver="escp2-b308" manufacturer="Epson" model="87" parameters="standard_params" />
       <printer translate="name" name="Epson B-310" driver="escp2-b310" manufacturer="Epson" model="87" parameters="standard_params" />
