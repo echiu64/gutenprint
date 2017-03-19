@@ -1693,17 +1693,13 @@ stpi_color_traditional_describe_parameter(const stp_vars_t *v,
 		{
 		  stp_parameter_t ink_limit_desc;
 		  stp_describe_parameter(v, "InkChannels", &ink_limit_desc);
-		  if (ink_limit_desc.p_type == STP_PARAMETER_TYPE_INT)
+		  if (ink_limit_desc.p_type == STP_PARAMETER_TYPE_INT &&
+		      ink_limit_desc.deflt.integer > 1)
 		    {
-		      if (ink_limit_desc.deflt.integer > 1)
-			{
-			  description->bounds.dbl.upper =
-			    ink_limit_desc.deflt.integer;
-			  description->deflt.dbl =
-			    ink_limit_desc.deflt.integer;
-			}
-		      else
-			description->is_active = 0;
+		      description->bounds.dbl.upper =
+			ink_limit_desc.deflt.integer;
+		      description->deflt.dbl =
+			ink_limit_desc.deflt.integer;
 		    }
 		  else
 		    description->is_active = 0;

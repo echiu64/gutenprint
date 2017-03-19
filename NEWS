@@ -259,8 +259,9 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
      Mitsubishi P93DW
 
-  3) Added support for the following Epson inkjet printer:
+  3) Added support for the following Epson inkjet printers:
 
+     EPSON Artisan 1430
      EPSON L210
 
   3) Enhanced support or bugfixes for the following printers:
@@ -279,7 +280,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
      * Improved duplex support by implementing ESC (u and ESC (s
        commands for duplex printing on models that support these:
-       
+
        MG3600 series
        MG5600 series
        MG5700 series
@@ -358,7 +359,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	Sinfonia S1245/CE          [experimental]
 	Sinfonia S2145/CS
 	Sinfonia S6145/CS2    [*1]
-	Sinfonia S6245/CE2         [experimental]	
+	Sinfonia S6245/CE2         [experimental]
 	Sony UP-DR150
 	Sony UP-DR200
 
@@ -400,9 +401,9 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      [*3] The USB PID for the CP820 is unknown at this time,
           so will not be claimed by the improved backend.
 
-  4) Dye-sublimation backend now reports media status via standard 
+  4) Dye-sublimation backend now reports media status via standard
      CUPS marker attributes.  This applies to all models except for:
-     
+
 	Kodak 805 and 1400
 	Sony UP-DR150, UP-DR200, and UP-SL10
 
@@ -509,8 +510,8 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	Mitsubishi CP-D80DW	  [experimental] [*1]
 	Sinfonia S6145/CS2	  [experimental] [*1]
 
-     [*1] Please note that these models utilize a print engine that 
-	  requires the host system to process the print data using 
+     [*1] Please note that these models utilize a print engine that
+	  requires the host system to process the print data using
 	  unknown algorithms.  Until these algorithms can be determined
 	  and re-implemented, these models are unsuitable for general
 	  use due to very poor output quality.
@@ -540,16 +541,16 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	Kodak 605
 	Kodak 6800/6850
 	Kodak 1400/805
-	Mitsubishi CP-9550 family 
+	Mitsubishi CP-9550 family
 	Sony UP-DR200
 	Mitsubishi CP-D70DW/D707DW/K60DW-S [experimental] [*1]
 
-     [*1] Please note that these models utilize a print engine that 
-	  requires the host system to process the print data using 
+     [*1] Please note that these models utilize a print engine that
+	  requires the host system to process the print data using
 	  unknown algorithms.  Until these algorithms can be determined
 	  and re-implemented, these models are unsuitable for general
 	  use due to very poor output quality.
-		
+
   3) Added support for the Datamax-O'Neil PCL printers, the Performance
      series (p1115, p1115s, p1120n, p1125, p1725, h8308) and the
      Datamax-O'Neil Workstation printer.
@@ -605,7 +606,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	Canon iP110 series  (EXPERIMENTAL)
 	Canon PIXMA iP110   (EXPERIMENTAL)(*1)
 	Canon PIXUS iP110   (EXPERIMENTAL)(*1)
-	
+
 	Canon iP2800 series (EXPERIMENTAL)
 	Canon PIXMA iP2810  (EXPERIMENTAL)(*1)
 	Canon PIXMA iP2820  (EXPERIMENTAL)(*1)
@@ -708,7 +709,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	Canon PIXMA MG5740  (EXPERIMENTAL)(*1)
 	Canon PIXMA MG5750  (EXPERIMENTAL)(*1)
 	Canon PIXMA MG5751  (EXPERIMENTAL)(*1)
-	Canon PIXMA MG5752  (EXPERIMENTAL)(*1)	
+	Canon PIXMA MG5752  (EXPERIMENTAL)(*1)
 	Canon PIXMA MG5753  (EXPERIMENTAL)(*1)
 	Canon PIXMA MG5770  (EXPERIMENTAL)(*1)
 	Canon PIXMA MG5780  (EXPERIMENTAL)(*1)
@@ -992,7 +993,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      printers.
 
      A new CUPS backend was added to support USB printers that require a
-     special communications protocol. The backend is called 
+     special communications protocol. The backend is called
      'gutenprint52usb' and requires libusb 1.0 (or newer) in order to build.
 
      The following dye-sublimation printers require this backend in order
@@ -1005,7 +1006,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
    	Kodak 6800 Photo Printer
    	Kodak 6850 Photo Printer
 	Kodak 605 Photo Printer
-   	Shinko/Sinfonia CHC-S2145 
+   	Shinko/Sinfonia CHC-S2145
    	Sony UP-DR150  (*1)
         Sony UP-DR200
 	DNP DS40  (*1)
@@ -1018,11 +1019,11 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
         Mitsubishi DP-D707DW (EXPERIMENTAL)
 
      *1) Please note that if you were using a Sony UP-DR150, DNP DS40/DS80,
-	 or a Canon SELPHY printer with a previous Gutenprint release, 
-         you will need to remove and re-create your printer queue after 
+	 or a Canon SELPHY printer with a previous Gutenprint release,
+         you will need to remove and re-create your printer queue after
          the upgrade to 5.2.10 is complete.
 
-     For further information about configuration and use of this CUPS 
+     For further information about configuration and use of this CUPS
      backend, please see the README document, section II D.
 
   2) New printers supported in this release:
@@ -1586,7 +1587,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
        Canon iX7000 series (EXPERIMENTAL)(*1)
        Canon PIXUS iX7000  (EXPERIMENTAL)(*2)
-			   
+
        Canon MX300 series  (EXPERIMENTAL)(*1)
        Canon PIXMA MX308   (EXPERIMENTAL)(*2)
 
@@ -1648,7 +1649,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA MX437   (EXPERIMENTAL)(*2)
        Canon PIXMA MX438   (EXPERIMENTAL)(*2)
        Canon PIXMA MX439   (EXPERIMENTAL)(*2)
-			   
+
        Canon MX450 series  (EXPERIMENTAL)
        Canon PIXMA MX451   (EXPERIMENTAL)(*2)
        Canon PIXMA MX452   (EXPERIMENTAL)(*2)
@@ -1686,7 +1687,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA MX712   (EXPERIMENTAL)(*2)
        Canon PIXMA MX714   (EXPERIMENTAL)(*2)
        Canon PIXMA MX715   (EXPERIMENTAL)(*2)
-			   
+
        Canon MX720 series  (EXPERIMENTAL)
        Canon PIXMA MX721   (EXPERIMENTAL)(*2)
        Canon PIXMA MX722   (EXPERIMENTAL)(*2)
@@ -1697,11 +1698,11 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
        Canon MX860 series  (EXPERIMENTAL)(*1)
        Canon PIXUS MX860   (EXPERIMENTAL)(*2)
-       Canon PIXMA MX868   (EXPERIMENTAL)(*2)			   
+       Canon PIXMA MX868   (EXPERIMENTAL)(*2)
 
        Canon MX870 series  (EXPERIMENTAL)(*1)
        Canon PIXUS MX870   (EXPERIMENTAL)(*2)
-       Canon PIXMA MX876   (EXPERIMENTAL)(*2)			   
+       Canon PIXMA MX876   (EXPERIMENTAL)(*2)
 
        Canon MX880 series  (EXPERIMENTAL)(*1)
        Canon PIXMA MX882   (EXPERIMENTAL)(*2)
@@ -1732,14 +1733,14 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXUS MX7600  (EXPERIMENTAL)(*2)
 
        Canon E500 series   (EXPERIMENTAL)(*1)
-			   
+
        Canon E510 series   (EXPERIMENTAL)
        Canon PIXMA E510    (EXPERIMENTAL)(*2)
        Canon PIXMA E518    (EXPERIMENTAL)(*2)
-			   
+
        Canon E600 series   (EXPERIMENTAL)(*1)
        Canon PIXMA E608    (EXPERIMENTAL)(*2)
-			   
+
        Canon E610 series   (EXPERIMENTAL)
        Canon PIXMA E610    (EXPERIMENTAL)(*2)
        Canon PIXMA E618    (EXPERIMENTAL)(*2)
@@ -1772,7 +1773,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
                We have retained support for other media types common
                to recent Canon printers, but it is unconfirmed whether
                the printer firmware will accept these.
-               The lines also lack support for borderless printing 
+               The lines also lack support for borderless printing
                in the Windows driver, and we have not tried to add
                experimental support.
 
@@ -1794,8 +1795,8 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        well as enabling support for more recent printers, it improves support
        for older models as well.
 
-       Please note that if you are using one of these models with a 
-       prior Gutenprint release, you will have to remove and re-create your 
+       Please note that if you are using one of these models with a
+       prior Gutenprint release, you will have to remove and re-create your
        printer queue after upgrading.
 
        Newly added in this release:
@@ -1807,7 +1808,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Added back after removal in 5.2.9 release:
 
        Canon SELPHY CP600 *1
-       Canon SELPHY CP720 
+       Canon SELPHY CP720
        Canon SELPHY CP780
        Canon SELPHY CP800
        Canon SELPHY ES1
@@ -1843,11 +1844,11 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
 	The SELPHY CP820 and CP910, and possibly newer models in the
 	SELPHY CP series utilize an entirely new print data format,
-	and as such are not compatible with previous models in the 
+	and as such are not compatible with previous models in the
 	SELPHY CP family.  We anticipate these models will be supported
 	in a subsequent Gutenprint release.
 
-     - Citizen Dye-Sublimation printers: 
+     - Citizen Dye-Sublimation printers:
 
        Citizen CX
        Citizen CX-W
@@ -1856,7 +1857,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
          These models are identical to the DNP DS40, DS80, and DSRX1,
 	 respectively, and for best results should be used with the
 	 intelligent backend.
-       
+
        Citizen CW-01
        Citizen CW-02
        Citizen OP900
@@ -1872,7 +1873,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        DNP DS80
 
 	Support for these printers has been considerably improved:
- 
+
 	 * Addition of an intelligent CUPS backend
 	 * 5x7 and 3.5x5" print support on the DS40
 	 * Matte lamination with printer firmware 1.30 or newer
@@ -1895,13 +1896,13 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Kodak 6850
        Kodak 605
 
-	These Kodak models require an intelligent CUPS backend, 
+	These Kodak models require an intelligent CUPS backend,
 	which is bundled with Gutenprint.
 
-       Kodak 8500 (EXPERIMENTAL)	
+       Kodak 8500 (EXPERIMENTAL)
        Kodak 9810 (EXPERIMENTAL)
 
-	Neither of these models have been tested and confirmed to work 
+	Neither of these models have been tested and confirmed to work
 	(or not), so feedback is welcome.
 
      - Mitsubishi Dye-Sublimation printers:
@@ -1918,16 +1919,16 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Mitsubishi CPK60DW-S     (EXPERIMENTAL)
        Mitsubishi CP3800DW      (EXPERIMENTAL)
 
-	None of these models have been tested and confirmed to work 
+	None of these models have been tested and confirmed to work
 	(or not), so feedback is welcome.
 
 	NOTE: With the exception of the CP-K60DW-S, all Mitsubishi
-	printers with red faceplates and/or model designations ending with 
+	printers with red faceplates and/or model designations ending with
 	an '-S' suffix are not currently supported.  These were only sold
-	as part of a Mitsubishi kiosk or lab solution, and were 
+	as part of a Mitsubishi kiosk or lab solution, and were
 	deliberately made incompatible with the non-S models.
 
-	The CP-D70DW and CP-D707DW (and likely the CP-K60DW) require use of 
+	The CP-D70DW and CP-D707DW (and likely the CP-K60DW) require use of
 	an intelligent backend,	which is bundled with Gutenprint.
 
      - Shinko/Sinfonia Dye-Sublimation printers:
