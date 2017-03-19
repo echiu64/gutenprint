@@ -83,7 +83,7 @@ if [ -n "$md5dir" -a ! -d "$md5dir" ] ; then
     mkdir -p "$md5dir"
 fi
 
-version="5.2";
+version="@GUTENPRINT_RELEASE_VERSION@";
 cupsdir="/usr/lib/cups/filter"
 if [ -x "$cupsdir/pstoraster" -o -x "$cupsdir/gstoraster" -o -x "$cupsdir/cgpdftoraster" ] ; then
     pages="24-`expr 24 + $npages - 1`"
