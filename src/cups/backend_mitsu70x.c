@@ -84,7 +84,7 @@ struct BandImage {
 };
 #endif
 
-#define MIN_LIB_APIVERSION 2
+#define REQUIRED_LIB_APIVERSION 4
 
 /* Image processing library function prototypes */
 #define LIB_NAME_RE "libMitsuD70ImageReProcess.so" // Reimplemented library
@@ -96,7 +96,7 @@ typedef void (*Destroy3DColorTableFN)(struct CColorConv3D *this);
 typedef void (*DoColorConvFN)(struct CColorConv3D *this, uint8_t *data, uint16_t cols, uint16_t rows, uint32_t bytes_per_row, int rgb_bgr);
 typedef struct CPCData *(*get_CPCDataFN)(const char *filename);
 typedef void (*destroy_CPCDataFN)(struct CPCData *data);
-typedef int (*do_image_effectFN)(struct CPCData *cpc, struct BandImage *input, struct BandImage *output, int sharpen, uint8_t rew[2]);
+typedef int (*do_image_effectFN)(struct CPCData *cpc, struct CPCData *ecpc, struct BandImage *input, struct BandImage *output, int sharpen, int reverse, uint8_t rew[2]);
 typedef int (*send_image_dataFN)(struct BandImage *out, void *context,
 			       int (*callback_fn)(void *context, void *buffer, uint32_t len));
 
@@ -112,6 +112,7 @@ typedef int (*send_image_dataFN)(struct BandImage *out, void *context,
 #define USB_PID_MITSU_D70X  0x3B30
 #define USB_PID_MITSU_K60   0x3B31
 #define USB_PID_MITSU_D80   0x3B36
+#define USB_PID_MITSU_D90   0x3B60
 #define USB_VID_KODAK       0x040a
 #define USB_PID_KODAK305    0x404f
 //#define USB_VID_FUJIFILM    XXXXXX
@@ -146,6 +147,7 @@ struct mitsu70x_ctx {
 	char *laminatefname;
 	char *lutfname;
 	char *cpcfname;
+	char *ecpcfname;
 
 	void *dl_handle;
 	lib70x_getapiversionFN GetAPIVersion;
@@ -155,15 +157,21 @@ struct mitsu70x_ctx {
 	DoColorConvFN DoColorConv;
 	get_CPCDataFN GetCPCData;
 	destroy_CPCDataFN DestroyCPCData;
+	do_image_effectFN DoImageEffect60;
+	do_image_effectFN DoImageEffect70;
+	do_image_effectFN DoImageEffect80;
 	do_image_effectFN DoImageEffect;
 	send_image_dataFN SendImageData;
 
 	struct CColorConv3D *lut;
 	struct CPCData *cpcdata;
+	struct CPCData *ecpcdata;
 
 	char *last_cpcfname;
+	char *last_ecpcfname;
 
 	int raw_format;
+	int reverse;
 	int sharpen; /* ie mhdr.sharpen - 1 */
 
 	uint8_t rew[2]; /* 1 for rewind ok (default!) */
@@ -204,6 +212,7 @@ struct mitsu70x_jobs {
 #define MECHA_STATUS_INIT   0x80
 #define MECHA_STATUS_FEED   0x50
 #define MECHA_STATUS_LOAD   0x40
+#define MECHA_STATUS_LOAD2  0x30
 #define MECHA_STATUS_PRINT  0x20
 #define MECHA_STATUS_IDLE   0x00
 
@@ -251,7 +260,7 @@ struct mitsu70x_jobs {
 #define ERROR_STATUS0_RIBBONEND      0x09
 #define ERROR_STATUS0_DOOROPEN_IDLE  0x0A
 #define ERROR_STATUS0_DOOROPEN_PRNT  0x0B
-#define ERROR_STATUS0_POWEROFF       0x0C // nonsense.. heh.
+#define ERROR_STATUS0_POWEROFF       0x0C // Powered off during printing..?
 #define ERROR_STATUS0_NOMCOP         0x0D
 #define ERROR_STATUS0_RIBBONSKIP1    0x0E
 #define ERROR_STATUS0_RIBBONSKIP2    0x0F
@@ -318,11 +327,15 @@ struct mitsu70x_printerstatus_resp {
 	uint8_t  hdr[4];  /* E4 56 32 31 */
 	uint8_t  memory;
 	uint8_t  power;
-	uint8_t  unk[34];
+	uint8_t  unk[20];
+	uint8_t  sleeptime; /* In minutes, 0-10 */
+	uint8_t  iserial; /* 0x00 for Enabled, 0x80 for Disabled */
+	uint8_t  unk_b[12];
 	int16_t  model[6]; /* LE, UTF-16 */
 	int16_t  serno[6]; /* LE, UTF-16 */
 	struct mitsu70x_status_ver vers[7]; // components are 'MLRTF'
-	uint8_t  null[8];
+	uint8_t  null[2];
+	uint8_t  user_serno[6];  /* Supposedly, don't know how to set it */
 	struct mitsu70x_status_deck lower;
 	struct mitsu70x_status_deck upper;
 } __attribute__((packed));
@@ -363,8 +376,8 @@ struct mitsu70x_hdr {
 	uint8_t  sharpen;  /* 0-9.  5 is "normal", 0 is "off" */
 	uint8_t  mode;     /* 0 for cooked YMC planar, 1 for packed BGR */
 	uint8_t  use_lut;  /* in BGR mode, 0 disables, 1 enables */
-
-	uint8_t  pad[448];
+	uint8_t  reversed; /* 1 tells the backend the row data is correct */
+	uint8_t  pad[447];
 } __attribute__((packed));
 
 /* Error dumps, etc */
@@ -377,6 +390,7 @@ static char *mitsu70x_mechastatus(uint8_t *sts)
 	case MECHA_STATUS_FEED:
 		return "Paper Feeding/Cutting";
 	case MECHA_STATUS_LOAD:
+	case MECHA_STATUS_LOAD2:
 		return "Media Loading";
 	case MECHA_STATUS_PRINT:
 		return "Printing";
@@ -674,13 +688,13 @@ static void mitsu70x_attach(void *vctx, struct libusb_device_handle *dev,
 	if (ctx->dl_handle) {
 		ctx->GetAPIVersion = DL_SYM(ctx->dl_handle, "lib70x_getapiversion");
 		if (!ctx->GetAPIVersion) {
-			WARNING("Problem resolving API Version symbol in imaging processing library, too old or not installed?\n");
+			ERROR("Problem resolving API Version symbol in imaging processing library, too old or not installed?\n");
 			DL_CLOSE(ctx->dl_handle);
 			ctx->dl_handle = NULL;
 			return;
 		}
-		if (ctx->GetAPIVersion() < MIN_LIB_APIVERSION) {
-			ERROR("Image processing library API version too old!\n");
+		if (ctx->GetAPIVersion() != REQUIRED_LIB_APIVERSION) {
+			ERROR("Image processing library API version mismatch!\n");
 			DL_CLOSE(ctx->dl_handle);
 			ctx->dl_handle = NULL;
 			return;
@@ -692,18 +706,34 @@ static void mitsu70x_attach(void *vctx, struct libusb_device_handle *dev,
 		ctx->DoColorConv = DL_SYM(ctx->dl_handle, "CColorConv3D_DoColorConv");
 		ctx->GetCPCData = DL_SYM(ctx->dl_handle, "get_CPCData");
 		ctx->DestroyCPCData = DL_SYM(ctx->dl_handle, "destroy_CPCData");
-		ctx->DoImageEffect = DL_SYM(ctx->dl_handle, "do_image_effect");
+		ctx->DoImageEffect60 = DL_SYM(ctx->dl_handle, "do_image_effect60");
+		ctx->DoImageEffect70 = DL_SYM(ctx->dl_handle, "do_image_effect70");
+		ctx->DoImageEffect80 = DL_SYM(ctx->dl_handle, "do_image_effect80");
 		ctx->SendImageData = DL_SYM(ctx->dl_handle, "send_image_data");
 		if (!ctx->Get3DColorTable || !ctx->Load3DColorTable ||
 		    !ctx->Destroy3DColorTable || !ctx->DoColorConv ||
 		    !ctx->GetCPCData || !ctx->DestroyCPCData ||
-		    !ctx->DoImageEffect || !ctx->SendImageData) {
-			WARNING("Problem resolving symbols in imaging processing library\n");
+		    !ctx->DoImageEffect60 || !ctx->DoImageEffect70 ||
+		    !ctx->DoImageEffect80 || !ctx->SendImageData) {
+			ERROR("Problem resolving symbols in imaging processing library\n");
 			DL_CLOSE(ctx->dl_handle);
 			ctx->dl_handle = NULL;
 		} else {
 			DEBUG("Image processing library successfully loaded\n");
 		}
+	}
+
+	switch (ctx->type) {
+	case P_MITSU_D80:
+		ctx->DoImageEffect = ctx->DoImageEffect80;
+		break;
+	case P_MITSU_K60:
+	case P_KODAK_305:
+		ctx->DoImageEffect = ctx->DoImageEffect60;
+		break;
+	default:
+		ctx->DoImageEffect = ctx->DoImageEffect70;
+		break;
 	}
 #else
 	WARNING("Dynamic library support not enabled, using internal fallback code\n");
@@ -722,6 +752,8 @@ static void mitsu70x_teardown(void *vctx) {
 	if (ctx->dl_handle) {
 		if (ctx->cpcdata)
 			ctx->DestroyCPCData(ctx->cpcdata);
+		if (ctx->ecpcdata)
+			ctx->DestroyCPCData(ctx->ecpcdata);
 		if (ctx->lut)
 			ctx->Destroy3DColorTable(ctx->lut);
 		DL_CLOSE(ctx->dl_handle);
@@ -780,6 +812,21 @@ repeat:
 
 	ctx->raw_format = !mhdr.mode;
 
+	/* Sanity check Matte mode */
+	if (!mhdr.laminate && mhdr.laminate_mode) {
+		if (ctx->type != P_MITSU_D70X) {
+			if (mhdr.speed != 0x03 && mhdr.speed != 0x04) {
+				WARNING("Forcing Ultrafine mode for matte printing!\n");
+				mhdr.speed = 0x04; /* Force UltraFine */
+			}
+		} else {
+			if (mhdr.speed != 0x03) {
+				mhdr.speed = 0x03; /* Force SuperFine */
+				WARNING("Forcing SuperFine mode for matte printing!\n");
+			}
+		}
+	}
+
 	/* Figure out the correction data table to use */
 	if (ctx->type == P_MITSU_D70X) {
 		ctx->laminatefname = CORRTABLE_PATH "/D70MAT01.raw";
@@ -802,11 +849,13 @@ repeat:
 
 		if (mhdr.speed == 3) {
 			ctx->cpcfname = CORRTABLE_PATH "/CPD80S01.cpc";
-			// XXX ctx->cpcfname = CORRTABLE_PATH "/CPD80E01.cpc"; for Superfine w/ Rewind, "depending on contents of image"
+			ctx->ecpcfname = CORRTABLE_PATH "/CPD80E01.cpc";
 		} else if (mhdr.speed == 4) {
 			ctx->cpcfname = CORRTABLE_PATH "/CPD80U01.cpc";
+			ctx->ecpcfname = NULL;
 		} else {
 			ctx->cpcfname = CORRTABLE_PATH "/CPD80N01.cpc";
+			ctx->ecpcfname = NULL;
 		}
 		if (mhdr.hdr[3] != 0x01) {
 			WARNING("Print job has wrong submodel specifier (%x)\n", mhdr.hdr[3]);
@@ -859,11 +908,13 @@ repeat:
 		ctx->lutfname = NULL;
 
 	ctx->sharpen = mhdr.sharpen - 1;
+	ctx->reverse = !mhdr.reversed;
 
 	/* Clean up header back to pristine. */
 	mhdr.use_lut = 0;
 	mhdr.mode = 0;
 	mhdr.sharpen = 0;
+	mhdr.reversed = 0;
 
 	/* Work out total printjob size */
 	ctx->cols = be16_to_cpu(mhdr.cols);
@@ -949,10 +1000,11 @@ repeat:
 			ctx->DoColorConv(ctx->lut, spoolbuf, ctx->cols, ctx->rows, ctx->cols * 3, COLORCONV_BGR);
 		}
 
-		/* Load in the CPC file, if needed! */
 		if (ctx->dl_handle) {
 			struct BandImage input;
 
+
+			/* Load in the CPC file, if needed */
 			if (ctx->cpcfname && ctx->cpcfname != ctx->last_cpcfname) {
 				ctx->last_cpcfname = ctx->cpcfname;
 				if (ctx->cpcdata)
@@ -964,8 +1016,23 @@ repeat:
 				}
 			}
 
-			/* Convert using image processing library */
+			/* Load in the secondary CPC, if needed */
+			if (ctx->ecpcfname != ctx->last_ecpcfname) {
+				ctx->last_ecpcfname = ctx->ecpcfname;
+				if (ctx->ecpcdata)
+					ctx->DestroyCPCData(ctx->ecpcdata);
+				if (ctx->ecpcfname) {
+					ctx->ecpcdata = ctx->GetCPCData(ctx->ecpcfname);
+					if (!ctx->ecpcdata) {
+						ERROR("Unable to load CPC file '%s'\n", ctx->cpcfname);
+						return CUPS_BACKEND_CANCEL;
+					}
+				} else {
+					ctx->ecpcdata = NULL;
+				}
+			}
 
+			/* Convert using image processing library */
 			input.origin_rows = input.origin_cols = 0;
 			input.rows = ctx->rows;
 			input.cols = ctx->cols;
@@ -980,7 +1047,10 @@ repeat:
 
 
 			DEBUG("Running print data through processing library\n");
-			if (ctx->DoImageEffect(ctx->cpcdata, &input, &ctx->output, ctx->sharpen, ctx->rew)) {
+			ctx->rew[0] = 1;
+			ctx->rew[1] = 1;
+			if (ctx->DoImageEffect(ctx->cpcdata, ctx->ecpcdata,
+					       &input, &ctx->output, ctx->sharpen, ctx->reverse, ctx->rew)) {
 				ERROR("Image Processing failed, aborting!\n");
 				return CUPS_BACKEND_CANCEL;
 			}
@@ -1203,11 +1273,15 @@ static int mitsu70x_set_sleeptime(struct mitsu70x_ctx *ctx, uint8_t time)
 	uint8_t cmdbuf[4];
 	int ret;
 
-	/* Send Job cancel.  No response. */
+	/* 10 minutes max, according to all docs. */
+	if (time > 10)
+		time = 10;
+
+	/* Send Parameter.. */
 	memset(cmdbuf, 0, 4);
 	cmdbuf[0] = 0x1b;
 	cmdbuf[1] = 0x53;
-	cmdbuf[2] = 0x53; // XXX also, 0x4e and 0x50 are other params.
+	cmdbuf[2] = 0x53;
 	cmdbuf[3] = time;
 
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
@@ -1217,6 +1291,59 @@ static int mitsu70x_set_sleeptime(struct mitsu70x_ctx *ctx, uint8_t time)
 	return 0;
 }
 
+static int mitsu70x_set_iserial(struct mitsu70x_ctx *ctx, uint8_t enabled)
+{
+	uint8_t cmdbuf[4];
+	int ret;
+
+	if (enabled)
+		enabled = 0;
+	else
+		enabled = 0x80;
+
+	/* Send Parameter.. */
+	memset(cmdbuf, 0, 4);
+	cmdbuf[0] = 0x1b;
+	cmdbuf[1] = 0x53;
+	cmdbuf[2] = 0x4e;
+	cmdbuf[3] = enabled;
+
+	if ((ret = send_data(ctx->dev, ctx->endp_down,
+			     cmdbuf, 4)))
+		return ret;
+
+	return 0;
+}
+
+#if 0
+/* Switches between "Driver" and "SDK" modes.
+   Single-endpoint vs Multi-Endpoint, essentially.
+   Not sure about the polarity.
+ */
+static int mitsu70x_set_printermode(struct mitsu70x_ctx *ctx, uint8_t enabled)
+{
+	uint8_t cmdbuf[4];
+	int ret;
+
+	if (enabled)
+		enabled = 0;
+	else
+		enabled = 0x80;
+
+	/* Send Parameter.. */
+	memset(cmdbuf, 0, 4);
+	cmdbuf[0] = 0x1b;
+	cmdbuf[1] = 0x53;
+	cmdbuf[2] = 0x50;
+	cmdbuf[3] = enabled;
+
+	if ((ret = send_data(ctx->dev, ctx->endp_down,
+			     cmdbuf, 4)))
+		return ret;
+
+	return 0;
+}
+#endif
 static int mitsu70x_wakeup(struct mitsu70x_ctx *ctx)
 {
 	int ret;
@@ -1413,21 +1540,6 @@ skip_status:
 		hdr->rewind[0] = !ctx->rew[0];
 		hdr->rewind[1] = !ctx->rew[1];
 	}
-	
-	/* Matte operation requires Ultrafine/superfine */
-	if (ctx->matte) {
-		if (ctx->type != P_MITSU_D70X) {
-			if (hdr->speed != 0x03 && hdr->speed != 0x04) {
-				WARNING("Forcing Ultrafine mode for matte printing!\n");
-				hdr->speed = 0x04; /* Force UltraFine */
-			}
-		} else {
-			if (hdr->speed != 0x03) {
-				hdr->speed = 0x03; /* Force SuperFine */
-				WARNING("Forcing Ultrafine mode for matte printing!\n");
-			}
-		}
-	}
 
 	/* Any other fixups? */
 	if ((ctx->type == P_MITSU_K60 || ctx->type == P_KODAK_305) &&
@@ -1585,6 +1697,8 @@ static void mitsu70x_dump_printerstatus(struct mitsu70x_printerstatus_resp *resp
 		INFO("FW Component: %c %s (%04x)\n",
 		     type, buf, be16_to_cpu(resp->vers[i].checksum));
 	}
+	INFO("Standby Timeout: %d minutes\n", resp->sleeptime);
+	INFO("iSerial Reporting: %s\n", resp->iserial ? "No" : "Yes" );	
 
 	INFO("Lower Mechanical Status: %s\n",
 	     mitsu70x_mechastatus(resp->lower.mecha_status));
@@ -1710,6 +1824,7 @@ static void mitsu70x_cmdline(void)
 	DEBUG("\t\t[ -s ]           # Query status\n");
 	DEBUG("\t\t[ -f ]           # Use fast return mode\n");
 	DEBUG("\t\t[ -k num ]       # Set standby time (1-60 minutes, 0 disables)\n");
+	DEBUG("\t\t[ -x num ]       # Set USB iSerialNumber Reporting (1 on, 0 off)\n");
 	DEBUG("\t\t[ -X jobid ]     # Abort a printjob\n");}
 
 static int mitsu70x_cmdline_arg(void *vctx, int argc, char **argv)
@@ -1720,7 +1835,7 @@ static int mitsu70x_cmdline_arg(void *vctx, int argc, char **argv)
 	if (!ctx)
 		return -1;
 
-	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "sX:k:")) >= 0) {
+	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "sk:X:x:")) >= 0) {
 		switch(i) {
 		GETOPT_PROCESS_GLOBAL
 		case 'k':
@@ -1728,6 +1843,9 @@ static int mitsu70x_cmdline_arg(void *vctx, int argc, char **argv)
 			break;
 		case 's':
 			j = mitsu70x_query_status(ctx);
+			break;
+		case 'x':
+			j = mitsu70x_set_iserial(ctx, atoi(optarg));
 			break;
 		case 'X':
 			j = mitsu70x_cancel_job(ctx, atoi(optarg));
@@ -1746,7 +1864,7 @@ static int mitsu70x_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend mitsu70x_backend = {
 	.name = "Mitsubishi CP-D70/D707/K60/D80",
-	.version = "0.57",
+	.version = "0.60",
 	.uri_prefix = "mitsu70x",
 	.cmdline_usage = mitsu70x_cmdline,
 	.cmdline_arg = mitsu70x_cmdline_arg,
@@ -1760,6 +1878,7 @@ struct dyesub_backend mitsu70x_backend = {
 		{ USB_VID_MITSU, USB_PID_MITSU_D70X, P_MITSU_D70X, ""},
 		{ USB_VID_MITSU, USB_PID_MITSU_K60, P_MITSU_K60, ""},
 		{ USB_VID_MITSU, USB_PID_MITSU_D80, P_MITSU_D80, ""},
+//		{ USB_VID_MITSU, USB_PID_MITSU_D90, P_MITSU_D90, ""},
 		{ USB_VID_KODAK, USB_PID_KODAK305, P_KODAK_305, ""},
 //	{ USB_VID_FUJIFILM, USB_PID_FUJI_ASK300, P_FUJI_ASK300, ""},
 	{ 0, 0, 0, ""}
@@ -1795,7 +1914,7 @@ struct dyesub_backend mitsu70x_backend = {
    YY YY == rows
    QQ QQ == lamination columns (equal to XX XX)
    ZZ ZZ == lamination rows (YY YY + 12 on D70x/D80/ASK300, YY YY on others)
-   RR RR == "rewind inhibit", 01 01 enabled, normally 00 00
+   RR RR == "rewind inhibit", 01 01 enabled, normally 00 00 (All but D70x)
    SS    == Print mode: 00 = Fine, 03 = SuperFine (D70x/D80 only), 04 = UltraFine
             (Matte requires Superfine or Ultrafine)
    UU    == 00 = Auto, 01 = Lower Deck (required for !D70x), 02 = Upper Deck

@@ -264,9 +264,16 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      EPSON Artisan 1430
      EPSON L210
 
-  3) Enhanced support or bugfixes for the following printers:
+  3) Enhanced support (and bugfixes) for the following
+     dye-sublimation and thermal transfer printers:
 
+     Fujifilm ASK-300  [EXPERIMENTAL]
+     Kodak 305
      Mitsubishi P95DW
+     Mitsubishi CP-D70DW
+     Mitsubishi CP-D707DW [EXPERIMENTAL]
+     Mitsubishi CP-D80DW
+     Mitsubishi CP-K60DW-S
 
   4) Improvements to the Gimp plugin
 
