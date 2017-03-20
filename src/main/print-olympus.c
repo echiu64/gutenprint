@@ -4609,10 +4609,11 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
   stp_putc(pd->privdata.m70x.sharpen, v);
   stp_putc(0x01, v);  /* Mark as 8bpp BGR rather than 16bpp YMC cooked */
   stp_putc(pd->privdata.m70x.use_lut, v);  /* Use LUT? */
+  stp_putc(0x01, v);  /* Tell the backend the data's in the proper order */
 #else
-  dyesub_nputc(v, 0x00, 15);
+  dyesub_nputc(v, 0x00, 16);
 #endif
-  dyesub_nputc(v, 0x00, 448); /* Pad to 512-byte block */
+  dyesub_nputc(v, 0x00, 447); /* Pad to 512-byte block */
 }
 
 static void mitsu_cpd70x_printer_init(stp_vars_t *v)
@@ -7501,7 +7502,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cpd70x_printsize_list,
     SHRT_MAX,
 #ifdef MITSU70X_8BPP
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT,
     &mitsu_cpd70x_printer_init, NULL,
 #else
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
@@ -7531,7 +7532,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cpk60_printsize_list,
     SHRT_MAX,
 #ifdef MITSU70X_8BPP
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT,
     &mitsu_cpk60_printer_init, NULL,
 #else
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
@@ -7561,7 +7562,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cpd80_printsize_list,
     SHRT_MAX,
 #ifdef MITSU70X_8BPP
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT,
     &mitsu_cpd70x_printer_init, NULL,
 #else
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
@@ -7591,7 +7592,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak305_printsize_list,
     SHRT_MAX,
 #ifdef MITSU70X_8BPP
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT,
     &kodak305_printer_init, NULL,    
 #else
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
@@ -7616,7 +7617,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cpd90_page_list,
     &mitsu_cpd90_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT,
     &mitsu_cpd90_printer_init, &mitsu_cpd90_printer_end,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
@@ -7677,7 +7678,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &fuji_ask300_printsize_list,
     SHRT_MAX,
 #ifdef MITSU70X_8BPP
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT,
     &mitsu_cpd70x_printer_init, NULL,    
 #else
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
