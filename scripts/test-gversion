@@ -42,7 +42,7 @@ for a in $major ; do
 		    f="$a$b$c$d$e"
 		    for g in $types ; do
 			echo -n "$f $g => "
-			./gversion X "$g" "$f"
+			./gversion "$g" X "$f"
 		    done
 		done
 	    done
