@@ -285,8 +285,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
      * Added duplex support to MP530
 
-     * Improved duplex support by implementing ESC (u and ESC (s
-       commands for duplex printing on models that support these:
+     * Improved duplex support for the following models:
 
        MG3600 series
        MG5600 series
@@ -304,20 +303,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        width from calculated to a constant value for paper sizes known
        to the driver.
 
-     * (IN PROGRESS) Added specific support for printing orientation
-       in all printers using ESC (P command with more than 4
-       parameters.
-
-     * In those printers using this command, corrected ESC (w command
-       to output on on first page only.
-
-     * Corrected 300 DPI modes on iP100
-
      * Added several resolution modes for Pro9500
-
-     * TO ACTIVATE: changed Oufuku Hagaki handling in driver to be
-       200mm width by 148mm height for compatibility with printer
-       firmware.
 
 * Changes from 5.2.11
 
