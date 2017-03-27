@@ -75,6 +75,9 @@
 # Canon SELPHY CP810
 0x04a9 0x3256 blacklist
 
+# Canon SELPHY CP820
+0x04a9 0x327b blacklist
+
 # Canon SELPHY CP900
 0x04a9 0x3255 blacklist
 
