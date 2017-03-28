@@ -8755,26 +8755,28 @@ dyesub_print_pixel(stp_vars_t *v,
     {
       if (pv->out_channels == pv->ink_channels)
         { /* copy out_channel (image) to equiv ink_channel (printer) */
-		if (dyesub_feature(caps, DYESUB_FEATURE_RGBtoYCBCR)) {
-			/* Convert RGB -> YCbCr (JPEG YCbCr444 coefficients) */
-			double R, G, B;
-			R = out[0];
-			G = out[1];
-			B = out[2];
+          if (dyesub_feature(caps, DYESUB_FEATURE_RGBtoYCBCR))
+	    {
+	      /* Convert RGB -> YCbCr (JPEG YCbCr444 coefficients) */
+	      double R, G, B;
+	      R = out[0];
+	      G = out[1];
+	      B = out[2];
 
-			if (i == 0) /* Y */
-			  ink[i] = R * 0.299 + G * 0.587 + B * 0.114;
-			else if (i == 1) /* Cb */
-			  ink[i] = R * -0.168736 + G * -0.331264 + B * 0.5 + 32768;
-			else if (i == 2) /* Cr */
-			  ink[i] = R * 0.5 + G * -0.418688 + B * -0.081312 + 32768;
-
-			/* FIXME:  Natively support YCbCr "inks" in the
-			   Gutenprint core and allow that as an input
-			   into the dyesub driver. */
-		} else {
-			ink[i] = out[i];
-		}
+	      if (i == 0) /* Y */
+	        ink[i] = R * 0.299 + G * 0.587 + B * 0.114;
+	      else if (i == 1) /* Cb */
+		ink[i] = R * -0.168736 + G * -0.331264 + B * 0.5 + (1 << (16 -1)); // Math is 16bpp here.
+	      else if (i == 2) /* Cr */
+	        ink[i] = R * 0.5 + G * -0.418688 + B * -0.081312 + (1 << (16 -1)); // Math is 16bpp here.
+	      /* FIXME:  Natively support YCbCr "inks" in the
+	         Gutenprint core and allow that as an input
+	         into the dyesub driver. */
+	    }
+	  else
+	    {
+	      ink[i] = out[i];
+	    }
         }
       else if (pv->out_channels < pv->ink_channels)
         { /* several ink_channels (printer) "share" same out_channel (image) */
@@ -8794,13 +8796,14 @@ dyesub_print_pixel(stp_vars_t *v,
   if (pv->bytes_per_ink_channel == 1) 
     {
       unsigned char *ink_u8 = (unsigned char *) ink;
-      for (i = 0; i < pv->ink_channels; i++) {
+      for (i = 0; i < pv->ink_channels; i++)
+        {
 #if 0
-             if (dyesub_feature(caps, DYESUB_FEATURE_RGBtoYCBCR))
-                     ink_u8[i] = ink[i] >> 8;
-             else
+          if (dyesub_feature(caps, DYESUB_FEATURE_RGBtoYCBCR))
+            ink_u8[i] = ink[i] >> 8;
+	  else
 #endif
-                     ink_u8[i] = ink[i] / 257;
+            ink_u8[i] = ink[i] / 257;
       }
     } 
   else if (pv->bits_per_ink_channel != 16)
