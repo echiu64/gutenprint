@@ -61,6 +61,7 @@
 #define DYESUB_LANDSCAPE 1
 
 #define MITSU70X_8BPP
+//#define S6145_YMC
 
 #ifndef MIN
 #  define MIN(a,b)	(((a) < (b)) ? (a) : (b))
@@ -5748,7 +5749,11 @@ static void shinko_chcs6145_printer_init(stp_vars_t *v)
   stp_put32_le(0x00, v);
   stp_put32_le(0x00, v);
 
+#ifdef S6145_YMC
+  stp_put32_le(0x01, v);
+#else
   stp_put32_le(0x00, v);
+#endif
 }
 
 /* Ciaat Brava 21 */
@@ -7846,11 +7851,18 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Shinko/Sinfonia CHC-S6145 */
     5004,
+#ifdef S6145_YMC
+    &ymc_ink_list,
+#else
     &rgb_ink_list,
+#endif
     &res_300dpi_list,
     &shinko_chcs6145_page_list,
     &shinko_chcs6145_printsize_list,
     SHRT_MAX,
+#ifdef S6145_YMC
+    DYESUB_FEATURE_PLANE_INTERLACE |
+#endif
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
     &shinko_chcs6145_printer_init, &shinko_chcs2145_printer_end,
     NULL, NULL,  /* No planes */
@@ -7862,11 +7874,18 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* CIAAT Brava 21 (aka CHC-S6145D) */
     5005,
+#ifdef S6145_YMC
+    &ymc_ink_list,
+#else
     &rgb_ink_list,
+#endif
     &res_300dpi_list,
     &ciaat_brava21_page_list,
     &ciaat_brava21_printsize_list,
     SHRT_MAX,
+#ifdef S6145_YMC
+    DYESUB_FEATURE_PLANE_INTERLACE |
+#endif
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
     &shinko_chcs6145_printer_init, &shinko_chcs2145_printer_end,
     NULL, NULL,  /* No planes */
