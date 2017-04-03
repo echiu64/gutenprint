@@ -1153,7 +1153,7 @@ static const dyesub_pagesize_t cp910_page[] =
 {
   { "Postcard", "Postcard 100x148mm", PT(1248,300)+1, PT(1872,300)+1, 13, 13, 16, 19, DYESUB_PORTRAIT},
   { "w253h337", "CP_L 89x119mm", PT(1152,300)+1, PT(1472,300)+1, 13, 13, 15, 15, DYESUB_PORTRAIT},
-  { "w155h244", "Card 54x86mm", PT(1088,300)+1, PT(668,300)+1, 13, 13, 15, 15, DYESUB_LANDSCAPE},
+  { "w155h244", "Card 54x86mm", PT(668,300)+1, PT(1088,300)+1, 13, 13, 15, 15, DYESUB_LANDSCAPE},
 };
 
 LIST(dyesub_pagesize_list_t, cp910_page_list, dyesub_pagesize_t, cp910_page);
