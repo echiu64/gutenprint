@@ -8768,11 +8768,24 @@ dyesub_print_pixel(stp_vars_t *v,
   unsigned short *out; /* array of output pixel data. [pv->out_channels] */
 
   int i;
+  int start, end;
 
   if (pv->print_mode == DYESUB_LANDSCAPE)
     { /* "rotate" image */
       dyesub_swap_doubles(&col, &row);
       row = (pv->imgw_px - 1) - row;
+    }
+
+  /* Only compute one color at a time */
+  if (pv->plane_interlacing || pv->row_interlacing)
+    {
+      start = plane;
+      end = plane + 1;
+    }
+  else
+    {
+      start = 0;
+      end = pv->ink_channels;
     }
 
   // XXX FIXME:  This is "point" interpolation.  Be smarter!
@@ -8784,7 +8797,7 @@ dyesub_print_pixel(stp_vars_t *v,
   // out should be an array generated.
 
   /* copy out_channel (image) to equiv ink_channel (printer) */
-  for (i = 0; i < pv->ink_channels; i++)
+  for (i = start; i < end; i++)
     {
       if (dyesub_feature(caps, DYESUB_FEATURE_RGBtoYCBCR))
         {
@@ -8833,8 +8846,7 @@ dyesub_print_pixel(stp_vars_t *v,
         }
     }
 
-  /* If we use plane or row interlacing, only write the color we want */
-  // FIXME:  This means we *THROW AWAY* most of what we just computed!
+  /* If we use plane or row interlacing, only write the plane's channel */
   if (pv->plane_interlacing || pv->row_interlacing)
     stp_zfwrite((char *) ink + (plane * pv->bytes_per_ink_channel), 
 		pv->bytes_per_ink_channel, 1, v);
