@@ -636,8 +636,8 @@ purge_excess_data(cups_image_t *cups)
   char *buffer = stp_malloc(cups->header.cupsBytesPerLine);
   if (buffer)
     {
-      if (! suppress_messages)
-	fprintf(stderr, "DEBUG: Gutenprint: Purging %d row%s\n",
+      if (! suppress_messages && ! suppress_verbose_messages )
+	fprintf(stderr, "DEBUG2: Gutenprint: Purging %d row%s\n",
 		cups->header.cupsHeight - cups->row,
 		((cups->header.cupsHeight - cups->row) == 1 ? "" : "s"));
       while (cups->row < cups->header.cupsHeight)
