@@ -8756,25 +8756,16 @@ dyesub_read_image(stp_vars_t *v,
   return image_data;
 }
 
-static int
-dyesub_print_pixel(stp_vars_t *v,
-		dyesub_print_vars_t *pv,
-		const dyesub_cap_t *caps,
-		double row,
-		double col,
-		int plane)
+static void
+dyesub_print_pixel(unsigned short *src, char *dest,
+		   dyesub_print_vars_t *pv,
+		   const dyesub_cap_t *caps,
+		   int plane)
 {
   unsigned short ink[MAX_INK_CHANNELS]; /* What is sent to printer */
-  unsigned short *out; /* array of output pixel data. [pv->out_channels] */
 
   int i;
   int start, end;
-
-  if (pv->print_mode == DYESUB_LANDSCAPE)
-    { /* "rotate" image */
-      dyesub_swap_doubles(&col, &row);
-      row = (pv->imgw_px - 1) - row;
-    }
 
   /* Only compute one color at a time */
   if (pv->plane_interlacing || pv->row_interlacing)
@@ -8788,14 +8779,6 @@ dyesub_print_pixel(stp_vars_t *v,
       end = pv->ink_channels;
     }
 
-  // XXX FIXME:  This is "point" interpolation.  Be smarter!
-  // eg:  Average  (average all pixels that touch this one)
-  //      BiLinear (scale based on linear interpolation)
-  //      BiCubic  (scale based on weighted average, based on proximity)
-  //      Lanczos  (awesome!! but slow)
-  out = &(pv->image_data[(int)row][(int)col * pv->out_channels]);
-  // out should be an array generated.
-
   /* copy out_channel (image) to equiv ink_channel (printer) */
   for (i = start; i < end; i++)
     {
@@ -8803,9 +8786,9 @@ dyesub_print_pixel(stp_vars_t *v,
         {
 	  /* Convert RGB -> YCbCr (JPEG YCbCr444 coefficients) */
 	  double R, G, B;
-	  R = out[0];
-	  G = out[1];
-	  B = out[2];
+	  R = src[0];
+	  G = src[1];
+	  B = src[2];
 
 	  if (i == 0) /* Y */
 	    ink[i] = R * 0.299 + G * 0.587 + B * 0.114;
@@ -8819,7 +8802,7 @@ dyesub_print_pixel(stp_vars_t *v,
 	}
       else
         {
-	   ink[i] = out[i];
+	   ink[i] = src[i];
         }
 
       /* Downscale 16bpp to output bpp */
@@ -8848,13 +8831,12 @@ dyesub_print_pixel(stp_vars_t *v,
 
   /* If we use plane or row interlacing, only write the plane's channel */
   if (pv->plane_interlacing || pv->row_interlacing)
-    stp_zfwrite((char *) ink + (plane * pv->bytes_per_ink_channel), 
-		pv->bytes_per_ink_channel, 1, v);
+    memcpy(dest, (char *) ink + (plane * pv->bytes_per_ink_channel),
+	   pv->bytes_per_ink_channel);
   else /* Otherwise, print the full set of inks, in order (eg RGB or BGR) */
     for (i = 0; i < pv->ink_channels; i++)
-      stp_zfwrite((char *) ink + (pv->bytes_per_ink_channel * (pv->ink_order[i]-1)),
-		  pv->bytes_per_ink_channel, 1, v);
-  return 1;
+      memcpy(dest, (char *) ink + (pv->bytes_per_ink_channel * (pv->ink_order[i]-1)),
+	     pv->bytes_per_ink_channel);
 }
 
 static int
@@ -8864,21 +8846,41 @@ dyesub_print_row(stp_vars_t *v,
 		double row,
 		int plane)
 {
-  int ret = 0;
   int w;
-  double col;
+  unsigned short *src;
+  char *dest;
+  size_t len;
+
+  len = pv->outw_px * pv->bytes_per_ink_channel;
+  dest = stp_malloc(len);
+  if (!dest)
+    return 0;  /* ? out of memory ? */
   
   for (w = 0; w < pv->outw_px; w++)
     {
-      col = dyesub_interpolate(w, pv->outw_px, pv->imgw_px);
+      double col = dyesub_interpolate(w, pv->outw_px, pv->imgw_px);
       if (pv->plane_lefttoright)
-	      ret = dyesub_print_pixel(v, pv, caps, row, pv->imgw_px - col - 1, plane);
-      else
-	      ret = dyesub_print_pixel(v, pv, caps, row, col, plane);
-      if (ret > 1)
-      	break;
+	col = pv->imgw_px - col - 1;
+      if (pv->print_mode == DYESUB_LANDSCAPE)
+        { /* "rotate" image */
+          dyesub_swap_doubles(&col, &row);
+          row = (pv->imgw_px - 1) - row;
+        }
+      // XXX FIXME:  This is "point" interpolation.  Be smarter!
+      // eg:  Average  (average all pixels that touch this one)
+      //      BiLinear (scale based on linear interpolation)
+      //      BiCubic  (scale based on weighted average, based on proximity)
+      //      Lanczos  (awesome!! but slow)
+      src = &(pv->image_data[(int)row][(int)col * pv->out_channels]);
+
+      dyesub_print_pixel(src, dest + w*pv->bytes_per_ink_channel,
+			 pv, caps, plane);
     }
-  return ret;
+
+  stp_zfwrite(dest, len, 1, v);
+  stp_free(dest);
+
+  return 1;
 }
 
 static int

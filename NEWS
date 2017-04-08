@@ -280,7 +280,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      Mitsubishi P95DW
 
      Additionally, code optimization in the dye-sublimation driver has
-     led to performance improvements for most models.
+     led to a significant (>2.5x) boost in performance.
 
   4) Improvements to the Gimp plugin
 
