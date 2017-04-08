@@ -255,32 +255,34 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        A4 paper.  This resulted in some Canon and PCL printers
        mishandling A4 paper.
 
-  2) Added support for the following thermal printer:
-
-     Mitsubishi P93DW
-
-  3) Added support for the following Epson inkjet printers:
+  2) Added support for the following Epson inkjet printers:
 
      EPSON Artisan 1430
      EPSON L210
 
-  3) Enhanced support (and bugfixes) for the following
-     dye-sublimation and thermal printers:
+  3) Improvements to the dye-sublimation driver:
 
-     Canon SELPHY CP820
-     Canon SELPHY CP910
-     Canon SELPHY CP1000
-     Canon SELPHY CP1200
-     Fujifilm ASK-300          [EXPERIMENTAL]
-     Kodak 305
-     Mitsubishi CP-D70DW
-     Mitsubishi CP-D707DW      [EXPERIMENTAL]
-     Mitsubishi CP-D80DW
-     Mitsubishi CP-K60DW-S
-     Mitsubishi P95DW
+     * Code optimizations in the dye-sublimation driver, resulting
+       in a significant (2x-2.7x) boost in performance.
 
-     Additionally, code optimization in the dye-sublimation driver has
-     led to a significant (>2.5x) boost in performance.
+     * Added support for the following thermal printer:
+
+      Mitsubishi P93DW
+
+     * Enhanced support (and bugfixes) for the following
+       dye-sublimation and thermal printers:
+
+      Canon SELPHY CP820
+      Canon SELPHY CP910
+      Canon SELPHY CP1000
+      Canon SELPHY CP1200
+      Fujifilm ASK-300          [EXPERIMENTAL]
+      Kodak 305
+      Mitsubishi CP-D70DW
+      Mitsubishi CP-D707DW      [EXPERIMENTAL]
+      Mitsubishi CP-D80DW
+      Mitsubishi CP-K60DW-S
+      Mitsubishi P95DW
 
   4) Improvements to the Gimp plugin
 
@@ -288,7 +290,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
      * Fix non-interactive plugin mode
 
-  4) Improvements to the Canon backend:
+  5) Improvements to the Canon driver:
 
      * Added duplex support to MP530
 
