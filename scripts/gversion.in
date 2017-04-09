@@ -36,7 +36,21 @@ if [ "$#" -gt 3 ] ; then
     usage
 fi
 
-description="${3:-`git describe --dirty --always --first-parent 2>/dev/null | sed 's/^[^0-9]*-//'`}"
+root="@PKGROOT@"
+
+if [ -z "$3" ] ; then
+    if [ -d "$root/.git" ] ; then
+	git describe --dirty --always --first-parent 2>/dev/null | sed 's/^[^0-9]*-//' > "$root/git-version-stamp"
+    fi
+
+    if [ -f "$root/git-version-stamp" ] ; then
+	description=`cat "$root/git-version-stamp"`
+    else
+	description='(unknown)'
+    fi
+else
+    description=$3
+fi
 
 # If we don't have git or this is not a repository, simply return the default value
 if [ -z "$description" ] ; then

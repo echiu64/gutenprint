@@ -10,6 +10,9 @@
 
 # Random noise
 *.patch
+*.orig
+*.rej
+tags
 
 # Generated documentation
 *.1
@@ -70,6 +73,7 @@ cat-id-tbl.c
 commandtocanon
 commandtoepson
 compare-checksums
+compress-checksums
 cups-calibrate
 cups-genppd.5.2
 cups-genppdupdate
@@ -83,6 +87,7 @@ escputil
 extract-strings
 genppd
 gen-printer-list
+git-version-stamp
 gutenprint
 gutenprint.5.2
 gutenprint.aux
@@ -105,6 +110,8 @@ gutenprint-version
 gutenprint-version.h
 gutenprint.vr
 gutenprint.vrs
+gutenprint-*/
+gversion
 html
 html-stamp
 Info.plist
@@ -140,7 +147,7 @@ stamp-po
 stamp-vti
 testdither
 test-driver
-testpattern
+src/testpattern/testpattern
 testpatternl.c
 testpattern.test
 testpatterny.c
@@ -148,6 +155,7 @@ testpatterny.h
 test-rastertogutenprint
 typebuiltins.c
 typebuiltins.h
+uncompress-checksums
 unprint
 users-guide
 users-guide.aux

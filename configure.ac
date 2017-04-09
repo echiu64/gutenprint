@@ -943,6 +943,8 @@ STP_RELEASE_DATE
 dnl Some versions of make get very grouchy about $(RM)
 RM='rm'
 
+PKGROOT=`pwd`
+
 dnl Substitutions
 AC_SUBST(prefix)
 AC_SUBST(exec_prefix)
@@ -986,6 +988,7 @@ AC_SUBST(BUILD_CUPS_PPDS)
 AC_SUBST(GUTENPRINT_BASE_VERSION)
 AC_SUBST(GUTENPRINT_RELEASE_VERSION)
 AC_SUBST(LIBUSB_BACKEND_LIBDEPS)
+AC_SUBST(PKGROOT)
 
 dnl Optional architecture options to be applied after all autoconf tests
 dnl are done...
@@ -1046,6 +1049,8 @@ AC_CONFIG_FILES([test/Makefile])
 AC_CONFIG_FILES([scripts/Makefile])
 AC_CONFIG_FILES([scripts/mkgitlog],
 		[chmod +x scripts/mkgitlog])
+AC_CONFIG_FILES([scripts/gversion],
+		[chmod +x scripts/gversion])
 AC_CONFIG_COMMANDS([default], [
 echo
 ],

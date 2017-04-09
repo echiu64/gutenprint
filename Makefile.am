@@ -72,7 +72,10 @@ dist-time-check:
 	  exit 1; \
 	fi
 
-dist-hook: dist-time-check
+git-version-stamp:
+	if [ -d .git ] ; then scripts/gversion > /dev/null; fi
+
+dist-hook: dist-time-check git-version-stamp
 	for dir in $(DISTDIRS) ; do \
 	  if test -d $(srcdir)/$$dir ; then \
 	    mkdir $(distdir)/$$dir; \
@@ -114,8 +117,8 @@ pdf:
 	cd doc ; \
 	$(MAKE) pdf
 
-snapshot:
-	$(MAKE) dist distdir=$(PACKAGE)`date +"%Y%m%d"`
+snapshot: scripts/gversion git-version-stamp
+	$(MAKE) dist distdir=$(PACKAGE)-`scripts/gversion`-`date +"%Y%m%d"`
 
 ## Clean
 
@@ -176,7 +179,7 @@ MAINTAINERCLEANFILES = \
 	$(CLEANMFOUR) \
 	$(CLEANPO)
 
-EXTRA_DIST = autogen.sh README.package
+EXTRA_DIST = autogen.sh README.package git-version-stamp
 
-.PHONY: deb html install-cups install-gimp snapshot ChangeLog Phony dist-time-check
+.PHONY: deb html install-cups install-gimp snapshot ChangeLog Phony dist-time-check git-version-stamp
 
