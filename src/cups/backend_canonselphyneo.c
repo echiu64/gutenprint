@@ -41,7 +41,7 @@
 
 /* Exported */
 #define USB_VID_CANON        0x04a9
-#define USB_PID_CANON_CP820  XXX
+#define USB_PID_CANON_CP820  0x327b
 #define USB_PID_CANON_CP910  0x327a
 #define USB_PID_CANON_CP1000 0x32ae
 #define USB_PID_CANON_CP1200 0x32b1
@@ -388,7 +388,7 @@ static void selphyneo_cmdline(void)
 
 struct dyesub_backend canonselphyneo_backend = {
 	.name = "Canon SELPHY CPneo",
-	.version = "0.06",
+	.version = "0.07",
 	.uri_prefix = "canonselphyneo",
 	.cmdline_usage = selphyneo_cmdline,
 	.cmdline_arg = selphyneo_cmdline_arg,
@@ -398,7 +398,7 @@ struct dyesub_backend canonselphyneo_backend = {
 	.read_parse = selphyneo_read_parse,
 	.main_loop = selphyneo_main_loop,
 	.devices = {
-//	{ USB_VID_CANON, USB_PID_CANON_CP820, P_CP910, ""},
+	{ USB_VID_CANON, USB_PID_CANON_CP820, P_CP910, ""},
 	{ USB_VID_CANON, USB_PID_CANON_CP910, P_CP910, ""},
 	{ USB_VID_CANON, USB_PID_CANON_CP1000, P_CP910, ""},
 	{ USB_VID_CANON, USB_PID_CANON_CP1200, P_CP910, ""},

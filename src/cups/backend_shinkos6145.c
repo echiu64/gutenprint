@@ -130,7 +130,7 @@ struct s6145_printjob_hdr {
 	uint32_t unk19;
 	uint32_t unk20;
 
-	uint32_t unk21;
+	uint32_t ext_flags;  /* 0x00 in the official headers. 0x01 to mark inout data as YMC planar */
 } __attribute__((packed));
 
 /* "Image Correction Parameter" File */
@@ -276,7 +276,8 @@ struct shinkos6145_ctx {
 	size_t datalen;
 
 	uint8_t ribbon_type;
-
+	uint8_t input_ymc;
+	
 	uint16_t last_donor;
 	uint16_t last_remain;
 	uint16_t last_ribbon;
@@ -365,7 +366,7 @@ static char *cmd_names(uint16_t v) {
 	default:
 		return "Unknown Command";
 	}
-};
+}
 
 struct s6145_print_cmd {
 	struct s6145_cmd_hdr hdr;
@@ -2097,11 +2098,17 @@ static int shinkos6145_read_parse(void *vctx, int data_fd) {
 		return CUPS_BACKEND_CANCEL;
 	}
 
+	/* Extended spool format to re-purpose an unused header field.
+	   When bit 0 is set, this tells the backend that the data is
+	   already in planar YMC format (vs packed RGB) so we don't need 
+	   to do the conversion ourselves.  Saves some processing overhead */
+	ctx->input_ymc = le32_to_cpu(ctx->hdr.ext_flags) & 0x01;
+
 	if (ctx->databuf) {
 		free(ctx->databuf);
 		ctx->databuf = NULL;
 	}
-
+	
 	ctx->datalen = le32_to_cpu(ctx->hdr.rows) * le32_to_cpu(ctx->hdr.columns) * 3;
 	ctx->databuf = malloc(ctx->datalen);
 	if (!ctx->databuf) {
@@ -2320,10 +2327,8 @@ top:
 		ctx->corrdata->width = cpu_to_le16(le32_to_cpu(ctx->hdr.columns));
 		ctx->corrdata->height = cpu_to_le16(le32_to_cpu(ctx->hdr.rows));
 
-		/* Convert packed RGB to planar YMC */
-		// XXX would it make more sense to have Gutenprint generate
-		// planar YMC data as an extension of the spooler format?
-		{
+		/* Convert packed RGB to planar YMC if necessary */
+		if (!ctx->input_ymc) {
 			int planelen = le16_to_cpu(ctx->corrdata->width) * le16_to_cpu(ctx->corrdata->height);
 			uint8_t *databuf3 = malloc(ctx->datalen);
 				 
@@ -2483,7 +2488,7 @@ static int shinkos6145_query_serno(struct libusb_device_handle *dev, uint8_t end
 
 struct dyesub_backend shinkos6145_backend = {
 	.name = "Shinko/Sinfonia CHC-S6145",
-	.version = "0.21",
+	.version = "0.22",
 	.uri_prefix = "shinkos6145",
 	.cmdline_usage = shinkos6145_cmdline,
 	.cmdline_arg = shinkos6145_cmdline_arg,

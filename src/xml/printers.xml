@@ -2919,7 +2919,7 @@
       <printer translate="name" name="Canon SELPHY CP790" deviceid="MFG:Canon;CMD:Raster3;MDL:CP790;CLS:PRINTER;DES:Canon CP790;VER:1.00;" driver="canon-cp790" manufacturer="Canon" model="1008" parameters="nativecopies" />
       <printer translate="name" name="Canon SELPHY CP800" deviceid="MFG:Canon;CMD:Raster3;MDL:CP800;CLS:PRINTER;DES:Canon CP800;VER:1.00;" driver="canon-cp800" manufacturer="Canon" model="1009" parameters="nativecopies" />
       <printer translate="name" name="Canon SELPHY CP810" deviceid="MFG:Canon;CMD:Raster3;MDL:CP810;CLS:PRINTER;DES:Canon CP810;VER:3.05;" driver="canon-cp810" manufacturer="Canon" model="1009" parameters="nativecopies" />
-      <printer translate="name" name="Canon SELPHY CP820" driver="canon-cp820" manufacturer="Canon" model="1011" parameters="nativecopies"/>
+      <printer translate="name" name="Canon SELPHY CP820" deviceid="MFG:Canon;CMD:Raster3;MDL:CP820;CLS:PRINTER;DES:Canon CP820;VER:1.00;CID:1284_CID_CA_YCC_ICP;" driver="canon-cp820" manufacturer="Canon" model="1011" parameters="nativecopies"/>
       <printer translate="name" name="Canon SELPHY CP900" deviceid="MFG:Canon;CMD:Raster3;MDL:CP900;CLS:PRINTER;DES:Canon CP900;VER:5.77;" driver="canon-cp900" manufacturer="Canon" model="1010" parameters="nativecopies" />
       <printer translate="name" name="Canon SELPHY CP910" deviceid="MFG:Canon;CMD:Raster3;MDL:CP910;CLS:PRINTER;DES:Canon CP910;VER:1.00;CID:CA_YCC_ICP;" driver="canon-cp910" manufacturer="Canon" model="1011" parameters="nativecopies" />
       <printer translate="name" name="Canon SELPHY CP1000" deviceid="MFG:Canon;CMD:Raster3;MDL:CP1000;CLS:PRINTER;DES:Canon CP1000;VER:1.00;CID:CA_YCC_ICP;" driver="canon-cp1000" manufacturer="Canon" model="1011" parameters="nativecopies" />

@@ -61,6 +61,7 @@
 #define DYESUB_LANDSCAPE 1
 
 #define MITSU70X_8BPP
+//#define S6145_YMC
 
 #ifndef MIN
 #  define MIN(a,b)	(((a) < (b)) ? (a) : (b))
@@ -1152,7 +1153,7 @@ static const dyesub_pagesize_t cp910_page[] =
 {
   { "Postcard", "Postcard 100x148mm", PT(1248,300), PT(1872,300), 13, 13, 16, 19, DYESUB_PORTRAIT},
   { "w253h337", "CP_L 89x119mm", PT(1152,300), PT(1472,300), 13, 13, 15, 15, DYESUB_PORTRAIT},
-  { "w155h244", "Card 54x86mm", PT(1088,300), PT(668,300), 13, 13, 15, 15, DYESUB_LANDSCAPE},
+  { "w155h244", "Card 54x86mm", PT(668,300), PT(1088,300), 13, 13, 15, 15, DYESUB_LANDSCAPE},
 };
 
 LIST(dyesub_pagesize_list_t, cp910_page_list, dyesub_pagesize_t, cp910_page);
@@ -5748,7 +5749,11 @@ static void shinko_chcs6145_printer_init(stp_vars_t *v)
   stp_put32_le(0x00, v);
   stp_put32_le(0x00, v);
 
+#ifdef S6145_YMC
+  stp_put32_le(0x01, v);
+#else
   stp_put32_le(0x00, v);
+#endif
 }
 
 /* Ciaat Brava 21 */
@@ -7846,11 +7851,18 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Shinko/Sinfonia CHC-S6145 */
     5004,
+#ifdef S6145_YMC
+    &ymc_ink_list,
+#else
     &rgb_ink_list,
+#endif
     &res_300dpi_list,
     &shinko_chcs6145_page_list,
     &shinko_chcs6145_printsize_list,
     SHRT_MAX,
+#ifdef S6145_YMC
+    DYESUB_FEATURE_PLANE_INTERLACE |
+#endif
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
     &shinko_chcs6145_printer_init, &shinko_chcs2145_printer_end,
     NULL, NULL,  /* No planes */
@@ -7862,11 +7874,18 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* CIAAT Brava 21 (aka CHC-S6145D) */
     5005,
+#ifdef S6145_YMC
+    &ymc_ink_list,
+#else
     &rgb_ink_list,
+#endif
     &res_300dpi_list,
     &ciaat_brava21_page_list,
     &ciaat_brava21_printsize_list,
     SHRT_MAX,
+#ifdef S6145_YMC
+    DYESUB_FEATURE_PLANE_INTERLACE |
+#endif
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
     &shinko_chcs6145_printer_init, &shinko_chcs2145_printer_end,
     NULL, NULL,  /* No planes */
@@ -8620,7 +8639,15 @@ static void
 dyesub_swap_ints(int *a, int *b)
 {
   int t = *a;
-  *a = *b; 
+  *a = *b;
+  *b = t;
+}
+
+static void
+dyesub_swap_doubles(double *a, double *b)
+{
+  double t = *a;
+  *a = *b;
   *b = t;
 }
 
@@ -8666,15 +8693,12 @@ dyesub_exec_check(stp_vars_t *v,
   return 1;
 }
 
-
-static int
+/* FIXME: This function is badly named.  It actually picks the best single
+   "point" on the original image to use for the desired output pixel. */
+static double
 dyesub_interpolate(int oldval, int oldsize, int newsize)
 {
-  /* 
-   * This is simple linear interpolation algorithm.
-   * When imagesize <> printsize I need rescale image somehow... :-/ 
-   */
-  return (int)(oldval * newsize / oldsize);
+  return ((double)oldval * (double)newsize / (double)oldsize);
 }
 
 static void
@@ -8733,121 +8757,131 @@ dyesub_read_image(stp_vars_t *v,
   return image_data;
 }
 
-static int
-dyesub_print_pixel(stp_vars_t *v,
-		dyesub_print_vars_t *pv,
-		const dyesub_cap_t *caps,
-		int row,
-		int col,
-		int plane)
+static void
+dyesub_print_pixel(unsigned short *src, char *dest,
+		   dyesub_print_vars_t *pv,
+		   const dyesub_cap_t *caps,
+		   int plane)
 {
-  unsigned short ink[MAX_INK_CHANNELS], *out;
-  int i, j, b;
+  unsigned short ink[MAX_INK_CHANNELS]; /* What is sent to printer */
 
-  if (pv->print_mode == DYESUB_LANDSCAPE)
-    { /* "rotate" image */
-      dyesub_swap_ints(&col, &row);
-      row = (pv->imgw_px - 1) - row;
-    }
+  int i;
+  int start, end;
 
-  out = &(pv->image_data[row][col * pv->out_channels]);
-
-  for (i = 0; i < pv->ink_channels; i++)
-    {
-      if (pv->out_channels == pv->ink_channels)
-        { /* copy out_channel (image) to equiv ink_channel (printer) */
-		if (dyesub_feature(caps, DYESUB_FEATURE_RGBtoYCBCR)) {
-			/* Convert RGB -> YCbCr (JPEG YCbCr444 coefficients) */
-			double R, G, B;
-			R = out[0];
-			G = out[1];
-			B = out[2];
-
-			if (i == 0) /* Y */
-			  ink[i] = R * 0.299 + G * 0.587 + B * 0.114;
-			else if (i == 1) /* Cb */
-			  ink[i] = R * -0.168736 + G * -0.331264 + B * 0.5 + 32768;
-			else if (i == 2) /* Cr */
-			  ink[i] = R * 0.5 + G * -0.418688 + B * -0.081312 + 32768;
-
-			/* FIXME:  Natively support YCbCr "inks" in the
-			   Gutenprint core and allow that as an input
-			   into the dyesub driver. */
-		} else {
-			ink[i] = out[i];
-		}
-        }
-      else if (pv->out_channels < pv->ink_channels)
-        { /* several ink_channels (printer) "share" same out_channel (image) */
-          ink[i] = out[i * pv->out_channels / pv->ink_channels];
-        }
-      else /* (pv->out_channels > pv->ink_channels) */
-        { /* merge several out_channels (image) into ink_channel (printer) */
-          int avg = 0;
-          for (j = 0; j < pv->out_channels / pv->ink_channels; j++)
-            avg += out[j + i * pv->out_channels / pv->ink_channels];
-	  ink[i] = avg * pv->ink_channels / pv->out_channels;
-	}
-    }
-   
-  /* Downscale 16bpp to output bpp */
-  /* FIXME:  Do we want to round? */
-  if (pv->bytes_per_ink_channel == 1) 
-    {
-      unsigned char *ink_u8 = (unsigned char *) ink;
-      for (i = 0; i < pv->ink_channels; i++) {
-#if 0
-             if (dyesub_feature(caps, DYESUB_FEATURE_RGBtoYCBCR))
-                     ink_u8[i] = ink[i] >> 8;
-             else
-#endif
-                     ink_u8[i] = ink[i] / 257;
-      }
-    } 
-  else if (pv->bits_per_ink_channel != 16)
-    {
-      for (i = 0; i < pv->ink_channels; i++)
-	ink[i] = ink[i] >> (16 - pv->bits_per_ink_channel);
-    }
-
-  /* Byteswap as needed */
-  if (pv->bytes_per_ink_channel == 2 && pv->byteswap)
-    for (i = 0; i < pv->ink_channels; i++)
-      ink[i] = ((ink[i] >> 8) & 0xff) | ((ink[i] & 0xff) << 8);
-
+  /* Only compute one color at a time */
   if (pv->plane_interlacing || pv->row_interlacing)
-    stp_zfwrite((char *) ink + (plane * pv->bytes_per_ink_channel), 
-		pv->bytes_per_ink_channel, 1, v);
+    {
+      start = plane;
+      end = plane + 1;
+    }
   else
-      /* print inks in correct order, eg. RGB  BGR */
-      for (b = 0; b < pv->ink_channels; b++)
-	stp_zfwrite((char *) ink + (pv->bytes_per_ink_channel * (pv->ink_order[b]-1)), 
-		    pv->bytes_per_ink_channel, 1, v);
+    {
+      start = 0;
+      end = pv->ink_channels;
+    }
 
-  return 1;
+  /* copy out_channel (image) to equiv ink_channel (printer) */
+  for (i = start; i < end; i++)
+    {
+      if (dyesub_feature(caps, DYESUB_FEATURE_RGBtoYCBCR))
+        {
+	  /* Convert RGB -> YCbCr (JPEG YCbCr444 coefficients) */
+	  double R, G, B;
+	  R = src[0];
+	  G = src[1];
+	  B = src[2];
+
+	  if (i == 0) /* Y */
+	    ink[i] = R * 0.299 + G * 0.587 + B * 0.114;
+	  else if (i == 1) /* Cb */
+	    ink[i] = R * -0.168736 + G * -0.331264 + B * 0.5 + (1 << (16 -1)); // Math is 16bpp here.
+	  else if (i == 2) /* Cr */
+	    ink[i] = R * 0.5 + G * -0.418688 + B * -0.081312 + (1 << (16 -1)); // Math is 16bpp here.
+	    /* FIXME:  Natively support YCbCr "inks" in the
+	       Gutenprint core and allow that as an input
+	       into the dyesub driver. */
+	}
+      else
+        {
+	   ink[i] = src[i];
+        }
+
+      /* Downscale 16bpp to output bpp */
+      if (pv->bytes_per_ink_channel == 1)
+        {
+	  unsigned char *ink_u8 = (unsigned char *) ink;
+#if 0
+	  /* FIXME:  Do we want to round? */
+          if (dyesub_feature(caps, DYESUB_FEATURE_RGBtoYCBCR))
+            ink_u8[i] = ink[i] >> 8;
+	  else
+#endif
+            ink_u8[i] = ink[i] / 257;
+        }
+      else /* ie 2 bytes per channel */
+        {
+	  /* Scale down to output bits */
+	  if (pv->bits_per_ink_channel != 16)
+	    ink[i] = ink[i] >> (16 - pv->bits_per_ink_channel);
+
+	  /* Byteswap if needed */
+	  if (pv->byteswap)
+	    ink[i] = ((ink[i] >> 8) & 0xff) | ((ink[i] & 0xff) << 8);
+        }
+    }
+
+  /* If we use plane or row interlacing, only write the plane's channel */
+  if (pv->plane_interlacing || pv->row_interlacing)
+    memcpy(dest, (char *) ink + (plane * pv->bytes_per_ink_channel),
+	   pv->bytes_per_ink_channel);
+  else /* Otherwise, print the full set of inks, in order (eg RGB or BGR) */
+    for (i = 0; i < pv->ink_channels; i++)
+      memcpy(dest, (char *) ink + (pv->bytes_per_ink_channel * (pv->ink_order[i]-1)),
+	     pv->bytes_per_ink_channel);
 }
 
 static int
 dyesub_print_row(stp_vars_t *v,
 		dyesub_print_vars_t *pv,
 		const dyesub_cap_t *caps,
-		int row,
+		double row,
 		int plane)
 {
-  int ret = 0;
-  int w, col;
+  int w;
+  unsigned short *src;
+  char *dest;
+  size_t len;
+
+  len = pv->outw_px * pv->bytes_per_ink_channel;
+  dest = stp_malloc(len);
+  if (!dest)
+    return 0;  /* ? out of memory ? */
   
   for (w = 0; w < pv->outw_px; w++)
     {
-      col = dyesub_interpolate(w, pv->outw_px, pv->imgw_px);
+      double col = dyesub_interpolate(w, pv->outw_px, pv->imgw_px);
       if (pv->plane_lefttoright)
-	      ret = dyesub_print_pixel(v, pv, caps, row, pv->imgw_px - col - 1, plane);
-      else
-	      ret = dyesub_print_pixel(v, pv, caps, row, col, plane);
-      if (ret > 1)
-      	break;
+	col = pv->imgw_px - col - 1;
+      if (pv->print_mode == DYESUB_LANDSCAPE)
+        { /* "rotate" image */
+          dyesub_swap_doubles(&col, &row);
+          row = (pv->imgw_px - 1) - row;
+        }
+      // XXX FIXME:  This is "point" interpolation.  Be smarter!
+      // eg:  Average  (average all pixels that touch this one)
+      //      BiLinear (scale based on linear interpolation)
+      //      BiCubic  (scale based on weighted average, based on proximity)
+      //      Lanczos  (awesome!! but slow)
+      src = &(pv->image_data[(int)row][(int)col * pv->out_channels]);
+
+      dyesub_print_pixel(src, dest + w*pv->bytes_per_ink_channel,
+			 pv, caps, plane);
     }
-  return ret;
+
+  stp_zfwrite(dest, len, 1, v);
+  stp_free(dest);
+
+  return 1;
 }
 
 static int
@@ -8860,7 +8894,8 @@ dyesub_print_plane(stp_vars_t *v,
 
 
   int ret = 0;
-  int h, row, p;
+  int h, p;
+  double row;
   int out_bytes = ((pv->plane_interlacing || pv->row_interlacing) ? 1 : pv->ink_channels)
   					* pv->bytes_per_ink_channel;
 
@@ -8894,9 +8929,9 @@ dyesub_print_plane(stp_vars_t *v,
 	    }
 
 	  row = dyesub_interpolate(h + pv->prnt_px - pv->outt_px,
-	  					pv->outh_px, pv->imgh_px);
+				   pv->outh_px, pv->imgh_px);
 	  stp_deprintf(STP_DBG_DYESUB,
-	  	"dyesub_print_plane: h = %d, row = %d\n", h, row);
+		       "dyesub_print_plane: h = %d, row = %f\n", h, row);
 	  ret = dyesub_print_row(v, pv, caps, row, p);
 
 	  if (dyesub_feature(caps, DYESUB_FEATURE_FULL_WIDTH)
@@ -9067,6 +9102,16 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
     stp_channel_add(v, i, 0, 1.0);
   pv.out_channels = stp_color_init(v, image, 65536);
 
+  /* If there's a mismatch in channels, that is ALWAYS a problem */
+  if (pv.out_channels != pv.ink_channels)
+    {
+       stp_deprintf(STP_DBG_DYESUB,
+		    "Input and output channel count mismatch! (%d vs %d)\n", pv.out_channels, pv.ink_channels);
+      stp_image_conclude(image);
+      stp_free(pd);
+      return 2;
+    }
+
   if (dyesub_feature(caps, DYESUB_FEATURE_12BPP)) {
     pv.bytes_per_ink_channel = 2;
     pv.bits_per_ink_channel = 12;
@@ -9116,6 +9161,7 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   if (!pv.image_data)
     {
       stp_image_conclude(image);
+      stp_free(pd);
       return 2;
     }
   /* /FIXME */
