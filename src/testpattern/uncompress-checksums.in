@@ -21,6 +21,27 @@ my (%checksums);
 
 my ($last_sum) = "";
 
+my (%sub_table);
+$sub_table{"PrintingMode"} = "P;";
+$sub_table{"PageSize"} = "S;";
+$sub_table{"DitherAlgorithm"} = "D;";
+$sub_table{"Resolution"} = "R;";
+$sub_table{"ColorCorrection"} = "C;";
+$sub_table{"Color"} = "c;";
+$sub_table{"MediaType"} = "M;";
+$sub_table{"InputSlot"} = "I;";
+
+%sub_table = reverse %sub_table;
+
+sub uncompress_chunk($) {
+    my ($chunk) = @_;
+    if (defined $sub_table{$chunk}) {
+	return $sub_table{$chunk};
+    } else {
+	return $chunk;
+    }
+}
+
 while (<>) {
     chomp;
     my ($sum, @keys) = split;
@@ -41,11 +62,20 @@ while (<>) {
 	foreach my $i (0..$#chunks) {
 	    if ($chunks[$i] eq '') {
 		$chunks[$i] = $pchunks[$i];
-	    } elsif ($chunks[$i] =~ /^([0-9]+)\+(.*)/) {
-		$chunks[$i] = substr($pchunks[$i], 0, $1) . $2;
+	    } else {
+		if ($chunks[$i] =~ /^([0-9]+)\+(.*)/) {
+		    $chunks[$i] = substr($pchunks[$i], 0, $1) . $2;
+		} elsif ($chunks[$i] =~ /^\*(.*)/) {
+		    $chunks[$i] = substr($pchunks[$i], 0, 2) . $1;
+		}
+		if ($chunks[$i] =~ m,(.*)/([0-9]+)$,) {
+		    $chunks[$i] = $1 . substr($pchunks[$i], -$2);
+		} elsif ($chunks[$i] =~ /([^\\]*)\\$/) {
+		    $chunks[$i] = $1 . substr($pchunks[$i], -2);
+		}
 	    }
 	}
-	my ($answer) = join('_', @chunks);
+	my ($answer) = join('_', map { uncompress_chunk($_) } @chunks);
 	$answer =~ s/(^[^:]*)_:(.*)/$2_$1/;
 	print "$sum *$answer.prn\n";
 	@pchunks = @chunks;
