@@ -89,6 +89,25 @@ my $min_prefix = find_min_nonunique_prefix(keys %checksums);
 
 my ($last_sum) = "";
 
+my (%sub_table);
+$sub_table{"PrintingMode"} = "P;";
+$sub_table{"PageSize"} = "S;";
+$sub_table{"DitherAlgorithm"} = "D;";
+$sub_table{"Resolution"} = "R;";
+$sub_table{"ColorCorrection"} = "C;";
+$sub_table{"Color"} = "c;";
+$sub_table{"MediaType"} = "M;";
+$sub_table{"InputSlot"} = "I;";
+
+sub compress_chunk($) {
+    my ($chunk) = @_;
+    if (defined $sub_table{$chunk}) {
+	return $sub_table{$chunk};
+    } else {
+	return $chunk;
+    }
+}
+
 foreach my $sum (sort keys %checksums) {
     my ($out) = substr($sum, 0, $min_prefix);
     if ($last_sum ne "") {
@@ -107,6 +126,7 @@ foreach my $sum (sort keys %checksums) {
     } @{$checksums{$sum}};
     foreach my $run (@runs) {
 	my (@chunks) = split(/_/, $run);
+	@chunks = map { compress_chunk($_) } @chunks;
 	my ($mchunks) = min(scalar @pchunks, scalar @chunks);
 	my ($i) = 0;
 	$out .= " ";
@@ -119,15 +139,29 @@ foreach my $sum (sort keys %checksums) {
 		my ($len) = length $chunks[$i];
 		my ($maxc) = min($len, $plen);
 		my ($dup) = 0;
+		my ($tail) = 0;
 		while ($dup < $maxc) {
 		    last if (substr($pchunks[$i], $dup, 1) ne
 			     substr($chunks[$i], $dup, 1));
 		    $dup++;
 		}
-		if ($dup > 2) {
-		    $out .= "$dup+" . substr($chunks[$i], $dup);
+		while ($tail < $maxc - $dup) {
+		    last if (substr($pchunks[$i], -1 - $tail, 1) ne
+			     substr($chunks[$i], -1 - $tail, 1));
+		    $tail++;
+		}
+		my ($chunk) = $chunks[$i];
+		if ($tail == 2) {
+		    $chunk = substr($chunk, 0, -$tail) . '\\';
+		} elsif ($tail > 2) {
+		    $chunk = substr($chunk, 0, -$tail) . "/$tail";
+		}
+		if ($dup == 2) {
+		    $out .= '*' . substr($chunk, $dup);
+		} elsif ($dup > 2) {
+		    $out .= "$dup+" . substr($chunk, $dup);
 		} else {
-		    $out .= "$chunks[$i]";
+		    $out .= "$chunk";
 		}
 	    } else {
 		$out .= "";

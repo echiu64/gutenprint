@@ -59,11 +59,15 @@ endif
 
 if BUILD_TESTPATTERN
 
+# This suffix is *not* static during development!
+CSUM_SUFFIX=`@PKGROOT@/scripts/gversion`
+CSUM_FILE=Checksums/sums.$(SPREFIX)$(CSUM_SUFFIX)
+
 checksums: testpattern run-testpattern-2 ./compress-checksums
 	$(MKDIR_P) Checksums
-	./run-testpattern-2 -q -M Checksums/sums.$(SPREFIX)@GUTENPRINT_VERSION@.in
-	./compress-checksums < Checksums/sums.@GUTENPRINT_VERSION@.in |$(BZIP2) -c > Checksums/sums.@GUTENPRINT_VERSION@.bz2
-	rm -f Checksums/sums.@GUTENPRINT_VERSION@.in
+	./run-testpattern-2 -q -M "$(CSUM_FILE).in"
+	./compress-checksums < "$(CSUM_FILE).in" | $(BZIP2) -c > "$(CSUM_FILE).bz2"
+	rm -f "$(CSUM_FILE).in"
 endif
 
 ## Clean

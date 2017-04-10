@@ -28,8 +28,10 @@ include $(top_srcdir)/scripts/global.mk
 EXTRA_DIST = \
 	autogen.sh \
 	global.mk \
-	mkgitlog
+	mkgitlog \
+	gversion
 
+noinst_SCRIPTS=gversion
 
 ## Clean
 
