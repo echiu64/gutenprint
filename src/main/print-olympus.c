@@ -8843,7 +8843,7 @@ static int
 dyesub_print_row(stp_vars_t *v,
 		dyesub_print_vars_t *pv,
 		const dyesub_cap_t *caps,
-		double row,
+		double in_row,
 		int plane)
 {
   int w;
@@ -8858,6 +8858,7 @@ dyesub_print_row(stp_vars_t *v,
   
   for (w = 0; w < pv->outw_px; w++)
     {
+      double row = in_row;
       double col = dyesub_interpolate(w, pv->outw_px, pv->imgw_px);
       if (pv->plane_lefttoright)
 	col = pv->imgw_px - col - 1;
