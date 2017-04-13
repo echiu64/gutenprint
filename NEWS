@@ -314,6 +314,8 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
      * Added several resolution modes for Pro9500
 
+  6) Added the Datamax-O'Neil H class series of printers.
+
 * Changes from 5.2.11
 
   1) The Ghostscript IJS driver and Foomatic data generator have been

@@ -1298,6 +1298,21 @@
       <printer translate="name" name="Datamax-ONeil E4305L Mark III" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:E4305L Mark III;" color="false" driver="datamax_oneil_E4305L" manufacturer="DatamaxONeil" model="10028" parameters="dpl_params" />
       <printer translate="name" name="Datamax-ONeil RL3e" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:RL3e;" color="false" driver="datamax_oneil_RL3e" manufacturer="DatamaxONeil" model="10029" parameters="dpl_params" />
       <printer translate="name" name="Datamax-ONeil RL4e" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:RL4e;" color="false" driver="datamax_oneil_RL4e" manufacturer="DatamaxONeil" model="10030" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil H4212" deviceid="MFG:Datamax;CMD:DPL;MDL:H4212;" color="false" driver="datamax_oneil_H4212" manufacturer="DatamaxONeil" model="10031" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil H4212X" deviceid="MFG:Datamax;CMD:DPL;MDL:H4212X;" color="false" driver="datamax_oneil_H4212X" manufacturer="DatamaxONeil" model="10032" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil H4310" deviceid="MFG:Datamax;CMD:DPL;MDL:H4310;" color="false" driver="datamax_oneil_H4310" manufacturer="DatamaxONeil" model="10033" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil H4310X" deviceid="MFG:Datamax;CMD:DPL;MDL:H4310X;" color="false" driver="datamax_oneil_H4310X" manufacturer="DatamaxONeil" model="10034" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil H4408" deviceid="MFG:Datamax;CMD:DPL;MDL:H4408;" color="false" driver="datamax_oneil_H4408" manufacturer="DatamaxONeil" model="10035" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil H4606" deviceid="MFG:Datamax;CMD:DPL;MDL:H4606;" color="false" driver="datamax_oneil_H4606" manufacturer="DatamaxONeil" model="10036" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil H4606X" deviceid="MFG:Datamax;CMD:DPL;MDL:H4606X;" color="false" driver="datamax_oneil_H4606X" manufacturer="DatamaxONeil" model="10037" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil H6210" deviceid="MFG:Datamax;CMD:DPL;MDL:H6210;" color="false" driver="datamax_oneil_H6210" manufacturer="DatamaxONeil" model="10038" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil H6210X" deviceid="MFG:Datamax;CMD:DPL;MDL:H6210X;" color="false" driver="datamax_oneil_H6210X" manufacturer="DatamaxONeil" model="10039" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil H6212" deviceid="MFG:Datamax;CMD:DPL;MDL:H6212;" color="false" driver="datamax_oneil_H6212" manufacturer="DatamaxONeil" model="10040" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil H6212X" deviceid="MFG:Datamax;CMD:DPL;MDL:H6212X;" color="false" driver="datamax_oneil_H6212X" manufacturer="DatamaxONeil" model="10041" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil H6308" deviceid="MFG:Datamax;CMD:DPL;MDL:H6308;" color="false" driver="datamax_oneil_H6308" manufacturer="DatamaxONeil" model="10042" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil H6310X" deviceid="MFG:Datamax;CMD:DPL;MDL:H6310X;" color="false" driver="datamax_oneil_H6310X" manufacturer="DatamaxONeil" model="10043" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil H8308" deviceid="MFG:Datamax;CMD:DPL;MDL:H8308;" color="false" driver="datamax_oneil_H8308" manufacturer="DatamaxONeil" model="10044" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil H8308X" deviceid="MFG:Datamax;CMD:DPL;MDL:H8308X;" color="false" driver="datamax_oneil_H8308X" manufacturer="DatamaxONeil" model="10045" parameters="dpl_params" />
     </family>
     <family name="escp2">
       <parameters name="standard_params">
