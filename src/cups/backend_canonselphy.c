@@ -369,11 +369,11 @@ static struct printer_data selphy_printers[] = {
 	  .model = "SELPHY CP Series (!CP-10/CP790)",
 	  .init_length = 12,
 	  .foot_length = 0,  /* CP900 has four-byte NULL footer that can be safely ignored */
-	  .init_readback = { 0x01, 0x00, 0x00, 0x00, -1, 0x00, -1, 0x00, 0x00, 0x00, 0x00, -1 },
-	  .ready_y_readback = { 0x02, 0x00, 0x00, 0x00, 0x70, 0x00, -1, 0x00, 0x00, 0x00, 0x00, -1 },
-	  .ready_m_readback = { 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, -1, 0x00, 0x00, 0x00, 0x00, -1 },
-	  .ready_c_readback = { 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, -1, 0x00, 0x00, 0x00, 0x00, -1 },
-	  .done_c_readback = { 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, -1, 0x00, 0x00, 0x00, 0x00, -1 },
+	  .init_readback = { 0x01, 0x00, 0x00, 0x00, -1, 0x00, -1, -1, 0x00, 0x00, 0x00, -1 },
+	  .ready_y_readback = { 0x02, 0x00, 0x00, 0x00, 0x70, 0x00, -1, -1, 0x00, 0x00, 0x00, -1 },
+	  .ready_m_readback = { 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, -1, -1, 0x00, 0x00, 0x00, -1 },
+	  .ready_c_readback = { 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, -1, -1, 0x00, 0x00, 0x00, -1 },
+	  .done_c_readback = { 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, -1, -1, 0x00, 0x00, 0x00, -1 },
 	  .clear_error = { 0x40, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
 	  .clear_error_len = 12,
 	  .pgcode_offset = 3,
@@ -1051,7 +1051,7 @@ static void canonselphy_cmdline(void)
 
 struct dyesub_backend canonselphy_backend = {
 	.name = "Canon SELPHY CP/ES",
-	.version = "0.92",
+	.version = "0.93",
 	.uri_prefix = "canonselphy",
 	.cmdline_usage = canonselphy_cmdline,
 	.cmdline_arg = canonselphy_cmdline_arg,
@@ -1338,7 +1338,7 @@ struct dyesub_backend canonselphy_backend = {
 
    01 00 00 00  00 00 00 00  00 00 00 00   [idle, waiting for init]
    02 00 00 00  00 00 00 00  00 00 00 00   [init sent, paper feeding]
-   02 00 00 00  00 00 00 00  00 00 00 00   [init sent, paper feeding] 
+   02 00 00 00  00 00 00 00  00 00 00 00   [init sent, paper feeding]
    02 00 00 00  00 00 00 00  00 00 00 00   [waiting for Y data]
    04 00 00 00  00 00 00 00  00 00 00 00   [waiting for M data]
    08 00 00 00  00 00 00 00  00 00 00 00   [waiting for C data]
@@ -1373,14 +1373,14 @@ struct dyesub_backend canonselphy_backend = {
 
    Known readback values:
 
-   01 00 00 00  [ss] 00 [pg] 00  00 00 00 [xx]   [idle, waiting for init]
-   02 00 [rr] 00  00 00 [pg] 00  00 00 00 [xx]   [init sent, paper feeding]
-   02 00 [rr] 00  10 00 [pg] 00  00 00 00 [xx]   [init sent, paper feeding] 
-   02 00 [rr] 00  70 00 [pg] 00  00 00 00 [xx]   [waiting for Y data]
-   04 00 00 00  00 00 [pg] 00  00 00 00 [xx]   [waiting for M data]
-   08 00 00 00  00 00 [pg] 00  00 00 00 [xx]   [waiting for C data]
-   10 00 00 00  00 00 [pg] 00  00 00 00 [xx]   [C done, waiting]
-   20 00 00 00  00 00 [pg] 00  00 00 00 [xx]   [All done]
+   01 00 00 00  [ss] 00 [pg] [zz]  00 00 00 [xx]   [idle, waiting for init]
+   02 00 [rr] 00  00 00 [pg] [zz]  00 00 00 [xx]   [init sent, paper feeding]
+   02 00 [rr] 00  10 00 [pg] [zz]  00 00 00 [xx]   [init sent, paper feeding]
+   02 00 [rr] 00  70 00 [pg] [zz]  00 00 00 [xx]   [waiting for Y data]
+   04 00 00 00  00 00 [pg] [zz]  00 00 00 [xx]   [waiting for M data]
+   08 00 00 00  00 00 [pg] [zz]  00 00 00 [xx]   [waiting for C data]
+   10 00 00 00  00 00 [pg] [zz]  00 00 00 [xx]   [C done, waiting]
+   20 00 00 00  00 00 [pg] [zz]  00 00 00 [xx]   [All done]
 
    [xx] is 0x01 on the CP780/CP800/CP900, 0x00 on all others.
 
@@ -1405,51 +1405,6 @@ struct dyesub_backend canonselphy_backend = {
       0x41 if the 'Wide' paper tray is loaded with a 'P' ribbon. A '0' is used
       to signify nothing being loaded.
 
- ***************************************************************************
- Selphy CP820/CP910/CP1000/CP1200:
-
-  Radically different spool file format!  300dpi, same print sizes, but also
-  adding a 50x50mm sticker and 22x17.3mm ministickers, though I think the
-  driver treats all of those as 'C' sizes for printing purposes.
-
-  Printer does *not* require use of a spooler!  Huzzah!
-
-  32-byte header:
-
-  0f 00 00 40 00 00 00 00  00 00 00 00 00 00 01 00
-  01 00 ?? 00 00 00 00 00  XX 04 00 00 WW ZZ 00 00
-
-  ?? == 50  (P)
-     == 4c  (L)
-     == 43  (C)
-
-  XX == e0  (P)
-        80  (L)
-        40  (C)
-
-  WW == 50  (P)
-        c0  (L)
-        9c  (C)
-
-  ZZ == 07  (P)
-        05  (L)
-        02  (C)
-
-  P == 7008800  == 2336256 * 3 + 32 (1872*1248)
-  L == 5087264  == 1695744 * 3 + 32 (1536*1104)
-  C == 2180384  == 726784 * 3 + 32  (1088*668)
-
-  It is worth mentioning that the image payload is Y'CbCr rather than the
-  traditional YMC (or even BGR) of other dyseubs.  Our best guess is that
-  we need to use the JPEG coefficients, although we realistically have
-  no way of confirming this.
-
-  It is hoped that the printers do support YMC data, but as of yet we
-  have no way of determining if this is possible.
-
-  Also, we have reports of the printer not quite behaving properly
-  in the face of multiple jobs; it's possible this thing may need a
-  backend after all, but more sniffs will need to be performed to determine
-  what the status readbacks (if any) mean.
+   [zz] is 0x01 when on battery power, 0x00 otherwise.
 
 */
