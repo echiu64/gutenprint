@@ -290,7 +290,9 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
      * Fix non-interactive plugin mode
 
-  5) Improvements to the Canon driver:
+  5) Changes to the Canon driver:
+
+     * removed iP100 (unsupported)
 
      * Added duplex support to MP530
 

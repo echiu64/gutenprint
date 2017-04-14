@@ -153,9 +153,11 @@
       <printer translate="name" name="Canon PIXMA iP90v" driver="bjc-PIXMA-iP90v" manufacturer="Canon" model="3000090" parameters="PIXMA_iP4000_params" />
       <printer translate="name" name="Canon PIXUS iP90v" driver="bjc-PIXUS-iP90v" manufacturer="Canon" model="3000090" parameters="PIXMA_iP4000_params" />
       <!-- Canon iP100 family -->
+<!--
       <printer translate="name" name="Canon iP100 series" driver="bjc-iP100-series" manufacturer="Canon" model="3000100" parameters="PIXMA_iP4000_params"/>
       <printer translate="name" name="Canon PIXMA iP100" driver="bjc-PIXMA-iP100" manufacturer="Canon" model="3000100" parameters="PIXMA_iP4000_params" />
       <printer translate="name" name="Canon PIXUS iP100" driver="bjc-PIXUS-iP100" manufacturer="Canon" model="3000100" parameters="PIXMA_iP4000_params" />
+-->
       <!-- Canon iP110 family -->
       <printer translate="name" name="Canon iP110 series" driver="bjc-iP110-series" manufacturer="Canon" model="3000110" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA iP110" driver="bjc-PIXMA-iP110" manufacturer="Canon" model="3000110" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
