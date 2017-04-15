@@ -33,7 +33,7 @@ TESTS = run-testpattern-1 run-testpattern-2
 
 bin_PROGRAMS = testpattern
 noinst_PROGRAMS = printers printer_options
-noinst_SCRIPTS = run-testpattern-2 compare-checksums compress-checksums uncompress-checksums
+noinst_SCRIPTS = run-testpattern-2 compare-checksums compress-checksums
 endif
 
 AM_LFLAGS = -i
@@ -66,7 +66,7 @@ CSUM_FILE=Checksums/sums.$(SPREFIX)$(CSUM_SUFFIX)
 checksums: testpattern run-testpattern-2 ./compress-checksums
 	$(MKDIR_P) Checksums
 	./run-testpattern-2 -q -M "$(CSUM_FILE).in"
-	./compress-checksums < "$(CSUM_FILE).in" | $(BZIP2) -c > "$(CSUM_FILE).bz2"
+	./compress-checksums < "$(CSUM_FILE).in" | $(COMPRESS) -c > "$(CSUM_FILE)$(CSUF)"
 	rm -f "$(CSUM_FILE).in"
 endif
 
@@ -80,5 +80,4 @@ EXTRA_DIST = \
 	run-testpattern \
 	run-testpattern-1 \
 	compare-checksums.in \
-	compress-checksums.in \
-	uncompress-checksums.in
+	compress-checksums.in

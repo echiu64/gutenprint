@@ -125,7 +125,7 @@ foreach my $sum (sort keys %checksums) {
 	"${mode}_:$printer"
     } @{$checksums{$sum}};
     foreach my $run (@runs) {
-	my (@chunks) = split(/_/, $run);
+	my (@chunks) = split(/[_]/, $run);
 	@chunks = map { compress_chunk($_) } @chunks;
 	my ($mchunks) = min(scalar @pchunks, scalar @chunks);
 	my ($i) = 0;

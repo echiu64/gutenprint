@@ -515,7 +515,6 @@ AC_PROG_LN_S
 AM_PROG_LEX
 AC_PROG_YACC
 AC_PROG_MKDIR_P
-AC_PATH_PROG([BZIP2], [bzip2])
 AC_PATH_PROG([TEST], [test])
 AC_PATH_PROG([TRUE], [true])
 AC_PATH_PROG([FIND], [find])
@@ -569,6 +568,18 @@ if test x${USE_MAINTAINER_MODE} = xyes ; then
     AC_MSG_WARN([HTML developer's guide cannot be regenerated!])
   fi
 fi
+
+AC_PATH_PROG([XZ], [xz])
+AC_PATH_PROG([BZIP2], [bzip2])
+if test x${XZ} =x ; then
+  COMPRESS="${BZIP2} -9"
+  CSUF=.bz2
+else
+  COMPRESS="${XZ} -9"
+  CSUF=.xz
+fi
+AC_SUBST(COMPRESS)
+AC_SUBST(CSUF)
 
 dnl CUPS checks
 STP_CUPS_PROGS
@@ -1026,8 +1037,6 @@ AC_CONFIG_FILES([src/testpattern/compare-checksums],
                 [chmod +x src/testpattern/compare-checksums])
 AC_CONFIG_FILES([src/testpattern/compress-checksums],
                 [chmod +x src/testpattern/compress-checksums])
-AC_CONFIG_FILES([src/testpattern/uncompress-checksums],
-                [chmod +x src/testpattern/uncompress-checksums])
 AC_CONFIG_FILES([src/cups/test-rastertogutenprint],
                 [chmod +x src/cups/test-rastertogutenprint])
 AC_CONFIG_FILES([src/testpattern/Makefile])
