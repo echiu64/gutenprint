@@ -570,13 +570,25 @@ if test x${USE_MAINTAINER_MODE} = xyes ; then
 fi
 
 AC_PATH_PROG([XZ], [xz])
+AC_PATH_PROG([GZIP], [gzip])
 AC_PATH_PROG([BZIP2], [bzip2])
-if test x${XZ} =x ; then
+AC_PATH_PROG([LRZIP], [lrzip])
+AC_PATH_PROG([RZIP], [rzip])
+if test x${LRZIP} != x ; then
+  COMPRESS="${LRZIP} -z -q"
+  CSUF=.lrz
+elif test x${XZ} != x ; then
+  COMPRESS="${XZ} -e -9"
+  CSUF=.xz
+elif test x${RZIP} != x ; then
+  COMPRESS="${RZIP} -9"
+  CSUF=.rz
+elif test x${BZIP2} != x ; then
   COMPRESS="${BZIP2} -9"
   CSUF=.bz2
 else
-  COMPRESS="${XZ} -9"
-  CSUF=.xz
+  COMPRESS="${GZIP} -9"
+  CSUF=.gz
 fi
 AC_SUBST(COMPRESS)
 AC_SUBST(CSUF)

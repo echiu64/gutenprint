@@ -535,7 +535,10 @@ sub do_output($) {
 	my $outbase = "${outkey}.prn";
 	my $outfile = "$output/$outbase";
 	if (defined $csum_file) {
-	    $checksum_cmd = "${csum_type}sum -b | sed 's/-/$outbase/' >> '$csum_file'";
+	    $checksum_cmd = "${csum_type}sum -b | sed 's/-/$outbase/'";
+	    if ($csum_file ne '' && $csum_file ne '-') {
+		$checksum_cmd .= " >> '$csum_file'";
+	    }
 	} elsif (defined $csum_dir) {
 	    my $checksum_dir = $csum_dir;
 	    if (defined $csum_dir && $csum_dir eq "") {

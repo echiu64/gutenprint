@@ -63,11 +63,11 @@ if BUILD_TESTPATTERN
 CSUM_SUFFIX=`@PKGROOT@/scripts/gversion`
 CSUM_FILE=Checksums/sums.$(SPREFIX)$(CSUM_SUFFIX)
 
-checksums: testpattern run-testpattern-2 ./compress-checksums
+Checksums:
 	$(MKDIR_P) Checksums
-	./run-testpattern-2 -q -M "$(CSUM_FILE).in"
-	./compress-checksums < "$(CSUM_FILE).in" | $(COMPRESS) -c > "$(CSUM_FILE)$(CSUF)"
-	rm -f "$(CSUM_FILE).in"
+
+checksums: testpattern run-testpattern-2 ./compress-checksums Checksums
+	./run-testpattern-2 -q -M - | ./compress-checksums | $(COMPRESS) > "$(CSUM_FILE)$(CSUF)"
 endif
 
 ## Clean

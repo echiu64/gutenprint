@@ -58,13 +58,17 @@ sub open_file($) {
     my ($file) = @_;
     my $in;
     if ($file =~ /\.bz2$/) {
-	open($in, '-|', "bunzip2 -c $file") or die("Can't open checksum file $file: $!\n");
+	open($in, '-|', "@BZIP2@ -d -c $file") || die("Can't open checksum file $file: $!\n");
     } elsif ($file =~ /.gz$/) {
-	open($in, '-|', "gunzip -c $file") or die("Can't open checksum file $file: $!\n");
+	open($in, '-|', "@GZIP@ -d -c $file") || die("Can't open checksum file $file: $!\n");
     } elsif ($file =~ /.xz$/) {
-	open($in, '-|', "unxz -c $file") or die("Can't open checksum file $file: $!\n");
+	open($in, '-|', "@XZ@ -d -c $file") || die("Can't open checksum file $file: $!\n");
+    } elsif ($file =~ /.lrz$/) {
+	open($in, '-|', "cat $file | @LRZIP@ -d -q") || die("Can't open checksum file $file: $!\n");
+    } elsif ($file =~ /.rz$/) {
+	open($in, '-|', "@RZIP@ -d -c $file") || die("Can't open checksum file $file: $!\n");
     } else {
-	open($in, '<', "$file") or die("Can't open checksum file $file: $!\n");
+	open($in, '<', "$file") || die("Can't open checksum file $file: $!\n");
     }
     return $in;
 }
