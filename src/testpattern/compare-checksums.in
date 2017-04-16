@@ -1,5 +1,5 @@
 #!@PERL@
-## Copyright (C) 2016 Robert Krawitz
+## Copyright (C) 2016-2017 Robert Krawitz
 ##
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -25,8 +25,12 @@ while ($#ARGV >= 0 && $ARGV[0] eq '-d') {
     shift @ARGV;
 }
 
-if ($#ARGV != 1) {
-    die "Usage: $0 old_checksum_file new_checksum_file\n";
+if ($#ARGV <= 0) {
+    print_file($ARGV[0]);
+} elsif ($#ARGV == 1) {
+    compare_files($ARGV[0], $ARGV[1]);
+} else {
+    die "Usage: $0 [old_checksum_file] [new_checksum_file]\n";
 }
 
 sub get_printer($) {
@@ -41,106 +45,149 @@ sub get_mode($) {
     return $mode;
 }
 
-sub load_file($\%\%) {
-    my ($file, $modes, $printers) = @_;
-    if ($file =~ /\.bz2$/) {
-	open(IN, "bunzip2 -c $file|") or die("Can't open checksum file $file: $!\n");
-    } elsif ($file =~ /.gz$/) {
-	open(IN, "gunzip -c $file|") or die("Can't open checksum file $file: $!\n");
+sub uncompress_chunk($$) {
+    my ($chunk, $sub_table) = @_;
+    if (defined $$sub_table{$chunk}) {
+	return $$sub_table{$chunk};
     } else {
-	open(IN, "$file") or die("Can't open checksum file $file: $!\n");
+	return $chunk;
     }
-    my ($inline);
-    my ($last_sum) = "";
-    while ($inline = <IN>) {
+}
+
+sub open_file($) {
+    my ($file) = @_;
+    my $in;
+    if ($file =~ /\.bz2$/) {
+	open($in, '-|', "@BZIP2@ -d -c $file") || die("Can't open checksum file $file: $!\n");
+    } elsif ($file =~ /.gz$/) {
+	open($in, '-|', "@GZIP@ -d -c $file") || die("Can't open checksum file $file: $!\n");
+    } elsif ($file =~ /.xz$/) {
+	open($in, '-|', "@XZ@ -d -c $file") || die("Can't open checksum file $file: $!\n");
+    } elsif ($file =~ /.lrz$/) {
+	open($in, '-|', "cat $file | @LRZIP@ -d -q") || die("Can't open checksum file $file: $!\n");
+    } elsif ($file =~ /.rz$/) {
+	open($in, '-|', "@RZIP@ -d -c $file") || die("Can't open checksum file $file: $!\n");
+    } else {
+	open($in, '<', "$file") || die("Can't open checksum file $file: $!\n");
+    }
+    return $in;
+}
+
+sub create_substitution_table() {
+    my (%sub_table);
+    $sub_table{"PrintingMode"} = "P;";
+    $sub_table{"PageSize"} = "S;";
+    $sub_table{"DitherAlgorithm"} = "D;";
+    $sub_table{"Resolution"} = "R;";
+    $sub_table{"ColorCorrection"} = "C;";
+    $sub_table{"Color"} = "c;";
+    $sub_table{"MediaType"} = "M;";
+    $sub_table{"InputSlot"} = "I;";
+    %sub_table = reverse %sub_table;
+    return \%sub_table;
+}
+
+sub initialize_file($) {
+    my ($file) = @_;
+    my (%ctx);
+    if ($file eq '' || $file eq '-' || ! defined $file) {
+	$ctx{"fh"} = \*STDIN;
+	$ctx{"close_fh"} = 0;
+    } else {
+	$ctx{"fh"} = open_file($file);
+	$ctx{"close_fh"} = 1;
+    }
+    $ctx{"sum"} = "";
+    $ctx{"last_sum"} = "";
+    $ctx{"kvals"} = [];
+    $ctx{"sub_table"} = create_substitution_table();
+    $ctx{"pchunks"} = [];
+    $ctx{"active"} = 1;
+    return \%ctx;
+}
+
+sub get_next_datum($) {
+    my ($ctx) = @_;
+    if (! $$ctx{"active"}) {
+	return undef;
+    }
+    if ((scalar @{$$ctx{"kvals"}}) == 0) {
+	my ($fh) = $$ctx{"fh"};
+	my ($inline);
+	my ($read) = 0;
+	while ($inline = <$fh>) {
+	    $read = 1;
+	    last;
+	}
+	if (! $read) {
+	    if ($$ctx{"close_fh"}) {
+		close($fh);
+	    }
+	    $$ctx{"active"} = 0;
+	    return undef;
+	}
 	chomp $inline;
 	my ($sum, @okeys) = split(/ /, $inline);
-	if ($last_sum ne "" && ((length $sum) < (length $last_sum))) {
-	    $sum = substr($last_sum, 0, ((length $last_sum) - (length $sum))) . $sum;
+	if ($$ctx{"last_sum"} ne "" &&
+	    ((length $sum) < (length $$ctx{"last_sum"}))) {
+	    $sum =
+		substr($$ctx{"last_sum"}, 0, 
+		       ((length $$ctx{"last_sum"}) - (length $sum))) . 
+		$sum;
 	}
-	$last_sum = $sum;
+	$$ctx{"sum"} = $sum;
+	$$ctx{"last_sum"} = $sum;
 	my @keys = map {
 	    s/\.prn$//;
 	    s/^\*//;
 	    $_;
 	} @okeys;
-	my (@pchunks) = ();
-	foreach my $k (@keys) {
-	    $k =~ s/=/________/g;
-	    $k =~ s/!/_______/g;
-	    $k =~ s/"/______/g;
-	    $k =~ s/,/_____/g;
-	    $k =~ s/'/____/g;
-	    $k =~ s/%/___/g;
-	    $k =~ s/>/__/g;
-	    my (@chunks) = split(/_/, $k, -1);
-	    foreach my $i (0..$#chunks) {
-		if ($chunks[$i] eq '') {
-		    $chunks[$i] = $pchunks[$i];
-		} elsif ($chunks[$i] =~ /^([0-9]+)\+(.*)/) {
-		    $chunks[$i] = substr($pchunks[$i], 0, $1) . $2;
-		}
+	$$ctx{"kvals"} = \@keys;
+	$$ctx{"pchunks"} = [];
+    }
+    my @pchunks = @{$$ctx{"pchunks"}};
+    my $k = shift(@{$$ctx{"kvals"}});
+    $k =~ s/=/________/g;
+    $k =~ s/!/_______/g;
+    $k =~ s/"/______/g;
+    $k =~ s/,/_____/g;
+    $k =~ s/'/____/g;
+    $k =~ s/%/___/g;
+    $k =~ s/>/__/g;
+    my (@chunks) = split(/_/, $k, -1);
+    foreach my $i (0..$#chunks) {
+	if ($chunks[$i] eq '') {
+	    $chunks[$i] = ${$$ctx{"pchunks"}}[$i];
+	} else {
+	    if ($chunks[$i] =~ /^([0-9]+)\+(.*)/) {
+		$chunks[$i] = substr(${$$ctx{"pchunks"}}[$i], 0, $1) . $2;
+	    } elsif ($chunks[$i] =~ /^\*(.*)/) {
+		$chunks[$i] = substr(${$$ctx{"pchunks"}}[$i], 0, 2) . $1;
 	    }
-	    my ($val) = join('_', @chunks);
-	    $val =~ s/(^[^:]*)_:(.*)/$2_$1/;
-	    $$modes{$val} = $sum;
-	    $$printers{get_printer($val)} = 1;
-	    @pchunks = @chunks;
+	    if ($chunks[$i] =~ m,(.*)/([0-9]+)$,) {
+		$chunks[$i] = $1 . substr(${$$ctx{"pchunks"}}[$i], -$2);
+	    } elsif ($chunks[$i] =~ /([^\\]*)\\$/) {
+		$chunks[$i] = $1 . substr(${$$ctx{"pchunks"}}[$i], -2);
+	    }
 	}
     }
-    close IN;
+    my ($val) = join('_', map { uncompress_chunk($_, $$ctx{"sub_table"}) } @chunks);
+    $val =~ s/(^[^:]*)_:(.*)/$2_$1/;
+    $$ctx{"pchunks"} = \@chunks;
+    return [$$ctx{"sum"}, $val];
 }
 
-load_file($ARGV[0], %old_modes, %old_printers);
-load_file($ARGV[1], %new_modes, %new_printers);
-
-my (%only_old_printers, %only_new_printers);
-
-foreach my $new_printer (keys %new_printers) {
-    if (! defined $old_printers{$new_printer}) {
-	$only_new_printers{$new_printer} = 1;
+sub load_file($\%\%) {
+    my ($file, $modes, $printers) = @_;
+    my ($ctx) = initialize_file($file);
+    my ($answer);
+    while ($answer = get_next_datum($ctx)) {
+	my ($sum) = $$answer[0];
+	my ($val) = $$answer[1];
+	$$modes{$val} = $sum;
+	$$printers{get_printer($val)} = 1;
     }
 }
-
-foreach my $old_printer (keys %old_printers) {
-    if (! defined $new_printers{$old_printer}) {
-	$only_old_printers{$old_printer} = 1;
-    }
-}
-
-my (@only_old_modes, @only_new_modes, @changed_modes);
-
-sub mode_ne($$) {
-    my ($new, $old) = @_;
-    if (length $new == length $old) {
-	return ($new ne $old);
-    } elsif (length $new < length $old) {
-	return ($new ne substr($old, 0, length $new));
-    } else {
-	return ($old ne substr($new, 0, length $old));
-    }
-}
-
-foreach my $old_mode (sort keys %old_modes) {
-    next if defined $only_old_printers{get_printer($old_mode)};
-    if (defined $new_modes{$old_mode}) {
-	if (mode_ne($new_modes{$old_mode}, $old_modes{$old_mode})) {
-	    push @changed_modes, $old_mode;
-	}
-    } else {
-	push @only_old_modes, $old_mode;
-    }
-}
-
-foreach my $new_mode (sort keys %new_modes) {
-    next if defined $only_new_printers{get_printer($new_mode)};
-    if (!defined $old_modes{$new_mode}) {
-	push @only_new_modes, $new_mode;
-    }
-}
-
-my (@only_old_printers) = sort keys %only_old_printers;
-my (@only_new_printers) = sort keys %only_new_printers;
 
 sub print_changes($$@) {
     my ($tag, $detail, @changes) = @_;
@@ -167,11 +214,76 @@ sub print_changes($$@) {
     print "\n";
 }
 
-if (! $detail1) {
-    print "*** Changes from $ARGV[0] to $ARGV[1] ***\n\n";
-    print_changes("Printers removed from $ARGV[1]", 0, @only_old_printers);
-    print_changes("Printers added to $ARGV[1]", 0, @only_new_printers);
-    print_changes("Modes removed from $ARGV[1]", 1, @only_old_modes);
-    print_changes("Modes added to $ARGV[1]", 1, @only_new_modes);
+sub compare_files($$) {
+    my ($file1, $file2) = @_;
+    load_file($file1, %old_modes, %old_printers);
+    load_file($file2, %new_modes, %new_printers);
+
+    my (%only_old_printers, %only_new_printers);
+
+    foreach my $new_printer (keys %new_printers) {
+	if (! defined $old_printers{$new_printer}) {
+	    $only_new_printers{$new_printer} = 1;
+	}
+    }
+
+    foreach my $old_printer (keys %old_printers) {
+	if (! defined $new_printers{$old_printer}) {
+	    $only_old_printers{$old_printer} = 1;
+	}
+    }
+
+    my (@only_old_modes, @only_new_modes, @changed_modes);
+
+    sub mode_ne($$) {
+	my ($new, $old) = @_;
+	if (length $new == length $old) {
+	    return ($new ne $old);
+	} elsif (length $new < length $old) {
+	    return ($new ne substr($old, 0, length $new));
+	} else {
+	    return ($old ne substr($new, 0, length $old));
+	}
+    }
+
+    foreach my $old_mode (sort keys %old_modes) {
+	next if defined $only_old_printers{get_printer($old_mode)};
+	if (defined $new_modes{$old_mode}) {
+	    if (mode_ne($new_modes{$old_mode}, $old_modes{$old_mode})) {
+		push @changed_modes, $old_mode;
+	    }
+	} else {
+	    push @only_old_modes, $old_mode;
+	}
+    }
+
+    foreach my $new_mode (sort keys %new_modes) {
+	next if defined $only_new_printers{get_printer($new_mode)};
+	if (!defined $old_modes{$new_mode}) {
+	    push @only_new_modes, $new_mode;
+	}
+    }
+
+    my (@only_old_printers) = sort keys %only_old_printers;
+    my (@only_new_printers) = sort keys %only_new_printers;
+
+    if (! $detail1) {
+	print "*** Changes from $ARGV[0] to $ARGV[1] ***\n\n";
+	print_changes("Printers removed from $ARGV[1]", 0, @only_old_printers);
+	print_changes("Printers added to $ARGV[1]", 0, @only_new_printers);
+	print_changes("Modes removed from $ARGV[1]", 1, @only_old_modes);
+	print_changes("Modes added to $ARGV[1]", 1, @only_new_modes);
+    }
+    print_changes("Changed printing modes", 1 + $detail1, @changed_modes);
 }
-print_changes("Changed printing modes", 1 + $detail1, @changed_modes);
+
+sub print_file($) {
+    my ($file) = @_;
+    my ($ctx) = initialize_file($file);
+    my ($answer);
+    while ($answer = get_next_datum($ctx)) {
+	my ($sum) = $$answer[0];
+	my ($val) = $$answer[1];
+	print "$sum *$val.prn\n";
+    }
+}

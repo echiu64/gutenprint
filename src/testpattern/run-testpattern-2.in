@@ -60,8 +60,7 @@ my @standard_options = ("InkType",
 			"Density",
 			"CyanDensity",
 			"Orientation", 
-			"LabelSeparator",
-			"PageSize,Resolution=MIN");
+			"LabelSeparator");
 my $global_status = 1;
 my $run_installed = 0;
 my $use_min_res = 0;
@@ -541,7 +540,10 @@ sub do_output($) {
 	my $outbase = "${outkey}.prn";
 	my $outfile = "$output/$outbase";
 	if (defined $csum_file) {
-	    $checksum_cmd = "${csum_type}sum -b | sed 's/-/$outbase/' >> '$csum_file'";
+	    $checksum_cmd = "${csum_type}sum -b | sed 's/-/$outbase/'";
+	    if ($csum_file ne '' && $csum_file ne '-') {
+		$checksum_cmd .= " >> '$csum_file'";
+	    }
 	} elsif (defined $csum_dir) {
 	    my $checksum_dir = $csum_dir;
 	    if (defined $csum_dir && $csum_dir eq "") {
@@ -863,7 +865,7 @@ sub stopit {
     }
 }
 
-if ($list_options) {
+sub list_options() {
     if ($#printer_list > 0) {
 	die "-L must be used with one printer\n";
     }
@@ -899,15 +901,16 @@ if ($list_options) {
 	    }
 	}
     }
-} elsif ($dontrun) {
-    map { do_printer($_, \*STDOUT) } @printer_list;
-    exit 0;
-} else {
+}
+
+sub runit() {
     my $valgrind_command;
     my $valopts;
     if ($gdb_attach) {
 	$proc_count = 1;
     }
+
+    # V A L G R I N D #
     if ($callgrind) {
 	$valopts = '--tool=callgrind --dump-instr=yes --trace-jump=yes';
 	$valgrind = 4;
@@ -927,6 +930,7 @@ if ($list_options) {
 	$valgrind_command = "valgrind $valopts";
     }
 
+    # O U T P U T #
     if (defined $output && $output ne "" && ! -d $output) {
 	mkdir $output || die "Can't create directory $output: $!\n";
     }
@@ -940,14 +944,12 @@ if ($list_options) {
 	system "touch $csum_file";
     }
 
-    my $status = 1;
+    # # # # # # # #
     my ($suppress);
     if (! defined $output && ! defined $csum_dir &&
 	! defined $csum_file) {
 	$suppress = '-n';
     }
-    my ($qopt) = $quiet ? "-q" : "";
-    my ($Hopt) = $halt_on_error ? "-H" : "";
     my (@children);
     my ($child_no);
     my ($kid);
@@ -960,6 +962,8 @@ if ($list_options) {
 		push @children, $kid;
 	    }
 	}
+
+	# Child: select the printers to print, round-robin.
 	if ($kid == 0) {
 	    my (@xprinter_list);
 	    foreach my $i (0..$#printer_list) {
@@ -970,7 +974,10 @@ if ($list_options) {
 	    @printer_list = @xprinter_list;
 	}
     }
+
+    my $status = 1;
     if ($proc_count > 1 && $kid > 0) {
+	# Parent in parallel case
 	while ($proc_count > 0 && $kid > 0) {
 	    $kid = waitpid(-1, 0);
 	    if ($kid > 0 && $? > 0) {
@@ -978,6 +985,8 @@ if ($list_options) {
 	    }
 	}
     } else {
+	my ($qopt) = $quiet ? "-q" : "";
+	my ($Hopt) = $halt_on_error ? "-H" : "";
 	$testpattern_command = "$valgrind_command ./testpattern -y $suppress $qopt $Hopt";
 	if ($single > 1) {
 	    $SIG{TERM} = sub() { stopit() };
@@ -1005,7 +1014,7 @@ if ($list_options) {
 	print STDERR "\n";
     }
     if ($status && ! $error) {
-	exit 0;
+	return 0;
     } else {
 	if ($error) {
 	    if ($single > 1) {
@@ -1015,6 +1024,15 @@ if ($list_options) {
 		print STDERR "*** $error CRASH${plural} NOTED***\n";
 	    }
 	}
-	exit 1;
+	return 1;
     }
+}
+
+
+if ($list_options) {
+    list_options();
+} elsif ($dontrun) {
+    map { do_printer($_, \*STDOUT) } @printer_list;
+} else {
+    exit(runit());
 }
