@@ -3521,7 +3521,7 @@ DECLARE_MODES(canon_PIXMA_Pro9000mk2,1);
 /* the Pro9500 has fewer quality settings in the driver than the Pro9500 Mk.II but I put the "missing" ones in anyway */
 static const canon_mode_t canon_PIXMA_Pro9500_modes[] = {
   /* plain mode: fast, 1 only but maybe accept 2 and 0 quality settings too */
-  {  600, 600,CANON_INK_CMYK,"600x600dpi_high_",N_("600x600 DPI HIGH"),INKSET(11_C6M6Y6K6_c),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},/* untested */
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_high",N_("600x600 DPI HIGH"),INKSET(11_C6M6Y6K6_c),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},/* untested */
   {  600, 600,CANON_INK_CMYK,"600x600dpi",N_("600x600 DPI"),INKSET(11_C6M6Y6K6_c),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},/* untested */
   {  600, 600,CANON_INK_CMYK,"300x600dpi_high",N_("300x600 DPI HIGH"),INKSET(11_C2M2Y2K2),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,2},
   {  600, 600,CANON_INK_CMYK,"300x600dpi",N_("300x600 DPI"),INKSET(11_C2M2Y2K2),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,1},
