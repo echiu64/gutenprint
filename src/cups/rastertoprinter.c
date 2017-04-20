@@ -1298,6 +1298,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   stp_set_float_parameter(default_settings, "AppGamma", 1.0);
   set_all_options(default_settings, options, num_options, ppd);
 
+  cupsFreeOptions(num_options, options);
   ppdClose(ppd);
 
   cups.ras = cupsRasterOpen(fd, CUPS_RASTER_READ);
