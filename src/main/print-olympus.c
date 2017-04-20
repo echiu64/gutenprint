@@ -1,9 +1,10 @@
 /*
  *
- *   Print plug-in DyeSub driver (formerly Olympus driver) for the GIMP.
+ *   Print plug-in DyeSub driver (formerly Olympus driver) for Gutenprint
  *
- *   Copyright 2003 - 2006
- *   Michael Mraka (Michael.Mraka@linux.cz)
+ *   Copyright 2003-2006 Michael Mraka (Michael.Mraka@linux.cz)
+ *
+ *   Copyright 2007-2017 Solomon Peachy (pizza@shaftnet.org)
  *
  *   The plug-in is based on the code of the RAW plugin for the GIMP of
  *   Michael Sweet (mike@easysw.com) and Robert Krawitz (rlk@alum.mit.edu)
@@ -283,7 +284,7 @@ typedef struct /* printer specific parameters */
   const dyesub_resolution_list_t *resolution;
   const dyesub_pagesize_list_t *pages;
   const dyesub_printsize_list_t *printsize;
-  int block_size;
+  int block_size;  /* Really # of rows in a block */
   int features;
   void (*printer_init_func)(stp_vars_t *);
   void (*printer_end_func)(stp_vars_t *);
@@ -8757,10 +8758,10 @@ dyesub_read_image(stp_vars_t *v,
 }
 
 static void
-dyesub_print_pixel(unsigned short *src, char *dest,
-		   dyesub_print_vars_t *pv,
-		   const dyesub_cap_t *caps,
-		   int plane)
+dyesub_render_pixel(unsigned short *src, char *dest,
+		    dyesub_print_vars_t *pv,
+		    const dyesub_cap_t *caps,
+		    int plane)
 {
   unsigned short ink[MAX_INK_CHANNELS]; /* What is sent to printer */
 
@@ -8835,26 +8836,22 @@ dyesub_print_pixel(unsigned short *src, char *dest,
 	   pv->bytes_per_ink_channel);
   else /* Otherwise, print the full set of inks, in order (eg RGB or BGR) */
     for (i = 0; i < pv->ink_channels; i++)
-      memcpy(dest, (char *) ink + (pv->bytes_per_ink_channel * (pv->ink_order[i]-1)),
+      memcpy(dest + i*pv->bytes_per_ink_channel,
+	     (char *) ink + (pv->bytes_per_ink_channel * (pv->ink_order[i]-1)),
 	     pv->bytes_per_ink_channel);
 }
 
-static int
-dyesub_print_row(stp_vars_t *v,
-		dyesub_print_vars_t *pv,
-		const dyesub_cap_t *caps,
-		double in_row,
-		int plane)
+static void
+dyesub_render_row(stp_vars_t *v,
+		  dyesub_print_vars_t *pv,
+		  const dyesub_cap_t *caps,
+		  double in_row,
+		  char *dest,
+		  int bytes_per_pixel,
+		  int plane)
 {
   int w;
   unsigned short *src;
-  char *dest;
-  size_t len;
-
-  len = pv->outw_px * pv->bytes_per_ink_channel;
-  dest = stp_malloc(len);
-  if (!dest)
-    return 0;  /* ? out of memory ? */
   
   for (w = 0; w < pv->outw_px; w++)
     {
@@ -8874,14 +8871,9 @@ dyesub_print_row(stp_vars_t *v,
       //      Lanczos  (awesome!! but slow)
       src = &(pv->image_data[(int)row][(int)col * pv->out_channels]);
 
-      dyesub_print_pixel(src, dest + w*pv->bytes_per_ink_channel,
-			 pv, caps, plane);
+      dyesub_render_pixel(src, dest + w*bytes_per_pixel,
+			  pv, caps, plane);
     }
-
-  stp_zfwrite(dest, len, 1, v);
-  stp_free(dest);
-
-  return 1;
 }
 
 static int
@@ -8891,17 +8883,36 @@ dyesub_print_plane(stp_vars_t *v,
 		   const dyesub_cap_t *caps,
 		   int plane)
 {
-
-
-  int ret = 0;
-  int h, p;
-  double row;
-  int out_bytes = ((pv->plane_interlacing || pv->row_interlacing) ? 1 : pv->ink_channels)
+  int h;
+  int bpp = ((pv->plane_interlacing || pv->row_interlacing) ? 1 : pv->ink_channels)
   					* pv->bytes_per_ink_channel;
+  size_t rowlen = pv->prnw_px * bpp;
+  char *destrow = stp_malloc(rowlen); /* Allocate a buffer for the rendered rows */
+  if (!destrow)
+    return 0;  /* ? out of memory ? */
+
+  /* Pre-Fill in the blank bits of the row. */
+  if (dyesub_feature(caps, DYESUB_FEATURE_FULL_WIDTH))
+    {
+      /* FIXME: This is broken for bpp != 1 and packed data -- but no such models exist. */
+      /* empty part left of image area */
+      if (pv->outl_px > 0)
+        {
+          memset(destrow, pv->empty_byte[plane], bpp * pv->outl_px);
+        }
+      /* empty part right of image area */
+      if (pv->outr_px < pv->prnw_px)
+        {
+          memset(destrow + rowlen - bpp * (pv->prnw_px - pv->outr_px),
+		 pv->empty_byte[plane],
+		 bpp * (pv->prnw_px - pv->outr_px));
+        }
+    }
 
   for (h = 0; h <= pv->prnb_px - pv->prnt_px; h++)
     {
-      p = pv->row_interlacing ? 0 : plane;
+      int p = pv->row_interlacing ? 0 : plane;
+      double row;
 
       do {
 
@@ -8916,31 +8927,25 @@ dyesub_print_plane(stp_vars_t *v,
 	  dyesub_exec(v, caps->block_init_func, "caps->block_init");
 	}
 
+      /* Generate a single row */
       if (h + pv->prnt_px < pv->outt_px || h + pv->prnt_px >= pv->outb_px)
         { /* empty part above or below image area */
-          dyesub_nputc(v, pv->empty_byte[plane], out_bytes * pv->prnw_px);
+	  memset(destrow, pv->empty_byte[plane], rowlen);
+	  /* FIXME: This is also broken for bpp != 1 and packed data  */
+	  /* FIXME: Also this is inefficient; it won't change once generated.. */
 	}
       else
         {
-	  if (dyesub_feature(caps, DYESUB_FEATURE_FULL_WIDTH)
-	  	&& pv->outl_px > 0)
-	    { /* empty part left of image area */
-              dyesub_nputc(v, pv->empty_byte[plane], out_bytes * pv->outl_px);
-	    }
-
 	  row = dyesub_interpolate(h + pv->prnt_px - pv->outt_px,
 				   pv->outh_px, pv->imgh_px);
+
 	  stp_deprintf(STP_DBG_DYESUB,
 		       "dyesub_print_plane: h = %d, row = %f\n", h, row);
-	  ret = dyesub_print_row(v, pv, caps, row, p);
 
-	  if (dyesub_feature(caps, DYESUB_FEATURE_FULL_WIDTH)
-	  	&& pv->outr_px < pv->prnw_px)
-	    { /* empty part right of image area */
-	      dyesub_nputc(v, pv->empty_byte[plane], out_bytes
-	      				* (pv->prnw_px - pv->outr_px));
-	    }
+	  dyesub_render_row(v, pv, caps, row, destrow + bpp * pv->outl_px, bpp, p);
 	}
+      /* And send it out */
+      stp_zfwrite(destrow, rowlen, 1, v);
 
       if (h + pv->prnt_px == pd->block_max_h)
         { /* block end */
@@ -8949,7 +8954,9 @@ dyesub_print_plane(stp_vars_t *v,
 
       } while (pv->row_interlacing && ++p < pv->ink_channels);
     }
-  return ret;
+
+  stp_free(destrow);
+  return 1;
 }
 
 /*
