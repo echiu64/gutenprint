@@ -42,6 +42,10 @@
 #define inline __inline__
 #endif
 
+#define MITSU70X_8BPP
+//#define S6145_YMC
+//#define CANONSELPHYNEO_CMY
+
 #define DYESUB_FEATURE_NONE		 0x00000000
 #define DYESUB_FEATURE_FULL_WIDTH	 0x00000001
 #define DYESUB_FEATURE_FULL_HEIGHT	 0x00000002
@@ -54,15 +58,14 @@
 #define DYESUB_FEATURE_12BPP             0x00000100
 #define DYESUB_FEATURE_16BPP             0x00000200
 #define DYESUB_FEATURE_BIGENDIAN         0x00000400
-#define DYESUB_FEATURE_RGBtoYCBCR        0x00000800
-#define DYESUB_FEATURE_DUPLEX            0x00001000
-#define DYESUB_FEATURE_MONOCHROME        0x00002000  /* Monochrome only..? */
+#define DYESUB_FEATURE_DUPLEX            0x00000800
+#define DYESUB_FEATURE_MONOCHROME        0x00001000
+#ifndef CANONSELPHYNEO_CMY
+#define DYESUB_FEATURE_RGBtoYCBCR        0x00002000
+#endif
 
 #define DYESUB_PORTRAIT  0
 #define DYESUB_LANDSCAPE 1
-
-#define MITSU70X_8BPP
-//#define S6145_YMC
 
 #ifndef MIN
 #  define MIN(a,b)	(((a) < (b)) ? (a) : (b))
@@ -1185,7 +1188,12 @@ static void cp910_printer_init_func(stp_vars_t *v)
                  0x50 )));
   stp_putc(pg, v);
 
-  dyesub_nputc(v, '\0', 5);
+  dyesub_nputc(v, '\0', 4);
+#ifdef CANONSELPHYNEO_CMY
+  stp_putc(0x01, v);
+#else
+  stp_putc(0x00, v);
+#endif
 
   stp_put32_le(pd->w_size, v);
   stp_put32_le(pd->h_size, v);
@@ -7064,20 +7072,34 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
-  { /* Canon CP820, CP910 */
+  { /* Canon CP820, CP910, CP1000, CP1200 */
     1011,
+#ifdef CANONSELPHYNEO_CMY
+    &cmy_ink_list,
+#else
     &rgb_ink_list,
+#endif
     &res_300dpi_list,
     &cp910_page_list,
     &cp910_printsize_list,
     SHRT_MAX,
+#ifdef CANONSELPHYNEO_CMY
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
+      | DYESUB_FEATURE_PLANE_INTERLACE,
+#else
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
       | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_RGBtoYCBCR,
+#endif
     &cp910_printer_init_func, NULL,
     NULL, NULL,
     NULL, NULL,
+#ifdef CANONSELPHYNEO_CMY
+    cpx00_adjust_curves,
+#else
     NULL,
+#endif
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -8783,6 +8805,7 @@ dyesub_render_pixel(unsigned short *src, char *dest,
   /* copy out_channel (image) to equiv ink_channel (printer) */
   for (i = start; i < end; i++)
     {
+#ifndef CANONSELPHYNEO_CMY
       if (dyesub_feature(caps, DYESUB_FEATURE_RGBtoYCBCR))
         {
 	  /* Convert RGB -> YCbCr (JPEG YCbCr444 coefficients) */
@@ -8802,6 +8825,7 @@ dyesub_render_pixel(unsigned short *src, char *dest,
 	       into the dyesub driver. */
 	}
       else
+#endif
         {
 	   ink[i] = src[i];
         }
@@ -8810,11 +8834,13 @@ dyesub_render_pixel(unsigned short *src, char *dest,
       if (pv->bytes_per_ink_channel == 1)
         {
 	  unsigned char *ink_u8 = (unsigned char *) ink;
+#ifndef CANONSELPHYNEO_CMY
 #if 0
 	  /* FIXME:  Do we want to round? */
           if (dyesub_feature(caps, DYESUB_FEATURE_RGBtoYCBCR))
             ink_u8[i] = ink[i] >> 8;
 	  else
+#endif
 #endif
             ink_u8[i] = ink[i] / 257;
         }
@@ -9139,11 +9165,16 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
 
   pv.image_data = dyesub_read_image(v, &pv, image);
   if (ink_type) {
+#ifndef CANONSELPHYNEO_CMY
 	  if (dyesub_feature(caps, DYESUB_FEATURE_RGBtoYCBCR)) {
 		  pv.empty_byte[0] = 0xff; /* Y */
 		  pv.empty_byte[1] = 0x80; /* Cb */
 		  pv.empty_byte[2] = 0x80; /* Cr */
-	  } else if (strcmp(ink_type, "RGB") == 0 || strcmp(ink_type, "BGR") == 0 || strcmp(ink_type, "Whitescale") == 0) {
+	  } else
+#endif
+	  if (strcmp(ink_type, "RGB") == 0 ||
+	      strcmp(ink_type, "BGR") == 0 ||
+	      strcmp(ink_type, "Whitescale") == 0) {
 		  pv.empty_byte[0] = 0xff;
 		  pv.empty_byte[1] = 0xff;
 		  pv.empty_byte[2] = 0xff;

@@ -97,6 +97,8 @@ static char *selphyneo_errors(uint8_t err)
 		return "Paper Feed";
 	case 0x03:
 		return "No Paper";
+	case 0x06:
+		return "Ink Cassette Empty";
 	case 0x07:
 		return "No Ink";
 	case 0x09:
@@ -388,7 +390,7 @@ static void selphyneo_cmdline(void)
 
 struct dyesub_backend canonselphyneo_backend = {
 	.name = "Canon SELPHY CPneo",
-	.version = "0.07",
+	.version = "0.08",
 	.uri_prefix = "canonselphyneo",
 	.cmdline_usage = selphyneo_cmdline,
 	.cmdline_arg = selphyneo_cmdline_arg,
@@ -421,7 +423,7 @@ struct dyesub_backend canonselphyneo_backend = {
   32-byte header:
 
   0f 00 00 40 00 00 00 00  00 00 00 00 00 00 01 00
-  01 00 TT 00 00 00 00 00  XX XX XX XX YY YY YY YY
+  01 00 TT 00 00 00 00 ZZ  XX XX XX XX YY YY YY YY
 
                            cols (le32) rows (le32)
         50                 e0 04       50 07          1248 * 1872  (P)
@@ -432,19 +434,17 @@ struct dyesub_backend canonselphyneo_backend = {
      == 4c  (L)
      == 43  (C)
 
+  ZZ == 00  Y'CbCr data follows
+     == 01  CMY    data follows
+
   Followed by three planes of image data.
 
   P == 7008800  == 2336256 * 3 + 32 (1872*1248)
   L == 5087264  == 1695744 * 3 + 32 (1472*1152)
   C == 2180384  == 726784 * 3 + 32  (1088*668)
 
-  It is worth mentioning that the image payload is Y'CbCr rather than the
-  traditional YMC (or even BGR) of other dyseubs.  Our best guess is that
-  we need to use the JPEG coefficients, although we realistically have
-  no way of confirming this.
-
-  It is hoped that the printers do support YMC data, but as of yet we
-  have no way of determining if this is possible.
+  It is worth mentioning that the Y'CbCr image data is surmised to use the 
+  JPEG coefficients, although we realistically have no way of confirming this.
 
   Other questions:
 
@@ -487,5 +487,19 @@ struct dyesub_backend canonselphyneo_backend = {
 Also, the first time a readback happens after plugging in the printer:
 
 34 44 35 31  01 00 01 00  01 00 45 00      "4D51" ...??
+
+
+** ** ** ** This is what windows sends if you print over the network:
+
+00 00 00 00 40 00 00 00  02 00 00 00 00 00 04 00  Header [unknown]
+00 00 02 00 00 00 00 00  00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+
+00 00 01 00 HH HH HH HH  02 00 00 00 PP PP PP PP  Header2 [unknown] PP == payload len, HH == payload + header2 len [ie + 3 ]
+CC CC CC CC RR RR RR RR  00 00 00 00 LL LL LL LL  CC == cols, RR == rows, LL == plane len (ie RR * CC)
+L2 L2 L2 L2                                       L2 == LL * 2, apparently.
+
+[ ..followed by three planes of LL bytes, totalling PP bytes.. ]
 
 */
