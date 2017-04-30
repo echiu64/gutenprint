@@ -471,6 +471,7 @@ run (const char        *name,		/* I - Name of print program. */
             fprintf(stderr,"Parameter unsupported in gimp2 plugin for parameter %s\n", key);
             break;
           }
+	  stp_parameter_description_destroy(&desc);
         }
       }
     }
@@ -527,7 +528,6 @@ run (const char        *name,		/* I - Name of print program. */
 
   if (export == GIMP_EXPORT_EXPORT)
     gimp_image_delete (image_ID);
-  stp_parameter_description_destroy(&desc);
   stp_vars_destroy(gimp_vars.v);
 }
 
