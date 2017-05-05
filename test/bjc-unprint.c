@@ -446,7 +446,7 @@ int process(FILE *infile,scanline_t *sf[7],int *xmin_,int *xmax_,int *ymin_,int 
       case 0x6d: col= 5; break; /* lightmagenta */
       case 0x63: col= 6; break; /* lightcyan    */
       default:
-	fprintf(stderr,"unkown color component 0x%02x\n",inbuff[0]);
+	fprintf(stderr,"unknown color component 0x%02x\n",inbuff[0]);
 	exit(-1);
       }
 

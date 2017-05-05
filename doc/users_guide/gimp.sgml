@@ -192,7 +192,7 @@ have selected a printer, you will see the printer command displayed.
     <para>
 The Gutenprint software does all of the necessary conversion of the
 image to be printed into the language of your printer. It is
-unnecessary and undesirable for any other sofware to manipulate this
+unnecessary and undesirable for any other software to manipulate this
 data.  (This is why the command contains the "-l" switch or the "-o
 raw" switch).  Please use care if you feel the need to edit this
 command.  Once you are satisfied with your selection, click the

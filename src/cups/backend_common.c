@@ -497,7 +497,7 @@ static int print_scan_output(struct libusb_device *device,
 		if (serial) free(serial);
 		WARNING("**** THIS PRINTER DOES NOT REPORT A SERIAL NUMBER!\n");
 		WARNING("**** If you intend to use multiple printers of this type, you\n");
-		WARNING("**** must only plug one in at a time or unexpected behaivor will occur!\n");
+		WARNING("**** must only plug one in at a time or unexpected behavior will occur!\n");
 		serial = strdup("NONE_UNKNOWN");
 	}
 

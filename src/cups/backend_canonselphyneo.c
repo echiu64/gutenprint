@@ -58,7 +58,7 @@ struct selphyneo_readback {
 	uint8_t data[12];
 } __attribute((packed));
 
-/* Private data stucture */
+/* Private data structure */
 struct selphyneo_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;

@@ -1277,7 +1277,7 @@ dpl_do_print (stp_vars_t * v, stp_image_t * image)
     }
 
   stp_puts ("\r\002L\r", v);	/* enter Label Formatting mode */
-  multiplier = dpl_get_multiplier (v);	/* dot multiplyer */
+  multiplier = dpl_get_multiplier (v);	/* dot multiplier */
   stp_zprintf (v, "D%1i%1i\r", multiplier, multiplier);
   stp_puts ("R0000\r", v);	/* 0 offset, offset handled below */
   stp_puts ("A2\r", v);		/* transparent mode */

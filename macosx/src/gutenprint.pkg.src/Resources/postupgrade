@@ -22,7 +22,7 @@ echo "Installing..."
 # We are also faced with the dropping of some Canon printers that we
 # need to delete.
 #
-# We are going to be a bit more agressive than before.  The matching
+# We are going to be a bit more aggressive than before.  The matching
 # pattern seems to have withstood the test of time.  Also, any depricated
 # printers will not be in a list from cups-genppd.5.2
 

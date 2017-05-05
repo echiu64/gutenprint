@@ -400,7 +400,7 @@ struct shinkos1245_resp_matte {
 
 #define MATTE_MODE_MATTE 0x00
 
-/* Private data stucture */
+/* Private data structure */
 struct shinkos1245_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;
@@ -1537,7 +1537,7 @@ top:
 		cmd.mode = (ctx->hdr.mode & 0x3f) || ((ctx->hdr.dust & 0x3) << 6);
 		cmd.combo = ctx->hdr.method;
 
-		/* Issue print commmand */
+		/* Issue print command */
 		i = shinkos1245_do_cmd(ctx, &cmd, sizeof(cmd),
 				       &status1, sizeof(status1),
 				       &num);

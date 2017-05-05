@@ -45,7 +45,7 @@
 #define USB_PID_SONY_UPDR200 0x035F
 #define USB_PID_SONY_UPCR10  0x0226
 
-/* Private data stucture */
+/* Private data structure */
 struct updr150_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;

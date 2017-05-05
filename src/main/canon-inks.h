@@ -219,14 +219,14 @@ DECLARE_INK(4,16);
 DECLARE_INK(8,16);
 
 
-/* A inkset is a list of inks and their (relative) densities 
+/* An inkset is a list of inks and their (relative) densities
  * For printers that use the extended SetImage command t)
  * the inkset will be used to build the parameter list
  * therefore invalid inksets will let the printer fallback
  * to a default mode which will then lead to wrong output
  * use {0,0.0,NULL} for undefined placeholder inks
  * set density to 0.0 to disable certain inks
- * the paramters will then still occure in the t) command 
+ * the parameters will then still occure in the t) command
  * 
  * names:
  * inksets are named canon_X_ where X is the number of possible inks in the set

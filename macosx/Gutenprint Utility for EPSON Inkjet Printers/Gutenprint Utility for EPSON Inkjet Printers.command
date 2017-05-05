@@ -60,7 +60,7 @@ if [ $busy -eq 1 ] ; then
 	printf "\nPrinter $1 is busy or not excepting jobs.\nWill try again in 10 seconds.\n\n"
 	sleep 10
 	else
-	printf "\nStill cannot access printer.  Unable to procede.\nGoodbye.\n\n"
+	printf "\nStill cannot access printer.  Unable to proceed.\nGoodbye.\n\n"
 	exit -1
 	fi
 else

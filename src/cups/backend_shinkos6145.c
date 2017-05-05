@@ -259,7 +259,7 @@ struct shinkos6145_correctionparam {
 	uint8_t  pad[3948];       // @12436, null.
 } __attribute__((packed)); /* 16384 bytes */
 
-/* Private data stucture */
+/* Private data structure */
 struct shinkos6145_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;
@@ -781,7 +781,7 @@ static char *error_str(uint8_t v) {
 	case ERROR_COMMS_TIMEOUT:
 		return "Main Communication Timeout";
 	case ERROR_MAINT_NEEDED:
-		return "Maintainence Needed";
+		return "Maintenance Needed";
 	case ERROR_BAD_COMMAND:
 		return "Inappropriate Command";
 	case ERROR_PRINTER:
@@ -1195,7 +1195,7 @@ static int get_status(struct shinkos6145_ctx *ctx)
 	INFO(" Print Counts:\n");
 	INFO("\tSince Paper Changed:\t%08u\n", le32_to_cpu(resp->count_paper));
 	INFO("\tLifetime:\t\t%08u\n", le32_to_cpu(resp->count_lifetime));
-	INFO("\tMaintainence:\t\t%08u\n", le32_to_cpu(resp->count_maint));
+	INFO("\tMaintenance:\t\t%08u\n", le32_to_cpu(resp->count_maint));
 	INFO("\tPrint Head:\t\t%08u\n", le32_to_cpu(resp->count_head));
 	INFO(" Cutter Actuations:\t%08u\n", le32_to_cpu(resp->count_cutter));
 	INFO(" Ribbon Remaining:\t%08u\n", le32_to_cpu(resp->count_ribbon_left));
@@ -1230,7 +1230,7 @@ static int get_status(struct shinkos6145_ctx *ctx)
 		return -1;
 
 	INFO("Lifetime Distance:     %08u inches\n", le32_to_cpu(resp2->lifetime_distance));
-	INFO("Maintainence Distance: %08u inches\n", le32_to_cpu(resp2->maint_distance));
+	INFO("Maintenance Distance:  %08u inches\n", le32_to_cpu(resp2->maint_distance));
 	INFO("Head Distance:         %08u inches\n", le32_to_cpu(resp2->head_distance));
 	
 	/* Query various params */

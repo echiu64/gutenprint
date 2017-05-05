@@ -1994,7 +1994,7 @@ static const dyesub_pagesize_t kodak_1400_page[] =
   */
   { "w612h864", "8.5x12", PT(2560,301)+1, PT(3010,301)+72*2, PT(76,301)+1, PT(76,301), 72, 72, DYESUB_PORTRAIT}, /* 8x12 */
   { "Legal", "8.5x14", PT(2560,301)+1, PT(3612,301)+72*2, PT(35,301)+1, PT(35,301)+1, 72, 72, DYESUB_PORTRAIT}, /* 8x14 */
-  { "A4", "A4",       PT(2560,301)+1, PT(3010,301)+72*2, PT(76,301)+1, PT(76,301), 0, 0, DYESUB_PORTRAIT}, /* A4, indentical to 8x12 */
+  { "A4", "A4",       PT(2560,301)+1, PT(3010,301)+72*2, PT(76,301)+1, PT(76,301), 0, 0, DYESUB_PORTRAIT}, /* A4, identical to 8x12 */
 };
 
 LIST(dyesub_pagesize_list_t, kodak_1400_page_list, dyesub_pagesize_t, kodak_1400_page);
@@ -2494,7 +2494,7 @@ static const stp_parameter_t kodak_8500_parameters[] =
   },
   {
     "MatteIntensity", N_("Matte Intensity"), "Color=No,Category=Advanced Printer Setup",
-    N_("Strengh of matte lamination pattern (-5 through +5)"),
+    N_("Strength of matte lamination pattern (-5 through +5)"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },  
@@ -5371,7 +5371,7 @@ static const stp_parameter_t shinko_chcs1245_parameters[] =
   },
   {
     "MatteIntensity", N_("Matte Intensity"), "Color=No,Category=Advanced Printer Setup",
-    N_("Strengh of matte lamination pattern (-25 through +25)"),
+    N_("Strength of matte lamination pattern (-25 through +25)"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },  

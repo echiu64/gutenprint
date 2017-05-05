@@ -526,7 +526,7 @@ stp_parameter_list_copy(stp_const_parameter_list_t list);
 /**
  * Append one parameter_list to another.
  * @param list the destination list (to append to).
- * @param append the list of paramters to append.  Each item that does
+ * @param append the list of parameters to append.  Each item that does
  * not already exist in list will be appended.
  */
 extern void
@@ -1386,10 +1386,10 @@ extern void stp_get_media_size(const stp_vars_t *v, int *width, int *height);
  * If the media size stored in V is invalid, the return values
  * will be indeterminate.  It is up to the user to specify legal values.
  * @param v the vars to use.
- * @param left a pointer to a int to store the left edge in.
- * @param right a pointer to a int to store the right edge in.
- * @param bottom a pointer to a int to store the bottom edge in.
- * @param top a pointer to a int to store the top edge in.
+ * @param left a pointer to an int to store the left edge in.
+ * @param right a pointer to an int to store the right edge in.
+ * @param bottom a pointer to an int to store the bottom edge in.
+ * @param top a pointer to an int to store the top edge in.
  */
 extern void stp_get_imageable_area(const stp_vars_t *v, int *left, int *right,
 				   int *bottom, int *top);
@@ -1413,10 +1413,10 @@ extern void stp_get_imageable_area(const stp_vars_t *v, int *left, int *right,
  * If the media size stored in V is invalid, the return values
  * will be indeterminate.  It is up to the user to specify legal values.
  * @param v the vars to use.
- * @param left a pointer to a int to store the left edge in.
- * @param right a pointer to a int to store the right edge in.
- * @param bottom a pointer to a int to store the bottom edge in.
- * @param top a pointer to a int to store the top edge in.
+ * @param left a pointer to an int to store the left edge in.
+ * @param right a pointer to an int to store the right edge in.
+ * @param bottom a pointer to an int to store the bottom edge in.
+ * @param top a pointer to an int to store the top edge in.
  */
 extern void stp_get_maximum_imageable_area(const stp_vars_t *v, int *left,
 					   int *right, int *bottom, int *top);
@@ -1426,10 +1426,10 @@ extern void stp_get_maximum_imageable_area(const stp_vars_t *v, int *left,
  * Retrieve the minimum and maximum size limits for custom media sizes
  * with the current printer settings.
  * @param v the vars to use.
- * @param max_width a pointer to a int to store the maximum width in.
- * @param max_height a pointer to a int to store the maximum height in.
- * @param min_width a pointer to a int to store the minimum width in.
- * @param min_height a pointer to a int to store the minimum height in.
+ * @param max_width a pointer to an int to store the maximum width in.
+ * @param max_height a pointer to an int to store the maximum height in.
+ * @param min_width a pointer to an int to store the minimum width in.
+ * @param min_height a pointer to an int to store the minimum height in.
  */
 extern void
 stp_get_size_limit(const stp_vars_t *v, int *max_width, int *max_height,
@@ -1440,8 +1440,8 @@ stp_get_size_limit(const stp_vars_t *v, int *max_width, int *max_height,
  * Retrieve the printing resolution of the selected resolution.  If the
  * resolution is invalid, -1 will be returned in both x and y.
  * @param v the vars to use.
- * @param x a pointer to a int to store the horizontal resolution in.
- * @param y a pointer to a int to store the vertical resolution in.
+ * @param x a pointer to an int to store the horizontal resolution in.
+ * @param y a pointer to an int to store the vertical resolution in.
  */
 extern void stp_describe_resolution(const stp_vars_t *v, int *x, int *y);
 

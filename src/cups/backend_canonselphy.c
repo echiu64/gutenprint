@@ -535,7 +535,7 @@ done:
 	return printer_type;
 }
 
-/* Private data stucture */
+/* Private data structure */
 struct canonselphy_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;
@@ -1166,7 +1166,7 @@ struct dyesub_backend canonselphy_backend = {
    08 00 03 00  [pg] 00 [pg2] [xx]  00 00 00 00   [? transitions to this]
    09 00 07 00  [pg] 00 [pg2] [xx]  00 00 00 00   [ready for C]
    09 00 00 00  [pg] 00 [pg2] 00  00 00 00 00   [? transitions to this]
-   0b 00 00 00  [pg] 00 [pg2] 00  00 00 00 00   [? transisions to this]
+   0b 00 00 00  [pg] 00 [pg2] 00  00 00 00 00   [? transitions to this]
    0c 00 00 00  [pg] 00 [pg2] 00  00 00 00 00   [? transitions to this]
    0f 00 00 00  [pg] 00 [pg2] 00  00 00 00 00   [? transitions to this]
    13 00 00 00  [pg] 00 [pg2] 00  00 00 00 00   [? transitions to this]

@@ -643,7 +643,7 @@ extern char *stp_curve_write_string(const stp_curve_t *curve);
  * routines may manipulate the locale to achieve a safe
  * representation.
  * @param fp the stream to read.
- * @returns the newly created curve, or NULL if an error occured.
+ * @returns the newly created curve, or NULL if an error occurred.
  */
 extern stp_curve_t *stp_curve_create_from_stream(FILE* fp);
 
@@ -653,7 +653,7 @@ extern stp_curve_t *stp_curve_create_from_stream(FILE* fp);
  * routines may manipulate the locale to achieve a safe
  * representation.
  * @param file the file to read.
- * @returns the newly created curve, or NULL if an error occured.
+ * @returns the newly created curve, or NULL if an error occurred.
  */
 extern stp_curve_t *stp_curve_create_from_file(const char* file);
 
@@ -663,7 +663,7 @@ extern stp_curve_t *stp_curve_create_from_file(const char* file);
  * routines may manipulate the locale to achieve a safe
  * representation.
  * @param string the string to read.
- * @returns the newly created curve, or NULL if an error occured.
+ * @returns the newly created curve, or NULL if an error occurred.
  */
 extern stp_curve_t *stp_curve_create_from_string(const char* string);
 

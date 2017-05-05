@@ -31,7 +31,7 @@
  *
  * The best way to get the Stylus Scanner working is to test
  * this and also correct my possibly errors.
- * Programming knowledge will be helpfull for this.
+ * Programming knowledge will be helpful for this.
  *
  */
  
@@ -151,14 +151,14 @@ static errorMessage_t errorMessage[] =
    { 0x03, "Transaction channel can't be closed."                    ,0 },
    { 0x04, "No sufficient resources available now."                  ,0 },
    { 0x05, "Connection denied."                                      ,1 },
-   { 0x06, "Channel allready open."                                  ,0 },
+   { 0x06, "Channel already open."                                   ,0 },
    { 0x07, "Credit overflow, previous credit remain valid."          ,0 },
    { 0x08, "Channel is not open."                                    ,1 },
    { 0x09, "Service not available on specified socket."              ,1 },
    { 0x0a, "Service name to socket ID failed."                       ,1 },
    { 0x0b, "Init transaction failed."                                ,1 },
    { 0x0c, "Invalid packet size."                                    ,1 },
-   { 0x0d, "Requested packed size is 0, no data can be transfered."  ,0 },
+   { 0x0d, "Requested packed size is 0, no data can be transferred." ,0 },
    { 0x80, "Malformed packet, ignored."                              ,1 },
    { 0x81, "No credit for received packet, ignored"                  ,0 },
    { 0x82, "Reply doesn't match with outstanding command, ignored."  ,1 },
@@ -377,7 +377,7 @@ static void printCmdType(unsigned char *cmd)
 
 /*******************************************************************/
 /* Function writeCmd()                                             */
-/*        write a commmand                                         */
+/*        write a command                                          */
 /* Input:  int   fd    file handle                                 */
 /*         char *cmd   the data are to be put here                 */
 /*         int   len   the number of bytes to read                 */
@@ -533,7 +533,7 @@ int readAnswer(int fd, unsigned char *buf, int len, int allowExtra)
          {
             /* the bytes idx 2 and 3 contain the length */
             /* in case of errors this may differ from   */
-            /* the expected lenght. Setting len to this */
+            /* the expected length. Setting len to this */
             /* value will avoid waiting for timeout     */
 	    int newlen = (buf[2] << 8) + buf[3];
 	    if (len > newlen)

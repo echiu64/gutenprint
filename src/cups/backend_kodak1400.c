@@ -74,7 +74,7 @@ struct kodak1400_hdr {
 } __attribute__((packed));
 
 
-/* Private data stucture */
+/* Private data structure */
 struct kodak1400_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;
@@ -643,7 +643,7 @@ struct dyesub_backend kodak1400_backend = {
   00 00 00 00     NULL
   XX              00 Glossy, 01 Matte   (Note: Kodak805 only supports Glossy)
   XX              01 to laminate, 00 to not.
-  01              Unkown, always set to 01
+  01              Unknown, always set to 01
   XX              Lamination Strength:
  
                   3c  Glossy

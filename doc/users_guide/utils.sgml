@@ -111,7 +111,7 @@ Cannot read from /dev/lp0: Invalid argument
     ]]>
   </programlisting>
 
-     Another possibile cause for error is that the raw printer device
+     Another possible cause for error is that the raw printer device
 does not have both read and write permission for the user attempting
 to access the device.  In this case, the error message will read
 "Permission denied".  A final possibility is that the raw printer

@@ -1085,7 +1085,7 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
   if (media_type && resolution && mode) {
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint:  check_current_mode --- Resolution, Media, Mode all known \n");
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: media type selected: '%s'\n",media_type->name);
-    stp_dprintf(STP_DBG_CANON, v,"DEBUG: (Inital) Gutenprint: mode initally active: '%s'\n",mode->name);
+    stp_dprintf(STP_DBG_CANON, v,"DEBUG: (Initial) Gutenprint: mode initially active: '%s'\n",mode->name);
       
     /* scroll through modeuse list to find media */
     muse = select_media_modes(v,media_type,mlist);
@@ -2471,13 +2471,13 @@ canon_printhead_colors(const stp_vars_t*v)
     stp_dprintf(STP_DBG_CANON, v,"(canon_printhead_colors[BW]) NOBLACK? %lu\n",(caps->features & CANON_CAP_NOBLACK));
     return CANON_INK_K;
   }
-  /* alternatively, if the cartridge selection is in force, and black cartride is selected, accept it */
+  /* alternatively, if the cartridge selection is in force, and black cartridge is selected, accept it */
   if(ink_set && !strcmp(ink_set, "Black")){
     stp_dprintf(STP_DBG_CANON, v,"(canon_printhead_colors[BW]) Found InkSet black selection\n");
     return CANON_INK_K;
   }
   
-  /* originaly finds selected InkType of form: CANON_INK_<inks> */
+  /* originally finds selected InkType of form: CANON_INK_<inks> */
   /* but this is incorrect, since it does not check media or mode */
   /* change: deal with mode set and mode not set cases */
 
@@ -6471,7 +6471,7 @@ canon_write(stp_vars_t *v,		/* I - Print file or command */
 	    unsigned char *line,	/* I - Output bitmap data */
 	    int           length,	/* I - Length of bitmap data */
 	    int           coloridx,	/* I - Which color */
-	    int           *empty,       /* IO- Preceeding empty lines */
+	    int           *empty,       /* IO- Preceding empty lines */
 	    int           width,	/* I - Printed width */
 	    int           offset, 	/* I - Offset from left side */
 	    int           bits,

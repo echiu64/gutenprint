@@ -64,7 +64,7 @@
 #define USB_PID_DNP_DS620 0x8b01
 #define USB_PID_DNP_DS820 0x9001
 
-/* Private data stucture */
+/* Private data structure */
 struct dnpds40_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;
@@ -369,7 +369,7 @@ static char *dnpds80_duplex_statuses(int status)
 		break;
 	}
 
-	return "Unkown Duplexer Error";
+	return "Unknown Duplexer Error";
 }
 
 static char *dnpds40_statuses(int status)

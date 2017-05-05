@@ -90,7 +90,7 @@ struct s2145_printjob_hdr {
 	uint32_t unk21;
 } __attribute__((packed));
 
-/* Private data stucture */
+/* Private data structure */
 struct shinkos2145_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;
@@ -591,7 +591,7 @@ static char *error_str(uint8_t v) {
 	case ERROR_COMMS_TIMEOUT:
 		return "Main Communication Timeout";
 	case ERROR_MAINT_NEEDED:
-		return "Maintainence Needed";
+		return "Maintenance Needed";
 	case ERROR_BAD_COMMAND:
 		return "Inappropriate Command";
 	case ERROR_PRINTER:
@@ -878,7 +878,7 @@ static int get_status(struct shinkos2145_ctx *ctx)
 	INFO(" Print Counts:\n");
 	INFO("\tSince Paper Changed:\t%08u\n", le32_to_cpu(resp->count_paper));
 	INFO("\tLifetime:\t\t%08u\n", le32_to_cpu(resp->count_lifetime));
-	INFO("\tMaintainence:\t\t%08u\n", le32_to_cpu(resp->count_maint));
+	INFO("\tMaintenance:\t\t%08u\n", le32_to_cpu(resp->count_maint));
 	INFO("\tPrint Head:\t\t%08u\n", le32_to_cpu(resp->count_head));
 	INFO(" Cutter Actuations:\t%08u\n", le32_to_cpu(resp->count_cutter));
 	INFO(" Ribbon Remaining:\t%08u\n", le32_to_cpu(resp->count_ribbon_left));
