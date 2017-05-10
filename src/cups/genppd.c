@@ -685,6 +685,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
 	      return 1;
 	    }
 	} while (pid > 0);
+      stp_free(subprocesses);
     }
   if (parent && !verbose)
     fprintf(stderr, " done.\n");
