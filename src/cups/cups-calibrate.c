@@ -370,7 +370,7 @@ main(int  argc,
   if (system(lpoptionscommand) == 0)
     puts("Calibration profile successfully saved.");
   else
-    puts("An error occured while saving the calibration profile.");
+    puts("An error occurred while saving the calibration profile.");
 
   return (0);
 }

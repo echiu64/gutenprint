@@ -47,7 +47,7 @@
 #define USB_PID_MITSU_P93D  0x0398
 #define USB_PID_MITSU_P95D  0x3b10
 
-/* Private data stucture */
+/* Private data structure */
 struct mitsup95d_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;

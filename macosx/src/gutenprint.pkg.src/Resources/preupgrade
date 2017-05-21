@@ -34,7 +34,7 @@ MICRO_VERSION=$(echo ${MACOS_VERSION}|awk '{split($0,a,".");print a[3];nextfile;
 # This will also take care of any inability of OS X 10.6 to not "upgrade"
 # as it did in prior versions of OS X.
 #
-# Testing in December, 2009 in preperation for Gutenprint 5.2.5 release shows
+# Testing in December, 2009 in preparation for Gutenprint 5.2.5 release shows
 # that the Receipt issuse is no longer present.
 # To be on the safe side, keep this deletion routine in but only for
 # for cases where the /Library/Receipt is not found.

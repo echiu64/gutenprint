@@ -53,7 +53,7 @@ extern "C" {
 typedef enum
 {
   STP_IMAGE_STATUS_OK,   /*!< Everything is OK. */
-  STP_IMAGE_STATUS_ABORT /*!< An error occured, or the job was aborted. */
+  STP_IMAGE_STATUS_ABORT /*!< An error occurred, or the job was aborted. */
 } stp_image_status_t;
 
 /**

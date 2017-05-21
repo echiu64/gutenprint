@@ -124,7 +124,7 @@ typedef int (*send_image_dataFN)(struct BandImage *out, void *context,
 /* Max size of data chunk sent over */
 #define CHUNK_LEN (256*1024)
 
-/* Private data stucture */
+/* Private data structure */
 struct mitsu70x_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;

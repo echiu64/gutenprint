@@ -43,7 +43,7 @@
 #define USB_PID_CITIZEN_CW01 0x0002 // Maybe others?
 //#define USB_PID_OLMEC_OP900 XXXX
 
-/* Private data stucture */
+/* Private data structure */
 struct cw01_spool_hdr {
 	uint8_t  type; /* 0x00 -> 0x06 */
 	uint8_t  res; /* vertical resolution; 0x00 == 334dpi, 0x01 == 600dpi */
@@ -183,7 +183,7 @@ static char *cw01_statuses(char *str)
 		break;
 	}
 
-	return "Unkown Error";
+	return "Unknown Error";
 }
 
 static int cw01_do_cmd(struct cw01_ctx *ctx,

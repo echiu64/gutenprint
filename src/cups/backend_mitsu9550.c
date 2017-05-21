@@ -104,7 +104,7 @@ struct mitsu9550_cmd {
 	uint8_t cmd[4];
 } __attribute__((packed));
 
-/* Private data stucture */
+/* Private data structure */
 struct mitsu9550_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;

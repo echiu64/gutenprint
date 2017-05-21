@@ -91,7 +91,7 @@ struct kodak605_media_list {
 struct kodak605_status {
 	struct kodak605_sts_hdr hdr;
 /*@10*/	uint32_t ctr_life;  /* Lifetime Prints */
-	uint32_t ctr_maint; /* Prints since last maintainence */
+	uint32_t ctr_maint; /* Prints since last maintenance */
 	uint32_t ctr_media; /* Prints on current media */
 	uint32_t ctr_cut;   /* Cutter Actuations */
 	uint32_t ctr_head;  /* Prints on current head */
@@ -164,7 +164,7 @@ static const char *kodak68xx_mediatypes(int type)
 
 #define CMDBUF_LEN 4
 
-/* Private data stucture */
+/* Private data structure */
 struct kodak605_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;

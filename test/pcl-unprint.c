@@ -436,7 +436,7 @@ void pcl_read_command(void)
 
 		    if (initial_command[0] == '%') {
 #ifdef DEBUG
-			fprintf(stderr, "ESC%% commmand\n");
+			fprintf(stderr, "ESC%% command\n");
 #endif
 			initial_command[initial_command_index] = '\0';
 		    }
@@ -462,7 +462,7 @@ void pcl_read_command(void)
 /*
    We get here if either this is a combined sequence, or we have processed
    the beginning of a parameterised sequence. There is an optional number
-   next, which may be preceeded by "+" or "-". FIXME We should also handle
+   next, which may be preceded by "+" or "-". FIXME We should also handle
    decimal points.
 */
 

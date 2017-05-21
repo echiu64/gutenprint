@@ -520,7 +520,7 @@ automake conditionals are not the same as make conditionals (which are
 not available).
 
 Another gotcha is that automake adds rules of its own, so you must make sure
-that the names do not clash, or you may get obscure problems occuring
+that the names do not clash, or you may get obscure problems occurring
 when you override an automake rule.
 
 

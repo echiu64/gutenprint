@@ -329,7 +329,8 @@ run (const char        *name,		/* I - Name of print program. */
         fprintf(stderr,"Key with no value provided\n");
       } else {
 
-        for( int k=0; k<kv_arr_len && values[0].data.d_status == GIMP_PDB_SUCCESS; k+=2 )
+	int k = 0;
+        for( k=0; k<kv_arr_len && values[0].data.d_status == GIMP_PDB_SUCCESS; k+=2 )
         {
           char *key = param[8].data.d_stringarray[k];
           char *value = param[8].data.d_stringarray[k + 1];
@@ -477,6 +478,7 @@ run (const char        *name,		/* I - Name of print program. */
             fprintf(stderr,"Parameter unsupported in gimp2 plugin for parameter %s\n", key);
             break;
           }
+	  stp_parameter_description_destroy(&desc);
         }
       }
     }
@@ -533,7 +535,6 @@ run (const char        *name,		/* I - Name of print program. */
 
   if (export == GIMP_EXPORT_EXPORT)
     gimp_image_delete (image_ID);
-  stp_parameter_description_destroy(&desc);
   stp_vars_destroy(gimp_vars.v);
 }
 

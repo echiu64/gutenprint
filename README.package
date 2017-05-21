@@ -104,7 +104,7 @@ end-user use.
      Gimp-Print 4.2 to be installed concurrently.
 
    * The core driver library component also includes XML data files
-     (in src/xml), locale files for the libary, and documentation.
+     (in src/xml), locale files for the library, and documentation.
      The XML data files in src/xml are mandatory; the driver will not
      function without these files.
 

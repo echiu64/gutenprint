@@ -181,7 +181,7 @@ extern struct dyesub_backend BACKEND;
 #endif
 
 /* CUPS compatibility */
-#define CUPS_BACKEND_OK            0 /* Sucess */
+#define CUPS_BACKEND_OK            0 /* Success */
 #define CUPS_BACKEND_FAILED        1 /* Failed to print use CUPS policy */
 #define CUPS_BACKEND_AUTH_REQUIRED 2 /* Auth required */
 #define CUPS_BACKEND_HOLD          3 /* Hold this job only */

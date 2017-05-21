@@ -221,7 +221,7 @@ struct kodak68x0_media_readback {
 
 #define CMDBUF_LEN 17
 
-/* Private data stucture */
+/* Private data structure */
 struct kodak6800_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;

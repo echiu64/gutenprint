@@ -1,9 +1,10 @@
 /*
  *
- *   Print plug-in DyeSub driver (formerly Olympus driver) for the GIMP.
+ *   Print plug-in DyeSub driver (formerly Olympus driver) for Gutenprint
  *
- *   Copyright 2003 - 2006
- *   Michael Mraka (Michael.Mraka@linux.cz)
+ *   Copyright 2003-2006 Michael Mraka (Michael.Mraka@linux.cz)
+ *
+ *   Copyright 2007-2017 Solomon Peachy (pizza@shaftnet.org)
  *
  *   The plug-in is based on the code of the RAW plugin for the GIMP of
  *   Michael Sweet (mike@easysw.com) and Robert Krawitz (rlk@alum.mit.edu)
@@ -41,6 +42,10 @@
 #define inline __inline__
 #endif
 
+#define MITSU70X_8BPP
+//#define S6145_YMC
+//#define CANONSELPHYNEO_CMY
+
 #define DYESUB_FEATURE_NONE		 0x00000000
 #define DYESUB_FEATURE_FULL_WIDTH	 0x00000001
 #define DYESUB_FEATURE_FULL_HEIGHT	 0x00000002
@@ -53,15 +58,14 @@
 #define DYESUB_FEATURE_12BPP             0x00000100
 #define DYESUB_FEATURE_16BPP             0x00000200
 #define DYESUB_FEATURE_BIGENDIAN         0x00000400
-#define DYESUB_FEATURE_RGBtoYCBCR        0x00000800
-#define DYESUB_FEATURE_DUPLEX            0x00001000
-#define DYESUB_FEATURE_MONOCHROME        0x00002000  /* Monochrome only..? */
+#define DYESUB_FEATURE_DUPLEX            0x00000800
+#define DYESUB_FEATURE_MONOCHROME        0x00001000
+#ifndef CANONSELPHYNEO_CMY
+#define DYESUB_FEATURE_RGBtoYCBCR        0x00002000
+#endif
 
 #define DYESUB_PORTRAIT  0
 #define DYESUB_LANDSCAPE 1
-
-#define MITSU70X_8BPP
-//#define S6145_YMC
 
 #ifndef MIN
 #  define MIN(a,b)	(((a) < (b)) ? (a) : (b))
@@ -283,7 +287,7 @@ typedef struct /* printer specific parameters */
   const dyesub_resolution_list_t *resolution;
   const dyesub_pagesize_list_t *pages;
   const dyesub_printsize_list_t *printsize;
-  int block_size;
+  int block_size;  /* Really # of rows in a block */
   int features;
   void (*printer_init_func)(stp_vars_t *);
   void (*printer_end_func)(stp_vars_t *);
@@ -1184,7 +1188,12 @@ static void cp910_printer_init_func(stp_vars_t *v)
                  0x50 )));
   stp_putc(pg, v);
 
-  dyesub_nputc(v, '\0', 5);
+  dyesub_nputc(v, '\0', 4);
+#ifdef CANONSELPHYNEO_CMY
+  stp_putc(0x01, v);
+#else
+  stp_putc(0x00, v);
+#endif
 
   stp_put32_le(pd->w_size, v);
   stp_put32_le(pd->h_size, v);
@@ -1985,7 +1994,7 @@ static const dyesub_pagesize_t kodak_1400_page[] =
   */
   { "w612h864", "8.5x12", PT(2560,301), PT(3010,301)+72*2, PT(76,301), PT(76,301), 72, 72, DYESUB_PORTRAIT}, /* 8x12 */
   { "Legal", "8.5x14", PT(2560,301), PT(3612,301)+72*2, PT(35,301), PT(35,301), 72, 72, DYESUB_PORTRAIT}, /* 8x14 */
-  { "A4", "A4",       PT(2560,301), PT(3010,301)+72*2, PT(76,301), PT(76,301), 0, 0, DYESUB_PORTRAIT}, /* A4, indentical to 8x12 */
+  { "A4", "A4",       PT(2560,301), PT(3010,301)+72*2, PT(76,301), PT(76,301), 0, 0, DYESUB_PORTRAIT}, /* A4, identical to 8x12 */
 };
 
 LIST(dyesub_pagesize_list_t, kodak_1400_page_list, dyesub_pagesize_t, kodak_1400_page);
@@ -2485,7 +2494,7 @@ static const stp_parameter_t kodak_8500_parameters[] =
   },
   {
     "MatteIntensity", N_("Matte Intensity"), "Color=No,Category=Advanced Printer Setup",
-    N_("Strengh of matte lamination pattern (-5 through +5)"),
+    N_("Strength of matte lamination pattern (-5 through +5)"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },  
@@ -5362,7 +5371,7 @@ static const stp_parameter_t shinko_chcs1245_parameters[] =
   },
   {
     "MatteIntensity", N_("Matte Intensity"), "Color=No,Category=Advanced Printer Setup",
-    N_("Strengh of matte lamination pattern (-25 through +25)"),
+    N_("Strength of matte lamination pattern (-25 through +25)"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },  
@@ -7063,20 +7072,34 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
-  { /* Canon CP820, CP910 */
+  { /* Canon CP820, CP910, CP1000, CP1200 */
     1011,
+#ifdef CANONSELPHYNEO_CMY
+    &cmy_ink_list,
+#else
     &rgb_ink_list,
+#endif
     &res_300dpi_list,
     &cp910_page_list,
     &cp910_printsize_list,
     SHRT_MAX,
+#ifdef CANONSELPHYNEO_CMY
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
+      | DYESUB_FEATURE_PLANE_INTERLACE,
+#else
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
       | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_RGBtoYCBCR,
+#endif
     &cp910_printer_init_func, NULL,
     NULL, NULL,
     NULL, NULL,
+#ifdef CANONSELPHYNEO_CMY
+    cpx00_adjust_curves,
+#else
     NULL,
+#endif
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -8758,10 +8781,10 @@ dyesub_read_image(stp_vars_t *v,
 }
 
 static void
-dyesub_print_pixel(unsigned short *src, char *dest,
-		   dyesub_print_vars_t *pv,
-		   const dyesub_cap_t *caps,
-		   int plane)
+dyesub_render_pixel(unsigned short *src, char *dest,
+		    dyesub_print_vars_t *pv,
+		    const dyesub_cap_t *caps,
+		    int plane)
 {
   unsigned short ink[MAX_INK_CHANNELS]; /* What is sent to printer */
 
@@ -8783,6 +8806,7 @@ dyesub_print_pixel(unsigned short *src, char *dest,
   /* copy out_channel (image) to equiv ink_channel (printer) */
   for (i = start; i < end; i++)
     {
+#ifndef CANONSELPHYNEO_CMY
       if (dyesub_feature(caps, DYESUB_FEATURE_RGBtoYCBCR))
         {
 	  /* Convert RGB -> YCbCr (JPEG YCbCr444 coefficients) */
@@ -8802,6 +8826,7 @@ dyesub_print_pixel(unsigned short *src, char *dest,
 	       into the dyesub driver. */
 	}
       else
+#endif
         {
 	   ink[i] = src[i];
         }
@@ -8810,11 +8835,13 @@ dyesub_print_pixel(unsigned short *src, char *dest,
       if (pv->bytes_per_ink_channel == 1)
         {
 	  unsigned char *ink_u8 = (unsigned char *) ink;
+#ifndef CANONSELPHYNEO_CMY
 #if 0
 	  /* FIXME:  Do we want to round? */
           if (dyesub_feature(caps, DYESUB_FEATURE_RGBtoYCBCR))
             ink_u8[i] = ink[i] >> 8;
 	  else
+#endif
 #endif
             ink_u8[i] = ink[i] / 257;
         }
@@ -8836,26 +8863,22 @@ dyesub_print_pixel(unsigned short *src, char *dest,
 	   pv->bytes_per_ink_channel);
   else /* Otherwise, print the full set of inks, in order (eg RGB or BGR) */
     for (i = 0; i < pv->ink_channels; i++)
-      memcpy(dest, (char *) ink + (pv->bytes_per_ink_channel * (pv->ink_order[i]-1)),
+      memcpy(dest + i*pv->bytes_per_ink_channel,
+	     (char *) ink + (pv->bytes_per_ink_channel * (pv->ink_order[i]-1)),
 	     pv->bytes_per_ink_channel);
 }
 
-static int
-dyesub_print_row(stp_vars_t *v,
-		dyesub_print_vars_t *pv,
-		const dyesub_cap_t *caps,
-		double in_row,
-		int plane)
+static void
+dyesub_render_row(stp_vars_t *v,
+		  dyesub_print_vars_t *pv,
+		  const dyesub_cap_t *caps,
+		  double in_row,
+		  char *dest,
+		  int bytes_per_pixel,
+		  int plane)
 {
   int w;
   unsigned short *src;
-  char *dest;
-  size_t len;
-
-  len = pv->outw_px * pv->bytes_per_ink_channel;
-  dest = stp_malloc(len);
-  if (!dest)
-    return 0;  /* ? out of memory ? */
   
   for (w = 0; w < pv->outw_px; w++)
     {
@@ -8875,14 +8898,9 @@ dyesub_print_row(stp_vars_t *v,
       //      Lanczos  (awesome!! but slow)
       src = &(pv->image_data[(int)row][(int)col * pv->out_channels]);
 
-      dyesub_print_pixel(src, dest + w*pv->bytes_per_ink_channel,
-			 pv, caps, plane);
+      dyesub_render_pixel(src, dest + w*bytes_per_pixel,
+			  pv, caps, plane);
     }
-
-  stp_zfwrite(dest, len, 1, v);
-  stp_free(dest);
-
-  return 1;
 }
 
 static int
@@ -8892,17 +8910,36 @@ dyesub_print_plane(stp_vars_t *v,
 		   const dyesub_cap_t *caps,
 		   int plane)
 {
-
-
-  int ret = 0;
-  int h, p;
-  double row;
-  int out_bytes = ((pv->plane_interlacing || pv->row_interlacing) ? 1 : pv->ink_channels)
+  int h;
+  int bpp = ((pv->plane_interlacing || pv->row_interlacing) ? 1 : pv->ink_channels)
   					* pv->bytes_per_ink_channel;
+  size_t rowlen = pv->prnw_px * bpp;
+  char *destrow = stp_malloc(rowlen); /* Allocate a buffer for the rendered rows */
+  if (!destrow)
+    return 0;  /* ? out of memory ? */
+
+  /* Pre-Fill in the blank bits of the row. */
+  if (dyesub_feature(caps, DYESUB_FEATURE_FULL_WIDTH))
+    {
+      /* FIXME: This is broken for bpp != 1 and packed data -- but no such models exist. */
+      /* empty part left of image area */
+      if (pv->outl_px > 0)
+        {
+          memset(destrow, pv->empty_byte[plane], bpp * pv->outl_px);
+        }
+      /* empty part right of image area */
+      if (pv->outr_px < pv->prnw_px)
+        {
+          memset(destrow + rowlen - bpp * (pv->prnw_px - pv->outr_px),
+		 pv->empty_byte[plane],
+		 bpp * (pv->prnw_px - pv->outr_px));
+        }
+    }
 
   for (h = 0; h <= pv->prnb_px - pv->prnt_px; h++)
     {
-      p = pv->row_interlacing ? 0 : plane;
+      int p = pv->row_interlacing ? 0 : plane;
+      double row;
 
       do {
 
@@ -8917,31 +8954,25 @@ dyesub_print_plane(stp_vars_t *v,
 	  dyesub_exec(v, caps->block_init_func, "caps->block_init");
 	}
 
+      /* Generate a single row */
       if (h + pv->prnt_px < pv->outt_px || h + pv->prnt_px >= pv->outb_px)
         { /* empty part above or below image area */
-          dyesub_nputc(v, pv->empty_byte[plane], out_bytes * pv->prnw_px);
+	  memset(destrow, pv->empty_byte[plane], rowlen);
+	  /* FIXME: This is also broken for bpp != 1 and packed data  */
+	  /* FIXME: Also this is inefficient; it won't change once generated.. */
 	}
       else
         {
-	  if (dyesub_feature(caps, DYESUB_FEATURE_FULL_WIDTH)
-	  	&& pv->outl_px > 0)
-	    { /* empty part left of image area */
-              dyesub_nputc(v, pv->empty_byte[plane], out_bytes * pv->outl_px);
-	    }
-
 	  row = dyesub_interpolate(h + pv->prnt_px - pv->outt_px,
 				   pv->outh_px, pv->imgh_px);
+
 	  stp_deprintf(STP_DBG_DYESUB,
 		       "dyesub_print_plane: h = %d, row = %f\n", h, row);
-	  ret = dyesub_print_row(v, pv, caps, row, p);
 
-	  if (dyesub_feature(caps, DYESUB_FEATURE_FULL_WIDTH)
-	  	&& pv->outr_px < pv->prnw_px)
-	    { /* empty part right of image area */
-	      dyesub_nputc(v, pv->empty_byte[plane], out_bytes
-	      				* (pv->prnw_px - pv->outr_px));
-	    }
+	  dyesub_render_row(v, pv, caps, row, destrow + bpp * pv->outl_px, bpp, p);
 	}
+      /* And send it out */
+      stp_zfwrite(destrow, rowlen, 1, v);
 
       if (h + pv->prnt_px == pd->block_max_h)
         { /* block end */
@@ -8950,7 +8981,9 @@ dyesub_print_plane(stp_vars_t *v,
 
       } while (pv->row_interlacing && ++p < pv->ink_channels);
     }
-  return ret;
+
+  stp_free(destrow);
+  return 1;
 }
 
 /*
@@ -9136,11 +9169,16 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
 
   pv.image_data = dyesub_read_image(v, &pv, image);
   if (ink_type) {
+#ifndef CANONSELPHYNEO_CMY
 	  if (dyesub_feature(caps, DYESUB_FEATURE_RGBtoYCBCR)) {
 		  pv.empty_byte[0] = 0xff; /* Y */
 		  pv.empty_byte[1] = 0x80; /* Cb */
 		  pv.empty_byte[2] = 0x80; /* Cr */
-	  } else if (strcmp(ink_type, "RGB") == 0 || strcmp(ink_type, "BGR") == 0 || strcmp(ink_type, "Whitescale") == 0) {
+	  } else
+#endif
+	  if (strcmp(ink_type, "RGB") == 0 ||
+	      strcmp(ink_type, "BGR") == 0 ||
+	      strcmp(ink_type, "Whitescale") == 0) {
 		  pv.empty_byte[0] = 0xff;
 		  pv.empty_byte[1] = 0xff;
 		  pv.empty_byte[2] = 0xff;

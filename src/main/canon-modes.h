@@ -1435,7 +1435,7 @@ DECLARE_MODES(canon_PIXMA_iP3100,1);
 static const canon_mode_t canon_PIXMA_iP4000_modes[] = {
   /* plain modes --- same for duplex */
   /* NOTE: temporarily allowing plain modes for CD printing */
-  /* legacy modes were used before printer capabilites were improved to handle real mode from driver */
+  /* legacy modes were used before printer capabilities were improved to handle real mode from driver */
   {  600, 600,CANON_INK_CMYK|CANON_INK_K,"600x600dpi_high4",N_("600x600 DPI HIGH (LEGACY)"),INKSET(4_C2M2Y2K2),16,MODE_FLAG_CD,NULL,1.0,1.0,NULL,NULL,NULL,2},/* legacy */
   {  600, 600,CANON_INK_CMYK|CANON_INK_K,"600x600dpi_std4",N_("600x600 DPI (LEGACY)"),INKSET(4_C2M2Y2K2),16,MODE_FLAG_CD,NULL,1.0,1.0,NULL,NULL,NULL,1},/* legacy */
   {  600, 600,CANON_INK_CMYK|CANON_INK_K,"600x600dpi_draft2",N_("600x600 DPI DRAFT (LEGACY)"),INKSET(4_C2M2Y2K2),16,MODE_FLAG_CD,NULL,1.0,1.0,NULL,NULL,NULL,0},/* legacy */
@@ -3521,7 +3521,7 @@ DECLARE_MODES(canon_PIXMA_Pro9000mk2,1);
 /* the Pro9500 has fewer quality settings in the driver than the Pro9500 Mk.II but I put the "missing" ones in anyway */
 static const canon_mode_t canon_PIXMA_Pro9500_modes[] = {
   /* plain mode: fast, 1 only but maybe accept 2 and 0 quality settings too */
-  {  600, 600,CANON_INK_CMYK,"600x600dpi_high_",N_("600x600 DPI HIGH"),INKSET(11_C6M6Y6K6_c),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},/* untested */
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_high",N_("600x600 DPI HIGH"),INKSET(11_C6M6Y6K6_c),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},/* untested */
   {  600, 600,CANON_INK_CMYK,"600x600dpi",N_("600x600 DPI"),INKSET(11_C6M6Y6K6_c),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},/* untested */
   {  600, 600,CANON_INK_CMYK,"300x600dpi_high",N_("300x600 DPI HIGH"),INKSET(11_C2M2Y2K2),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,2},
   {  600, 600,CANON_INK_CMYK,"300x600dpi",N_("300x600 DPI"),INKSET(11_C2M2Y2K2),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,1},
@@ -3653,7 +3653,7 @@ static const canon_mode_t canon_PIXMA_iP8100_modes[] = {
   {  600, 600,CANON_INK_K,"600x600dpi_mono",N_("600x600 DPI MONO"),INKSET(11_K2),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,1},
   {  600, 600,CANON_INK_K,"600x600dpi_draftmono",N_("600x600 DPI MONO DRAFT"),INKSET(11_K2),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,0},
   /* photo modes */
-  /* one mode for PPpro ud1, hi cannot be supported yet as it uses Red ink (R) in addtion to CMYKcm */
+  /* one mode for PPpro ud1, hi cannot be supported yet as it uses Red ink (R) in addition to CMYKcm */
   {  600, 600,CANON_INK_CcMmYK,"600x600dpi_photohigh",N_("600x600 DPI PHOTO HIGH"),INKSET(11_C6M6Y6K6c16m16_c),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_PRO,NULL,1.0,1.0,NULL,NULL,NULL,4},
   {  600, 600,CANON_INK_CcMmYK,"600x600dpi_photohigh2",N_("600x600 DPI PHOTO HIGH matte/HiRes"),INKSET(11_C6M6Y6K6c6m6_c),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_PRO,NULL,1.0,1.0,NULL,NULL,NULL,4},
   {  600, 600,CANON_INK_CcMmYK,"600x600dpi_photo",N_("600x600 DPI PHOTO / CD High"),INKSET(11_C6M6Y6K6c6m6_c),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_PRO|MODE_FLAG_CD,NULL,1.0,1.0,NULL,NULL,NULL,2},
@@ -3777,7 +3777,7 @@ static const canon_mode_t canon_PIXMA_iP9910_modes[] = {
   {  600, 600,CANON_INK_K,"600x600dpi_mono",N_("600x600 DPI MONO"),INKSET(11_K2),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,1},
   {  600, 600,CANON_INK_K,"600x600dpi_draftmono",N_("600x600 DPI MONO DRAFT"),INKSET(11_K2),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,0},
   /* photo modes */
-  /* one mode for PPpro hi, and PPplusGlossy hi cannot be supported yet as it uses Red (R) and Green (G) ink in addtion to CMYKcm */
+  /* one mode for PPpro hi, and PPplusGlossy hi cannot be supported yet as it uses Red (R) and Green (G) ink in addition to CMYKcm */
   {  600, 600,CANON_INK_CcMmYK,"600x600dpi_photohigh",N_("600x600 DPI PHOTO HIGH plusDS/gloss"),INKSET(11_C6M6Y6K6c16m16_c),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_PRO,NULL,1.0,1.0,NULL,NULL,NULL,4},
   {  600, 600,CANON_INK_CcMmYK,"600x600dpi_photohigh2",N_("600x600 DPI PHOTO HIGH matte/HiRes"),INKSET(11_C6M6Y6K6c6m6_c),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_PRO,NULL,1.0,1.0,NULL,NULL,NULL,4},
   {  600, 600,CANON_INK_CcMmYK,"600x600dpi_photo",N_("600x600 DPI PHOTO pro"),INKSET(11_C6M6Y6K6c16m16_c),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_PRO,NULL,1.0,1.0,NULL,NULL,NULL,3},

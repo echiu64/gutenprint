@@ -534,7 +534,7 @@ stp_parameter_list_copy(stp_const_parameter_list_t list);
 /**
  * Append one parameter_list to another.
  * @param list the destination list (to append to).
- * @param append the list of paramters to append.  Each item that does
+ * @param append the list of parameters to append.  Each item that does
  * not already exist in list will be appended.
  */
 extern void
