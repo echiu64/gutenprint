@@ -326,7 +326,8 @@ run (const char        *name,		/* I - Name of print program. */
         fprintf(stderr,"Key with no value provided\n");
       } else {
 
-        for( int k=0; k<kv_arr_len && values[0].data.d_status == GIMP_PDB_SUCCESS; k+=2 )
+	int k = 0;
+        for( k=0; k<kv_arr_len && values[0].data.d_status == GIMP_PDB_SUCCESS; k+=2 )
         {
           char *key = param[8].data.d_stringarray[k];
           char *value = param[8].data.d_stringarray[k + 1];
