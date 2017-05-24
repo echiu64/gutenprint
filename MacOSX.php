@@ -130,6 +130,11 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 		<h2> Headlines </h2>
 
 		<p>
+			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.13-pre1 is released!</span>
+			<br>
+			<a href="MacOSX.php#5.2.13-pre1">May 23, 2017</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.13-pre1, a pre-release of Gutenprint 5.2.13.  This release fixes some important bugs, adds support for additional printers, and offers improvements for others. <b>NOTE: Users of many dye sublimation printers must follow a special installation procedure.  Please read the release notes very carefully!</b>  See the <a href="MacOSX.php#5.2.12">Release notes</a> for more detail.  See the <b>Downloads</b> section for download links.
+		</p>
+		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.12 is released!</span>
 			<br>
 			<a href="MacOSX.php#5.2.12">January 19, 2017</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.12, a stable release of Gutenprint 5.2.  This release adds support for many new printers and other improvements over 5.2.11. <b>NOTE: Users of many dye sublimation printers must follow a special installation procedure.  Please read the release notes very carefully!</b>  See the <a href="MacOSX.php#5.2.12">Release notes</a> for more detail.  See the <b>Downloads</b> section for download links.
@@ -180,6 +185,15 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 <!-- indent text -->
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Downloads</h2>
+		<p>
+			<b>Gutenprint 5.2.13-pre1</b>
+			<br>
+			<span style="background-color:#d0ffff;"><a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.13-pre1/gutenprint-5.2.13-pre1.dmg/download">gutenprint-5.2.13-pre1.dmg</a></span>&nbsp;&nbsp;(12.4 MB)
+		</p>
+		<p>
+The Gutenprint project is pleased to announce Gutenprint 5.2.13-pre1, a pre-release of Gutenprint 5.2.13.  &nbsp;&nbsp;(<a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.13-pre1/gutenprint-5.2.13-pre1.tar.bz2/download">source code</a>)
+</p>
+
 		<p>
 			<b>Gutenprint 5.2.12</b>
 			<br>
@@ -290,6 +304,29 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.10, a stable releas
 		</td>
 	</tr>
 </table>
+<a name="5.2.13-pre1"></a>
+<table cellpadding="0" bgcolor="#d0d0d0" width="60%">
+	<tr>
+		<td align="left">
+			<b>Gutenprint 5.2.13-pre1</b>
+		</td>
+		<td align="right">
+			<b>2017-01-19</b>
+		</td>
+	</tr>
+</table>
+<p>
+<b>Gutenprint 5.2.13-pre1</b> is a pre-release of Gutenprint 5.2.13.  This pre-release fixes some important bugs, adds support for additional printers, and offers improvements for others.  <b>NOTE: Users of many dye sublimation printers must follow a special installation procedure.  Please read the release notes very carefully!</b>
+<ol style="margin-top:0.25em; list-style-type:decimal;">
+
+	<li> Fix some important outstanding bugs</li>
+
+	<li> Adds support for additional printers</li>
+
+	<li> Offers improvements for some printers</li>
+</ol>
+</p>
+
 <p>
 <b>Gutenprint 5.2.12</b> is a stable release of Gutenprint 5.2.  This release adds support for many new printers and other improvements over 5.2.11. <b>NOTE: Users of many dye sublimation printers must follow a special installation procedure.  Please read the release notes very carefully!</b>
 <ol style="margin-top:0.25em; list-style-type:decimal;">
@@ -301,6 +338,29 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.10, a stable releas
 	<li> Add support for additional Epson inkjet printers, including preliminary/experimental support for many SureColor P-series printers.  There are restrictions on the latter; please read the release notes for details.</li>
 
 	<li> Add support for more Canon inkjet printers</li>
+</ol>
+</p>
+
+<a name="5.2.13-pre1"></a>
+<table cellpadding="0" bgcolor="#d0d0d0" width="60%">
+	<tr>
+		<td align="left">
+			<b>Gutenprint 5.2.13-pre1</b>
+		</td>
+		<td align="right">
+			<b>2017-01-19</b>
+		</td>
+	</tr>
+</table>
+<p>
+<b>Gutenprint 5.2.13-pre1</b> is a pre-release of Gutenprint 5.2.13.  This pre-release fixes some important bugs, adds support for additional printers, and offers improvements for others.  <b>NOTE: Users of many dye sublimation printers must follow a special installation procedure.  Please read the release notes very carefully!</b>
+<ol style="margin-top:0.25em; list-style-type:decimal;">
+
+	<li> Fix some important outstanding bugs</li>
+
+	<li> Adds support for additional printers</li>
+
+	<li> Offers improvements for some printers</li>
 </ol>
 </p>
 

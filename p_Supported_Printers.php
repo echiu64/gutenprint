@@ -17,8 +17,8 @@ of them.  We will fill in this list as we verify successful operation
 of these printers.  You can help by testing this with your own printer
 and reporting the results!</p>
 
-<table summary="Supported printers for Gutenrint 5.2.11">
-<caption style="font-size:135%;margin-bottom:0.50em;"><b>Gutenprint 5.2.11</b></caption>
+<table summary="Supported printers for Gutenrint 5.2.13-pre1">
+<caption style="font-size:135%;margin-bottom:0.50em;"><b>Gutenprint 5.2.13-pre1</b></caption>
 <tr><td>Canon BJ-30</td><td>bjc-30</td><td></td></tr>
 <tr><td>Canon BJC-50</td><td>bjc-50</td><td></td></tr>
 <tr><td>Canon BJC-55</td><td>bjc-55</td><td></td></tr>
@@ -78,9 +78,6 @@ and reporting the results!</p>
 <tr><td>Canon PIXUS iP90</td><td>bjc-PIXUS-iP90</td><td></td></tr>
 <tr><td>Canon PIXMA iP90v</td><td>bjc-PIXMA-iP90v</td><td></td></tr>
 <tr><td>Canon PIXUS iP90v</td><td>bjc-PIXUS-iP90v</td><td></td></tr>
-<tr><td>Canon iP100 series</td><td>bjc-iP100-series</td><td></td></tr>
-<tr><td>Canon PIXMA iP100</td><td>bjc-PIXMA-iP100</td><td></td></tr>
-<tr><td>Canon PIXUS iP100</td><td>bjc-PIXUS-iP100</td><td></td></tr>
 <tr><td>Canon iP110 series</td><td>bjc-iP110-series</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA iP110</td><td>bjc-PIXMA-iP110</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXUS iP110</td><td>bjc-PIXUS-iP110</td><td>EXPERIMENTAL</td></tr>
@@ -1031,6 +1028,7 @@ and reporting the results!</p>
 <tr><td>Epson Artisan 800</td><td>escp2-artisan800</td><td></td></tr>
 <tr><td>Epson Artisan 810</td><td>escp2-artisan810</td><td></td></tr>
 <tr><td>Epson Artisan 835</td><td>escp2-artisan835</td><td></td></tr>
+<tr><td>Epson Artisan 1430</td><td>escp2-artisan1430</td><td>(not in 5.2.12)</td></tr>
 <tr><td>Epson B-300</td><td>escp2-b300</td><td></td></tr>
 <tr><td>Epson B-308</td><td>escp2-b308</td><td></td></tr>
 <tr><td>Epson B-310</td><td>escp2-b310</td><td></td></tr>
@@ -1040,6 +1038,7 @@ and reporting the results!</p>
 <tr><td>Epson B-510DN</td><td>escp2-b510dn</td><td></td></tr>
 <tr><td>Epson L120</td><td>escp2-l120</td><td></td></tr>
 <tr><td>Epson L210</td><td>escp2-l210</td><td></td></tr>
+<tr><td>Epson L310</td><td>escp2-l310</td><td>(not in 5.2.12)</td></tr>
 <tr><td>Epson L1300</td><td>escp2-l1300</td><td></td></tr>
 <tr><td>Epson L1800</td><td>escp2-l1800</td><td></td></tr>
 <tr><td>Epson Stylus C20</td><td>escp2-c20</td><td></td></tr>
@@ -2564,6 +2563,21 @@ and reporting the results!</p>
 <tr><td>Datamax-ONeil E4305L Mark III</td><td>datamax_oneil_E4305L</td><td></td></tr>
 <tr><td>Datamax-ONeil RL3e</td><td>datamax_oneil_RL3e</td><td></td></tr>
 <tr><td>Datamax-ONeil RL4e</td><td>datamax_oneil_RL4e</td><td></td></tr>
+<tr><td>Datamax-ONeil H4212</td><td>datamax_oneil_H4212</td><td>(not in 5.2.12)</td></tr>
+<tr><td>Datamax-ONeil H4212X</td><td>datamax_oneil_H4212X</td><td>(not in 5.2.12)</td></tr>
+<tr><td>Datamax-ONeil H4310</td><td>datamax_oneil_H4310</td><td>(not in 5.2.12)</td></tr>
+<tr><td>Datamax-ONeil H4310X</td><td>datamax_oneil_H4310X</td><td>(not in 5.2.12)</td></tr>
+<tr><td>Datamax-ONeil H4408</td><td>datamax_oneil_H4408</td><td>(not in 5.2.12)</td></tr>
+<tr><td>Datamax-ONeil H4606</td><td>datamax_oneil_H4606</td><td>(not in 5.2.12)</td></tr>
+<tr><td>Datamax-ONeil H4606X</td><td>datamax_oneil_H4606X</td><td>(not in 5.2.12)</td></tr>
+<tr><td>Datamax-ONeil H6210</td><td>datamax_oneil_H6210</td><td>(not in 5.2.12)</td></tr>
+<tr><td>Datamax-ONeil H6210X</td><td>datamax_oneil_H6210X</td><td>(not in 5.2.12)</td></tr>
+<tr><td>Datamax-ONeil H6212</td><td>datamax_oneil_H6212</td><td>(not in 5.2.12)</td></tr>
+<tr><td>Datamax-ONeil H6212X</td><td>datamax_oneil_H6212X</td><td>(not in 5.2.12)</td></tr>
+<tr><td>Datamax-ONeil H6308</td><td>datamax_oneil_H6308</td><td>(not in 5.2.12)</td></tr>
+<tr><td>Datamax-ONeil H6310X</td><td>datamax_oneil_H6310X</td><td>(not in 5.2.12)</td></tr>
+<tr><td>Datamax-ONeil H8308</td><td>datamax_oneil_H8308</td><td>(not in 5.2.12)</td></tr>
+<tr><td>Datamax-ONeil H8308X</td><td>datamax_oneil_H8308X</td><td>(not in 5.2.12)</td></tr>
 <tr><td>Compaq IJ1200</td><td>compaq-ij1200</td><td></td></tr>
 <tr><td>Lexmark X73</td><td>lexmark-x73</td><td></td></tr>
 <tr><td>Lexmark Z42</td><td>lexmark-z42</td><td></td></tr>
@@ -2670,8 +2684,9 @@ and reporting the results!</p>
 <tr><td>Mitsubishi CP-9800DZ</td><td>mitsubishi-9800dz</td><td></td></tr>
 <tr><td>Mitsubishi CP-9800DW-S</td><td>mitsubishi-9800dw-s</td><td></td></tr>
 <tr><td>Mitsubishi P95D</td><td>mitsubishi-p95d</td><td></td></tr>
-<tr><td>Shinko CHC-S9045</td><td>shinko-chcs9045</td><td></td></tr>
 <tr><td>Mitsubishi CP-9500DW</td><td>mitsubishi-9500dw</td><td></td></tr>
+<tr><td>Mitsubishi P93D</td><td>mitsubishi-p93d</td><td>(not in 5.2.12)</td></tr>
+<tr><td>Shinko CHC-S9045</td><td>shinko-chcs9045</td><td></td></tr>
 <tr><td>Shinko CHC-S2145</td><td>shinko-chcs2145</td><td></td></tr>
 <tr><td>Sinfonia S2145/S2</td><td>sinfonia-chcs2145</td><td></td></tr>
 <tr><td>Shinko CHC-S1245</td><td>shinko-chcs1245</td><td>EXPERIMENTAL</td></tr>
