@@ -572,13 +572,13 @@ typedef struct
   int page_width;		/* Page width (points) */
   int page_height;		/* Page height (points) */
   int page_true_height;		/* Physical page height (points) */
-  int page_extra_height;	/* Extra height for set_form_factor (rows) */
-  int paper_extra_bottom;	/* Extra bottom for set_page_size (rows) */
   int page_true_width;		/* Physical page height (points) */
   int cd_x_offset;		/* CD X offset (micro units) */
   int cd_y_offset;		/* CD Y offset (micro units) */
   int cd_outer_radius;		/* CD radius (micro units) */
   int cd_inner_radius;		/* CD radius (micro units) */
+  int page_extra_height;	/* Extra height for set_form_factor (rows) */
+  int paper_extra_bottom;	/* Extra bottom for set_page_size (rows) */
 
   /* Image parameters */	/* Indexed from top left */
   int image_height;		/* Height of printed region (points) */

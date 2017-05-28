@@ -200,7 +200,8 @@ static gpFile	gpopen(const char *path, const char *mode);
 static int	gpclose(gpFile f);
 #endif /* !CUPS_DRIVER_INTERFACE */
 static int	gpputs(gpFile f, const char *s);
-static int	gpprintf(gpFile f, const char *format, ...);
+static int	gpprintf(gpFile f, const char *format, ...)
+       __attribute__((format(__printf__, 2, 3)));
 static char	**getlangs(void);
 static int	is_special_option(const char *name);
 static void	print_group_close(gpFile fp, stp_parameter_class_t p_class,
@@ -1776,18 +1777,6 @@ print_one_option(gpFile fp, stp_vars_t *v, const stp_string_list_t *po,
       print_close_ui = 0;
       gpprintf(fp, "*CloseUI: *Stp%s\n\n", desc->name);
 
-#if 0
-      /* This needs to be enabled if/when dimensions become floating point */
-      /*
-       * Add custom option code and value parameter...
-       */
-
-      gpprintf(fp, "*CustomStp%s True: \"pop\"\n", desc->name);
-      gpprintf(fp, "*ParamCustomStp%s Value/%s: 1 points %d %d\n\n",
-	       desc->name, _("Value"), desc->bounds.dimension.lower,
-	       desc->bounds.dimension.upper);
-#endif
-
       break;
     case STP_PARAMETER_TYPE_INT:
       gpprintf(fp, "*OPOptionHints Stp%s: \"input spinbox\"\n", lparam->name);
@@ -1911,11 +1900,6 @@ print_one_localization(gpFile fp, const stp_string_list_t *po,
 	  gpprintf(fp, "*%s.Stp%s %d/%s: \"\"\n", lang,
 		   desc->name, i, dimstr);
 	}
-#if 0
-      /* This needs to be enabled if/when dimensions are floating point */
-      gpprintf(fp, "*%s.ParamCustomStp%s Value/%s: \"\"\n", lang,
-	       desc->name, _("Value"));
-#endif
       break;
 
     case STP_PARAMETER_TYPE_INT:

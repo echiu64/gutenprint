@@ -145,8 +145,11 @@ run (const char        *name,		/* I - Name of print program. */
   gint32 base_type;
   stp_parameter_t desc;
   if (getenv("STP_DEBUG_STARTUP"))
-    while (SDEBUG)
-      ;
+    {
+      fprintf(stderr, "pid is %d\n", getpid());
+      while (SDEBUG)
+	;
+    }
 
  /*
   * Initialise libgutenprint
