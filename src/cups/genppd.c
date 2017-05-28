@@ -1777,7 +1777,6 @@ print_one_option(gpFile fp, stp_vars_t *v, const stp_string_list_t *po,
       print_close_ui = 0;
       gpprintf(fp, "*CloseUI: *Stp%s\n\n", desc->name);
 
-      /* This needs to be enabled if/when dimensions become floating point */
       /*
        * Add custom option code and value parameter...
        */
@@ -1910,7 +1909,6 @@ print_one_localization(gpFile fp, const stp_string_list_t *po,
 	  gpprintf(fp, "*%s.Stp%s %d/%s: \"\"\n", lang,
 		   desc->name, i, dimstr);
 	}
-      /* This needs to be enabled if/when dimensions are floating point */
       gpprintf(fp, "*%s.ParamCustomStp%s Value/%s: \"\"\n", lang,
 	       desc->name, _("Value"));
       break;

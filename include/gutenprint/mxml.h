@@ -68,12 +68,12 @@
 
 typedef enum stp_mxml_type_e		/**** The XML node type. ****/
 {
-  STP_MXML_ELEMENT,			/* XML element with attributes */
-  STP_MXML_INTEGER,			/* Integer value */
-  STP_MXML_OPAQUE,			/* Opaque string */
-  STP_MXML_REAL,			/* Real value */
-  STP_MXML_TEXT,			/* Text fragment */
-  STP_MXML_DIMENSION,			/* Dimensional value */
+  STP_MXML_ELEMENT,				/* XML element with attributes */
+  STP_MXML_INTEGER,				/* Integer value */
+  STP_MXML_OPAQUE,				/* Opaque string */
+  STP_MXML_REAL,				/* Real value */
+  STP_MXML_TEXT,				/* Text fragment */
+  STP_MXML_DIMENSION,				/* Dimensional value */
 } stp_mxml_type_t;
 
 typedef struct stp_mxml_attr_s		/**** An XML element attribute value. ****/

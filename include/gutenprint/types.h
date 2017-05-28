@@ -1,8 +1,7 @@
 /*
- *   libgimpprint image functions.
+ *   Gutenprint type declarations
  *
- *   Copyright 1997-2000 Michael Sweet (mike@easysw.com) and
- *	Robert Krawitz (rlk@alum.mit.edu)
+ *   Copyright 2017 Robert Krawitz (rlk@alum.mit.edu)
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -20,8 +19,8 @@
  */
 
 /**
- * @file gutenprint/image.h
- * @brief Image functions.
+ * @file gutenprint/types
+ * @brief Gutenprint dimension type declarations
  */
 
 #ifndef GUTENPRINT_TYPES_H

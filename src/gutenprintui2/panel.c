@@ -2988,10 +2988,6 @@ position_callback (GtkWidget *widget)
 	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (scaling_ppi), TRUE);
 	  scaling_callback (scaling_ppi);
 	}
-      fprintf(stderr, "width %f height %f iw %f nv %f FINCH %f\n", 
-	      ((gdouble) image_width) / (new_value / FINCH),
-	      ((gdouble) image_height) / (new_value / FINCH),
-	      image_width, new_value, FINCH);
       if  (widget == width_entry)
 	GTK_ADJUSTMENT (scaling_adjustment)->value =
 	  ((gdouble) image_width) / (new_value / FINCH);
