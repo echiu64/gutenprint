@@ -2643,7 +2643,9 @@ canon_size_type(const stp_vars_t *v, const canon_cap_t * caps)
 
       /* if (!strcmp(name,"CD5Inch"))  return 0x5b; */ /* CD Tray J */
       /* if (!strcmp(name,"CD5Inch"))  return 0x62; */ /* CD Tray L */
-
+      
+      if (!strcmp(name,"w360h360"))    return 0xba; /* square 5x5 inch */
+      
       /* custom */
 
       stp_deprintf(STP_DBG_CANON,"canon: Unknown paper size '%s' - using custom\n",name);
@@ -4374,7 +4376,7 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
 static void
 canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 {
-  unsigned char arg_ESCP_1, arg_ESCP_2, arg_ESCP_5, arg_ESCP_6, arg_ESCP_9;
+  unsigned char arg_ESCP_1, arg_ESCP_2, arg_ESCP_5, arg_ESCP_6, arg_ESCP_7, arg_ESCP_9;
 
   int width, length;
   /*  const char *media_size = stp_get_string_parameter(v, "PageSize");
@@ -4411,6 +4413,8 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
   arg_ESCP_2 = (init->pt) ? init->pt->media_code_P: 0x00;
   arg_ESCP_5 = 0x01; /* default for portrait orientation */
   arg_ESCP_6 = 0x00; /* default for portrait orientation */
+
+  arg_ESCP_7 = 0x01; /* default - use unknown */
 
   if( orientation_type && !strcmp(orientation_type,"Portrait")) { /* none */
     arg_ESCP_5 = 0x01;
@@ -4476,7 +4480,7 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
     /* default: use upper tray of cassette with two trays, condition check later */
     arg_ESCP_9 = 0x01;
   }
-  else if ( !(strcmp(init->caps->name,"PIXMA E400")) || !(strcmp(init->caps->name,"PIXMA E460")) || !(strcmp(init->caps->name,"PIXMA E480")) || !(strcmp(init->caps->name,"PIXMA E560")) || !(strcmp(init->caps->name,"PIXMA MG2900")) || !(strcmp(init->caps->name,"PIXMA MG3500")) || !(strcmp(init->caps->name,"PIXMA MG3600")) || !(strcmp(init->caps->name,"PIXMA MG5500")) || !(strcmp(init->caps->name,"PIXMA MG5600")) || !(strcmp(init->caps->name,"PIXMA iP110")) || !(strcmp(init->caps->name,"PIXMA iP2800")) || !(strcmp(init->caps->name,"PIXMA iP8700")) || !(strcmp(init->caps->name,"PIXMA iX6800")) || !(strcmp(init->caps->name,"MAXIFY iB4000")) || !(strcmp(init->caps->name,"MAXIFY MB2000")) || !(strcmp(init->caps->name,"MAXIFY MB2300")) || !(strcmp(init->caps->name,"PIXMA MX470")) || !(strcmp(init->caps->name,"PIXMA MX490")) ) {
+  else if ( !(strcmp(init->caps->name,"PIXMA E400")) || !(strcmp(init->caps->name,"PIXMA E460")) ||  !(strcmp(init->caps->name,"PIXMA E470")) || !(strcmp(init->caps->name,"PIXMA E480")) || !(strcmp(init->caps->name,"PIXMA E560")) || !(strcmp(init->caps->name,"PIXMA MG2900")) || !(strcmp(init->caps->name,"PIXMA MG3500")) || !(strcmp(init->caps->name,"PIXMA MG3600")) || !(strcmp(init->caps->name,"PIXMA MG5500")) || !(strcmp(init->caps->name,"PIXMA MG5600")) || !(strcmp(init->caps->name,"PIXMA iP110")) || !(strcmp(init->caps->name,"PIXMA iP2800")) || !(strcmp(init->caps->name,"PIXMA iP8700")) || !(strcmp(init->caps->name,"PIXMA iX6800")) || !(strcmp(init->caps->name,"MAXIFY iB4000")) || !(strcmp(init->caps->name,"MAXIFY MB2000")) || !(strcmp(init->caps->name,"MAXIFY MB2300")) || !(strcmp(init->caps->name,"PIXMA MX470")) || !(strcmp(init->caps->name,"PIXMA MX490")) ) {
     arg_ESCP_9 = 0xff;
   }
 
@@ -4484,7 +4488,13 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
     arg_ESCP_9 = 0x00;
   }
 
-
+  if ( !(strcmp(init->caps->name,"PIXMA E470")) ){
+    /* USComm#10 or DL envelope sizes */
+    if ( ( arg_ESCP_1 == 0x2e ) || ( arg_ESCP_1 == 0x2f ) ) {
+	arg_ESCP_7 = 0x00;
+      }
+  }
+  
   /* workaround for CD media */
 
   if ( (arg_ESCP_2 == 0x1f) || ( arg_ESCP_2 == 0x20) ) {
@@ -4781,14 +4791,14 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 
       if ( !(strcmp(init->caps->name,"PIXMA MG7700")) ) {
 	/* output with 3 extra 0s at the end */
-	canon_cmd( v,ESC28,0x50,12,0x00,arg_ESCP_1,0x00,arg_ESCP_2,arg_ESCP_5,arg_ESCP_6,0x01,0x00,arg_ESCP_9,0x00,0x00,0x00 );
+	canon_cmd( v,ESC28,0x50,12,0x00,arg_ESCP_1,0x00,arg_ESCP_2,arg_ESCP_5,arg_ESCP_6,arg_ESCP_7,0x00,arg_ESCP_9,0x00,0x00,0x00 );
       }
       else {
       
       /* arg_ESCP_1 = 0x03; */ /* A4 size */
       /* arg_ESCP_2 = 0x00; */ /* plain media */
       /*                             size                media                                  tray */
-      canon_cmd( v,ESC28,0x50,9,0x00,arg_ESCP_1,0x00,arg_ESCP_2,arg_ESCP_5,arg_ESCP_6,0x01,0x00,arg_ESCP_9 );
+      canon_cmd( v,ESC28,0x50,9,0x00,arg_ESCP_1,0x00,arg_ESCP_2,arg_ESCP_5,arg_ESCP_6,arg_ESCP_7,0x00,arg_ESCP_9 );
 
       }
     }
@@ -4798,7 +4808,7 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
       /* arg_ESCP_1 = 0x03; */ /* A4 size */
       /* arg_ESCP_2 = 0x00; */ /* plain media */
       /*                             size                media             */
-      canon_cmd( v,ESC28,0x50,8,0x00,arg_ESCP_1,0x00,arg_ESCP_2,arg_ESCP_5,arg_ESCP_6,0x01,0x00 );
+      canon_cmd( v,ESC28,0x50,8,0x00,arg_ESCP_1,0x00,arg_ESCP_2,arg_ESCP_5,arg_ESCP_6,arg_ESCP_7,0x00 );
     }
   else if ( init->caps->ESC_P_len == 6 ) /* first devices with XML header and ender */
     {/* the 4th of the 6 bytes is the media type. 2nd byte is media size. Both read from canon-media array. */

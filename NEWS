@@ -292,6 +292,21 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
   5) Changes to the Canon driver:
 
+     * added support for following printer models:
+
+       E470 series         (EXPERIMENTAL)
+       Canon PIXMA E470    (EXPERIMENTAL)(*1)
+       Canon PIXMA E471    (EXPERIMENTAL)(*1)
+       Canon PIXMA E474    (EXPERIMENTAL)(*1)
+       Canon PIXMA E477    (EXPERIMENTAL)(*1)
+       Canon PIXMA E478    (EXPERIMENTAL)(*1)
+
+       Note 1: Added individual family
+               instances, even though the
+               printer identifies itself
+               by a generic family
+               identification string.
+
      * removed iP100 (unsupported)
 
      * Added duplex support to MP530
