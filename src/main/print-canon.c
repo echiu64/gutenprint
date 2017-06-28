@@ -545,6 +545,8 @@ static const char* canon_families[] = {
  "MAXIFY iB", /* 14 */
  "MAXIFY MB", /* 15 */
  "PIXMA MPC", /* 16 */
+ "PIXMA G",   /* 17 */
+ "PIXMA TS",  /* 18 */
 };
 
 /* canon model ids look like the following
