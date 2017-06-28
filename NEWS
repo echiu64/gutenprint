@@ -294,6 +294,8 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
      * added support for following printer models:
 
+       Canon PIXMA G1000   (EXPERIMENTAL)
+
        E470 series         (EXPERIMENTAL)
        Canon PIXMA E470    (EXPERIMENTAL)(*1)
        Canon PIXMA E471    (EXPERIMENTAL)(*1)

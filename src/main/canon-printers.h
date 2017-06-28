@@ -3766,6 +3766,23 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     iP4500_channel_order
   },
+  { /* Canon PIXMA G1000 --- with XML */
+    "PIXMA G1000", 3,          /*model, model_id*/
+    INCH(17/2), 1917,       /* max paper width and height assumed */
+    10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
+    &canon_MULTIPASS_MP250_slotlist,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I|CANON_CAP_v|CANON_CAP_XML|CANON_CAP_BORDERLESS,0,
+    3,9, /* ESC (l and (P command lengths */
+    0, /* Upper/Lower Cassette option */
+    control_cmd_PIXMA_MG5300,    
+    &canon_PIXMA_G1000_modelist,
+    &canon_PIXMA_G1000_paperlist,
+    &canon_PIXMA_G1000_modeuselist,
+    NULL,
+    NULL,
+    NULL,
+    iP4500_channel_order /* CMYK */
+  },  
   { /* Canon PIXMA P200 --- with XML */
     "PIXMA P200", 3,          /*model, model_id*/
     INCH(17/2), 1917,       /* max paper width and height assumed */
