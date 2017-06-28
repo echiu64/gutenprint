@@ -4489,7 +4489,7 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
   }
 
   if ( !(strcmp(init->caps->name,"PIXMA E470")) ){
-    /* USComm#10 or DL envelope sizes */
+    /* USComm#10 or DL envelope sizes (no others supported): possibly all envelope sizes? */
     if ( ( arg_ESCP_1 == 0x2e ) || ( arg_ESCP_1 == 0x2f ) ) {
 	arg_ESCP_7 = 0x00;
       }
