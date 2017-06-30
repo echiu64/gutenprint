@@ -1203,6 +1203,8 @@
       <printer translate="name" name="Canon PIXMA G2002" driver="bjc-PIXMA-G2002" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <!-- Canon PIXMA G3000 -->
       <printer translate="name" name="Canon PIXMA G3000" driver="bjc-PIXMA-G3000" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <!-- Canon PIXMA G4000 -->
+      <printer translate="name" name="Canon PIXMA G4000" driver="bjc-PIXMA-G4000" manufacturer="Canon" model="17004000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <!-- Canon PIXMA P200 -->
       <printer translate="name" name="Canon PIXMA P200" driver="bjc-PIXMA-P200" manufacturer="Canon" model="13000200" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <!-- Canon MAXIFY iB4000 family -->
