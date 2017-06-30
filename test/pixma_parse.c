@@ -56,6 +56,9 @@ static int nextcmd( FILE *infile,unsigned char* cmd,unsigned char *buf, unsigned
 {
 	unsigned char c1,c2;
 	unsigned int startxml, endxml;
+	unsigned int startxmllen, endxmllen;
+	startxmllen=680; // 1086; 732; 680; embedded parameters varies with driver -- TODO: parse XML separately
+	endxmllen=263;	
 	if (feof(infile))
 		return -1;
 	while (!feof(infile)){
@@ -66,14 +69,14 @@ static int nextcmd( FILE *infile,unsigned char* cmd,unsigned char *buf, unsigned
 		if (c1 == 60 ){  /* "<" for XML start */
 		  if (*xml_read==0){
 		    /* start */
-		    startxml=680-1;
-		    fread(buf,1,startxml,infile); /* 1 less than 680 */
+		    startxml=startxmllen-1;
+		    fread(buf,1,startxml,infile); /* 1 less than startxmllen */
 		    fprintf(fout,"nextcmd: read starting XML %d %d\n", *xml_read, startxml);
 		    *xml_read=1;
 		  }else if (*xml_read==1) {
 		    /* end */
-		    endxml=263-1;
-		    fread(buf,1,endxml,infile); /* 1 less than 263*/
+		    endxml=endxmllen-1;
+		    fread(buf,1,endxml,infile); /* 1 less than endxmllen */
 		    fprintf(fout,"nextcmd: read ending XML %d %d\n", *xml_read, endxml);
 		    *xml_read=2;
 		  }
