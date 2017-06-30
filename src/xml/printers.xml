@@ -1150,6 +1150,11 @@
       <printer translate="name" name="Canon PIXMA E404" driver="bjc-PIXMA-E404" manufacturer="Canon" model="12000400" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA E408" driver="bjc-PIXMA-E408" manufacturer="Canon" model="12000400" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA E409" driver="bjc-PIXMA-E409" manufacturer="Canon" model="12000400" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <!-- Canon E410 family -->
+      <printer translate="name" name="Canon E410 series" driver="bjc-E410-series" manufacturer="Canon" model="12000400" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA E410" driver="bjc-PIXMA-E410" manufacturer="Canon" model="12000400" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA E414" driver="bjc-PIXMA-E414" manufacturer="Canon" model="12000400" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA E417" driver="bjc-PIXMA-E417" manufacturer="Canon" model="12000400" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>          <printer translate="name" name="Canon PIXMA E418" driver="bjc-PIXMA-E418" manufacturer="Canon" model="12000400" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>  
       <!-- Canon E460 family -->
       <printer translate="name" name="Canon E460 series" driver="bjc-E460-series" manufacturer="Canon" model="12000460" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA E460" driver="bjc-PIXMA-E460" manufacturer="Canon" model="12000460" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
