@@ -52,13 +52,10 @@ FILE* fout;
  *   1 when EOF has been reached
  *  -1 when an error occurred
  */
-static int nextcmd( FILE *infile,unsigned char* cmd,unsigned char *buf, unsigned int *cnt, unsigned int *xml_read)
+static int nextcmd( FILE *infile,unsigned char* cmd,unsigned char *buf, unsigned int *cnt, unsigned int *xml_read,unsigned int startxmllen,unsigned int endxmllen)
 {
 	unsigned char c1,c2;
 	unsigned int startxml, endxml;
-	unsigned int startxmllen, endxmllen;
-	startxmllen=680; // 1086; 732; 680; embedded parameters varies with driver -- TODO: parse XML separately
-	endxmllen=263;	
 	if (feof(infile))
 		return -1;
 	while (!feof(infile)){
@@ -594,7 +591,7 @@ static unsigned int read_uint32(unsigned char* a){
 
 
 /* process a printjob command by command */
-static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned int maxh){
+static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned int maxh,unsigned int startxmllen,unsigned int endxmllen){
 	image_t* img=calloc(1,sizeof(image_t));
 	unsigned char* buf=malloc(0xFFFF);
 	int returnv=0;
@@ -607,7 +604,7 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 	while(!returnv && !feof(in)){
 		unsigned char cmd;
 		unsigned int cnt = 0;
-		if((returnv = nextcmd(in,&cmd,buf,&cnt,&xml_read)))
+		if((returnv = nextcmd(in,&cmd,buf,&cnt,&xml_read,startxmllen,endxmllen)))
 			break;
 		switch(cmd){
 			case 'c':
@@ -939,6 +936,8 @@ static void display_usage(void){
 	printf(" -v: verbose print ESC e),F) and A) commands\n");
 	printf(" -x width: cut the output ppm to the given width\n");
 	printf(" -y height: cut the output ppm to the given height\n");
+	printf(" -s if XML prolog is present, define number of bytes (default 680) \n");
+	printf(" -e if XML epilog is present, define number of bytes (default 263) \n");
 	printf(" -h: display this help\n");
 }
 
@@ -948,9 +947,14 @@ int main(int argc,char* argv[]){
 	int verbose = 0;
 	unsigned int maxh=0;
 	unsigned int maxw=0;
+	unsigned int startxmllen, endxmllen;
+
 	char* filename_in=NULL,*filename_out=NULL;
 	FILE *in,*out=NULL;
 	int i;
+
+	startxmllen=680; // 1086; 732; 680; embedded parameters varies with driver -- TODO: parse XML separately
+	endxmllen=263; // default value
 
 	if (DEBUG)
 	  fout = stderr; /* unbuffered */
@@ -983,6 +987,22 @@ int main(int argc,char* argv[]){
 					display_usage();
 					return 1;
 				}
+			}else if(argv[i][1] == 's'){
+				if(argc > i+1){
+					++i;
+					startxmllen = atoi(argv[i]);
+				}else{
+					display_usage();
+					return 1;
+				}
+			}else if(argv[i][1] == 'e'){
+				if(argc > i+1){
+					++i;
+					endxmllen = atoi(argv[i]);
+				}else{
+					display_usage();
+					return 1;
+				}				
 			}else {
 			  printf("unknown parameter %s\n",argv[i]);
 				return 1;
@@ -1015,7 +1035,7 @@ int main(int argc,char* argv[]){
 	}
 	
 	/* process the printjob */
-	process(in,out,verbose,maxw,maxh);
+	process(in,out,verbose,maxw,maxh,startxmllen,endxmllen);
 
 	/* cleanup */
 	fclose(in);
