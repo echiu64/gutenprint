@@ -322,6 +322,12 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
                by a generic family
                identification string.
 
+     Added following models to existing series:
+
+       Canon MG2500 series:
+         Canon PIXMA MG2522
+         Canon PIXMA MG2525
+
      * removed iP100 (unsupported)
 
      * Added duplex support to MP530
