@@ -685,6 +685,22 @@
       <printer translate="name" name="Canon PIXMA MG2970" driver="bjc-PIXMA-MG2970" manufacturer="Canon" model="8002900" parameters="PIXMA_iP4300_params">EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</printer>
       <printer translate="name" name="Canon PIXMA MG2980" driver="bjc-PIXMA-MG2980" manufacturer="Canon" model="8002900" parameters="PIXMA_iP4300_params">EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</printer>
       <printer translate="name" name="Canon PIXMA MG2990" driver="bjc-PIXMA-MG2990" manufacturer="Canon" model="8002900" parameters="PIXMA_iP4300_params">EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</printer>
+      <!-- Canon MG3000 family -->
+      <printer translate="name" name="Canon MG3000 series" driver="bjc-MG3000-series" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG3010" driver="bjc-PIXMA-MG3010" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG3020" driver="bjc-PIXMA-MG3020" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG3022" driver="bjc-PIXMA-MG3022" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG3030" driver="bjc-PIXMA-MG3030" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG3040" driver="bjc-PIXMA-MG3040" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG3050" driver="bjc-PIXMA-MG3050" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer><!-- black model -->
+      <printer translate="name" name="Canon PIXMA MG3051" driver="bjc-PIXMA-MG3051" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer><!-- white model -->
+      <printer translate="name" name="Canon PIXMA MG3052" driver="bjc-PIXMA-MG3052" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer><!-- grey model -->
+      <printer translate="name" name="Canon PIXMA MG3053" driver="bjc-PIXMA-MG3053" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer><!-- blue/white model -->
+      <printer translate="name" name="Canon PIXMA MG3060" driver="bjc-PIXMA-MG3060" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG3070" driver="bjc-PIXMA-MG3070" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG3077" driver="bjc-PIXMA-MG3077" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG3080" driver="bjc-PIXMA-MG3080" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG3090" driver="bjc-PIXMA-MG3090" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <!-- Canon MG3100 family -->
       <printer translate="name" name="Canon MG3100 series" driver="bjc-MG3100-series" manufacturer="Canon" model="8003100" parameters="PIXMA_iP4300_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA MG3100" driver="bjc-PIXMA-MG3100" manufacturer="Canon" model="8003100" parameters="PIXMA_iP4300_params">EXPERIMENTAL</printer>
