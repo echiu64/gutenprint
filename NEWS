@@ -292,6 +292,62 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
   5) Changes to the Canon driver:
 
+     * added support for following printer models:
+
+       Canon PIXMA G1000   (EXPERIMENTAL)
+       
+       Canon PIXMA G2000   (EXPERIMENTAL)
+       Canon PIXMA G2002   (EXPERIMENTAL)
+
+       Canon PIXMA G3000   (EXPERIMENTAL)
+
+       Canon PIXMA G4000   (EXPERIMENTAL)
+
+       MG3000 series       (EXPERIMENTAL)
+       Canon PIXMA MG3010  (EXPERIMENTAL)(*1)
+       Canon PIXMA MG3020  (EXPERIMENTAL)(*1)
+       Canon PIXMA MG3022  (EXPERIMENTAL)(*1)
+       Canon PIXMA MG3030  (EXPERIMENTAL)(*1)
+       Canon PIXMA MG3040  (EXPERIMENTAL)(*1)
+       Canon PIXMA MG3050  (EXPERIMENTAL)(*1)
+       Canon PIXMA MG3051  (EXPERIMENTAL)(*1)
+       Canon PIXMA MG3052  (EXPERIMENTAL)(*1)
+       Canon PIXMA MG3053  (EXPERIMENTAL)(*1)
+       Canon PIXMA MG3060  (EXPERIMENTAL)(*1)
+       Canon PIXMA MG3070  (EXPERIMENTAL)(*1)
+       Canon PIXMA MG3077  (EXPERIMENTAL)(*1)
+       Canon PIXMA MG3080  (EXPERIMENTAL)(*1)
+       Canon PIXMA MG3090  (EXPERIMENTAL)(*1)
+       
+       E410 series         (EXPERIMENTAL)
+       Canon PIXMA E410    (EXPERIMENTAL)(*1)
+       Canon PIXMA E414    (EXPERIMENTAL)(*1)
+       Canon PIXMA E417    (EXPERIMENTAL)(*1)
+       Canon PIXMA E418    (EXPERIMENTAL)(*1)
+
+       E470 series         (EXPERIMENTAL)
+       Canon PIXMA E470    (EXPERIMENTAL)(*1)
+       Canon PIXMA E471    (EXPERIMENTAL)(*1)
+       Canon PIXMA E474    (EXPERIMENTAL)(*1)
+       Canon PIXMA E477    (EXPERIMENTAL)(*1)
+       Canon PIXMA E478    (EXPERIMENTAL)(*1)
+
+       Note 1: Added individual family
+               instances, even though the
+               printer identifies itself
+               by a generic family
+               identification string.
+
+     Added following models to existing series:
+
+       Canon MG2500 series:
+         Canon PIXMA MG2522
+         Canon PIXMA MG2525
+         Canon PIXMA MG2540S
+         Canon PIXMA MG2545S
+         Canon PIXMA MG2550S
+         Canon PIXMA MG2555S
+			   
      * removed iP100 (unsupported)
 
      * Added duplex support to MP530

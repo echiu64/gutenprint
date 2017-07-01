@@ -52,7 +52,7 @@ FILE* fout;
  *   1 when EOF has been reached
  *  -1 when an error occurred
  */
-static int nextcmd( FILE *infile,unsigned char* cmd,unsigned char *buf, unsigned int *cnt, unsigned int *xml_read)
+static int nextcmd( FILE *infile,unsigned char* cmd,unsigned char *buf, unsigned int *cnt, unsigned int *xml_read,unsigned int startxmllen,unsigned int endxmllen)
 {
 	unsigned char c1,c2;
 	unsigned int startxml, endxml;
@@ -66,14 +66,14 @@ static int nextcmd( FILE *infile,unsigned char* cmd,unsigned char *buf, unsigned
 		if (c1 == 60 ){  /* "<" for XML start */
 		  if (*xml_read==0){
 		    /* start */
-		    startxml=680-1;
-		    fread(buf,1,startxml,infile); /* 1 less than 680 */
+		    startxml=startxmllen-1;
+		    fread(buf,1,startxml,infile); /* 1 less than startxmllen */
 		    fprintf(fout,"nextcmd: read starting XML %d %d\n", *xml_read, startxml);
 		    *xml_read=1;
 		  }else if (*xml_read==1) {
 		    /* end */
-		    endxml=263-1;
-		    fread(buf,1,endxml,infile); /* 1 less than 263*/
+		    endxml=endxmllen-1;
+		    fread(buf,1,endxml,infile); /* 1 less than endxmllen */
 		    fprintf(fout,"nextcmd: read ending XML %d %d\n", *xml_read, endxml);
 		    *xml_read=2;
 		  }
@@ -591,7 +591,7 @@ static unsigned int read_uint32(unsigned char* a){
 
 
 /* process a printjob command by command */
-static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned int maxh){
+static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned int maxh,unsigned int startxmllen,unsigned int endxmllen){
 	image_t* img=calloc(1,sizeof(image_t));
 	unsigned char* buf=malloc(0xFFFF);
 	int returnv=0;
@@ -604,7 +604,7 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 	while(!returnv && !feof(in)){
 		unsigned char cmd;
 		unsigned int cnt = 0;
-		if((returnv = nextcmd(in,&cmd,buf,&cnt,&xml_read)))
+		if((returnv = nextcmd(in,&cmd,buf,&cnt,&xml_read,startxmllen,endxmllen)))
 			break;
 		switch(cmd){
 			case 'c':
@@ -936,6 +936,8 @@ static void display_usage(void){
 	printf(" -v: verbose print ESC e),F) and A) commands\n");
 	printf(" -x width: cut the output ppm to the given width\n");
 	printf(" -y height: cut the output ppm to the given height\n");
+	printf(" -s if XML prolog is present, define number of bytes (default 680) \n");
+	printf(" -e if XML epilog is present, define number of bytes (default 263) \n");
 	printf(" -h: display this help\n");
 }
 
@@ -945,9 +947,14 @@ int main(int argc,char* argv[]){
 	int verbose = 0;
 	unsigned int maxh=0;
 	unsigned int maxw=0;
+	unsigned int startxmllen, endxmllen;
+
 	char* filename_in=NULL,*filename_out=NULL;
 	FILE *in,*out=NULL;
 	int i;
+
+	startxmllen=680; // 1086; 732; 680; embedded parameters varies with driver -- TODO: parse XML separately
+	endxmllen=263; // default value
 
 	if (DEBUG)
 	  fout = stderr; /* unbuffered */
@@ -980,6 +987,22 @@ int main(int argc,char* argv[]){
 					display_usage();
 					return 1;
 				}
+			}else if(argv[i][1] == 's'){
+				if(argc > i+1){
+					++i;
+					startxmllen = atoi(argv[i]);
+				}else{
+					display_usage();
+					return 1;
+				}
+			}else if(argv[i][1] == 'e'){
+				if(argc > i+1){
+					++i;
+					endxmllen = atoi(argv[i]);
+				}else{
+					display_usage();
+					return 1;
+				}				
 			}else {
 			  printf("unknown parameter %s\n",argv[i]);
 				return 1;
@@ -1012,7 +1035,7 @@ int main(int argc,char* argv[]){
 	}
 	
 	/* process the printjob */
-	process(in,out,verbose,maxw,maxh);
+	process(in,out,verbose,maxw,maxh,startxmllen,endxmllen);
 
 	/* cleanup */
 	fclose(in);

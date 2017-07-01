@@ -659,8 +659,14 @@
       <printer translate="name" name="Canon MG2500 series" driver="bjc-MG2500-series" manufacturer="Canon" model="8002400" parameters="PIXMA_iP4300_params">EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</printer>
       <printer translate="name" name="Canon PIXMA MG2510" driver="bjc-PIXMA-MG2510" manufacturer="Canon" model="8002400" parameters="PIXMA_iP4300_params">EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</printer>
       <printer translate="name" name="Canon PIXMA MG2520" driver="bjc-PIXMA-MG2520" manufacturer="Canon" model="8002400" parameters="PIXMA_iP4300_params">EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</printer>
+      <printer translate="name" name="Canon PIXMA MG2522" driver="bjc-PIXMA-MG2522" manufacturer="Canon" model="8002400" parameters="PIXMA_iP4300_params">EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</printer>
+      <printer translate="name" name="Canon PIXMA MG2525" driver="bjc-PIXMA-MG2525" manufacturer="Canon" model="8002400" parameters="PIXMA_iP4300_params">EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</printer>
       <printer translate="name" name="Canon PIXMA MG2540" driver="bjc-PIXMA-MG2540" manufacturer="Canon" model="8002400" parameters="PIXMA_iP4300_params">EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</printer>
+      <printer translate="name" name="Canon PIXMA MG2540S" driver="bjc-PIXMA-MG2540S" manufacturer="Canon" model="8002400" parameters="PIXMA_iP4300_params">EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</printer>
+      <printer translate="name" name="Canon PIXMA MG2545S" driver="bjc-PIXMA-MG2545S" manufacturer="Canon" model="8002400" parameters="PIXMA_iP4300_params">EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</printer>
       <printer translate="name" name="Canon PIXMA MG2550" driver="bjc-PIXMA-MG2550" manufacturer="Canon" model="8002400" parameters="PIXMA_iP4300_params">EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</printer>
+      <printer translate="name" name="Canon PIXMA MG2550S" driver="bjc-PIXMA-MG2550S" manufacturer="Canon" model="8002400" parameters="PIXMA_iP4300_params">EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</printer>
+      <printer translate="name" name="Canon PIXMA MG2555S" driver="bjc-PIXMA-MG2555S" manufacturer="Canon" model="8002400" parameters="PIXMA_iP4300_params">EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</printer>
       <printer translate="name" name="Canon PIXMA MG2560" driver="bjc-PIXMA-MG2560" manufacturer="Canon" model="8002400" parameters="PIXMA_iP4300_params">EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</printer>
       <printer translate="name" name="Canon PIXMA MG2570" driver="bjc-PIXMA-MG2570" manufacturer="Canon" model="8002400" parameters="PIXMA_iP4300_params">EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</printer>
       <printer translate="name" name="Canon PIXMA MG2570S" driver="bjc-PIXMA-MG2570S" manufacturer="Canon" model="8002400" parameters="PIXMA_iP4300_params">EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</printer>
@@ -679,6 +685,22 @@
       <printer translate="name" name="Canon PIXMA MG2970" driver="bjc-PIXMA-MG2970" manufacturer="Canon" model="8002900" parameters="PIXMA_iP4300_params">EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</printer>
       <printer translate="name" name="Canon PIXMA MG2980" driver="bjc-PIXMA-MG2980" manufacturer="Canon" model="8002900" parameters="PIXMA_iP4300_params">EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</printer>
       <printer translate="name" name="Canon PIXMA MG2990" driver="bjc-PIXMA-MG2990" manufacturer="Canon" model="8002900" parameters="PIXMA_iP4300_params">EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</printer>
+      <!-- Canon MG3000 family -->
+      <printer translate="name" name="Canon MG3000 series" driver="bjc-MG3000-series" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG3010" driver="bjc-PIXMA-MG3010" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG3020" driver="bjc-PIXMA-MG3020" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG3022" driver="bjc-PIXMA-MG3022" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG3030" driver="bjc-PIXMA-MG3030" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG3040" driver="bjc-PIXMA-MG3040" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG3050" driver="bjc-PIXMA-MG3050" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer><!-- black model -->
+      <printer translate="name" name="Canon PIXMA MG3051" driver="bjc-PIXMA-MG3051" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer><!-- white model -->
+      <printer translate="name" name="Canon PIXMA MG3052" driver="bjc-PIXMA-MG3052" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer><!-- grey model -->
+      <printer translate="name" name="Canon PIXMA MG3053" driver="bjc-PIXMA-MG3053" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer><!-- blue/white model -->
+      <printer translate="name" name="Canon PIXMA MG3060" driver="bjc-PIXMA-MG3060" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG3070" driver="bjc-PIXMA-MG3070" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG3077" driver="bjc-PIXMA-MG3077" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG3080" driver="bjc-PIXMA-MG3080" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG3090" driver="bjc-PIXMA-MG3090" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <!-- Canon MG3100 family -->
       <printer translate="name" name="Canon MG3100 series" driver="bjc-MG3100-series" manufacturer="Canon" model="8003100" parameters="PIXMA_iP4300_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA MG3100" driver="bjc-PIXMA-MG3100" manufacturer="Canon" model="8003100" parameters="PIXMA_iP4300_params">EXPERIMENTAL</printer>
@@ -1150,12 +1172,24 @@
       <printer translate="name" name="Canon PIXMA E404" driver="bjc-PIXMA-E404" manufacturer="Canon" model="12000400" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA E408" driver="bjc-PIXMA-E408" manufacturer="Canon" model="12000400" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA E409" driver="bjc-PIXMA-E409" manufacturer="Canon" model="12000400" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <!-- Canon E410 family -->
+      <printer translate="name" name="Canon E410 series" driver="bjc-E410-series" manufacturer="Canon" model="12000400" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA E410" driver="bjc-PIXMA-E410" manufacturer="Canon" model="12000400" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA E414" driver="bjc-PIXMA-E414" manufacturer="Canon" model="12000400" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA E417" driver="bjc-PIXMA-E417" manufacturer="Canon" model="12000400" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>          <printer translate="name" name="Canon PIXMA E418" driver="bjc-PIXMA-E418" manufacturer="Canon" model="12000400" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>  
       <!-- Canon E460 family -->
       <printer translate="name" name="Canon E460 series" driver="bjc-E460-series" manufacturer="Canon" model="12000460" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA E460" driver="bjc-PIXMA-E460" manufacturer="Canon" model="12000460" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA E461" driver="bjc-PIXMA-E461" manufacturer="Canon" model="12000460" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA E464" driver="bjc-PIXMA-E464" manufacturer="Canon" model="12000460" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA E468" driver="bjc-PIXMA-E468" manufacturer="Canon" model="12000460" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+            <!-- Canon E470 family -->
+      <printer translate="name" name="Canon E470 series" driver="bjc-E470-series" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA E470" driver="bjc-PIXMA-E470" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA E471" driver="bjc-PIXMA-E471" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA E474" driver="bjc-PIXMA-E474" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA E477" driver="bjc-PIXMA-E477" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA E478" driver="bjc-PIXMA-E478" manufacturer="Canon" model="12000470" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <!-- Canon E480 family -->
       <printer translate="name" name="Canon E480 series" driver="bjc-E480-series" manufacturer="Canon" model="12000480" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA E480" driver="bjc-PIXMA-E480" manufacturer="Canon" model="12000480" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
@@ -1184,6 +1218,15 @@
       <printer translate="name" name="Canon E610 series" driver="bjc-E610-series" manufacturer="Canon" model="12000610" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA E610" driver="bjc-PIXMA-E610" manufacturer="Canon" model="12000610" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA E618" driver="bjc-PIXMA-E618" manufacturer="Canon" model="12000610" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <!-- Canon PIXMA G1000 -->
+      <printer translate="name" name="Canon PIXMA G1000" driver="bjc-PIXMA-G1000" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <!-- Canon PIXMA G2000 -->
+      <printer translate="name" name="Canon PIXMA G2000" driver="bjc-PIXMA-G2000" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA G2002" driver="bjc-PIXMA-G2002" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <!-- Canon PIXMA G3000 -->
+      <printer translate="name" name="Canon PIXMA G3000" driver="bjc-PIXMA-G3000" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <!-- Canon PIXMA G4000 -->
+      <printer translate="name" name="Canon PIXMA G4000" driver="bjc-PIXMA-G4000" manufacturer="Canon" model="17004000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <!-- Canon PIXMA P200 -->
       <printer translate="name" name="Canon PIXMA P200" driver="bjc-PIXMA-P200" manufacturer="Canon" model="13000200" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <!-- Canon MAXIFY iB4000 family -->
