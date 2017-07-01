@@ -327,7 +327,11 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon MG2500 series:
          Canon PIXMA MG2522
          Canon PIXMA MG2525
-
+         Canon PIXMA MG2540S
+         Canon PIXMA MG2545S
+         Canon PIXMA MG2550S
+         Canon PIXMA MG2555S
+			   
      * removed iP100 (unsupported)
 
      * Added duplex support to MP530
