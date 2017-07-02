@@ -2637,17 +2637,31 @@ canon_size_type(const stp_vars_t *v, const canon_cap_t * caps)
 
       /* Fine Art paper codes */
       /* MG6300, MG6500, MG6700, MG7100, MG7500 (only A4), MG6900, MG7700  */
-      /* iP8700, iX6800 (A3  */
+      /* iP8700, iX6800 (A3 also) */
       /* if (!strcmp(name,"A4"))       return 0x58; */ /* FineArt A4 35mm border */
-      /* if (!strcmp(name,"Letter"))   return 0x5a; */ /* FineArt Letter 35mm border */
       /* if (!strcmp(name,"A3"))       return 0x59; */ /* FineArt A3 35mm border */
+      /* if (!strcmp(name,"Letter"))   return 0x5a; */ /* FineArt Letter 35mm border */
       /* if (!strcmp(name,"A3plus"))   return 0x5d; */ /* FineArt A3plus 35mm border */
 
       /* if (!strcmp(name,"CD5Inch"))  return 0x5b; */ /* CD Tray J */
       /* if (!strcmp(name,"CD5Inch"))  return 0x62; */ /* CD Tray L */
-      
+
+      if (!strcmp(name,"A6"))          return 0x63;
+
+      if (!strcmp(name,"LegalIndia"))  return 0x8d; /* Legal (India) */
+      if (!strcmp(name,"Oficio"))      return 0x8e; /* Oficio */
+      if (!strcmp(name,"M-Oficio"))    return 0x8f; /* Mexico Oficio */
+
+      if (!strcmp(name,"w612h936"))    return 0x90; /* (American) Foolscap */
+      if (!strcmp(name,"Executive"))   return 0x91;
+
+      if (!strcmp(name,"C5"))          return 0x92; /* C5 Env */
+      if (!strcmp(name,"Monarch"))     return 0x93; /* Monarch Env */
+
+      if (!strcmp(name,"B-Oficio"))    return 0x94; /* Brazil Oficio */
+
       if (!strcmp(name,"w360h360"))    return 0xba; /* square 5x5 inch */
-      
+
       /* custom */
 
       stp_deprintf(STP_DBG_CANON,"canon: Unknown paper size '%s' - using custom\n",name);
@@ -2663,6 +2677,7 @@ static void fix_papersize(unsigned char arg_ESCP_1, int *paper_width, int *paper
 
   switch(arg_ESCP_1)
     {
+    case 0x63: *paper_width = 2481; *paper_length = 3497; break;; /* A6 */      
     case 0x01: *paper_width = 3497; *paper_length = 4961; break;; /* A5 */
     case 0x03: *paper_width = 4961; *paper_length = 7016; break;; /* A4 */
     case 0x05: *paper_width = 7016; *paper_length = 9922; break;; /* A3 */
@@ -2670,8 +2685,14 @@ static void fix_papersize(unsigned char arg_ESCP_1, int *paper_width, int *paper
     case 0x0a: *paper_width = 6071; *paper_length = 8599; break;; /* B4 */
     case 0x0d: *paper_width = 5100; *paper_length = 6600; break;; /* Letter */
     case 0x0f: *paper_width = 5100; *paper_length = 8400; break;; /* Legal */
+    case 0x8d: *paper_width = 5079; *paper_length = 8150; break;; /* Legal (India) */
+    case 0x8e: *paper_width = 5100; *paper_length = 7500; break;; /* Oficio */
+    case 0x94: *paper_width = 5103; *paper_length = 8386; break;; /* Brazil Oficio */
+    case 0x8f: *paper_width = 5103; *paper_length = 8056; break;; /* Mexico Oficio */
+    case 0x90: *paper_width = 5100; *paper_length = 7800; break;; /* (American) Foolscap */
+    case 0x91: *paper_width = 4352; *paper_length = 6300; break;; /* Executive */
     case 0x11: *paper_width = 6600; *paper_length = 10200; break;; /* Tabloid : 11x17" */
-      /* Letter+, A4+ only seem to be available in shirink-to-fit */
+      /* Letter+, A4+ only seem to be available in shrink-to-fit */
       /* case 0x2a: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; */ /* LetterExtra : Letter navi, Letter+ */
       /* case 0x2b: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; */ /* A4Extra : A4navi, A4+ */
     case 0x2c: *paper_width = 7772; *paper_length = 11410; break;; /* A3Extra : A3navi, A3+ (13x19") */
@@ -2692,12 +2713,15 @@ static void fix_papersize(unsigned char arg_ESCP_1, int *paper_width, int *paper
     case 0x31: *paper_width = 2155; *paper_length = 4489;  break;; /* w277xh538 : Western Env #6 (you6) */
     case 0x3a: *paper_width = 2835; *paper_length = 5552; break;; /* w340xh666 : Japanese Long Env #3 (chou3) */
     case 0x3b: *paper_width = 2126; *paper_length = 4843; break;; /* w255xh581 : Japanese Long Env #4 (chou4) */
+    case 0x92: *paper_width = 3827; *paper_length = 5410; break;; /* C5 */
+    case 0x93: *paper_width = 2325; *paper_length = 4500; break;; /* Monarch */
       /* Photo media */
     case 0x32: *paper_width = 2103; *paper_length = 3000; break;; /* w252h360 : L --- similar to US 3.5x5" */
     case 0x33: *paper_width = 3000; *paper_length = 4205; break;; /* w360h504 : 2L --- similar to US 5x7" */
     case 0x37: *paper_width = 3000; *paper_length = 4200; break;; /* w360h504 : US 5x7" */
     case 0x34: *paper_width = 2400; *paper_length = 3600; break;; /* w288h432J : KG --- same as US 4x6" */
     case 0x46: *paper_width = 2400; *paper_length = 4800; break;; /* w288h576 : US 4x8" */
+    case 0xba: *paper_width = 3000; *paper_length = 3000; break;; /* w360h360 : square 5x5" */
       /* CD media */
     case 0x35: *paper_width = 3207; *paper_length = 6041; break;;  /* CD5Inch : CD Custom Tray */
     case 0x3f: *paper_width = 3378; *paper_length = 6206; break;;  /* CD5Inch : CD Tray A */
@@ -2710,6 +2734,7 @@ static void fix_papersize(unsigned char arg_ESCP_1, int *paper_width, int *paper
     case 0x56: *paper_width = 3095; *paper_length = 6008; break;;  /* CD5Inch : CD Tray G late version */
     case 0x57: *paper_width = 3572; *paper_length = 8953; break;;  /* CD5Inch : CD Tray H */
     case 0x5b: *paper_width = 3071; *paper_length = 5311; break;;  /* CD5Inch : CD Tray J */
+      /* no printer using Tray L yet supported */
       /* case 0x62: paper_width = ( init->page_width + border_left + border_right ) * unit / 72; break;; */  /* CD5Inch : CD Tray L */
       /* Business/Credit Card media */
     case 0x36: *paper_width = 1300; *paper_length = 2150; break;; /* w155h257 : Japanese Business Card 55x91mm */
@@ -4484,7 +4509,7 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
     /* default: use upper tray of cassette with two trays, condition check later */
     arg_ESCP_9 = 0x01;
   }
-  else if ( !(strcmp(init->caps->name,"PIXMA E400")) || !(strcmp(init->caps->name,"PIXMA E460")) ||  !(strcmp(init->caps->name,"PIXMA E470")) || !(strcmp(init->caps->name,"PIXMA E480")) || !(strcmp(init->caps->name,"PIXMA E560")) || !(strcmp(init->caps->name,"PIXMA G1000")) || !(strcmp(init->caps->name,"PIXMA G4000")) || !(strcmp(init->caps->name,"PIXMA MG2900")) || !(strcmp(init->caps->name,"PIXMA MG3500")) || !(strcmp(init->caps->name,"PIXMA MG3600")) || !(strcmp(init->caps->name,"PIXMA MG5500")) || !(strcmp(init->caps->name,"PIXMA MG5600")) || !(strcmp(init->caps->name,"PIXMA iP110")) || !(strcmp(init->caps->name,"PIXMA iP2800")) || !(strcmp(init->caps->name,"PIXMA iP8700")) || !(strcmp(init->caps->name,"PIXMA iX6800")) || !(strcmp(init->caps->name,"MAXIFY iB4000")) || !(strcmp(init->caps->name,"MAXIFY MB2000")) || !(strcmp(init->caps->name,"MAXIFY MB2300")) || !(strcmp(init->caps->name,"PIXMA MX470")) || !(strcmp(init->caps->name,"PIXMA MX490")) ) {
+  else if ( !(strcmp(init->caps->name,"PIXMA E400")) || !(strcmp(init->caps->name,"PIXMA E460")) ||  !(strcmp(init->caps->name,"PIXMA E470")) || !(strcmp(init->caps->name,"PIXMA E480")) || !(strcmp(init->caps->name,"PIXMA E560")) || !(strcmp(init->caps->name,"PIXMA G1000")) || !(strcmp(init->caps->name,"PIXMA G4000")) || !(strcmp(init->caps->name,"PIXMA MG2900")) || !(strcmp(init->caps->name,"PIXMA MG3500")) || !(strcmp(init->caps->name,"PIXMA MG3600")) || !(strcmp(init->caps->name,"PIXMA MG5500")) || !(strcmp(init->caps->name,"PIXMA MG5600")) || !(strcmp(init->caps->name,"PIXMA iP110")) || !(strcmp(init->caps->name,"PIXMA iP2800")) || !(strcmp(init->caps->name,"PIXMA iP8700")) || !(strcmp(init->caps->name,"PIXMA iX6800")) || !(strcmp(init->caps->name,"MAXIFY iB4000")) || !(strcmp(init->caps->name,"MAXIFY iB4100")) || !(strcmp(init->caps->name,"MAXIFY MB2000")) || !(strcmp(init->caps->name,"MAXIFY MB2300")) || !(strcmp(init->caps->name,"PIXMA MX470")) || !(strcmp(init->caps->name,"PIXMA MX490")) ) {
     arg_ESCP_9 = 0xff;
   }
 
@@ -4503,6 +4528,9 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 	case 0x31: arg_ESCP_7=0x00; break;; /* Western Env #6 (you6) */
 	case 0x3a: arg_ESCP_7=0x00; break;; /* Japanese Long Env #3 (chou3) */
 	case 0x3b: arg_ESCP_7=0x00; break;; /* Japanese Long Env #4 (chou4) */
+	  /* new envelopes for some printers added for completeness */
+	case 0x92: arg_ESCP_7=0x00; break;; /* C5 */
+	case 0x93: arg_ESCP_7=0x00; break;; /* Monarch */
 	}
   }
   
