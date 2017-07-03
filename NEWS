@@ -351,6 +351,15 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon MAXIFY MB2150 (EXPERIMENTAL)(*1)
        Canon MAXIFY MB2160 (EXPERIMENTAL)(*1)
 
+       Canon MB2700 series (EXPERIMENTAL)
+       Canon MAXIFY MB2710 (EXPERIMENTAL)(*1)
+       Canon MAXIFY MB2720 (EXPERIMENTAL)(*1)
+       Canon MAXIFY MB2730 (EXPERIMENTAL)(*1)
+       Canon MAXIFY MB2740 (EXPERIMENTAL)(*1)
+       Canon MAXIFY MB2750 (EXPERIMENTAL)(*1)
+       Canon MAXIFY MB2760 (EXPERIMENTAL)(*1)
+       Canon MAXIFY MB2790 (EXPERIMENTAL)(*1)
+       
        Note 1: Added individual family
                instances, even though the
                printer identifies itself
