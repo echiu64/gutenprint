@@ -283,6 +283,13 @@ static const canon_inkset_t canon_4_C2M2Y2K2_inkset[] = {
         {'K',1.0,&canon_1b_2l_ink}
 };
 
+static const canon_inkset_t canon_4_C3M3Y3K3_inkset[] = {
+        {'C',1.0,&canon_2b_3l_ink},
+        {'M',1.0,&canon_2b_3l_ink},
+        {'Y',1.0,&canon_2b_3l_ink},
+        {'K',1.0,&canon_2b_3l_ink},
+};
+
 static const canon_inkset_t canon_4_C3M3Y3K3_c_inkset[] = {
         {'C',1.0,&canon_2b_3l_c_ink},
         {'M',1.0,&canon_2b_3l_c_ink},
@@ -296,6 +303,14 @@ static const canon_inkset_t canon_4_C4M4Y4K4_inkset[] = {
         {'M',1.0,&canon_2b_4l_ink},
         {'Y',1.0,&canon_2b_4l_ink},
         {'K',1.0,&canon_2b_4l_ink}
+};
+
+/* Inkset for printing in CMYK and 4bit/pixel */
+static const canon_inkset_t canon_4_C4M4Y4K4fourbpp_inkset[] = {
+        {'C',1.0,&canon_4b_4l_ink},
+        {'M',1.0,&canon_4b_4l_ink},
+        {'Y',1.0,&canon_4b_4l_ink},
+        {'K',1.0,&canon_4b_4l_ink}
 };
 
 /*

@@ -1444,6 +1444,34 @@
       <height value="1369"/>
       <unit value="metric-extended"/>
     </paper>
+    <paper name="LegalIndia">
+      <description translate="value" value="Legal (India)"/>
+      <comment value="215.0mm x 345.0mm (8.46in x 13.58in)"/>
+      <width value="609"/>
+      <height value="978"/>
+      <unit value="metric-extended"/>
+    </paper>
+    <paper name="Oficio">
+      <description translate="value" value="Oficio"/>
+      <comment value="8.5in x 12.5in"/>
+      <width value="612"/>
+      <height value="900"/>
+      <unit value="english-extended"/>
+    </paper>
+    <paper name="B-Oficio">
+      <description translate="value" value=" Brazil Oficio"/>
+      <comment value="216.0mm x 355.0mm (8.5in x 14in)"/>
+      <width value="612"/>
+      <height value="1006"/>
+      <unit value="metric-extended"/>
+    </paper>
+    <paper name="M-Oficio">
+      <description translate="value" value="Mexico Oficio"/>
+      <comment value="216.0mm x 341.0mm (8.5in x 13.43in)"/>
+      <width value="612"/>
+      <height value="966"/>
+      <unit value="metric-extended"/>
+    </paper>
 
 <!-- Group Labels -->
     <paper name="d-o400x600">

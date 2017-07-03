@@ -1239,6 +1239,17 @@
       <printer translate="name" name="Canon MAXIFY iB4060" driver="bjc-MAXIFY-iB4060" manufacturer="Canon" model="14004000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon MAXIFY iB4070" driver="bjc-MAXIFY-iB4070" manufacturer="Canon" model="14004000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon MAXIFY iB4080" driver="bjc-MAXIFY-iB4080" manufacturer="Canon" model="14004000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY iB4090" driver="bjc-MAXIFY-iB4090" manufacturer="Canon" model="14004000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <!-- Canon MAXIFY iB4100 family -->
+      <printer translate="name" name="Canon iB4100 series" driver="bjc-iB4100-series" manufacturer="Canon" model="14004100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY iB4110" driver="bjc-MAXIFY-iB4110" manufacturer="Canon" model="14004100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY iB4120" driver="bjc-MAXIFY-iB4120" manufacturer="Canon" model="14004100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY iB4130" driver="bjc-MAXIFY-iB4130" manufacturer="Canon" model="14004100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY iB4140" driver="bjc-MAXIFY-iB4140" manufacturer="Canon" model="14004100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY iB4150" driver="bjc-MAXIFY-iB4150" manufacturer="Canon" model="14004100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY iB4170" driver="bjc-MAXIFY-iB4170" manufacturer="Canon" model="14004100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY iB4180" driver="bjc-MAXIFY-iB4180" manufacturer="Canon" model="14004100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY iB4190" driver="bjc-MAXIFY-iB4190" manufacturer="Canon" model="14004100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <!-- Canon MAXIFY MB2000 family -->
       <printer translate="name" name="Canon MB2000 series" driver="bjc-MB2000-series" manufacturer="Canon" model="15002000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon MAXIFY MB2010" driver="bjc-MAXIFY-MB2010" manufacturer="Canon" model="15002000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
@@ -1247,6 +1258,14 @@
       <printer translate="name" name="Canon MAXIFY MB2040" driver="bjc-MAXIFY-MB2040" manufacturer="Canon" model="15002000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon MAXIFY MB2050" driver="bjc-MAXIFY-MB2050" manufacturer="Canon" model="15002000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon MAXIFY MB2060" driver="bjc-MAXIFY-MB2060" manufacturer="Canon" model="15002000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <!-- Canon MAXIFY MB2100 family -->
+      <printer translate="name" name="Canon MB2100 series" driver="bjc-MB2100-series" manufacturer="Canon" model="15002100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB2110" driver="bjc-MAXIFY-MB2110" manufacturer="Canon" model="15002100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB2120" driver="bjc-MAXIFY-MB2120" manufacturer="Canon" model="15002100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB2130" driver="bjc-MAXIFY-MB2130" manufacturer="Canon" model="15002100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB2140" driver="bjc-MAXIFY-MB2140" manufacturer="Canon" model="15002100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB2150" driver="bjc-MAXIFY-MB2150" manufacturer="Canon" model="15002100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB2160" driver="bjc-MAXIFY-MB2160" manufacturer="Canon" model="15002100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <!-- Canon MAXIFY MB2300 family -->
       <printer translate="name" name="Canon MB2300 series" driver="bjc-MB2300-series" manufacturer="Canon" model="15002300" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon MAXIFY MB2320" driver="bjc-MAXIFY-MB2320" manufacturer="Canon" model="15002300" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
@@ -1255,6 +1274,15 @@
       <printer translate="name" name="Canon MAXIFY MB2350" driver="bjc-MAXIFY-MB2350" manufacturer="Canon" model="15002300" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon MAXIFY MB2360" driver="bjc-MAXIFY-MB2360" manufacturer="Canon" model="15002300" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon MAXIFY MB2390" driver="bjc-MAXIFY-MB2390" manufacturer="Canon" model="15002300" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <!-- Canon MAXIFY MB2700 family -->
+      <printer translate="name" name="Canon MB2700 series" driver="bjc-MB2700-series" manufacturer="Canon" model="15002700" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB2710" driver="bjc-MAXIFY-MB2710" manufacturer="Canon" model="15002700" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB2720" driver="bjc-MAXIFY-MB2720" manufacturer="Canon" model="15002700" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB2730" driver="bjc-MAXIFY-MB2730" manufacturer="Canon" model="15002700" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB2740" driver="bjc-MAXIFY-MB2740" manufacturer="Canon" model="15002700" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB2750" driver="bjc-MAXIFY-MB2750" manufacturer="Canon" model="15002700" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB2760" driver="bjc-MAXIFY-MB2760" manufacturer="Canon" model="15002700" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB2790" driver="bjc-MAXIFY-MB2790" manufacturer="Canon" model="15002700" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <!-- Canon MAXIFY MB5000 family -->
       <printer translate="name" name="Canon MB5000 series" driver="bjc-MB5000-series" manufacturer="Canon" model="15002000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon MAXIFY MB5020" driver="bjc-MAXIFY-MB5020" manufacturer="Canon" model="15002000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
@@ -1265,6 +1293,17 @@
       <printer translate="name" name="Canon MAXIFY MB5070" driver="bjc-MAXIFY-MB5070" manufacturer="Canon" model="15002000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon MAXIFY MB5080" driver="bjc-MAXIFY-MB5080" manufacturer="Canon" model="15002000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon MAXIFY MB5090" driver="bjc-MAXIFY-MB5090" manufacturer="Canon" model="15002000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <!-- Canon MAXIFY MB5100 family -->
+      <printer translate="name" name="Canon MB5100 series" driver="bjc-MB5100-series" manufacturer="Canon" model="15002100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB5110" driver="bjc-MAXIFY-MB5110" manufacturer="Canon" model="15002100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB5120" driver="bjc-MAXIFY-MB5120" manufacturer="Canon" model="15002100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB5130" driver="bjc-MAXIFY-MB5130" manufacturer="Canon" model="15002100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB5140" driver="bjc-MAXIFY-MB5140" manufacturer="Canon" model="15002100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB5150" driver="bjc-MAXIFY-MB5150" manufacturer="Canon" model="15002100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB5160" driver="bjc-MAXIFY-MB5160" manufacturer="Canon" model="15002100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB5170" driver="bjc-MAXIFY-MB5170" manufacturer="Canon" model="15002100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB5180" driver="bjc-MAXIFY-MB5180" manufacturer="Canon" model="15002100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB5190" driver="bjc-MAXIFY-MB5190" manufacturer="Canon" model="15002100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <!-- Canon MAXIFY MB5300 family -->
       <printer translate="name" name="Canon MB5300 series" driver="bjc-MB5300-series" manufacturer="Canon" model="15002300" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon MAXIFY MB5310" driver="bjc-MAXIFY-MB5310" manufacturer="Canon" model="15002300" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
@@ -1275,6 +1314,17 @@
       <printer translate="name" name="Canon MAXIFY MB5360" driver="bjc-MAXIFY-MB5360" manufacturer="Canon" model="15002300" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon MAXIFY MB5370" driver="bjc-MAXIFY-MB5370" manufacturer="Canon" model="15002300" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon MAXIFY MB5390" driver="bjc-MAXIFY-MB5390" manufacturer="Canon" model="15002300" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <!-- Canon MAXIFY MB5400 family -->
+      <printer translate="name" name="Canon MB5400 series" driver="bjc-MB5400-series" manufacturer="Canon" model="15002700" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB5410" driver="bjc-MAXIFY-MB5410" manufacturer="Canon" model="15002700" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB5420" driver="bjc-MAXIFY-MB5420" manufacturer="Canon" model="15002700" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB5430" driver="bjc-MAXIFY-MB5430" manufacturer="Canon" model="15002700" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB5440" driver="bjc-MAXIFY-MB5440" manufacturer="Canon" model="15002700" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB5450" driver="bjc-MAXIFY-MB5450" manufacturer="Canon" model="15002700" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB5460" driver="bjc-MAXIFY-MB5460" manufacturer="Canon" model="15002700" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB5470" driver="bjc-MAXIFY-MB5470" manufacturer="Canon" model="15002700" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB5480" driver="bjc-MAXIFY-MB5480" manufacturer="Canon" model="15002700" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB5490" driver="bjc-MAXIFY-MB5490" manufacturer="Canon" model="15002700" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <!-- -->
       <printer translate="name" name="Canon PIXUS 50i" driver="bjc-50i" manufacturer="Canon" model="2000050" parameters="density_800_params" />
       <printer translate="name" name="Canon PIXUS 80i" driver="bjc-80i" manufacturer="Canon" model="2000080" parameters="density_800_params" />
