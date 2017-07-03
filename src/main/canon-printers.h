@@ -3851,9 +3851,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL,
     iP4500_channel_order
-  },
-
-  
+  },  
   { /* Canon MAXIFY MB2000 --- with XML */
     /* Same: MB5000 */
     "MAXIFY MB2000", 3,          /*model, model_id*/
@@ -3872,6 +3870,23 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     iP4500_channel_order
   },
+    { /* Canon MAXIFY MB2100 --- with XML */
+    "MAXIFY MB2100", 3,          /*model, model_id*/
+    INCH(17/2), 1917,       /* max paper width and height assumed */
+    10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
+    &canon_MULTIPASS_MX7600_slotlist,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I|CANON_CAP_v|CANON_CAP_w|CANON_CAP_XML|CANON_CAP_DUPLEX|CANON_CAP_s,0,
+    3,9, /* ESC (l and (P command lengths */
+    0, /* Upper/Lower Cassette option */
+    control_cmd_PIXMA_MG5300, /*features*/
+    &canon_MAXIFY_iB4100_modelist,
+    &canon_MAXIFY_iB4100_paperlist,
+    &canon_MAXIFY_iB4100_modeuselist,
+    NULL,
+    NULL,
+    NULL,
+    iP4500_channel_order
+  },  
   { /* Canon MAXIFY MB2300 --- with XML */
     /* Same: MB5300 */
     "MAXIFY MB2300", 3,          /*model, model_id*/

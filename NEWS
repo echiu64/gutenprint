@@ -343,6 +343,14 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon MAXIFY iB4180 (EXPERIMENTAL)(*1)
        Canon MAXIFY iB4190 (EXPERIMENTAL)(*1)
 
+       Canon MB2100 series (EXPERIMENTAL)
+       Canon MAXIFY MB2110 (EXPERIMENTAL)(*1)
+       Canon MAXIFY MB2120 (EXPERIMENTAL)(*1)
+       Canon MAXIFY MB2130 (EXPERIMENTAL)(*1)
+       Canon MAXIFY MB2140 (EXPERIMENTAL)(*1)
+       Canon MAXIFY MB2150 (EXPERIMENTAL)(*1)
+       Canon MAXIFY MB2160 (EXPERIMENTAL)(*1)
+
        Note 1: Added individual family
                instances, even though the
                printer identifies itself

@@ -1258,6 +1258,14 @@
       <printer translate="name" name="Canon MAXIFY MB2040" driver="bjc-MAXIFY-MB2040" manufacturer="Canon" model="15002000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon MAXIFY MB2050" driver="bjc-MAXIFY-MB2050" manufacturer="Canon" model="15002000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon MAXIFY MB2060" driver="bjc-MAXIFY-MB2060" manufacturer="Canon" model="15002000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <!-- Canon MAXIFY MB2100 family -->
+      <printer translate="name" name="Canon MB2100 series" driver="bjc-MB2100-series" manufacturer="Canon" model="15002100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB2110" driver="bjc-MAXIFY-MB2110" manufacturer="Canon" model="15002100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB2120" driver="bjc-MAXIFY-MB2120" manufacturer="Canon" model="15002100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB2130" driver="bjc-MAXIFY-MB2130" manufacturer="Canon" model="15002100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB2140" driver="bjc-MAXIFY-MB2140" manufacturer="Canon" model="15002100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB2150" driver="bjc-MAXIFY-MB2150" manufacturer="Canon" model="15002100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MAXIFY MB2160" driver="bjc-MAXIFY-MB2160" manufacturer="Canon" model="15002100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>      
       <!-- Canon MAXIFY MB2300 family -->
       <printer translate="name" name="Canon MB2300 series" driver="bjc-MB2300-series" manufacturer="Canon" model="15002300" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon MAXIFY MB2320" driver="bjc-MAXIFY-MB2320" manufacturer="Canon" model="15002300" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
