@@ -3871,6 +3871,7 @@ static const canon_cap_t canon_model_capabilities[] =
     iP4500_channel_order
   },
     { /* Canon MAXIFY MB2100 --- with XML */
+      /* Same MB5100 */
     "MAXIFY MB2100", 3,          /*model, model_id*/
     INCH(17/2), 1917,       /* max paper width and height assumed */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
@@ -3906,6 +3907,7 @@ static const canon_cap_t canon_model_capabilities[] =
     iP4500_channel_order
   },
   { /* Canon MAXIFY MB2700 --- with XML */
+    /* Same MB5400 */
     "MAXIFY MB2700", 3,          /*model, model_id*/
     INCH(17/2), 1917,       /* max paper width and height assumed */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
