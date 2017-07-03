@@ -53,9 +53,14 @@ sub print_it {
 	map { $add += $addlines{$_} } @files;
 	map { $remove += $removelines{$_} } @files;
 	print "	Lines: +$add, -$remove\n";
-	print "	Files:\n";
+	print "	Files:";
+	my ($fcount) = 0;
 	foreach my $fn (@files) {
-	    print "		$fn (";
+	    if ($fcount++ == 0) {
+		print "	$fn (";
+	    } else {
+		print "		$fn (";
+	    }
 	    if ($filechanges{$fn} eq 'D') {
 		print "removed -$removelines{$fn}";
 	    } elsif ($filechanges{$fn} eq 'C') {
