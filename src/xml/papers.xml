@@ -1467,7 +1467,7 @@
     </paper>
     <paper name="M-Oficio">
       <description translate="value" value="Mexico Oficio"/>
-      <comment value="216,0mm x 341.0mm (8.5in x 13.43in)"/>
+      <comment value="216.0mm x 341.0mm (8.5in x 13.43in)"/>
       <width value="612"/>
       <height value="966"/>
       <unit value="metric-extended"/>
