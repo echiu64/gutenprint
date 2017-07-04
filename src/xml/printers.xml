@@ -411,10 +411,10 @@
       <printer translate="name" name="Canon PIXMA MP220" driver="bjc-MULTIPASS-MP220" manufacturer="Canon" model="5000210" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer><!-- driver legacy names used -->
       <printer translate="name" name="Canon PIXMA MP228" driver="bjc-PIXMA-MP228" manufacturer="Canon" model="5000210" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <!-- Canon MP230 family -->
-      <printer translate="name" name="Canon MP230 series" driver="bjc-MP230-series" manufacturer="Canon" model="5000230" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="Canon PIXMA MP230" driver="bjc-MULTIPASS-MP230" manufacturer="Canon" model="5000230" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer><!-- driver legacy names used -->
-      <printer translate="name" name="Canon PIXMA MP236" driver="bjc-PIXMA-MP236" manufacturer="Canon" model="5000230" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="Canon PIXMA MP237" driver="bjc-PIXMA-MP237" manufacturer="Canon" model="5000230" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MP230 series" deviceid="MFG:Canon;CMD:BJL,BJRaster3,BSCCe,IVEC,IVECPLI;MDL:MP230 series;CLS:PRINTER;DES:Canon MP230 series;VER:1.050;STA:10;FSI:00;HRI:C;MSI:AOFF,B240,DAT,E3,HASF,JOFF,K21000700;PDR:4;PSE:LNHB41360;CID:CA_IVEC1TYPE0_IJP;" driver="bjc-MP230-series" manufacturer="Canon" model="5000230" parameters="PIXMA_iP4000_params"></printer>
+      <printer translate="name" name="Canon PIXMA MP230" driver="bjc-MULTIPASS-MP230" manufacturer="Canon" model="5000230" parameters="PIXMA_iP4000_params"></printer><!-- driver legacy names used -->
+      <printer translate="name" name="Canon PIXMA MP236" driver="bjc-PIXMA-MP236" manufacturer="Canon" model="5000230" parameters="PIXMA_iP4000_params"></printer>
+      <printer translate="name" name="Canon PIXMA MP237" driver="bjc-PIXMA-MP237" manufacturer="Canon" model="5000230" parameters="PIXMA_iP4000_params"></printer>
       <!-- Canon MP240 family -->
       <printer translate="name" name="Canon MP240 series" driver="bjc-MP240-series" manufacturer="Canon" model="5000240" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA MP240" driver="bjc-MULTIPASS-MP240" manufacturer="Canon" model="5000240" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer><!-- driver legacy names used -->

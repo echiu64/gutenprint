@@ -449,6 +449,9 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        MB5000 series
        MB5300 series
 
+     * corrected black-only and color-only cartridge support for MP230
+       series
+
      * Improved printer firmware papersize detection when using
        automatic paper source selection (Autofeed), by changing paper
        width from calculated to a constant value for paper sizes known

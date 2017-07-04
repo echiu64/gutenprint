@@ -6467,21 +6467,13 @@ DECLARE_MODEUSES(canon_MULTIPASS_MP210);
 static const char* canon_MULTIPASS_MP230_modeuses_plain[] = {
   "600x600dpi_high",
   "600x600dpi",
-  "600x600dpi_draft",/*untested*/
+  "600x600dpi_draft",
   "300x300dpi",
-  "300x300dpi_draft",/*untested*/
-  /* Mono */
-  "600x600dpi_highmono",
-  "600x600dpi_mono",
-  "600x600dpi_draftmono",/*untested*/
-  "300x300dpi_mono",
-  "300x300dpi_draftmono",/*untested*/
   /* Color */
   "600x600dpi_high3",
   "600x600dpi_std3",
-  "600x600dpi_draft3",/*untested*/
+  "600x600dpi_draft3",
   "300x300dpi_std3",
-  "300x300dpi_draft3",/*untested*/
   NULL
   };
 
@@ -6504,10 +6496,6 @@ static const char* canon_MULTIPASS_MP230_modeuses_Hagaki[] = {
   "600x600dpi_high2",
   "600x600dpi_std2",
   "600x600dpi_draft2",/*untested*/
-  /* Mono */
-  "600x600dpi_highmono2",
-  "600x600dpi_mono2",
-  "600x600dpi_draftmono2",/*untested*/
   /* Color */
   "600x600dpi_high4",
   "600x600dpi_std4",
@@ -6526,7 +6514,7 @@ static const char* canon_MULTIPASS_MP230_modeuses_PPother[] = {
   };
 
 static const canon_modeuse_t canon_MULTIPASS_MP230_modeuses[] = {
- { "Plain",             canon_MULTIPASS_MP230_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL | DUPLEX_SUPPORT | DUPLEX_MODEREPL},
+ { "Plain",             canon_MULTIPASS_MP230_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
  { "PhotoPlusGloss2",	canon_MULTIPASS_MP230_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
  { "PhotoProPlat",	canon_MULTIPASS_MP230_modeuses_PPproPlat, INKSET_COLOR_SUPPORT },
  { "PhotoProLuster",    canon_MULTIPASS_MP230_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
