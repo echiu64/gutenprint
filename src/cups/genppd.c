@@ -560,11 +560,11 @@ main(int  argc,			    /* I - Number of command-line arguments */
       break;
     }
   }
-#ifdef HAVE_LIBZ  
+#ifdef HAVE_LIBZ
   if (use_compression)
     gpext = ".gz";
   else
-#endif	  
+#endif
     gpext = "";
   if (optind < argc) {
     int n, numargs;
@@ -662,7 +662,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
       for (i = 0; i < stp_printer_model_count(); i++)
 	{
 	  printer = stp_get_printer_by_index(i);
-	  
+
 	  if (i % parallel == rotor && printer)
 	    {
 	      if (! verbose && (i % 50) == 0)
@@ -1195,7 +1195,7 @@ print_ppd_header_3(gpFile fp, ppd_type_t ppd_type, int model,
   gpputs(fp, "*TTRasterizer:	Type42\n");
 
   gpputs(fp, "*cupsVersion:	1.2\n");
-  
+
   gpprintf(fp, "*cupsFilter:	\"application/vnd.cups-raster 100 rastertogutenprint.%s\"\n", GUTENPRINT_RELEASE_VERSION);
   if (strcasecmp(manufacturer, "EPSON") == 0)
     gpputs(fp, "*cupsFilter:	\"application/vnd.cups-command 33 commandtoepson\"\n");
@@ -2616,7 +2616,7 @@ write_ppd(
 		}
 	    }
 	  stp_parameter_description_destroy(&desc);
-	  
+
 	  /*
 	   * Quality settings
 	   */

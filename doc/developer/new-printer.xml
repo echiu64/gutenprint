@@ -479,7 +479,7 @@ const paperlist_t *paperlist;
         black) is printed.  So if the density is
         <constant>0.5</constant>, solid black actually prints only
         half the possible dots.  &ldquo;Base density&rdquo; refers to
-        the fact that the density value can be scaled in the GUI or via 
+        the fact that the density value can be scaled in the GUI or via
 	CUPS options.  The density value specified
         (which is not made visible to the user) is multiplied by the
         base density to obtain the effective density value.  All other

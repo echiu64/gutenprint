@@ -1,5 +1,5 @@
 #!/bin/sh
-################################################################################             
+################################################################################
 # A unified uninstaller for Gutenprint and Gimp-Print.                        #
 # This uninstaller will uninstall versions from 4.2.1                          #
 # Through present day naming as of September 1, 2015                           #
@@ -35,7 +35,7 @@ printf "\nThis script is distributed in the hope that it will be useful,\nbut WI
 ## Keep the syntax in case it is needed at a later date.
 #Xvers=`sw_vers -productVersion | awk -F. '{printf "%d\n", $1 * 100 + $2}'`
 
-## If pkgutil is available (10.6 and later), check to see if pkgutil has 
+## If pkgutil is available (10.6 and later), check to see if pkgutil has
 ## any packages to deal with.
 if [ -x /usr/sbin/pkgutil ] ; then
 	pkgutil_pkg=(`pkgutil --pkgs | grep -E '[Gg]utenprint|sourceforge\.[Gg]utenprint|[Gg]imp'`)
@@ -44,12 +44,12 @@ fi
 ## For all versions of OS X use check /Library/Receipts in case
 ## pkgutil is not present or if pkgutil does not recognize packages
 ## with non-conforming (numbers) in CFBundleIdentifier.
-oldpackages=(`ls /Library/Receipts | grep -E '[Gg]utenprint|[Gg]imp[Pp]rint|[Gg]imp-[Pp]rint'`)		
+oldpackages=(`ls /Library/Receipts | grep -E '[Gg]utenprint|[Gg]imp[Pp]rint|[Gg]imp-[Pp]rint'`)
 
 ## Now test that there is any installation. If not, exit 0.
-if [ ! -z "${oldpackages[0]}" -o ! -z "${pkgutil_pkg[0]}" ]; then 
- 	break; 
- else 
+if [ ! -z "${oldpackages[0]}" -o ! -z "${pkgutil_pkg[0]}" ]; then
+ 	break;
+ else
 	printf "\nNo Gutenprint/Gimp-Print installation receipt found.\nThere is nothing for this script to do.\n\nIf you still think there is an installation of Gutenprint on\nyour computer, please contact Gutenprint at\n\"http://gimp-print.sourceforge.net\"\n\n"
 	exit 0
 fi
@@ -69,7 +69,7 @@ fi
 read -p "Do you want to continue? (Y,n)  " continued
 if [[ "$continued" = [Yy] ]] || [[ "$continued" = [Yy][Ee][Ss] ]] ; then
 	printf "Please enter you administrator's password if prompted.\nNothing will appear on the screen as you enter your password.\n"
-else 
+else
 exit 0
 fi
 
@@ -86,7 +86,7 @@ for pkg in ${oldpackages[@]} ; do
 	for gutenfile in ` lsbom -sf /Library/Receipts/$pkg/Contents/Archive.bom | sed  's/^\.//g' | sort -r `  ; do
 		test -f "$gutenfile" && sudo /bin/rm -f "$gutenfile"
 	done
-	
+
 	## Remove any symlinks
 	for gutenlink in ` lsbom -ls /Library/Receipts/$pkg/Contents/Archive.bom | sed  's/^\.//g' ` ; do
 		test -L "$gutenlink" &&  sudo /bin/rm -f "$gutenlink"
@@ -121,7 +121,7 @@ if [ ! -z "${pkgutil_pkg[0]}" ] ; then
 	for file in /usr/libexec/cups/backend/gutenprint52+usb /usr/libexec/cups/driver/gutenprint.5.2  /usr/libexec/cups/filter/commandtocanon  /usr/libexec/cups/filter/commandtoepson /usr/libexec/cups/filter/rastertogutenprint.5.2 /usr/local/bin/escputil; do
 		test -L $file && sudo /bin/rm -f $file
 	done
-	done		
+	done
 fi
 ################################################
 ### 4. CLEAN THINGS UP BEFORE WE LEAVE ########
@@ -129,9 +129,9 @@ fi
 ## Clean up any remaining PPDs in /Library/Printers
 MODEL_PPD_DIR="/Library/Printers/PPDs/Contents/Resources"
 ##############################################################
-## Remove any PPDs that might be lying around from a previous 
+## Remove any PPDs that might be lying around from a previous
 ## install of some sort.
-LAST_PPD=($(find ${MODEL_PPD_DIR} -name 'stp-*\.5\.[0-2]\.ppd\.gz' | sort)) 
+LAST_PPD=($(find ${MODEL_PPD_DIR} -name 'stp-*\.5\.[0-2]\.ppd\.gz' | sort))
 	if [ ${#LAST_PPD[@]} -gt 0 ]; then
 		echo Removing the PPDs...
 		for ((jj=0;$jj < ${#LAST_PPD[@]} ; jj++)) ; do
@@ -139,8 +139,8 @@ LAST_PPD=($(find ${MODEL_PPD_DIR} -name 'stp-*\.5\.[0-2]\.ppd\.gz' | sort))
 			/bin/rm ${LAST_PPD[$jj]}
 		done
 	fi
-	
-	## Now remove any queues.  The basic awk routine is left over from 
+
+	## Now remove any queues.  The basic awk routine is left over from
 ## Tyler Blessing.
 # set the CUPS ppd directory variable
 CUPS_PPD_DIR="/etc/cups/ppd/"
@@ -168,4 +168,3 @@ do
 done
 
 exit 0
-

@@ -2,11 +2,11 @@
 # Owen Taylor     97-11-3
 
 dnl AM_PATH_GLIB([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND [, MODULES]]]])
-dnl Test for GLIB, and define GLIB_CFLAGS and GLIB_LIBS, if "gmodule" or 
+dnl Test for GLIB, and define GLIB_CFLAGS and GLIB_LIBS, if "gmodule" or
 dnl gthread is specified in MODULES, pass to glib-config
 dnl
 AC_DEFUN(AM_PATH_GLIB,
-[dnl 
+[dnl
 dnl Get the cflags and libraries from the glib-config script
 dnl
 AC_ARG_WITH(glib-prefix,[  --with-glib-prefix=PFX   Prefix where GLIB is installed (optional)],
@@ -32,10 +32,10 @@ AC_ARG_ENABLE(glibtest, [  --disable-glibtest       Do not try to compile and ru
   for module in . $4
   do
       case "$module" in
-         gmodule) 
+         gmodule)
              glib_config_args="$glib_config_args gmodule"
          ;;
-         gthread) 
+         gthread)
              glib_config_args="$glib_config_args gthread"
          ;;
       esac
@@ -71,7 +71,7 @@ dnl
 #include <stdio.h>
 #include <stdlib.h>
 
-int 
+int
 main ()
 {
   int major, minor, micro;
@@ -90,7 +90,7 @@ main ()
       (glib_minor_version != $glib_config_minor_version) ||
       (glib_micro_version != $glib_config_micro_version))
     {
-      printf("\n*** 'glib-config --version' returned %d.%d.%d, but GLIB (%d.%d.%d)\n", 
+      printf("\n*** 'glib-config --version' returned %d.%d.%d, but GLIB (%d.%d.%d)\n",
              $glib_config_major_version, $glib_config_minor_version, $glib_config_micro_version,
              glib_major_version, glib_minor_version, glib_micro_version);
       printf ("*** was found! If glib-config was correct, then it is best\n");
@@ -101,7 +101,7 @@ main ()
       printf("*** If glib-config was wrong, set the environment variable GLIB_CONFIG\n");
       printf("*** to point to the correct copy of glib-config, and remove the file config.cache\n");
       printf("*** before re-running configure\n");
-    } 
+    }
   else if ((glib_major_version != GLIB_MAJOR_VERSION) ||
 	   (glib_minor_version != GLIB_MINOR_VERSION) ||
            (glib_micro_version != GLIB_MICRO_VERSION))
@@ -145,7 +145,7 @@ main ()
   fi
   if test "x$no_glib" = x ; then
      AC_MSG_RESULT(yes)
-     ifelse([$2], , :, [$2])     
+     ifelse([$2], , :, [$2])
   else
      AC_MSG_RESULT(no)
      if test "$GLIB_CONFIG" = "no" ; then

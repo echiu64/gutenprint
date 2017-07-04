@@ -113,7 +113,7 @@ which to choose.  Once the selection is made, click the
 CUPS versions 1.1.11 and later <emphasis>REQUIRE</emphasis>
 the user to insure that the desired USB printer is powered on
 <emphasis>AND</emphasis> physically connected to the USB bus
-<emphasis>BEFORE</emphasis> starting the CUPS software.  
+<emphasis>BEFORE</emphasis> starting the CUPS software.
    </para>
    <para>
 CUPS must see the USB printer when the software starts.  The CUPS software
@@ -124,7 +124,7 @@ simply plug in the USB printer and power it on after CUPS has started.
    <para>
 If the USB printer was not connected and powered on at the time CUPS was
 started, there will not be a USB printer shown in the
-list of devices on the CUPS Admin Device Window (see 
+list of devices on the CUPS Admin Device Window (see
 <xref linkend="fig-cups-admin-device">).  In this event, stop the CUPS
 software, properly connect and power on the USB printer, and restart
 the CUPS software.
@@ -132,8 +132,8 @@ the CUPS software.
    <para>
 From the list of devices shown in the CUPS Admin Device Window
 (see <xref linkend="fig-cups-admin-device">), a clever user might
-attempt to avoid this issue by selecting 
-<guimenuitem>Internet Printing Protocol</guimenuitem> 
+attempt to avoid this issue by selecting
+<guimenuitem>Internet Printing Protocol</guimenuitem>
 and then enter something similar to 'usb:/dev/usblp0' in the next
 screen.  However, this fails later in the configuration process with a
 "client_error_not_possible" error message with no other explanation.
@@ -165,7 +165,7 @@ English (see <xref linkend="fig-cups-admin-model">).  Also take note
 of the Gutenprint revision for the driver, and ensure that it is
 indeed the version of Gutenprint which you have most recently
 installed.  Once you have made the proper selection, click on the
-<guibutton>Continue</guibutton> button. 
+<guibutton>Continue</guibutton> button.
    </para>
 
    <figure id="fig-cups-admin-model"><title>The 2nd CUPS Admin Model/Driver Window</title>

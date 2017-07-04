@@ -1500,7 +1500,7 @@ extern char *stp_parameter_get_category(const stp_vars_t *v,
  * @param desc the parameter description to use (must already be described)
  * @param category the name of the category to search for.
  * @param value the value of the category to search for.
- * @returns whether the parameter has the category with the specified value. 
+ * @returns whether the parameter has the category with the specified value.
  */
 extern int stp_parameter_has_category_value(const stp_vars_t *v,
 					    const stp_parameter_t *desc,

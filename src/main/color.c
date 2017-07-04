@@ -271,4 +271,3 @@ stp_color_unregister(const stp_color_t *color)
 
   return 0;
 }
-

@@ -61,7 +61,7 @@ ps: $(MANUAL).ps
 pdf: $(MANUAL).pdf
 	cd developer; $(MAKE) pdf
 
-html: 
+html:
 	cd developer; $(MAKE) html
 
 install-data-local: FAQ.html gutenprint-users-manual.odt gutenprint-users-manual.pdf

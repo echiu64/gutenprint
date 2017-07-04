@@ -643,7 +643,7 @@ stpi_dither_ut(stp_vars_t *v,
 
       if (ddc->b > 65535)
 	ddc->b = 65535;
-    
+
       ddc->v += 2 * ddc->b + (ddc->errs[0][x + MAX_SPREAD] + 8) / 16;
       total_error += eventone_adjust(ddc, et, ddc->v - ddc->b, ddc->b);
       if (total_error >= comparison)
@@ -655,7 +655,7 @@ stpi_dither_ut(stp_vars_t *v,
 	    {
 	      stpi_dither_channel_t *dc = &CHANNEL(d, i);
 	      shade_distance_t *sp = (shade_distance_t *) dc->aux_data;
-      
+
 	      if (dc->ptr)
 		{
 
@@ -683,7 +683,7 @@ stpi_dither_ut(stp_vars_t *v,
 		}
 	    }
 	}
-    
+
       for (i=0; i < channel_count; i++)
 	{
 	  stpi_dither_channel_t *dc = &CHANNEL(d, i);
@@ -714,7 +714,7 @@ stpi_dither_ut(stp_vars_t *v,
 		  inkp = &(sp->upper);
 		  dc->v -= 131070;
 		  sp->dis = et->d_sq;
-		}	  
+		}
 	      if (inkp->bits)
 		{
 		  if (!mask || (*(mask + d->ptr_offset) & bit))

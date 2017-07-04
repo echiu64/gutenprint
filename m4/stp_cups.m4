@@ -122,7 +122,7 @@ fi
 # STP_CUPS_PATH
 # -------------
 # Set CUPS install paths
-AC_DEFUN([STP_CUPS_PATH], 
+AC_DEFUN([STP_CUPS_PATH],
 [# CUPS path setup
 # Fix "prefix" variable if it hasn't been specified...
 if test x${cups_prefix} = xNONE ; then

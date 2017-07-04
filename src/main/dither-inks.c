@@ -99,7 +99,7 @@ stpi_dither_channel_destroy(stpi_dither_channel_t *channel)
   STP_SAFE_FREE(channel->ranges);
   stp_dither_matrix_destroy(&(channel->pick));
   stp_dither_matrix_destroy(&(channel->dithermat));
-}  
+}
 
 static void
 initialize_channel(stp_vars_t *v, int channel, int subchannel)
@@ -130,7 +130,7 @@ insert_subchannel(stp_vars_t *v, stpi_dither_t *d, int channel, int subchannel)
   stpi_dither_channel_t *nc =
     stp_malloc(sizeof(stpi_dither_channel_t) *
 	       (d->total_channel_count + increment));
-      
+
   if (d->channel)
     {
       /*

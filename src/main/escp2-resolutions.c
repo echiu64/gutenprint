@@ -159,12 +159,12 @@ stp_escp2_load_resolutions_from_xml(const stp_vars_t *v, stp_mxml_node_t *node)
 			{
 			  res->hres = data[0];
 			  res->vres = data[1];
-			}			      
+			}
 		      else if (!strcmp(elt, "printedResolution"))
 			{
 			  res->printed_hres = data[0];
 			  res->printed_vres = data[1];
-			}			      
+			}
 		    }
 		  else if (!strcmp(elt, "verticalPasses") &&
 			   cchild->child &&
@@ -268,17 +268,17 @@ stp_escp2_load_quality_presets_from_xml(const stp_vars_t *v, stp_mxml_node_t *no
 		    {
 		      qpw->qualities[count].min_hres = data[0];
 		      qpw->qualities[count].min_vres = data[1];
-		    }			      
+		    }
 		  else if (!strcmp(cchild->value.element.name, "maximumResolution"))
 		    {
 		      qpw->qualities[count].max_hres = data[0];
 		      qpw->qualities[count].max_vres = data[1];
-		    }			      
+		    }
 		  else if (!strcmp(cchild->value.element.name, "desiredResolution"))
 		    {
 		      qpw->qualities[count].desired_hres = data[0];
 		      qpw->qualities[count].desired_vres = data[1];
-		    }			      
+		    }
 		}
 	      cchild = cchild->next;
 	    }

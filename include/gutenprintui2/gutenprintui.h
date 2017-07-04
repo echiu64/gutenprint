@@ -104,7 +104,7 @@ typedef struct stpui_image
   void (*rotate_180)(struct stpui_image *image);
   void (*crop)(struct stpui_image *image, int left, int top,
 	       int right, int bottom);
-} stpui_image_t;  
+} stpui_image_t;
 
 /*
  * Function prototypes

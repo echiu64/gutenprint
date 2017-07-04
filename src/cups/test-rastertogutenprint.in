@@ -145,7 +145,7 @@ else
     tfile=`mktemp`
     trap cleanup 1 2 3 6 14 15 30
     "$pdfjam" -q "$testfile" "$pages" -o $tfile
-fi    
+fi
 
 if [ -z "$verbose" ] ; then
     STP_SUPPRESS_MESSAGES=1
@@ -327,10 +327,10 @@ if [ -d ppd/C ] ; then
 	done
 	files=$nondup_files
     fi
-    for i in $(seq 0 $(($jobs-1))) ; do 
+    for i in $(seq 0 $(($jobs-1))) ; do
 	runall $jobs $i $files &
     done
-    for i in $(seq 0 $(($jobs-1))) ; do 
+    for i in $(seq 0 $(($jobs-1))) ; do
 	wait -n
 	if [ "$?" -gt 0 ] ; then
 	    retval=1

@@ -680,7 +680,7 @@ stp_curve_set_data_points(stp_curve_t *curve, size_t count,
 		       "stp_curve_set_data_points: horizontal value must "
 		       "not exceed .99999\n");
 	  return 0;
-	}	  
+	}
       if (data[i].x < 0 || data[i].x > 1)
 	{
 	  stp_deprintf(STP_DBG_CURVE_ERRORS,
@@ -1054,7 +1054,7 @@ do_interpolate_spline(double low, double high, double frac,
 {
   double a = 1.0 - frac;
   double b = frac;
-  double retval = 
+  double retval =
     ((a * a * a - a) * interval_low) + ((b * b * b - b) * interval_high);
   retval = retval * x_interval * x_interval / 6;
   retval += (a * low) + (b * high);

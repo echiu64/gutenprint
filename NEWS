@@ -294,14 +294,45 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
      * added support for following printer models:
 
+       G1000 series
        Canon PIXMA G1000   (EXPERIMENTAL)
-       
+       Canon PIXMA G1100   (EXPERIMENTAL)
+       Canon PIXMA G1200   (EXPERIMENTAL)
+       Canon PIXMA G1400   (EXPERIMENTAL)
+       Canon PIXMA G1500   (EXPERIMENTAL)
+       Canon PIXMA G1800   (EXPERIMENTAL)
+       Canon PIXMA G1900   (EXPERIMENTAL)
+
+       G2000 series
        Canon PIXMA G2000   (EXPERIMENTAL)
        Canon PIXMA G2002   (EXPERIMENTAL)
+       Canon PIXMA G2100   (EXPERIMENTAL)
+       Canon PIXMA G2200   (EXPERIMENTAL)
+       Canon PIXMA G2400   (EXPERIMENTAL)
+       Canon PIXMA G2500   (EXPERIMENTAL)
+       Canon PIXMA G2600   (EXPERIMENTAL)
+       Canon PIXMA G2800   (EXPERIMENTAL)
+       Canon PIXMA G2900   (EXPERIMENTAL)
 
+       G3000 series
        Canon PIXMA G3000   (EXPERIMENTAL)
+       Canon PIXMA G3100   (EXPERIMENTAL)
+       Canon PIXMA G3200   (EXPERIMENTAL)
+       Canon PIXMA G3400   (EXPERIMENTAL)
+       Canon PIXMA G3500   (EXPERIMENTAL)
+       Canon PIXMA G3600   (EXPERIMENTAL)
+       Canon PIXMA G3800   (EXPERIMENTAL)
+       Canon PIXMA G3900   (EXPERIMENTAL)
 
+       G4000 series
        Canon PIXMA G4000   (EXPERIMENTAL)
+       Canon PIXMA G4100   (EXPERIMENTAL)
+       Canon PIXMA G4200   (EXPERIMENTAL)
+       Canon PIXMA G4400   (EXPERIMENTAL)
+       Canon PIXMA G4500   (EXPERIMENTAL)
+       Canon PIXMA G4600   (EXPERIMENTAL)
+       Canon PIXMA G4800   (EXPERIMENTAL)
+       Canon PIXMA G4900   (EXPERIMENTAL)
 
        MG3000 series       (EXPERIMENTAL)
        Canon PIXMA MG3010  (EXPERIMENTAL)(*1)
@@ -318,7 +349,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA MG3077  (EXPERIMENTAL)(*1)
        Canon PIXMA MG3080  (EXPERIMENTAL)(*1)
        Canon PIXMA MG3090  (EXPERIMENTAL)(*1)
-       
+
        E410 series         (EXPERIMENTAL)
        Canon PIXMA E410    (EXPERIMENTAL)(*1)
        Canon PIXMA E414    (EXPERIMENTAL)(*1)
@@ -417,6 +448,9 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        MB2300 series
        MB5000 series
        MB5300 series
+
+     * corrected black-only and color-only cartridge support for MP230
+       series
 
      * Improved printer firmware papersize detection when using
        automatic paper source selection (Autofeed), by changing paper

@@ -162,7 +162,7 @@ Command_Type: COMMAND_TYPE tNUMBER
 Scaling: SCALING tNUMBER
 	{
 	  if (current_printer)
-	    current_printer->scaling = $2; 
+	    current_printer->scaling = $2;
 	}
 ;
 

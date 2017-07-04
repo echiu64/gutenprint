@@ -43,7 +43,7 @@
 #if defined(USE_DLOPEN)
 #define WITH_DYNAMIC
 #include <dlfcn.h>
-#define DL_INIT() do {} while(0)    
+#define DL_INIT() do {} while(0)
 #define DL_OPEN(__x) dlopen(__x, RTLD_NOW)
 #define DL_SYM(__x, __y) dlsym(__x, __y)
 #define DL_CLOSE(__x) dlclose(__x)
@@ -175,7 +175,7 @@ struct mitsu70x_ctx {
 	int sharpen; /* ie mhdr.sharpen - 1 */
 
 	uint8_t rew[2]; /* 1 for rewind ok (default!) */
-	
+
 	struct BandImage output;
 };
 
@@ -350,7 +350,7 @@ struct mitsu70x_memorystatus_resp {
 	uint8_t  rsvd;
 } __attribute__((packed));
 
-// XXX also seen commands 0x67, 0x72, 0x54, 0x6e 
+// XXX also seen commands 0x67, 0x72, 0x54, 0x6e
 
 struct mitsu70x_hdr {
 	uint8_t  hdr[4]; /* 1b 5a 54 XX */  // XXX also, seen 1b 5a 43!
@@ -411,14 +411,14 @@ static char *mitsu70x_jobstatuses(uint8_t *sts)
 		return "Data transfer";
 	case JOB_STATUS0_QUEUE:
 		return "Queued for printing";
-	case JOB_STATUS0_PRINT:		
+	case JOB_STATUS0_PRINT:
 		switch(sts[1]) {
 		case JOB_STATUS1_PRINT_MEDIALOAD:
 			return "Media loading";
 		case JOB_STATUS1_PRINT_PRE_Y:
 			return "Waiting to print yellow plane";
 		case JOB_STATUS1_PRINT_Y:
-			return "Printing yellow plane";			
+			return "Printing yellow plane";
 		case JOB_STATUS1_PRINT_PRE_M:
 			return "Waiting to print magenta plane";
 		case JOB_STATUS1_PRINT_M:
@@ -699,7 +699,7 @@ static void mitsu70x_attach(void *vctx, struct libusb_device_handle *dev,
 			ctx->dl_handle = NULL;
 			return;
 		}
-		
+
 		ctx->Get3DColorTable = DL_SYM(ctx->dl_handle, "CColorConv3D_Get3DColorTable");
 		ctx->Load3DColorTable = DL_SYM(ctx->dl_handle, "CColorConv3D_Load3DColorTable");
 		ctx->Destroy3DColorTable = DL_SYM(ctx->dl_handle, "CColorConv3D_Destroy3DColorTable");
@@ -1466,7 +1466,7 @@ top:
 		     mitsu70x_media_types(resp.lower.media_brand, resp.lower.media_type));
 		ATTR("marker-types=ribbonWax\n");
 	}
-	
+
 	/* FW sanity checking */
 	if (ctx->type == P_KODAK_305) {
 		if (be16_to_cpu(resp.vers[0].checksum) != EK305_0104_M_CSUM)
@@ -1503,7 +1503,7 @@ skip_status:
 	{
 		int i;
 		struct mitsu70x_jobs jobs;
-		
+
 		ret = mitsu70x_get_jobs(ctx, &jobs);
 		if (ret)
 			return CUPS_BACKEND_FAILED;
@@ -1659,7 +1659,7 @@ skip_status:
 		}
 
 		/* Update cache for the next round */
-		memcpy(last_status, jobstatus.job_status, 4);		
+		memcpy(last_status, jobstatus.job_status, 4);
 	} while(1);
 
 	/* Clean up */
@@ -1707,7 +1707,7 @@ static void mitsu70x_dump_printerstatus(struct mitsu70x_printerstatus_resp *resp
 		     type, buf, be16_to_cpu(resp->vers[i].checksum));
 	}
 	INFO("Standby Timeout: %d minutes\n", resp->sleeptime);
-	INFO("iSerial Reporting: %s\n", resp->iserial ? "No" : "Yes" );	
+	INFO("iSerial Reporting: %s\n", resp->iserial ? "No" : "Yes" );
 
 	INFO("Lower Mechanical Status: %s\n",
 	     mitsu70x_mechastatus(resp->lower.mecha_status));
@@ -1759,7 +1759,7 @@ static int mitsu70x_query_status(struct mitsu70x_ctx *ctx)
 	struct mitsu70x_printerstatus_resp resp;
 #if 0
 	struct mitsu70x_jobs jobs;
-#endif	
+#endif
 	struct mitsu70x_jobstatus jobstatus;
 
 	int ret;

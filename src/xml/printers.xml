@@ -14,9 +14,9 @@
    name and printer name (the mapping is done both ways).
 
    NOTE TO TRANSLATORS: Printer names should not be translated into
-   their equivalents (the same printer sold under a different name) 
+   their equivalents (the same printer sold under a different name)
    in other countries.  The correct way to handle this is to add
-   another printer to this list.  Translations should be done for 
+   another printer to this list.  Translations should be done for
    e. g. character sets.
 
    For example, a Japanese printer will have the same model name wherever
@@ -86,11 +86,11 @@
         <parameter type="float" name="Gamma">0.9</parameter>
         <parameter type="float" name="BlackGamma">0.6</parameter>
       </parameters>
-      <parameters name="PIXMA_iX5000_params"> 
-        <parameter type="float" name="BlackGamma">2.0</parameter> 
-        <parameter type="float" name="YellowGamma">1.4</parameter> 
-        <parameter type="float" name="MagentaGamma">1.3</parameter> 
-        <parameter type="float" name="CyanGamma">1.3</parameter> 
+      <parameters name="PIXMA_iX5000_params">
+        <parameter type="float" name="BlackGamma">2.0</parameter>
+        <parameter type="float" name="YellowGamma">1.4</parameter>
+        <parameter type="float" name="MagentaGamma">1.3</parameter>
+        <parameter type="float" name="CyanGamma">1.3</parameter>
       </parameters>
       <printer translate="name" name="Canon BJ-30" driver="bjc-30" manufacturer="Canon" model="30" parameters="gamma_2_density_800_params" />
       <printer translate="name" name="Canon BJC-50" deviceid="MFG:Canon;MDL:BJC-50;" driver="bjc-50" manufacturer="Canon" model="4400" parameters="gamma_5_density_800_params" />
@@ -322,7 +322,7 @@
       <printer translate="name" name="Canon PIXMA iP8750" driver="bjc-PIXMA-iP8750" manufacturer="Canon" model="3008700" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA iP8760" driver="bjc-PIXMA-iP8760" manufacturer="Canon" model="3008700" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA iP8770" driver="bjc-PIXMA-iP8770" manufacturer="Canon" model="3008700" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="Canon PIXMA iP8780" driver="bjc-PIXMA-iP8780" manufacturer="Canon" model="3008700" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>  
+      <printer translate="name" name="Canon PIXMA iP8780" driver="bjc-PIXMA-iP8780" manufacturer="Canon" model="3008700" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <!-- Canon iP9910 (PIXUS only, PIXMA iP9910 does not exist) -->
       <printer translate="name" name="Canon PIXMA iP9910" driver="bjc-PIXMA-iP9910" manufacturer="Canon" model="3009910" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXUS iP9910" driver="bjc-PIXUS-iP9910" manufacturer="Canon" model="3009910" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
@@ -411,10 +411,10 @@
       <printer translate="name" name="Canon PIXMA MP220" driver="bjc-MULTIPASS-MP220" manufacturer="Canon" model="5000210" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer><!-- driver legacy names used -->
       <printer translate="name" name="Canon PIXMA MP228" driver="bjc-PIXMA-MP228" manufacturer="Canon" model="5000210" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <!-- Canon MP230 family -->
-      <printer translate="name" name="Canon MP230 series" driver="bjc-MP230-series" manufacturer="Canon" model="5000230" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="Canon PIXMA MP230" driver="bjc-MULTIPASS-MP230" manufacturer="Canon" model="5000230" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer><!-- driver legacy names used -->
-      <printer translate="name" name="Canon PIXMA MP236" driver="bjc-PIXMA-MP236" manufacturer="Canon" model="5000230" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="Canon PIXMA MP237" driver="bjc-PIXMA-MP237" manufacturer="Canon" model="5000230" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MP230 series" deviceid="MFG:Canon;CMD:BJL,BJRaster3,BSCCe,IVEC,IVECPLI;MDL:MP230 series;CLS:PRINTER;DES:Canon MP230 series;VER:1.050;STA:10;FSI:00;HRI:C;MSI:AOFF,B240,DAT,E3,HASF,JOFF,K21000700;PDR:4;PSE:LNHB41360;CID:CA_IVEC1TYPE0_IJP;" driver="bjc-MP230-series" manufacturer="Canon" model="5000230" parameters="PIXMA_iP4000_params"></printer>
+      <printer translate="name" name="Canon PIXMA MP230" driver="bjc-MULTIPASS-MP230" manufacturer="Canon" model="5000230" parameters="PIXMA_iP4000_params"></printer><!-- driver legacy names used -->
+      <printer translate="name" name="Canon PIXMA MP236" driver="bjc-PIXMA-MP236" manufacturer="Canon" model="5000230" parameters="PIXMA_iP4000_params"></printer>
+      <printer translate="name" name="Canon PIXMA MP237" driver="bjc-PIXMA-MP237" manufacturer="Canon" model="5000230" parameters="PIXMA_iP4000_params"></printer>
       <!-- Canon MP240 family -->
       <printer translate="name" name="Canon MP240 series" driver="bjc-MP240-series" manufacturer="Canon" model="5000240" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA MP240" driver="bjc-MULTIPASS-MP240" manufacturer="Canon" model="5000240" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer><!-- driver legacy names used -->
@@ -535,7 +535,7 @@
       <!-- Canon MP620 family -->
       <printer translate="name" name="Canon MP620 series" driver="bjc-MP620-series" manufacturer="Canon" model="5000620" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA MP620" driver="bjc-MULTIPASS-MP620" manufacturer="Canon" model="5000620" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer><!-- driver legacy names used -->
-      <printer translate="name" name="Canon PIXMA MP620B" driver="bjc-PIXMA-MP620B" manufacturer="Canon" model="5000620" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>      
+      <printer translate="name" name="Canon PIXMA MP620B" driver="bjc-PIXMA-MP620B" manufacturer="Canon" model="5000620" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXUS MP620" driver="bjc-PIXUS-MP620" manufacturer="Canon" model="5000620" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA MP628" driver="bjc-PIXMA-MP628" manufacturer="Canon" model="5000620" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <!-- Canon MP630 family -->
@@ -1176,7 +1176,7 @@
       <printer translate="name" name="Canon E410 series" driver="bjc-E410-series" manufacturer="Canon" model="12000400" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA E410" driver="bjc-PIXMA-E410" manufacturer="Canon" model="12000400" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA E414" driver="bjc-PIXMA-E414" manufacturer="Canon" model="12000400" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="Canon PIXMA E417" driver="bjc-PIXMA-E417" manufacturer="Canon" model="12000400" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>          <printer translate="name" name="Canon PIXMA E418" driver="bjc-PIXMA-E418" manufacturer="Canon" model="12000400" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>  
+      <printer translate="name" name="Canon PIXMA E417" driver="bjc-PIXMA-E417" manufacturer="Canon" model="12000400" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>          <printer translate="name" name="Canon PIXMA E418" driver="bjc-PIXMA-E418" manufacturer="Canon" model="12000400" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <!-- Canon E460 family -->
       <printer translate="name" name="Canon E460 series" driver="bjc-E460-series" manufacturer="Canon" model="12000460" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA E460" driver="bjc-PIXMA-E460" manufacturer="Canon" model="12000460" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
@@ -1218,15 +1218,46 @@
       <printer translate="name" name="Canon E610 series" driver="bjc-E610-series" manufacturer="Canon" model="12000610" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA E610" driver="bjc-PIXMA-E610" manufacturer="Canon" model="12000610" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA E618" driver="bjc-PIXMA-E618" manufacturer="Canon" model="12000610" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
-      <!-- Canon PIXMA G1000 -->
+      <!-- Canon PIXMA G1000 family -->
+      <printer translate="name" name="Canon G1000 series" driver="bjc-G1000-series" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA G1000" driver="bjc-PIXMA-G1000" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
-      <!-- Canon PIXMA G2000 -->
+      <printer translate="name" name="Canon PIXMA G1100" driver="bjc-PIXMA-G1100" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA G1200" driver="bjc-PIXMA-G1200" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA G1400" driver="bjc-PIXMA-G1400" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA G1500" driver="bjc-PIXMA-G1500" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA G1800" driver="bjc-PIXMA-G1800" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA G1900" driver="bjc-PIXMA-G1900" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <!-- Canon PIXMA G2000 family -->
+      <printer translate="name" name="Canon G2000 series" driver="bjc-G2000-series" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA G2000" driver="bjc-PIXMA-G2000" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA G2002" driver="bjc-PIXMA-G2002" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
-      <!-- Canon PIXMA G3000 -->
+      <printer translate="name" name="Canon PIXMA G2100" driver="bjc-PIXMA-G2100" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA G2200" driver="bjc-PIXMA-G2200" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA G2400" driver="bjc-PIXMA-G2400" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA G2500" driver="bjc-PIXMA-G2500" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA G2600" driver="bjc-PIXMA-G2600" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA G2800" driver="bjc-PIXMA-G2800" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA G2900" driver="bjc-PIXMA-G2900" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <!-- Canon PIXMA G3000 family -->
+      <printer translate="name" name="Canon G3000 series" driver="bjc-G3000-series" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA G3000" driver="bjc-PIXMA-G3000" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
-      <!-- Canon PIXMA G4000 -->
+      <printer translate="name" name="Canon PIXMA G3100" driver="bjc-PIXMA-G3100" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA G3200" driver="bjc-PIXMA-G3200" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA G3400" driver="bjc-PIXMA-G3400" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA G3500" driver="bjc-PIXMA-G3500" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA G3600" driver="bjc-PIXMA-G3600" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA G3800" driver="bjc-PIXMA-G3800" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA G3900" driver="bjc-PIXMA-G3900" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <!-- Canon PIXMA G4000 family -->
+      <printer translate="name" name="Canon G4000 series" driver="bjc-G4000-series" manufacturer="Canon" model="17004000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA G4000" driver="bjc-PIXMA-G4000" manufacturer="Canon" model="17004000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA G4100" driver="bjc-PIXMA-G4100" manufacturer="Canon" model="17004000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA G4200" driver="bjc-PIXMA-G4200" manufacturer="Canon" model="17004000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA G4400" driver="bjc-PIXMA-G4400" manufacturer="Canon" model="17004000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA G4500" driver="bjc-PIXMA-G4500" manufacturer="Canon" model="17004000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA G4600" driver="bjc-PIXMA-G4600" manufacturer="Canon" model="17004000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA G4800" driver="bjc-PIXMA-G4800" manufacturer="Canon" model="17004000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA G4900" driver="bjc-PIXMA-G4900" manufacturer="Canon" model="17004000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <!-- Canon PIXMA P200 -->
       <printer translate="name" name="Canon PIXMA P200" driver="bjc-PIXMA-P200" manufacturer="Canon" model="13000200" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <!-- Canon MAXIFY iB4000 family -->
@@ -2994,7 +3025,7 @@
     <family name="dyesub">
       <parameters name="nativecopies">
         <parameter type="boolean" name="NativeCopies">1</parameter>
-      </parameters>      
+      </parameters>
       <printer translate="name" name="Olympus P-10" driver="olympus-p10" manufacturer="Olympus" model="2" />
       <printer translate="name" name="Olympus P-11" driver="olympus-p11" manufacturer="Olympus" model="2" />
       <printer translate="name" name="Olympus P-200" driver="olympus-p200" manufacturer="Olympus" model="4" />

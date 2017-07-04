@@ -275,4 +275,3 @@ stpi_describe_generic_parameter(const stp_vars_t *v, const char *name,
       description->deflt.boolean = 0;
     }
 }
-

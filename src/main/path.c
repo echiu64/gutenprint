@@ -122,7 +122,7 @@ stpi_path_check(const struct dirent *module, /* File to check */
   namelen = strlen(filename);
   /* make sure we can take off suffix (e.g. .la)
      and still have a sane filename */
-  if (namelen >= strlen(check_suffix) + 1) 
+  if (namelen >= strlen(check_suffix) + 1)
     {
       if (!stat (filename, &modstat))
 	{

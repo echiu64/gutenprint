@@ -1,15 +1,15 @@
 dnl Copyright (C) 2001-2004 Roger Leigh
-dnl 
+dnl
 dnl This program is free software; you can redistribute it and/or modify
 dnl it under the terms of the GNU General Public License as published by
 dnl the Free Software Foundation; either version 2, or (at your option)
 dnl any later version.
-dnl 
+dnl
 dnl This program is distributed in the hope that it will be useful,
 dnl but WITHOUT ANY WARRANTY; without even the implied warranty of
 dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 dnl GNU General Public License for more details.
-dnl 
+dnl
 dnl You should have received a copy of the GNU General Public License
 dnl along with this program; if not, write to the Free Software
 dnl Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
@@ -41,7 +41,7 @@ dnl
 dnl The .soname version is (GCI - GBA).GBA
 dnl Example: if GCI is 3 and GBA is 1, the version is 2.1.  To get 2.2,
 dnl GCI would be incremented to 4 and GBA to 2.
-dnl 
+dnl
 dnl *NOTE*: due to an error preparing 5.2.8, we must skip over major version of
 dnl 3 (that is, GCI - GBA) and go directly from 2 to 4.
 dnl
@@ -372,7 +372,7 @@ if test x$enable_static = xyes; then
   else
     AC_MSG_ERROR([--disable-static must be used with --with-modules])
   fi
-fi 
+fi
 
 STP_ARG_ENABLE([debug],
                [turn on debugging in build],
@@ -911,7 +911,7 @@ if test x$USE_LTDL = xtrue; then
     GUTENPRINT_LIBDEPS="${GUTENPRINT_LIBDEPS} ${LTDL_LIBS}"
     gutenprint_libdeps="${gutenprint_libdeps} ${LTDL_LIBS}"
   fi
-  LIBUSB_BACKEND_LIBDEPS="${LIBUSB_BACKEND_LIBDEPS} ${LTDL_LIBS}"  
+  LIBUSB_BACKEND_LIBDEPS="${LIBUSB_BACKEND_LIBDEPS} ${LTDL_LIBS}"
   AC_DEFINE(USE_LTDL, "1", [Use GNU libltdl as module loader])
   AC_MSG_RESULT([ltdl])
 elif test x$USE_DLOPEN = xtrue; then
@@ -921,7 +921,7 @@ elif test x$USE_DLOPEN = xtrue; then
     MODULE="true"
     AC_DEFINE(MODULE, "1", [Build a modular libgutenprint])
     GUTENPRINT_LIBDEPS="${GUTENPRINT_LIBDEPS} ${DLOPEN_LIBS}"
-    gutenprint_libdeps="${gutenprint_libdeps} ${DLOPEN_LIBS}"    
+    gutenprint_libdeps="${gutenprint_libdeps} ${DLOPEN_LIBS}"
   fi
   LIBUSB_BACKEND_LIBDEPS="${LIBUSB_BACKEND_LIBDEPS} ${DLOPEN_LIBS}"
   AC_DEFINE(USE_DLOPEN, "1", [Use libdl/dlopen as module loader])

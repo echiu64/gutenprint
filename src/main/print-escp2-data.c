@@ -163,7 +163,7 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
 			    data[3] = stp_xmlstrtoul(cval);
 			}
 		      child = child->next;
-		    }		      
+		    }
 		  if (!strcmp(htype, "default"))
 		    {
 		      p->nozzles = data[0];
@@ -214,7 +214,7 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
 		      if (child->type == STP_MXML_TEXT)
 			data[i++] = stp_xmlstrtodim(child->value.text.string);
 		      child = child->next;
-		    }		      
+		    }
 		  if (dtype && !strcmp(dtype, "duplex"))
 		    {
 		      p->duplex_left_margin = data[0];

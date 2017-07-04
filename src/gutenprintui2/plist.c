@@ -190,7 +190,7 @@ stpui_build_standard_print_command(const stpui_plist_t *plist,
     raw = 0;
   else
     raw = 1;
-  
+
   if (copy_count > 1)
     stp_asprintf(&count_string, "%s %d ",
 		 global_printing_system->copy_count_command, copy_count);
@@ -370,7 +370,7 @@ stpui_printer_initialize(stpui_plist_t *printer)
   stp_set_errdata(printer->v, stderr);
   stpui_plist_set_copy_count(printer, 1);
   stp_set_string_parameter(printer->v, "InputImageType", image_type);
-  stp_set_string_parameter(printer->v, "JobMode", "Page");  
+  stp_set_string_parameter(printer->v, "JobMode", "Page");
   if (image_raw_channels)
     {
       (void) sprintf(tmp, "%d", image_raw_channels);
@@ -742,7 +742,7 @@ stpui_printrc_load_v0(FILE *fp)
 	}
       else
 	continue;
-      
+
       if (!get_mandatory_string_param(key.v, "Resolution", &lineptr))
 	continue;
       if (!get_mandatory_string_param(key.v, "PageSize", &lineptr))
@@ -955,7 +955,7 @@ stpui_printrc_load_v1(FILE *fp)
 	if (strcmp(current_printer, stpui_plist[i].name) == 0)
 	  stpui_plist_current = i;
     }
-}  
+}
 
 char *stpui_printrc_current_printer = NULL;
 extern FILE *yyin;
@@ -1378,7 +1378,7 @@ usr1_handler (int sig)
  * x,y refers to file descriptor y duplicated onto file descriptor x.
  * So "<0,3" means input file descriptor 3 (pipefd[0]) dup2'ed onto
  * file descriptor 0.
- * 
+ *
  * fd0 = fd 0
  * fd1 = fd 1
  * fd2 = fd 2
@@ -1389,9 +1389,9 @@ usr1_handler (int sig)
  * fd7 = errfd[0]
  * fd8 = errfd[1]
  *
- * 
+ *
  *                            NORMAL CASE
- * 
+ *
  * PARENT             CHILD 1              CHILD 2          CHILD 3
  * (print generator)  (lpr monitor)        (print command)  (error monitor)
  * |
@@ -1463,9 +1463,9 @@ usr1_handler (int sig)
  * | return
  * X
  *
- * 
+ *
  *                            ERROR CASE (job cancelled)
- * 
+ *
  * PARENT             CHILD 1              CHILD 2          CHILD 3
  * (print generator)  (lpr monitor)        (print command)  (error monitor)
  * |
@@ -1596,7 +1596,7 @@ stpui_print(const stpui_plist_t *printer, stpui_image_t *image)
 		      if (opid < 0)
 			_exit(1);
 		      else if (opid == 0) /* Child 3 (monitors stderr) */
-			{ 
+			{
 			  stp_outfunc_t errfunc = stpui_get_errfunc();
 			  void *errdata = stpui_get_errdata();
 			  /* calls g_message on anything it sees */

@@ -125,7 +125,7 @@ struct shinkos1245_cmd_print {
 struct shinkos1245_cmd_getstatus {
 	struct shinkos1245_cmd_hdr hdr;
 	uint8_t cmd[1];   /* 0x03 */
-	uint8_t pad[10]; 
+	uint8_t pad[10];
 } __attribute__((packed));
 
 struct shinkos1245_resp_status {
@@ -360,7 +360,7 @@ enum {
 
 #define TONE_CURVE_SIZE 1536
 #define TONE_CURVE_DATA_BLOCK_SIZE 64
-   
+
 /* Query Model information */
 struct shinkos1245_cmd_getmodel {
 	struct shinkos1245_cmd_hdr hdr;
@@ -656,7 +656,7 @@ static int shinkos1245_set_matte(struct shinkos1245_ctx *ctx,
 	if (sts.code == CMD_CODE_BAD)
 		return 1;
 
-	ERROR("Bad return code (%02x) on SET_MATTE command\n", sts.code);	
+	ERROR("Bad return code (%02x) on SET_MATTE command\n", sts.code);
 	return -99;
 }
 
@@ -1267,7 +1267,7 @@ static void *shinkos1245_init(void)
 	return ctx;
 }
 
-static void shinkos1245_attach(void *vctx, struct libusb_device_handle *dev, 
+static void shinkos1245_attach(void *vctx, struct libusb_device_handle *dev,
 			       uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
 {
 	struct shinkos1245_ctx *ctx = vctx;
@@ -1280,9 +1280,9 @@ static void shinkos1245_attach(void *vctx, struct libusb_device_handle *dev,
 
 	device = libusb_get_device(dev);
 	libusb_get_device_descriptor(device, &desc);
-	
+
 	ctx->type = lookup_printer_type(&shinkos1245_backend,
-					desc.idVendor, desc.idProduct);	
+					desc.idVendor, desc.idProduct);
 
 	/* Ensure jobid is sane */
 	ctx->jobid = jobid & 0x7f;
@@ -1361,7 +1361,7 @@ static int shinkos1245_read_parse(void *vctx, int data_fd) {
 		do {
 			ret = read(data_fd, ptr, remain);
 			if (ret < 0) {
-				ERROR("Read failed (%d/%d/%d)\n", 
+				ERROR("Read failed (%d/%d/%d)\n",
 				      ret, remain, ctx->datalen);
 				perror("ERROR: Read failed");
 				return ret;

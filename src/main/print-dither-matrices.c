@@ -523,7 +523,7 @@ stp_xml_dither_cache_set(int x, int y, const char *filename)
 static int
 stp_xml_process_dither_matrix(stp_mxml_node_t *dm,     /* The dither matrix node */
 			       const char *file)  /* Source file */
-			       
+
 {
   const char *value;
   int x = -1;
@@ -700,7 +700,7 @@ stp_find_standard_dither_array(int x_aspect, int y_aspect)
     x_aspect += 1;		/* so cheat */
   if (y_aspect == 3)
     y_aspect += 1;
-  
+
   divisor = gcd(x_aspect, y_aspect);
   x_aspect /= divisor;
   y_aspect /= divisor;

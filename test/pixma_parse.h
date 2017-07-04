@@ -37,7 +37,7 @@
 
 /* Bitstream reader from FFmpeg (http://www.ffmpeg.org)
  * libavcodec/bitstream.h
- * 
+ *
  */
 
 typedef struct PutBitContext {
@@ -62,7 +62,7 @@ static inline void put_bits(PutBitContext *s, int n, unsigned int value)
 
     /*    printf("put_bits=%d %x\n", n, value); */
 
-    
+
     bit_buf = s->bit_buf;
     bit_left = s->bit_left;
 
@@ -302,5 +302,3 @@ typedef struct image_s {
 /* static const unsigned char valid_colors[] = {'C','M','Y','K','c','m','y','k',0xa3,0xad}; */
 static const unsigned char valid_colors[] = {'C','M','Y','K','c','m','y','k','R','G','H','A','B','D','E','F','I','J','L','M','N','O','P','Q','S','T','U','V','W','X','Z','a','b','d','e','f'};
 #endif
-
-

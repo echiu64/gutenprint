@@ -1,4 +1,4 @@
-<!-- 
+<!--
      The GNU Public License 2 in DocBook
      Markup by Eric Baudais <baudais@okstate.edu>
      Maintained by the GNOME Documentation Project
@@ -35,7 +35,7 @@
 
   <sect1 id="gpl-preamble">
     <title>Preamble</title>
-    
+
     <para>
       The licenses for most software are designed to take away your
       freedom to share and change it. By contrast, the GNU General
@@ -158,7 +158,7 @@
 	absence of any warranty; and give any other recipients of the
 	Program a copy of this License along with the Program.
       </para>
-      
+
       <para>
 	You may charge a fee for the physical act of transferring a
 	copy, and you may at your option offer warranty protection in
@@ -306,7 +306,7 @@
 	system on which the executable runs, unless that component
 	itself accompanies the executable.
       </para>
-      
+
       <para>
 	If distribution of executable or object code is made by
 	offering access to copy from a designated place, then offering
@@ -319,7 +319,7 @@
 
     <sect2 id="gpl-sect4">
       <title>Section 4</title>
-      
+
       <para>
 	You may not copy, modify, sublicense, or distribute the
 	Program except as expressly provided under this License. Any
@@ -426,7 +426,7 @@
 
     <sect2 id="gpl-sect9">
       <title>Section 9</title>
-      
+
       <para>
 	The Free Software Foundation may publish revised and/or new
 	versions of the General Public License from time to time. Such
@@ -499,4 +499,3 @@
     </sect2>
   </sect1>
 </appendix>
-

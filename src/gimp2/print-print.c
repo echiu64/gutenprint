@@ -48,4 +48,3 @@ do_gimp_install_procedure(const char *blurb, const char *help,
 			  n_args, 0,
 			  args, NULL);
 }
-			  

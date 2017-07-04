@@ -1,4 +1,4 @@
-/* d4lib.c 
+/* d4lib.c
  * Copyright (C) 2001 Jean-Jacques Sarton jj.sarton@t-online.de
  *
  * This program is free software; you can redistribute it and/or modify
@@ -34,7 +34,7 @@
  * Programming knowledge will be helpful for this.
  *
  */
- 
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -77,7 +77,7 @@ static int d4Errno = 0;
 /* commands for the D4 protocol
 
 Transaction    Cmd    Reply
--------------- ----   -----    
+-------------- ----   -----
 Init           0x00   0x80
 OpenChannel    0x01   0x81
 CloseChannel   0x02   0x82
@@ -420,7 +420,7 @@ static int writeCmd(int fd, unsigned char *cmd, int len)
    errno = 0;
    while ( i < len )
    {
-      SET_TIMER(ti,oti,d4WrTimeout);         
+      SET_TIMER(ti,oti,d4WrTimeout);
       w = SafeWrite(fd, cmd+i,len-i);
       RESET_TIMER(ti,oti);
       if ( w < 0 )
@@ -578,7 +578,7 @@ int readAnswer(int fd, unsigned char *buf, int len, int allowExtra)
 	   excess -= status;
 	 }
      }
-   
+
    if ( debugD4 )
    {
       printCmdType(buf);
@@ -797,7 +797,7 @@ static int sendReceiveCmd(int fd, unsigned char *cmd, int len, unsigned char *an
 int EnterIEEE(int fd)
 {
    unsigned char buf[200];
-   unsigned char cmd[] = 
+   unsigned char cmd[] =
    {
       0x00, 0x00, 0x00, 0x1b, 0x01, '@', 'E', 'J', 'L', ' ',
       '1', '2', '8', '4', '.', '4', 0x0a, '@', 'E', 'J',
@@ -851,7 +851,7 @@ int Init(int fd)
    unsigned char buf[20];
    init_t cmd;
    int rd;
-   
+
    cmd.head.psid     = 0;
    cmd.head.ssid     = 0;
    cmd.head.lengthH  = 0;
@@ -860,7 +860,7 @@ int Init(int fd)
    cmd.head.control  = 0;
    cmd.head.command  = 0;
    cmd.revision      = 0x10;
-    
+
    rd = sendReceiveCmd(fd, (unsigned char*)&cmd, sizeof(cmd), buf, 9, 0 );
    return rd == 9 ? 1 : 0;
 }
@@ -1015,7 +1015,7 @@ int OpenChannel(int fd, unsigned char sockId, int *sndSz, int *rcvSz)
          return -1;
       }
    }
-   return 1;                 
+   return 1;
 }
 
 /*******************************************************************/
@@ -1085,7 +1085,7 @@ int CreditRequest(int fd, unsigned char socketID)
    else
    {
       return rd > 0 ? 0 : rd; /* there was an error */
-   } 
+   }
 }
 
 /*******************************************************************/
@@ -1149,7 +1149,7 @@ int askForCredit(int fd, unsigned char socketID, int *sndSize, int *rcvSize)
    int credit = 0;
    int count  = 0;
    int retries = 10;
-   
+
    while (credit == 0 && retries-- >= 0 )
    {
       while((credit=CreditRequest(fd,socketID)) == 0  && count < MAX_CREDIT_REQUEST && retries-- >= 0)
@@ -1172,7 +1172,7 @@ int askForCredit(int fd, unsigned char socketID, int *sndSize, int *rcvSize)
             OpenChannel(fd, socketID, sndSize, rcvSize);
          }
       }
-      /* if the parent died, live this loop if credit not got */ 
+      /* if the parent died, live this loop if credit not got */
       if ( credit == 0 && getppid() == ppid )
          return 0;
       count++;
@@ -1249,7 +1249,7 @@ int writeData(int fd, unsigned char socketID, const unsigned char *buf, int len,
       gettimeofday(&end, NULL);
       dt = (end.tv_sec  - beg.tv_sec) * 1000000;
       dt += end.tv_usec - beg.tv_usec;
-# endif  
+# endif
       printf("+++Send: ");
       for ( ret = 0; (wr > 0) && (ret < ((wr > 20) ? 20 : wr)) ; ret++ )
          printf("%02x ", buffer[ret]);
@@ -1292,7 +1292,7 @@ int readData(int fd, unsigned char socketID, unsigned char *buf, int len)
       /* wait a little bit */
       d4USleep(d4RdDataTimeout);
       ret = _readData(fd, buf, len);
-      return ret; 
+      return ret;
    }
    else
    {
@@ -1313,7 +1313,7 @@ int readData(int fd, unsigned char socketID, unsigned char *buf, int len)
 /*         int   *sndSz    Send buffer size                        */
 /*         int   *rcvSz    Receive buffer size                     */
 /*         int   len       how many datas are to we send           */
-/*         fptr  test      function to verify buffer contents      */ 
+/*         fptr  test      function to verify buffer contents      */
 /*                                                                 */
 /* Return: number of bytes read or -1;                             */
 /*                                                                 */
@@ -1398,7 +1398,7 @@ static inline void clearSndBuf(int fd)
 {
    char             buf[256];
    struct itimerval ti, oti;
-   
+
    SET_TIMER(ti,oti, d4RdTimeout);
    while ( read(fd, buf, sizeof(buf) ) > 0 )
       SET_TIMER(ti,oti, d4RdTimeout);
@@ -1426,7 +1426,7 @@ int InitReply(int fd)
    cmd.head.command  = 0x80;
    cmd.head.result   = 0;   /* put the correct value here, 0,1,2 or 0x0b */
    cmd.revision      = 0x10;
-    
+
 }
 
 int ExitReply(int fd)
@@ -1455,7 +1455,7 @@ int Error(int fd)
    cmd.head.command  = 0x7f;
    cmd.epsid         = psid;
    cmd.essid         = ssid;
-   cmd.ecode         = 0x80; /* + 1...7 */ 
+   cmd.ecode         = 0x80; /* + 1...7 */
 }
 
 int GetSocketIDReply(int fd, unsigned char socketID)
@@ -1474,7 +1474,7 @@ int GetSocketIDReply(int fd, unsigned char socketID)
    cmd->result   = 0; /* put the correct vale here 0 or 0x0a */
    buf[sizeof(cmdHeader_t)] = socketID;
    strcpy(buf+1+sizeof(cmdHeader_t), serviceName);
-   
+
 }
 
 int GetServiceName(inf fd, unsigned char socketID)
@@ -1509,8 +1509,8 @@ int GetServiceNameReply(inf fd)
    cmd->result   = 0; /* put the correct vale here 0 or 0x0a */
    buf[sizeof(replyHeader_t)] = socketID;
    strcpy(buf+1+sizeof(replyHeader_t), serviceName);
-   
-}  
+
+}
 
 int CreditReply(int fd, unsigned char socketID, int credit)
 {
@@ -1528,4 +1528,3 @@ int CreditReply(int fd, unsigned char socketID, int credit)
 }
 
 #endif
-

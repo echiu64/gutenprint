@@ -152,5 +152,3 @@ stpi_buffer_image(stp_image_t* image, unsigned int flags)
 
 	return buffered_image;
 }
-
- 

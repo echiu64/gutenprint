@@ -41,7 +41,7 @@ Project</ulink> home page.
     <para>
     This version of the manual has been specifically packaged in this
 way in an attempt to better suit the needs of people interested only
-in using the Gutenprint software with 
+in using the Gutenprint software with
 <ulink url="http://www.gimp.org">GIMP</ulink> (GNU Image Manipulation Program).
     </para>
 
@@ -53,6 +53,3 @@ in using the Gutenprint software with
 &gimp;
 &gfdl;
 </book>
-
-
-

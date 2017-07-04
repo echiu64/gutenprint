@@ -233,7 +233,7 @@ sub VERSION_MESSAGE($;$$$) {
 sub help() {
     HELP_MESSAGE(\*STDOUT);
 }
-		  
+
 sub check_multicat() {
 }
 
