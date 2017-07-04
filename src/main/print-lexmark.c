@@ -1094,7 +1094,7 @@ lexmark_sat_adjustment(const lexmark_cap_t * caps, const stp_vars_t *v)
 
 
 static void
-lexmark_describe_resolution(const stp_vars_t *v, 
+lexmark_describe_resolution(const stp_vars_t *v,
 			    stp_resolution_t *x, stp_resolution_t *y)
 {
   const char *resolution = stp_get_string_parameter(v, "Resolution");

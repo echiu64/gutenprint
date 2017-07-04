@@ -5757,7 +5757,7 @@ static void setup_page(stp_vars_t* v,canon_privdata_t* privdata){
     privdata->page_width = page_right - page_left; /* checked in Epson: matches */
     privdata->page_height = page_bottom - page_top; /* checked in Epson: matches */
   }
-  
+
   stp_dprintf(STP_DBG_CANON, v, "setup_page page_top = %f\n",page_top);
   stp_dprintf(STP_DBG_CANON, v, "setup_page page_bottom = %f\n",page_bottom);
   stp_dprintf(STP_DBG_CANON, v, "setup_page page_left = %f\n",page_left);

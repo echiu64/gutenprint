@@ -1374,7 +1374,7 @@ stp_get_parameter_active(const stp_vars_t *v, const char *parameter,
  * @param width a pointer to an stp_dimension_t to store the media width in.
  * @param height a pointer to an stp_dimension_t to store the media height in.
  */
-extern void stp_get_media_size(const stp_vars_t *v, 
+extern void stp_get_media_size(const stp_vars_t *v,
 			       stp_dimension_t *width, stp_dimension_t *height);
 
 /**
@@ -1430,8 +1430,8 @@ extern void stp_get_imageable_area(const stp_vars_t *v,
  */
 extern void stp_get_maximum_imageable_area(const stp_vars_t *v,
 					   stp_dimension_t *left,
-					   stp_dimension_t *right, 
-					   stp_dimension_t *bottom, 
+					   stp_dimension_t *right,
+					   stp_dimension_t *bottom,
 					   stp_dimension_t *top);
 
 /**
@@ -1445,7 +1445,7 @@ extern void stp_get_maximum_imageable_area(const stp_vars_t *v,
  * @param min_height a pointer to a stp_dimension_t to store the minimum height in.
  */
 extern void
-stp_get_size_limit(const stp_vars_t *v, 
+stp_get_size_limit(const stp_vars_t *v,
 		   stp_dimension_t *max_width, stp_dimension_t *max_height,
 		   stp_dimension_t *min_width, stp_dimension_t *min_height);
 

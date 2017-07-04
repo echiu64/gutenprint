@@ -1041,7 +1041,7 @@ stp_set_dimension_parameter(stp_vars_t *v, const char *parameter, stp_dimension_
 }
 
 void
-stp_set_default_dimension_parameter(stp_vars_t *v, const char *parameter, 
+stp_set_default_dimension_parameter(stp_vars_t *v, const char *parameter,
 				    stp_dimension_t sval)
 {
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_DIMENSION];

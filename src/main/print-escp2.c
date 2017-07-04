@@ -2950,7 +2950,7 @@ escp2_media_size(const stp_vars_t *v,	/* I */
 static void
 internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
 			int use_maximum_area,
-			stp_dimension_t *left, stp_dimension_t *right, 
+			stp_dimension_t *left, stp_dimension_t *right,
 			stp_dimension_t *bottom, stp_dimension_t *top)
 {
   stp_dimension_t	width, height;			/* Size of page */
@@ -4094,7 +4094,7 @@ setup_page(stp_vars_t *v)
   const char *cd_type = stp_get_string_parameter(v, "PageSize");
   if (cd_type && (strcmp(cd_type, "CDCustom") == 0 ))
      {
-	stp_dimension_t outer_diameter = 
+	stp_dimension_t outer_diameter =
 	  stp_get_dimension_parameter(v, "CDOuterDiameter");
 	stp_set_page_width(v, outer_diameter);
 	stp_set_page_height(v, outer_diameter);
@@ -4172,7 +4172,7 @@ setup_page(stp_vars_t *v)
 
   if (input_slot && input_slot->is_cd && escp2_cd_x_offset(v) > 0)
     {
-      stp_dimension_t left_center = escp2_cd_x_offset(v) + 
+      stp_dimension_t left_center = escp2_cd_x_offset(v) +
 	stp_get_dimension_parameter(v, "CDXAdjustment");
       stp_dimension_t top_center = escp2_cd_y_offset(v) +
 	stp_get_dimension_parameter(v, "CDYAdjustment");

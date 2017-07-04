@@ -461,7 +461,7 @@ stp_get_media_size(const stp_vars_t *v, stp_dimension_t *width, stp_dimension_t 
 
 void
 stp_get_imageable_area(const stp_vars_t *v,
-		       stp_dimension_t *left, stp_dimension_t *right, 
+		       stp_dimension_t *left, stp_dimension_t *right,
 		       stp_dimension_t *bottom, stp_dimension_t *top)
 {
   const stp_printfuncs_t *printfuncs =
@@ -480,7 +480,7 @@ stp_get_maximum_imageable_area(const stp_vars_t *v,
 }
 
 void
-stp_get_size_limit(const stp_vars_t *v, 
+stp_get_size_limit(const stp_vars_t *v,
 		   stp_dimension_t *max_width, stp_dimension_t *max_height,
 		   stp_dimension_t *min_width, stp_dimension_t *min_height)
 {

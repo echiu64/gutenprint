@@ -149,7 +149,7 @@ extern stp_mxml_node_t	*stp_mxmlNewElement(stp_mxml_node_t *parent, const char *
 extern stp_mxml_node_t	*stp_mxmlNewInteger(stp_mxml_node_t *parent, int integer);
 extern stp_mxml_node_t	*stp_mxmlNewOpaque(stp_mxml_node_t *parent, const char *opaque);
 extern stp_mxml_node_t	*stp_mxmlNewReal(stp_mxml_node_t *parent, double real);
-extern stp_mxml_node_t	*stp_mxmlNewDimension(stp_mxml_node_t *parent, 
+extern stp_mxml_node_t	*stp_mxmlNewDimension(stp_mxml_node_t *parent,
 					      stp_dimension_t real);
 extern stp_mxml_node_t	*stp_mxmlNewText(stp_mxml_node_t *parent, int whitespace,
 			             const char *string);

@@ -248,13 +248,13 @@ typedef struct
   void  (*media_size)(const stp_vars_t *v, stp_dimension_t *width,
 		      stp_dimension_t *height);
   void  (*imageable_area)(const stp_vars_t *v, stp_dimension_t *left,
-			  stp_dimension_t *right, stp_dimension_t *bottom, 
+			  stp_dimension_t *right, stp_dimension_t *bottom,
 			  stp_dimension_t *top);
-  void  (*maximum_imageable_area)(const stp_vars_t *v, stp_dimension_t *left, 
-				  stp_dimension_t *right, stp_dimension_t *bottom, 
+  void  (*maximum_imageable_area)(const stp_vars_t *v, stp_dimension_t *left,
+				  stp_dimension_t *right, stp_dimension_t *bottom,
 				  stp_dimension_t *top);
-  void  (*limit)(const stp_vars_t *v, stp_dimension_t *max_width, 
-		 stp_dimension_t *max_height, stp_dimension_t *min_width, 
+  void  (*limit)(const stp_vars_t *v, stp_dimension_t *max_width,
+		 stp_dimension_t *max_height, stp_dimension_t *min_width,
 		 stp_dimension_t *min_height);
   int   (*print)(const stp_vars_t *v, stp_image_t *image);
   void  (*describe_resolution)(const stp_vars_t *v, stp_resolution_t *x,
