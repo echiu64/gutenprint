@@ -35,23 +35,20 @@ if ($#ARGV <= 0) {
 
 sub get_printer($) {
     my ($mode) = @_;
-    $mode =~ s/_PrintingMode.*//;
+    $mode =~ s/_PrintingMode.*//o;
     return $mode;
 }
 
 sub get_mode($) {
     my ($mode) = @_;
-    $mode =~ s/.*_PrintingMode/PrintingMode/;
+    $mode =~ s/.*_PrintingMode/PrintingMode/o;
     return $mode;
 }
 
 sub uncompress_chunk($$) {
     my ($chunk, $sub_table) = @_;
-    if (defined $$sub_table{$chunk}) {
-	return $$sub_table{$chunk};
-    } else {
-	return $chunk;
-    }
+    $$sub_table{$chunk} = $chunk if (! defined $$sub_table{$chunk});
+    return $$sub_table{$chunk};
 }
 
 sub open_file($) {
@@ -73,6 +70,17 @@ sub open_file($) {
     return $in;
 }
 
+sub create_underscore_table() {
+    my (%us_table);
+    my (@chars) = ('>', '%', "'", ',', '"', '!', '=');
+    my ($us) = '__';
+    foreach my $char (@chars) {
+	$us_table{$char} = $us;
+	$us = $us . "_";
+    }
+    return \%us_table;
+}
+
 sub create_substitution_table() {
     my (%sub_table);
     $sub_table{"PrintingMode"} = "P;";
@@ -92,10 +100,8 @@ sub initialize_file($) {
     my (%ctx);
     if ($file eq '' || $file eq '-' || ! defined $file) {
 	$ctx{"fh"} = \*STDIN;
-	$ctx{"close_fh"} = 0;
     } else {
 	$ctx{"fh"} = open_file($file);
-	$ctx{"close_fh"} = 1;
     }
     $ctx{"sum"} = "";
     $ctx{"last_sum"} = "";
@@ -103,76 +109,56 @@ sub initialize_file($) {
     $ctx{"sub_table"} = create_substitution_table();
     $ctx{"pchunks"} = [];
     $ctx{"active"} = 1;
+    my ($us_table) = create_underscore_table();
+    $ctx{"us_table"} = $us_table;
     return \%ctx;
 }
 
 sub get_next_datum($) {
     my ($ctx) = @_;
-    if (! $$ctx{"active"}) {
-	return undef;
-    }
+    return undef if (! $$ctx{"active"});
     if ((scalar @{$$ctx{"kvals"}}) == 0) {
 	my ($fh) = $$ctx{"fh"};
 	my ($inline);
-	my ($read) = 0;
-	while ($inline = <$fh>) {
-	    $read = 1;
-	    last;
-	}
-	if (! $read) {
-	    if ($$ctx{"close_fh"}) {
-		close($fh);
-	    }
+	if (! ($inline = <$fh>)) {
+	    close($fh) if ($fh != \*STDIN);
 	    $$ctx{"active"} = 0;
 	    return undef;
 	}
 	chomp $inline;
-	my ($sum, @okeys) = split(/ /, $inline);
-	if ($$ctx{"last_sum"} ne "" &&
-	    ((length $sum) < (length $$ctx{"last_sum"}))) {
-	    $sum =
-		substr($$ctx{"last_sum"}, 0, 
-		       ((length $$ctx{"last_sum"}) - (length $sum))) . 
-		$sum;
+	$inline =~ s/([=!",'%>])/$$ctx{"us_table"}{$1}/go;
+	$inline =~ s/([PSDRCcMI];)/$$ctx{"sub_table"}{$1}/go;
+	$inline =~ s/(^| )\*/$1/go;
+	$inline =~ s/\.prn( |$)/$1/go;
+	my ($sum, @keys) = split(/ /o, $inline);
+	my $osum = $$ctx{"sum"};
+	$$ctx{"kvals"} = \@keys;
+	if ($osum ne "" && ((length $sum) < (length $osum))) {
+	    $sum = substr($osum, 0, ((length $osum) - (length $sum))) . $sum;
 	}
 	$$ctx{"sum"} = $sum;
-	$$ctx{"last_sum"} = $sum;
-	my @keys = map {
-	    s/\.prn$//;
-	    s/^\*//;
-	    $_;
-	} @okeys;
-	$$ctx{"kvals"} = \@keys;
 	$$ctx{"pchunks"} = [];
     }
-    my @pchunks = @{$$ctx{"pchunks"}};
-    my $k = shift(@{$$ctx{"kvals"}});
-    $k =~ s/=/________/g;
-    $k =~ s/!/_______/g;
-    $k =~ s/"/______/g;
-    $k =~ s/,/_____/g;
-    $k =~ s/'/____/g;
-    $k =~ s/%/___/g;
-    $k =~ s/>/__/g;
-    my (@chunks) = split(/_/, $k, -1);
+    my (@chunks) = split(/_/o, shift(@{$$ctx{"kvals"}}), -1);
+    my $pchunks = $$ctx{"pchunks"};
     foreach my $i (0..$#chunks) {
 	if ($chunks[$i] eq '') {
-	    $chunks[$i] = ${$$ctx{"pchunks"}}[$i];
+	    $chunks[$i] = $$pchunks[$i];
 	} else {
-	    if ($chunks[$i] =~ /^([0-9]+)\+(.*)/) {
-		$chunks[$i] = substr(${$$ctx{"pchunks"}}[$i], 0, $1) . $2;
-	    } elsif ($chunks[$i] =~ /^\*(.*)/) {
-		$chunks[$i] = substr(${$$ctx{"pchunks"}}[$i], 0, 2) . $1;
+	    if ($chunks[$i] =~ /^([0-9]+)\+(.*)/o) {
+		$chunks[$i] = substr($$pchunks[$i], 0, $1) . $2;
+	    } elsif ($chunks[$i] =~ /^\*(.*)/o) {
+		$chunks[$i] = substr($$pchunks[$i], 0, 2) . $1;
 	    }
-	    if ($chunks[$i] =~ m,(.*)/([0-9]+)$,) {
-		$chunks[$i] = $1 . substr(${$$ctx{"pchunks"}}[$i], -$2);
-	    } elsif ($chunks[$i] =~ /([^\\]*)\\$/) {
-		$chunks[$i] = $1 . substr(${$$ctx{"pchunks"}}[$i], -2);
+	    if ($chunks[$i] =~ m,(.*)/([0-9]+)$,o) {
+		$chunks[$i] = $1 . substr($$pchunks[$i], -$2);
+	    } elsif ($chunks[$i] =~ /([^\\]*)\\$/o) {
+		$chunks[$i] = $1 . substr($$pchunks[$i], -2);
 	    }
 	}
     }
-    my ($val) = join('_', map { uncompress_chunk($_, $$ctx{"sub_table"}) } @chunks);
-    $val =~ s/(^[^:]*)_:(.*)/$2_$1/;
+    my ($val) = join('_', @chunks);
+    $val =~ s/(^[^:]*)_:(.*)/$2_$1/o;
     $$ctx{"pchunks"} = \@chunks;
     return [$$ctx{"sum"}, $val];
 }
