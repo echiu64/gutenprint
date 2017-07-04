@@ -61,7 +61,7 @@ static int		mxml_write_node(stp_mxml_node_t *node, void *p,
 					int (*putc_cb)(int, void *));
 static int		mxml_write_string(const char *s, void *p,
 					  int (*putc_cb)(int, void *));
-static int		mxml_write_ws(stp_mxml_node_t *node, void *p, 
+static int		mxml_write_ws(stp_mxml_node_t *node, void *p,
 			              int (*cb)(stp_mxml_node_t *, int), int ws,
 				      int col, int (*putc_cb)(int, void *));
 
@@ -436,7 +436,7 @@ mxml_load_data(stp_mxml_node_t *top,	/* I - Top node */
         default : /* Should never happen... */
 	    node = NULL;
 	    break;
-      }	  
+      }
 
       if (*bufptr)
       {
@@ -1139,7 +1139,7 @@ mxml_write_node(stp_mxml_node_t *node,	/* I - Node to write */
 	      return (-1);
             if ((*putc_cb)('\"', p) < 0)
 	      return (-1);
-	    
+
             col += strlen(attr->name) + strlen(attr->value) + 3;
 	  }
 

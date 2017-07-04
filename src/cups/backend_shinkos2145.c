@@ -254,7 +254,7 @@ static char *print_modes(uint8_t v) {
 #define PRINT_METHOD_4x6_2UP 0x02
 #define PRINT_METHOD_2x6_2UP 0x04
 
-static char *print_methods (uint8_t v) { 
+static char *print_methods (uint8_t v) {
 	switch (v) {
 	case PRINT_METHOD_STD:
 		return "Standard";
@@ -320,7 +320,7 @@ static char *fwinfo_targets (uint8_t v) {
 		return "USB Boot ";
 	case FWINFO_TARGET_USB_APP:
 		return "USB App  ";
-	case FWINFO_TARGET_TABLES: 
+	case FWINFO_TARGET_TABLES:
 		return "Tables   ";
 	default:
 		return "Unknown  ";
@@ -833,7 +833,7 @@ static int s2145_do_cmd(struct shinkos2145_ctx *ctx,
 	}
 
 	if (resp->result != RESULT_SUCCESS) {
-		INFO("Printer Status:  %02x (%s)\n", resp->status, 
+		INFO("Printer Status:  %02x (%s)\n", resp->status,
 		     status_str(resp->status));
 		INFO(" Result: 0x%02x  Error: 0x%02x (0x%02x/0x%02x = %s)\n",
 		     resp->result, resp->error, resp->printer_major,
@@ -1086,7 +1086,7 @@ static int cancel_job(struct shinkos2145_ctx *ctx, char *str)
 	return 0;
 }
 
-static int flash_led(struct shinkos2145_ctx *ctx) 
+static int flash_led(struct shinkos2145_ctx *ctx)
 {
 	struct s2145_cmd_hdr cmd;
 	struct s2145_status_hdr *resp = (struct s2145_status_hdr *) rdbuf;
@@ -1150,7 +1150,7 @@ static int button_set(struct shinkos2145_ctx *ctx, int enable)
 	return 0;
 }
 
-static int get_tonecurve(struct shinkos2145_ctx *ctx, int type, char *fname) 
+static int get_tonecurve(struct shinkos2145_ctx *ctx, int type, char *fname)
 {
 	struct s2145_readtone_cmd  cmd;
 	struct s2145_readtone_resp *resp = (struct s2145_readtone_resp *) rdbuf;
@@ -1224,7 +1224,7 @@ done:
 	return ret;
 }
 
-static int set_tonecurve(struct shinkos2145_ctx *ctx, int target, char *fname) 
+static int set_tonecurve(struct shinkos2145_ctx *ctx, int target, char *fname)
 {
 	struct s2145_update_cmd cmd;
 	struct s2145_status_hdr *resp = (struct s2145_status_hdr *) rdbuf;
@@ -1394,7 +1394,7 @@ static void *shinkos2145_init(void)
 	return ctx;
 }
 
-static void shinkos2145_attach(void *vctx, struct libusb_device_handle *dev, 
+static void shinkos2145_attach(void *vctx, struct libusb_device_handle *dev,
 			       uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
 {
 	struct shinkos2145_ctx *ctx = vctx;
@@ -1407,9 +1407,9 @@ static void shinkos2145_attach(void *vctx, struct libusb_device_handle *dev,
 
 	device = libusb_get_device(dev);
 	libusb_get_device_descriptor(device, &desc);
-	
+
 	ctx->type = lookup_printer_type(&shinkos2145_backend,
-					desc.idVendor, desc.idProduct);	
+					desc.idVendor, desc.idProduct);
 
 	/* Ensure jobid is sane */
 	ctx->jobid = (jobid & 0x7f);
@@ -1445,7 +1445,7 @@ static int shinkos2145_read_parse(void *vctx, int data_fd) {
 	if (ret < 0 || ret != sizeof(ctx->hdr)) {
 		if (ret == 0)
 			return CUPS_BACKEND_CANCEL;
-		ERROR("Read failed (%d/%d/%d)\n", 
+		ERROR("Read failed (%d/%d/%d)\n",
 		      ret, 0, (int)sizeof(ctx->hdr));
 		perror("ERROR: Read failed");
 		return ret;
@@ -1482,7 +1482,7 @@ static int shinkos2145_read_parse(void *vctx, int data_fd) {
 		do {
 			ret = read(data_fd, ptr, remain);
 			if (ret < 0) {
-				ERROR("Read failed (%d/%d/%d)\n", 
+				ERROR("Read failed (%d/%d/%d)\n",
 				      ret, remain, ctx->datalen);
 				perror("ERROR: Read failed");
 				return ret;
@@ -1495,7 +1495,7 @@ static int shinkos2145_read_parse(void *vctx, int data_fd) {
 	/* Make sure footer is sane too */
 	ret = read(data_fd, tmpbuf, 4);
 	if (ret != 4) {
-		ERROR("Read failed (%d/%d/%d)\n", 
+		ERROR("Read failed (%d/%d/%d)\n",
 		      ret, 4, 4);
 		perror("ERROR: Read failed");
 		return ret;
@@ -1522,7 +1522,7 @@ static int shinkos2145_main_loop(void *vctx, int copies) {
 
 	struct s2145_cmd_hdr *cmd = (struct s2145_cmd_hdr *) cmdbuf;;
 	struct s2145_print_cmd *print = (struct s2145_print_cmd *) cmdbuf;
-	struct s2145_status_resp *sts = (struct s2145_status_resp *) rdbuf; 
+	struct s2145_status_resp *sts = (struct s2145_status_resp *) rdbuf;
 	struct s2145_mediainfo_resp *media = (struct s2145_mediainfo_resp *) rdbuf;
 
 	/* Send Media Query */
@@ -1704,9 +1704,9 @@ top:
 
 printer_error:
 	ERROR("Printer reported error: %#x (%s) status: %#x (%s) -> %#x.%#x (%s)\n",
-	      sts->hdr.error, 
+	      sts->hdr.error,
 	      error_str(sts->hdr.error),
-	      sts->hdr.status, 
+	      sts->hdr.status,
 	      status_str(sts->hdr.status),
 	      sts->hdr.printer_major, sts->hdr.printer_minor,
 	      error_codes(sts->hdr.printer_major, sts->hdr.printer_minor));
@@ -1782,7 +1782,7 @@ struct dyesub_backend shinkos2145_backend = {
    00 00 00 00 00 00 00 00  00 00 00 00 ce ff ff ff
    00 00 00 00 ce ff ff ff  QQ QQ 00 00 ce ff ff ff  QQ == DPI, ie 300.
    00 00 00 00 ce ff ff ff  00 00 00 00 00 00 00 00
-   00 00 00 00 
+   00 00 00 00
 
    [[Packed RGB payload of WW*HH*3 bytes]]
 

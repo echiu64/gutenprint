@@ -236,7 +236,7 @@ Image_get_row(stp_image_t *image, unsigned char *data, size_t byte_limit,
 	  break;
 	}
       im->initialized = 1;
-    }    
+    }
   if (im->tmp)
     inter = im->tmp;
   else

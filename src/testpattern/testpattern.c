@@ -159,7 +159,7 @@ clear_testpattern(testpattern_t *p)
       p->d.pattern.levels[i] = 0;
     }
 }
-  
+
 
 testpattern_t *
 get_next_testpattern(void)

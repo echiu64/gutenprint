@@ -397,7 +397,7 @@ run_weavetest_from_stdin(void)
 	{
 	  /* Assume that we're running within run-weavetest, and */
 	  /* print out the heartbeat */
-	      
+
 	  if (previous_strategy != strategy)
 	    {
 	      printf("%s%d:", previous_strategy == -1 ? "" : "\n", strategy);

@@ -69,7 +69,7 @@ static void* updr150_init(void)
 	return ctx;
 }
 
-static void updr150_attach(void *vctx, struct libusb_device_handle *dev, 
+static void updr150_attach(void *vctx, struct libusb_device_handle *dev,
 			   uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
 {
 	struct updr150_ctx *ctx = vctx;
@@ -86,7 +86,7 @@ static void updr150_attach(void *vctx, struct libusb_device_handle *dev,
 	libusb_get_device_descriptor(device, &desc);
 
 	ctx->type = lookup_printer_type(&updr150_backend,
-					desc.idVendor, desc.idProduct);	
+					desc.idVendor, desc.idProduct);
 
 	ctx->copies_offset = 0;
 }
@@ -380,21 +380,21 @@ struct dyesub_backend updr150_backend = {
 
   Sony UP-CL10 / DNP SL-10 spool format:
 
-60 ff ff ff 
+60 ff ff ff
 f8 ff ff ff
-fd ff ff ff 14 00 00 00   1b 15 00 00 00 0d 00 00  00 00 00 07 00 00 00 00  WW WW HH HH 
+fd ff ff ff 14 00 00 00   1b 15 00 00 00 0d 00 00  00 00 00 07 00 00 00 00  WW WW HH HH
 fb ff ff ff
 f4 ff ff ff 0b 00 00 00   1b ea 00 00 00 00 SH SH  SH SH 00 SL SL SL SL
 
  [[ Data, rows * cols * 3 bytes ]]
 
-f3 ff ff ff 0f 00 00 00   1b e5 00 00 00 08 00 00  00 00 00 00 00 00 00 
-            12 00 00 00   1b e1 00 00 00 0b 00 00  80 00 00 00 00 00 WW WW  HH HH 
-fa ff ff ff 09 00 00 00   1b ee 00 00 00 02 00 00  NN 
-            07 00 00 00   1b 0a 00 00 00 00 00 
-f9 ff ff ff 
-fc ff ff ff 07 00 00 00   1b 17 00 00 00 00 00 
-f7 ff ff ff 
+f3 ff ff ff 0f 00 00 00   1b e5 00 00 00 08 00 00  00 00 00 00 00 00 00
+            12 00 00 00   1b e1 00 00 00 0b 00 00  80 00 00 00 00 00 WW WW  HH HH
+fa ff ff ff 09 00 00 00   1b ee 00 00 00 02 00 00  NN
+            07 00 00 00   1b 0a 00 00 00 00 00
+f9 ff ff ff
+fc ff ff ff 07 00 00 00   1b 17 00 00 00 00 00
+f7 ff ff ff
 
  WW WW == Columns, Big Endian
  HH HH == Rows, Big Endian

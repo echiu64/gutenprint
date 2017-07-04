@@ -222,7 +222,7 @@ typedef struct
   short n_inklists;
   inklist_t *inklists;
 } inkgroup_t;
-    
+
 
 /*
  ****************************************************************

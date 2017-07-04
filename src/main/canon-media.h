@@ -22,7 +22,7 @@
  */
 
 /* This file contains the definitions for the possible Media Types
-   TODO: Color Correction and Density adjustment 
+   TODO: Color Correction and Density adjustment
 */
 
 #ifndef GUTENPRINT_INTERNAL_CANON_MEDIA_H
@@ -1014,7 +1014,7 @@ static const canon_paper_t canon_PIXMA_iP6100_papers[] = {
   { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x00,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x00,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x00,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "CD",		N_ ("CD"),				0x0c,0x12,0x00,0x00,0.78, 0.25, 0.500, 0, 0, 0 }, 
+  { "CD",		N_ ("CD"),				0x0c,0x12,0x00,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x00,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Transparency", 	N_ ("Transparencies"),			0x02,0x02,0x00,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x00,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
@@ -2220,7 +2220,7 @@ static const canon_paper_t canon_PIXMA_MG2900_papers[] = {
   { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* unconfirmed: PP other */
 };
 DECLARE_PAPERS(canon_PIXMA_MG2900);
-  
+
 static const canon_paper_t canon_PIXMA_iP8700_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
   { "PhotoPlusGloss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGgold */
@@ -2301,7 +2301,7 @@ static const canon_paper_t canon_PIXMA_G1000_papers[] = { /* Esc (w for those th
   { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0x13,0.78, 0.25, 0.500, 0, 0, 0 },/* PP other */
 };
 DECLARE_PAPERS(canon_PIXMA_G1000);
-  
+
 static const canon_paper_t canon_PIXMA_iX6800_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
   { "PhotoPlusGloss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGgold */

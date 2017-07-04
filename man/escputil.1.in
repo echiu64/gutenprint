@@ -71,7 +71,7 @@ device.
 .B \-o, \-\-align\-color
 Align the color print head (used by Stylus Color 480 and 580 only).  CAUTION:
 Misuse of this option may result in poor print quality and/or damage to the
-printer.   
+printer.
 .TP
 .B \-s, \-\-status
 Retrieve printer status.

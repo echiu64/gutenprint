@@ -589,4 +589,3 @@ while (! $atend) {
 }
 
 print "\n" if $curpos > 1;
-

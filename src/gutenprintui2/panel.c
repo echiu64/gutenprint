@@ -1616,7 +1616,7 @@ create_copy_number_frame(void)
   copy_count_spin_button = gtk_spin_button_new (adj, 0, 0);
   gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (copy_count_spin_button), FALSE);
   gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (copy_count_spin_button), TRUE);
-  gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (copy_count_spin_button), 
+  gtk_spin_button_set_update_policy (GTK_SPIN_BUTTON (copy_count_spin_button),
 				     GTK_UPDATE_IF_VALID);
 
   g_signal_connect(G_OBJECT (adj), "value_changed",
@@ -2924,7 +2924,7 @@ compute_printable_region(void)
   stp_get_imageable_area(pv->v, &left, &right, &bottom, &top);
   printable_width  = right - left;
   printable_height = bottom - top;
-}  
+}
 
 static void
 set_orientation(int orientation)
@@ -3753,7 +3753,7 @@ command_type_callback(GtkWidget *widget, gpointer data)
       gtk_widget_set_sensitive(file_button, TRUE);
       gtk_widget_set_sensitive(copy_count_spin_button, FALSE);
       stpui_plist_set_command_type(pv, COMMAND_TYPE_FILE);
-    }      
+    }
 }
 
 static void
@@ -3988,7 +3988,7 @@ ppd_file_callback(GtkWidget *widget, gpointer data)
     }
   else
     gtk_label_set_text(GTK_LABEL(ppd_model), "");
-}  
+}
 
 /*
  *  setup_open_callback() -

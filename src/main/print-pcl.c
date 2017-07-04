@@ -1898,11 +1898,11 @@ pcl_papersize_valid(const stp_papersize_t *pt,
 
 /*
  * Is it a valid type?
- */  
+ */
   if (pt->paper_size_type != PAPERSIZE_TYPE_STANDARD &&
       pt->paper_size_type != PAPERSIZE_TYPE_ENVELOPE)
     return(0);
-  
+
 /*
  * Is it a recognized supported name?
  */
@@ -1963,7 +1963,7 @@ pcl_list_parameters(const stp_vars_t *v)
   tmp_list = stp_dither_list_parameters(v);
   stp_parameter_list_append(ret, tmp_list);
   stp_parameter_list_destroy(tmp_list);
-  
+
   for (i = 0; i < the_parameter_count; i++)
     stp_parameter_list_add_param(ret, &(the_parameters[i]));
   for (i = 0; i < float_parameter_count; i++)
@@ -3221,14 +3221,14 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
 
   if (!stp_check_curve_parameter(v, "HueMap", STP_PARAMETER_ACTIVE))
     {
-      stp_curve_t *hue_adjustment = 
+      stp_curve_t *hue_adjustment =
 	stp_curve_create_from_string(standard_hue_adjustment);
       stp_set_curve_parameter(v, "HueMap", hue_adjustment);
       stp_curve_destroy(hue_adjustment);
     }
   if (!stp_check_curve_parameter(v, "LumMap", STP_PARAMETER_ACTIVE))
     {
-      stp_curve_t *lum_adjustment = 
+      stp_curve_t *lum_adjustment =
 	stp_curve_create_from_string(standard_lum_adjustment);
 #if 0
       /*

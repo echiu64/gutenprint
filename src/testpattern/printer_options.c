@@ -41,7 +41,7 @@ main(int argc, char **argv)
     }
 
   stp_init();
-  
+
   if (argc > first_arg)
     {
       printer_list = stp_string_list_create();
@@ -164,7 +164,7 @@ main(int argc, char **argv)
 		      printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
 			     driver, desc.name, "None", "None");
 		    }
-		    
+
 		  printf("$stpdata{'%s'}{'%s'}{'False'} = 'False';\n",
 			 driver, desc.name);
 		  printf("$stpdata{'%s'}{'%s'}{'True'} = 'True';\n",

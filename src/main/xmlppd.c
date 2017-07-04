@@ -496,7 +496,7 @@ stpi_xmlppd_read_ppd_file(const char *filename)	/* I - PPD file */
       option = NULL;
       stp_option_data_name[0] = '\0';
     }
-      
+
   for (i = 0; i < stp_string_list_count(ialist); i++)
     {
       stp_param_string_t *pstr = stp_string_list_param(ialist, i);

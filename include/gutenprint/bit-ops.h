@@ -127,7 +127,7 @@ extern void	stp_split_4(int height, int bits, const unsigned char *in,
  * @param n the number of outputs into which the input should be distributed
  * @param in the input bit string
  * @param outs the array of output bit strings
- * 
+ *
  */
 extern void	stp_unpack(int height, int bits, int n, const unsigned char *in,
 			   unsigned char **outs);

@@ -154,7 +154,7 @@ static void *selphyneo_init(void)
 
 extern struct dyesub_backend selphyneo_backend;
 
-static void selphyneo_attach(void *vctx, struct libusb_device_handle *dev, 
+static void selphyneo_attach(void *vctx, struct libusb_device_handle *dev,
 				  uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
 {
 	struct selphyneo_ctx *ctx = vctx;
@@ -197,7 +197,7 @@ static int selphyneo_read_parse(void *vctx, int data_fd)
 	if (i != sizeof(hdr)) {
 		if (i == 0)
 			return CUPS_BACKEND_CANCEL;
-		ERROR("Read failed (%d/%d)\n", 
+		ERROR("Read failed (%d/%d)\n",
 		      i, (int)sizeof(hdr));
 		perror("ERROR: Read failed");
 		return CUPS_BACKEND_FAILED;
@@ -215,19 +215,19 @@ static int selphyneo_read_parse(void *vctx, int data_fd)
 		      hdr.data[10], le32_to_cpu(hdr.cols), le32_to_cpu(hdr.rows));
 		return CUPS_BACKEND_CANCEL;
 	}
-	
+
 	/* Allocate a buffer */
 	ctx->datalen = 0;
 	ctx->databuf = malloc(remain + sizeof(hdr));
 	if (!ctx->databuf) {
 		ERROR("Memory allocation failure!\n");
 		return CUPS_BACKEND_FAILED;
-	}				
+	}
 
 	/* Store the read-in header */
 	memcpy(ctx->databuf, &hdr, sizeof(hdr));
 	ctx->datalen += sizeof(hdr);
-	
+
 	/* Read in data */
 	while (remain > 0) {
 		i = read(data_fd, ctx->databuf + ctx->datalen, remain);
@@ -243,7 +243,7 @@ static int selphyneo_read_parse(void *vctx, int data_fd)
 static int selphyneo_main_loop(void *vctx, int copies) {
 	struct selphyneo_ctx *ctx = vctx;
 	struct selphyneo_readback rdback;
-	
+
 	int ret, num;
 
 	/* Read in the printer status to clear last state */
@@ -261,13 +261,13 @@ static int selphyneo_main_loop(void *vctx, int copies) {
 
 	ATTR("marker-types=ribbonWax\n");
 
-top:	
+top:
 	INFO("Waiting for printer idle\n");
 
 	do {
 		ret = read_data(ctx->dev, ctx->endp_up,
 				(uint8_t*) &rdback, sizeof(rdback), &num);
-		
+
 		if (ret < 0)
 			return CUPS_BACKEND_FAILED;
 
@@ -294,7 +294,7 @@ top:
 
 	ATTR("marker-levels=%d\n", -3); /* ie Unknown but OK */
 
-	INFO("Sending spool data\n");	
+	INFO("Sending spool data\n");
 	/* Send the data over in 256K chunks */
 	{
 		int chunk = 256*1024;
@@ -318,7 +318,7 @@ top:
 	do {
 		ret = read_data(ctx->dev, ctx->endp_up,
 				(uint8_t*) &rdback, sizeof(rdback), &num);
-		
+
 		if (ret < 0)
 			return CUPS_BACKEND_FAILED;
 
@@ -374,7 +374,7 @@ static int selphyneo_cmdline_arg(void *vctx, int argc, char **argv)
 		GETOPT_PROCESS_GLOBAL
 		case 'R':
 			selphyneo_send_reset(ctx);
-			break;			
+			break;
 		}
 
 		if (j) return j;
@@ -443,7 +443,7 @@ struct dyesub_backend canonselphyneo_backend = {
   L == 5087264  == 1695744 * 3 + 32 (1472*1152)
   C == 2180384  == 726784 * 3 + 32  (1088*668)
 
-  It is worth mentioning that the Y'CbCr image data is surmised to use the 
+  It is worth mentioning that the Y'CbCr image data is surmised to use the
   JPEG coefficients, although we realistically have no way of confirming this.
 
   Other questions:
@@ -474,7 +474,7 @@ struct dyesub_backend canonselphyneo_backend = {
 
  ZZ == Media?
 
-   01  
+   01
    10
    11
     ^-- Ribbon

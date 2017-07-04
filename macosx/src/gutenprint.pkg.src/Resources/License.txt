@@ -1,4 +1,4 @@
-Gutenprint is a suite of printer drivers that may be used with most common UNIX print spooling systems, including CUPS, lpr, LPRng, or others.    
+Gutenprint is a suite of printer drivers that may be used with most common UNIX print spooling systems, including CUPS, lpr, LPRng, or others.
 
 Copyright (C) 1999-2015 various Gutenprint authors
 

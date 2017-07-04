@@ -383,7 +383,7 @@ stp_i18n_load(const char *locale)	/* I - Locale name */
     pocache->next = stpi_pocache;
     stpi_pocache  = pocache;
   }
-  
+
   if (ic)
     iconv_close(ic);
   return (po);

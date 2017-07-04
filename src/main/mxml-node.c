@@ -377,7 +377,7 @@ stp_mxmlNewReal(stp_mxml_node_t *parent,	/* I - Parent node or STP_MXML_NO_PAREN
  * list. The constant STP_MXML_NO_PARENT can be used to specify that the new
  * text node has no parent. The whitespace parameter is used to specify
  * whether leading whitespace is present before the node. The text
- * string must be nul-terminated and is copied into the new node.  
+ * string must be nul-terminated and is copied into the new node.
  */
 
 stp_mxml_node_t *				/* O - New node */

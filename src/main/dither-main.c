@@ -197,7 +197,7 @@ stpi_set_dither_function(stp_vars_t *v)
 	  if ((d->stpi_dither_type & (D_EVENTONE | D_UNITONE)) &&
 	      (d->x_aspect > 2 || d->y_aspect > 2))
 	    d->stpi_dither_type = D_ADAPTIVE_HYBRID;
-	}	
+	}
     }
   else if (image_type && strcmp(image_type, "Text") == 0)
     d->stpi_dither_type = D_VERY_FAST;
@@ -371,7 +371,7 @@ stp_dither_init(stp_vars_t *v, stp_image_t *image, int out_width,
    * For hybrid EvenTone we want to use the good matrix.  For regular
    * EvenTone, we don't need to pay the cost.
    */
-  
+
   if (d->stpi_dither_type == D_VERY_FAST || d->stpi_dither_type ==D_EVENTONE ||
       d->stpi_dither_type == D_FAST || d->stpi_dither_type == D_PREDITHERED)
     {

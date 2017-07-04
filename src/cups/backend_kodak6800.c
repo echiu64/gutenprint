@@ -930,7 +930,7 @@ static int kodak6850_send_unk(struct kodak6800_ctx *ctx)
 		return CUPS_BACKEND_FAILED;
 	}
 
-#if 0	
+#if 0
 	// XXX No particular idea what this actually is
 	if (rdbuf[1] != 0x01 && rdbuf[1] != 0x00) {
 		ERROR("Unexpected status code (0x%02x)!\n", rdbuf[1]);
@@ -947,7 +947,7 @@ static void kodak6800_cmdline(void)
 	DEBUG("\t\t[ -m ]           # Query media\n");
 	DEBUG("\t\t[ -s ]           # Query status\n");
 	DEBUG("\t\t[ -R ]           # Reset printer\n");
-	DEBUG("\t\t[ -X jobid ]     # Cancel Job\n");	
+	DEBUG("\t\t[ -X jobid ]     # Cancel Job\n");
 }
 
 static int kodak6800_cmdline_arg(void *vctx, int argc, char **argv)
@@ -1009,7 +1009,7 @@ static void *kodak6800_init(void)
 	return ctx;
 }
 
-static void kodak6800_attach(void *vctx, struct libusb_device_handle *dev, 
+static void kodak6800_attach(void *vctx, struct libusb_device_handle *dev,
 			      uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
 {
 	struct kodak6800_ctx *ctx = vctx;
@@ -1095,7 +1095,7 @@ static int kodak6800_read_parse(void *vctx, int data_fd) {
 		do {
 			ret = read(data_fd, ptr, remain);
 			if (ret < 0) {
-				ERROR("Read failed (%d/%d/%d)\n", 
+				ERROR("Read failed (%d/%d/%d)\n",
 				      ret, remain, ctx->datalen);
 				perror("ERROR: Read failed");
 				return CUPS_BACKEND_CANCEL;

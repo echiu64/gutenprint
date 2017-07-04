@@ -59,7 +59,7 @@ struct mitsup95d_ctx {
 	int mem_clr_present;
 
 	uint8_t hdr[2];  // 1b 51
-	
+
 	uint8_t hdr1[50]; // 1b 57 20 2e ...
 	uint8_t hdr2[50]; // 1b 57 21 2e ...
 	uint8_t hdr3[50]; // 1b 57 22 2e ...
@@ -531,7 +531,7 @@ struct dyesub_backend mitsup95d_backend = {
   [[ 00 00 00  00 00 00 00   00 00 00 00  00 00 00 00
   00 ]] 00 00  00 02 00 00   00 00 00 00  00 00 00 00
   00 XY
- 
+
    P93:
 
   1b 57 21 2e  00 4a aa 00   00 TT 00 00  00 NN 00 MM
@@ -685,5 +685,3 @@ UNKNOWNS:
  * What "custom gamma" table does to spool file?
 
 */
-
-

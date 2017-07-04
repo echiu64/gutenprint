@@ -236,8 +236,8 @@ check_ppd_file(const stp_vars_t *v)
       m_ppd_file = stp_strdup(ppd_file);
       return 1;
     }
-}    
-  
+}
+
 
 static stp_parameter_list_t
 ps_list_parameters(const stp_vars_t *v)
@@ -1377,4 +1377,3 @@ stp_module_t stp_module_data =
     print_ps_module_exit,
     (void *) &print_ps_module_data
   };
-

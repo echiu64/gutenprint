@@ -100,7 +100,7 @@ static int send_plane(struct kodak1400_ctx *ctx,
 		cmdbuf[1] = 0x74;
 		cmdbuf[2] = 0x00;
 		cmdbuf[3] = 0x50;
-	
+
 		if ((ret = send_data(ctx->dev, ctx->endp_down,
 				     cmdbuf, CMDBUF_LEN)))
 			return ret;
@@ -127,7 +127,7 @@ static int send_plane(struct kodak1400_ctx *ctx,
 		int i;
 		for (i = 0 ; i < ctx->hdr.rows ; i++) {
 			if ((ret = send_data(ctx->dev, ctx->endp_down,
-					     planedata + i * ctx->hdr.columns, 
+					     planedata + i * ctx->hdr.columns,
 					     ctx->hdr.columns)))
 				return ret;
 		}
@@ -138,7 +138,7 @@ static int send_plane(struct kodak1400_ctx *ctx,
 	cmdbuf[1] = 0x74;
 	cmdbuf[2] = 0x01;
 	cmdbuf[3] = 0x50;
-	
+
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
 			     cmdbuf, CMDBUF_LEN)))
 		return ret;
@@ -194,10 +194,10 @@ static int kodak1400_set_tonecurve(struct kodak1400_ctx *ctx, char *fname)
 		ret = -3;
 		goto done;
 	}
-	
+
 	ret = read_data(dev, endp_up,
 			respbuf, sizeof(respbuf), &num);
-	
+
 	if (ret < 0)
 		goto done;
 	if (num != 8) {
@@ -231,7 +231,7 @@ static int kodak1400_set_tonecurve(struct kodak1400_ctx *ctx, char *fname)
 	/* get the response */
 	ret = read_data(dev, endp_up,
 			respbuf, sizeof(respbuf), &num);
-	
+
 	if (ret < 0)
 		goto done;
 	if (num != 8) {
@@ -288,11 +288,11 @@ static void *kodak1400_init(void)
 		return NULL;
 	}
 	memset(ctx, 0, sizeof(struct kodak1400_ctx));
-	
+
 	return ctx;
 }
 
-static void kodak1400_attach(void *vctx, struct libusb_device_handle *dev, 
+static void kodak1400_attach(void *vctx, struct libusb_device_handle *dev,
 			     uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
 {
 	struct kodak1400_ctx *ctx = vctx;
@@ -352,7 +352,7 @@ static int kodak1400_read_parse(void *vctx, int data_fd) {
 	if (ret < 0 || ret != sizeof(ctx->hdr)) {
 		if (ret == 0)
 			return CUPS_BACKEND_CANCEL;
-		ERROR("Read failed (%d/%d/%d)\n", 
+		ERROR("Read failed (%d/%d/%d)\n",
 		      ret, 0, (int)sizeof(ctx->hdr));
 		perror("ERROR: Read failed");
 		return CUPS_BACKEND_CANCEL;
@@ -367,7 +367,7 @@ static int kodak1400_read_parse(void *vctx, int data_fd) {
 	ctx->hdr.planesize = le32_to_cpu(ctx->hdr.planesize);
 	ctx->hdr.rows = le16_to_cpu(ctx->hdr.rows);
 	ctx->hdr.columns = le16_to_cpu(ctx->hdr.columns);
-	
+
 	/* Set up plane data */
 	ctx->plane_r = malloc(ctx->hdr.planesize);
 	ctx->plane_g = malloc(ctx->hdr.planesize);
@@ -392,7 +392,7 @@ static int kodak1400_read_parse(void *vctx, int data_fd) {
 			do {
 				ret = read(data_fd, ptr, remain);
 				if (ret < 0) {
-					ERROR("Read failed (%d/%d/%u) (%d/%u @ %d)\n", 
+					ERROR("Read failed (%d/%d/%u) (%d/%u @ %d)\n",
 					      ret, remain, ctx->hdr.columns,
 					      i, ctx->hdr.rows, j);
 					perror("ERROR: Read failed");
@@ -437,7 +437,7 @@ top:
 	/* Read in the printer status */
 	ret = read_data(ctx->dev, ctx->endp_up,
 			rdbuf, READBACK_LEN, &num);
-	
+
 	if (ret < 0)
 		return CUPS_BACKEND_FAILED;
 	if (memcmp(rdbuf, rdbuf2, READBACK_LEN)) {
@@ -454,7 +454,7 @@ top:
 		return CUPS_BACKEND_STOP;  // HOLD/CANCEL/FAILED?  XXXX parse error!
 	}
 
-	fflush(stderr);       
+	fflush(stderr);
 
 	switch (state) {
 	case S_IDLE:
@@ -645,14 +645,14 @@ struct dyesub_backend kodak1400_backend = {
   XX              01 to laminate, 00 to not.
   01              Unknown, always set to 01
   XX              Lamination Strength:
- 
+
                   3c  Glossy
                   28  Matte +5
                   2e  Matte +4
                   34  Matte +3
                   3a  Matte +2
                   40  Matte +1
-                  46  Matte 
+                  46  Matte
                   52  Matte -1
                   5e  Matte -2
                   6a  Matte -3
@@ -669,7 +669,7 @@ struct dyesub_backend kodak1400_backend = {
     All readback values are 8 bytes long.
 
     Multi-byte numbers are sent BIG ENDIAN.
-  
+
     Image data is sent via planes, one scanline per URB.
 
  <-- 1b 72                           # Status query
@@ -677,7 +677,7 @@ struct dyesub_backend kodak1400_backend = {
 
  <-- 1b 00                           # Reset/attention?
  <-- 1b 5a 53  0a 00  0b c2          # Setup (ie hdr.columns and hdr.rows)
- <-- 1b 59 01                        # ?? hdr.matte ? 
+ <-- 1b 59 01                        # ?? hdr.matte ?
  <-- 1b 60 XX                        # hdr.lamination
  <-- 1b 62 XX                        # hdr.lam_strength
  <-- 1b 61 01                        # ?? hdr.unk1 ?
@@ -688,7 +688,7 @@ struct dyesub_backend kodak1400_backend = {
  <-- row last
 
  <-- 1b 74 01 50                     # ??
- 
+
  <-- 1b 72                           # Status query
  --> e4 72 00 00  00 00 50 59        # Printing plane 1
   [ repeats until...]
@@ -760,21 +760,21 @@ struct dyesub_backend kodak1400_backend = {
   Calibration data:
 
  <-- 1b a2                           # ?? Reset cal tables?
- --> 00 01 00 00  00 00 00 00        
+ --> 00 01 00 00  00 00 00 00
 
  <-- 1b a0 02 03 06 10               # 06 10 == 1552 bytes aka the CAL data.
  <-- cal data
 
-  [[ Data is organized as three blocks of 512 bytes followed by 
-     16 NULL bytes. 
+  [[ Data is organized as three blocks of 512 bytes followed by
+     16 NULL bytes.
 
-     Each block appears to be 256 entries of 16-bit LE data, 
+     Each block appears to be 256 entries of 16-bit LE data,
      so each input value is translated into a 16-bit number in the printer.
 
      Assuming blocks are ordered BGR.
 
-  ]] 
+  ]]
 
- --> 00 00 00 00  00 00 00 00        
+ --> 00 00 00 00  00 00 00 00
 
 */

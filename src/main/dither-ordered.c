@@ -74,7 +74,7 @@ init_dither_channel_new(stpi_dither_channel_t *dc, stp_vars_t *v)
   double upper_bottom = 0;
   double upper_middle = 0;
   double upper_top = 0;
-  
+
   double *breakpoints;
   double *val;
   unsigned short *data;

@@ -342,7 +342,7 @@ X     + Piecewise linear curves.  This is a more economical storage
 	UPDATE 20040529 GTK does not support piecewise curves.
 	Therefore this would either require a GTK upgrade or a custom
 	widget.  The standard GTK curve widget is deprecated in any
-	event.  
+	event.
 
 	UPDATE 20040605 Mike Porter has provided a replacement widget
 	which provides better services in this regard.  It needs to be
@@ -624,7 +624,7 @@ RC2 entry:
 Release:
 
     The entire package should be complete, and all agreed-upon bugs
-    fixed.    
+    fixed.
 
 
 This schedule and phase criteria is based on the 4.0 and 4.2 release
@@ -755,7 +755,7 @@ X     + Exposure of more internal printer parameters (such as ink
 	level.
 
 	This would be highly desirable, if for no other reason than to
-	tell genppd what the correct ordering is for pages.  
+	tell genppd what the correct ordering is for pages.
 
 	Low-moderate effort (mostly in design), low-moderate risk,
 	high return.  The primary risk factor is ensuring that this

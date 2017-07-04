@@ -232,7 +232,7 @@ static const stp_curve_point_t reverse_piecewise_sat_adjustment[] =
   { 1.00, 2},
 };
 
-const char *small_piecewise_curve = 
+const char *small_piecewise_curve =
 "<?xml version=\"1.0\"?>\n"
 "<gutenprint xmlns=\"http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0\"\n"
 "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"

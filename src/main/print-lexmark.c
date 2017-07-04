@@ -367,7 +367,7 @@ static const float_param_t float_parameters[] =
       STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 5.0, 1.0, 1
   },
-};    
+};
 
 static const int float_parameter_count =
 sizeof(float_parameters) / sizeof(const float_param_t);
@@ -1130,7 +1130,7 @@ lexmark_list_parameters(const stp_vars_t *v)
   stp_parameter_list_t *tmp_list;
 
   int i;
-  
+
   /* Set up dithering */
   tmp_list = stp_dither_list_parameters(v);
   stp_parameter_list_append(ret, tmp_list);

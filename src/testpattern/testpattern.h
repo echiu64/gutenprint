@@ -108,5 +108,3 @@ typedef struct yylv {
 #define YYSTYPE_IS_DECLARED 1
 
 #include "testpatterny.h"
-
-

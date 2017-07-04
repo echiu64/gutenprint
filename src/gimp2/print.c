@@ -346,17 +346,17 @@ run (const char        *name,		/* I - Name of print program. */
             /*
              * Some useful string stp parameters
              *
-             * "PrintingMode": BW, Color 
-             * "Resolution": "300", "720", etc. 
-             * "PageSize": "Letter", "A4", etc. TODO: Support Custom 
-             * "MediaType": "Plain", "Glossy", etc. 
-             * "InputSlot": "Tray1", "Manual", etc. 
-             * "ColorCorrection": Color Correction model 
-             * "InkType": Type of ink or cartridge 
-             * "InkSet": Set of inks to use 
-             * "DitherAlgorithm": Dither algorithm 
-             * "Weave": Weave method 
-             * "PrintingDirection": "Bidirectional", "Unidirectional" 
+             * "PrintingMode": BW, Color
+             * "Resolution": "300", "720", etc.
+             * "PageSize": "Letter", "A4", etc. TODO: Support Custom
+             * "MediaType": "Plain", "Glossy", etc.
+             * "InputSlot": "Tray1", "Manual", etc.
+             * "ColorCorrection": Color Correction model
+             * "InkType": Type of ink or cartridge
+             * "InkSet": Set of inks to use
+             * "DitherAlgorithm": Dither algorithm
+             * "Weave": Weave method
+             * "PrintingDirection": "Bidirectional", "Unidirectional"
              */
 
             stp_set_string_parameter(gimp_vars.v, key, value);
@@ -375,14 +375,14 @@ run (const char        *name,		/* I - Name of print program. */
             /*
              * Some useful floating point stp parameters
              *
-             * "Brightness"  0-400% 
-             * "Gamma"  Output gamma 0.1 - 3.0 
+             * "Brightness"  0-400%
+             * "Gamma"  Output gamma 0.1 - 3.0
              * "Contrast" 0.1 - 3.0
-             * "Saturation"  0-1000% 
-             * "Density"  0-200% 
-             * "DropSize1"  0.0-1.0 
-             * "DropSize2"  0.0-1.0 
-             * "DropSize3"  0.0-1.0 
+             * "Saturation"  0-1000%
+             * "Density"  0-200%
+             * "DropSize1"  0.0-1.0
+             * "DropSize2"  0.0-1.0
+             * "DropSize3"  0.0-1.0
              */
 
             float_value = strtof(value, &endptr);
@@ -409,7 +409,7 @@ run (const char        *name,		/* I - Name of print program. */
             values[0].data.d_status = GIMP_PDB_CALLING_ERROR;
             fprintf(stderr,"Parameter type unsupported in gimp2 plugin for parameter %s\n", key);
             break;
-            
+
           case STP_PARAMETER_TYPE_INVALID:
 
             /*
@@ -441,7 +441,7 @@ run (const char        *name,		/* I - Name of print program. */
                   /*
                    * Scaling > 0 in %
                    */
-                  
+
                   stp_set_width(gimp_vars.v, pointwidth * gimp_vars.scaling / 100.);
                   stp_set_height(gimp_vars.v, pointheight * gimp_vars.scaling / 100.);
                 }
@@ -460,7 +460,7 @@ run (const char        *name,		/* I - Name of print program. */
               break;
             }
 
-            /* 
+            /*
              * Output orientation (-1 = auto, 0 = portrait, 1 = landscape)
              */
 

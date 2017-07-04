@@ -167,7 +167,7 @@ static const dpl_cap_t dpl_model_capabilities[] = {
   {10020,			/* I Class Mark II 600 DPI */
    4 * 72, 99 * 72,		/* Max paper size */
    1, 1,			/* Min paper size */
-   /* for future use 
+   /* for future use
       DPL_RES_150_150 | DPL_RES_203_203 | DPL_RES_300_300 | DPL_RES_600_600, */
    DPL_RES_300_300 | DPL_RES_600_600,	/* Resolutions */
    DPL_RES_600_600,
@@ -729,7 +729,7 @@ dpl_papersize_valid (const stp_papersize_t * pt, int model)
 
 /*
  * We are allowed custom paper sizes. Check that the size is within
- * limits.  Check that the name contains d-o if this is the 
+ * limits.  Check that the name contains d-o if this is the
  * Datamax O'Neil label printer and not custom paper
  */
 

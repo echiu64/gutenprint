@@ -438,7 +438,7 @@ escp2_set_paper_dimensions(stp_vars_t *v)
 	pd->page_management_units / 72;
       stp_send_command(v, "\033(S", "bll", w, h);
       if (stp_check_int_parameter(pv, "PrintMethod", STP_PARAMETER_ACTIVE))
-	stp_send_command(v, "\033(m", "bc", 
+	stp_send_command(v, "\033(m", "bc",
 			 stp_get_int_parameter(pv, "PrintMethod"));
     }
 }

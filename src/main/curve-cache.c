@@ -137,4 +137,3 @@ stp_curve_cache_copy(stp_cached_curve_t *dest, const stp_cached_curve_t *src)
 	stp_curve_cache_set_curve_copy(dest, src->curve);
     }
 }
-

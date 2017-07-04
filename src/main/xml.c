@@ -140,7 +140,7 @@ stp_xml_preinit(void)
       stp_list_set_freefunc(stpi_xml_preloads, xml_preload_freefunc);
       stp_list_set_namefunc(stpi_xml_preloads, xml_preload_namefunc);
     }
-}    
+}
 
 /*
  * Call before using any of the static functions in this file.  All
@@ -211,7 +211,7 @@ stp_xml_parse_file_named(const char *name)
     }
   stp_list_destroy(file_list);
 }
-  
+
 
 /*
  * Read all available XML files.
@@ -546,6 +546,3 @@ stp_xmldoc_create_generic(void)
 
   return doc;
 }
-
-
-

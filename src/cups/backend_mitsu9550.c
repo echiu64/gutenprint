@@ -526,7 +526,7 @@ static char *mitsu9550_media_types(uint8_t type, uint8_t is_s)
 		}
 		return NULL;
 	}
-	
+
 	switch (type & 0xf) { /* values can be 0x0? or 0x4? */
 	case 0x01:
 		return "CK9035 (3.5x5)";
@@ -556,7 +556,7 @@ static int validate_media(int type, int media, int cols, int rows)
 				return 1;
 			break;
 		case 0x02: /* 4x6 */
-		case 0x03: /* 4x6 postcard */ 
+		case 0x03: /* 4x6 postcard */
 			if (cols != 2152)
 				return 1;
 			if (rows != 1416 && rows != 1184 && rows != 1240)
@@ -707,7 +707,7 @@ static int validate_media(int type, int media, int cols, int rows)
 	case P_MITSU_9800S:
 		switch(media & 0xf) {
 		case 0x02: /* 4x6 */
-		case 0x03: /* 4x6 postcard */ 
+		case 0x03: /* 4x6 postcard */
 			if (cols != 1868 && rows != 1228)
 				return 1;
 			break;
@@ -837,20 +837,20 @@ top:
 	if (ctx->hdr4_present)
 		if ((ret = send_data(ctx->dev, ctx->endp_down,
 				     (uint8_t*) &ctx->hdr4, sizeof(struct mitsu9550_hdr4))))
-			return CUPS_BACKEND_FAILED;		
-	
+			return CUPS_BACKEND_FAILED;
+
 	if (ctx->is_s) {
 		/* Send "start data" command */
 		cmd.cmd[0] = 0x1b;
 		cmd.cmd[1] = 0x5a;
 		cmd.cmd[2] = 0x43;
 		cmd.cmd[3] = 0x00;
-		
+
 		if ((ret = send_data(ctx->dev, ctx->endp_down,
 				     (uint8_t*) &cmd, sizeof(cmd))))
 			return CUPS_BACKEND_FAILED;
 	}
-	
+
 	/* Send over plane data */
 	while(1) {
 		struct mitsu9550_plane *plane = (struct mitsu9550_plane *)ptr;
@@ -878,7 +878,7 @@ top:
 //		struct mitsu9550_status2 *sts2 = (struct mitsu9550_status2*) rdbuf;
 		struct mitsu9550_media *media = (struct mitsu9550_media *) rdbuf;
 		uint16_t donor, remain;
-		
+
 		ret = mitsu9550_get_status(ctx, rdbuf, 0, 0, 1); // media
 		if (ret < 0)
 			return CUPS_BACKEND_FAILED;
@@ -903,11 +903,11 @@ top:
 		ret = mitsu9550_get_status(ctx, rdbuf, 0, 1, 0); // status2
 		if (ret < 0)
 			return CUPS_BACKEND_FAILED;
-		
+
 		ret = mitsu9550_get_status(ctx, rdbuf, 1, 0, 0); // status
 		if (ret < 0)
 			return CUPS_BACKEND_FAILED;
-		
+
 		/* Make sure we're ready to proceed */
 		if (sts->sts5 != 0) {
 			ERROR("Unexpected response (sts5 %02x)\n", sts->sts5);
@@ -1094,7 +1094,7 @@ static int mitsu9550_query_status2(struct mitsu9550_ctx *ctx)
 {
 	struct mitsu9550_status2 resp;
 	int ret;
-	
+
 	ret = mitsu9550_get_status(ctx, (uint8_t*) &resp, 0, 1, 0);
 
 	if (!ret)
@@ -1121,13 +1121,13 @@ static int mitsu9550_query_serno(struct libusb_device_handle *dev, uint8_t endp_
 
 	ret = read_data(dev, endp_up,
 			rdbuf, READBACK_LEN, &num);
-	
+
 	if (ret < 0)
 		return CUPS_BACKEND_FAILED;
 
 	if ((unsigned int)num < sizeof(cmd) + 1) /* Short read */
 		return CUPS_BACKEND_FAILED;
-	
+
 	if (rdbuf[0] != 0xe4 ||
 	    rdbuf[1] != 0x72 ||
 	    rdbuf[2] != 0x6e ||
@@ -1140,7 +1140,7 @@ static int mitsu9550_query_serno(struct libusb_device_handle *dev, uint8_t endp_
 		WARNING("Short serno read! (%d vs %u)\r\n",
 			num, rdbuf[4]);
 
-	/* model and serial number are encoded as 16-bit unicode, 
+	/* model and serial number are encoded as 16-bit unicode,
 	   little endian, separated by spaces. */
 	i = num;
 	ptr = rdbuf + 5;
@@ -1152,7 +1152,7 @@ static int mitsu9550_query_serno(struct libusb_device_handle *dev, uint8_t endp_
 		i -= 2;
 	}
 	*buf = 0; /* Null-terminate the returned string */
-	
+
 	return ret;
 }
 
@@ -1233,7 +1233,7 @@ struct dyesub_backend mitsu9550_backend = {
    1b 57 20 2e 00 QQ QQ 00  00 00 00 00 00 00 XX XX :: XX XX == columns
    YY YY 00 00 00 00 00 00  00 00 00 00 00 00 00 00 :: YY YY == rows
    00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00 :: QQ == 0x0a90 on 9810, 0x0a10 on all others.
-   00 00 
+   00 00
 
    ~~~ Header 2
 
@@ -1246,15 +1246,15 @@ struct dyesub_backend mitsu9550_backend = {
 
    1b 57 22 2e 00 40 00 00  00 00 00 XX 00 00 00 00 :: XX = 00 normal, 01 FineDeep
    00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
-   00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00 
-   00 00 
+   00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+   00 00
 
    ~~~ Header 4 (all but 9550-S and 9800-S, involves error policy?)
 
    1b 57 26 2e 00 QQ 00 00  00 00 00 SS RR 01 00 00 :: QQ = 0x70 on 9550/98x0, 0x60 on 9600 or 9800S
    00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00 :: RR = 0x01 on 9550/98x0, 0x00 on 9600
    00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00 :: SS = 0x01 on 9800S
-   00 00  
+   00 00
 
   ~~~~ Data follows:
 
@@ -1309,7 +1309,7 @@ struct dyesub_backend mitsu9550_backend = {
   [[ Unknown ]]
 
  -> 1b 4b 7f 00
- <- eb 4b 8f 00 02 00 5e  [[ '02' seems to be a length ]] 
+ <- eb 4b 8f 00 02 00 5e  [[ '02' seems to be a length ]]
 
   [[ Unknown ]]
 
@@ -1337,11 +1337,11 @@ struct dyesub_backend mitsu9550_backend = {
  <- e4 4b 01 00 02 00 78
 
   Status Query
- 
+
  -> 1b 56 30 00
  -> 30 2e 00 00 00 00 MM 00  NN NN ZZ 00 00 00 00 00 :: MM, NN, ZZ
     QQ RR SS 00 00 00 00 00  00 00 00 00 00 00 00 00 :: QQ, RR, SS
-    00 00 00 00 00 00 00 00  00 00 00 00 TT UU 00 00 :: TT, UU 
+    00 00 00 00 00 00 00 00  00 00 00 00 TT UU 00 00 :: TT, UU
 
   Status Query B (not sure what to call this)
 
@@ -1414,7 +1414,7 @@ struct dyesub_backend mitsu9550_backend = {
      [...]
     00  3e 00 00  80 44  :: Idle.
 
-  Also seen: 
+  Also seen:
 
     00  3e 00 00  96 4b  :: Idle
     00  be 00 00  96 4b  :: Data submitted, pre "start"
@@ -1447,8 +1447,8 @@ struct dyesub_backend mitsu9550_backend = {
   SS :: ?? 0x00 means "ready for another print" but 0x01 is "busy"
   TT :: ?? seen values between 0x7c through 0x96)
   UU :: ?? seen values between 0x43 and 0x4c -- temperature?
- 
-  *** 
+
+  ***
 
    Other printer commands seen:
 

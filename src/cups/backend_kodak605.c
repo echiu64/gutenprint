@@ -291,7 +291,7 @@ static int kodak605_read_parse(void *vctx, int data_fd) {
 	if (ret < 0 || ret != sizeof(ctx->hdr)) {
 		if (ret == 0)
 			return CUPS_BACKEND_CANCEL;
-		ERROR("Read failed (%d/%d/%d)\n", 
+		ERROR("Read failed (%d/%d/%d)\n",
 		      ret, 0, (int)sizeof(ctx->hdr));
 		perror("ERROR: Read failed");
 		return CUPS_BACKEND_CANCEL;
@@ -683,7 +683,7 @@ struct dyesub_backend kodak605_backend = {
 	.teardown = kodak605_teardown,
 	.read_parse = kodak605_read_parse,
 	.main_loop = kodak605_main_loop,
-	.devices = { 
+	.devices = {
 	{ USB_VID_KODAK, USB_PID_KODAK_605, P_KODAK_605, "Kodak"},
 	{ 0, 0, 0, ""}
 	}

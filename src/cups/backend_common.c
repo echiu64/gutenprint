@@ -226,7 +226,7 @@ done:
 	return ret;
 }
 
-int send_data(struct libusb_device_handle *dev, uint8_t endp, 
+int send_data(struct libusb_device_handle *dev, uint8_t endp,
 	      uint8_t *buf, int len)
 {
 	int num = 0;
@@ -312,7 +312,7 @@ static char *url_encode(char *str) {
 	}
 
 	while (*pstr) {
-		if (isalnum(*pstr) || *pstr == '-' || *pstr == '_' || *pstr == '.' || *pstr == '~') 
+		if (isalnum(*pstr) || *pstr == '-' || *pstr == '_' || *pstr == '.' || *pstr == '~')
 			*pbuf++ = *pstr;
 		else if (*pstr == ' ')
 			*pbuf++ = '+';
@@ -404,7 +404,7 @@ static int print_scan_output(struct libusb_device *device,
 			break;
 	}
 
-	/* Query IEEE1284 info only if it's a PRINTER class */	
+	/* Query IEEE1284 info only if it's a PRINTER class */
 	if (desc->bDeviceClass == LIBUSB_CLASS_PRINTER ||
 	    (desc->bDeviceClass == LIBUSB_CLASS_PER_INTERFACE &&
 	     config->interface[iface].altsetting[altset].bInterfaceClass == LIBUSB_CLASS_PRINTER)) {
@@ -513,7 +513,7 @@ static int print_scan_output(struct libusb_device *device,
 		strncpy(buf + k, product, sizeof(buf)-k);
 
 		fprintf(stdout, "direct %s://%s?serial=%s&backend=%s \"%s\" \"%s\" \"%s\" \"\"\n",
-			prefix, buf, serial, backend->uri_prefix, 
+			prefix, buf, serial, backend->uri_prefix,
 			descr, descr,
 			ieee_id? ieee_id : "");
 	}
@@ -571,7 +571,7 @@ extern struct dyesub_backend cw01_backend;
 
 static struct dyesub_backend *backends[] = {
 	&canonselphy_backend,
-	&canonselphyneo_backend,	
+	&canonselphyneo_backend,
 	&kodak6800_backend,
 	&kodak605_backend,
 	&kodak1400_backend,
@@ -582,7 +582,7 @@ static struct dyesub_backend *backends[] = {
 	&updr150_backend,
 	&mitsu70x_backend,
 	&mitsu9550_backend,
-	&mitsup95d_backend,	
+	&mitsup95d_backend,
 	&dnpds40_backend,
 	&cw01_backend,
 	NULL,
@@ -942,7 +942,7 @@ int main (int argc, char **argv)
 				endp_down = config->interface[iface].altsetting[altset].endpoint[i].bEndpointAddress;
 		}
 		if (endp_up && endp_down)
-			break;		
+			break;
 	}
 
 	if (config)

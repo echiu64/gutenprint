@@ -33,7 +33,7 @@
 
 //#define DNP_ONLY
 
-/* Enables caching of last print type to speed up 
+/* Enables caching of last print type to speed up
    job pipelining.  Without this we always have to
    assume the worst */
 //#define STATE_DIR "/tmp"
@@ -88,7 +88,7 @@ struct dnpds40_ctx {
 	uint32_t last_multicut;
 	int last_matte;
 
-	int fullcut;	
+	int fullcut;
 	int matte;
 	int cutter;
 	int can_rewind;
@@ -105,7 +105,7 @@ struct dnpds40_ctx {
 	int supports_3x5x2;
 	int supports_matte;
 	int supports_finematte;
-	int supports_luster;	
+	int supports_luster;
 	int supports_advmatte;
 	int supports_fullcut;
 	int supports_rewind;
@@ -419,7 +419,7 @@ static int dnpds40_do_cmd(struct dnpds40_ctx *ctx,
 			     (uint8_t*)cmd, sizeof(*cmd))))
 		return ret;
 
-	if (data && len) 
+	if (data && len)
 		if ((ret = send_data(ctx->dev, ctx->endp_down,
 				     data, len)))
 			return ret;
@@ -881,10 +881,10 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 	}
 
 	/* There's no way to figure out the total job length in advance, we
-	   have to parse the stream until we get to the image plane data, 
+	   have to parse the stream until we get to the image plane data,
 	   and even then the stream can contain arbitrary commands later.
 
-	   So instead, we allocate a buffer of the maximum possible length, 
+	   So instead, we allocate a buffer of the maximum possible length,
 	   then parse the incoming stream until we hit the START command at
 	   the end of the job.
 	*/
@@ -910,7 +910,7 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 	while (run) {
 		int remain, i, j;
 		/* Read in command header */
-		i = read(data_fd, ctx->databuf + ctx->datalen, 
+		i = read(data_fd, ctx->databuf + ctx->datalen,
 			 sizeof(struct dnpds40_cmd));
 		if (i < 0)
 			return i;
@@ -932,7 +932,7 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 		/* Read in data chunk as quickly as possible */
 		remain = j;
 		while (remain > 0) {
-			i = read(data_fd, ctx->databuf + ctx->datalen + sizeof(struct dnpds40_cmd), 
+			i = read(data_fd, ctx->databuf + ctx->datalen + sizeof(struct dnpds40_cmd),
 				 remain);
 			if (i < 0) {
 				ERROR("Data Read Error: %d (%d/%d @%d)\n", i, remain, j, ctx->datalen);
@@ -948,7 +948,7 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 		/* Check for some offsets */
 		if(!memcmp("CNTRL QTY", ctx->databuf + ctx->datalen+2, 9)) {
 			/* Ignore this.  We will insert our own later on */
-			continue;			
+			continue;
 		}
 		if(!memcmp("CNTRL CUTTER", ctx->databuf + ctx->datalen+2, 12)) {
 			memcpy(buf, ctx->databuf + ctx->datalen + 32, 8);
@@ -1125,7 +1125,7 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 		case P_DNP_DS80D:
 			if (ctx->matte) {
 				int mcut = ctx->multicut;
-				
+
 				if (mcut > MULTICUT_S_BACK)
 					mcut -= MULTICUT_S_BACK;
 				else if (mcut > MULTICUT_S_FRONT)
@@ -1945,7 +1945,7 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 
 		dnpds40_cleanup_string((char*)resp, len);
 		i = atoi((char*)resp);
-			
+
 		INFO("Standby Transition time: %d minutes\n", i);
 
 		free(resp);
@@ -1960,7 +1960,7 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 		dnpds40_cleanup_string((char*)resp, len);
 		i = atoi((char*)resp);
 		INFO("Media End kept across power cycles: %s\n",
-		     i ? "Yes" : "No");		     
+		     i ? "Yes" : "No");
 
 		free(resp);
 	}

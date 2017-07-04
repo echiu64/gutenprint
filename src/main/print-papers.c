@@ -313,7 +313,7 @@ stp_xml_process_paper(stp_mxml_node_t *paper) /* The paper node */
       if (prop->type == STP_MXML_ELEMENT)
 	{
 	  const char *prop_name = prop->value.element.name;
-      
+
 	  if (!strcmp(prop_name, "description"))
 	    {
 	      outpaper->text = stp_strdup(stp_mxmlElementGetAttr(prop, "value"));

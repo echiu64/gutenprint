@@ -1,5 +1,5 @@
 /******************************************************************************
- * pixma_parse.c parser for Canon BJL printjobs 
+ * pixma_parse.c parser for Canon BJL printjobs
  * Copyright (c) 2005 - 2007 Sascha Sommer <saschasommer@freenet.de>.
  *
  * This program is free software; you can redistribute it and/or modify
@@ -30,7 +30,7 @@
 
 #include "pixma_parse.h"
 
-/*TODO: 
+/*TODO:
   1. change color loops to search for each named color rather than using a predefined order.
   2. keep iP6700 workaround, but check what happens with the real printer.
 */
@@ -40,7 +40,7 @@ FILE* fout;
 
 /* nextcmd(): find a command in a printjob
  * commands in the printjob start with either ESC[ or ESC(
- * ESC@ (go to neutral mode) and 0xc (form feed) are handled directly 
+ * ESC@ (go to neutral mode) and 0xc (form feed) are handled directly
  * params:
  *  infile: handle to the printjob
  *  cmd: the command type
@@ -146,7 +146,7 @@ static int valid_color(unsigned char color){
 }
 
 
-/* eight2ten() 
+/* eight2ten()
  * decompression routine for canons 10to8 compression that stores 5 3-valued pixels in 8-bit
  */
 static int eight2ten(unsigned char* inbuffer,unsigned char* outbuffer,int num_bytes,int outbuffer_size){
@@ -249,7 +249,7 @@ static int Raster(image_t* img,unsigned char* buffer,unsigned int len,unsigned c
 #endif
 
 	/* if(!color){
-	   printf("no matching color for %c (0x%x, %i) in the database => ignoring %i bytes\n",color_name,color_name,color_name, len); 
+	   printf("no matching color for %c (0x%x, %i) in the database => ignoring %i bytes\n",color_name,color_name,color_name, len);
 	   } */
 	if (DEBUG) {
 	  fprintf(fout,"DEBUG enter Raster len=%i,color=%c\n",len,color_name);
@@ -260,9 +260,9 @@ static int Raster(image_t* img,unsigned char* buffer,unsigned int len,unsigned c
 		int c = *buf;
 		++buf;
 		--len;
-	
+
 		/*printf("DEBUG top of while loop len=%i\n",len);*/
-	
+
 		if(c >= 128)
 			c -=256;
 		if(c== -128){ /* end of line => decode and copy things here */
@@ -471,7 +471,7 @@ static void write_line(image_t*img,FILE* fp,int pos_y){
 		  }
 		  /* update statistics */
 		  (img->color[i].dots)[img->color[i].value] += 1;
-		  /* set to 1 if the level is used */	
+		  /* set to 1 if the level is used */
 		  (img->color[i].usedlevels)[img->color[i].value]=1;
 		}
 		/* calculate CMYK values */
@@ -497,7 +497,7 @@ static void write_line(image_t*img,FILE* fp,int pos_y){
 			if(x > img->image_right)
 				img->image_right = x;
 		}
-			
+
                 /* clip values */
                 if(lK > 255)
                    lK = 255;
@@ -509,9 +509,9 @@ static void write_line(image_t*img,FILE* fp,int pos_y){
                    lY = 255;
 		/* convert to RGB */
 		/* 0 == black, 255 == white */
-		line[x*3]=255 - lC - lK;        
-		line[x*3+1]=255 - lM -lK;      
-		line[x*3+2]=255 - lY -lK;     
+		line[x*3]=255 - lC - lK;
+		line[x*3+1]=255 - lM -lK;
+		line[x*3+2]=255 - lY -lK;
 		++img->dots;
 	}
 
@@ -530,11 +530,11 @@ static void write_ppm(image_t* img,FILE* fp){
         for(i=0;i<MAX_COLORS;i++){
 	  /*img->color[i].dots=calloc(1,sizeof(int)*(img->color[i].level+1));*/
 	  img->color[i].dots=calloc(1,sizeof(int)*(1<<((img->color[i].bpp)+1)));
-	}	
+	}
 	/* allocate buffers for levels used*/
         for(i=0;i<MAX_COLORS;i++){
 	  img->color[i].usedlevels=calloc(1,sizeof(int)*(1<<((img->color[i].bpp)+1)));
-	}	
+	}
 
 	/* write header */
 	fputs("P6\n", fp);
@@ -547,7 +547,7 @@ static void write_ppm(image_t* img,FILE* fp){
 	for(i=0;i<img->height;i++){
 		write_line(img,fp,i);
 	}
-	
+
 	/* output some statistics */
 	printf("statistics:\n");
 	for(i=0;i<MAX_COLORS;i++){
@@ -574,13 +574,13 @@ static void write_ppm(image_t* img,FILE* fp){
 	img->image_left = img->image_left * 72.0 / img->xres ;
 	img->image_right = img->image_right * 72.0 / img->xres ;
 	printf("top %u bottom %u left %u right %u\n",img->image_top,img->image_bottom,img->image_left,img->image_right);
-	printf("width %u height %u\n",img->image_right - img->image_left,img->image_bottom - img->image_top);	
+	printf("width %u height %u\n",img->image_right - img->image_left,img->image_bottom - img->image_top);
 
 	/* clean up */
         for(i=0;i<MAX_COLORS;i++){
 		if(img->color[i].dots)
 			free(img->color[i].dots);
-	}	
+	}
 
 }
 
@@ -694,12 +694,12 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 					}
 
 					for(i=0;i<num_colors;i++){
-					  if(i<MAX_COLORS){	
+					  if(i<MAX_COLORS){
 					    img->color[i].name=order[i];
 					    img->color[i].compression=buf[3+i*3] >> 5;
 					    img->color[i].bpp=buf[3+i*3] & 31;
 					    img->color[i].level=(buf[3+i*3+1] << 8) + buf[3+i*3+2];/* check this carefully */
-					    
+
 					    /* work around for levels not matching (bpp gives more) */
 					    /*if ((img->color[i].level == 3) && (img->color[i].bpp == 2)) {
 					      printf("WARNING: color %c bpp %i declared levels %i, setting to 4 for testing \n",img->color[i].name,img->color[i].bpp,img->color[i].level);
@@ -710,7 +710,7 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 					    /*  printf("WARNING: color %c bpp %i declared levels %i, setting to 16 for testing \n",img->color[i].name,img->color[i].bpp,img->color[i].level);
 						img->color[i].level = 16;
 						} */
-					    
+
 					    /* this is not supposed to give accurate images */
 					    /* if(i<4) */ /* set to actual colors CMYK */
 					    if((img->color[i].name =='K')||(img->color[i].name =='C')||(img->color[i].name =='M')||(img->color[i].name =='Y') ) {
@@ -718,7 +718,7 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 					      /*if (i>7)*/
 						/*img->color[i].density -= 128; */
 					      /* see if can subtract something from CMYK where 0x80 involved */
-					    }					    
+					    }
 					    else
 					      img->color[i].density = 128; /*128+96;*/ /* try to add 0x80 to sub-channels for MP450 hi-quality mode */
                                             /*
@@ -733,7 +733,7 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 					      order[i+1] = 'y';
 					      black_found = 1;
 					      img->color[i].density = 255;
-					    } 
+					    }
 					    */
 					    /* %c*/
 					    fprintf(fout," Color %c Compression: %i bpp %i level %i\n",img->color[i].name,
@@ -742,17 +742,17 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 					    fprintf(fout," Color %i out of bounds!\n", i);
 					    /*printf(" Color ignoring setting %x %x %x\n",buf[3+i*3],buf[3+i*3+1],buf[3+i*3+2]);*/
 					  }
-					  
+
 					}
-					
-					
+
+
 				}else if(buf[0]==0x1 && buf[1]==0x0 && buf[2]==0x1){
-					fprintf(fout," 1bit-per pixel\n");					
+					fprintf(fout," 1bit-per pixel\n");
 					num_colors = cnt*3; /*no idea yet! 3 for iP4000 */
 					/*num_colors=9;*/
 					/*for(i=0;i<MAX_COLORS;i++){*/
 					for(i=0;i<num_colors;i++){
-					  if(i<MAX_COLORS){	
+					  if(i<MAX_COLORS){
 					        /* usual */
   					        char order[]="CMYKcmyk";
 					        /* const char order[]="CMYKcmykHRGABDEFIJLMNOPQSTUVWXZabdef";*/
@@ -878,7 +878,7 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 				if(img->lines_per_block){
 					img->height += (buf[0]*256+buf[1])*img->lines_per_block;
 					img->cur_color=0;
-				}else	
+				}else
 					img->height += (buf[0]*256+buf[1]);
 				break;
 			default: /* Last but not least completely unknown commands */
@@ -894,7 +894,7 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 	if(returnv < -2){ /* was < 0 :  work around to see what we get */
 		fprintf(fout,"error: parsing the printjob failed error %i\n",returnv);
 	} else {
-	
+
 		fprintf(fout,"created bit image with width %i height %i\n",img->width,img->height);
 		if(maxh > 0){
 			fprintf(fout,"limiting height to %u\n",maxh);
@@ -960,7 +960,7 @@ int main(int argc,char* argv[]){
 	  fout = stderr; /* unbuffered */
 	else
 	  fout = stdout; /* buffered */
-		      
+
 	printf("pixma_parse - parser for Canon BJL printjobs (c) 2005-2007 Sascha Sommer <saschasommer@freenet.de>\n");
 
 	/* parse args */
@@ -970,7 +970,7 @@ int main(int argc,char* argv[]){
 				verbose = 1;
 			}else if(argv[i][1] == 'h'){
 				display_usage();
-				return 0;	
+				return 0;
 			}else if(argv[i][1] == 'y'){
 				if(argc > i+1){
 					++i;
@@ -1002,7 +1002,7 @@ int main(int argc,char* argv[]){
 				}else{
 					display_usage();
 					return 1;
-				}				
+				}
 			}else {
 			  printf("unknown parameter %s\n",argv[i]);
 				return 1;
@@ -1033,7 +1033,7 @@ int main(int argc,char* argv[]){
 		fclose(in);
 		return 1;
 	}
-	
+
 	/* process the printjob */
 	process(in,out,verbose,maxw,maxh,startxmllen,endxmllen);
 
@@ -1042,4 +1042,4 @@ int main(int argc,char* argv[]){
 	if(out)
 		fclose(out);
 	return 0;
-} 
+}

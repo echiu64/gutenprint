@@ -59,7 +59,7 @@ my @standard_options = ("InkType",
 			"PrintingDirection",
 			"Density",
 			"CyanDensity",
-			"Orientation", 
+			"Orientation",
 			"LabelSeparator");
 my $global_status = 1;
 my $run_installed = 0;
@@ -524,7 +524,7 @@ sub do_print($$) {
 	}
     } else {
 	print $fh $output;
-    }	
+    }
 }
 
 sub do_output($) {
@@ -776,7 +776,7 @@ sub do_printer($$) {
 			    }
 			}
 		    } grep { ! defined $subkeys{$_} &&
-			     ($use_unused_options || 
+			     ($use_unused_options ||
 			      defined $stpdata{$printer}{$_})} (keys %base_settings);
 		    my ($mstring) = join "_", @mvals;
 		    my ($ostring) = join "+", @ovals;

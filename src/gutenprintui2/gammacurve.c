@@ -479,4 +479,3 @@ stpui_gamma_curve_destroy (GtkObject *object)
   if (GTK_OBJECT_CLASS (parent_class)->destroy)
     (* GTK_OBJECT_CLASS (parent_class)->destroy) (object);
 }
-

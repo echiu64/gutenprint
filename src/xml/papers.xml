@@ -187,7 +187,7 @@
     </paper>
     <paper name="w338h504">
       <description translate="value" value="4.7x7"/>
-      <comment value="Only used by CW-01/OP900 dyesub printers"/>      
+      <comment value="Only used by CW-01/OP900 dyesub printers"/>
       <width value="338"/>
       <height value="504"/>
       <unit value="english-extended"/>
@@ -326,7 +326,7 @@
       <height value="504"/>
       <unit value="english-extended"/>
     </paper>
-    <paper name="w576h576">      
+    <paper name="w576h576">
       <description translate="value" value="8x8"/>
       <comment value="Only used by certain dyesub models"/>
       <width value="576"/>
@@ -1752,42 +1752,42 @@
       <width value="595"/>
       <height value="842"/>
       <unit value="metric"/>
-    </paper>    
+    </paper>
     <paper name="A4x4inch">
       <description translate="value" value="A4 width * 4inch"/>
       <comment value="Only used by DNP DS820"/>
       <width value="595"/>
       <height value="288"/>
       <unit value="metric"/>
-    </paper>    
+    </paper>
     <paper name="A4x5inch">
       <description translate="value" value="A4 width * 5inch"/>
       <comment value="Only used by DNP DS820"/>
       <width value="595"/>
       <height value="360"/>
       <unit value="metric"/>
-    </paper>    
+    </paper>
     <paper name="A4x6inch">
       <description translate="value" value="A4 width * 6inch"/>
       <comment value="Only used by DNP DS820"/>
       <width value="595"/>
       <height value="432"/>
       <unit value="metric"/>
-    </paper>    
+    </paper>
     <paper name="A4x8inch">
       <description translate="value" value="A4 width * 8inch"/>
       <comment value="Only used by DNP DS820"/>
       <width value="595"/>
       <height value="576"/>
       <unit value="metric"/>
-    </paper>    
+    </paper>
     <paper name="A4x10inch">
       <description translate="value" value="A4 width * 10inch"/>
       <comment value="Only used by DNP DS820"/>
       <width value="595"/>
       <height value="720"/>
       <unit value="metric"/>
-    </paper>    
+    </paper>
     <paper name="A4x10inch-div2">
       <description translate="value" value="A4 width * 5 inch x2"/>
       <comment value="Only used by DNP DS820"/>
@@ -1835,8 +1835,8 @@
       <width value="432"/>
       <height value="648"/>
       <unit value="english-extended"/>
-      <type value="special"/>      
-    </paper>    
+      <type value="special"/>
+    </paper>
     <paper name="w576h576-div2">
       <description translate="value" value="4x8*2"/>
       <width value="576"/>
@@ -1849,7 +1849,7 @@
       <width value="576"/>
       <height value="648"/>
       <unit value="english-extended"/>
-    </paper>    
+    </paper>
     <paper name="c8x10-div2">
       <description translate="value" value="8x5*2"/>
       <width value="576"/>
@@ -1877,28 +1877,28 @@
       <width value="576"/>
       <height value="792"/>
       <unit value="english-extended"/>
-      <type value="special"/>      
+      <type value="special"/>
     </paper>
     <paper name="w576h864-div2">
       <description translate="value" value="8x6*2"/>
       <width value="576"/>
       <height value="864"/>
       <unit value="english-extended"/>
-      <type value="special"/>      
+      <type value="special"/>
     </paper>
     <paper name="w576h864-div3">
       <description translate="value" value="8x4*3"/>
       <width value="576"/>
       <height value="864"/>
       <unit value="english-extended"/>
-      <type value="special"/>      
+      <type value="special"/>
     </paper>
     <paper name="w576h864-div3sheet">
       <description translate="value" value="8x4*3"/>
       <width value="576"/>
       <height value="864"/>
       <unit value="english-extended"/>
-      <type value="special"/>      
+      <type value="special"/>
     </paper>
     <paper name="w576h864-w576h576_w576h288">
       <description translate="value" value="8x8+8x4"/>

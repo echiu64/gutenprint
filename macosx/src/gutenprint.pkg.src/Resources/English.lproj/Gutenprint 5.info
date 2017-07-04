@@ -1,8 +1,8 @@
 Title Gutenprint 5
-Version 
+Version
 Description Install Gutenprint. High quality, open source printer drivers supporting hundreds of printer models.
 DefaultLocation /
-DeleteWarning 
+DeleteWarning
 
 ### Package Flags
 

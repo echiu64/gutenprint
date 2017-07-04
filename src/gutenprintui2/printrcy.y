@@ -164,7 +164,7 @@ Command_Type: COMMAND_TYPE tINT
 Scaling: SCALING tDOUBLE
 	{
 	  if (current_printer)
-	    current_printer->scaling = $2; 
+	    current_printer->scaling = $2;
 	}
 ;
 
@@ -185,7 +185,7 @@ Autosize_Roll_Paper: AUTOSIZE_ROLL_PAPER tINT
 Unit: UNIT tINT
 	{
 	  if (current_printer)
-	    current_printer->unit = $2; 
+	    current_printer->unit = $2;
 	}
 ;
 

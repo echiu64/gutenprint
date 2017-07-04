@@ -28,7 +28,7 @@
 /*
  * To use this driver, we recommend this:
  *
- *   stp_set_driver(v, "raw-data-8");  // or raw_data-16 
+ *   stp_set_driver(v, "raw-data-8");  // or raw_data-16
  *   stp_set_string_parameter(v, "PageSize", "Custom");
  *   stp_set_page_height(v, HEIGHT);
  *   stp_set_page_width(v, WIDTH);

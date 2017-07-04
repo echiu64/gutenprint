@@ -125,7 +125,7 @@ stpi_channel_clear(void *vc)
   if (cg->channel_count > 0)
     for (i = 0; i < cg->channel_count; i++)
       clear_a_channel(cg, i);
-  
+
   STP_SAFE_FREE(cg->alloc_data_1);
   STP_SAFE_FREE(cg->alloc_data_2);
   STP_SAFE_FREE(cg->alloc_data_3);
@@ -377,7 +377,7 @@ stp_channel_set_gcr_curve(stp_vars_t *v, const stp_curve_t *curve)
     cg->gcr_curve = stp_curve_create_copy(curve);
   else
     cg->gcr_curve = NULL;
-}  
+}
 
 const stp_curve_t *
 stp_channel_get_gcr_curve(stp_vars_t *v)
@@ -387,7 +387,7 @@ stp_channel_get_gcr_curve(stp_vars_t *v)
     return NULL;
   stp_dprintf(STP_DBG_INK, v, "set_gcr_curve\n");
   return cg->gcr_curve;
-}  
+}
 
 void
 stp_channel_set_curve(stp_vars_t *v, int color, const stp_curve_t *curve)
@@ -464,7 +464,7 @@ input_needs_splitting(const stp_vars_t *v)
   return 0;
 #endif
 }
-  
+
 
 void
 stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
@@ -559,7 +559,7 @@ stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
 	  cg->gloss_physical_channel += cg->c[i].subchannel_count;
 	}
     }
-	  
+
   cg->input_channels = input_channel_count;
   cg->width = width;
   cg->alloc_data_1 =
@@ -808,7 +808,7 @@ copy_channels(const stp_vars_t *v)
 		}
 	      output++;
 	    }
-	}	  
+	}
     }
 }
 

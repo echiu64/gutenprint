@@ -5,7 +5,7 @@
 #   Product name:   Gutenprint Epson Utility                                   #
 #        version:   1.0.4                                                      #
 #                                                                              #
-#	Copyright 2007-2008 by Matt Broughton <walterwego@macosx.com>              #
+#	Copyright 2007-2008 by Matt Broughton <walterwego@macosx.com>          #
 #                                                                              #
 #   This program is freed software; you can redistribute it and/or modify it   #
 #   under the terms of the GNU General Public License as published by the Free #
@@ -24,7 +24,7 @@
 #                                                                              #
 ################################################################################
 
-### This program is intended to provide a user interface for the 
+### This program is intended to provide a user interface for the
 ### Gutenprint `escputil` Epson utility.
 
 #set -x
@@ -92,7 +92,7 @@ echo
 do_align () {
 do_printer_status "$1"
 echo
-echo Starting alignment procedure for "$2". 
+echo Starting alignment procedure for "$2".
 echo Please follow the instructions. . .
 echo
 "${Xescputil}" -P "$1" -m `grep '^\*StpDriverName' "${PPD_DIR}"/"$1".ppd | awk '{print $2}' | sed 's/"//g'` -a
@@ -109,7 +109,7 @@ echo
 
 ### Sort through the printer queues in /etc/cups/ppd
 ### Single out Epson Gutenprint printers using v5.x.x PPDs
-### TO DO (24 August, 2007) take into account v4.2.x queues if suitable 
+### TO DO (24 August, 2007) take into account v4.2.x queues if suitable
 ### escputil and libraries are present.
 
 ### Using 2 strings for matching will take a bit of extra time, but it allows
@@ -142,7 +142,7 @@ elif [ ${#EPSON_PRINTERS[@]} -eq 1 ] ; then
 ## One eligible printer found
 NAME=${EPSON_PRINTERS[0]}
 MODEL=`awk -F\" '/ModelName/{print $2}' "${PPD_DIR}"/${NAME}.ppd`
-elif 
+elif
 [ ${#EPSON_PRINTERS[@]} -gt 1 ] ; then
 ## Multiple eligible printers found
 printf "\nPlease enter the number associated with the printer you want use.\n"
@@ -151,10 +151,10 @@ printf "\nPlease enter the number associated with the printer you want use.\n"
 validate=1
 until [ $validate -eq 0 ] ; do
 select NAME in "${EPSON_PRINTERS[@]}" "None of the above" ; do
-[ "${NAME}" != "" ] 
+[ "${NAME}" != "" ]
 validate=$?
 	if [ $validate -eq 0 ] ; then
-	
+
 	if [ "${NAME}" = "None of the above" ] ; then
 	printf "\nNo printer chosen.  Exiting.\n"
 	exit 0
@@ -168,7 +168,7 @@ MODEL=`awk -F\" '/ModelName/{print $2}' "${PPD_DIR}"/${NAME}.ppd`
 	fi
 done
 done
-	
+
 fi
 
 

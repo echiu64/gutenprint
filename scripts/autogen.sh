@@ -279,11 +279,11 @@ test -z "$convertloc" && {
 
 # Check for docbook version 4
 # Note workaround for Fedora installation
-# Include path for Fedora Docbook. A bit circuitous, but Fedora appends 
-# a bunch of extra stuff to the name of the directory-- including the 
-# version of Fedora (eg -fc9).  We don't want to test for every version 
-# of Fedora and modern bourne shells won't expand the glob (*); 
-# therefore, we do a `find` first and then test to see if there are any 
+# Include path for Fedora Docbook. A bit circuitous, but Fedora appends
+# a bunch of extra stuff to the name of the directory-- including the
+# version of Fedora (eg -fc9).  We don't want to test for every version
+# of Fedora and modern bourne shells won't expand the glob (*);
+# therefore, we do a `find` first and then test to see if there are any
 # results.
 
 if test -d /usr/share/sgml/docbook ;  then

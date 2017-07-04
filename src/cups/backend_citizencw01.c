@@ -310,7 +310,7 @@ static void cw01_attach(void *vctx, struct libusb_device_handle *dev,
 
 	device = libusb_get_device(dev);
 	libusb_get_device_descriptor(device, &desc);
-	
+
 	ctx->type = lookup_printer_type(&cw01_backend,
 					desc.idVendor, desc.idProduct);
 }
@@ -339,7 +339,7 @@ static int cw01_read_parse(void *vctx, int data_fd) {
 	}
 
 	i = read(data_fd, (uint8_t*) &ctx->hdr, sizeof(struct cw01_spool_hdr));
-	
+
 	if (i < 0)
 		return i;
 	if (i == 0)
@@ -347,7 +347,7 @@ static int cw01_read_parse(void *vctx, int data_fd) {
 
 	if (i < (int)sizeof(struct cw01_spool_hdr))
 		return CUPS_BACKEND_CANCEL;
-	
+
 	if (ctx->hdr.type > 0x06 || ctx->hdr.res > 0x01) {
 		ERROR("Unrecognized header data format!\n");
 		return CUPS_BACKEND_CANCEL;
@@ -409,7 +409,7 @@ top:
 			if (!resp)
 				return CUPS_BACKEND_FAILED;
 			cw01_cleanup_string((char*)resp, len);
-	
+
 			/* Check to see if we have sufficient buffers */
 			// XXX audit these rules...?
 			if (!strcmp("FBP00", (char*)resp) ||
@@ -620,7 +620,7 @@ static int cw01_get_info(struct cw01_ctx *ctx)
 
 	cw01_cleanup_string((char*)resp, len);
 
-	INFO("Media Lot Code: '%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x'\n", 
+	INFO("Media Lot Code: '%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x'\n",
 	     *(resp+2), *(resp+3), *(resp+4), *(resp+5), *(resp+6), *(resp+7),
 	     *(resp+8), *(resp+9), *(resp+10), *(resp+11), *(resp+12), *(resp+13));
 
@@ -874,7 +874,7 @@ struct dyesub_backend cw01_backend = {
 	}
 };
 
-/* 
+/*
 
 Basic spool file format:
 
@@ -888,7 +888,7 @@ TT RR NN 00 XX XX XX XX  00 00 00 00              <- FILE header.
 
 Followed by three planes, each with this header:
 
-28 00 00 00 00 08 00 00  RR RR 00 00 01 00 08 00 
+28 00 00 00 00 08 00 00  RR RR 00 00 01 00 08 00
 00 00 00 00 00 00 00 00  5a 33 00 00 YY YY 00 00
 00 01 00 00 00 00 00 00
 
@@ -897,7 +897,7 @@ Followed by three planes, each with this header:
 
 Followed by 1024 bytes of color tables:
 
- ff ff ff 00 ... 00 00 00 00 
+ ff ff ff 00 ... 00 00 00 00
 
 1024+40 = 1064 bytes of header per plane.
 

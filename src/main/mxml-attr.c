@@ -148,6 +148,6 @@ stp_mxmlElementSetAttr(stp_mxml_node_t *node,	/* I - Element node */
 
     return;
   }
-    
+
   node->value.element.num_attrs ++;
 }
