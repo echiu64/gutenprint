@@ -292,49 +292,49 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
   5) Changes to the Canon driver:
 
-     * added support for following printer models:
+     * Added support for following printer models:
 
-       G1000 series
-       Canon PIXMA G1000   (EXPERIMENTAL)
-       Canon PIXMA G1100   (EXPERIMENTAL)
-       Canon PIXMA G1200   (EXPERIMENTAL)
-       Canon PIXMA G1400   (EXPERIMENTAL)
-       Canon PIXMA G1500   (EXPERIMENTAL)
-       Canon PIXMA G1800   (EXPERIMENTAL)
-       Canon PIXMA G1900   (EXPERIMENTAL)
+       Canon G1000 series  (EXPERIMENTAL)
+       Canon PIXMA G1000   (EXPERIMENTAL)(*1)
+       Canon PIXMA G1100   (EXPERIMENTAL)(*1)
+       Canon PIXMA G1200   (EXPERIMENTAL)(*1)
+       Canon PIXMA G1400   (EXPERIMENTAL)(*1)
+       Canon PIXMA G1500   (EXPERIMENTAL)(*1)
+       Canon PIXMA G1800   (EXPERIMENTAL)(*1)
+       Canon PIXMA G1900   (EXPERIMENTAL)(*1)
 
-       G2000 series
-       Canon PIXMA G2000   (EXPERIMENTAL)
-       Canon PIXMA G2002   (EXPERIMENTAL)
-       Canon PIXMA G2100   (EXPERIMENTAL)
-       Canon PIXMA G2200   (EXPERIMENTAL)
-       Canon PIXMA G2400   (EXPERIMENTAL)
-       Canon PIXMA G2500   (EXPERIMENTAL)
-       Canon PIXMA G2600   (EXPERIMENTAL)
-       Canon PIXMA G2800   (EXPERIMENTAL)
-       Canon PIXMA G2900   (EXPERIMENTAL)
+       Canon G2000 series  (EXPERIMENTAL)
+       Canon PIXMA G2000   (EXPERIMENTAL)(*1)
+       Canon PIXMA G2002   (EXPERIMENTAL)(*1)
+       Canon PIXMA G2100   (EXPERIMENTAL)(*1)
+       Canon PIXMA G2200   (EXPERIMENTAL)(*1)
+       Canon PIXMA G2400   (EXPERIMENTAL)(*1)
+       Canon PIXMA G2500   (EXPERIMENTAL)(*1)
+       Canon PIXMA G2600   (EXPERIMENTAL)(*1)
+       Canon PIXMA G2800   (EXPERIMENTAL)(*1)
+       Canon PIXMA G2900   (EXPERIMENTAL)(*1)
 
-       G3000 series
-       Canon PIXMA G3000   (EXPERIMENTAL)
-       Canon PIXMA G3100   (EXPERIMENTAL)
-       Canon PIXMA G3200   (EXPERIMENTAL)
-       Canon PIXMA G3400   (EXPERIMENTAL)
-       Canon PIXMA G3500   (EXPERIMENTAL)
-       Canon PIXMA G3600   (EXPERIMENTAL)
-       Canon PIXMA G3800   (EXPERIMENTAL)
-       Canon PIXMA G3900   (EXPERIMENTAL)
+       Canon G3000 series  (EXPERIMENTAL)
+       Canon PIXMA G3000   (EXPERIMENTAL)(*1)
+       Canon PIXMA G3100   (EXPERIMENTAL)(*1)
+       Canon PIXMA G3200   (EXPERIMENTAL)(*1)
+       Canon PIXMA G3400   (EXPERIMENTAL)(*1)
+       Canon PIXMA G3500   (EXPERIMENTAL)(*1)
+       Canon PIXMA G3600   (EXPERIMENTAL)(*1)
+       Canon PIXMA G3800   (EXPERIMENTAL)(*1)
+       Canon PIXMA G3900   (EXPERIMENTAL)(*1)
 
-       G4000 series
-       Canon PIXMA G4000   (EXPERIMENTAL)
-       Canon PIXMA G4100   (EXPERIMENTAL)
-       Canon PIXMA G4200   (EXPERIMENTAL)
-       Canon PIXMA G4400   (EXPERIMENTAL)
-       Canon PIXMA G4500   (EXPERIMENTAL)
-       Canon PIXMA G4600   (EXPERIMENTAL)
-       Canon PIXMA G4800   (EXPERIMENTAL)
-       Canon PIXMA G4900   (EXPERIMENTAL)
+       Canon G4000 series  (EXPERIMENTAL)
+       Canon PIXMA G4000   (EXPERIMENTAL)(*1)
+       Canon PIXMA G4100   (EXPERIMENTAL)(*1)
+       Canon PIXMA G4200   (EXPERIMENTAL)(*1)
+       Canon PIXMA G4400   (EXPERIMENTAL)(*1)
+       Canon PIXMA G4500   (EXPERIMENTAL)(*1)
+       Canon PIXMA G4600   (EXPERIMENTAL)(*1)
+       Canon PIXMA G4800   (EXPERIMENTAL)(*1)
+       Canon PIXMA G4900   (EXPERIMENTAL)(*1)
 
-       MG3000 series       (EXPERIMENTAL)
+       Canon MG3000 series (EXPERIMENTAL)
        Canon PIXMA MG3010  (EXPERIMENTAL)(*1)
        Canon PIXMA MG3020  (EXPERIMENTAL)(*1)
        Canon PIXMA MG3022  (EXPERIMENTAL)(*1)
@@ -350,13 +350,13 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA MG3080  (EXPERIMENTAL)(*1)
        Canon PIXMA MG3090  (EXPERIMENTAL)(*1)
 
-       E410 series         (EXPERIMENTAL)
+       Canon E410 series   (EXPERIMENTAL)
        Canon PIXMA E410    (EXPERIMENTAL)(*1)
        Canon PIXMA E414    (EXPERIMENTAL)(*1)
        Canon PIXMA E417    (EXPERIMENTAL)(*1)
        Canon PIXMA E418    (EXPERIMENTAL)(*1)
 
-       E470 series         (EXPERIMENTAL)
+       Canon E470 series   (EXPERIMENTAL)
        Canon PIXMA E470    (EXPERIMENTAL)(*1)
        Canon PIXMA E471    (EXPERIMENTAL)(*1)
        Canon PIXMA E474    (EXPERIMENTAL)(*1)
@@ -419,9 +419,9 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
                by a generic family
                identification string.
 
-     Added following models to existing series:
+     * Added following models to existing series:
 
-       Canon MG2500 series:
+       MG2500 series:
          Canon PIXMA MG2522
          Canon PIXMA MG2525
          Canon PIXMA MG2540S
@@ -429,10 +429,10 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
          Canon PIXMA MG2550S
          Canon PIXMA MG2555S
 
-       Canon iB4000 series:
+       iB4000 series:
          Canon MAXIFY iB4090
 
-     * removed iP100 (unsupported)
+     * Removed iP100 (unsupported)
 
      * Added duplex support to MP530
 
@@ -449,7 +449,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        MB5000 series
        MB5300 series
 
-     * corrected black-only and color-only cartridge support for MP230
+     * Corrected black-only and color-only cartridge support for MP230
        series
 
      * Improved printer firmware papersize detection when using
