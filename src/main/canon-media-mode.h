@@ -10723,6 +10723,80 @@ static const canon_modeuse_t canon_MULTIPASS_E560_modeuses[] = {
 
 DECLARE_MODEUSES(canon_MULTIPASS_E560);
 
+/* ----------------------------------- Canon E3100  ----------------------------------- */
+static const char* canon_PIXMA_E3100_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi",
+  "600x600dpi_draft",/*untested*/
+  "300x300dpi",
+  /* Color */
+  "600x600dpi_high3",
+  "600x600dpi_std3",
+  "600x600dpi_draft3",/*untested*/
+  "300x300dpi_std3",
+  NULL
+  };
+
+static const char* canon_PIXMA_E3100_modeuses_PPplusG2[] = {
+  "1200x1200dpi_photohigh2",
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  "600x600dpi_photodraft",/*untested*/
+  NULL
+};
+
+static const char* canon_PIXMA_E3100_modeuses_PPGstd[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  "600x600dpi_photodraft",/*untested*/
+  NULL
+};
+
+static const char* canon_PIXMA_E3100_modeuses_Hagaki[] = {
+  "600x600dpi_high2",
+  "600x600dpi_std2",
+  "600x600dpi_draft2",/*untested*/
+  /* Color */
+  "600x600dpi_high4",
+  "600x600dpi_std4",
+  "600x600dpi_draft4",/*untested*/
+  NULL
+};
+
+/*unsupported*/
+static const char* canon_PIXMA_E3100_modeuses_TShirt[] = {
+  "600x600dpi_photohigh",
+  NULL
+};
+
+/*unsupported*/
+static const char* canon_PIXMA_E3100_modeuses_PPother[] = {
+  "600x600dpi_photohigh",
+  NULL
+};
+
+static const canon_modeuse_t canon_PIXMA_E3100_modeuses[] = {
+ { "Plain",             canon_PIXMA_E3100_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+ { "PhotoPlusGloss2",	canon_PIXMA_E3100_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+ { "PhotoProPlat",	canon_PIXMA_E3100_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },/*unsupported*/
+ { "PhotoProLuster",    canon_PIXMA_E3100_modeuses_PPGstd, INKSET_COLOR_SUPPORT },/*unsupported*/
+ { "PhotoProSemiGloss", canon_PIXMA_E3100_modeuses_PPGstd, INKSET_COLOR_SUPPORT },/*unsupported*/
+ { "GlossyPaperStandard",canon_PIXMA_E3100_modeuses_PPGstd, INKSET_COLOR_SUPPORT },
+ { "PhotopaperMatte",	canon_PIXMA_E3100_modeuses_PPGstd, INKSET_COLOR_SUPPORT },/*unsupported*/
+ { "Coated",		canon_PIXMA_E3100_modeuses_PPGstd, INKSET_COLOR_SUPPORT },/*unsupported*/
+ { "InkJetHagakiaddr", 	canon_PIXMA_E3100_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+ { "InkJetHagaki", 	canon_PIXMA_E3100_modeuses_PPGstd, INKSET_COLOR_SUPPORT },
+ { "InkjetPhotoHagakiKaddr",canon_PIXMA_E3100_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+ { "InkjetPhotoHagakiK",canon_PIXMA_E3100_modeuses_PPGstd, INKSET_COLOR_SUPPORT },
+ { "HagakiA", 	        canon_PIXMA_E3100_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+ { "Hagaki", 	        canon_PIXMA_E3100_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+ { "TShirt",		canon_PIXMA_E3100_modeuses_TShirt, INKSET_COLOR_SUPPORT },/*unsupported*/
+ { "Envelope",		canon_PIXMA_E3100_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },/*unsupported*/
+ { "PhotopaperOther",	canon_PIXMA_E3100_modeuses_PPother, INKSET_COLOR_SUPPORT },/*unsupported*/
+};
+
+DECLARE_MODEUSES(canon_PIXMA_E3100);
+
 /* ----------------------------------- Canon G1000  ----------------------------------- */
 static const char* canon_PIXMA_G1000_modeuses_plain[] = {
   "600x600dpi_high",

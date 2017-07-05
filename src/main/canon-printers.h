@@ -3766,6 +3766,23 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     iP4500_channel_order
   },
+  { /* Canon PIXMA E3100 --- with XML, borderless */
+    "PIXMA E3100", 3,          /*model, model_id*/
+    INCH(17/2), 1917,       /* max paper width and height */
+    10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
+    &canon_MULTIPASS_MP250_slotlist, /* these models only have a rear tray. Also uses CAP_T */
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I|CANON_CAP_T|CANON_CAP_v|CANON_CAP_w|CANON_CAP_XML|CANON_CAP_BORDERLESS,0,
+    2,9, /* ESC (l and (P command lengths */
+    0, /* Upper/Lower Cassette option */
+    control_cmd_PIXMA_MG5300,  /*features */
+    &canon_PIXMA_E3100_modelist,
+    &canon_PIXMA_E3100_paperlist,
+    &canon_PIXMA_E3100_modeuselist,
+    NULL,
+    NULL,
+    NULL,
+    iP4500_channel_order
+  },
   { /* Canon PIXMA G1000 --- with XML */
     "PIXMA G1000", 3,          /*model, model_id*/
     INCH(17/2), 1917,       /* max paper width and height assumed */
