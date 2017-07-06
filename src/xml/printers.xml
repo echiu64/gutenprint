@@ -1445,6 +1445,8 @@
       <printer translate="name" name="Datamax-ONeil H6310X" deviceid="MFG:Datamax;CMD:DPL;MDL:H6310X;" color="false" driver="datamax_oneil_H6310X" manufacturer="DatamaxONeil" model="10043" parameters="dpl_params" />
       <printer translate="name" name="Datamax-ONeil H8308" deviceid="MFG:Datamax;CMD:DPL;MDL:H8308;" color="false" driver="datamax_oneil_H8308" manufacturer="DatamaxONeil" model="10044" parameters="dpl_params" />
       <printer translate="name" name="Datamax-ONeil H8308X" deviceid="MFG:Datamax;CMD:DPL;MDL:H8308X;" color="false" driver="datamax_oneil_H8308X" manufacturer="DatamaxONeil" model="10045" parameters="dpl_params" />
+      <printer translate="name" name="Honeywell RP2" deviceid="MFG:Honeywell ;CMD:DPL;MDL:SAV2;" color="false" driver="honeywell_rp2" manufacturer="Honeywell" model="10046" parameters="dpl_params" />
+      <printer translate="name" name="Honeywell RP4" deviceid="MFG:Honeywell ;CMD:DPL;MDL:SAV4;" color="false" driver="honeywell_rp4" manufacturer="Honeywell" model="10047" parameters="dpl_params" />
     </family>
     <family name="escp2">
       <parameters name="standard_params">

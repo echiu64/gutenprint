@@ -467,6 +467,8 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
   6) Added the Datamax-O'Neil H class series of printers.
 
+  7) Added the two Honeywell printers, RP2 (SAV2) and RP4 (SAV4).
+
 * Changes from 5.2.11
 
   1) The Ghostscript IJS driver and Foomatic data generator have been
