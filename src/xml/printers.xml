@@ -1266,6 +1266,20 @@
       <!-- Canon TS3100 family -->
       <printer translate="name" name="Canon TS3100 series" driver="bjc-TS3100-series" manufacturer="Canon" model="12003100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA TS3170" driver="bjc-PIXMA-TS3170" manufacturer="Canon" model="12003100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <!-- Canon TS5000 family -->
+      <printer translate="name" name="Canon TS5000 series" driver="bjc-TS5000-series" manufacturer="Canon" model="18005000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS5010" driver="bjc-PIXMA-TS5010" manufacturer="Canon" model="18005000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS5020" driver="bjc-PIXMA-TS5020" manufacturer="Canon" model="18005000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS5030" driver="bjc-PIXMA-TS5030" manufacturer="Canon" model="18005000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS5040" driver="bjc-PIXMA-TS5040" manufacturer="Canon" model="18005000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS5050" driver="bjc-PIXMA-TS5050" manufacturer="Canon" model="18005000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer><!-- black model -->
+      <printer translate="name" name="Canon PIXMA TS5051" driver="bjc-PIXMA-TS5051" manufacturer="Canon" model="18005000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer><!-- white model -->
+      <printer translate="name" name="Canon PIXMA TS5053" driver="bjc-PIXMA-TS5053" manufacturer="Canon" model="18005000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer><!-- grey model -->
+      <printer translate="name" name="Canon PIXMA TS5055" driver="bjc-PIXMA-TS5055" manufacturer="Canon" model="18005000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer><!-- black model -->
+      <printer translate="name" name="Canon PIXMA TS5060" driver="bjc-PIXMA-TS5060" manufacturer="Canon" model="18005000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS5070" driver="bjc-PIXMA-TS5070" manufacturer="Canon" model="18005000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS5080" driver="bjc-PIXMA-TS5080" manufacturer="Canon" model="18005000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS5090" driver="bjc-PIXMA-TS5090" manufacturer="Canon" model="18005000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <!-- Canon MAXIFY iB4000 family -->
       <printer translate="name" name="Canon iB4000 series" driver="bjc-iB4000-series" manufacturer="Canon" model="14004000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon MAXIFY iB4010" driver="bjc-MAXIFY-iB4010" manufacturer="Canon" model="14004000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
