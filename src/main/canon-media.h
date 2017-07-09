@@ -193,6 +193,13 @@ static const canon_slot_t canon_PIXMA_iP3600_slots[] = {
 };
 DECLARE_SLOTS(canon_PIXMA_iP3600);
 
+static const canon_slot_t canon_PIXMA_TS6000_slots[] = {
+  { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 0xe },
+  { "Rear",       N_ ("Rear tray"), 0x4 },
+  { "Cassette",   N_ ("Cassette"), 0x8 },
+};
+DECLARE_SLOTS(canon_PIXMA_TS6000);
+
 static const canon_slot_t canon_PIXMA_iP4600_slots[] = {
   { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 0xe },
   { "Rear",       N_ ("Rear tray"), 0x4 },

@@ -1280,6 +1280,18 @@
       <printer translate="name" name="Canon PIXMA TS5070" driver="bjc-PIXMA-TS5070" manufacturer="Canon" model="18005000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA TS5080" driver="bjc-PIXMA-TS5080" manufacturer="Canon" model="18005000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA TS5090" driver="bjc-PIXMA-TS5090" manufacturer="Canon" model="18005000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <!-- Canon TS6000 family -->
+      <printer translate="name" name="Canon TS6000 series" driver="bjc-TS6000-series" manufacturer="Canon" model="18006000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS6010" driver="bjc-PIXMA-TS6010" manufacturer="Canon" model="18006000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS6020" driver="bjc-PIXMA-TS6020" manufacturer="Canon" model="18006000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS6030" driver="bjc-PIXMA-TS6030" manufacturer="Canon" model="18006000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS6040" driver="bjc-PIXMA-TS6040" manufacturer="Canon" model="18006000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS6050" driver="bjc-PIXMA-TS6050" manufacturer="Canon" model="18006000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer><!-- black model -->
+      <printer translate="name" name="Canon PIXMA TS6051" driver="bjc-PIXMA-TS6051" manufacturer="Canon" model="18006000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer><!-- white model -->
+      <printer translate="name" name="Canon PIXMA TS6052" driver="bjc-PIXMA-TS6052" manufacturer="Canon" model="18006000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer><!-- grey model -->
+      <printer translate="name" name="Canon PIXMA TS6060" driver="bjc-PIXMA-TS6060" manufacturer="Canon" model="18006000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS6070" driver="bjc-PIXMA-TS6070" manufacturer="Canon" model="18006000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS6080" driver="bjc-PIXMA-TS6080" manufacturer="Canon" model="18006000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <!-- Canon MAXIFY iB4000 family -->
       <printer translate="name" name="Canon iB4000 series" driver="bjc-iB4000-series" manufacturer="Canon" model="14004000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon MAXIFY iB4010" driver="bjc-MAXIFY-iB4010" manufacturer="Canon" model="14004000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
