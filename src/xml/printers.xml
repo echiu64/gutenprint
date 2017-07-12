@@ -1292,6 +1292,30 @@
       <printer translate="name" name="Canon PIXMA TS6060" driver="bjc-PIXMA-TS6060" manufacturer="Canon" model="18006000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA TS6070" driver="bjc-PIXMA-TS6070" manufacturer="Canon" model="18006000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA TS6080" driver="bjc-PIXMA-TS6080" manufacturer="Canon" model="18006000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <!-- Canon TS8000 family -->
+      <printer translate="name" name="Canon TS8000 series" driver="bjc-TS8000-series" manufacturer="Canon" model="18008000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS8010" driver="bjc-PIXMA-TS8010" manufacturer="Canon" model="18008000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS8020" driver="bjc-PIXMA-TS8020" manufacturer="Canon" model="18008000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS8030" driver="bjc-PIXMA-TS8030" manufacturer="Canon" model="18008000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS8040" driver="bjc-PIXMA-TS8040" manufacturer="Canon" model="18008000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS8050" driver="bjc-PIXMA-TS8050" manufacturer="Canon" model="18008000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer><!-- black model -->
+      <printer translate="name" name="Canon PIXMA TS8051" driver="bjc-PIXMA-TS8051" manufacturer="Canon" model="18008000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer><!-- white model -->
+      <printer translate="name" name="Canon PIXMA TS8052" driver="bjc-PIXMA-TS8052" manufacturer="Canon" model="18008000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer><!-- red model -->
+      <printer translate="name" name="Canon PIXMA TS8053" driver="bjc-PIXMA-TS8053" manufacturer="Canon" model="18008000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer><!-- brown model -->
+      <printer translate="name" name="Canon PIXMA TS8060" driver="bjc-PIXMA-TS8060" manufacturer="Canon" model="18008000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS8070" driver="bjc-PIXMA-TS8070" manufacturer="Canon" model="18008000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS8080" driver="bjc-PIXMA-TS8080" manufacturer="Canon" model="18008000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS8090" driver="bjc-PIXMA-TS8090" manufacturer="Canon" model="18008000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <!-- Canon TS9000 family -->
+      <printer translate="name" name="Canon TS9000 series" driver="bjc-TS9000-series" manufacturer="Canon" model="18008000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS9010" driver="bjc-PIXMA-TS9010" manufacturer="Canon" model="18008000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS9020" driver="bjc-PIXMA-TS9020" manufacturer="Canon" model="18008000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS9030" driver="bjc-PIXMA-TS9030" manufacturer="Canon" model="18008000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS9040" driver="bjc-PIXMA-TS9040" manufacturer="Canon" model="18008000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS9050" driver="bjc-PIXMA-TS9050" manufacturer="Canon" model="18008000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer><!-- white model -->
+      <printer translate="name" name="Canon PIXMA TS9055" driver="bjc-PIXMA-TS9055" manufacturer="Canon" model="18008000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer><!-- red model -->
+      <printer translate="name" name="Canon PIXMA TS9060" driver="bjc-PIXMA-TS9060" manufacturer="Canon" model="18008000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS9080" driver="bjc-PIXMA-TS9080" manufacturer="Canon" model="18008000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <!-- Canon MAXIFY iB4000 family -->
       <printer translate="name" name="Canon iB4000 series" driver="bjc-iB4000-series" manufacturer="Canon" model="14004000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon MAXIFY iB4010" driver="bjc-MAXIFY-iB4010" manufacturer="Canon" model="14004000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>

@@ -10893,7 +10893,7 @@ static const char* canon_PIXMA_TS6000_modeuses_Hagaki[] = {
 
 static const char* canon_PIXMA_TS6000_modeuses_inkjetHagaki[] = {
   "600x600dpi_photohigh2",
-  "600x600dpi_photo",
+  "600x600dpi_photo2",
   NULL
 };
 
@@ -10928,6 +10928,79 @@ static const canon_modeuse_t canon_PIXMA_TS6000_modeuses[] = {
 };
 
 DECLARE_MODEUSES(canon_PIXMA_TS6000);
+
+/* ----------------------------------- Canon TS8000  ----------------------------------- */
+/* leave out media with entirely unsupported modes, no standins */
+static const char* canon_PIXMA_TS8000_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi_high2",/*duplex*/
+  "600x600dpi",
+  "600x600dpi_std2",/*duplex*/
+  "600x600dpi_draft",
+  NULL
+  };
+
+static const char* canon_PIXMA_TS8000_modeuses_Coated[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_PIXMA_TS8000_modeuses_Hagaki[] = {
+  "600x600dpi_high3",
+  "600x600dpi_high4",/*duplex*/
+  "600x600dpi_std3",
+  "600x600dpi_std4",/*duplex*/
+  NULL
+};
+
+static const char* canon_PIXMA_TS8000_modeuses_Env[] = {
+  "600x600dpi_high3",
+  "600x600dpi_std3",
+  NULL
+};
+
+static const char* canon_PIXMA_TS8000_modeuses_inkjetHagaki[] = {
+  "600x600dpi_photohigh2",
+  "600x600dpi_photo2",
+  NULL
+};
+
+static const char* canon_PIXMA_TS8000_modeuses_CD[] = {
+  "600x600dpi_photohigh3",
+  "600x600dpi_photo3",
+  NULL
+};
+
+static const char* canon_PIXMA_TS8000_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  NULL
+};
+
+static const canon_modeuse_t canon_PIXMA_TS8000_modeuses[] = {
+  { "Plain",            canon_PIXMA_TS8000_modeuses_plain, DUPLEX_SUPPORT | DUPLEX_MODEREPL },
+  /*  { "PhotoPlusGloss2",  canon_PIXMA_TS8000_modeuses_PPplusG2, 0 },*/
+  /*  { "PhotoProPlat",     canon_PIXMA_TS8000_modeuses_PPpro, 0 },*/
+  /*  { "PhotoProLuster",   canon_PIXMA_TS8000_modeuses_PPplusG2, 0 },*/
+  /*  { "PhotoProSemiGloss",canon_PIXMA_TS8000_modeuses_PPplusG2, 0 },*/
+  /*  { "PhotopaperMatte",	canon_PIXMA_TS8000_modeuses_PPplusG2, 0 },*/
+  /*  { "GlossyPaperStandard",canon_PIXMA_TS8000_modeuses_PPplusG2, 0 },*/
+  { "Coated",		canon_PIXMA_TS8000_modeuses_Coated, 0 },
+  { "InkJetHagakiaddr", canon_PIXMA_TS8000_modeuses_Hagaki, DUPLEX_SUPPORT | DUPLEX_MODEREPL },
+  { "InkJetHagaki", 	canon_PIXMA_TS8000_modeuses_inkjetHagaki, 0 },
+  { "InkjetPhotoHagakiKaddr",canon_PIXMA_TS8000_modeuses_Hagaki, DUPLEX_SUPPORT | DUPLEX_MODEREPL },
+  /*  { "InkjetPhotoHagakiK",canon_PIXMA_TS8000_modeuses_PPplusG2, 0 },*/
+  { "HagakiA", 	        canon_PIXMA_TS8000_modeuses_Hagaki, DUPLEX_SUPPORT | DUPLEX_MODEREPL },
+  { "Hagaki", 	        canon_PIXMA_TS8000_modeuses_Hagaki, DUPLEX_SUPPORT | DUPLEX_MODEREPL },
+  { "TShirt",		canon_PIXMA_TS8000_modeuses_TShirt, 0 },
+  { "Envelope",		canon_PIXMA_TS8000_modeuses_Env, 0 },
+  /*  { "PhotopaperOther",	canon_PIXMA_TS8000_modeuses_PPother, 0 },*/
+  { "DiscCompat",	canon_PIXMA_TS8000_modeuses_CD, 0 },
+  { "DiscOthers",	canon_PIXMA_TS8000_modeuses_CD, 0 },
+  /*  { "FineArtOther",	canon_PIXMA_TS8000_modeuses_PPother, 0 }, */
+};
+
+DECLARE_MODEUSES(canon_PIXMA_TS8000);
 
 /* ----------------------------------- Canon G1000  ----------------------------------- */
 static const char* canon_PIXMA_G1000_modeuses_plain[] = {

@@ -200,6 +200,14 @@ static const canon_slot_t canon_PIXMA_TS6000_slots[] = {
 };
 DECLARE_SLOTS(canon_PIXMA_TS6000);
 
+static const canon_slot_t canon_PIXMA_TS8000_slots[] = {
+  { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 0xe },
+  { "Rear",       N_ ("Rear tray"), 0x4 },
+  { "Cassette",   N_ ("Cassette"), 0x8 },
+  { "CD",         N_ ("CD tray"), 0xa },
+};
+DECLARE_SLOTS(canon_PIXMA_TS8000);
+
 static const canon_slot_t canon_PIXMA_iP4600_slots[] = {
   { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 0xe },
   { "Rear",       N_ ("Rear tray"), 0x4 },
@@ -2330,6 +2338,30 @@ static const canon_paper_t canon_PIXMA_TS5000_papers[] = {
   { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0x13,0.78, 0.25, 0.500, 0, 0, 0 },
 };
 DECLARE_PAPERS(canon_PIXMA_TS5000);
+
+static const canon_paper_t canon_PIXMA_TS8000_papers[] = {
+  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
+  /*  { "PhotoPlusGloss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0x03,0.78, 0.25, 0.500, 0, 0, 0 },*/
+  /*  { "PhotoProPlat",	N_ ("Photo Paper Pro Platinum"),	0x1e,0x24,0x33,0x05,0.78, 0.25, 0.500, 0, 0, 0 },*/
+  /*  { "PhotoProLuster",	N_ ("Photo Paper Pro Luster"),		0x25,0x28,0x3f,0x11,0.78, 0.25, 0.500, 0, 0, 0 },*/
+  /*  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0x06,0.78, 0.25, 0.500, 0, 0, 0 },*/
+  /*  { "GlossyPaperStandard",N_ ("Photo Paper Glossy"),		0x05,0x05,0x44,0x0e,0.78, 0.25, 0.500, 0, 0, 0 },*/
+  /*  { "PhotopaperMatte",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0x0f,0.78, 0.25, 0.500, 0, 0, 0 },*/
+  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0x09,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "InkJetHagakiaddr", N_ ("Ink Jet Hagaki (address side"),	0x08,0x09,0x46,0x24,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0x0b,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "InkjetPhotoHagakiKaddr",N_ ("Hagaki K (Inkjet Photo) (address side)"),0x08,0x09,0x47,0x26,0.78, 0.25, 0.500, 0, 0, 0 },
+  /*  { "InkjetPhotoHagakiK",N_ ("Hagaki K (Inkjet Photo)"),	0x05,0x05,0x36,0x0d,0.78, 0.25, 0.500, 0, 0, 0 },*/
+  { "HagakiA", 	        N_ ("Hagaki A (address side)"),	        0x08,0x09,0x48,0x28,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0x0c,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0x12,0.78, 0.25, 0.500, 0, 0, 0 },
+  /*  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0x13,0.78, 0.25, 0.500, 0, 0, 0 },*/
+  { "DiscCompat",	N_ ("Printable Disc (Compatible)"),	0x0c,0x12,0x1f,0x21,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "DiscOthers",	N_ ("Printable Disc (anti-bleed)"),	0x0c,0x12,0x20,0x22,0.78, 0.25, 0.500, 0, 0, 0 },
+  /*  { "FineArtOther",     N_ ("Fine Art Other"),	                0x13,0x18,0x29,0x23,0.78, 0.25, 0.500, 0, 0, 0 },*/
+};
+DECLARE_PAPERS(canon_PIXMA_TS8000);
 
 static const canon_paper_t canon_PIXMA_G1000_papers[] = { /* Esc (w for those that use it */
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
