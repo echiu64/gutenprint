@@ -451,6 +451,28 @@ static const dpl_cap_t dpl_model_capabilities[] = {
    'C',                         /* Minimum IPS */
    'G',                         /* Default IPS */
    },
+/* Honeywell Thermal DPL printers */
+  {10046,                       /* RP2 */
+   2 * 72, 99 * 72,             /* Max paper size */
+   1, 1,                        /* Min paper size */
+   DPL_RES_203_203,     /* Resolutions */
+   DPL_RES_203_203,
+   DPL_RES_203_203,
+   'I',
+   'A',
+   'E',
+   },
+/* Honeywell Thermal DPL printers */
+  {10047,                       /* RP4 */
+   4 * 72, 99 * 72,             /* Max paper size */
+   1, 1,                        /* Min paper size */
+   DPL_RES_203_203,     /* Resolutions */
+   DPL_RES_203_203,
+   DPL_RES_203_203,
+   'I',
+   'A',
+   'E',
+   },
 };
 
 static const stp_parameter_t the_parameters[] = {
@@ -832,8 +854,6 @@ dpl_parameters (const stp_vars_t * v, const char *name,
   else if (strcmp (name, "Resolution") == 0)
     {
       description->bounds.str = stp_string_list_create ();
-      stp_string_list_add_string (description->bounds.str, "None",
-				  _("Default"));
       description->deflt.str =
 	dpl_val_to_string (caps->max_resolution, dpl_resolutions,
 			   NUM_RESOLUTIONS);
