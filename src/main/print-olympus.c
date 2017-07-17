@@ -7768,7 +7768,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Mitsubishi CP9500D */
     4115,
-    &bgr_ink_list,
+    &rgb_ink_list,
     &res_m9500_list,
     &mitsu_cp9500_page_list,
     &mitsu_cp9500_printsize_list,
