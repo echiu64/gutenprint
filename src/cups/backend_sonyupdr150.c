@@ -216,7 +216,7 @@ static int updr150_read_parse(void *vctx, int data_fd) {
 
 static int updr150_main_loop(void *vctx, int copies) {
 	struct updr150_ctx *ctx = vctx;
-	int i = 0, ret;
+	int i, ret;
 
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
@@ -228,6 +228,7 @@ static int updr150_main_loop(void *vctx, int copies) {
 	}
 
 top:
+	i = 0;
 	while (i < ctx->datalen) {
 		uint32_t len;
 		memcpy(&len, ctx->databuf + i, sizeof(len));
@@ -276,7 +277,7 @@ static int updr150_cmdline_arg(void *vctx, int argc, char **argv)
 
 struct dyesub_backend updr150_backend = {
 	.name = "Sony UP-DR150/UP-DR200/UP-CR10",
-	.version = "0.18",
+	.version = "0.19",
 	.uri_prefix = "sonyupdr150",
 	.cmdline_arg = updr150_cmdline_arg,
 	.init = updr150_init,
