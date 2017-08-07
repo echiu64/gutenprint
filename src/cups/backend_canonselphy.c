@@ -978,7 +978,7 @@ top:
 			if (ctx->cp900)
 				state = S_PRINTER_CP900_FOOTER;
 			else
-				state = S_FINISHED;
+				state = S_PRINTER_DONE;
 		}
 		break;
 	case S_PRINTER_CP900_FOOTER: {
@@ -1051,7 +1051,7 @@ static void canonselphy_cmdline(void)
 
 struct dyesub_backend canonselphy_backend = {
 	.name = "Canon SELPHY CP/ES",
-	.version = "0.93",
+	.version = "0.94",
 	.uri_prefix = "canonselphy",
 	.cmdline_usage = canonselphy_cmdline,
 	.cmdline_arg = canonselphy_cmdline_arg,
