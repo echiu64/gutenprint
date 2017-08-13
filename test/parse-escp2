@@ -102,6 +102,72 @@ $horizontal_position = 0;
 $print_offsets = 0;
 $total_length = 0;
 
+sub get_long($) {
+    my ($string) = @_;
+    my ($tmp) = unpack("V", $string);
+    if ($tmp >= (1 << 31)) {
+	return -(0xffffffff ^ $tmp) - 1;
+    } else {
+	return $tmp;
+    }
+}
+
+sub get_long_at($) {
+    my ($offset) = @_;
+    return get_long(substr($stuff, $curoffset + $offset, 4))
+}
+
+sub get_short($) {
+    my ($string) = @_;
+    my ($tmp) = unpack("v", $string);
+    if ($tmp >= (1 << 15)) {
+	return -(0xffff ^ $tmp) - 1;
+    } else {
+	return $tmp;
+    }
+}
+
+sub get_raw_at($;$) {
+    my ($offset, $count) = @_;
+    $count = 1 if ! defined $count;
+    return substr($stuff, $curoffset + $offset, $count);
+}
+
+sub get_short_at($) {
+    my ($offset) = @_;
+    return get_short(get_raw_at($offset, 2))
+}
+
+sub get_byte($) {
+    my ($string) = @_;
+    return $nchartable{substr($string, 0, 1)};
+}
+
+sub get_byte_at($) {
+    my ($offset) = @_;
+    return get_byte(get_raw_at($offset, 1))
+}
+
+sub get_string_at($$) {
+    my ($offset, $count) = @_;
+    return join('', map { $rchartable{get_raw_at($offset + $_)}} (0..$count-1));
+}
+
+sub get_char_at($) {
+    my ($offset) = @_;
+    return $chartable{get_raw_at($offset, 1)};
+}
+
+sub get_vector_at($$;$) {
+    my ($offset, $count, $nospc) = @_;
+    my ($str) = get_raw_at($offset, $count);
+    if ($nospc) {
+	return sprintf("%*v02x ", $str);
+    } else {
+	return sprintf("%*v02x ", " ", $str);
+    }
+}
+
 sub fill_buffer($) {
     my ($where) = @_;
     return 1 if $total_length - $curoffset >= $where;
@@ -144,14 +210,153 @@ sub increment_curpos($) {
     $curoffset += $curpos_increment;
 }
 
-# This slows things down tremendously...
-sub xdata($;$) {
-    my ($start, $end) = @_;
-    if (defined $end) {
-	return substr($stuff, $start + $curoffset, $end);
+sub print_remote_SN($) {
+    my ($skipchars) = @_;
+    if ($skipchars == 1) {
+	print(" (Setup)"); 
+    } elsif ($skipchars == 3) {
+	my ($subcmd) = get_byte_at(1);
+	my ($arg) = get_byte_at(2);
+	if ($subcmd == 0) {
+	    print(" (Feed Sequence $arg)"); 
+	} elsif ($subcmd == 4) {
+	    print(" (Feed Adjustment $arg)"); 
+	} elsif ($subcmd == 5) {
+	    print(" (Vacuum Intensity $arg)"); 
+	} else {
+	    print(" (Unknown command $subcmd, arg $arg)");
+	}
     } else {
-	return substr($stuff, $start + $curoffset);
+	print(" (Unknown command)");
     }
+}
+
+sub print_remote_DR($) {
+    my ($skipchars) = @_;
+    if ($skipchars == 4) {
+	my ($subcmd) = get_byte_at(1);
+	my ($arg) = get_short_at(2);
+	if ($subcmd == 0) {
+	    printf(" (Scan dry time %.1f)", $arg / 10.0);
+	} elsif ($subcmd == 1) {
+	    printf(" (Page dry time %.1f)", $arg / 10.0);
+	} elsif ($subcmd == 0x40) {
+	    printf(" (Scan minimum dry time %.1f)", $arg / 10.0);
+	} else {
+	    print(" (Unknown command $subcmd, arg $arg)");
+	}
+    } else {
+	print(" (Unknown command)");
+    }
+}
+
+sub print_remote_CO($) {
+    my ($skipchars) = @_;
+    if ($skipchars == 8) {
+	my ($cmd) = get_byte_at(2);
+	my ($arg) = get_long_at(4);
+	if ($cmd == 0) {
+	    print(" (cut)");
+	} elsif ($cmd == 1) {
+	    print(" (cut all at $arg)");
+	} elsif ($cmd == 2) {
+	    print(" (cut last at $arg)");
+	} else {
+	    print(" (Unknown command $cmd)");
+	}
+    } else {
+	print(" (unknown command)");
+    }
+}
+
+sub print_remote_MI($) {
+    my ($skipchars) = @_;
+    if ($skipchars == 4) {
+	my ($media) = get_byte_at(2);
+	my ($size) = get_byte_at(3);
+	print(" (Media type $media, size code $size)");
+    } else {
+	print(" (unknown command)");
+    }
+}
+
+sub print_remote_DP($) {
+    my ($skipchars) = @_;
+    if ($skipchars == 2) {
+	my ($cmd) = get_byte_at(1);
+	if ($cmd == 0) {
+	    print(" (no duplex)");
+	} elsif ($cmd == 1) {
+	    print(" (duplex no tumble)");
+	} elsif ($cmd == 2) {
+	    print(" (duplex tumble)");
+	} else {
+	    print(" (unknown duplex command $cmd)");
+	}
+    } else {
+	print(" (unknown command)");
+    }
+}
+
+sub print_remote_PH($) {
+    my ($skipchars) = @_;
+    if ($skipchars == 2) {
+	my ($thickness) = get_byte_at(1);
+	print(" (Paper thickness $thickness)");
+    } else {
+	print(" (unknown command)");
+    }
+}
+
+sub print_remote_US($) {
+    my ($skipchars) = @_;
+    if ($skipchars == 3) {
+	my ($cmd) = get_byte_at(1);
+	my ($arg) = get_byte_at(2);
+	if ($cmd == 1) {
+	    print(" (Platen gap $arg)");
+	} else {
+	    print(" (Unknown command $cmd, arg $arg)");
+	}
+    } else {
+	print(" (unknown command)");
+    }
+}
+
+sub print_remote_FP($) {
+    my ($skipchars) = @_;
+    if ($skipchars == 3) {
+	my ($offset) = get_short_at(1);
+	print(" (Full bleed, offset $offset)");
+    } else {
+	print(" (unknown command)");
+    }
+}
+
+sub print_remote_IK($) {
+    my ($skipchars) = @_;
+    if ($skipchars == 2) {
+	my ($ink_type) = get_byte_at(1);
+	my ($ink) = $ink_type >= 0x80 ? "matte" : "photo";
+	print(" (Ink type $ink_type, probably $ink)");
+    } else {
+	print(" (unknown command)");
+    }
+}
+
+sub print_remote_JS($) {
+    my ($skipchars) = @_;
+    print(" (Job start)");
+}
+
+sub print_remote_JE($) {
+    my ($skipchars) = @_;
+    print(" (Job end)");
+}
+
+sub print_remote_PP($) {
+    my ($skipchars) = @_;
+    print(" (Set input slot, printer-specific)");
 }
 
 sub do_remote_command() {
@@ -160,39 +365,37 @@ sub do_remote_command() {
     print "1b  (  R ";
     increment_curpos(3);
     fill_buffer(2);
-    my $lchar = substr($stuff, $curoffset + 0, 1);
-    my $nlchar = $nchartable{$lchar};
-    my $hchar = substr($stuff, $curoffset + 1, 1);
-    my $nhchar = $nchartable{$hchar};
-    printf " %02x %02x ", $nlchar, $nhchar;
+    my ($nlchar) = get_byte_at(0);
+    my ($nhchar) = get_byte_at(1);
     my $skipchars = ($nhchar * 256) + $nlchar;
     increment_curpos(2);
     fill_buffer($skipchars);
-    for (my $i = 0; $i < $skipchars; $i++) {
-	print $rchartable{substr($stuff, $curoffset + $i, 1)};
-    }
+    print get_string_at(0, $skipchars);
     increment_curpos($skipchars);
-    while (fill_buffer(2) &&
-	   substr($stuff, $curoffset + 0, 2) =~ /[A-Z0-9][A-Z0-9]/) {
+    while (fill_buffer(2) && get_raw_at(0, 2) =~ /[A-Z0-9][A-Z0-9]/) {
 	print "\n";
 	printf "%08x    ", $curpos;
-	my ($cmd) = substr($stuff, $curoffset + 0, 2);
+	my ($cmd) = get_raw_at(0, 2);
 	print $cmd;
 	increment_curpos(2);
 	fill_buffer(2);
-	$lchar = substr($stuff, $curoffset + 0, 1);
-	$nlchar = $nchartable{$lchar};
-	$hchar = substr($stuff, $curoffset + 1, 1);
-	$nhchar = $nchartable{$hchar};
+	$nlchar = get_byte_at(0);
+	$nhchar = get_byte_at(1);
 	if ($cmd eq "DF") {
 	    $skipchars = 0;
 	} else {
 	    $skipchars = ($nhchar * 256) + $nlchar;
 	}
-	printf " %02x %02x ", $nlchar, $nhchar;
+	printf(" %02x %02x ", $nlchar, $nhchar);
 	increment_curpos(2);
 	fill_buffer($skipchars);
-	printf "%*v02x ", " ", substr($stuff, $curoffset, $skipchars);
+	print get_vector_at(0, $skipchars);
+	if ($opt_v) {
+	    if (eval "defined \&print_remote_$cmd") {
+		map { print("   "); } ($skipchars...5) if ($skipchars < 6);
+		eval "print_remote_$cmd($skipchars)";
+	    }
+	}
 	increment_curpos($skipchars);
     }
 }
@@ -203,9 +406,7 @@ sub print_prefix_bytes($$) {
     printf "%08x  ", $curpos;
     print "1b ";
     fill_buffer($bytes_to_print);
-    my $char = substr($stuff, $curoffset + 1, 1);
-    print "$chartable{$char} ";
-    printf "%*v02x ", " ", substr($stuff, $curoffset + 2, $bytes_to_print - 2);
+    print get_char_at(1), " ", get_vector_at(2, $bytes_to_print - 2);
     increment_curpos($bytes_to_print);
 }
 
@@ -221,15 +422,14 @@ sub print_output_data($$$$$$) {
     $dots /= $dot_scale;
     my $real_dots = $dots / $bitsperpixel;
     if ($opt_v) {
-	print " ($real_dots dots, $rows rows, $bitsperpixel bits";
+	my ($xcolor) = sprintf("%2x", $color);
+	print " ($xcolor color $real_dots dots, $rows rows, $bitsperpixel bits";
     }
     my $savedots = $dots;
     if ($comptype == 0) {
 	foreach $i (0..$rows-1) {
 	    fill_buffer($dots / 8);
-	    if ($opt_V) {
-		printf "%*v02x ", " ", substr($stuff, $curoffset + 0, $dots / 8);
-	    }
+	    print get_vector_at(0, $dots / 8) if ($opt_V);
 	    increment_curpos($dots / 8);
 	}
     } elsif ($comptype == 1) {
@@ -245,7 +445,7 @@ sub print_output_data($$$$$$) {
 		    $counter++;
 		    fill_buffer($counter);
 		    if ($opt_v || $opt_V) {
-			my $tmp = sprintf "%*v02x ", " ", substr($stuff, $curoffset + 0, $counter);
+			my $tmp = get_vector_at(0, $counter);
 			if (!($tmp =~ /^[0 ]+$/)) {
 			    $found_something = 1;
 			    $last_row = $i;
@@ -262,7 +462,7 @@ sub print_output_data($$$$$$) {
 		    $counter = 257 - $counter;
 		    fill_buffer(1);
 		    if ($opt_v || $opt_V) {
-			$fchar = sprintf "%v02x ", substr($stuff, $curoffset + 0, 1);
+			$fchar = sprintf "%v02x ", get_raw_at(0, 1);
 			if ($fchar ne "00 ") {
 			    $found_something = 1;
 			    $last_row = $i;
@@ -312,60 +512,35 @@ sub print_output_data($$$$$$) {
     }
 }
 
-sub do_special_command() {
-    fill_buffer(8);
-    my $comptype = $nchartable{substr($stuff, $curoffset + 2, 1)};
-    my $color = 0;
-    my $dots = unpack("v", substr($stuff, $curoffset + 6, 2));
-    my $rows = $nchartable{substr($stuff, $curoffset + 5, 1)};
-    print_prefix_bytes(8, 2);
-    print_output_data($comptype, 1, $dots, $rows, 8, $color);
+sub purge_line() {
     fill_buffer(1);
-    while (substr($stuff, $curoffset + 0, 1) eq "\r") {
+    while (get_raw_at(0) eq "\r") {
 	fill_buffer(1);
 	increment_curpos(1);
     }
+}
+
+sub do_special_command() {
+    fill_buffer(8);
+    my $comptype = get_byte_at(2);
+    my $color = 0;
+    my $dots = get_short_at(6);
+    my $rows = get_byte_at(5);
+    print_prefix_bytes(8, 2);
+    print_output_data($comptype, 1, $dots, $rows, 8, $color);
+    purge_line();
 }
 
 sub do_special1_command() {
     fill_buffer(9);
-    my $color = $nchartable{substr($stuff, $curoffset + 2, 1)};
-    my $comptype = $nchartable{substr($stuff, $curoffset + 3, 1)};
-    my $bitsperpixel = $nchartable{substr($stuff, $curoffset + 4, 1)};
-    my $dots = unpack("v", substr($stuff, $curoffset + 5, 2));
-    my $rows = unpack("v", substr($stuff, $curoffset + 7, 2));
+    my $color = get_byte_at(2);
+    my $comptype = get_byte_at(3);
+    my $bitsperpixel = get_byte_at(4);
+    my $dots = get_short_at(5);
+    my $rows = get_short_at(7);
     print_prefix_bytes(9, 1);
     print_output_data($comptype, $bitsperpixel, $dots, $rows, 1, $color);
-    fill_buffer(1);
-    while (substr($stuff, $curoffset + 0, 1) eq "\r") {
-	fill_buffer(1);
-	increment_curpos(1);
-    }
-}
-
-sub get_long($) {
-    my ($string) = @_;
-    my ($tmp) = unpack("V", $string);
-    if ($tmp >= (1 << 31)) {
-	return -(0xffffffff ^ $tmp) - 1;
-    } else {
-	return $tmp;
-    }
-}
-
-sub get_short($) {
-    my ($string) = @_;
-    my ($tmp) = unpack("v", $string);
-    if ($tmp >= (1 << 15)) {
-	return -(0xffff ^ $tmp) - 1;
-    } else {
-	return $tmp;
-    }
-}
-
-sub get_byte($) {
-    my ($string) = @_;
-    return $nchartable{$string};
+    purge_line();
 }
 
 if ($opt_O) {
@@ -379,30 +554,181 @@ if ($opt_O) {
     } @stuff;
 }
 
+sub do_xcmd_c($) {
+    my ($skipchars) = @_;
+    my ($top, $bottom);
+    if ($skipchars == 8) {
+	$top = get_long_at(5);
+	$bottom = get_long_at(9) if ($opt_v);
+    } else {
+	$top = get_short_at(5);
+	$bottom = get_short_at(7) if ($opt_v);
+    }
+    if ($opt_v) {
+	printf (" (page format %d %d %.2f %.2f)", $top, $bottom,
+		$top / $page_mgmt_unit, $bottom / $page_mgmt_unit);
+    }
+    $initial_vertical_position = $top * $vertical_unit / $page_mgmt_unit;
+    $vertical_position = $initial_vertical_position;
+}
+
+sub do_xcmd_S($) {
+    my ($skipchars) = @_;
+    if ($opt_v) {
+	my ($width, $height);
+	if ($skipchars == 8) {
+	    $width = get_long_at(5);
+	    $height = get_long_at(9);
+	} else {
+	    $width = get_short_at(5);
+	    $height = get_short_at(7);
+	}
+	printf (" (paper size %d %d %.2f %.2f)", $width, $height, 
+		$width / $page_mgmt_unit, $height / $page_mgmt_unit);
+    }
+}
+
+sub do_xcmd_C($) {
+    my ($skipchars) = @_;
+    if ($opt_v) {
+	my ($length);
+	if ($skipchars == 4) {
+	    $length = get_long_at(5);
+	} else {
+	    $length = get_short_at(5);
+	}
+	printf (" (page length %d %.2f)", $length, $length / $page_mgmt_unit);
+    }
+}
+
+sub do_xcmd_D($) {
+    my ($skipchars) = @_;
+    my $base = get_short_at(5);
+    my $y = get_byte_at(7);
+    my $x = get_byte_at(8);
+    $raster_x = $x / $base;
+    $raster_y = $y / $base;
+    if ($opt_v) {
+	printf (" (raster base %d, %d x %d)", $base, $base / $x, $base / $y);
+    }
+}
+
+sub do_xcmd_U($) {
+    my ($skipchars) = @_;
+    my $page_mgmt = get_byte_at(5);
+    if ($skipchars == 5) {
+	my $vertical = get_byte_at(6);
+	my $horiz = get_byte_at(7);
+	my $scale = get_short_at(8);
+	$page_mgmt_unit = $scale / $page_mgmt;
+	$horizontal_unit = $scale / $horiz;
+	$vertical_unit = $scale / $vertical;
+	if ($opt_v) {
+	    printf (" (units base %d  mgmt %d  vert %d  horiz %d)",
+		    $scale, $page_mgmt_unit, $vertical_unit, $horizontal_unit);
+	}
+    } else {
+	if ($opt_v) {
+	    printf " (units base = %d/3600)", $page_mgmt;
+	}
+	$page_mgmt_unit = 3600 / $page_mgmt;
+	$horizontal_unit = 3600 / $page_mgmt;
+	$vertical_unit = 3600 / $page_mgmt;
+    }
+}
+
+sub do_xcmd_v($) {
+    my ($skipchars) = @_;
+    my ($length);
+    if ($skipchars == 4) {
+	$length = get_long_at(5);
+    } else {
+	$length = get_short_at(5);
+    }
+    $vertical_position += $length;
+    if ($opt_v) {
+	printf (" (skip vertical %d at %d %.4f)", $length, $vertical_position,
+		$vertical_position / $vertical_unit);
+    }
+}
+
+sub do_xcmd_dlr($) {
+    my ($skipchars) = @_;
+    if ($skipchars == 4) {
+	$horizontal_position = get_long_at(5);
+    } else {
+	$horizontal_position = get_short_at(5);
+    }
+    if ($opt_v) {
+	printf (" (horizontal position %d %.4f)",
+		$horizontal_position, $horizontal_position / $horizontal_unit);
+    }
+}
+
+sub do_xcmd_d($) {
+    if ($opt_v) {
+	my ($bytes) = get_short_at(3);
+	printf " (nop $bytes bytes)";
+    }
+}
+
+sub do_xcmd_m($) {
+    my ($skipchars) = @_;
+    if ($opt_v) { printf(" (print method %x)", get_byte_at(5)); }
+}
+
+sub do_xcmd_e($) {
+    my ($skipchars) = @_;
+    if ($opt_v) { printf(" (dot size %x)", get_byte_at(6)); }
+}
+
+sub do_xcmd_G($) {
+    my ($skipchars) = @_;
+    if ($opt_v) { print(" (set graphics mode)"); }
+}
+
+sub do_xcmd_K($) {
+    my ($skipchars) = @_;
+    if ($opt_v) {
+	my ($ctype) = get_byte_at(6);
+	if ($ctype == 1) {
+	    print(" (BW mode)");
+	} elsif ($ctype == 2) {
+	    print(" (Color mode)");
+	} elsif ($ctype == 3) {
+	    print(" (Fast 360 color mode)");
+	} else {
+	    print(" (Unknown BW/color mode)");
+	}
+    }
+}
+
+sub do_xcmd_i($) {
+    my ($skipchars) = @_;
+    if ($opt_v) {
+	my ($ctype) = get_byte_at(5);
+	if ($ctype == 0) {
+	    print(" (Soft weave)");
+	} else {
+	    printf(" (Printer weave method %d)", $ctype);
+	}
+    }
+}
+
 while (! $atend) {
     my $found;
-    my $key;
     my $skipchars;
     my $startoff;
-    my $kchar;
-    my $nkchar;
-    my $lchar;
-    my $nlchar;
-    my $hchar;
-    my $nhchar;
-    my $i;
-    my $char;
-    my $nchar;
     my $bytes;
     my ($maxklen) = $keylengths{$seqkeys[0]};
     fill_buffer(1);
-    my $cchar = substr($stuff, $curoffset + 0, 1);
+    my $cchar = get_raw_at(0);
     if ($cchar eq "$esc") {
 	$found = 0;
 	fill_buffer(2 + $maxklen);
-	foreach $key (@seqkeys) {
+	foreach my $key (@seqkeys) {
 	    my ($klen) = $keylengths{$key};
-	    if (substr($stuff, $curoffset + 1, $klen) eq $key) {
+	    if (get_raw_at(1, $klen) eq $key) {
 		$skipchars = $seqtable{$key};
 		if ($skipchars eq "SPECIAL") {
 		    do_special_command();
@@ -423,144 +749,33 @@ while (! $atend) {
 		    if ($skipchars eq "VARIABLE") {
 			fill_buffer(3);
 			$print_variable = 1;
-			$kchar = substr($stuff, $curoffset + $klen + 1, 1);
-			$nkchar = unpack("C", $kchar);
-			$lchar = substr($stuff, $curoffset + $klen + 2, 1);
-			$nlchar = unpack("C", $lchar);
-			$hchar = substr($stuff, $curoffset + $klen + 3, 1);
-			$nhchar = unpack("C", $hchar);
+			my $nlchar = get_byte_at($klen + 2);
+			my $nhchar = get_byte_at($klen + 3);
 			$skipchars = ($nhchar * 256) + $nlchar;
 			$startoff = 3;
 			$print_stuff = 1;
 		    }
 		    my ($blen) = $skipchars + $klen + $startoff;
 		    fill_buffer($blen + 1);
-		    $char = substr($stuff, $curoffset + 1, 1);
-		    print "$chartable{$char} ";
+		    print get_char_at(1), " ";
 		    if ($blen > 1) {
-			$char = substr($stuff, $curoffset + 2, 1);
-			print "$chartable{$char} ";
+			my $char = get_raw_at(2);
+			print get_char_at(2), " ";
 			if ($blen > 2) {
 			    if ($print_variable && $char eq "d") {
-				printf ("%*v02x ", " ",
-					substr($stuff, $curoffset + 3, 2));
+				print get_vector_at(3, 2);
 			    } else {
-				printf ("%*v02x ", " ",
-					substr($stuff, $curoffset + 3, $blen - 2));
+				print get_vector_at(3, $blen - 2);
 			    }
 			}
 		    }
 		    if ($print_stuff) {
-			my $xchar = substr($stuff, $curoffset + 2, 1);
-			if ($xchar eq "c") {
-			    my ($top, $bottom);
-			    if ($skipchars == 8) {
-				$top = get_long(substr($stuff, $curoffset + 5, 4));
-				if ($opt_v) {
-				    $bottom = get_long(substr($stuff, $curoffset + 9, 4));
-				}
-			    } else {
-				$top = get_short(substr($stuff, $curoffset + 5, 2));
-				if ($opt_v) {
-				    $bottom = get_short(substr($stuff, $curoffset + 7, 2));
-				}
-			    }
-			    if ($opt_v) {
-				printf (" (page format %d %d %.2f %.2f)",
-					$top, $bottom, $top / $page_mgmt_unit,
-					$bottom / $page_mgmt_unit);
-			    }
-			    $initial_vertical_position =
-				$top * $vertical_unit / $page_mgmt_unit;
-			    $vertical_position = $initial_vertical_position;
-			} elsif ($xchar eq "S") {
-			    if ($opt_v) {
-				my ($width, $height);
-				if ($skipchars == 8) {
-				    $width = get_long(substr($stuff, $curoffset + 5, 4));
-				    $height = get_long(substr($stuff, $curoffset + 9, 4));
-				} else {
-				    $width = get_short(substr($stuff, $curoffset + 5, 2));
-				    $height = get_short(substr($stuff, $curoffset + 7, 2));
-				}
-				printf (" (paper size %d %d %.2f %.2f)",
-					$width, $height, $width / $page_mgmt_unit,
-					$height / $page_mgmt_unit);
-			    }
-			} elsif ($xchar eq "C") {
-			    if ($opt_v) {
-				my ($length);
-				if ($skipchars == 4) {
-				    $length = get_long(substr($stuff, $curoffset + 5, 4));
-				} else {
-				    $length = get_short(substr($stuff, $curoffset + 5, 2));
-				}
-				printf (" (page length %d %.2f)",
-					$length, $length / $page_mgmt_unit);
-			    }
-			} elsif ($xchar eq "D") {
-			    my $base = get_short(substr($stuff, $curoffset + 5, 2));
-			    my $y = $nchartable{substr($stuff, $curoffset + 7, 1)};
-			    my $x = $nchartable{substr($stuff, $curoffset + 8, 1)};
-			    $raster_x = $x / $base;
-			    $raster_y = $y / $base;
-			    if ($opt_v) {
-				printf (" (raster base %d, %d x %d)",
-					$base, $base / $x, $base / $y);
-			    }
-			} elsif ($xchar eq "U") {
-			    if ($skipchars == 5) {
-				my $page_mgmt = $nchartable{substr($stuff, $curoffset + 5, 1)};
-				my $vertical = $nchartable{substr($stuff, $curoffset + 6, 1)};
-				my $horiz = $nchartable{substr($stuff, $curoffset + 7, 1)};
-				my $scale = get_short(substr($stuff, $curoffset + 8, 2));
-				$page_mgmt_unit = $scale / $page_mgmt;
-				$horizontal_unit = $scale / $horiz;
-				$vertical_unit = $scale / $vertical;
-				if ($opt_v) {
-				    printf (" (units base %d  mgmt %d  vert %d  horiz %d)",
-					    $scale, $page_mgmt_unit,
-					    $vertical_unit, $horizontal_unit);
-				}
-			    } else {
-				my $page_mgmt = $nchartable{substr($stuff, $curoffset + 5, 1)};
-				if ($opt_v) {
-				    printf " (units base = %d/3600)", $page_mgmt;
-				}
-				$page_mgmt_unit = 3600 / $page_mgmt;
-				$horizontal_unit = 3600 / $page_mgmt;
-				$vertical_unit = 3600 / $page_mgmt;
-			    }
-			} elsif ($xchar eq "v") {
-			    my ($length);
-			    if ($skipchars == 4) {
-				$length = get_long(substr($stuff, $curoffset + 5, 4));
-			    } else {
-				$length = get_short(substr($stuff, $curoffset + 5, 2));
-			    }
-			    $vertical_position += $length;
-			    if ($opt_v) {
-				printf (" (skip vertical %d at %d %.4f)",
-					$length, $vertical_position,
-					$vertical_position / $vertical_unit);
-			    }
-			} elsif ($xchar eq "\$") {
-			    if ($skipchars == 4) {
-				$horizontal_position =
-				    get_long(substr($stuff, $curoffset + 5, 4));
-			    } else {
-				$horizontal_position =
-				    get_short(substr($stuff, $curoffset + 5, 2));
-			    }
-			    if ($opt_v) {
-				printf (" (horizontal position %d %.4f)",
-					$horizontal_position,
-					$horizontal_position / $horizontal_unit);
-			    }
-			} elsif ($xchar eq "d") {
-			    if ($opt_v) {
-				printf " (nop)";
-			    }
+			my $xchar = get_raw_at(2);
+			if ($xchar eq '$') {
+			    $xchar = 'dlr';
+			}
+			if (eval defined "defined do_xcmd_$xchar") {
+			    eval "do_xcmd_$xchar($skipchars)";
 			}
 		    }
 		    $found = 1;
