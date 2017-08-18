@@ -1,7 +1,7 @@
 /*
  *   DNP DS40/DS80 Photo Printer CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013-2017 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2018 Solomon Peachy <pizza@shaftnet.org>
  *
  *   Development of this backend was sponsored by:
  *
@@ -57,9 +57,11 @@
 #define USB_PID_DNP_DS40  0x0003 // Also Citizen CX
 #define USB_PID_DNP_DS80  0x0004 // Also Citizen CX-W, and Mitsubishi CP-3800DW
 #define USB_PID_DNP_DSRX1 0x0005 // Also Citizen CY
-#define USB_PID_CITIZEN_CW02 0x0006
 #define USB_PID_DNP_DS80D 0x0007
 #define USB_PID_DNP_DS620_OLD 0x0008
+
+#define USB_PID_CITIZEN_CW02 0x0006 // Also OP900II
+#define USB_PID_CITIZEN_CX02 0x000A
 
 #define USB_VID_DNP       0x1452
 #define USB_PID_DNP_DS620 0x8b01
@@ -674,6 +676,9 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
 			ctx->supports_mediaoffset = 1;
 			ctx->supports_iserial = 1;
 		}
+		if (FW_VER_CHECK(2,06)) {
+			ctx->supports_5x5 = ctx->supports_6x6 = 1;
+		}
 		break;
 	case P_DNP_DS620:
 		ctx->native_width = 1920;
@@ -896,7 +901,7 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 	ctx->databuf = malloc(MAX_PRINTJOB_LEN);
 	if (!ctx->databuf) {
 		ERROR("Memory allocation failure!\n");
-		return CUPS_BACKEND_CANCEL;
+		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 
 	/* Clear everything out */
@@ -2486,8 +2491,8 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
-	.name = "DNP DS40/DS80/DSRX1/DS620",
-	.version = "0.93",
+	.name = "DNP DS40/DS80/DSRX1/DS620/DS820",
+	.version = "0.95",
 	.uri_prefix = "dnpds40",
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
@@ -2505,6 +2510,7 @@ struct dyesub_backend dnpds40_backend = {
 	{ USB_VID_DNP, USB_PID_DNP_DS620, P_DNP_DS620, NULL},
 	{ USB_VID_DNP, USB_PID_DNP_DS80D, P_DNP_DS80D, NULL},
 	{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW02, P_DNP_DS40, NULL},
+	{ USB_VID_CITIZEN, USB_PID_CITIZEN_CX02, P_DNP_DS620, NULL},
 	{ USB_VID_DNP, USB_PID_DNP_DS820, P_DNP_DS820, NULL},
 	{ 0, 0, 0, NULL}
 	}
