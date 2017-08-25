@@ -58,25 +58,15 @@ executables.  The command to unpack this file is</p>
 named <tt>README</tt> and <tt>NEWS</tt> in that subdirectory for
 further instructions.
 
-<h3>CVS access</h3>
+<h3>Git access</h3>
 
-<p>You may view the <a
-href="http://gimp-print.cvs.sourceforge.net/gimp-print">CVS web
-interface</a>.  This facility is known to be erratic, and we have no
-control over it.</p>
+<p>If you want to use the current development, you can clone the
+repository:</p>
 
-<p>If you want to use CVS source code, these are the commands (assuming you have CVS installed.) ;
+<pre>
+git clone git://git.code.sf.net/p/gimp-print/source gimp-print-source
+</pre>
 
-<PRE>
-cvs -d:pserver:anonymous@gimp-print.cvs.sourceforge.net:/cvsroot/gimp-print login
-
-cvs -z3
--d:pserver:anonymous@gimp-print.cvs.sourceforge.net:/cvsroot/gimp-print co -P print
-</PRE>
-
-
-
-
-
+<p>To view the repository, visit <a href="https://sourceforge.net/p/gimp-print/source/ci/master/tree/">https://sourceforge.net/p/gimp-print/source/ci/master/tree/</a></p>
 
 <?require('standard_html_footer.php');?>
