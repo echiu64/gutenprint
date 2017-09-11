@@ -2130,10 +2130,6 @@
       <printer translate="name" name="Brother HL-1670N" driver="brother-hl-1670n" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-1850" driver="brother-hl-1850" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-1870N" driver="brother-hl-1870n" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <!-- Brother HL-2030 series -->
-      <printer translate="name" name="Brother HL-2030" deviceid="MFG:Brother;MDL:HL-2030 series;CMD:PJL,HBP;" driver="brother-hl-2030" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-2035" driver="brother-hl-2035" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <!-- -->
       <printer translate="name" name="Brother HL-2060" driver="brother-hl-2060" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-2250DN" driver="brother-hl-2250dn" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-2460" deviceid="MFG:Brother;MDL:Brother HL-2460 series;" driver="brother-hl-2460" manufacturer="Brother" model="6" parameters="pcl_laser_params" />

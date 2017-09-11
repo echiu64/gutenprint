@@ -247,6 +247,13 @@ device.  We have determined that the data is in fact written by the
 
 III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
+* Changes from 5.2.13
+
+  1) Support for the Brother HL-2030 and HL-2035 has been removed.  We
+     have determined that these printers do not use standard PCL; they
+     use a proprietary printing method that we cannot support.
+
+
 * Changes from 5.2.12
 
   1) Critical bugfix
