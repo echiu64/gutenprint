@@ -253,6 +253,20 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      have determined that these printers do not use standard PCL; they
      use a proprietary printing method that we cannot support.
 
+  2) A crash that affected certain dyesub printers when used with
+     simplified PPD files has been fixed.  The printers involved are:
+
+     Citizen CX-W
+     Dai Nippon Printing DS620
+     Dai Nippon Printing DS80
+     Dai Nippon Printing DS80DX
+     Dai Nippon Printing DS820
+     Mitsubishi CP-3800DW
+     Mitsubishi CP-D70DW
+     Mitsubishi CP-D707DW
+     Shinko/Sinfonia CHC-S2145
+     Shinko/Sinfonia CHC-S6245
+
 
 * Changes from 5.2.12
 

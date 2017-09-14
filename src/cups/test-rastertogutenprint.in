@@ -232,7 +232,7 @@ get_ppds() {
 }
 
 if [ -n "$make_ppds" -o ! -d ppd/C ] ; then
-    make ppd-nonls
+    make ppd-nonls-a
 ## Not all systems can work with gzipped PPDs
     find ppd/C -name '*.ppd.gz' | xargs gunzip -f
 fi
