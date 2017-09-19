@@ -115,8 +115,8 @@ typedef int (*send_image_dataFN)(struct BandImage *out, void *context,
 #define USB_PID_MITSU_D90   0x3B60
 #define USB_VID_KODAK       0x040a
 #define USB_PID_KODAK305    0x404f
-//#define USB_VID_FUJIFILM    XXXXXX
-//#define USB_PID_FUJI_ASK300 XXXXXX
+#define USB_VID_FUJIFILM    0x04cb
+#define USB_PID_FUJI_ASK300 0x5006
 
 /* Width of the laminate data file */
 #define LAMINATE_STRIDE 1864
@@ -304,7 +304,7 @@ struct mitsu70x_jobs {
 
 struct mitsu70x_status_deck {
 	uint8_t  mecha_status[2];
-	uint8_t  temperature;   /* D70 family only, K60 no */
+	uint8_t  temperature;   /* D70/D80 family only, K60 no? */
 	uint8_t  error_status[3];
 	uint8_t  rsvd_a[10];    /* K60 family [1] == temperature? [3:6] == lifetime prints in BCD */
 
@@ -328,19 +328,21 @@ struct mitsu70x_printerstatus_resp {
 	uint8_t  memory;
 	uint8_t  power;
 	uint8_t  unk[20];
-	uint8_t  sleeptime; /* In minutes, 0-10 */
+	uint8_t  sleeptime; /* In minutes, 0-60 */
 	uint8_t  iserial; /* 0x00 for Enabled, 0x80 for Disabled */
 	uint8_t  unk_b[12];
 	int16_t  model[6]; /* LE, UTF-16 */
 	int16_t  serno[6]; /* LE, UTF-16 */
 	struct mitsu70x_status_ver vers[7]; // components are 'MLRTF'
 	uint8_t  null[2];
-	uint8_t  user_serno[6];  /* Supposedly, don't know how to set it */
+	uint8_t  user_serno[6];  /* XXX Supposedly, don't know how to set it */
 	struct mitsu70x_status_deck lower;
 	struct mitsu70x_status_deck upper;
 } __attribute__((packed));
 
+#define MK60S_0105_M_CSUM  0x148C  /* 1.05 316M3 1 148C */
 #define EK305_0104_M_CSUM  0x2878  /* 1.04 316F8 3 2878 */
+#define MD70X_0110_M_CSUM  0x064D  /* 1.10 316V1 1 064D */
 #define MD70X_0112_M_CSUM  0x9FC3  /* 1.12 316W1 1 9FC3 */
 
 struct mitsu70x_memorystatus_resp {
@@ -355,7 +357,7 @@ struct mitsu70x_memorystatus_resp {
 struct mitsu70x_hdr {
 	uint8_t  hdr[4]; /* 1b 5a 54 XX */  // XXX also, seen 1b 5a 43!
 	uint16_t jobid;
-	uint8_t  rewind[2];  /* XXX K60/EK305/D80 only, 0 normally, 1 for "skip" ??? */
+	uint8_t  rewind[2];  /* K60/EK305/D80 only */
 	uint8_t  zero0[8];
 
 	uint16_t cols;
@@ -365,14 +367,14 @@ struct mitsu70x_hdr {
 	uint8_t  speed;
 	uint8_t  zero1[7];
 
-	uint8_t  deck; /* 0 = default, 1 = lower, 2 = upper */
+	uint8_t  deck; /* 0 = default, 1 = lower, 2 = upper -- Non-D70/D707 is always '1' */
 	uint8_t  zero2[7];
 	uint8_t  laminate; /* 00 == on, 01 == off */
 	uint8_t  laminate_mode; /* 00 == glossy, 02 == matte */
 	uint8_t  zero3[6];
 
 	uint8_t  multicut;
-	uint8_t  zero4[12];
+	uint8_t  zero4[12]; /* NOTE:  everything past this point is an extension */
 	uint8_t  sharpen;  /* 0-9.  5 is "normal", 0 is "off" */
 	uint8_t  mode;     /* 0 for cooked YMC planar, 1 for packed BGR */
 	uint8_t  use_lut;  /* in BGR mode, 0 disables, 1 enables */
@@ -444,6 +446,15 @@ static char *mitsu70x_jobstatuses(uint8_t *sts)
 		case JOB_STATUS1_END_OK:
 			return "Normal End";
 		case JOB_STATUS1_END_HEADER:
+			switch(sts[2]) {
+			case JOB_STATUS2_END_HEADER_ERROR:
+				return "Incorrect Header data (bad print size?)";
+			case JOB_STATUS2_END_HEADER_MEMORY:
+				return "Insufficient printer memory";
+			default:
+				return "Unknown 'End Header' status2";
+			}
+			break;			
 		case JOB_STATUS1_END_PRINT:
 			switch(sts[2]) {
 			case JOB_STATUS2_END_PRINT_MEDIA:
@@ -619,7 +630,7 @@ static const char *mitsu70x_media_types(uint8_t brand, uint8_t type)
 	else if (brand == 0xff && type == 0x05)
 		return "CK-D769 (6x9)";
 	else if (brand == 0xff && type == 0x0f)
-		return "CK-D768 (6x8)";
+		return "CK-D768/CK-D868 (6x8)";
 	else if (brand == 0x6c && type == 0x84)
 		return "Kodak 5R (5x7)";
 	else if (brand == 0x6c && type == 0x8f)
@@ -628,14 +639,21 @@ static const char *mitsu70x_media_types(uint8_t brand, uint8_t type)
 		return "CK-K57R (5x7)";
 	else if (brand == 0x61 && type == 0x8f)
 		return "CK-K76R (6x8)";
+	else if (brand == 0x7a && type == 0x02)
+		return "RL-CF900 (3.5x5)";
+	else if (brand == 0x7a && type == 0x02)
+		return "RK-CF800/4R (4x6)";
+	else if (brand == 0x7a && type == 0x04)
+		return "R2L-CF460/5R (5x7)";
+	else if (brand == 0x7a && type == 0x0f)
+		return "R68-CF400/6R (6x8)";
 	else
 		return "Unknown";
 
 // Also CK-D715, CK-D718, CK-D720, CK-D723 (4x6,5x8,6x8,6x9) for D70-S model
 //      CK-D746-U for D70-U model
 //      CK-D820 (6x8) for D80-S model
-//      CK-D868 (6x8) for D80 (non-S)
-// D90 can use _all_ of htese types except for the -U!
+// D90 can use _all_ of these types except for the -U!
 
 }
 
@@ -893,7 +911,7 @@ repeat:
 		}
 	} else if (ctx->type == P_FUJI_ASK300) {
 		ctx->laminatefname = CORRTABLE_PATH "/ASK300M2.raw"; // Same as D70
-		ctx->lutfname = CORRTABLE_PATH "/CPD70L01.lut";  // XXX guess, driver did not come with external LUT!
+//		ctx->lutfname = CORRTABLE_PATH "/CPD70L01.lut";  // XXX guess, driver did not come with external LUT!
 		if (mhdr.speed == 3 || mhdr.speed == 4) {
 			mhdr.speed = 3; /* Super Fine */
 			ctx->cpcfname = CORRTABLE_PATH "/ASK300T3.cpc";
@@ -1271,9 +1289,9 @@ static int mitsu70x_set_sleeptime(struct mitsu70x_ctx *ctx, uint8_t time)
 	uint8_t cmdbuf[4];
 	int ret;
 
-	/* 10 minutes max, according to all docs. */
-	if (time > 10)
-		time = 10;
+	/* 60 minutes max, according to all docs. */
+	if (time > 60)
+		time = 60;
 
 	/* Send Parameter.. */
 	memset(cmdbuf, 0, 4);
@@ -1471,6 +1489,9 @@ top:
 	if (ctx->type == P_KODAK_305) {
 		if (be16_to_cpu(resp.vers[0].checksum) != EK305_0104_M_CSUM)
 			WARNING("Printer FW out of date. Highly recommend upgrading EK305 to v1.04!\n");
+	} else if (ctx->type == P_MITSU_K60) {
+		if (be16_to_cpu(resp.vers[0].checksum) != MK60S_0105_M_CSUM)
+			WARNING("Printer FW out of date. Highly recommend upgrading K60 to v1.05!\n");
 	} else if (ctx->type == P_MITSU_D70X) {
 		if (be16_to_cpu(resp.vers[0].checksum) != MD70X_0112_M_CSUM)
 			WARNING("Printer FW out of date. Highly recommend upgrading D70/D707 to v1.12!\n");
@@ -1602,11 +1623,19 @@ skip_status:
 				ctx->last_donor_l = donor_l;
 				ctx->last_donor_u = donor_u;
 				ATTR("marker-levels=%d,%d\n", donor_l, donor_u);
+				ATTR("marker-message='\"%d native prints remaining on %s media\"','\"%d native prints remaining on %s media\"'\n",
+				     be16_to_cpu(resp.lower.remain),
+				     mitsu70x_media_types(resp.lower.media_brand, resp.lower.media_type),
+				     be16_to_cpu(resp.upper.remain),
+				     mitsu70x_media_types(resp.upper.media_brand, resp.upper.media_type));
 			}
 		} else {
 			if (donor_l != ctx->last_donor_l) {
 				ctx->last_donor_l = donor_l;
 				ATTR("marker-levels=%d\n", donor_l);
+				ATTR("marker-message=\"%d native prints remaining on %s media\"\n",
+				     be16_to_cpu(resp.lower.remain),
+				     mitsu70x_media_types(resp.lower.media_brand, resp.lower.media_type));
 			}
 		}
 
@@ -1873,7 +1902,7 @@ static int mitsu70x_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend mitsu70x_backend = {
 	.name = "Mitsubishi CP-D70/D707/K60/D80",
-	.version = "0.61",
+	.version = "0.65",
 	.uri_prefix = "mitsu70x",
 	.cmdline_usage = mitsu70x_cmdline,
 	.cmdline_arg = mitsu70x_cmdline_arg,
@@ -1889,7 +1918,7 @@ struct dyesub_backend mitsu70x_backend = {
 		{ USB_VID_MITSU, USB_PID_MITSU_D80, P_MITSU_D80, ""},
 //		{ USB_VID_MITSU, USB_PID_MITSU_D90, P_MITSU_D90, ""},
 		{ USB_VID_KODAK, USB_PID_KODAK305, P_KODAK_305, ""},
-//	{ USB_VID_FUJIFILM, USB_PID_FUJI_ASK300, P_FUJI_ASK300, ""},
+		{ USB_VID_FUJIFILM, USB_PID_FUJI_ASK300, P_FUJI_ASK300, ""},
 	{ 0, 0, 0, ""}
 	}
 };
@@ -1913,7 +1942,7 @@ struct dyesub_backend mitsu70x_backend = {
    1b 5a 54 PP JJ JJ RR RR  00 00 00 00 00 00 00 00
    XX XX YY YY QQ QQ ZZ ZZ  SS 00 00 00 00 00 00 00
    UU 00 00 00 00 00 00 00  LL TT 00 00 00 00 00 00
-   RR 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+   MM 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
 
    (padded by NULLs to a 512-byte boundary)
 
@@ -1923,13 +1952,13 @@ struct dyesub_backend mitsu70x_backend = {
    YY YY == rows
    QQ QQ == lamination columns (equal to XX XX)
    ZZ ZZ == lamination rows (YY YY + 12 on D70x/D80/ASK300, YY YY on others)
-   RR RR == "rewind inhibit", 01 01 enabled, normally 00 00 (All but D70x)
+   RR RR == "rewind inhibit", 01 01 enabled, normally 00 00 (All but D70x/A300)
    SS    == Print mode: 00 = Fine, 03 = SuperFine (D70x/D80 only), 04 = UltraFine
             (Matte requires Superfine or Ultrafine)
    UU    == 00 = Auto, 01 = Lower Deck (required for !D70x), 02 = Upper Deck
    LL    == lamination enable, 00 == on, 01 == off
-   TT    == lamination mode: 00 glossy, 02 matte.
-   RR    == 00 (normal), 01 = (Double-cut 4x6), 05 = (double-cut 2x6)
+   TT    == lamination mode: 00 glossy, 02 matte
+   MM    == 00 (normal), 01 = (Double-cut 4x6), 05 = (double-cut 2x6)
 
    Data planes:
    16-bit data, rounded up to 512-byte block (XX * YY * 2 bytes)
