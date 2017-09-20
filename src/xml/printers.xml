@@ -1734,6 +1734,7 @@
       <printer translate="name" name="Epson Stylus Pro 4800/4880 Back Compatible" driver="escp2-4600" manufacturer="Epson" model="112" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Pro 4800" driver="escp2-4800" manufacturer="Epson" model="106" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Pro 4880" driver="escp2-4880" manufacturer="Epson" model="102" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Pro 4900" driver="escp2-4900" manufacturer="Epson" model="130" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Pro 5000" driver="escp2-5000" manufacturer="Epson" model="27" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Pro 5500" driver="escp2-5500" manufacturer="Epson" model="40" parameters="pro_5500_params" />
       <printer translate="name" name="Epson Stylus Pro 7000" driver="escp2-7000" manufacturer="Epson" model="28" parameters="standard_params" />
