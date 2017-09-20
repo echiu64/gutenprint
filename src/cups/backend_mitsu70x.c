@@ -344,6 +344,7 @@ struct mitsu70x_printerstatus_resp {
 #define EK305_0104_M_CSUM  0x2878  /* 1.04 316F8 3 2878 */
 #define MD70X_0110_M_CSUM  0x064D  /* 1.10 316V1 1 064D */
 #define MD70X_0112_M_CSUM  0x9FC3  /* 1.12 316W1 1 9FC3 */
+#define FA300_XXXX_M_CSUM  0x4431  /* ?.?? 416J2 1 4431 */
 
 struct mitsu70x_memorystatus_resp {
 	uint8_t  hdr[3]; /* E4 56 33 */
@@ -918,9 +919,9 @@ repeat:
 		} else {
 			ctx->cpcfname = CORRTABLE_PATH "/ASK300T1.cpc";
 		}
-		if (mhdr.hdr[3] != 0x01) {
+		if (mhdr.hdr[3] != 0x80) {
 			WARNING("Print job has wrong submodel specifier (%x)\n", mhdr.hdr[3]);
-			mhdr.hdr[3] = 0x01;
+			mhdr.hdr[3] = 0x80;
 		}
 	}
 	if (!mhdr.use_lut)
@@ -1902,7 +1903,7 @@ static int mitsu70x_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend mitsu70x_backend = {
 	.name = "Mitsubishi CP-D70/D707/K60/D80",
-	.version = "0.65",
+	.version = "0.66",
 	.uri_prefix = "mitsu70x",
 	.cmdline_usage = mitsu70x_cmdline,
 	.cmdline_arg = mitsu70x_cmdline_arg,
@@ -1946,7 +1947,7 @@ struct dyesub_backend mitsu70x_backend = {
 
    (padded by NULLs to a 512-byte boundary)
 
-   PP    == 0x01 on D70x/D80/ASK300, 0x00 on K60, 0x90 on K305
+   PP    == 0x01 on D70x/D80, 0x00 on K60, 0x90 on K305, 0x80 on ASK300
    JJ JJ == Job ID, can leave at 00 00
    XX XX == columns
    YY YY == rows

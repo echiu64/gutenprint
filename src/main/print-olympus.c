@@ -5127,6 +5127,11 @@ static const dyesub_printsize_t fuji_ask300_printsize[] =
 
 LIST(dyesub_printsize_list_t, fuji_ask300_printsize_list, dyesub_printsize_t, fuji_ask300_printsize);
 
+static void fuji_ask300_printer_init(stp_vars_t *v)
+{
+  mitsu_cpd70k60_printer_init(v, 0x80);
+}
+
 /* Shinko CHC-S9045 (experimental) */
 static const dyesub_pagesize_t shinko_chcs9045_page[] =
 {
@@ -7708,12 +7713,12 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     SHRT_MAX,
 #ifdef MITSU70X_8BPP
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT,
-    &mitsu_cpd70x_printer_init, NULL,
+    &fuji_ask300_printer_init, NULL,
 #else
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_16BPP
       | DYESUB_FEATURE_BIGENDIAN,
-    &mitsu_cpd70x_printer_init, &mitsu_cpd70x_printer_end,
+    &fuji_ask300_printer_init, &mitsu_cpd70x_printer_end,
 #endif
     NULL, &mitsu_cpd70x_plane_end,
     NULL, NULL, /* No block funcs */
