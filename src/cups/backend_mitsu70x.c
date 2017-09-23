@@ -640,7 +640,7 @@ static const char *mitsu70x_media_types(uint8_t brand, uint8_t type)
 		return "CK-K57R (5x7)";
 	else if (brand == 0x61 && type == 0x8f)
 		return "CK-K76R (6x8)";
-	else if (brand == 0x7a && type == 0x02)
+	else if (brand == 0x7a && type == 0x01)
 		return "RL-CF900 (3.5x5)";
 	else if (brand == 0x7a && type == 0x02)
 		return "RK-CF800/4R (4x6)";
