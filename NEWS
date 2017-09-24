@@ -20,6 +20,7 @@ These release notes contain the following sections:
 I)    General Requirements
 II)   Critical Upgrade Note
 III)  Changes from Previous Releases
+        * Changes from 5.2.13
         * Changes from 5.2.12
         * Changes from 5.2.11
         * Changes from 5.2.10
@@ -246,6 +247,36 @@ device.  We have determined that the data is in fact written by the
 ================================================================
 
 III) MAJOR CHANGES FROM PREVIOUS RELEASES
+
+* Changes from 5.2.13
+
+  1) Support for the Brother HL-2030 and HL-2035 has been removed.  We
+     have determined that these printers do not use standard PCL; they
+     use a proprietary printing method that we cannot support.
+
+  2) A crash that affected certain dyesub printers when used with
+     simplified PPD files has been fixed.  The printers involved are:
+
+     Citizen CX-W
+     Dai Nippon Printing DS620
+     Dai Nippon Printing DS80
+     Dai Nippon Printing DS80DX
+     Dai Nippon Printing DS820
+     Mitsubishi CP-3800DW
+     Mitsubishi CP-D70DW
+     Mitsubishi CP-D707DW
+     Shinko/Sinfonia CHC-S1245
+     Shinko/Sinfonia CHC-S2145
+     Shinko/Sinfonia CHC-S6145
+     Shinko/Sinfonia CHC-S6245
+
+  3) Enhanced support for the following dye-sublimation printers:
+
+     Fujifilm ASK-300
+
+  4) Initial support for EPSON Stylus Pro 7900 (Partial -- no
+     orange/green inks)
+
 
 * Changes from 5.2.12
 

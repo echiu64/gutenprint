@@ -360,9 +360,7 @@ sub print_remote_PP($) {
 }
 
 sub do_remote_command() {
-    print "\n";
-    printf "%08x  ", $curpos;
-    print "1b  (  R ";
+    printf "\n%08x  1b  (  R ", $curpos;
     increment_curpos(3);
     fill_buffer(2);
     my ($nlchar) = get_byte_at(0);
@@ -373,8 +371,7 @@ sub do_remote_command() {
     print get_string_at(0, $skipchars);
     increment_curpos($skipchars);
     while (fill_buffer(2) && get_raw_at(0, 2) =~ /[A-Z0-9][A-Z0-9]/) {
-	print "\n";
-	printf "%08x    ", $curpos;
+	printf "\n%08x    ", $curpos;
 	my ($cmd) = get_raw_at(0, 2);
 	print $cmd;
 	increment_curpos(2);
@@ -402,9 +399,7 @@ sub do_remote_command() {
 
 sub print_prefix_bytes($$) {
     my ($bytes_to_print) = @_;
-    print "\n";
-    printf "%08x  ", $curpos;
-    print "1b ";
+    printf "\n%08x  1b ", $curpos;
     fill_buffer($bytes_to_print);
     print get_char_at(1), " ", get_vector_at(2, $bytes_to_print - 2);
     increment_curpos($bytes_to_print);
@@ -422,7 +417,7 @@ sub print_output_data($$$$$$) {
     $dots /= $dot_scale;
     my $real_dots = $dots / $bitsperpixel;
     if ($opt_v) {
-	my ($xcolor) = sprintf("%2x", $color);
+	my ($xcolor) = sprintf("%02x", $color);
 	print " ($xcolor color $real_dots dots, $rows rows, $bitsperpixel bits";
     }
     my $savedots = $dots;
@@ -554,6 +549,11 @@ if ($opt_O) {
     } @stuff;
 }
 
+sub indent_cmd($) {
+    my ($skipchars) = @_;
+    map { print("   "); } ($skipchars...3) if ($skipchars < 4);
+}
+
 sub do_xcmd_c($) {
     my ($skipchars) = @_;
     my ($top, $bottom);
@@ -583,6 +583,7 @@ sub do_xcmd_S($) {
 	    $width = get_short_at(5);
 	    $height = get_short_at(7);
 	}
+	indent_cmd($skipchars);
 	printf (" (paper size %d %d %.2f %.2f)", $width, $height, 
 		$width / $page_mgmt_unit, $height / $page_mgmt_unit);
     }
@@ -597,6 +598,7 @@ sub do_xcmd_C($) {
 	} else {
 	    $length = get_short_at(5);
 	}
+	indent_cmd($skipchars);
 	printf (" (page length %d %.2f)", $length, $length / $page_mgmt_unit);
     }
 }
@@ -609,6 +611,7 @@ sub do_xcmd_D($) {
     $raster_x = $x / $base;
     $raster_y = $y / $base;
     if ($opt_v) {
+	indent_cmd($skipchars);
 	printf (" (raster base %d, %d x %d)", $base, $base / $x, $base / $y);
     }
 }
@@ -624,11 +627,13 @@ sub do_xcmd_U($) {
 	$horizontal_unit = $scale / $horiz;
 	$vertical_unit = $scale / $vertical;
 	if ($opt_v) {
+	    indent_cmd($skipchars);
 	    printf (" (units base %d  mgmt %d  vert %d  horiz %d)",
 		    $scale, $page_mgmt_unit, $vertical_unit, $horizontal_unit);
 	}
     } else {
 	if ($opt_v) {
+	    indent_cmd($skipchars);
 	    printf " (units base = %d/3600)", $page_mgmt;
 	}
 	$page_mgmt_unit = 3600 / $page_mgmt;
@@ -647,6 +652,7 @@ sub do_xcmd_v($) {
     }
     $vertical_position += $length;
     if ($opt_v) {
+	indent_cmd($skipchars);
 	printf (" (skip vertical %d at %d %.4f)", $length, $vertical_position,
 		$vertical_position / $vertical_unit);
     }
@@ -660,36 +666,49 @@ sub do_xcmd_dlr($) {
 	$horizontal_position = get_short_at(5);
     }
     if ($opt_v) {
+	indent_cmd($skipchars);
 	printf (" (horizontal position %d %.4f)",
 		$horizontal_position, $horizontal_position / $horizontal_unit);
     }
 }
 
 sub do_xcmd_d($) {
+    my ($skipchars) = @_;
     if ($opt_v) {
 	my ($bytes) = get_short_at(3);
+	indent_cmd($skipchars);
 	printf " (nop $bytes bytes)";
     }
 }
 
 sub do_xcmd_m($) {
     my ($skipchars) = @_;
-    if ($opt_v) { printf(" (print method %x)", get_byte_at(5)); }
+    if ($opt_v) { 
+	indent_cmd($skipchars);
+	printf(" (print method %x)", get_byte_at(5));
+    }
 }
 
 sub do_xcmd_e($) {
     my ($skipchars) = @_;
-    if ($opt_v) { printf(" (dot size %x)", get_byte_at(6)); }
+    if ($opt_v) {
+	indent_cmd($skipchars);
+	printf(" (dot size %x)", get_byte_at(6));
+    }
 }
 
 sub do_xcmd_G($) {
     my ($skipchars) = @_;
-    if ($opt_v) { print(" (set graphics mode)"); }
+    if ($opt_v) { 
+	indent_cmd($skipchars);
+	print(" (set graphics mode)");
+    }
 }
 
 sub do_xcmd_K($) {
     my ($skipchars) = @_;
     if ($opt_v) {
+	indent_cmd($skipchars);
 	my ($ctype) = get_byte_at(6);
 	if ($ctype == 1) {
 	    print(" (BW mode)");
@@ -706,6 +725,7 @@ sub do_xcmd_K($) {
 sub do_xcmd_i($) {
     my ($skipchars) = @_;
     if ($opt_v) {
+	indent_cmd($skipchars);
 	my ($ctype) = get_byte_at(5);
 	if ($ctype == 0) {
 	    print(" (Soft weave)");
@@ -740,9 +760,7 @@ while (! $atend) {
 		    do_remote_command();
 		    $found = 2;
 		} else {
-		    print "\n";
-		    printf "%08x  ", $curpos;
-		    print "1b ";
+		    printf "\n%08x  1b ", $curpos;
 		    $startoff = 0;
 		    my $print_stuff = 0;
 		    my $print_variable = 0;
@@ -785,16 +803,13 @@ while (! $atend) {
 	    }
 	}
 	if (! $found) {
-	    print "\n";
-	    printf "%08x  ", $curpos;
-	    print "1b ";
+	    printf "\n%08x  1b ", $curpos;
 	    increment_curpos(1);
 	} elsif ($found == 1) {
 	    increment_curpos($bytes);
 	}
     } elsif ($cchar eq "\0" || $cchar eq "\f") {
-	printf "\n%08x  ", $curpos;
-	print "$chartable{$cchar} ";
+	printf "\n%08x  $chartable{$cchar} ", $curpos;
 	$vertical_position = $initial_vertical_position;
 	increment_curpos(1);
     } else {
