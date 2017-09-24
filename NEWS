@@ -485,6 +485,9 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
   5) Initial support for EPSON Stylus Pro 7900 (Partial -- no
      orange/green inks)
 
+  6) The SureColor P800, previously marked Experimental, has been
+     retuned and is now no longer considered experimental.
+
 
 * Changes from 5.2.12
 

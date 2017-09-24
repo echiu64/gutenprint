@@ -1914,7 +1914,7 @@
       <printer translate="name" name="Epson Stylus XP100" driver="escp2-xp100" manufacturer="Epson" model="123" parameters="standard_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Epson SureColor P400" driver="escp2-p400" manufacturer="Epson" model="91" parameters="standard_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Epson SureColor P600" driver="escp2-p600" manufacturer="Epson" model="115" parameters="standard_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="Epson SureColor P800" driver="escp2-p800" manufacturer="Epson" model="102" parameters="standard_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Epson SureColor P800" driver="escp2-p800" manufacturer="Epson" model="130" parameters="standard_params"></printer>
       <printer translate="name" name="Epson SureColor P6000" driver="escp2-p6000" manufacturer="Epson" model="89" parameters="standard_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Epson SureColor P7000" driver="escp2-p7000" manufacturer="Epson" model="124" parameters="standard_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Epson SureColor P7000 Commercial Edition" driver="escp2-p7000c" manufacturer="Epson" model="126" parameters="standard_params">EXPERIMENTAL; violet ink not supported</printer>
