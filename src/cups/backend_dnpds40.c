@@ -1,7 +1,7 @@
 /*
  *   DNP DS40/DS80 Photo Printer CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013-2016 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2017 Solomon Peachy <pizza@shaftnet.org>
  *
  *   Development of this backend was sponsored by:
  *
@@ -698,9 +698,11 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
 		if (FW_VER_CHECK(1,20))
 			ctx->supports_adv_fullcut = ctx->supports_advmatte = 1;
 		if (FW_VER_CHECK(1,30))
-			ctx->supports_luster = ctx->supports_finematte = 1;
+			ctx->supports_luster = 1;
 		if (FW_VER_CHECK(1,33))
 			ctx->supports_media_ext = 1;
+		if (FW_VER_CHECK(1,52))
+			ctx->supports_finematte = 1;
 		break;
 	case P_DNP_DS820:
 		ctx->native_width = 2560;
@@ -2484,7 +2486,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS40/DS80/DSRX1/DS620",
-	.version = "0.91",
+	.version = "0.92",
 	.uri_prefix = "dnpds40",
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
