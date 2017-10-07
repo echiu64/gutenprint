@@ -214,3 +214,7 @@
 
 # CIAAT Brava 21
 0x10ce 0x001e blacklist
+
+# Fujifilm ASK-300
+0x04cb 0x5006 blacklist
+
