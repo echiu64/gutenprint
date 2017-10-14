@@ -212,7 +212,7 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
 		  while (child && i < 4)
 		    {
 		      if (child->type == STP_MXML_TEXT)
-			data[i++] = stp_xmlstrtoul(child->value.text.string);
+			data[i++] = stp_xmlstrtodim(child->value.text.string);
 		      child = child->next;
 		    }
 		  if (dtype && !strcmp(dtype, "duplex"))
@@ -299,36 +299,36 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
 		p->bidirectional_upper_limit = stp_xmlstrtoul(val);
 	      else if (!strcmp(name, "minimumMediaSize"))
 		{
-		  p->min_paper_width = stp_xmlstrtoul(child->value.text.string);
+		  p->min_paper_width = stp_xmlstrtodim(child->value.text.string);
 		  child = child->next;
-		  p->min_paper_height = stp_xmlstrtoul(child->value.text.string);
+		  p->min_paper_height = stp_xmlstrtodim(child->value.text.string);
 		}
 	      else if (!strcmp(name, "maximumMediaSize"))
 		{
-		  p->max_paper_width = stp_xmlstrtoul(child->value.text.string);
+		  p->max_paper_width = stp_xmlstrtodim(child->value.text.string);
 		  child = child->next;
-		  p->max_paper_height = stp_xmlstrtoul(child->value.text.string);
+		  p->max_paper_height = stp_xmlstrtodim(child->value.text.string);
 		}
 	      else if (!strcmp(name, "maximumImageableArea"))
 		{
-		  p->max_imageable_width = stp_xmlstrtoul(child->value.text.string);
+		  p->max_imageable_width = stp_xmlstrtodim(child->value.text.string);
 		  child = child->next;
-		  p->max_imageable_height = stp_xmlstrtoul(child->value.text.string);
+		  p->max_imageable_height = stp_xmlstrtodim(child->value.text.string);
 		}
 	      else if (!strcmp(name, "CDOffset"))
 		{
-		  p->cd_x_offset = stp_xmlstrtoul(child->value.text.string);
+		  p->cd_x_offset = stp_xmlstrtodim(child->value.text.string);
 		  child = child->next;
-		  p->cd_y_offset = stp_xmlstrtoul(child->value.text.string);
+		  p->cd_y_offset = stp_xmlstrtodim(child->value.text.string);
 		}
 	      else if (!strcmp(name, "CDMediaSize"))
 		{
-		  p->cd_page_width = stp_xmlstrtoul(child->value.text.string);
+		  p->cd_page_width = stp_xmlstrtodim(child->value.text.string);
 		  child = child->next;
-		  p->cd_page_height = stp_xmlstrtoul(child->value.text.string);
+		  p->cd_page_height = stp_xmlstrtodim(child->value.text.string);
 		}
 	      else if (!strcmp(name, "extraBottom"))
-		p->paper_extra_bottom = stp_xmlstrtoul(val);
+		p->paper_extra_bottom = stp_xmlstrtodim(val);
 	      else if (!strcmp(name, "AlignmentChoices"))
 		{
 		  p->alignment_passes =

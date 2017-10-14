@@ -175,10 +175,10 @@ raw_parameters(const stp_vars_t *v, const char *name,
 
 static void
 raw_imageable_area(const stp_vars_t *v,
-		   int  *left,
-		   int  *right,
-		   int  *bottom,
-		   int  *top)
+		   stp_dimension_t  *left,
+		   stp_dimension_t  *right,
+		   stp_dimension_t  *bottom,
+		   stp_dimension_t  *top)
 {
   *left = 0;
   *top = 0;
@@ -188,8 +188,8 @@ raw_imageable_area(const stp_vars_t *v,
 
 static void
 raw_limit(const stp_vars_t *v,			/* I */
-	    int *width, int *height,
-	    int *min_width, int *min_height)
+	    stp_dimension_t *width, stp_dimension_t *height,
+	    stp_dimension_t *min_width, stp_dimension_t *min_height)
 {
   *width = 65535;
   *height = 65535;
@@ -198,7 +198,8 @@ raw_limit(const stp_vars_t *v,			/* I */
 }
 
 static void
-raw_describe_resolution(const stp_vars_t *v, int *x, int *y)
+raw_describe_resolution(const stp_vars_t *v,
+			stp_resolution_t *x, stp_resolution_t *y)
 {
   *x = 72;
   *y = 72;

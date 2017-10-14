@@ -336,6 +336,18 @@ stp_xmlstrtod(const char *textval)
 }
 
 /*
+ * Convert a text string into a dimension.
+ */
+stp_dimension_t
+stp_xmlstrtodim(const char *textval)
+{
+  double val; /* The value to return */
+  val = (stp_dimension_t) strtod(textval, (char **)NULL);
+
+  return val;
+}
+
+/*
  * Convert an encoded text string into a raw.
  */
 stp_raw_t *

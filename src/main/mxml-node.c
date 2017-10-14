@@ -21,6 +21,7 @@
  *   stp_mxmlNewInteger() - Create a new integer node.
  *   stp_mxmlNewOpaque()  - Create a new opaque string.
  *   stp_mxmlNewReal()    - Create a new real number node.
+ *   stp_mxmlNewDimension()    - Create a new dimension node.
  *   stp_mxmlNewText()    - Create a new text fragment node.
  *   stp_mxmlRemove()     - Remove a node from its parent.
  *   mxml_new()       - Create a new node.
@@ -223,6 +224,9 @@ stp_mxmlDelete(stp_mxml_node_t *node)		/* I - Node to delete */
     case STP_MXML_REAL :
        /* Nothing to do */
         break;
+    case STP_MXML_DIMENSION :
+       /* Nothing to do */
+        break;
     case STP_MXML_TEXT :
         if (node->value.text.string)
 	  free(node->value.text.string);
@@ -367,6 +371,13 @@ stp_mxmlNewReal(stp_mxml_node_t *parent,	/* I - Parent node or STP_MXML_NO_PAREN
     node->value.real = real;
 
   return (node);
+}
+
+stp_mxml_node_t *				/* O - New node */
+stp_mxmlNewDimension(stp_mxml_node_t *parent,	/* I - Parent node or STP_MXML_NO_PARENT */
+		     stp_dimension_t      dimension)	/* I - Dimension value */
+{
+  return stp_mxmlNewReal(parent, (double) dimension);
 }
 
 

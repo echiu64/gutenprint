@@ -45,6 +45,7 @@ my $include_pattern = '';
 my $exclude_pattern = '';
 my %exclude_list = ();
 my @standard_options = ("InkType",
+			"Resolution",
 			"InkSet,RawChannels",
 			"DitherAlgorithm",
 			"Duplex",
@@ -103,6 +104,7 @@ my $list_options = 0;
 my $verbose = 0;
 my $use_unused_options = 0;
 my $proc_count = 1;
+my $round = 0;
 
 my @default_options = ();
 my %base_settings = ("DitherAlgorithm" => "Fast");
@@ -151,6 +153,7 @@ GetOptions("C=s" => \$csum_type,
 	   "v+"  => \$valgrind,
 	   "x=s" => \@exclude_list,
 	   "y=s" => \@exclude_patterns,
+	   "u"   => \$round,
 	   "t:i" => \$proc_count);
 
 sub print_help_and_exit() {
@@ -200,7 +203,7 @@ Usage: run-testpattern-2 [opts] [model ...]
                     -vvv  Show reachable data also
                     -vvvv Minimal checks only
 
-  Test selection options:
+  Test selection/control options:
     -d option=value Test this option with only the specified (default) value,
                     if available.
     -G geometry     Specify geometry (=(HxV)(+L+T), as fractions of page).
@@ -208,18 +211,21 @@ Usage: run-testpattern-2 [opts] [model ...]
                     option1,option2... tests all combinations of each
                     option.  For floating point and integer options, a
                     selection of values is tested.
+                    To remove an option from the list tested, specify
+                    -o -option
                     Default:
                         $options
+    -o+             Any options specified with -o will be tested in addition
+                    to those specified.
     -p page count   Specify number of pages to print per printer.  Default $std_pages.
     -P page count   Specify number of pages to print per printer when testing
                     duplex mode.  Default $duplex_pages.
-    -r              Do not test each resolution (test only the default).
     -R              Use the minimum resolution (rather than the default)
-                    to test other options.
-    -RR             Use only the minimum resolution, and do not test other
-                    resolutions.
+                    to test other options.  Equivalent to -dResolution=MIN.
     -X              Repeat specified cases listed on standard input.
     -N              Supply all requested options, even if unused.
+    -u              Round all dimensions to the lower point (for
+                    regression testing against Gutenprint 5.2).
 
   Miscellaneous options:
     -i              Use the installed Gutenprint libraries rather than
@@ -242,9 +248,36 @@ if ($help) {
     print_help_and_exit();
 }
 
-my $pages = $std_pages;
+if ($use_min_res) {
+    $base_settings{"Resolution"} = "MIN";
+}
 
-if (! @special_options) {
+if (@special_options) {
+    my (%options);
+    my ($optseq) = 1;
+    if (scalar grep { /^\+$/ } @special_options) {
+	map { $options{$_} = $optseq++; } @standard_options;
+    }
+    if (scalar grep { /^\-$/ } @special_options) {
+	%options = ();
+    }
+    foreach my $opt (@special_options) {
+	next if $_ eq '+';
+	if ($opt =~ /^-/) {
+	    $opt = substr($opt, 1);
+	    delete $options{$opt};
+	} else {
+	    if ($opt =~ /^\+/) {
+		$opt = substr($opt, 1);
+	    }
+	    if (! defined $options{$opt}) {
+		$options{$opt} = $optseq++;
+	    }
+	}
+    }
+    my (%ropt) = reverse %options;
+    @special_options = map { $ropt{$_} } sort { $a <=> $b } keys %ropt;
+} else {
     @special_options = @standard_options;
 }
 
@@ -362,8 +395,8 @@ sub set_global_message($) {
     push @global_messages, "message \"$message\";\n"
 }
 
-sub print_one_testpattern($;$) {
-    my ($printer, $raw) = @_;
+sub print_one_testpattern($$;$) {
+    my ($printer, $pages, $raw) = @_;
     my $stuff = join "", @global_messages;
     $stuff .= join "", @job_extras;
     $global_printer = $printer;
@@ -388,6 +421,9 @@ sub print_one_testpattern($;$) {
 	$stuff .= sprintf("top %f;\n", $top);
 	$stuff .= "blackline 0;\n";
 	$stuff .= "steps 16;\n";
+	if ($round) {
+	    $stuff .= "round;\n";
+	}
 	if ($raw > 0) {
 	    $stuff .= "mode extended $raw 16;\n";
 	    $stuff .= "xpattern ";
@@ -629,175 +665,147 @@ sub build_key($$) {
     return join ",", @answer;
 }
 
-sub do_printer($$) {
-    my ($printer, $global_fh) = @_;
-    my $tmp;
+sub get_min_max_res($) {
+    my ($printer) = @_;
+    my (@resolutions) = grep {$_ ne 'None' } keys %{$stpdata{$printer}{'Resolution'}};
     my $min_res_name;
     my $min_res_value = 0;
     my $max_res_name;
     my $max_res_value = 0;
-    my $first_time = 1;
-    my $key;
-    my $skip_resolutions_local = $skip_resolutions;
-    my %opt_vals = {};
-    $tmp = $stpdata{$printer}{'Resolution'};
-    my (@resolutions) = grep {$_ ne 'None' } keys %$tmp;
-    $tmp = $stpdata{$printer}{'PrintingMode'};
-    my (@printing_modes) = grep {$_ ne 'None' } keys %$tmp;
+    foreach my $res (sort @resolutions) {
+	my $res_value = ($stpdata{$printer}{'x_resolution'}{$res} *
+			 $stpdata{$printer}{'y_resolution'}{$res});
+	if ($min_res_value == 0 || $res_value < $min_res_value) {
+	    $min_res_value = $res_value;
+	    $min_res_name = $res;
+	}
+	if ($res_value > $max_res_value) {
+	    $max_res_value = $res_value;
+	    $max_res_name = $res;
+	}
+    }
+    return ($min_res_name, $max_res_name);
+}
+
+sub get_printing_modes($) {
+    my ($printer) = @_;
+    my (@printing_modes) = grep {$_ ne 'None' } keys %{$stpdata{$printer}{'PrintingMode'}};
     if ($base_settings{'PrintingMode'}) {
 	if ($base_settings{'PrintingMode'} eq 'Color' &&
 	    grep { $_ eq 'Color' } @printing_modes) {
-	    @printing_modes = 'Color';
+	    return ('Color');
 	} elsif ($base_settings{'PrintingMode'} eq 'BW' &&
 		 grep { $_ eq 'BW' } @printing_modes) {
-	    @printing_modes = 'BW';
+	    return ('BW');
 	} else {
-	    return;
+	    return ();
 	}
+    } else {
+	return @printing_modes;
     }
+}
 
-    foreach $tmp (sort @resolutions) {
-	my $res_value = ($stpdata{$printer}{'x_resolution'}{$tmp} *
-			 $stpdata{$printer}{'y_resolution'}{$tmp});
-	if ($min_res_value == 0 || $res_value < $min_res_value) {
-	    $min_res_value = $res_value;
-	    $min_res_name = $tmp;
-	}
-	if ($res_value > $min_res_value) {
-	    $max_res_value = $res_value;
-	    $max_res_name = $tmp;
-	}
-    }
-    foreach $key (@special_options) {
-	my (@subkeys) = (split(/,/, $key));
-	if (grep { /^Resolution$/ } @subkeys) {
-	    $skip_resolutions_local = 1;
-	}
-	my $nkey = build_key($key, $printer);
-	if ($nkey ne "") {
-	    my (@vals) = build_list($nkey, $printer, $min_res_name, $max_res_name);
-	    $nkey =~ s/=[^,]*//g;
-	    $opt_vals{$nkey} = \@vals;
+sub get_optvals($$$) {
+    my ($printer, $min_res_name, $max_res_name) = @_;
+    my (%opt_vals);
+    if (! @special_options) {
+	$opt_vals{"Default"} = ['all'];
+    } else {
+	foreach my $key (@special_options) {
+	    my (@subkeys) = (split(/,/, $key));
+	    my $nkey = build_key($key, $printer);
+	    if ($nkey ne "") {
+		my (@vals) = build_list($nkey, $printer, $min_res_name, $max_res_name);
+		$nkey =~ s/=[^,]*//g;
+		$opt_vals{$nkey} = \@vals;
+	    }
 	}
     }
-    if ($use_min_res > 1) {
-	@resolutions = ($min_res_name);
-    }
-    # We want to do all resolutions and all ink types in both color modes.
-    # We don't need to do both resolutions and ink types.
-    my $pmode;
-    foreach $pmode (sort @printing_modes) {
-	my ($resolution);
-	$pages = $std_pages;
-	if (! $skip_resolutions_local) {
-	    foreach $resolution (sort @resolutions) {
+    return %opt_vals;
+}
+
+# Resolution needs special handling because of MIN and MAX
+# Duplex needs special handling because of printing multiple pages, and
+#        need to set JobMode
+# RawChannels needs special handling because it's handled specially by
+#        the underlying testpattern command.
+sub do_printer($$) {
+    my ($printer, $global_fh) = @_;
+    my $first_time = 1;
+    my %opt_vals = {};
+
+    my (@printing_modes) = get_printing_modes($printer);
+    return if (! @printing_modes);
+    my ($min_res, $max_res) = get_min_max_res($printer);
+    my (%opt_vals) = get_optvals($printer, $min_res, $max_res);
+    foreach my $pmode (sort @printing_modes) {
+	foreach my $key (sort keys %opt_vals) {
+	    next if ($key eq "RawChannels" && $pmode ne "Color");
+	    next if (! defined $opt_vals{$key} || $opt_vals{$key} < 1);
+	    my (@opts) = sort @{$opt_vals{$key}};
+	    my (@subkeys) = split (/,/, $key);
+	    my (%subkeys);
+	    map {$subkeys{$_} = 1} @subkeys;
+	    my $opt;
+	    foreach $opt (@opts) {
 		@extras = ();
 		@job_extras = ();
 		@messages = ();
 		@global_messages = ();
+		my (@ovals);
+		my $rawval;
+		my (@subopts) = split (/,/, $opt);
+		map {
+		    my $k = $subkeys[$_];
+		    my $v = $subopts[$_];
+		    next if ($k eq "RawChannels" && $v ne "None" && $pmode ne "Color");
+		    if ($k eq "RawChannels") {
+			$rawval = $v;
+		    } else {
+			set_opt($k, $v, $printer);
+		    }
+		    push @ovals, "${k}=${v}";
+		} (0..$#subkeys);
+		map {
+		    if ($key ne $_) {
+			my $setting = $base_settings{$_};
+			if ($_ eq "Resolution" && $setting eq "MIN") {
+			    $setting = $min_res;
+			} elsif ($_ eq "Resolution" && $setting eq "MAX") {
+			    $setting = $max_res;
+			}
+			set_opt($_, $setting, $printer);
+			push @ovals, "${_}=$setting";
+		    }
+		} grep { ! defined $subkeys{$_} &&
+			     ($use_unused_options ||
+			      defined $stpdata{$printer}{$_})} (keys %base_settings);
+		my $pages = $std_pages;
+		set_opt("PrintingMode", $pmode, $printer);
+		if ($key =~ /Duplex/) {
+		    set_opt("JobMode", "Job", $printer);
+		    $pages = $duplex_pages;
+		}
+		my $rawval;
 		if ($first_time) {
 		    if ($quiet < 2) {
 			set_global_message("$printer\n");
 		    } elsif ($quiet == 2) {
 			set_global_message(".");
 		    }
+		    $first_time = 0;
 		}
-		set_opt("PrintingMode", $pmode, $printer);
-		set_opt("Resolution", $resolution, $printer);
-		map { set_opt($_, $base_settings{$_}, $printer)} grep { $use_unused_options || defined $stpdata{$printer}{$_}} sort keys %base_settings;
-		my ($case) = "${printer}_PrintingMode_${pmode}_Resolution_${resolution}";
+		my ($mstring) = join "_", @ovals;
+		$mstring =~ s/=/_/g;
+		my ($ostring) = join "+", @ovals;
+		my $case = "${printer}_PrintingMode_${pmode}_${mstring}";
 		$global_case = $case;
 		if (! $rerun || $rerun_cases{$case}) {
-		    $first_time = 0;
 		    $global_messages = $case;
 		    do_output($case);
-		    set_message("    ${pmode}+${resolution}");
-		    my $output = print_one_testpattern($printer);
-		    do_print( $output, $global_fh );
-		}
-	    }
-	}
-	foreach $key (sort keys %opt_vals) {
-	    next if ($key eq "RawChannels" && $pmode ne "Color");
-	    my (@subkeys) = split (/,/, $key);
-	    my (%subkeys);
-	    map {$subkeys{$_} = 1} @subkeys;
-	    $tmp = $opt_vals{$key};
-	    if (defined $tmp && $tmp >= 1) {
-		my (@opts) = sort @$tmp;
-		my $opt;
-		my $rawval;
-		my $set_resolution = 0;
-		foreach $opt (sort @opts) {
-		    my (@subopts) = split (/,/, $opt);
-		    @extras = ();
-		    @job_extras = ();
-		    @messages = ();
-		    @global_messages = ();
-		    set_opt("PrintingMode", $pmode, $printer);
-		    if ($use_min_res && ! grep { /^Resolution$/ } @subkeys) {
-			set_opt("Resolution", $min_res_name, $printer);
-		    }
-		    my (@mvals);
-		    my (@ovals);
-		    map {
-			my $k = $subkeys[$_];
-			my $v = $subopts[$_];
-			if ($k eq "RawChannels") {
-			    next if ($v ne "None" && $pmode ne "Color");
-			    $rawval = $v;
-			} else {
-			    set_opt($k, $v, $printer);
-			}
-			push @mvals, "${k}_${v}";
-			push @ovals, "${k}=${v}";
-		    } (0..$#subkeys);
-		    if ($first_time) {
-			if ($quiet < 2) {
-			    set_global_message("$printer\n");
-			} elsif ($quiet == 2) {
-			    set_global_message(".");
-			}
-			$first_time = 0;
-		    }
-		    # FIXME! need to handle Duplex as a subkey
-		    map {
-			$pages = $std_pages;
-			if ($key ne $_) {
-			    set_opt($_, $base_settings{$_}, $printer);
-			    push @mvals, "${_}_$base_settings{$_}";
-			    push @ovals, "${_}=$base_settings{$_}";
-			    if ($_ eq "Resolution") {
-				$set_resolution = 1;
-			    }
-			    if ($_ eq "Duplex") {
-				set_opt("JobMode", "Job", $printer);
-				$pages = $duplex_pages;
-			    }
-			}
-		    } grep { ! defined $subkeys{$_} &&
-			     ($use_unused_options ||
-			      defined $stpdata{$printer}{$_})} (keys %base_settings);
-		    my ($mstring) = join "_", @mvals;
-		    my ($ostring) = join "+", @ovals;
-		    my $case;
-		    if ($use_min_res && ! $set_resolution) {
-			$case = "${printer}_PrintingMode_${pmode}_Resolution_${min_res_name}_${mstring}";
-		    } else {
-			$case = "${printer}_PrintingMode_${pmode}_${mstring}";
-		    }
-		    $global_case = $case;
-		    if (! $rerun || $rerun_cases{$case}) {
-			$global_messages = $case;
-			do_output($case);
-			if ($use_min_res && ! $set_resolution) {
-			    set_message("    ${ostring}+${pmode}+${min_res_name}");
-			} else {
-			    set_message("    ${ostring}+${pmode}");
-			}
-			my $output = print_one_testpattern($printer, $rawval);
-			do_print( $output, $global_fh );
-		    }
+		    set_message("    ${pmode}+${ostring}");
+		    my $output = print_one_testpattern($printer, $pages, $rawval);
+		    do_print($output, $global_fh);
 		}
 	    }
 	}
@@ -837,7 +845,7 @@ sub restart_testpattern {
 	if ($single > 1) {
 	    warn("\n***TESTPATTERN CRASHED*** ($global_case) ($err)!\n");
 	} else {
-	    warn("\n***TESTPATTERN CRASHED*** (cannot determine case) ($err)!\n");
+	    warn("\n***TESTPATTERN CRASHED*** (cannot determine case, near $global_case) ($err)!\n");
 	}
 	if ($halt_on_error) {
 	    stopit();

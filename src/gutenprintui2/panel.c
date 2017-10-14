@@ -29,7 +29,7 @@
 #define INCH 72
 #define FINCH ((gdouble) INCH)
 #define ROUNDUP(x, y) (((x) + ((y) - 1)) / (y))
-#define SCALE(x, y) (((x) + (1.0 / (2.0 * (y)))) * (y))
+#define SCALE(x, y) ((x) * (y))
 
 #include <gutenprint/gutenprint-intl-internal.h>
 #include <gutenprintui2/gutenprintui.h>
@@ -167,12 +167,12 @@ static gint preview_x, preview_y, preview_w, preview_h;
 
 static gint physical_orientation = -2; /* Actual orientation */
 
-static gint paper_width, paper_height; /* Physical width */
-static gint printable_width, printable_height;	/* Size of printable area */
-static gint print_width, print_height; /* Printed area of image */
-static gint left, right, top, bottom; /* Imageable region */
-static gint image_width, image_height; /* Image size (possibly rotated) */
-static gint image_true_width, image_true_height; /* Original image */
+static gdouble paper_width, paper_height; /* Physical width */
+static gdouble printable_width, printable_height;	/* Size of printable area */
+static gdouble print_width, print_height; /* Printed area of image */
+static gdouble left, right, top, bottom; /* Imageable region */
+static gdouble image_width, image_height; /* Image size (possibly rotated) */
+static gdouble image_true_width, image_true_height; /* Original image */
 static gdouble image_xres, image_yres; /* Original image resolution */
 static gint do_update_thumbnail = 0;
 static gint saveme = 0;		/* True if printrc should be saved */
@@ -273,15 +273,15 @@ static int current_option_count = 0;
 static unit_t units[] =
   {
     { N_("Inch"), N_("Set the base unit of measurement to inches"),
-      72.0, NULL, "%.2f" },
+      72.0, NULL, "%.4f" },
     { N_("cm"), N_("Set the base unit of measurement to centimetres"),
-      72.0 / 2.54, NULL, "%.2f" },
+      72.0 / 2.54, NULL, "%.4f" },
     { N_("Points"), N_("Set the base unit of measurement to points (1/72\")"),
-      1.0, NULL, "%.0f" },
+      1.0, NULL, "%.2f" },
     { N_("mm"), N_("Set the base unit of measurement to millimetres"),
-      72.0 / 25.4, NULL, "%.1f" },
+      72.0 / 25.4, NULL, "%.3f" },
     { N_("Pica"), N_("Set the base unit of measurement to picas (1/12\")"),
-      72.0 / 12.0, NULL, "%.1f" },
+      72.0 / 12.0, NULL, "%.3f" },
   };
 static const gint unit_count = sizeof(units) / sizeof(unit_t);
 
@@ -1158,20 +1158,10 @@ populate_option_table(GtkWidget *table, int p_class)
 		  digits = 3;
 		  minor_increment = .001;
 		}
-	      else if (unit_scaler > 10)
+	      else
 		{
 		  digits = 2;
 		  minor_increment = .01;
-		}
-	      else if (unit_scaler > 1)
-		{
-		  digits = 1;
-		  minor_increment = .1;
-		}
-	      else
-		{
-		  digits = 0;
-		  minor_increment = 1;
 		}
 	      add_reset_button(opt, table, 4, vpos[desc->p_level][desc->p_type]);
 	      stpui_create_scale_entry(opt, GTK_TABLE(table), 0,
@@ -1180,7 +1170,7 @@ populate_option_table(GtkWidget *table, int p_class)
 				       opt->info.flt.deflt / unit_scaler,
 				       opt->info.flt.lower / unit_scaler,
 				       opt->info.flt.upper / unit_scaler,
-				       minor_increment, minor_increment * 10,
+				       minor_increment, 1.0,
 				       digits, TRUE, 0, 0, NULL,
 				       !(desc->is_mandatory));
 	      stpui_set_adjustment_tooltip(opt->info.flt.adjustment,
@@ -2198,7 +2188,7 @@ create_scaling_frame (void)
   scaling_adjustment =
     stpui_scale_entry_new (GTK_TABLE (table), 0, 0, _("Scaling:"), 100, 75,
 			   100.0, minimum_image_percent, 100.0,
-			   1.0, 10.0, 1, TRUE, 0, 0, NULL);
+			   1.0, 10.0, 2, TRUE, 0, 0, NULL);
   stpui_set_adjustment_tooltip(scaling_adjustment,
 			       _("Set the scale (size) of the image"));
   g_signal_connect (G_OBJECT (scaling_adjustment), "value_changed",
@@ -2749,7 +2739,7 @@ scaling_callback (GtkWidget *widget)
        */
       current_scale = GTK_ADJUSTMENT (scaling_adjustment)->value;
       GTK_ADJUSTMENT (scaling_adjustment)->value =
-	min_ppi_scaling / (current_scale / 100);
+	min_ppi_scaling / (current_scale / 100.0);
       pv->scaling = 0.0;
     }
   else if (widget == scaling_percent)
@@ -2763,7 +2753,7 @@ scaling_callback (GtkWidget *widget)
       GTK_ADJUSTMENT (scaling_adjustment)->lower = minimum_image_percent;
       GTK_ADJUSTMENT (scaling_adjustment)->upper = 100.0;
 
-      new_percent = 100 * min_ppi_scaling / current_scale;
+      new_percent = 100.0 * min_ppi_scaling / current_scale;
 
       if (new_percent > 100)
 	new_percent = 100;
@@ -2893,8 +2883,8 @@ plist_build_combo (GtkWidget      *combo,       /* I - Combo widget */
 void
 stpui_set_image_dimensions(gint width, gint height)
 {
-  image_true_width = width;
-  image_true_height = height;
+  image_true_width = (gdouble) width;
+  image_true_height = (gdouble) height;
 }
 
 void
@@ -2969,7 +2959,7 @@ static void
 position_callback (GtkWidget *widget)
 {
   gdouble new_printed_value = atof (gtk_entry_get_text (GTK_ENTRY (widget)));
-  gint new_value = SCALE(new_printed_value, units[pv->unit].scale);
+  gdouble new_value = SCALE(new_printed_value, units[pv->unit].scale);
 
   reset_preview ();
   suppress_preview_update++;
@@ -3488,10 +3478,10 @@ static void
 custom_media_size_callback(GtkWidget *widget,
 			   gpointer data)
 {
-  gint width_limit, height_limit;
-  gint min_width_limit, min_height_limit;
+  gdouble width_limit, height_limit;
+  gdouble min_width_limit, min_height_limit;
   gdouble new_printed_value = atof(gtk_entry_get_text(GTK_ENTRY(widget)));
-  gint new_value = SCALE(new_printed_value, units[pv->unit].scale);
+  gdouble new_value = SCALE(new_printed_value, units[pv->unit].scale);
   invalidate_frame ();
   invalidate_preview_thumbnail ();
   reset_preview ();
@@ -3534,9 +3524,9 @@ set_media_size(const gchar *new_media_size)
 
   if (pap)
     {
-      gint size;
-      int old_width = stp_get_page_width(pv->v);
-      int old_height = stp_get_page_height(pv->v);
+      gdouble size;
+      gdouble old_width = stp_get_page_width(pv->v);
+      gdouble old_height = stp_get_page_height(pv->v);
       int need_preview_update = 0;
 
       if (! stpui_show_all_paper_sizes &&
@@ -3563,7 +3553,7 @@ set_media_size(const gchar *new_media_size)
 
       if (pap->width == 0)
 	{
-	  int max_w, max_h, min_w, min_h;
+	  gdouble max_w, max_h, min_w, min_h;
 	  stp_get_size_limit(pv->v, &max_w, &max_h, &min_w, &min_h);
 	  size = old_width;
 	  if (size < min_w)
@@ -3589,11 +3579,11 @@ set_media_size(const gchar *new_media_size)
       setup_auto_paper_size();
       if (pap->height == 0)
 	{
-	  int max_w, max_h, min_w, min_h;
+	  gdouble max_w, max_h, min_w, min_h;
 	  stp_get_size_limit(pv->v, &max_w, &max_h, &min_w, &min_h);
 	  if (auto_paper_size)
 	    {
-	      int l, r, b, t;
+	      gdouble l, r, b, t;
 	      stp_set_page_height(pv->v, 0);
 	      old_height = 0;
 	      stp_get_imageable_area(pv->v, &l, &r, &b, &t);
@@ -4761,8 +4751,8 @@ do_preview_thumbnail (void)
   gint printable_display_left, printable_display_top;
   gint paper_display_width, paper_display_height;
   gint printable_display_width, printable_display_height;
-  int l_bottom = stp_get_top(pv->v) + stp_get_height(pv->v);
-  int l_right = stp_get_left(pv->v) + stp_get_width(pv->v);
+  gdouble l_bottom = stp_get_top(pv->v) + stp_get_height(pv->v);
+  gdouble l_right = stp_get_left(pv->v) + stp_get_width(pv->v);
 
   preview_ppi = preview_size_horiz * FINCH / (gdouble) paper_width;
 
@@ -4979,8 +4969,8 @@ preview_update (void)
 	pv->scaling = -min_ppi_scaling;
 
       twidth = (FINCH * (gdouble) image_width / -pv->scaling);
-      print_width = twidth + .5;
-      print_height = (twidth * (gdouble) image_height / image_width) + .5;
+      print_width = twidth;
+      print_height = (twidth * (gdouble) image_height / image_width);
       GTK_ADJUSTMENT (scaling_adjustment)->lower = min_ppi_scaling;
       GTK_ADJUSTMENT (scaling_adjustment)->upper = max_ppi_scaling;
       GTK_ADJUSTMENT (scaling_adjustment)->value = -pv->scaling;
@@ -5000,9 +4990,9 @@ preview_update (void)
     {
       gdouble twidth = printable_width * pv->scaling / 100;
 
-      print_width = twidth + .5;
+      print_width = twidth;
       print_height =
-	(twidth * (gdouble) image_height / (gdouble) image_width) + .5;
+	(twidth * (gdouble) image_height / (gdouble) image_width);
     }
   else
     {
@@ -5013,19 +5003,19 @@ preview_update (void)
 	/* i.e. if image is wider relative to its height than the width
 	   of the printable area relative to its height */
 	{
-	  gdouble twidth = printable_width * pv->scaling / 100;
+	  gdouble twidth = printable_width * pv->scaling / 100.0;
 
-	  print_width = twidth + .5;
+	  print_width = twidth;
 	  print_height =
-	    (twidth * (gdouble) image_height / (gdouble) image_width) + .5;
+	    (twidth * (gdouble) image_height / (gdouble) image_width);
 	}
       else
 	{
-	  gdouble theight = printable_height * pv->scaling /100;
+	  gdouble theight = printable_height * pv->scaling /100.0;
 
-	  print_height = theight + .5;
+	  print_height = theight;
 	  print_width =
-	    (theight * (gdouble) image_width / (gdouble) image_height) + .5;
+	    (theight * (gdouble) image_width / (gdouble) image_height);
 	}
     }
 
@@ -5126,10 +5116,10 @@ preview_motion_callback (GtkWidget      *widget,
 			 gpointer        data)
 {
 
-  gint old_top  = stp_get_top (pv->v);
-  gint old_left = stp_get_left (pv->v);
-  gint new_top  = old_top;
-  gint new_left = old_left;
+  gdouble old_top  = stp_get_top (pv->v);
+  gdouble old_left = stp_get_left (pv->v);
+  gdouble new_top  = old_top;
+  gdouble new_left = old_left;
   gint steps;
   if (preview_active != 1 || event->type != GDK_MOTION_NOTIFY)
     return;
@@ -5162,10 +5152,10 @@ preview_motion_callback (GtkWidget      *widget,
     case 2:
       if (move_constraint & MOVE_HORIZONTAL)
 	{
-	  gint increment_width =
+	  gdouble increment_width =
 	    ((move_constraint & MOVE_GRID) && pv->scaling > 0) ?
 	    printable_width * pv->scaling / 100 : print_width;
-	  gint x_threshold = MAX (1, (preview_ppi * increment_width) / INCH);
+	  gdouble x_threshold = MAX (1, (preview_ppi * increment_width) / FINCH);
 	  if (event->x > mouse_x)
 	    steps = MIN((event->x - mouse_x) / x_threshold,
 			((right - orig_left) / increment_width) - 1);
@@ -5176,10 +5166,10 @@ preview_motion_callback (GtkWidget      *widget,
 	}
       if (move_constraint & MOVE_VERTICAL)
 	{
-	  gint increment_height =
+	  gdouble increment_height =
 	    ((move_constraint & MOVE_GRID) && pv->scaling > 0) ?
 	    printable_height * pv->scaling / 100 : print_height;
-	  gint y_threshold = MAX (1, (preview_ppi * increment_height) / INCH);
+	  gdouble y_threshold = MAX (1, (preview_ppi * increment_height) / FINCH);
 	  if (event->y > mouse_y)
 	    steps = MIN((event->y - mouse_y) / y_threshold,
 			((bottom - orig_top) / increment_height) - 1);
@@ -5245,7 +5235,7 @@ dimension_update (GtkAdjustment *adjustment)
 	  opt->info.flt.adjustment &&
 	  adjustment == GTK_ADJUSTMENT(opt->info.flt.adjustment))
 	{
-	  int new_value = (adjustment->value + (.5 / unit_scaler)) * unit_scaler;
+	  gdouble new_value = adjustment->value * unit_scaler;
 	  invalidate_preview_thumbnail ();
 	  if (stp_get_dimension_parameter(pv->v, opt->fast_desc->name) !=
 	      new_value)

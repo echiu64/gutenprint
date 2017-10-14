@@ -1540,6 +1540,15 @@
       <printer translate="name" name="Epson L310" driver="escp2-l310" manufacturer="Epson" model="129" parameters="cx3500_params" />
       <printer translate="name" name="Epson L1300" driver="escp2-l1300" manufacturer="Epson" model="99" parameters="standard_params" />
       <printer translate="name" name="Epson L1800" driver="escp2-l1800" manufacturer="Epson" model="122" parameters="cx3500_params" />
+      <printer translate="name" name="Epson SC-P400 Series" driver="escp2-p400-s" manufacturer="Epson" model="91" parameters="standard_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Epson SC-P600 Series" driver="escp2-p600-s" manufacturer="Epson" model="115" parameters="standard_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Epson SC-P800 Series" driver="escp2-p800-s" manufacturer="Epson" model="130" parameters="standard_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Epson SC-P6000 Series" driver="escp2-p6000-s" manufacturer="Epson" model="89" parameters="standard_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Epson SC-P7000 Series" driver="escp2-p7000-s" manufacturer="Epson" model="124" parameters="standard_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Epson SC-P8000 Series" driver="escp2-p8000-s" manufacturer="Epson" model="90" parameters="standard_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Epson SC-P9000 Series" driver="escp2-p9000-s" manufacturer="Epson" model="125" parameters="standard_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Epson SC-P10000 Series" driver="escp2-p10000-s" manufacturer="Epson" model="90" parameters="standard_params">EXPERIMENTAL; only three levels of gray supported</printer>
+      <printer translate="name" name="Epson SC-P20000 Series" driver="escp2-p20000-s" manufacturer="Epson" model="88" parameters="standard_params">EXPERIMENTAL; only three levels of gray supported</printer>
       <printer translate="name" name="Epson Stylus C20" deviceid="MFG:EPSON;MDL:Stylus C20;DES:EPSON Stylus C20;CMD:ESCPL2,BDC,D4;" driver="escp2-c20" manufacturer="Epson" model="42" parameters="480_params" />
       <printer translate="name" name="Epson Stylus C20SX" driver="escp2-c20sx" manufacturer="Epson" model="42" parameters="480_params" />
       <printer translate="name" name="Epson Stylus C20UX" deviceid="MFG:EPSON;MDL:Stylus C20;DES:EPSON Stylus C20;CMD:ESCPL2,BDC,D4;" driver="escp2-c20ux" manufacturer="Epson" model="42" parameters="480_params" />
@@ -1915,7 +1924,7 @@
       <printer translate="name" name="Epson Stylus XP100" driver="escp2-xp100" manufacturer="Epson" model="123" parameters="standard_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Epson SureColor P400" driver="escp2-p400" manufacturer="Epson" model="91" parameters="standard_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Epson SureColor P600" driver="escp2-p600" manufacturer="Epson" model="115" parameters="standard_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="Epson SureColor P800" driver="escp2-p800" manufacturer="Epson" model="102" parameters="standard_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Epson SureColor P800" driver="escp2-p800" manufacturer="Epson" model="130" parameters="standard_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Epson SureColor P6000" driver="escp2-p6000" manufacturer="Epson" model="89" parameters="standard_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Epson SureColor P7000" driver="escp2-p7000" manufacturer="Epson" model="124" parameters="standard_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Epson SureColor P7000 Commercial Edition" driver="escp2-p7000c" manufacturer="Epson" model="126" parameters="standard_params">EXPERIMENTAL; violet ink not supported</printer>

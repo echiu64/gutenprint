@@ -1769,9 +1769,40 @@ do_extended_ink_info_1(const stp_printer_t *printer)
 		 gettext(stp_string_list_param(color_list, i)->text),
 		 val, id, (year > 80 ? 19 : 20), year, month);
 	}
+      else if (sscanf(ind,
+		      "IQT:%x;TSH:%*4s;PDY:%x;PDM:%x;IC1:%x;IC2:%*x;IK1:%*x;IK2:%*x;TOV:%*x;TVU:%*x;LOG:EPSON;",
+		      &val, &year, &month, &id ) == 4 ||
+	       sscanf(ind,
+		      "IQT:%x;TSH:%*4s;PDY:%x;PDM:%x;IC1:%x;IC2:%*x;IK1:%*x;IK2:%*x;TOV:%*x;TVU:%*x;LOG:INKbyEPSON;",
+		      &val, &year, &month, &id ) == 4)
+	{
+	  STP_DEBUG(printf("***Case 4: i %i val %ud year %ud mo %ud id %ud\n",
+			   i, val, year, month, id));
+	  if (i == 0)
+	    printf("%20s    %20s   %12s   %7s\n",
+		   _("Ink cartridge"), _("Percent remaining"), _("Part number"),
+		   _("Date"));
+	  printf("%20s    %20d    T0%03d            %2d%02d-%02d\n",
+		 gettext(stp_string_list_param(color_list, i)->text),
+		 val, id, (year > 80 ? 19 : 20), year, month);
+	}
+      else if (sscanf(ind,
+		      "II:%*2s;IQT:%x;PDY:%x;PDM:%x;STY:%*2s;STM:%*2s;STD:%*2s;EDY:%*2s;EDM:%*2s;EDD:%*2s;IC1:%x;IC2:%*4s;IK:%*4s;TOV:%*x;TVU:%*x;VIQ:%*4x;UIQ:%*4x;ERC:%*x;SID:%*x;LOG:EPSON   ;",
+		      &val, &year, &month, &id ) == 4)
+	{
+	  STP_DEBUG(printf("***Case 5: i %i val %ud year %ud mo %ud id %ud\n",
+			   i, val, year, month, id));
+	  if (i == 0)
+	    printf("%20s    %20s   %12s   %7s\n",
+		   _("Ink cartridge"), _("Percent remaining"), _("Part number"),
+		   _("Date"));
+	  printf("%20s    %20d    T0%03d            %2d%02d-%02d\n",
+		 gettext(stp_string_list_param(color_list, i)->text),
+		 val, id, (year > 80 ? 19 : 20), year, month);
+	}
       else
 	{
-	  STP_DEBUG(printf("***Case 5: failure %i (%s)\n", i, ind));
+	  STP_DEBUG(printf("***Case 6: failure %i (%s)\n", i, ind));
 	  printf("Cannot identify cartridge in slot %d\n", i);
 	}
     }

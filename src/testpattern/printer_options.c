@@ -134,16 +134,16 @@ main(int argc, char **argv)
 				 driver, desc.name, param->name, param->text);
 			  if (strcmp(desc.name, "Resolution") == 0)
 			    {
-			      int x, y;
+			      stp_resolution_t x, y;
 			      stp_set_string_parameter(pv, "Resolution",
 						       param->name);
 			      stp_describe_resolution(pv, &x, &y);
 			      if (x > 0 && y > 0)
 				{
 				  printf("$stpdata{'%s'}{'%s'}{'%s'} = '%d';\n",
-					 driver, "x_resolution", param->name, x);
+					 driver, "x_resolution", param->name, (int) x);
 				  printf("$stpdata{'%s'}{'%s'}{'%s'} = '%d';\n",
-					 driver, "y_resolution", param->name, y);
+					 driver, "y_resolution", param->name, (int) y);
 				}
 			    }
 			  stp_clear_string_parameter(pv, "Resolution");
@@ -217,11 +217,11 @@ main(int argc, char **argv)
 		  if (desc.bounds.dimension.lower <= desc.deflt.dimension &&
 		      desc.bounds.dimension.upper >= desc.deflt.dimension)
 		    {
-		      printf("$stp_dimension_values{'%s'}{'MINVAL'}{'%s'} = %d;\n",
+		      printf("$stp_dimension_values{'%s'}{'MINVAL'}{'%s'} = %f;\n",
 			     driver, desc.name, desc.bounds.dimension.lower);
-		      printf("$stp_dimension_values{'%s'}{'MAXVAL'}{'%s'} = %d;\n",
+		      printf("$stp_dimension_values{'%s'}{'MAXVAL'}{'%s'} = %f;\n",
 			     driver, desc.name, desc.bounds.dimension.upper);
-		      printf("$stp_dimension_values{'%s'}{'DEFVAL'}{'%s'} = %d;\n",
+		      printf("$stp_dimension_values{'%s'}{'DEFVAL'}{'%s'} = %f;\n",
 			     driver, desc.name, desc.deflt.dimension);
 		      /* printf("$stp_dimension_values{'%s'}{'LONG_NAME'}{'%s'} = '%s';\n",
 			 driver, desc.name, gettext(desc.text)); */

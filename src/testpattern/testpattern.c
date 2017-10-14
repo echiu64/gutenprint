@@ -96,6 +96,7 @@ int global_noscale = 0;
 int global_suppress_output = 0;
 int global_quiet = 0;
 int global_fail_verify_ok = 0;
+int global_round_size = 0;
 char *global_output = NULL;
 FILE *output = NULL;
 int write_to_process = 0;
@@ -112,6 +113,15 @@ static size_t
 c_strlen(const char *s)
 {
   return strlen(s);
+}
+
+static double
+roundto(double n)
+{
+  if (global_round_size)
+    return (double) ((int) n);
+  else
+    return n;
 }
 
 static char *
@@ -266,9 +276,9 @@ do_print(void)
   int status = 0;
   stp_vars_t *v;
   const stp_printer_t *the_printer;
-  int left, right, top, bottom;
-  int x, y;
-  int width, height;
+  stp_dimension_t left, right, top, bottom;
+  stp_resolution_t x, y;
+  stp_dimension_t width, height;
   int retval;
   stp_parameter_list_t params;
   int count;
@@ -409,43 +419,52 @@ do_print(void)
   stp_set_printer_defaults_soft(v, the_printer);
 
   stp_get_imageable_area(v, &left, &right, &bottom, &top);
+  left = roundto(left);
+  right = roundto(right);
+  bottom = roundto(bottom);
+  top = roundto(top);
   stp_describe_resolution(v, &x, &y);
   if (x < 0)
     x = 300;
   if (y < 0)
     y = 300;
 
-  width = right - left;
-  height = bottom - top;
+  width = roundto(right - left);
+  height = roundto(bottom - top);
 
   switch (global_size_mode)
     {
     case SIZE_PT:
-      top += (int) (global_xtop + .5);
-      left += (int) (global_xleft + .5);
-      width = (int) (global_hsize + .5);
-      height = (int) (global_vsize + .5);
+      top += roundto((int) (global_xtop + .5));
+      left += roundto((int) (global_xleft + .5));
+      width = roundto((int) (global_hsize + .5));
+      height = roundto((int) (global_vsize + .5));
       break;
     case SIZE_IN:
-      top += (int) ((global_xtop * 72) + .5);
-      left += (int) ((global_xleft * 72) + .5);
-      width = (int) ((global_hsize * 72) + .5);
-      height = (int) ((global_vsize * 72) + .5);
+      top += roundto((int) ((global_xtop * 72) + .5));
+      left += roundto((int) ((global_xleft * 72) + .5));
+      width = roundto((int) ((global_hsize * 72) + .5));
+      height = roundto((int) ((global_vsize * 72) + .5));
       break;
     case SIZE_MM:
-      top += (int) ((global_xtop * 72 / 25.4) + .5);
-      left += (int) ((global_xleft * 72 / 25.4) + .5);
-      width = (int) ((global_hsize * 72 / 25.4) + .5);
-      height = (int) ((global_vsize * 72 / 25.4) + .5);
+      top += roundto((int) ((global_xtop * 72 / 25.4) + .5));
+      left += roundto((int) ((global_xleft * 72 / 25.4) + .5));
+      width = roundto((int) ((global_hsize * 72 / 25.4) + .5));
+      height = roundto((int) ((global_vsize * 72 / 25.4) + .5));
       break;
     case SIZE_RELATIVE:
     default:
-      top += height * global_xtop;
-      left += width * global_xleft;
-      width *= global_hsize;
-      height *= global_vsize;
+      top = roundto(top + (height * global_xtop));
+      left = roundto(left + (width * global_xleft));
+      width = roundto(width * global_hsize);
+      height = roundto(height * global_vsize);
       break;
     }
+  if (width < 1)
+    width = 1;
+  if (height < 1)
+    height = 1;
+
   stp_set_width(v, width);
   stp_set_height(v, height);
 #if 0

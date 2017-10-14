@@ -378,48 +378,48 @@ typedef struct escp2_printer
 					       /* in auto mode */
 /*****************************************************************************/
   /* Paper size limits */
-  int		max_paper_width; /* Maximum paper width, in points */
-  int		max_paper_height; /* Maximum paper height, in points */
-  int		min_paper_width; /* Maximum paper width, in points */
-  int		min_paper_height; /* Maximum paper height, in points */
-  int		max_imageable_width; /* Maximum imageable area, in points */
-  int		max_imageable_height; /* Maximum imageable area, in points */
+  stp_dimension_t	max_paper_width; /* Maximum paper width, in points */
+  stp_dimension_t	max_paper_height; /* Maximum paper height, in points */
+  stp_dimension_t	min_paper_width; /* Maximum paper width, in points */
+  stp_dimension_t	min_paper_height; /* Maximum paper height, in points */
+  stp_dimension_t	max_imageable_width; /* Maximum imageable area, in points */
+  stp_dimension_t	max_imageable_height; /* Maximum imageable area, in points */
 /*****************************************************************************/
   /* Borders */
 				/* SHEET FED: */
 				/* Softweave: */
-  short		left_margin;	/* Left margin, points */
-  short		right_margin;	/* Right margin, points */
-  short		top_margin;	/* Absolute top margin, points */
-  short		bottom_margin;	/* Absolute bottom margin, points */
+  stp_dimension_t	left_margin;	/* Left margin, points */
+  stp_dimension_t	right_margin;	/* Right margin, points */
+  stp_dimension_t	top_margin;	/* Absolute top margin, points */
+  stp_dimension_t	bottom_margin;	/* Absolute bottom margin, points */
 				/* Printer weave: */
-  short		m_left_margin;	/* Left margin, points */
-  short		m_right_margin;	/* Right margin, points */
-  short		m_top_margin;	/* Absolute top margin, points */
-  short		m_bottom_margin;	/* Absolute bottom margin, points */
+  stp_dimension_t	m_left_margin;	/* Left margin, points */
+  stp_dimension_t	m_right_margin;	/* Right margin, points */
+  stp_dimension_t	m_top_margin;	/* Absolute top margin, points */
+  stp_dimension_t	m_bottom_margin;	/* Absolute bottom margin, points */
 				/* ROLL FEED: */
 				/* Softweave: */
-  short		roll_left_margin;	/* Left margin, points */
-  short		roll_right_margin;	/* Right margin, points */
-  short		roll_top_margin;	/* Absolute top margin, points */
-  short		roll_bottom_margin;	/* Absolute bottom margin, points */
+  stp_dimension_t	roll_left_margin;	/* Left margin, points */
+  stp_dimension_t	roll_right_margin;	/* Right margin, points */
+  stp_dimension_t	roll_top_margin;	/* Absolute top margin, points */
+  stp_dimension_t	roll_bottom_margin;	/* Absolute bottom margin, points */
 				/* Printer weave: */
-  short		m_roll_left_margin;	/* Left margin, points */
-  short		m_roll_right_margin;	/* Right margin, points */
-  short		m_roll_top_margin;	/* Absolute top margin, points */
-  short		m_roll_bottom_margin;	/* Absolute bottom margin, points */
+  stp_dimension_t	m_roll_left_margin;	/* Left margin, points */
+  stp_dimension_t	m_roll_right_margin;	/* Right margin, points */
+  stp_dimension_t	m_roll_top_margin;	/* Absolute top margin, points */
+  stp_dimension_t	m_roll_bottom_margin;	/* Absolute bottom margin, points */
 				/* Duplex margin limit (SHRT_MIN = no limit): */
-  short		duplex_left_margin;	/* Left margin, points */
-  short		duplex_right_margin;	/* Right margin, points */
-  short		duplex_top_margin;	/* Absolute top margin, points */
-  short		duplex_bottom_margin;	/* Absolute bottom margin, points */
+  stp_dimension_t	duplex_left_margin;	/* Left margin, points */
+  stp_dimension_t	duplex_right_margin;	/* Right margin, points */
+  stp_dimension_t	duplex_top_margin;	/* Absolute top margin, points */
+  stp_dimension_t	duplex_bottom_margin;	/* Absolute bottom margin, points */
 				/* Print directly to CD */
-  short		cd_x_offset;	/* Center of CD (horizontal offset) */
-  short		cd_y_offset;	/* Center of CD (vertical offset) */
-  short		cd_page_width;	/* Width of "page" when printing to CD */
-  short		cd_page_height;	/* Height of "page" when printing to CD */
+  stp_dimension_t	cd_x_offset;	/* Center of CD (horizontal offset) */
+  stp_dimension_t	cd_y_offset;	/* Center of CD (vertical offset) */
+  stp_dimension_t	cd_page_width;	/* Width of "page" when printing to CD */
+  stp_dimension_t	cd_page_height;	/* Height of "page" when printing to CD */
 				/* Extra height for form factor command */
-  short		paper_extra_bottom; /* Extra space on the bottom of the page */
+  stp_dimension_t	paper_extra_bottom; /* Extra space on the bottom of the page */
 /*****************************************************************************/
   /* Parameters for escputil */
   short		alignment_passes;
@@ -565,26 +565,26 @@ typedef struct
   int extra_vertical_passes;	/* Quality enhancement */
 
   /* page parameters */		/* Indexed from top left */
-  int page_left;		/* Left edge of page (points) */
-  int page_right;		/* Right edge of page (points) */
-  int page_top;			/* Top edge of page (points) */
-  int page_bottom;		/* Bottom edge of page (points) */
-  int page_width;		/* Page width (points) */
-  int page_height;		/* Page height (points) */
-  int page_true_height;		/* Physical page height (points) */
-  int page_true_width;		/* Physical page height (points) */
-  int cd_x_offset;		/* CD X offset (micro units) */
-  int cd_y_offset;		/* CD Y offset (micro units) */
-  int cd_outer_radius;		/* CD radius (micro units) */
-  int cd_inner_radius;		/* CD radius (micro units) */
+  stp_dimension_t page_left;		/* Left edge of page (points) */
+  stp_dimension_t page_right;		/* Right edge of page (points) */
+  stp_dimension_t page_top;		/* Top edge of page (points) */
+  stp_dimension_t page_bottom;		/* Bottom edge of page (points) */
+  stp_dimension_t page_width;		/* Page width (points) */
+  stp_dimension_t page_height;		/* Page height (points) */
+  stp_dimension_t page_true_height;	/* Physical page height (points) */
+  stp_dimension_t page_true_width;	/* Physical page height (points) */
+  stp_dimension_t cd_x_offset;		/* CD X offset (micro units) */
+  stp_dimension_t cd_y_offset;		/* CD Y offset (micro units) */
+  stp_dimension_t cd_outer_radius;	/* CD radius (micro units) */
+  stp_dimension_t cd_inner_radius;	/* CD radius (micro units) */
   int page_extra_height;	/* Extra height for set_form_factor (rows) */
   int paper_extra_bottom;	/* Extra bottom for set_page_size (rows) */
 
   /* Image parameters */	/* Indexed from top left */
-  int image_height;		/* Height of printed region (points) */
-  int image_width;		/* Width of printed region (points) */
-  int image_top;		/* First printed row (points) */
-  int image_left;		/* Left edge of image (points) */
+  stp_dimension_t image_height;		/* Height of printed region (points) */
+  stp_dimension_t image_width;		/* Width of printed region (points) */
+  stp_dimension_t image_top;		/* First printed row (points) */
+  stp_dimension_t image_left;		/* Left edge of image (points) */
   int image_scaled_width;	/* Width of physical printed region (dots) */
   int image_printed_width;	/* Width of printed region (dots) */
   int image_scaled_height;	/* Height of physical printed region (dots) */

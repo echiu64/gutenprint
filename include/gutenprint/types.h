@@ -1,9 +1,7 @@
 /*
+ *   Gutenprint type declarations
  *
- *   Print plug-in for the GIMP.
- *
- *   Copyright 1997-2000 Michael Sweet (mike@easysw.com),
- *	Robert Krawitz (rlk@alum.mit.edu). and Steve Miller (smiller@rni.net
+ *   Copyright 2017 Robert Krawitz (rlk@alum.mit.edu)
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -18,25 +16,25 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *
- *
- * Revision History:
- *
- *   See ChangeLog
  */
 
-#ifndef GUTENPRINTUI_PRINTRC_H
-#define GUTENPRINTUI_PRINTRC_H
+/**
+ * @file gutenprint/types
+ * @brief Gutenprint dimension type declarations
+ */
 
-#if ! defined (YYSTYPE) && ! defined (YYSTYPE_IS_DECLARED)
-typedef union yylv {
-  double dval;
-  char *sval;
-} YYSTYPE;
-# define yystype YYSTYPE /* obsolescent; will be withdrawn */
-# define YYSTYPE_IS_DECLARED 1
+#ifndef GUTENPRINT_TYPES_H
+#define GUTENPRINT_TYPES_H
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
-#include "printrcy.h"
+typedef double stp_dimension_t;
+typedef int stp_resolution_t;
 
-#endif /* GUTENPRINTUI_PRINTRC_H */
+#ifdef __cplusplus
+  }
+#endif
+
+#endif /* GUTENPRINT_TYPES_H */

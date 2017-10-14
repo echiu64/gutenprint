@@ -37,12 +37,12 @@
 typedef struct canon_caps {
   const char* name;   /* model name */
   int model_id;       /* model ID code for use in commands */
-  int max_width;      /* maximum printable paper size */
-  int max_height;
-  int border_left;    /* left margin, points */
-  int border_right;   /* right margin, points */
-  int border_top;     /* absolute top margin, points */
-  int border_bottom;  /* absolute bottom margin, points */
+  stp_dimension_t max_width;      /* maximum printable paper size */
+  stp_dimension_t max_height;
+  stp_dimension_t border_left;    /* left margin, points */
+  stp_dimension_t border_right;   /* right margin, points */
+  stp_dimension_t border_top;     /* absolute top margin, points */
+  stp_dimension_t border_bottom;  /* absolute bottom margin, points */
   /*  int raster_lines_per_block; */
   /* number of raster lines in every F) command */
   const canon_slotlist_t* slotlist; /*available paperslots */

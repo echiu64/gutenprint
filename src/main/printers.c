@@ -452,7 +452,7 @@ stp_printer_get_defaults(const stp_printer_t *printer)
 }
 
 void
-stp_get_media_size(const stp_vars_t *v, int *width, int *height)
+stp_get_media_size(const stp_vars_t *v, stp_dimension_t *width, stp_dimension_t *height)
 {
   const stp_printfuncs_t *printfuncs =
     stpi_get_printfuncs(stp_get_printer(v));
@@ -461,7 +461,8 @@ stp_get_media_size(const stp_vars_t *v, int *width, int *height)
 
 void
 stp_get_imageable_area(const stp_vars_t *v,
-		       int *left, int *right, int *bottom, int *top)
+		       stp_dimension_t *left, stp_dimension_t *right,
+		       stp_dimension_t *bottom, stp_dimension_t *top)
 {
   const stp_printfuncs_t *printfuncs =
     stpi_get_printfuncs(stp_get_printer(v));
@@ -470,7 +471,8 @@ stp_get_imageable_area(const stp_vars_t *v,
 
 void
 stp_get_maximum_imageable_area(const stp_vars_t *v,
-			       int *left, int *right, int *bottom, int *top)
+			       stp_dimension_t *left, stp_dimension_t *right,
+			       stp_dimension_t *bottom, stp_dimension_t *top)
 {
   const stp_printfuncs_t *printfuncs =
     stpi_get_printfuncs(stp_get_printer(v));
@@ -478,8 +480,9 @@ stp_get_maximum_imageable_area(const stp_vars_t *v,
 }
 
 void
-stp_get_size_limit(const stp_vars_t *v, int *max_width, int *max_height,
-		   int *min_width, int *min_height)
+stp_get_size_limit(const stp_vars_t *v,
+		   stp_dimension_t *max_width, stp_dimension_t *max_height,
+		   stp_dimension_t *min_width, stp_dimension_t *min_height)
 {
   const stp_printfuncs_t *printfuncs =
     stpi_get_printfuncs(stp_get_printer(v));
@@ -487,7 +490,7 @@ stp_get_size_limit(const stp_vars_t *v, int *max_width, int *max_height,
 }
 
 void
-stp_describe_resolution(const stp_vars_t *v, int *x, int *y)
+stp_describe_resolution(const stp_vars_t *v, stp_resolution_t *x, stp_resolution_t *y)
 {
   const stp_printfuncs_t *printfuncs =
     stpi_get_printfuncs(stp_get_printer(v));
@@ -660,18 +663,18 @@ verify_int_param(const stp_vars_t *v, const char *parameter,
 
 static int
 verify_dimension_param(const stp_vars_t *v, const char *parameter,
-		 stp_parameter_t *desc, int quiet)
+		       stp_parameter_t *desc, int quiet)
 {
   stp_dprintf(STP_DBG_VARS, v, "    Verifying dimension %s\n", parameter);
   if (desc->is_mandatory ||
       stp_check_dimension_parameter(v, parameter, STP_PARAMETER_ACTIVE))
     {
-      int checkval = stp_get_dimension_parameter(v, parameter);
+      stp_dimension_t checkval = stp_get_dimension_parameter(v, parameter);
       if (checkval < desc->bounds.dimension.lower ||
 	  checkval > desc->bounds.dimension.upper)
 	{
 	  if (!quiet)
-	    stp_eprintf(v, _("%s must be between %d and %d (is %d)\n"),
+	    stp_eprintf(v, _("%s must be between %f and %f (is %f)\n"),
 			parameter, desc->bounds.dimension.lower,
 			desc->bounds.dimension.upper, checkval);
 	  stp_parameter_description_destroy(desc);
@@ -816,7 +819,7 @@ stp_verify_printer_params(stp_vars_t *v)
   int nparams;
   int i;
   int answer = 1;
-  int left, top, bottom, right;
+  stp_dimension_t left, top, bottom, right;
   const char *pagesize = stp_get_string_parameter(v, "PageSize");
 
   stp_dprintf(STP_DBG_VARS, v, "** Entering stp_verify_printer_params(0x%p)\n",
@@ -835,7 +838,7 @@ stp_verify_printer_params(stp_vars_t *v)
     }
   else
     {
-      int width, height, min_height, min_width;
+      stp_dimension_t width, height, min_height, min_width;
       stp_get_size_limit(v, &width, &height, &min_width, &min_height);
       if (stp_get_page_height(v) <= min_height ||
 	  stp_get_page_height(v) > height ||
@@ -845,7 +848,7 @@ stp_verify_printer_params(stp_vars_t *v)
 	  stp_eprintf(v, _("Page size is not valid\n"));
 	}
       stp_dprintf(STP_DBG_PAPER, v,
-		  "page size max %d %d min %d %d actual %d %d\n",
+		  "page size max %f %f min %f %f actual %f %f\n",
 		  width, height, min_width, min_height,
 		  stp_get_page_width(v), stp_get_page_height(v));
     }
@@ -853,23 +856,23 @@ stp_verify_printer_params(stp_vars_t *v)
   stp_get_imageable_area(v, &left, &right, &bottom, &top);
 
   stp_dprintf(STP_DBG_PAPER, v,
-	      "page      left %d top %d right %d bottom %d\n",
+	      "page      left %f top %f right %f bottom %f\n",
 	      left, top, right, bottom);
   stp_dprintf(STP_DBG_PAPER, v,
-	      "requested left %d top %d width %d height %d\n",
+	      "requested left %f top %f width %f height %f\n",
 	      stp_get_left(v), stp_get_top(v),
 	      stp_get_width(v), stp_get_height(v));
 
   if (stp_get_top(v) < top)
     {
       answer = 0;
-      stp_eprintf(v, _("Top margin must not be less than %d\n"), top);
+      stp_eprintf(v, _("Top margin must not be less than %f\n"), top);
     }
 
   if (stp_get_left(v) < left)
     {
       answer = 0;
-      stp_eprintf(v, _("Left margin must not be less than %d\n"), left);
+      stp_eprintf(v, _("Left margin must not be less than %f\n"), left);
     }
 
   if (stp_get_height(v) <= 0)
@@ -887,14 +890,14 @@ stp_verify_printer_params(stp_vars_t *v)
   if (stp_get_left(v) + stp_get_width(v) > right)
     {
       answer = 0;
-      stp_eprintf(v, _("Image is too wide for the page: left margin is %d, width %d, right edge is %d\n"),
+      stp_eprintf(v, _("Image is too wide for the page: left margin is %f, width %f, right edge is %f\n"),
 		  stp_get_left(v), stp_get_width(v), right);
     }
 
   if (stp_get_top(v) + stp_get_height(v) > bottom)
     {
       answer = 0;
-      stp_eprintf(v, _("Image is too long for the page: top margin is %d, height %d, bottom edge is %d\n"),
+      stp_eprintf(v, _("Image is too long for the page: top margin is %f, height %f, bottom edge is %f\n"),
 		  stp_get_top(v), stp_get_height(v), bottom);
     }
 

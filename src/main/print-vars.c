@@ -48,6 +48,7 @@ typedef struct
     int ival;
     int bval;
     double dval;
+    stp_dimension_t sval;
     stp_curve_t *cval;
     stp_array_t *aval;
     stp_raw_t rval;
@@ -66,12 +67,12 @@ struct stp_vars			/* Plug-in variables */
 {
   char *driver;			/* Name of printer "driver" */
   char *color_conversion;       /* Color module in use */
-  int	left;			/* Offset from left-upper corner, points */
-  int	top;			/* ... */
-  int	width;			/* Width of the image, points */
-  int	height;			/* ... */
-  int	page_width;		/* Width of page in points */
-  int	page_height;		/* Height of page in points */
+  stp_dimension_t	left;		/* Offset from left-upper corner, points */
+  stp_dimension_t	top;		/* ... */
+  stp_dimension_t	width;		/* Width of the image, points */
+  stp_dimension_t	height;		/* ... */
+  stp_dimension_t	page_width;	/* Width of page in points */
+  stp_dimension_t	page_height;	/* Height of page in points */
   stp_list_t *params[STP_PARAMETER_TYPE_INVALID];
   stp_list_t *internal_data;
   void (*outfunc)(void *data, const char *buffer, size_t bytes);
@@ -190,8 +191,10 @@ value_copy(const void *item)
     case STP_PARAMETER_TYPE_RAW:
       copy_to_raw(&(ret->value.rval), v->value.rval.data, v->value.rval.bytes);
       break;
-    case STP_PARAMETER_TYPE_INT:
     case STP_PARAMETER_TYPE_DIMENSION:
+      ret->value.sval = v->value.sval;
+      break;
+    case STP_PARAMETER_TYPE_INT:
     case STP_PARAMETER_TYPE_BOOLEAN:
       ret->value.ival = v->value.ival;
       break;
@@ -411,12 +414,12 @@ pre##_get_##s(const stp_vars_t *v)			\
 
 DEF_STRING_FUNCS(driver, stp)
 DEF_STRING_FUNCS(color_conversion, stp)
-DEF_FUNCS(left, int, stp)
-DEF_FUNCS(top, int, stp)
-DEF_FUNCS(width, int, stp)
-DEF_FUNCS(height, int, stp)
-DEF_FUNCS(page_width, int, stp)
-DEF_FUNCS(page_height, int, stp)
+DEF_FUNCS(left, stp_dimension_t, stp)
+DEF_FUNCS(top, stp_dimension_t, stp)
+DEF_FUNCS(width, stp_dimension_t, stp)
+DEF_FUNCS(height, stp_dimension_t, stp)
+DEF_FUNCS(page_width, stp_dimension_t, stp)
+DEF_FUNCS(page_height, stp_dimension_t, stp)
 DEF_FUNCS(outdata, void *, stp)
 DEF_FUNCS(errdata, void *, stp)
 DEF_FUNCS(outfunc, stp_outfunc_t, stp)
@@ -1012,13 +1015,13 @@ stp_get_boolean_parameter(const stp_vars_t *v, const char *parameter)
 }
 
 void
-stp_set_dimension_parameter(stp_vars_t *v, const char *parameter, int ival)
+stp_set_dimension_parameter(stp_vars_t *v, const char *parameter, stp_dimension_t sval)
 {
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_DIMENSION];
   value_t *val;
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
-  stp_deprintf(STP_DBG_VARS, "stp_set_dimension_parameter(0x%p, %s, %d)\n",
-	       (const void *) v, parameter, ival);
+  stp_deprintf(STP_DBG_VARS, "stp_set_dimension_parameter(0x%p, %s, %f)\n",
+	       (const void *) v, parameter, sval);
   if (item)
     {
       val = (value_t *) stp_list_item_get_data(item);
@@ -1033,18 +1036,19 @@ stp_set_dimension_parameter(stp_vars_t *v, const char *parameter, int ival)
       val->active = STP_PARAMETER_ACTIVE;
       stp_list_item_create(list, NULL, val);
     }
-  val->value.ival = ival;
+  val->value.sval = sval;
   stp_set_verified(v, 0);
 }
 
 void
-stp_set_default_dimension_parameter(stp_vars_t *v, const char *parameter, int ival)
+stp_set_default_dimension_parameter(stp_vars_t *v, const char *parameter,
+				    stp_dimension_t sval)
 {
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_DIMENSION];
   value_t *val;
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
-  stp_deprintf(STP_DBG_VARS, "stp_set_default_dimension_parameter(0x%p, %s, %d)\n",
-	       (const void *) v, parameter, ival);
+  stp_deprintf(STP_DBG_VARS, "stp_set_default_dimension_parameter(0x%p, %s, %f)\n",
+	       (const void *) v, parameter, sval);
   if (!item)
     {
       val = stp_malloc(sizeof(value_t));
@@ -1052,7 +1056,7 @@ stp_set_default_dimension_parameter(stp_vars_t *v, const char *parameter, int iv
       val->typ = STP_PARAMETER_TYPE_DIMENSION;
       val->active = STP_PARAMETER_DEFAULTED;
       stp_list_item_create(list, NULL, val);
-      val->value.ival = ival;
+      val->value.sval = sval;
     }
   stp_set_verified(v, 0);
 }
@@ -1069,7 +1073,7 @@ stp_clear_dimension_parameter(stp_vars_t *v, const char *parameter)
   stp_set_verified(v, 0);
 }
 
-int
+stp_dimension_t
 stp_get_dimension_parameter(const stp_vars_t *v, const char *parameter)
 {
   const stp_list_t *list = v->params[STP_PARAMETER_TYPE_DIMENSION];
@@ -1077,7 +1081,7 @@ stp_get_dimension_parameter(const stp_vars_t *v, const char *parameter)
   if (item)
     {
       const value_t *val = (const value_t *) stp_list_item_get_data(item);
-      return val->value.ival;
+      return val->value.sval;
     }
   else
     {
@@ -1085,7 +1089,7 @@ stp_get_dimension_parameter(const stp_vars_t *v, const char *parameter)
       stp_describe_parameter(v, parameter, &desc);
       if (desc.p_type == STP_PARAMETER_TYPE_DIMENSION)
 	{
-	  int intval = desc.deflt.integer;
+	  stp_dimension_t intval = desc.deflt.dimension;
 	  stp_parameter_description_destroy(&desc);
 	  return intval;
 	}
@@ -1471,9 +1475,9 @@ stpi_vars_print_error(const stp_vars_t *v, const char *prefix)
   };
   stp_erprintf("%s: Gutenprint: === BEGIN GUTENPRINT SETTINGS ===\n", prefix);
   stp_erprintf("%s: Gutenprint:     Driver: %s\n", prefix, stp_get_driver(v));
-  stp_erprintf("%s: Gutenprint:     L: %d  T: %d  W: %d  H: %d\n", prefix, stp_get_left(v),
+  stp_erprintf("%s: Gutenprint:     L: %f  T: %f  W: %f  H: %f\n", prefix, stp_get_left(v),
 	       stp_get_top(v), stp_get_width(v), stp_get_height(v));
-  stp_erprintf("%s: Gutenprint:     Page: %dx%d\n", prefix, stp_get_page_width(v),
+  stp_erprintf("%s: Gutenprint:     Page: %fx%f\n", prefix, stp_get_page_width(v),
 	       stp_get_page_height(v));
   stp_erprintf("%s: Gutenprint:     Conversion: %s\n", prefix, stp_get_color_conversion(v));
   for (i = 0; i < STP_PARAMETER_TYPE_INVALID; i++)
@@ -1513,8 +1517,12 @@ stpi_vars_print_error(const stp_vars_t *v, const char *prefix)
 	      if (crep)
 		stp_free(crep);
 	      break;
-	    case STP_PARAMETER_TYPE_INT:
 	    case STP_PARAMETER_TYPE_DIMENSION:
+	      stp_erprintf("%s: Gutenprint:         (%s) (%i) (%s) [%f]\n", prefix,
+			   val->name, val->active, data_types[val->typ],
+			   val->value.sval);
+	      break;
+	    case STP_PARAMETER_TYPE_INT:
 	    case STP_PARAMETER_TYPE_BOOLEAN:
 	      stp_erprintf("%s: Gutenprint:         (%s) (%i) (%s) [%d]\n", prefix,
 			   val->name, val->active, data_types[val->typ],
@@ -1634,7 +1642,7 @@ debug_print_parameter_description(const stp_parameter_t *desc, const char *who,
       break;
     case STP_PARAMETER_TYPE_DIMENSION:
       stp_deprintf(STP_DBG_VARS,
-		   "   Dimension default: %d Bounds: %d %d\n",
+		   "   Dimension default: %f Bounds: %f %f\n",
 		   desc->deflt.dimension,
 		   desc->bounds.dimension.lower, desc->bounds.dimension.upper);
       break;
@@ -2002,10 +2010,10 @@ fill_vars_from_xmltree(stp_mxml_node_t *prop, stp_mxml_node_t *root,
 		  if (cnode->type == STP_MXML_TEXT)
 		    {
 		      stp_set_dimension_parameter
-			(v, p_name, (int) stp_xmlstrtol(cnode->value.text.string));
+			(v, p_name, (int) stp_xmlstrtodim(cnode->value.text.string));
 		      type = STP_PARAMETER_TYPE_DOUBLE;
 		      if (stp_get_debug_level() & STP_DBG_XML)
-			stp_deprintf(STP_DBG_XML, "  Set dimension '%s' to '%s' (%d)\n",
+			stp_deprintf(STP_DBG_XML, "  Set dimension '%s' to '%s' (%f)\n",
 				     p_name, cnode->value.text.string,
 				     stp_get_dimension_parameter(v, p_name));
 		    }
@@ -2276,7 +2284,7 @@ stp_xmltree_create_from_vars(const stp_vars_t *v)
 		  break;
 		case STP_PARAMETER_TYPE_DIMENSION:
 		  stp_mxmlElementSetAttr(node, "type", "dimension");
-		  stp_mxmlNewInteger(node, stp_get_dimension_parameter(v, name));
+		  stp_mxmlNewDimension(node, stp_get_dimension_parameter(v, name));
 		  break;
 		default:
 		  stp_mxmlElementSetAttr(node, "type", "INVALID!");

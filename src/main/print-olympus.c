@@ -73,9 +73,9 @@
 #ifndef MAX
 #  define MAX(a, b)	(((a) > (b)) ? (a) : (b))
 #endif /* !MAX */
-#define PX(pt,dpi)	((pt) * (dpi) / 72)
-#define PT(px,dpi)	((px) * 72 / (dpi))
-#define PT1(px,dpi)	(((px) * 72 / (dpi))+1)
+#define PX(pt,dpi)	(int)(((stp_dimension_t)(pt) * (stp_resolution_t)(dpi) / (stp_resolution_t)72) + 0.5f)
+#define PT(px,dpi)	((stp_resolution_t)(px) * (stp_resolution_t)72 / (stp_dimension_t)(dpi))
+#define PT1		PT
 #define LIST(list_t, list_name, items_t, items_name) \
 	static const list_t list_name = \
 	{ \
@@ -110,8 +110,8 @@ typedef struct {
 
 typedef struct {
   const char* name;
-  int w_dpi;
-  int h_dpi;
+  stp_resolution_t w_dpi;
+  stp_resolution_t h_dpi;
 } dyesub_resolution_t;
 
 typedef struct {
@@ -122,12 +122,12 @@ typedef struct {
 typedef struct {
   const char* name;
   const char* text;
-  int width_pt;
-  int height_pt;
-  int border_pt_left;
-  int border_pt_right;
-  int border_pt_top;
-  int border_pt_bottom;
+  stp_dimension_t width_pt;
+  stp_dimension_t height_pt;
+  stp_dimension_t border_pt_left;
+  stp_dimension_t border_pt_right;
+  stp_dimension_t border_pt_top;
+  stp_dimension_t border_pt_bottom;
   int print_mode;
 } dyesub_pagesize_t;
 
@@ -237,8 +237,8 @@ typedef struct
 /* Private data for dyesub driver as a whole */
 typedef struct
 {
-  int w_dpi, h_dpi;
-  int w_size, h_size;
+  stp_resolution_t w_dpi, h_dpi;
+  stp_dimension_t w_size, h_size;
   char plane;
   int block_min_w, block_min_h;
   int block_max_w, block_max_h;
@@ -8482,8 +8482,8 @@ dyesub_current_pagesize(const stp_vars_t *v)
 
 static void
 dyesub_media_size(const stp_vars_t *v,
-		int *width,
-		int *height)
+		stp_dimension_t *width,
+		stp_dimension_t *height)
 {
   const dyesub_pagesize_t *p = dyesub_current_pagesize(v);
   stp_default_media_size(v, width, height);
@@ -8497,13 +8497,13 @@ dyesub_media_size(const stp_vars_t *v,
 static void
 dyesub_imageable_area_internal(const stp_vars_t *v,
 				int  use_maximum_area,
-				int  *left,
-				int  *right,
-				int  *bottom,
-				int  *top,
+				stp_dimension_t  *left,
+				stp_dimension_t  *right,
+				stp_dimension_t  *bottom,
+				stp_dimension_t  *top,
 				int  *print_mode)
 {
-  int width, height;
+  stp_dimension_t width, height;
   const dyesub_pagesize_t *p = dyesub_current_pagesize(v);
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(
 		  				stp_get_model_id(v));
@@ -8534,10 +8534,10 @@ dyesub_imageable_area_internal(const stp_vars_t *v,
 
 static void
 dyesub_imageable_area(const stp_vars_t *v,
-		       int  *left,
-		       int  *right,
-		       int  *bottom,
-		       int  *top)
+		       stp_dimension_t  *left,
+		       stp_dimension_t  *right,
+		       stp_dimension_t  *bottom,
+		       stp_dimension_t  *top)
 {
   int not_used;
   dyesub_imageable_area_internal(v, 0, left, right, bottom, top, &not_used);
@@ -8545,10 +8545,10 @@ dyesub_imageable_area(const stp_vars_t *v,
 
 static void
 dyesub_maximum_imageable_area(const stp_vars_t *v,
-			       int  *left,
-			       int  *right,
-			       int  *bottom,
-			       int  *top)
+			       stp_dimension_t  *left,
+			       stp_dimension_t  *right,
+			       stp_dimension_t  *bottom,
+			       stp_dimension_t  *top)
 {
   int not_used;
   const int model = stp_get_model_id(v);
@@ -8567,8 +8567,8 @@ dyesub_maximum_imageable_area(const stp_vars_t *v,
 
 static void
 dyesub_limit(const stp_vars_t *v,			/* I */
-	    int *width, int *height,
-	    int *min_width, int *min_height)
+	    stp_dimension_t *width, stp_dimension_t *height,
+	    stp_dimension_t *min_width, stp_dimension_t *min_height)
 {
   *width  = SHRT_MAX;
   *height = SHRT_MAX;
@@ -8577,7 +8577,8 @@ dyesub_limit(const stp_vars_t *v,			/* I */
 }
 
 static void
-dyesub_describe_resolution(const stp_vars_t *v, int *x, int *y)
+dyesub_describe_resolution(const stp_vars_t *v,
+			   stp_resolution_t *x, stp_resolution_t *y)
 {
   const char *resolution = stp_get_string_parameter(v, "Resolution");
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(
@@ -9006,22 +9007,23 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(model);
   int max_print_px_width = 0;
   int max_print_px_height = 0;
-  int w_dpi, h_dpi;	/* Resolution */
+  int w_dpi, h_dpi;
+  stp_resolution_t wr_dpi, hr_dpi;	/* Resolution */
 
   /* output in 1/72" */
-  int out_pt_width  = stp_get_width(v);
-  int out_pt_height = stp_get_height(v);
-  int out_pt_left   = stp_get_left(v);
-  int out_pt_top    = stp_get_top(v);
+  stp_dimension_t out_pt_width  = stp_get_width(v);
+  stp_dimension_t out_pt_height = stp_get_height(v);
+  stp_dimension_t out_pt_left   = stp_get_left(v);
+  stp_dimension_t out_pt_top    = stp_get_top(v);
 
   /* page in 1/72" */
-  int page_pt_width  = stp_get_page_width(v);
-  int page_pt_height = stp_get_page_height(v);
-  int page_pt_left = 0;
-  int page_pt_right = 0;
-  int page_pt_top = 0;
-  int page_pt_bottom = 0;
-  int page_mode;
+  stp_dimension_t page_pt_width  = stp_get_page_width(v);
+  stp_dimension_t page_pt_height = stp_get_page_height(v);
+  stp_dimension_t page_pt_left = 0;
+  stp_dimension_t page_pt_right = 0;
+  stp_dimension_t page_pt_top = 0;
+  stp_dimension_t page_pt_bottom = 0;
+  int page_mode;	
 
   int pl;
 
@@ -9047,7 +9049,9 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   pv.imgw_px = stp_image_width(image);
   pv.imgh_px = stp_image_height(image);
 
-  stp_describe_resolution(v, &w_dpi, &h_dpi);
+  stp_describe_resolution(v, &wr_dpi, &hr_dpi);
+  w_dpi = (int) wr_dpi;
+  h_dpi = (int) hr_dpi;
   dyesub_printsize(v, &max_print_px_width, &max_print_px_height);
 
   /* Duplex processing -- Rotate even pages for DuplexNoTumble */
@@ -9107,14 +9111,14 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
     dyesub_swap_ints(&w_dpi, &h_dpi);
 
   stp_deprintf(STP_DBG_DYESUB,
-	      "paper (pt)   %d x %d\n"
+	      "paper (pt)   %f x %f\n"
 	      "image (px)   %d x %d\n"
-	      "image (pt)   %d x %d\n"
-	      "* out (pt)   %d x %d\n"
+	      "image (pt)   %f x %f\n"
+	      "* out (pt)   %f x %f\n"
 	      "* out (px)   %d x %d\n"
-	      "* left x top (pt) %d x %d\n"
+	      "* left x top (pt) %f x %f\n"
 	      "* left x top (px) %d x %d\n"
-	      "border (pt) (%d - %d) = %d x (%d - %d) = %d\n"
+	      "border (pt) (%f - %f) = %f x (%f - %f) = %f\n"
 	      "printable pixels (px)   %d x %d\n"
 	      "res (dpi)               %d x %d\n",
 	      page_pt_width, page_pt_height,

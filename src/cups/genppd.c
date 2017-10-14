@@ -123,7 +123,7 @@ typedef struct				/**** Media size values ****/
 {
   const char	*name,			/* Media size name */
 		*text;			/* Media size text */
-  int		width,			/* Media width */
+  stp_dimension_t	width,			/* Media width */
 		height,			/* Media height */
 		left,			/* Media left margin */
 		right,			/* Media right margin */
@@ -1246,10 +1246,10 @@ print_page_sizes(gpFile fp, stp_vars_t *v, int simplified,
   int num_opts;
   paper_t *the_papers;
   int i;
-  int		width, height,		/* Page information */
+  stp_dimension_t	width, height,		/* Page information */
 		bottom, left,
 		top, right;
-  int		min_width,		/* Min/max custom size */
+  stp_dimension_t	min_width,		/* Min/max custom size */
 		min_height,
 		max_width,
 		max_height;
@@ -1335,7 +1335,7 @@ print_page_sizes(gpFile fp, stp_vars_t *v, int simplified,
   for (i = 0; i < cur_opt; i ++)
     {
       gpprintf(fp,  "*PageSize %s", the_papers[i].name);
-      gpprintf(fp, "/%s:\t\"<</PageSize[%d %d]/ImagingBBox null>>setpagedevice\"\n",
+      gpprintf(fp, "/%s:\t\"<</PageSize[%.3f %.3f]/ImagingBBox null>>setpagedevice\"\n",
 	       the_papers[i].text, the_papers[i].width, the_papers[i].height);
     }
   gpputs(fp, "*CloseUI: *PageSize\n\n");
@@ -1350,7 +1350,7 @@ print_page_sizes(gpFile fp, stp_vars_t *v, int simplified,
   for (i = 0; i < cur_opt; i ++)
     {
       gpprintf(fp,  "*PageRegion %s", the_papers[i].name);
-      gpprintf(fp, "/%s:\t\"<</PageSize[%d %d]/ImagingBBox null>>setpagedevice\"\n",
+      gpprintf(fp, "/%s:\t\"<</PageSize[%.3f %.3f]/ImagingBBox null>>setpagedevice\"\n",
 	       the_papers[i].text, the_papers[i].width, the_papers[i].height);
     }
   gpputs(fp, "*CloseUI: *PageRegion\n\n");
@@ -1360,7 +1360,7 @@ print_page_sizes(gpFile fp, stp_vars_t *v, int simplified,
   for (i = 0; i < cur_opt; i ++)
     {
       gpprintf(fp,  "*ImageableArea %s", the_papers[i].name);
-      gpprintf(fp, "/%s:\t\"%d %d %d %d\"\n", the_papers[i].text,
+      gpprintf(fp, "/%s:\t\"%.3f %.3f %.3f %.3f\"\n", the_papers[i].text,
 	       the_papers[i].left, the_papers[i].bottom,
 	       the_papers[i].right, the_papers[i].top);
     }
@@ -1372,7 +1372,7 @@ print_page_sizes(gpFile fp, stp_vars_t *v, int simplified,
   for (i = 0; i < cur_opt; i ++)
     {
       gpprintf(fp, "*PaperDimension %s", the_papers[i].name);
-      gpprintf(fp, "/%s:\t\"%d %d\"\n",
+      gpprintf(fp, "/%s:\t\"%.3f %.3f\"\n",
 	       the_papers[i].text, the_papers[i].width, the_papers[i].height);
     }
   gpputs(fp, "\n");
@@ -1392,14 +1392,14 @@ print_page_sizes(gpFile fp, stp_vars_t *v, int simplified,
       if (right > width)
 	width = right;
 
-      gpprintf(fp, "*MaxMediaWidth:  \"%d\"\n", max_width);
-      gpprintf(fp, "*MaxMediaHeight: \"%d\"\n", max_height);
-      gpprintf(fp, "*HWMargins:      %d %d %d %d\n",
+      gpprintf(fp, "*MaxMediaWidth:  \"%.3f\"\n", max_width);
+      gpprintf(fp, "*MaxMediaHeight: \"%.3f\"\n", max_height);
+      gpprintf(fp, "*HWMargins:      %.3f %.3f %.3f %.3f\n",
 	       left, height - bottom, width - right, top);
       gpputs(fp, "*CustomPageSize True: \"pop pop pop <</PageSize[5 -2 roll]/ImagingBBox null>>setpagedevice\"\n");
-      gpprintf(fp, "*ParamCustomPageSize Width:        1 points %d %d\n",
+      gpprintf(fp, "*ParamCustomPageSize Width:        1 points %.3f %.3f\n",
 	       min_width, max_width);
-      gpprintf(fp, "*ParamCustomPageSize Height:       2 points %d %d\n",
+      gpprintf(fp, "*ParamCustomPageSize Height:       2 points %.3f %.3f\n",
 	       min_height, max_height);
       gpputs(fp, "*ParamCustomPageSize WidthOffset:  3 points 0 0\n");
       gpputs(fp, "*ParamCustomPageSize HeightOffset: 4 points 0 0\n");
@@ -1748,15 +1748,15 @@ print_one_option(gpFile fp, stp_vars_t *v, const stp_string_list_t *po,
       gpprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
 	       desc->name, desc->p_type, desc->is_mandatory,
 	       desc->p_class, desc->p_level, desc->channel,
-	       (double) desc->bounds.dimension.lower,
-	       (double) desc->bounds.dimension.upper,
-	       (double) desc->deflt.dimension);
+	       desc->bounds.dimension.lower,
+	       desc->bounds.dimension.upper,
+	       desc->deflt.dimension);
       if (desc->is_mandatory)
 	{
 	  gpprintf(fp, "*DefaultStp%s: %d\n",
-		   desc->name, desc->deflt.dimension);
+		   desc->name, (int) desc->deflt.dimension);
 	  gpprintf(fp, "*StpDefaultStp%s: %d\n",
-		   desc->name, desc->deflt.dimension);
+		   desc->name, (int) desc->deflt.dimension);
 	}
       else
 	{
@@ -1766,8 +1766,8 @@ print_one_option(gpFile fp, stp_vars_t *v, const stp_string_list_t *po,
 	}
       if (!skip_color)
 	{
-	  for (i = desc->bounds.dimension.lower;
-	       i <= desc->bounds.dimension.upper; i++)
+	  for (i = (int) desc->bounds.dimension.lower;
+	       i <= (int) desc->bounds.dimension.upper; i++)
 	    {
 	      snprintf(dimstr, sizeof(dimstr), _("%.1f mm"),
 		       (double)i * 25.4 / 72.0);
@@ -1777,6 +1777,15 @@ print_one_option(gpFile fp, stp_vars_t *v, const stp_string_list_t *po,
 
       print_close_ui = 0;
       gpprintf(fp, "*CloseUI: *Stp%s\n\n", desc->name);
+
+      /*
+       * Add custom option code and value parameter...
+       */
+
+      gpprintf(fp, "*CustomStp%s True: \"pop\"\n", desc->name);
+      gpprintf(fp, "*ParamCustomStp%s Value/%s: 1 points %d %d\n\n",
+	       desc->name, _("Value"), (int) desc->bounds.dimension.lower,
+	       (int) desc->bounds.dimension.upper);
 
       break;
     case STP_PARAMETER_TYPE_INT:
@@ -1893,14 +1902,16 @@ print_one_localization(gpFile fp, const stp_string_list_t *po,
 	gpprintf(fp, "*%s.Stp%s %s/%s: \"\"\n", lang, desc->name,
 		 "None", _("None"));
       /* Unlike the other fields, dimensions are not strictly numbers */
-      for (i = desc->bounds.dimension.lower;
-	   i <= desc->bounds.dimension.upper; i++)
+      for (i = (int) desc->bounds.dimension.lower;
+	   i <= (int) desc->bounds.dimension.upper; i++)
 	{
 	  snprintf(dimstr, sizeof(dimstr), _("%.1f mm"),
 		   (double)i * 25.4 / 72.0);
 	  gpprintf(fp, "*%s.Stp%s %d/%s: \"\"\n", lang,
 		   desc->name, i, dimstr);
 	}
+      gpprintf(fp, "*%s.ParamCustomStp%s Value/%s: \"\"\n", lang,
+	       desc->name, _("Value"));
       break;
 
     case STP_PARAMETER_TYPE_INT:
@@ -1978,7 +1989,7 @@ write_ppd(
 {
   int		i, j, k, l;		/* Looping vars */
   int		num_opts;		/* Number of printer options */
-  int		xdpi, ydpi;		/* Resolution info */
+  stp_resolution_t	xdpi, ydpi;	/* Resolution info */
   stp_vars_t	*v;			/* Variable info */
   const char	*driver;		/* Driver name */
   const char	*family;		/* Printer family */
@@ -2208,7 +2219,7 @@ write_ppd(
 	    }
 	  gpprintf(fp, "*%sStpQuality %s/%s:\t\"<</HWResolution[%d %d]/cupsRowFeed %d>>setpagedevice\"\n",
 		   nocolor && strcmp(opt->name, desc.deflt.str) != 0 ? "?" : "",
-		   opt->name, stp_i18n_lookup(po, opt->text), xdpi, ydpi, i + 1);
+		   opt->name, stp_i18n_lookup(po, opt->text), (int) xdpi, (int) ydpi, i + 1);
 	}
       gpputs(fp, "*CloseUI: *StpQuality\n\n");
     }
@@ -2232,7 +2243,7 @@ write_ppd(
 	  stp_string_list_t *res_list = stp_string_list_create();
 	  char res_name[64];	/* Plenty long enough for XXXxYYYdpi */
 	  int resolution_ok;
-	  int tmp_xdpi, tmp_ydpi;
+	  stp_resolution_t tmp_xdpi, tmp_ydpi;
 
 	  if (is_color_opt)
 	    gpprintf(fp, "*ColorKeyWords: \"Resolution\"\n");
@@ -2268,13 +2279,13 @@ write_ppd(
 		excess resolution.  However, make the hardware resolution
 		match the printer default.
 	      */
-	      (void) snprintf(res_name, 63, "%dx%ddpi", tmp_xdpi + 1, tmp_xdpi);
+	      (void) snprintf(res_name, 63, "%dx%ddpi", (int) tmp_xdpi + 1, (int) tmp_xdpi);
 	      default_resolution = stp_strdup(res_name);
 	      stp_string_list_add_string(res_list, res_name, res_name);
 	      gpprintf(fp, "*DefaultResolution: %s\n", res_name);
 	      gpprintf(fp, "*StpDefaultResolution: %s\n", res_name);
 	      gpprintf(fp, "*Resolution %s/%s:\t\"<</HWResolution[%d %d]>>setpagedevice\"\n",
-		       res_name, _("Automatic"), xdpi, ydpi);
+		       res_name, _("Automatic"), (int) xdpi, (int) ydpi);
 	      gpprintf(fp, "*StpResolutionMap: %s %s\n", res_name, "None");
 	    }
 	  else
@@ -2283,9 +2294,9 @@ write_ppd(
 	      stp_describe_resolution(v, &xdpi, &ydpi);
 
 	      if (xdpi == ydpi)
-		(void) snprintf(res_name, 63, "%ddpi", xdpi);
+		(void) snprintf(res_name, 63, "%ddpi", (int) xdpi);
 	      else
-		(void) snprintf(res_name, 63, "%dx%ddpi", xdpi, ydpi);
+		(void) snprintf(res_name, 63, "%dx%ddpi", (int) xdpi, (int) ydpi);
 	      gpprintf(fp, "*DefaultResolution: %s\n", res_name);
 	      gpprintf(fp, "*StpDefaultResolution: %s\n", res_name);
 	      /*
@@ -2320,9 +2331,9 @@ write_ppd(
 	      do
 		{
 		  if (tmp_xdpi == tmp_ydpi)
-		    (void) snprintf(res_name, 63, "%ddpi", tmp_xdpi);
+		    (void) snprintf(res_name, 63, "%ddpi", (int) tmp_xdpi);
 		  else
-		    (void) snprintf(res_name, 63, "%dx%ddpi", tmp_xdpi, tmp_ydpi);
+		    (void) snprintf(res_name, 63, "%dx%ddpi", (int) tmp_xdpi, (int) tmp_ydpi);
 		  if ((!has_quality_parameter &&
 		       strcmp(opt->name, desc.deflt.str) == 0) ||
 		      !stp_string_list_is_present(res_list, res_name))
@@ -2344,7 +2355,7 @@ write_ppd(
 	      stp_string_list_add_string(resolutions, res_name, opt->text);
 	      gpprintf(fp, "*%sResolution %s/%s:\t\"<</HWResolution[%d %d]/cupsCompression %d>>setpagedevice\"\n",
 		       nocolor && strcmp(opt->name, desc.deflt.str) != 0 ? "?" : "",
-		       res_name, stp_i18n_lookup(po, opt->text), xdpi, ydpi, i + 1);
+		       res_name, stp_i18n_lookup(po, opt->text), (int) xdpi, (int) ydpi, i + 1);
 	      if (strcmp(res_name, opt->name) != 0)
 		gpprintf(fp, "*StpResolutionMap: %s %s\n", res_name, opt->name);
 	    }

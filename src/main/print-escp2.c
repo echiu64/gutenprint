@@ -117,6 +117,14 @@ static const double ink_darknesses[] =
   STP_PARAMETER_LEVEL_INTERNAL, 0, 1, STP_CHANNEL_NONE, 1, 0	\
 }
 
+#define PARAMETER_DIMENSION(s)					\
+{								\
+  "escp2_" #s, "escp2_" #s,					\
+  "Color=Yes,Category=Advanced Printer Functionality", NULL,	\
+  STP_PARAMETER_TYPE_DIMENSION, STP_PARAMETER_CLASS_FEATURE,	\
+  STP_PARAMETER_LEVEL_INTERNAL, 0, 1, STP_CHANNEL_NONE, 1, 0	\
+}
+
 #define PARAMETER_INT_RO(s)					\
 {								\
   "escp2_" #s, "escp2_" #s,					\
@@ -415,12 +423,12 @@ static const stp_parameter_t the_parameters[] =
   PARAMETER_INT(black_nozzle_separation),
   PARAMETER_INT(fast_nozzle_separation),
   PARAMETER_INT(separation_rows),
-  PARAMETER_INT(max_paper_width),
-  PARAMETER_INT(max_paper_height),
-  PARAMETER_INT(min_paper_width),
-  PARAMETER_INT(min_paper_height),
-  PARAMETER_INT(max_imageable_width),
-  PARAMETER_INT(max_imageable_height),
+  PARAMETER_DIMENSION(max_paper_width),
+  PARAMETER_DIMENSION(max_paper_height),
+  PARAMETER_DIMENSION(min_paper_width),
+  PARAMETER_DIMENSION(min_paper_height),
+  PARAMETER_DIMENSION(max_imageable_width),
+  PARAMETER_DIMENSION(max_imageable_height),
   PARAMETER_INT(extra_feed),
   PARAMETER_INT(pseudo_separation_rows),
   PARAMETER_INT(base_separation),
@@ -435,10 +443,10 @@ static const stp_parameter_t the_parameters[] =
   PARAMETER_INT(base_horizontal_position_alignment),
   PARAMETER_INT(bidirectional_upper_limit),
   PARAMETER_INT(physical_channels),
-  PARAMETER_INT(left_margin),
-  PARAMETER_INT(right_margin),
-  PARAMETER_INT(top_margin),
-  PARAMETER_INT(bottom_margin),
+  PARAMETER_DIMENSION(left_margin),
+  PARAMETER_DIMENSION(right_margin),
+  PARAMETER_DIMENSION(top_margin),
+  PARAMETER_DIMENSION(bottom_margin),
   PARAMETER_INT(ink_type),
   PARAMETER_INT(bits),
   PARAMETER_INT(base_res),
@@ -446,10 +454,10 @@ static const stp_parameter_t the_parameters[] =
   PARAMETER_INT_RO(alignment_choices),
   PARAMETER_INT_RO(alternate_alignment_passes),
   PARAMETER_INT_RO(alternate_alignment_choices),
-  PARAMETER_INT(cd_x_offset),
-  PARAMETER_INT(cd_y_offset),
-  PARAMETER_INT(cd_page_width),
-  PARAMETER_INT(cd_page_height),
+  PARAMETER_DIMENSION(cd_page_width),
+  PARAMETER_DIMENSION(cd_page_height),
+  PARAMETER_DIMENSION(cd_x_offset),
+  PARAMETER_DIMENSION(cd_y_offset),
   PARAMETER_INT(paper_extra_bottom),
   PARAMETER_RAW(preinit_sequence),
   PARAMETER_RAW(preinit_remote_sequence),
@@ -1040,6 +1048,19 @@ escp2_##f(const stp_vars_t *v)						\
     }									\
 }
 
+#define DEF_DIMENSION_ACCESSOR(f)					\
+static stp_dimension_t							\
+escp2_##f(const stp_vars_t *v)						\
+{									\
+  if (stp_check_dimension_parameter(v, "escp2_" #f, STP_PARAMETER_ACTIVE)) \
+    return stp_get_dimension_parameter(v, "escp2_" #f);			\
+  else									\
+    {									\
+      stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);	\
+      return (stp_dimension_t) printdef->f;				\
+    }									\
+}
+
 #define DEF_RAW_ACCESSOR(f, t)						\
 static t								\
 escp2_##f(const stp_vars_t *v)						\
@@ -1053,12 +1074,12 @@ escp2_##f(const stp_vars_t *v)						\
     }									\
 }
 
-#define DEF_ROLL_ACCESSOR(f, t)						\
-static t								\
+#define DEF_ROLL_ACCESSOR(f)						\
+static stp_dimension_t							\
 escp2_##f(const stp_vars_t *v, int rollfeed)				\
 {									\
-  if (stp_check_int_parameter(v, "escp2_" #f, STP_PARAMETER_ACTIVE))	\
-    return stp_get_int_parameter(v, "escp2_" #f);			\
+  if (stp_check_dimension_parameter(v, "escp2_" #f, STP_PARAMETER_ACTIVE))	\
+    return stp_get_dimension_parameter(v, "escp2_" #f);			\
   else									\
     {									\
       stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);	\
@@ -1117,28 +1138,36 @@ DEF_SIMPLE_ACCESSOR(alignment_choices, int)
 DEF_SIMPLE_ACCESSOR(alternate_alignment_passes, int)
 DEF_SIMPLE_ACCESSOR(alternate_alignment_choices, int)
 
-DEF_SIMPLE_ACCESSOR(max_paper_width, unsigned)
-DEF_SIMPLE_ACCESSOR(max_paper_height, unsigned)
-DEF_SIMPLE_ACCESSOR(min_paper_width, unsigned)
-DEF_SIMPLE_ACCESSOR(min_paper_height, unsigned)
-DEF_SIMPLE_ACCESSOR(max_imageable_width, unsigned)
-DEF_SIMPLE_ACCESSOR(max_imageable_height, unsigned)
-DEF_SIMPLE_ACCESSOR(cd_page_width, int)
-DEF_SIMPLE_ACCESSOR(cd_page_height, int)
+DEF_DIMENSION_ACCESSOR(max_paper_width)
+DEF_DIMENSION_ACCESSOR(max_paper_height)
+DEF_DIMENSION_ACCESSOR(min_paper_width)
+DEF_DIMENSION_ACCESSOR(min_paper_height)
+DEF_DIMENSION_ACCESSOR(max_imageable_width)
+DEF_DIMENSION_ACCESSOR(max_imageable_height)
+DEF_DIMENSION_ACCESSOR(cd_page_width)
+DEF_DIMENSION_ACCESSOR(cd_page_height)
 
-DEF_SIMPLE_ACCESSOR(cd_x_offset, int)
-DEF_SIMPLE_ACCESSOR(cd_y_offset, int)
+DEF_DIMENSION_ACCESSOR(cd_x_offset)
+DEF_DIMENSION_ACCESSOR(cd_y_offset)
 
-DEF_ROLL_ACCESSOR(left_margin, unsigned)
-DEF_ROLL_ACCESSOR(right_margin, unsigned)
-DEF_ROLL_ACCESSOR(top_margin, unsigned)
-DEF_ROLL_ACCESSOR(bottom_margin, unsigned)
+DEF_ROLL_ACCESSOR(left_margin)
+DEF_ROLL_ACCESSOR(right_margin)
+DEF_ROLL_ACCESSOR(top_margin)
+DEF_ROLL_ACCESSOR(bottom_margin)
 
 DEF_RAW_ACCESSOR(preinit_sequence, const stp_raw_t *)
 DEF_RAW_ACCESSOR(preinit_remote_sequence, const stp_raw_t *)
 DEF_RAW_ACCESSOR(postinit_remote_sequence, const stp_raw_t *)
 
 DEF_RAW_ACCESSOR(vertical_borderless_sequence, const stp_raw_t *)
+
+/* froundto( 500.5 points, 180 dpi, 72 points/inch) */
+static double
+froundto(double value, double numerator, double denominator)
+{
+  double multiplier = (double) ((int) ((numerator + (denominator / 2)) / denominator));
+  return ((double) ((int) ((value * multiplier) + .5))) / multiplier;
+}
 
 static const resolution_list_t *
 escp2_reslist(const stp_vars_t *v)
@@ -1619,8 +1648,8 @@ get_printer_resolution_bounds(const stp_vars_t *v,
 static int
 verify_papersize(const stp_vars_t *v, const stp_papersize_t *pt)
 {
-  unsigned int height_limit, width_limit;
-  unsigned int min_height_limit, min_width_limit;
+  stp_dimension_t height_limit, width_limit;
+  stp_dimension_t min_height_limit, min_width_limit;
   unsigned int envelope_landscape =
     stp_escp2_has_cap(v, MODEL_ENVELOPE_LANDSCAPE, MODEL_ENVELOPE_LANDSCAPE_YES);
   width_limit = escp2_max_paper_width(v);
@@ -2845,7 +2874,7 @@ stp_escp2_find_resolution(const stp_vars_t *v)
 }
 
 static inline int
-imax(int a, int b)
+smax(stp_dimension_t a, stp_dimension_t b)
 {
   if (a > b)
     return a;
@@ -2855,8 +2884,8 @@ imax(int a, int b)
 
 static void
 escp2_media_size(const stp_vars_t *v,	/* I */
-		 int  *width,		/* O - Width in points */
-		 int  *height) 		/* O - Height in points */
+		 stp_dimension_t  *width,		/* O - Width in points */
+		 stp_dimension_t  *height) 		/* O - Height in points */
 {
   if (stp_get_page_width(v) > 0 && stp_get_page_height(v) > 0)
     {
@@ -2921,17 +2950,18 @@ escp2_media_size(const stp_vars_t *v,	/* I */
 static void
 internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
 			int use_maximum_area,
-			int *left, int *right, int *bottom, int *top)
+			stp_dimension_t *left, stp_dimension_t *right,
+			stp_dimension_t *bottom, stp_dimension_t *top)
 {
-  int	width, height;			/* Size of page */
+  stp_dimension_t	width, height;			/* Size of page */
   int	rollfeed = 0;			/* Roll feed selected */
   int	cd = 0;			/* CD selected */
   const char *media_size = stp_get_string_parameter(v, "PageSize");
   const char *duplex = stp_get_string_parameter(v, "Duplex");
-  int left_margin = 0;
-  int right_margin = 0;
-  int bottom_margin = 0;
-  int top_margin = 0;
+  stp_dimension_t left_margin = 0;
+  stp_dimension_t right_margin = 0;
+  stp_dimension_t bottom_margin = 0;
+  stp_dimension_t top_margin = 0;
   const stp_papersize_t *pt = NULL;
   const input_slot_t *input_slot = NULL;
 
@@ -2973,10 +3003,10 @@ internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
 	  top_margin = pt->top;
 	}
 
-      left_margin = imax(left_margin, escp2_left_margin(v, rollfeed));
-      right_margin = imax(right_margin, escp2_right_margin(v, rollfeed));
-      bottom_margin = imax(bottom_margin, escp2_bottom_margin(v, rollfeed));
-      top_margin = imax(top_margin, escp2_top_margin(v, rollfeed));
+      left_margin = smax(left_margin, escp2_left_margin(v, rollfeed));
+      right_margin = smax(right_margin, escp2_right_margin(v, rollfeed));
+      bottom_margin = smax(bottom_margin, escp2_bottom_margin(v, rollfeed));
+      top_margin = smax(top_margin, escp2_top_margin(v, rollfeed));
     }
   if (supports_borderless(v) &&
       (use_maximum_area ||
@@ -2989,11 +3019,11 @@ internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
 	    {
 	      if (use_paper_margins)
 		{
-		  unsigned width_limit = escp2_max_paper_width(v);
-		  int offset = escp2_zero_margin_offset(v);
-		  int margin = escp2_micro_left_margin(v);
-		  int sep = escp2_base_separation(v);
-		  int delta = -((offset - margin) * 72 / sep);
+		  stp_dimension_t width_limit = escp2_max_paper_width(v);
+		  stp_dimension_t offset = escp2_zero_margin_offset(v);
+		  stp_dimension_t margin = escp2_micro_left_margin(v);
+		  stp_dimension_t sep = escp2_base_separation(v);
+		  stp_dimension_t delta = -((offset - margin) * 72.0 / sep);
 		  left_margin = delta; /* Allow some overlap if paper isn't */
 		  right_margin = delta; /* positioned correctly */
 		  if (width - right_margin - 3 > width_limit)
@@ -3021,10 +3051,10 @@ internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
     }
   if (!use_maximum_area && duplex && strcmp(duplex, "None") != 0)
     {
-      left_margin = imax(left_margin, escp2_duplex_left_margin(v));
-      right_margin = imax(right_margin, escp2_duplex_right_margin(v));
-      bottom_margin = imax(bottom_margin, escp2_duplex_bottom_margin(v));
-      top_margin = imax(top_margin, escp2_duplex_top_margin(v));
+      left_margin = smax(left_margin, escp2_duplex_left_margin(v));
+      right_margin = smax(right_margin, escp2_duplex_right_margin(v));
+      bottom_margin = smax(bottom_margin, escp2_duplex_bottom_margin(v));
+      top_margin = smax(top_margin, escp2_duplex_top_margin(v));
     }
 
   if (width > escp2_max_imageable_width(v))
@@ -3043,28 +3073,28 @@ internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
 
 static void
 escp2_imageable_area(const stp_vars_t *v,   /* I */
-		     int  *left,	/* O - Left position in points */
-		     int  *right,	/* O - Right position in points */
-		     int  *bottom,	/* O - Bottom position in points */
-		     int  *top)		/* O - Top position in points */
+		     stp_dimension_t  *left,	/* O - Left position in points */
+		     stp_dimension_t  *right,	/* O - Right position in points */
+		     stp_dimension_t  *bottom,	/* O - Bottom position in points */
+		     stp_dimension_t  *top)		/* O - Top position in points */
 {
   internal_imageable_area(v, 1, 0, left, right, bottom, top);
 }
 
 static void
 escp2_maximum_imageable_area(const stp_vars_t *v,   /* I */
-			     int  *left,   /* O - Left position in points */
-			     int  *right,  /* O - Right position in points */
-			     int  *bottom, /* O - Bottom position in points */
-			     int  *top)    /* O - Top position in points */
+			     stp_dimension_t  *left,   /* O - Left position in points */
+			     stp_dimension_t  *right,  /* O - Right position in points */
+			     stp_dimension_t  *bottom, /* O - Bottom position in points */
+			     stp_dimension_t  *top)    /* O - Top position in points */
 {
   internal_imageable_area(v, 1, 1, left, right, bottom, top);
 }
 
 static void
 escp2_limit(const stp_vars_t *v,			/* I */
-	    int *width, int *height,
-	    int *min_width, int *min_height)
+	    stp_dimension_t *width, stp_dimension_t *height,
+	    stp_dimension_t *min_width, stp_dimension_t *min_height)
 {
   *width =	escp2_max_paper_width(v);
   *height =	escp2_max_paper_height(v);
@@ -3073,7 +3103,7 @@ escp2_limit(const stp_vars_t *v,			/* I */
 }
 
 static void
-escp2_describe_resolution(const stp_vars_t *v, int *x, int *y)
+escp2_describe_resolution(const stp_vars_t *v, stp_resolution_t *x, stp_resolution_t *y)
 {
   const res_t *res = stp_escp2_find_resolution(v);
   if (res && verify_resolution(v, res))
@@ -4052,9 +4082,9 @@ setup_page(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
   const input_slot_t *input_slot = stp_escp2_get_input_slot(v);
-  int extra_left = 0;
-  int extra_top = 0;
-  int hub_size = 0;
+  stp_dimension_t extra_left = 0;
+  stp_dimension_t extra_top = 0;
+  stp_dimension_t hub_size = 0;
   int min_horizontal_alignment = escp2_min_horizontal_position_alignment(v);
   int base_horizontal_alignment =
     pd->res->hres / escp2_base_horizontal_position_alignment(v);
@@ -4064,7 +4094,8 @@ setup_page(stp_vars_t *v)
   const char *cd_type = stp_get_string_parameter(v, "PageSize");
   if (cd_type && (strcmp(cd_type, "CDCustom") == 0 ))
      {
-	int outer_diameter = stp_get_dimension_parameter(v, "CDOuterDiameter");
+	stp_dimension_t outer_diameter =
+	  stp_get_dimension_parameter(v, "CDOuterDiameter");
 	stp_set_page_width(v, outer_diameter);
 	stp_set_page_height(v, outer_diameter);
 	stp_set_width(v, outer_diameter);
@@ -4074,11 +4105,11 @@ setup_page(stp_vars_t *v)
  else
     {
 	const char *inner_radius_name = stp_get_string_parameter(v, "CDInnerRadius");
-  	hub_size = 43 * 10 * 72 / 254;	/* 43 mm standard CD hub */
+  	hub_size = 43.0 * 10.0 * 72.0 / 254.0;	/* 43 mm standard CD hub */
 
   	if (inner_radius_name && strcmp(inner_radius_name, "Small") == 0)
-   	  hub_size = 16 * 10 * 72 / 254;	/* 15 mm prints to the hole - play it
-				   safe and print 16 mm */
+   	  hub_size = 16.0 * 10.0 * 72.0 / 254.0;	/* 15 mm prints to the hole -
+							   play safe and print 16 mm */
     }
 
   escp2_media_size(v, &(pd->page_true_width), &(pd->page_true_height));
@@ -4134,11 +4165,16 @@ setup_page(stp_vars_t *v)
   internal_imageable_area(v, 0, 0, &pd->page_left, &pd->page_right,
 			  &pd->page_bottom, &pd->page_top);
 
+  stp_set_left(v, froundto(stp_get_left(v), pd->res->hres, 72));
+  stp_set_width(v, froundto(stp_get_width(v), pd->res->hres, 72));
+  stp_set_top(v, froundto(stp_get_top(v), pd->res->hres, 72));
+  stp_set_height(v, froundto(stp_get_height(v), pd->res->hres, 72));
+
   if (input_slot && input_slot->is_cd && escp2_cd_x_offset(v) > 0)
     {
-      int left_center = escp2_cd_x_offset(v) +
+      stp_dimension_t left_center = escp2_cd_x_offset(v) +
 	stp_get_dimension_parameter(v, "CDXAdjustment");
-      int top_center = escp2_cd_y_offset(v) +
+      stp_dimension_t top_center = escp2_cd_y_offset(v) +
 	stp_get_dimension_parameter(v, "CDYAdjustment");
       pd->page_true_height = pd->page_bottom - pd->page_top;
       pd->page_true_width = pd->page_right - pd->page_left;
@@ -4150,13 +4186,13 @@ setup_page(stp_vars_t *v)
       pd->page_bottom -= pd->page_top;
       pd->page_top = 0;
       pd->page_left = 0;
-      extra_top = top_center - (pd->page_bottom / 2);
-      extra_left = left_center - (pd->page_right / 2);
-      pd->cd_inner_radius = hub_size * pd->micro_units / 72 / 2;
-      pd->cd_outer_radius = pd->page_right * pd->micro_units / 72 / 2;
+      extra_top = top_center - (pd->page_bottom / 2.0);
+      extra_left = left_center - (pd->page_right / 2.0);
+      pd->cd_inner_radius = hub_size * pd->micro_units / 72.0 / 2.0;
+      pd->cd_outer_radius = pd->page_right * pd->micro_units / 72.0 / 2.0;
       pd->cd_x_offset =
-	((pd->page_right / 2) - stp_get_left(v)) * pd->micro_units / 72;
-      pd->cd_y_offset = stp_get_top(v) * pd->res->printed_vres / 72;
+	((pd->page_right / 2.0) - stp_get_left(v)) * pd->micro_units / 72.0;
+      pd->cd_y_offset = stp_get_top(v) * pd->res->printed_vres / 72.0;
       if (escp2_cd_page_height(v))
 	{
 	  pd->page_right = escp2_cd_page_width(v);
@@ -4279,15 +4315,15 @@ escp2_print_data(stp_vars_t *v, stp_image_t *image)
   int errlast = -1;
   int errline  = 0;
   int y;
-  double outer_r_sq = 0;
-  double inner_r_sq = 0;
+  stp_dimension_t outer_r_sq = 0;
+  stp_dimension_t inner_r_sq = 0;
   int x_center = pd->cd_x_offset * pd->res->printed_hres / pd->micro_units;
   unsigned char *cd_mask = NULL;
   if (pd->cd_outer_radius > 0)
     {
       cd_mask = stp_malloc(1 + (pd->image_printed_width + 7) / 8);
-      outer_r_sq = (double) pd->cd_outer_radius * (double) pd->cd_outer_radius;
-      inner_r_sq = (double) pd->cd_inner_radius * (double) pd->cd_inner_radius;
+      outer_r_sq = pd->cd_outer_radius * pd->cd_outer_radius;
+      inner_r_sq = pd->cd_inner_radius * pd->cd_inner_radius;
     }
 
   for (y = 0; y < pd->image_printed_height; y ++)
@@ -4305,7 +4341,7 @@ escp2_print_data(stp_vars_t *v, stp_image_t *image)
 
       if (cd_mask)
 	{
-	  int y_distance_from_center =
+	  stp_dimension_t y_distance_from_center =
 	    pd->cd_outer_radius -
 	    ((y + pd->cd_y_offset) * pd->micro_units / pd->res->printed_vres);
 	  if (y_distance_from_center < 0)
@@ -4313,15 +4349,14 @@ escp2_print_data(stp_vars_t *v, stp_image_t *image)
 	  memset(cd_mask, 0, (pd->image_printed_width + 7) / 8);
 	  if (y_distance_from_center < pd->cd_outer_radius)
 	    {
-	      double y_sq = (double) y_distance_from_center *
-		(double) y_distance_from_center;
-	      int x_where = sqrt(outer_r_sq - y_sq) + .5;
+	      stp_dimension_t y_sq = y_distance_from_center * y_distance_from_center;
+	      stp_dimension_t x_where = sqrt(outer_r_sq - y_sq);
 	      int scaled_x_where = x_where * pd->res->printed_hres / pd->micro_units;
 	      set_mask(cd_mask, x_center, scaled_x_where,
 		       pd->image_printed_width, 1, 0);
 	      if (y_distance_from_center < pd->cd_inner_radius)
 		{
-		  x_where = sqrt(inner_r_sq - y_sq) + .5;
+		  x_where = sqrt(inner_r_sq - y_sq);
 		  scaled_x_where = x_where * pd->res->printed_hres / pd->micro_units;
 		  set_mask(cd_mask, x_center, scaled_x_where,
 			   pd->image_printed_width, 1, 1);

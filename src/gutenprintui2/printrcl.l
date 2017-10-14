@@ -68,11 +68,10 @@ q_strdup(const char *s)
 
 digit		[0-9]
 boolean		(True)|(False)
-integer		[-+]?{digit}+
-float		[-+]?{digit}+(\.{digit}+)?([eE][-+]?{digit}+)?
-string         ([\"][^\"\n]*[\"])|([\'][^\']*[\'])
+number		[-+]?{digit}+(\.{digit}+)?([eE][-+]?{digit}+)?
+string		([\"][^\"\n]*[\"])|([\'][^\']*[\'])
 ws		[ \t]+
-printrc_hdr	#PRINTRCv[234].*\n
+printrc_hdr	#PRINTRCv[2345].*\n
 word		[a-zA-Z][a-zA-Z0-9_]*
 
 %%
@@ -109,8 +108,7 @@ Dimension		DBG(pDIMENSION); return pDIMENSION;
 Boolean			DBG(pBOOLEAN); return pBOOLEAN;
 Curve			DBG(pCURVE); return pCURVE;
 
-{integer}		yylval.ival = atoi(yytext); DBG(tINT); return tINT;
-{float}			yylval.dval = strtod(yytext, NULL); DBG(tDOUBLE); return tDOUBLE;
+{number}		yylval.dval = strtod(yytext, NULL); DBG(tNUMBER); return tNUMBER;
 {string}		yylval.sval = q_strdup(yytext); DBG(tSTRING); return tSTRING;
 {boolean}		yylval.sval = g_strdup(yytext); DBG(tBOOLEAN); return tBOOLEAN;
 {word}			yylval.sval = g_strdup(yytext); DBG(tWORD); return tWORD;

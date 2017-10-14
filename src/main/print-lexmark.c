@@ -1094,7 +1094,8 @@ lexmark_sat_adjustment(const lexmark_cap_t * caps, const stp_vars_t *v)
 
 
 static void
-lexmark_describe_resolution(const stp_vars_t *v, int *x, int *y)
+lexmark_describe_resolution(const stp_vars_t *v,
+			    stp_resolution_t *x, stp_resolution_t *y)
 {
   const char *resolution = stp_get_string_parameter(v, "Resolution");
   const lexmark_res_t *res =
@@ -1307,16 +1308,16 @@ lexmark_parameters(const stp_vars_t *v, const char *name,
 static void
 internal_imageable_area(const stp_vars_t *v,   /* I */
 			int  use_paper_margins,
-			int  *left,	/* O - Left position in points */
-			int  *right,	/* O - Right position in points */
-			int  *bottom,	/* O - Bottom position in points */
-			int  *top)	/* O - Top position in points */
+			stp_dimension_t  *left,	/* O - Left position in points */
+			stp_dimension_t  *right,	/* O - Right position in points */
+			stp_dimension_t  *bottom,	/* O - Bottom position in points */
+			stp_dimension_t  *top)	/* O - Top position in points */
 {
-  int	width, length;			/* Size of page */
-  int left_margin = 0;
-  int right_margin = 0;
-  int bottom_margin = 0;
-  int top_margin = 0;
+  stp_dimension_t	width, length;			/* Size of page */
+  stp_dimension_t left_margin = 0;
+  stp_dimension_t right_margin = 0;
+  stp_dimension_t bottom_margin = 0;
+  stp_dimension_t top_margin = 0;
   const char *media_size = stp_get_string_parameter(v, "PageSize");
   const stp_papersize_t *pt = NULL;
   const lexmark_cap_t *caps =
@@ -1347,20 +1348,20 @@ internal_imageable_area(const stp_vars_t *v,   /* I */
 
 static void
 lexmark_imageable_area(const stp_vars_t *v,   /* I */
-		       int  *left,	/* O - Left position in points */
-		       int  *right,	/* O - Right position in points */
-		       int  *bottom,	/* O - Bottom position in points */
-		       int  *top)	/* O - Top position in points */
+		       stp_dimension_t  *left,	/* O - Left position in points */
+		       stp_dimension_t  *right,	/* O - Right position in points */
+		       stp_dimension_t  *bottom,	/* O - Bottom position in points */
+		       stp_dimension_t  *top)	/* O - Top position in points */
 {
   internal_imageable_area(v, 1, left, right, bottom, top);
 }
 
 static void
 lexmark_limit(const stp_vars_t *v,  		/* I */
-	      int *width,
-	      int *height,
-	      int *min_width,
-	      int *min_height)
+	      stp_dimension_t *width,
+	      stp_dimension_t *height,
+	      stp_dimension_t *min_width,
+	      stp_dimension_t *min_height)
 {
   const lexmark_cap_t * caps= lexmark_get_model_capabilities(stp_get_model_id(v));
   *width =	caps->max_paper_width;
@@ -1597,15 +1598,16 @@ lexmark_do_print(stp_vars_t *v, stp_image_t *image)
 {
   int		status = 1;
   int		y;		/* Looping vars */
-  int		xdpi, ydpi;	/* Resolution */
-  int		n;		/* Output number */
-  int page_width,	/* Width of page */
+  stp_resolution_t	xdpi, ydpi;	/* Resolution */
+  stp_dimension_t page_width,	/* Width of page */
     page_height,	/* Length of page */
     page_left,
     page_top,
     page_right,
     page_bottom,
-    page_true_height,	/* True length of page */
+    page_true_width,	/* True length of page */
+    page_true_height;	/* True length of page */
+  int
     out_width,	/* Width of image on page in pixels */
     out_height,	/* Length of image on page */
     length,		/* Length of raster data in bytes*/
@@ -1652,8 +1654,8 @@ lexmark_do_print(stp_vars_t *v, stp_image_t *image)
   const char    *print_mode = stp_get_string_parameter(v, "PrintingMode");
   int printing_color = 0;
   const char	*ink_type     = stp_get_string_parameter(v, "InkType");
-  int		top = stp_get_top(v);
-  int		left = stp_get_left(v);
+  stp_dimension_t	top = stp_get_top(v);
+  stp_dimension_t	left = stp_get_left(v);
 
   const lexmark_cap_t * caps= lexmark_get_model_capabilities(model);
   const lexmark_res_t *res_para_ptr =
@@ -1712,7 +1714,7 @@ lexmark_do_print(stp_vars_t *v, stp_image_t *image)
    */
 
   stp_describe_resolution(v, &xdpi, &ydpi);
-  stp_dprintf(STP_DBG_LEXMARK, v, "lexmark: resolution=%dx%d\n",xdpi,ydpi);
+  stp_dprintf(STP_DBG_LEXMARK, v, "lexmark: resolution=%dx%d\n",(int)xdpi,(int)ydpi);
 
   switch (res_para_ptr->resid) {
   case DPI300:
@@ -1750,8 +1752,8 @@ densityDivisor /= 1.2;
   nozzle_separation = ydpi / physical_ydpi;
 
   horizontal_passes = xdpi / physical_xdpi;
-  stp_dprintf(STP_DBG_LEXMARK, v, "lexmark: horizontal_passes %i, xdpi %i, physical_xdpi %i\n",
-	       horizontal_passes, xdpi, physical_xdpi);
+  stp_dprintf(STP_DBG_LEXMARK, v, "lexmark: horizontal_passes %i, xdpi %d, physical_xdpi %i\n",
+	      horizontal_passes, (int)xdpi, physical_xdpi);
 
 
 
@@ -1776,11 +1778,11 @@ densityDivisor /= 1.2;
   page_width = page_right - page_left;
   page_height = page_bottom - page_top;
 
-  stp_dprintf(STP_DBG_LEXMARK, v, "page_right %d, page_left %d, page_top %d, page_bottom %d, left %d, top %d\n",page_right, page_left, page_top, page_bottom,left, top);
+  stp_dprintf(STP_DBG_LEXMARK, v, "page_right %f, page_left %f, page_top %f, page_bottom %f, left %f, top %f\n",page_right, page_left, page_top, page_bottom,left, top);
 
   image_height = stp_image_height(image);
 
-  stp_default_media_size(v, &n, &page_true_height);
+  stp_default_media_size(v, &page_true_width, &page_true_height);
   lxm3200_linetoeject = (page_true_height * 1200) / 72;
 
 
@@ -1798,11 +1800,11 @@ densityDivisor /= 1.2;
   out_height = ydpi * out_height / 72;
 
 
-  stp_dprintf(STP_DBG_LEXMARK, v, "border: left %d, x_raster_res %d, offset_left %d\n", left, caps->x_raster_res, caps->offset_left_border);
+  stp_dprintf(STP_DBG_LEXMARK, v, "border: left %f, x_raster_res %d, offset_left %d\n", left, caps->x_raster_res, caps->offset_left_border);
 
   left = ((caps->x_raster_res * left) / 72) + caps->offset_left_border;
 
-  stp_dprintf(STP_DBG_LEXMARK, v, "border: left %d\n", left);
+  stp_dprintf(STP_DBG_LEXMARK, v, "border: left %f\n", left);
 
 
 

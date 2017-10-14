@@ -88,8 +88,8 @@ query (void)
     { GIMP_PDB_DRAWABLE,(BAD_CONST_CHAR) "drawable",(BAD_CONST_CHAR) "Input drawable" },
     { GIMP_PDB_STRING,	(BAD_CONST_CHAR) "driver",	(BAD_CONST_CHAR) "Printer driver short name" },
     { GIMP_PDB_STRING,	(BAD_CONST_CHAR) "printer_queue",(BAD_CONST_CHAR) "CUPS Printer Queue" },
-    { GIMP_PDB_INT32,   (BAD_CONST_CHAR) "left",    (BAD_CONST_CHAR) "Left offset (points, -1 = centered)" },
-    { GIMP_PDB_INT32,   (BAD_CONST_CHAR) "top",     (BAD_CONST_CHAR) "Top offset (points, -1 = centered)" },
+    { GIMP_PDB_FLOAT,   (BAD_CONST_CHAR) "left",    (BAD_CONST_CHAR) "Left offset (points, -1 = centered)" },
+    { GIMP_PDB_FLOAT,   (BAD_CONST_CHAR) "top",     (BAD_CONST_CHAR) "Top offset (points, -1 = centered)" },
     { GIMP_PDB_INT32,   (BAD_CONST_CHAR) "length_key_value_array", (BAD_CONST_CHAR) "Length of the key-value array" },
     { GIMP_PDB_STRINGARRAY, (BAD_CONST_CHAR) "keys", (BAD_CONST_CHAR) "Key-value pairs for Gutenprint Settings" },
   };
@@ -305,13 +305,13 @@ run (const char        *name,		/* I - Name of print program. */
        * Left offset (points, -1 = centered)
        */
 
-      stp_set_left(gimp_vars.v, param[6].data.d_int32);
+      stp_set_left(gimp_vars.v, param[6].data.d_float);
 
       /*
        * Top offset (points, -1 = centered)
        */
 
-      stp_set_top(gimp_vars.v, param[5].data.d_int32);
+      stp_set_top(gimp_vars.v, param[5].data.d_float);
 
       /*
        * Parse remaining parameters from key-value string array
@@ -371,6 +371,7 @@ run (const char        *name,		/* I - Name of print program. */
             break;
 
           case STP_PARAMETER_TYPE_DOUBLE:
+          case STP_PARAMETER_TYPE_DIMENSION:
 
             /*
              * Some useful floating point stp parameters
@@ -397,7 +398,10 @@ run (const char        *name,		/* I - Name of print program. */
             }
             else
             {
-              stp_set_float_parameter(gimp_vars.v, key, float_value);
+	      if (desc.p_type == STP_PARAMETER_TYPE_DOUBLE)
+		stp_set_float_parameter(gimp_vars.v, key, float_value);
+	      else
+		stp_set_dimension_parameter(gimp_vars.v, key, float_value);
             }
             break;
 
@@ -405,7 +409,6 @@ run (const char        *name,		/* I - Name of print program. */
           case STP_PARAMETER_TYPE_FILE:
           case STP_PARAMETER_TYPE_RAW:
           case STP_PARAMETER_TYPE_ARRAY:
-          case STP_PARAMETER_TYPE_DIMENSION:
             values[0].data.d_status = GIMP_PDB_CALLING_ERROR;
             fprintf(stderr,"Parameter type unsupported in gimp2 plugin for parameter %s\n", key);
             break;
