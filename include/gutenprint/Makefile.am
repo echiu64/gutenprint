@@ -44,6 +44,7 @@ pkginclude_HEADERS = \
 	printers.h \
 	sequence.h \
 	string-list.h \
+	types.h \
 	util.h \
 	vars.h \
 	weave.h \

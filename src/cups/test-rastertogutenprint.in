@@ -232,8 +232,9 @@ get_ppds() {
 }
 
 if [ -n "$make_ppds" -o ! -d ppd/C ] ; then
-    make ppd-nonls-a
-## Not all systems can work with gzipped PPDs
+    rm -rf ppd/C		# Clean out any leftover simplified PPDs
+    make ppd-nonls-a		# that double the time for the test
+## not all systems can work with gzipped PPDs
     find ppd/C -name '*.ppd.gz' | xargs gunzip -f
 fi
 

@@ -55,9 +55,9 @@ install-data-local: NEWS AUTHORS COPYING README
 # live branches from that time) to save a lot of diffs.
 
 ChangeLog:
-	if [ -d .git -a -f ChangeLog.pre-5.2.11 ] ; then \
+	if [ -d .git -a -f ChangeLog.pre-5.3 ] ; then \
 	  $(MAKE) -C scripts mkgitlog; \
-	  scripts/mkgitlog -i ChangeLog.pre-5.2.11 -r gutenprint-5_2_11 > ChangeLog; \
+	  scripts/mkgitlog -i ChangeLog.pre-5.3 -r gutenprint-5_3-OPEN > ChangeLog; \
 	fi
 
 configure.in:
