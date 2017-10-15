@@ -197,13 +197,6 @@ stp_printer_get_manufacturer(const stp_printer_t *printer)
 }
 
 const char *
-stp_printer_get_foomatic_id(const stp_printer_t *printer)
-{
-  stp_erprintf("stp_printer_get_foomatic_id is DEPRECATED\n");
-  return NULL;
-}
-
-const char *
 stp_printer_get_comment(const stp_printer_t *printer)
 {
   return printer->comment;
@@ -275,13 +268,6 @@ stp_get_printer_by_device_id(const char *device_id)
 	return ((const stp_printer_t *) stp_list_item_get_data(printer_item));
       printer_item = stp_list_item_next(printer_item);
     }
-  return NULL;
-}
-
-const stp_printer_t *
-stp_get_printer_by_foomatic_id(const char *foomatic_id)
-{
-  stp_erprintf("stp_get_printer_by_foomatic_id is DEPRECATED\n");
   return NULL;
 }
 

@@ -800,7 +800,7 @@ A) PRINTER INSTALLATION
 
     Other PPD files are described differently, such as
 
-    Epson MJ 520C Foomatic/stcolor (recommended)
+    EPSON New Stylus Color Series CUPS v1.1 (recommended)
 
     These PPD files, whether "recommended" or not, are not Gutenprint
     PPD files.

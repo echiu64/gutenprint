@@ -90,14 +90,6 @@ extern const stp_printer_t *stp_get_printer_by_driver(const char *driver);
 extern const stp_printer_t *stp_get_printer_by_device_id(const char *device_id);
 
 /**
- * Get a printer model by its foomatic ID.
- * @param foomatic_id the printer model's foomatic ID
- * @returns a pointer to the printer model, or NULL on failure.  The
- * pointer should not be freed.
- */
-extern const stp_printer_t *stp_get_printer_by_foomatic_id(const char *foomatic_id);
-
-/**
  * Get the printer model from a vars object.
  * @param v the vars to use.
  * @returns a pointer to the printer model, or NULL on failure.  The
@@ -149,13 +141,6 @@ extern const char *stp_printer_get_family(const stp_printer_t *p);
  * @returns the manufacturer's name (should never be freed).
  */
 extern const char *stp_printer_get_manufacturer(const stp_printer_t *p);
-
-/**
- * Get a printer model's foomatic ID
- * @param p the printer model to use.
- * @returns the foomatic ID or NULL (should never be freed)
- */
-extern const char *stp_printer_get_foomatic_id(const stp_printer_t *p);
 
 /**
  * Get a printer model's comment string
