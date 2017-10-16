@@ -784,12 +784,10 @@ build_printer_combo(void)
 static int
 check_page_size(const char *paper_size)
 {
-  const stp_papersize_t *ps = stp_get_papersize_by_name(paper_size);
-  if (ps && (ps->paper_unit == PAPERSIZE_ENGLISH_STANDARD ||
-	     ps->paper_unit == PAPERSIZE_METRIC_STANDARD))
-    return 1;
-  else
-    return 0;
+  const stp_papersize_t *ps = stp_describe_papersize(pv->v, paper_size);
+  int page_size_ok = (ps && (ps->paper_unit == PAPERSIZE_ENGLISH_STANDARD ||
+			     ps->paper_unit == PAPERSIZE_METRIC_STANDARD));
+  return page_size_ok;
 }
 
 static void
@@ -3330,7 +3328,7 @@ static void
 setup_auto_paper_size(void)
 {
   const stp_papersize_t *ps =
-    stp_get_papersize_by_name(stp_get_string_parameter(pv->v, "PageSize"));
+    stp_describe_papersize(pv->v, stp_get_string_parameter(pv->v, "PageSize"));
   if (ps->height == 0 && ps->width != 0)		/* Implies roll feed */
     {
       g_signal_handlers_block_matched (G_OBJECT(auto_paper_size_button),
@@ -3516,7 +3514,7 @@ static void
 set_media_size(const gchar *new_media_size)
 {
   static int setting_media_size = 0;
-  const stp_papersize_t *pap = stp_get_papersize_by_name (new_media_size);
+  const stp_papersize_t *pap = stp_describe_papersize (pv->v, new_media_size);
 
   if (setting_media_size)
     return;
@@ -3537,7 +3535,7 @@ set_media_size(const gchar *new_media_size)
 	  stp_parameter_t desc;
 	  stp_describe_parameter(pv->v, "PageSize", &desc);
 	  stp_set_string_parameter(pv->v, "PageSize", desc.deflt.str);
-	  pap = stp_get_papersize_by_name(desc.deflt.str);
+	  pap = stp_describe_papersize(pv->v, desc.deflt.str);
 	  stp_parameter_description_destroy(&desc);
 	  for (i = 0; i < current_option_count; i++)
 	    {

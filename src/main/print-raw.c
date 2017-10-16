@@ -156,15 +156,17 @@ raw_parameters(const stp_vars_t *v, const char *name,
     }
   else if (strcmp(name, "PageSize") == 0)
     {
-      int papersizes = stp_known_papersizes();
+      const stp_papersize_list_t *paper_sizes =
+	stpi_get_standard_papersize_list();
+      const stp_papersize_list_item_t *ptli =
+	stpi_papersize_list_get_start(paper_sizes);
       description->bounds.str = stp_string_list_create();
-      for (i = 0; i < papersizes; i++)
+      while (ptli)
 	{
-	  /* All users of the raw drivers should use "Custom" PageSize
-	     and manually set page height/width! */
-	  const stp_papersize_t *pt = stp_get_papersize_by_index(i);
+	  const stp_papersize_t *pt = stpi_paperlist_item_get_data(ptli);
 	  stp_string_list_add_string(description->bounds.str,
 				     pt->name, gettext(pt->text));
+	  ptli = stpi_paperlist_item_next(ptli);
 	}
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
@@ -361,7 +363,8 @@ static const stp_printfuncs_t print_raw_printfuncs =
   stp_verify_printer_params,
   NULL,
   NULL,
-  NULL
+  NULL,
+  stpi_standard_describe_papersize
 };
 
 
@@ -377,14 +380,14 @@ static stp_family_t print_raw_module_data =
 static int
 print_raw_module_init(void)
 {
-  return stp_family_register(print_raw_module_data.printer_list);
+  return stpi_family_register(print_raw_module_data.printer_list);
 }
 
 
 static int
 print_raw_module_exit(void)
 {
-  return stp_family_unregister(print_raw_module_data.printer_list);
+  return stpi_family_unregister(print_raw_module_data.printer_list);
 }
 
 

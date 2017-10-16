@@ -1002,7 +1002,7 @@ lexmark_size_type
 static unsigned char
 lexmark_size_type(const stp_vars_t *v, const lexmark_cap_t * caps)
 {
-  const stp_papersize_t *pp = stp_get_papersize_by_size(stp_get_page_height(v),
+  const stp_papersize_t *pp = stpi_get_papersize_by_size(v, stp_get_page_height(v),
 							stp_get_page_width(v));
   if (pp)
     {
@@ -1202,7 +1202,9 @@ lexmark_parameters(const stp_vars_t *v, const char *name,
   {
     unsigned int height_limit, width_limit;
     unsigned int min_height_limit, min_width_limit;
-    int papersizes = stp_known_papersizes();
+    const stp_papersize_list_t *paper_sizes = stpi_get_standard_papersize_list();
+    const stp_papersize_list_item_t *ptli =
+      stpi_papersize_list_get_start(paper_sizes);
     description->bounds.str = stp_string_list_create();
 
     width_limit  = caps->max_paper_width;
@@ -1210,23 +1212,25 @@ lexmark_parameters(const stp_vars_t *v, const char *name,
     min_width_limit  = caps->min_paper_width;
     min_height_limit = caps->min_paper_height;
 
-    for (i = 0; i < papersizes; i++) {
-      const stp_papersize_t *pt = stp_get_papersize_by_index(i);
+    while (ptli)
+      {
+	const stp_papersize_t *pt = stpi_paperlist_item_get_data(ptli);
 
-      if (pt->paper_size_type != PAPERSIZE_TYPE_STANDARD &&
-	  pt->paper_size_type != PAPERSIZE_TYPE_ENVELOPE)
-        continue;
+	if (pt->paper_size_type == PAPERSIZE_TYPE_STANDARD ||
+	    pt->paper_size_type == PAPERSIZE_TYPE_ENVELOPE) {
 
-      if (strlen(pt->name) > 0 &&
-	  pt->width <= width_limit && pt->height <= height_limit &&
-	  (pt->height >= min_height_limit || pt->height == 0) &&
-	  (pt->width >= min_width_limit || pt->width == 0))
-	{
-	  if (stp_string_list_count(description->bounds.str) == 0)
-	    description->deflt.str = pt->name;
-	  stp_string_list_add_string(description->bounds.str,
-				     pt->name, gettext(pt->text));
+	  if (strlen(pt->name) > 0 &&
+	      pt->width <= width_limit && pt->height <= height_limit &&
+	      (pt->height >= min_height_limit || pt->height == 0) &&
+	      (pt->width >= min_width_limit || pt->width == 0))
+	    {
+	      if (stp_string_list_count(description->bounds.str) == 0)
+		description->deflt.str = pt->name;
+	      stp_string_list_add_string(description->bounds.str,
+					 pt->name, gettext(pt->text));
+	    }
 	}
+	ptli = stpi_paperlist_item_next(ptli);
     }
   }
   else if (strcmp(name, "Resolution") == 0)
@@ -1325,7 +1329,7 @@ internal_imageable_area(const stp_vars_t *v,   /* I */
 
 
   if (media_size && use_paper_margins)
-    pt = stp_get_papersize_by_name(media_size);
+    pt = stp_describe_papersize(v, media_size);
 
   stp_default_media_size(v, &width, &length);
   if (pt)
@@ -2182,7 +2186,8 @@ static const stp_printfuncs_t print_lexmark_printfuncs =
   stp_verify_printer_params,
   NULL,
   NULL,
-  NULL
+  NULL,
+  stpi_standard_describe_papersize
 };
 
 
@@ -3008,14 +3013,14 @@ static stp_family_t print_lexmark_module_data =
 static int
 print_lexmark_module_init(void)
 {
-  return stp_family_register(print_lexmark_module_data.printer_list);
+  return stpi_family_register(print_lexmark_module_data.printer_list);
 }
 
 
 static int
 print_lexmark_module_exit(void)
 {
-  return stp_family_unregister(print_lexmark_module_data.printer_list);
+  return stpi_family_unregister(print_lexmark_module_data.printer_list);
 }
 
 

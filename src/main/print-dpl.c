@@ -839,14 +839,18 @@ dpl_parameters (const stp_vars_t * v, const char *name,
 
   if (strcmp (name, "PageSize") == 0)
     {
-      int papersizes = stp_known_papersizes ();
+      const stp_papersize_list_t *paper_sizes =
+	stpi_get_papersize_list_named("labels", "");
+      const stp_papersize_list_item_t *ptli =
+	stpi_papersize_list_get_start(paper_sizes);
       description->bounds.str = stp_string_list_create ();
-      for (i = 0; i < papersizes; i++)
+      while (ptli)
 	{
-	  const stp_papersize_t *pt = stp_get_papersize_by_index (i);
+	  const stp_papersize_t *pt = stpi_paperlist_item_get_data(ptli);
 	  if (strlen (pt->name) > 0 && dpl_papersize_valid (pt, model))
-	    stp_string_list_add_string (description->bounds.str,
-					pt->name, gettext (pt->text));
+	    stp_string_list_add_string(description->bounds.str,
+				       pt->name, gettext(pt->text));
+	  ptli = stpi_paperlist_item_next(ptli);
 	}
       description->deflt.str =
 	stp_string_list_param (description->bounds.str, 0)->name;
@@ -976,6 +980,12 @@ static const char *
 dpl_describe_output (const stp_vars_t * v)
 {
   return "Grayscale";
+}
+
+static const stp_papersize_t *
+dpl_describe_papersize(const stp_vars_t *v, const char *name)
+{
+  return stpi_get_listed_papersize(name, "labels");
 }
 
 static void
@@ -1348,7 +1358,8 @@ static const stp_printfuncs_t print_dpl_printfuncs = {
   stp_verify_printer_params,
   NULL,
   NULL,
-  NULL
+  NULL,
+  dpl_describe_papersize
 };
 
 
@@ -1447,14 +1458,14 @@ static stp_family_t print_dpl_module_data = {
 static int
 print_dpl_module_init (void)
 {
-  return stp_family_register (print_dpl_module_data.printer_list);
+  return stpi_family_register (print_dpl_module_data.printer_list);
 }
 
 
 static int
 print_dpl_module_exit (void)
 {
-  return stp_family_unregister (print_dpl_module_data.printer_list);
+  return stpi_family_unregister (print_dpl_module_data.printer_list);
 }
 
 

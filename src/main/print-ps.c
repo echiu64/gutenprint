@@ -470,6 +470,74 @@ ps_media_size_internal(const stp_vars_t *v,		/* I */
   return;
 }
 
+static const stp_papersize_t *
+ps_describe_papersize(const stp_vars_t *v, const char *name)
+{
+  int status = check_ppd_file(v);
+  if (status)
+    {
+      stp_mxml_node_t *paper = stpi_xmlppd_find_page_size(m_ppd, name);
+      if (paper)
+	{
+	  const char *papersize_list_name = m_ppd_file ? m_ppd_file : "NOPPD";
+	  stp_papersize_list_t *ourlist =
+	    stpi_find_papersize_list_named(papersize_list_name);
+	  const stp_papersize_t *papersize;
+	  const stp_papersize_t *standard_papersize =
+	    stpi_get_listed_papersize("standard", name);
+
+	  if (! ourlist)
+	    ourlist = stpi_new_papersize_list(papersize_list_name);
+
+	  papersize = stpi_get_papersize_by_name(ourlist, name);
+	  if (! papersize)
+	    {
+	      stp_papersize_t *npapersize = stp_malloc(sizeof(stp_papersize_t));
+	      npapersize->name = stp_strdup(name);
+	      npapersize->text = stp_strdup(name);
+	      npapersize->comment = NULL;
+	      /*
+	       * Note that we used the width and height from the PPD file,
+	       * not from the standard definition.  This is so that if the
+	       * PPD file is for another driver that uses slightly different
+	       * dimensions than we do that our description matches that of
+	       * driver in use.
+	       */
+	      npapersize->width = atof(stp_mxmlElementGetAttr(paper, "width"));
+	      npapersize->height = atof(stp_mxmlElementGetAttr(paper, "height"));
+	      /*
+	       * Only use auxiliary information from our list if our paper size
+	       * really is substantially the same as what the PPD file says!
+	       */
+	      if (standard_papersize &&
+		  fabs(npapersize->width - standard_papersize->width) < 1 &&
+		  fabs(npapersize->height - standard_papersize->height) < 1)
+		{
+		  npapersize->paper_unit = standard_papersize->paper_unit;
+		  npapersize->paper_size_type = standard_papersize->paper_size_type;
+		  npapersize->top = standard_papersize->top;
+		  npapersize->left = standard_papersize->left;
+		  npapersize->bottom = standard_papersize->bottom;
+		  npapersize->right = standard_papersize->right;
+		}
+	      else
+		{
+		  npapersize->top = 0;
+		  npapersize->left = 0;
+		  npapersize->bottom = 0;
+		  npapersize->right = 0;
+		  npapersize->paper_unit = PAPERSIZE_ENGLISH_STANDARD;
+		  npapersize->paper_size_type = PAPERSIZE_TYPE_STANDARD;
+		}
+	      if (stpi_papersize_create(ourlist, npapersize))
+		return npapersize;
+	    }
+	  return papersize;
+	}
+    }
+  return NULL;
+}
+
 static void
 ps_media_size(const stp_vars_t *v, stp_dimension_t *width, stp_dimension_t *height)
 {
@@ -1341,7 +1409,8 @@ static const stp_printfuncs_t print_ps_printfuncs =
   stp_verify_printer_params,
   NULL,
   NULL,
-  ps_external_options
+  ps_external_options,
+  ps_describe_papersize
 };
 
 
@@ -1355,14 +1424,14 @@ static stp_family_t print_ps_module_data =
 static int
 print_ps_module_init(void)
 {
-  return stp_family_register(print_ps_module_data.printer_list);
+  return stpi_family_register(print_ps_module_data.printer_list);
 }
 
 
 static int
 print_ps_module_exit(void)
 {
-  return stp_family_unregister(print_ps_module_data.printer_list);
+  return stpi_family_unregister(print_ps_module_data.printer_list);
 }
 
 

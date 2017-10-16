@@ -37,109 +37,128 @@
 #endif
 #include <string.h>
 #include <stdlib.h>
+#include <sys/param.h>
 
-static stp_list_t *paper_list = NULL;
+typedef struct
+{
+  char *name;
+  stp_papersize_list_t *list;
+} papersize_list_impl_t;
+
+static stp_list_t *list_of_papersize_lists = NULL;
 
 static void
-stpi_paper_freefunc(void *item)
+papersize_list_impl_freefunc(void *item)
+{
+  papersize_list_impl_t *papersize_list = (papersize_list_impl_t *) item;
+  stp_list_destroy(papersize_list->list);
+  STP_SAFE_FREE(papersize_list->name);
+  STP_SAFE_FREE(papersize_list);
+}
+
+static const char *
+papersize_list_impl_namefunc(const void *item)
+{
+  return ((const papersize_list_impl_t *) item)->name;
+}
+
+static const char *
+papersize_list_impl_long_namefunc(const void *item)
+{
+  return ((const papersize_list_impl_t *) item)->name;
+}
+
+static void
+check_list_of_papersize_lists(void)
+{
+  if (! list_of_papersize_lists)
+    {
+      stp_deprintf(STP_DBG_PAPER, "Initializing...\n");
+      list_of_papersize_lists = stp_list_create();
+      stp_list_set_freefunc(list_of_papersize_lists, papersize_list_impl_freefunc);
+      stp_list_set_namefunc(list_of_papersize_lists, papersize_list_impl_namefunc);
+      stp_list_set_long_namefunc(list_of_papersize_lists, papersize_list_impl_long_namefunc);
+    }
+}
+
+static void
+stpi_papersize_freefunc(void *item)
 {
   stp_papersize_t *paper = (stp_papersize_t *) (item);
+#pragma GCC diagnostic ignored "-Wcast-qual"
   STP_SAFE_FREE(paper->name);
   STP_SAFE_FREE(paper->text);
   STP_SAFE_FREE(paper->comment);
+#pragma GCC diagnostic pop
   STP_SAFE_FREE(paper);
 }
 
 static const char *
-stpi_paper_namefunc(const void *item)
+stpi_papersize_namefunc(const void *item)
 {
   const stp_papersize_t *paper = (const stp_papersize_t *) (item);
   return paper->name;
 }
 
 static const char *
-stpi_paper_long_namefunc(const void *item)
+stpi_papersize_long_namefunc(const void *item)
 {
   const stp_papersize_t *paper = (const stp_papersize_t *) (item);
   return paper->text;
 }
 
-static int
-stpi_paper_list_init(void)
+stp_papersize_list_t *
+stpi_create_papersize_list(void)
 {
-  if (paper_list)
-    stp_list_destroy(paper_list);
-  paper_list = stp_list_create();
-  stp_list_set_freefunc(paper_list, stpi_paper_freefunc);
-  stp_list_set_namefunc(paper_list, stpi_paper_namefunc);
-  stp_list_set_long_namefunc(paper_list, stpi_paper_long_namefunc);
-  /* stp_list_set_sortfunc(stpi_paper_sortfunc); */
-
-  return 0;
+  stp_list_t *papersize_list = stp_list_create();
+  stp_list_set_freefunc(papersize_list, stpi_papersize_freefunc);
+  stp_list_set_namefunc(papersize_list, stpi_papersize_namefunc);
+  stp_list_set_long_namefunc(papersize_list, stpi_papersize_long_namefunc);
+  return (stp_papersize_list_t *) papersize_list;
 }
 
-static inline void
-check_paperlist(void)
+int
+stpi_papersize_create(stp_papersize_list_t *list, stp_papersize_t *p)
 {
-  if (paper_list == NULL)
-    {
-      stp_xml_parse_file_named("papers.xml");
-      if (paper_list == NULL)
-	{
-	  stp_erprintf("No papers found: is STP_MODULE_PATH correct?\n");
-	  stpi_paper_list_init();
-	}
-    }
-}
+  stp_list_item_t *papersize_item;
 
-static int
-stpi_paper_create(stp_papersize_t *p)
-{
-  stp_list_item_t *paper_item;
-
-  if (paper_list == NULL)
-    {
-      stpi_paper_list_init();
-      stp_deprintf(STP_DBG_PAPER,
-		   "stpi_paper_create(): initialising paper_list...\n");
-    }
-
-  /* Check the paper does not already exist */
-  paper_item = stp_list_get_start(paper_list);
-  while (paper_item)
+  /*
+   * Check the paper does not already exist
+   * Not the most efficient way of doing it, but the number of papers
+   * is not large enough to be a significant bottleneck.
+   */
+  papersize_item = stp_list_get_start(list);
+  while (papersize_item)
     {
       const stp_papersize_t *ep =
-	(const stp_papersize_t *) stp_list_item_get_data(paper_item);
+	(const stp_papersize_t *) stp_list_item_get_data(papersize_item);
       if (ep && !strcmp(p->name, ep->name))
 	{
-	  stp_erprintf("Duplicate paper size `%s'\n",
-		       p->name);
-	  stpi_paper_freefunc(p);
+	  stp_erprintf("Duplicate paper size `%s'\n", p->name);
+	  stpi_papersize_freefunc(p);
 	  return 1;
 	}
-      paper_item = stp_list_item_next(paper_item);
+      papersize_item = stp_list_item_next(papersize_item);
     }
 
   /* Add paper to list */
-  stp_list_item_create(paper_list, NULL, (void *) p);
+  stp_list_item_create(list, NULL, (void *) p);
 
   return 0;
 }
 
 int
-stp_known_papersizes(void)
+stpi_papersize_count(const stp_papersize_list_t *paper_size_list)
 {
-  check_paperlist();
-  return stp_list_get_length(paper_list);
+  return stp_list_get_length(paper_size_list);
 }
 
 const stp_papersize_t *
-stp_get_papersize_by_name(const char *name)
+stpi_get_papersize_by_name(const stp_papersize_list_t *list, const char *name)
 {
   stp_list_item_t *paper;
 
-  check_paperlist();
-  paper = stp_list_get_item_by_name(paper_list, name);
+  paper = stp_list_get_item_by_name(list, name);
   if (!paper)
     return NULL;
   else
@@ -147,37 +166,52 @@ stp_get_papersize_by_name(const char *name)
 }
 
 const stp_papersize_t *
-stp_get_papersize_by_index(int idx)
+stpi_get_listed_papersize(const char *name, const char *papersize_list)
 {
-  stp_list_item_t *paper;
-
-  check_paperlist();
-  paper = stp_list_get_item_by_index(paper_list, idx);
-  if (!paper)
-    return NULL;
+  const stp_papersize_list_t *list =
+    stpi_get_papersize_list_named(papersize_list, "");
+  if (list)
+    return stpi_get_papersize_by_name(list, name);
   else
-    return (const stp_papersize_t *) stp_list_item_get_data(paper);
+    return NULL;
+}
+
+const stp_papersize_t *
+stpi_standard_describe_papersize(const stp_vars_t *v, const char *name)
+{
+  STPI_ASSERT(v, NULL);
+  return stpi_get_listed_papersize(name, "standard");
+}
+
+const stp_papersize_t *
+stp_describe_papersize(const stp_vars_t *v, const char *name)
+{
+  return stpi_printer_describe_papersize(v, name);
 }
 
 static int
-paper_size_mismatch(stp_dimension_t l, stp_dimension_t w, const stp_papersize_t *val)
+papersize_size_mismatch(stp_dimension_t l, stp_dimension_t w,
+			const stp_papersize_t *val)
 {
   stp_dimension_t hdiff = abs(l - (stp_dimension_t) val->height);
   stp_dimension_t vdiff = abs(w - (stp_dimension_t) val->width);
   return hdiff > vdiff ? hdiff : vdiff;
 }
 
-const stp_papersize_t *
-stp_get_papersize_by_size(stp_dimension_t l, stp_dimension_t w)
+static const stp_papersize_t *
+get_papersize_by_size_internal(const stp_papersize_list_t *list,
+			       stp_dimension_t l, stp_dimension_t w,
+			       int exact)
 {
   int score = INT_MAX;
   const stp_papersize_t *ref = NULL;
   const stp_papersize_t *val = NULL;
-  int i;
-  int sizes = stp_known_papersizes();
-  for (i = 0; i < sizes; i++)
+  const stp_papersize_list_item_t *ptli =
+    stpi_papersize_list_get_start(list);
+  STPI_ASSERT(list, NULL);
+  while (ptli)
     {
-      val = stp_get_papersize_by_index(i);
+      val = stpi_paperlist_item_get_data(ptli);
 
       if (val->width == w && val->height == l)
 	{
@@ -187,40 +221,32 @@ stp_get_papersize_by_size(stp_dimension_t l, stp_dimension_t w)
 	  else
 	    ref = val;
 	}
-      else
+      else if (!exact)
 	{
-	  int myscore = paper_size_mismatch(l, w, val);
+	  int myscore = papersize_size_mismatch(l, w, val);
 	  if (myscore < score && myscore < 5)
 	    {
 	      ref = val;
 	      score = myscore;
 	    }
 	}
+      ptli = stpi_paperlist_item_next(ptli);
     }
   return ref;
 }
 
 const stp_papersize_t *
-stp_get_papersize_by_size_exact(stp_dimension_t l, stp_dimension_t w)
+stpi_get_papersize_by_size(const stp_papersize_list_t *list,
+			  stp_dimension_t l, stp_dimension_t w)
 {
-  const stp_papersize_t *ref = NULL;
-  const stp_papersize_t *val = NULL;
-  int i;
-  int sizes = stp_known_papersizes();
-  for (i = 0; i < sizes; i++)
-    {
-      val = stp_get_papersize_by_index(i);
+  return get_papersize_by_size_internal(list, l, w, 0);
+}
 
-      if (val->width == w && val->height == l)
-	{
-	  if (val->top == 0 && val->left == 0 &&
-	      val->bottom == 0 && val->right == 0)
-	    return val;
-	  else
-	    ref = val;
-	}
-    }
-  return ref;
+const stp_papersize_t *
+stpi_get_papersize_by_size_exact(const stp_papersize_list_t *list,
+				stp_dimension_t l, stp_dimension_t w)
+{
+  return get_papersize_by_size_internal(list, l, w, 1);
 }
 
 void
@@ -238,7 +264,7 @@ stp_default_media_size(const stp_vars_t *v,	/* I */
       const char *page_size = stp_get_string_parameter(v, "PageSize");
       const stp_papersize_t *papersize = NULL;
       if (page_size)
-	papersize = stp_get_papersize_by_name(page_size);
+	papersize = stp_describe_papersize(v, page_size);
       if (!papersize)
 	{
 	  *width = 1;
@@ -262,8 +288,8 @@ stp_default_media_size(const stp_vars_t *v,	/* I */
 static stp_papersize_t *
 stp_xml_process_paper(stp_mxml_node_t *paper) /* The paper node */
 {
-  stp_mxml_node_t *prop;                              /* Temporary node pointer */
-  const char *stmp;                                /* Temporary string */
+  stp_mxml_node_t *prop;	/* Temporary node pointer */
+  const char *stmp;		/* Temporary string */
   /* props[] (unused) is the correct tag sequence */
   /*  const char *props[] =
     {
@@ -385,8 +411,6 @@ stp_xml_process_paper(stp_mxml_node_t *paper) /* The paper node */
 		{
 		  if (!strcmp(stmp, "envelope"))
 		    outpaper->paper_size_type = PAPERSIZE_TYPE_ENVELOPE;
-		  else if (!strcmp(stmp, "special"))
-		    outpaper->paper_size_type = PAPERSIZE_TYPE_SPECIAL;
 		  else
 		    outpaper->paper_size_type = PAPERSIZE_TYPE_STANDARD;
 		}
@@ -405,7 +429,8 @@ stp_xml_process_paper(stp_mxml_node_t *paper) /* The paper node */
  * Parse the <paperdef> node.
  */
 static int
-stp_xml_process_paperdef(stp_mxml_node_t *paperdef, const char *file) /* The paperdef node */
+stp_xml_process_papersize_def(stp_mxml_node_t *paperdef, const char *file,
+			      stp_papersize_list_t *papersize_list)
 {
   stp_mxml_node_t *paper;                           /* paper node pointer */
   stp_papersize_t *outpaper;         /* Generated paper */
@@ -415,12 +440,12 @@ stp_xml_process_paperdef(stp_mxml_node_t *paperdef, const char *file) /* The pap
     {
       if (paper->type == STP_MXML_ELEMENT)
 	{
-	  const char *paper_name = paper->value.element.name;
-	  if (!strcmp(paper_name, "paper"))
+	  const char *papersize_name = paper->value.element.name;
+	  if (!strcmp(papersize_name, "paper"))
 	    {
 	      outpaper = stp_xml_process_paper(paper);
 	      if (outpaper)
-		stpi_paper_create(outpaper);
+		stpi_papersize_create(papersize_list, outpaper);
 	    }
 	}
       paper = paper->next;
@@ -428,8 +453,110 @@ stp_xml_process_paperdef(stp_mxml_node_t *paperdef, const char *file) /* The pap
   return 1;
 }
 
-void
-stpi_init_paper(void)
+const stp_papersize_list_t *
+stpi_get_papersize_list_named(const char *name, const char *file)
 {
-  stp_register_xml_parser("paperdef", stp_xml_process_paperdef);
+  stp_list_item_t *item;
+  papersize_list_impl_t *impl;
+
+  check_list_of_papersize_lists();
+  item = stp_list_get_item_by_name(list_of_papersize_lists, name);
+  if (item)
+    {
+      impl = (papersize_list_impl_t *) stp_list_item_get_data(item);
+    }
+  else
+    {
+      stp_list_t *dirlist;
+      int found = 0;
+      char buf[MAXPATHLEN+1];
+
+      stp_deprintf(STP_DBG_PAPER, "Loading paper list %s from %s\n",
+		   name, file ? file : "(null)");
+      if (! file)
+	return NULL;
+      else if (!strcmp(file, ""))
+	(void) snprintf(buf, MAXPATHLEN, "papers/%s.xml", name);
+      else
+	strncpy(buf, file, MAXPATHLEN);
+      stp_xml_init();
+      dirlist = stpi_data_path();
+      item = stp_list_get_start(dirlist);
+      while (item)
+	{
+	  const char *dn = (const char *) stp_list_item_get_data(item);
+	  char *fn = stpi_path_merge(dn, buf);
+	  stp_mxml_node_t *doc = stp_mxmlLoadFromFile(NULL, fn,
+						      STP_MXML_NO_CALLBACK);
+	  stp_deprintf(STP_DBG_PAPER, "  Trying %s => %p\n", fn, (void *)doc);
+	  stp_free(fn);
+	  if (doc)
+	    {
+	      stp_mxml_node_t *node =
+		stp_mxmlFindElement(doc, doc, "paperdef", NULL, NULL,
+				    STP_MXML_DESCEND);
+	      if (node)
+		{
+		  const char *stmp = stp_mxmlElementGetAttr(node, "name");
+		  STPI_ASSERT(stmp && !strcmp(name, stmp), NULL);
+		  impl = stp_malloc(sizeof(papersize_list_impl_t));
+		  impl->name = stp_strdup(name);
+		  impl->list = stpi_create_papersize_list();
+		  stp_deprintf(STP_DBG_PAPER, "    Loading %s\n", stmp);
+		  stp_list_item_create(list_of_papersize_lists, NULL, impl);
+		  stp_xml_process_papersize_def(node, buf, impl->list);
+		  found = 1;
+		}
+	      stp_mxmlDelete(doc);
+	      if (found)
+		break;
+	    }
+	  item = stp_list_item_next(item);
+	}
+      stp_xml_exit();
+      stp_list_destroy(dirlist);
+      if (!found)
+	return NULL;
+    }
+  return impl->list;
+}
+
+stp_papersize_list_t *
+stpi_find_papersize_list_named(const char *name)
+{
+  stp_list_item_t *item;
+
+  check_list_of_papersize_lists();
+  item = stp_list_get_item_by_name(list_of_papersize_lists, name);
+  if (item)
+    {
+      papersize_list_impl_t *impl =
+	(papersize_list_impl_t *) stp_list_item_get_data(item);
+      if (impl)
+	return impl->list;
+    }
+  return NULL;
+}
+
+stp_papersize_list_t *
+stpi_new_papersize_list(const char *name)
+{
+  stp_list_item_t *item;
+  papersize_list_impl_t *impl;
+
+  check_list_of_papersize_lists();
+  item = stp_list_get_item_by_name(list_of_papersize_lists, name);
+  if (item)
+    return NULL;
+  impl = stp_malloc(sizeof(papersize_list_impl_t));
+  impl->name = stp_strdup(name);
+  impl->list = stpi_create_papersize_list();
+  stp_list_item_create(list_of_papersize_lists, NULL, impl);
+  return impl->list;
+}
+
+const stp_papersize_list_t *
+stpi_get_standard_papersize_list(void)
+{
+  return stpi_get_papersize_list_named("standard", "");
 }

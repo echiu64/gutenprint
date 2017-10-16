@@ -485,7 +485,6 @@ stp_init(void)
       stpi_init_debug();
       stp_xml_preinit();
       stpi_init_printer();
-      stpi_init_paper();
       stpi_init_dither();
       /* Load modules */
       if (stp_module_load())

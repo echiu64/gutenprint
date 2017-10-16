@@ -318,7 +318,7 @@ validate_options(stp_vars_t *v, cups_image_t *cups)
 		  if (strcmp(desc.name, "PageSize") == 0)
 		    {
 		      const stp_papersize_t *ps =
-			stp_get_papersize_by_name(desc.deflt.str);
+			stp_describe_papersize(v, desc.deflt.str);
 		      if (ps->width > 0)
 			{
 			  if (! suppress_messages)
@@ -425,7 +425,7 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings,
 	  stp_set_page_width(v, cups->header.PageSize[0]);
 	  stp_set_page_height(v, cups->header.PageSize[1]);
 	}
-      else if (stp_get_papersize_by_name(page_size_name))
+      else if (stp_describe_papersize(v, page_size_name))
 	{
 	  stp_dimension_t width, height;
 	  if (!suppress_messages)

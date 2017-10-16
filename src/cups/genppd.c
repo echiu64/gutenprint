@@ -459,7 +459,13 @@ print_page_sizes(gpFile fp, stp_vars_t *v, int simplified,
     {
       const stp_papersize_t *papersize;
       opt = stp_string_list_param(desc.bounds.str, i);
-      papersize = stp_get_papersize_by_name(opt->name);
+      if (strcmp(opt->name, "Custom") == 0)
+	{
+	  variable_sizes = 1;
+	  continue;
+	}
+
+      papersize = stp_describe_papersize(v, opt->name);
 
       if (!papersize)
 	{
@@ -467,22 +473,17 @@ print_page_sizes(gpFile fp, stp_vars_t *v, int simplified,
 	  continue;
 	}
 
-      if (strcmp(opt->name, "Custom") == 0)
-	{
-	  variable_sizes = 1;
-	  continue;
-	}
       if (simplified && num_opts >= 10 &&
 	  (!desc.deflt.str || strcmp(opt->name, desc.deflt.str) != 0) &&
 	  (papersize->paper_unit == PAPERSIZE_ENGLISH_EXTENDED ||
 	   papersize->paper_unit == PAPERSIZE_METRIC_EXTENDED))
 	continue;
 
+      if (papersize->width <= 0 || papersize->height <= 0)
+	continue;
+
       width  = papersize->width;
       height = papersize->height;
-
-      if (width <= 0 || height <= 0)
-	continue;
 
       stp_set_string_parameter(v, "PageSize", opt->name);
 
@@ -1730,7 +1731,7 @@ write_ppd(
 	    {
 	      const stp_papersize_t *papersize;
 	      opt = stp_string_list_param(desc.bounds.str, i);
-	      papersize = stp_get_papersize_by_name(opt->name);
+	      papersize = stp_describe_papersize(v, opt->name);
 
 	      if (!papersize)
 		continue;
@@ -1742,11 +1743,9 @@ write_ppd(
 
 	      if (simplified && num_opts >= 10 &&
 		  (papersize->paper_unit == PAPERSIZE_ENGLISH_EXTENDED ||
-		   papersize->paper_unit == PAPERSIZE_METRIC_EXTENDED))
-		continue;
-
-	      if ((papersize->width <= 0 || papersize->height <= 0) &&
-		  strcmp(opt->name, "Custom") != 0)
+		   papersize->paper_unit == PAPERSIZE_METRIC_EXTENDED ||
+		   ((papersize->width <= 0 || papersize->height <= 0) &&
+		    strcmp(opt->name, "Custom") != 0)))
 		continue;
 
 	      gpprintf(fp, "*%s.PageSize %s/%s: \"\"\n", lang, opt->name, stp_i18n_lookup(po, opt->text));

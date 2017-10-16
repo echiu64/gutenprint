@@ -225,44 +225,10 @@ extern int stp_end_job(const stp_vars_t *v, stp_image_t *image);
  */
 extern stp_string_list_t *stp_get_external_options(const stp_vars_t *v);
 
-typedef struct
-{
-  stp_parameter_list_t (*list_parameters)(const stp_vars_t *v);
-  void  (*parameters)(const stp_vars_t *v, const char *name,
-		      stp_parameter_t *);
-  void  (*media_size)(const stp_vars_t *v, stp_dimension_t *width,
-		      stp_dimension_t *height);
-  void  (*imageable_area)(const stp_vars_t *v, stp_dimension_t *left,
-			  stp_dimension_t *right, stp_dimension_t *bottom,
-			  stp_dimension_t *top);
-  void  (*maximum_imageable_area)(const stp_vars_t *v, stp_dimension_t *left,
-				  stp_dimension_t *right, stp_dimension_t *bottom,
-				  stp_dimension_t *top);
-  void  (*limit)(const stp_vars_t *v, stp_dimension_t *max_width,
-		 stp_dimension_t *max_height, stp_dimension_t *min_width,
-		 stp_dimension_t *min_height);
-  int   (*print)(const stp_vars_t *v, stp_image_t *image);
-  void  (*describe_resolution)(const stp_vars_t *v, stp_resolution_t *x,
-			       stp_resolution_t *y);
-  const char *(*describe_output)(const stp_vars_t *v);
-  int   (*verify)(stp_vars_t *v);
-  int   (*start_job)(const stp_vars_t *v, stp_image_t *image);
-  int   (*end_job)(const stp_vars_t *v, stp_image_t *image);
-  stp_string_list_t *(*get_external_options)(const stp_vars_t *v);
-} stp_printfuncs_t;
-
-typedef struct stp_family
-{
-  const stp_printfuncs_t *printfuncs;   /* printfuncs for the printer */
-  stp_list_t             *printer_list; /* list of printers */
-} stp_family_t;
-
 extern int stp_get_model_id(const stp_vars_t *v);
 
 extern int stp_verify_printer_params(stp_vars_t *v);
 
-extern int stp_family_register(stp_list_t *family);
-extern int stp_family_unregister(stp_list_t *family);
 extern void stp_initialize_printer_defaults(void);
 
 extern stp_parameter_list_t stp_printer_list_parameters(const stp_vars_t *v);
