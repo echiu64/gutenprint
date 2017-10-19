@@ -1737,7 +1737,7 @@
       <printer translate="name" name="Epson Stylus Photo TX800FW" driver="escp2-tx800w" manufacturer="Epson" model="96" parameters="claria_params" />
       <printer translate="name" name="Epson Stylus Photo TX810FW" driver="escp2-tx810fw" manufacturer="Epson" model="96" parameters="claria_params" />
       <printer translate="name" name="Epson Stylus Pro 3800" driver="escp2-3800" manufacturer="Epson" model="108" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Pro 3880" driver="escp2-3880" manufacturer="Epson" model="107" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Pro 3880" deviceid="MFG:EPSON;CMD:ESCPL2,BDC,D4,D4PX;MDL:Epson Stylus Pro 3880;CLS:PRINTER;DES:EPSON Epson Stylus Pro 3880;" driver="escp2-3880" manufacturer="Epson" model="107" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Pro 3885" driver="escp2-3885" manufacturer="Epson" model="107" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Pro 4000" driver="escp2-4000" manufacturer="Epson" model="114" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Pro 4800/4880 Back Compatible" driver="escp2-4600" manufacturer="Epson" model="112" parameters="standard_params" />
@@ -1753,7 +1753,8 @@
       <printer translate="name" name="Epson Stylus Pro 7800" driver="escp2-7800" manufacturer="Epson" model="103" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Pro 7880" driver="escp2-7880" manufacturer="Epson" model="89" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Pro 7890" driver="escp2-7890" manufacturer="Epson" model="89" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Pro 7900" driver="escp2-7900" manufacturer="Epson" model="116" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Pro 7900" deviceid="MFG:EPSON;CMD:ESCPL2,BDC,D4,D4PX;MDL:Stylus Pro 7900;CLS:PRINTER;DES:EPSON Stylus Pro 7900;
+" driver="escp2-7900" manufacturer="Epson" model="116" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Pro 9000" driver="escp2-9000" manufacturer="Epson" model="30" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Pro 9500" driver="escp2-9500" manufacturer="Epson" model="31" parameters="pro_5500_params" />
       <printer translate="name" name="Epson Stylus Pro 9600" driver="escp2-9600" manufacturer="Epson" model="49" parameters="standard_params" />
@@ -1761,7 +1762,7 @@
       <printer translate="name" name="Epson Stylus Pro 9800" driver="escp2-9800" manufacturer="Epson" model="104" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Pro 9880" driver="escp2-9880" manufacturer="Epson" model="90" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Pro 9890" driver="escp2-9890" manufacturer="Epson" model="90" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Pro 9900" driver="escp2-9900" manufacturer="Epson" model="117" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Pro 9900" deviceid="MFG:EPSON;CMD:ESCPL2,BDC,D4,D4PX;MDL:Stylus Pro 9900;CLS:PRINTER;DES:EPSON Stylus Pro 9900;" driver="escp2-9900" manufacturer="Epson" model="117" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Pro 10000" driver="escp2-10000" manufacturer="Epson" model="41" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Pro 11800/11880 Back Compatible" driver="escp2-11600" manufacturer="Epson" model="113" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Pro 11800" driver="escp2-11800" manufacturer="Epson" model="105" parameters="standard_params" />
@@ -1922,8 +1923,8 @@
       <printer translate="name" name="Epson Stylus TX650" driver="escp2-tx650" manufacturer="Epson" model="97" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus TX659" driver="escp2-tx659" manufacturer="Epson" model="97" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus XP100" driver="escp2-xp100" manufacturer="Epson" model="123" parameters="standard_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="Epson SureColor P400" driver="escp2-p400" manufacturer="Epson" model="91" parameters="standard_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="Epson SureColor P600" driver="escp2-p600" manufacturer="Epson" model="115" parameters="standard_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Epson SureColor P400" deviceid="MFG:EPSON;CMD:ESCPL2,BDC,D4,D4PX,ESCPR7,END4;MDL:SC-P400 Series;CLS:PRINTER;DES:EPSON SC-P400 Series;CID:EpsonRGB;RID:02;DDS:022500;" driver="escp2-p400" manufacturer="Epson" model="91" parameters="standard_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Epson SureColor P600" deviceid="MFG:EPSON;CMD:ESCPL2,BDC,D4,D4PX,ESCPR7,END4;MDL:SC-P600 Series;CLS:PRINTER;DES:EPSON SC-P600 Series;CID:EpsonRGB;RID:02;DDS:022500;ELG:0EF0;" driver="escp2-p600" manufacturer="Epson" model="115" parameters="standard_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Epson SureColor P800" driver="escp2-p800" manufacturer="Epson" model="130" parameters="standard_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Epson SureColor P6000" driver="escp2-p6000" manufacturer="Epson" model="89" parameters="standard_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Epson SureColor P7000" driver="escp2-p7000" manufacturer="Epson" model="124" parameters="standard_params">EXPERIMENTAL</printer>
