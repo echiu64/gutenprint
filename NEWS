@@ -270,13 +270,14 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      Shinko/Sinfonia CHC-S6145
      Shinko/Sinfonia CHC-S6245
 
-  3) Enhanced support for the following dye-sublimation printers:
+  3) Enhanced support and bugfixes for the following dye-sublimation printers:
 
      Fujifilm ASK-300
+     Sony UP-DR150
+     Sony UP-DR200
 
   4) Initial support for EPSON Stylus Pro 7900 (Partial -- no
      orange/green inks)
-
 
 * Changes from 5.2.12
 
