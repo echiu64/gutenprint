@@ -122,28 +122,28 @@ typedef struct {
 typedef struct {
   const char* name;
   const char* text;
-  stp_dimension_t width_pt;
-  stp_dimension_t height_pt;
-  stp_dimension_t border_pt_left;
-  stp_dimension_t border_pt_right;
-  stp_dimension_t border_pt_top;
-  stp_dimension_t border_pt_bottom;
+  stp_dimension_t width;
+  stp_dimension_t height;
+  stp_dimension_t left;
+  stp_dimension_t right;
+  stp_dimension_t top;
+  stp_dimension_t bottom;
   int print_mode;
 } dyesub_pagesize_t;
 
 #define DEFINE_PAPER(__n, __t, __w, __h, __bl, __br, __bt, __bb, __pm)	\
 	{ .name = __n, .text = N_(__t),					\
-			.width_pt = __w, .height_pt = __h,		\
-			.border_pt_left = __bl,				\
-			.border_pt_right = __br,			\
-			.border_pt_top = __bt,				\
-			.border_pt_bottom = __bb,			\
+			.width = __w, .height = __h,			\
+			.left = __bl,					\
+			.right = __br,					\
+			.top = __bt,					\
+			.bottom = __bb,					\
 			.print_mode = __pm,				\
 			}
 
 #define DEFINE_PAPER_SIMPLE(__n, __t, __w, __h, __pm)			\
 	{ .name = __n, .text = N_(__t),					\
-			.width_pt = __w, .height_pt = __h,		\
+			.width = __w, .height = __h,			\
 			.print_mode = __pm,				\
 			}
 
@@ -8376,13 +8376,13 @@ dyesub_media_size(const stp_vars_t *v,
 		stp_dimension_t *width,
 		stp_dimension_t *height)
 {
-  const dyesub_pagesize_t *p = dyesub_current_pagesize(v);
+  const dyesub_pagesize_t *pt = dyesub_current_pagesize(v);
   stp_default_media_size(v, width, height);
 
-  if (p && p->width_pt > 0)
-    *width = p->width_pt;
-  if (p && p->height_pt > 0)
-    *height = p->height_pt;
+  if (pt && pt->width > 0)
+    *width = pt->width;
+  if (pt && pt->height > 0)
+    *height = pt->height;
 }
 
 static void
@@ -8395,7 +8395,7 @@ dyesub_imageable_area_internal(const stp_vars_t *v,
 				int  *print_mode)
 {
   stp_dimension_t width, height;
-  const dyesub_pagesize_t *p = dyesub_current_pagesize(v);
+  const dyesub_pagesize_t *pt = dyesub_current_pagesize(v);
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(
 		  				stp_get_model_id(v));
 
@@ -8403,7 +8403,7 @@ dyesub_imageable_area_internal(const stp_vars_t *v,
   if (use_maximum_area
       || (dyesub_feature(caps, DYESUB_FEATURE_BORDERLESS) &&
           stp_get_boolean_parameter(v, "Borderless"))
-      || !p)
+      || !pt)
     {
       *left = 0;
       *top  = 0;
@@ -8412,13 +8412,13 @@ dyesub_imageable_area_internal(const stp_vars_t *v,
     }
   else
     {
-      *left = p->border_pt_left;
-      *top  = p->border_pt_top;
-      *right  = width  - p->border_pt_right;
-      *bottom = height - p->border_pt_bottom;
+      *left = pt->left;
+      *top  = pt->top;
+      *right  = width  - pt->right;
+      *bottom = height - pt->bottom;
     }
-  if (p)
-    *print_mode = p->print_mode;
+  if (pt)
+    *print_mode = pt->print_mode;
   else
     *print_mode = DYESUB_PORTRAIT;
 }
@@ -8914,7 +8914,7 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   stp_dimension_t page_pt_right = 0;
   stp_dimension_t page_pt_top = 0;
   stp_dimension_t page_pt_bottom = 0;
-  int page_mode;	
+  int page_mode;
 
   int pl;
 
