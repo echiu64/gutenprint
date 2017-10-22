@@ -2657,7 +2657,7 @@ static const dyesub_pagesize_t mitsu_p95d_page[] =
   DEFINE_PAPER_SIMPLE( "w284h426", "1280x1920", PT1(1280,325), PT1(1920,325), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w284h1277", "1280x5760", PT1(1280,325), PT1(5760,325), DYESUB_PORTRAIT),
   /* A true "custom" size, printer will cut at the image boundary */
-  DEFINE_PAPER_SIMPLE( "Custom", NULL, PT1(1280,325), -1, DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "Custom", "Custom", PT1(1280,325), -1, DYESUB_PORTRAIT),
 };
 
 LIST(dyesub_pagesize_list_t, mitsu_p95d_page_list, dyesub_pagesize_t, mitsu_p95d_page);
@@ -8213,18 +8213,15 @@ dyesub_parameters(const stp_vars_t *v, const char *name,
     {
       int default_specified = 0;
       const dyesub_pagesize_list_t *p = caps->pages;
-      const char* text;
 
       description->bounds.str = stp_string_list_create();
+
+      /* Walk the list of pagesizes for the printer */
       for (i = 0; i < p->n_items; i++)
 	{
-          const stp_papersize_t *pt = stp_get_papersize_by_name(
-			  p->item[i].name);
-
-	  text = (p->item[i].text ? p->item[i].text : pt->text);
 	  stp_string_list_add_string(description->bounds.str,
-			  p->item[i].name, gettext(text));
-	  if (! default_specified && pt && pt->width > 0 && pt->height > 0)
+				     p->item[i].name, gettext(p->item[i].text));
+	  if (! default_specified && p->item[i].width > 0 && p->item[i].height > 0)
 	    {
 	      description->deflt.str = p->item[i].name;
 	      default_specified = 1;
@@ -8357,7 +8354,6 @@ static const dyesub_pagesize_t*
 dyesub_current_pagesize(const stp_vars_t *v)
 {
   const char *page = stp_get_string_parameter(v, "PageSize");
-  const stp_papersize_t *pt = stp_get_papersize_by_name(page);
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(
 		  				stp_get_model_id(v));
   const dyesub_pagesize_list_t *p = caps->pages;
@@ -8365,7 +8361,7 @@ dyesub_current_pagesize(const stp_vars_t *v)
 
   for (i = 0; i < p->n_items; i++)
     {
-      if (strcmp(p->item[i].name,pt->name) == 0)
+      if (strcmp(p->item[i].name,page) == 0)
           return &(p->item[i]);
     }
   return NULL;
