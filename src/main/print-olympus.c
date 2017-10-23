@@ -383,8 +383,8 @@ LIST(dyesub_resolution_list_t, res_310dpi_list, dyesub_resolution_t, res_310dpi)
 
 static const dyesub_pagesize_t p10_page[] =
 {
-  DEFINE_PAPER_SIMPLE( "w288h432", "4x6", 298, 430, DYESUB_PORTRAIT), /* 4x6" */
-  DEFINE_PAPER_SIMPLE( "B7", "3.5x5", 266, 370, DYESUB_PORTRAIT),	 /* 3.5x5" */
+  DEFINE_PAPER_SIMPLE( "w288h432", "4x6", PT1(1280,310), PT1(1848,310), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "B7", "3.5x5", PT1(1144,310), PT1(1591,310), DYESUB_PORTRAIT),
 };
 
 LIST(dyesub_pagesize_list_t, p10_page_list, dyesub_pagesize_t, p10_page);
@@ -441,7 +441,7 @@ LIST(dyesub_resolution_list_t, res_320dpi_list, dyesub_resolution_t, res_320dpi)
 
 static const dyesub_pagesize_t p200_page[] =
 {
-  DEFINE_PAPER( "ISOB7", "80x125mm", -1, -1, 16, 17, 33, 33, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "ISOB7", "80x125mm", PT(960,320), PT(1280,320), 16, 17, 33, 33, DYESUB_PORTRAIT),
 };
 
 LIST(dyesub_pagesize_list_t, p200_page_list, dyesub_pagesize_t, p200_page);
@@ -503,7 +503,7 @@ LIST(dyesub_resolution_list_t, p300_res_list, dyesub_resolution_t, p300_res);
 
 static const dyesub_pagesize_t p300_page[] =
 {
-  DEFINE_PAPER( "A6", "A6", -1, -1, 28, 28, 48, 48, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "A6", "A6", PT1(1024,306), PT1(1376,306), 28, 28, 48, 48, DYESUB_PORTRAIT),
 };
 
 LIST(dyesub_pagesize_list_t, p300_page_list, dyesub_pagesize_t, p300_page);
@@ -608,9 +608,9 @@ LIST(dyesub_resolution_list_t, res_314dpi_list, dyesub_resolution_t, res_314dpi)
 
 static const dyesub_pagesize_t p400_page[] =
 {
-  DEFINE_PAPER( "A4", "A4", -1, -1, 22, 22, 54, 54, DYESUB_PORTRAIT),
-  DEFINE_PAPER( "c8x10", "A5 wide", -1, -1, 58, 59, 84, 85, DYESUB_PORTRAIT),
-  DEFINE_PAPER( "C6", "2 Postcards (A4)", -1, -1, 9, 9, 9, 9, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "A4", "A4", PT1(2400,314), PT1(3200,314), 22, 22, 54, 54, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "c8x10", "A5 wide", PT1(2000,314), PT1(2400,314), 58, 59, 84, 85, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "C6", "2 Postcards (A4)", PT1(1328,314), PT1(1920,314), 9, 9, 9, 9, DYESUB_PORTRAIT),
 };
 
 LIST(dyesub_pagesize_list_t, p400_page_list, dyesub_pagesize_t, p400_page);
@@ -732,10 +732,10 @@ static void p400_adjust_curves(stp_vars_t *v)
 /* Olympus P-440 series */
 static const dyesub_pagesize_t p440_page[] =
 {
-  DEFINE_PAPER( "A4", "A4", -1, -1, 10, 9, 54, 54, DYESUB_PORTRAIT),
-  DEFINE_PAPER( "c8x10", "A5 wide", -1, -1, 58, 59, 72, 72, DYESUB_PORTRAIT),
-  DEFINE_PAPER( "C6", "2 Postcards (A4)", -1, -1, 9, 9, 9, 9, DYESUB_PORTRAIT),
-  DEFINE_PAPER( "w255h581", "A6 wide", -1, -1, 25, 25, 25, 24, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "A4", "A4", PT1(2508,314), PT1(3200,314), 10, 9, 54, 54, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "c8x10", "A5 wide", PT1(2000,314), PT1(2508,314), 58, 59, 72, 72, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "C6", "2 Postcards (A4)", PT1(1328,314), PT1(1920,314), 9, 9, 9, 9, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "w255h581", "A6 wide", PT1(892,314), PT1(2320,314), 25, 25, 25, 24, DYESUB_PORTRAIT),
 };
 
 LIST(dyesub_pagesize_list_t, p440_page_list, dyesub_pagesize_t, p440_page);
@@ -826,8 +826,8 @@ static void p440_block_end_func(stp_vars_t *v)
 /* Olympus P-S100 */
 static const dyesub_pagesize_t ps100_page[] =
 {
-  DEFINE_PAPER_SIMPLE( "w288h432", "4x6", 296, 426, DYESUB_PORTRAIT),/* 4x6" */
-  DEFINE_PAPER_SIMPLE( "B7", "3.5x5", 264, 366, DYESUB_PORTRAIT),	/* 3.5x5" */
+  DEFINE_PAPER_SIMPLE( "w288h432", "4x6", PT1(1254,306), PT1(1808,306), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "B7", "3.5x5", PT1(1120,306), PT1(1554,306), DYESUB_PORTRAIT),
 };
 
 LIST(dyesub_pagesize_list_t, ps100_page_list, dyesub_pagesize_t, ps100_page);
@@ -896,7 +896,7 @@ LIST(dyesub_resolution_list_t, res_300dpi_list, dyesub_resolution_t, res_300dpi)
 
 static const dyesub_pagesize_t cp10_page[] =
 {
-  DEFINE_PAPER( "w155h244", "Card 54x86mm", 159, 250, 6, 6, 29, 29, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "w155h244", "Card 54x86mm", PT1(662,300), PT1(1040,300), 6, 6, 29, 29, DYESUB_PORTRAIT),
 };
 
 LIST(dyesub_pagesize_list_t, cp10_page_list, dyesub_pagesize_t, cp10_page);
@@ -911,9 +911,9 @@ LIST(dyesub_printsize_list_t, cp10_printsize_list, dyesub_printsize_t, cp10_prin
 /* Canon CP-100 series */
 static const dyesub_pagesize_t cpx00_page[] =
 {
-  DEFINE_PAPER( "Postcard", "Postcard 100x148mm", 296, 434, 13, 13, 16, 19, DYESUB_PORTRAIT),
-  DEFINE_PAPER( "w253h337", "CP_L 89x119mm", 264, 350, 13, 13, 15, 15, DYESUB_PORTRAIT),
-  DEFINE_PAPER( "w155h244", "Card 54x86mm", 162, 250, 13, 13, 15, 15, DYESUB_LANDSCAPE),
+  DEFINE_PAPER( "Postcard", "Postcard 100x148mm", PT1(1232,300), PT1(1808,300), 13, 13, 16, 19, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "w253h337", "CP_L 89x119mm", PT1(1100,300), PT1(1456,300), 13, 13, 15, 15, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "w155h244", "Card 54x86mm", PT1(672,300), PT1(1040,300), 13, 13, 15, 15, DYESUB_LANDSCAPE),
 };
 
 LIST(dyesub_pagesize_list_t, cpx00_page_list, dyesub_pagesize_t, cpx00_page);
@@ -1011,10 +1011,10 @@ static void cpx00_adjust_curves(stp_vars_t *v)
 /* Canon CP-220 series */
 static const dyesub_pagesize_t cp220_page[] =
 {
-  DEFINE_PAPER( "Postcard", "Postcard 100x148mm", 296, 434, 13, 13, 16, 19, DYESUB_PORTRAIT),
-  DEFINE_PAPER( "w253h337", "CP_L 89x119mm", 264, 350, 13, 13, 15, 15, DYESUB_PORTRAIT),
-  DEFINE_PAPER( "w155h244", "Card 54x86mm", 162, 250, 13, 13, 15, 15, DYESUB_LANDSCAPE),
-  DEFINE_PAPER( "w283h566", "Wide 100x200mm", 296, 580, 13, 13, 20, 20, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "Postcard", "Postcard 100x148mm", PT1(1232,300), PT1(1808,300), 13, 13, 16, 19, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "w253h337", "CP_L 89x119mm", PT1(1100,300), PT1(1456,300), 13, 13, 15, 15, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "w155h244", "Card 54x86mm", PT1(672,300), PT1(1040,300), 13, 13, 15, 15, DYESUB_LANDSCAPE),
+  DEFINE_PAPER( "w283h566", "Wide 100x200mm", PT1(1232,300), PT1(2416,300), 13, 13, 20, 20, DYESUB_PORTRAIT),
 };
 
 LIST(dyesub_pagesize_list_t, cp220_page_list, dyesub_pagesize_t, cp220_page);
@@ -1294,8 +1294,8 @@ LIST(laminate_list_t, dppex5_laminate_list, laminate_t, dppex5_laminate);
 /* Sony UP-DP10 */
 static const dyesub_pagesize_t updp10_page[] =
 {
-  DEFINE_PAPER( "w288h432", "UPC-10P23 (4x6)", -1, -1, 12, 12, 18, 18, DYESUB_LANDSCAPE),
-  DEFINE_PAPER( "w288h387", "UPC-10P34 (4x5)", -1, 384, 12, 12, 16, 16, DYESUB_LANDSCAPE),
+ DEFINE_PAPER( "w288h432", "UPC-10P23 (4x6)", PT(1200,300), PT(1800,300), 12, 12, 18, 18, DYESUB_LANDSCAPE),
+ DEFINE_PAPER( "w288h387", "UPC-10P34 (4x5)", PT(1200,300), PT(1600,300), 12, 12, 16, 16, DYESUB_LANDSCAPE),
 };
 
 LIST(dyesub_pagesize_list_t, updp10_page_list, dyesub_pagesize_t, updp10_page);
@@ -1402,10 +1402,10 @@ static void updp10_adjust_curves(stp_vars_t *v)
 /* Sony UP-DR100 */
 static const dyesub_pagesize_t updr100_page[] =
 {
-  DEFINE_PAPER_SIMPLE( "w288h432",	"4x6", 298, 442, DYESUB_LANDSCAPE),
-  DEFINE_PAPER_SIMPLE( "B7",	"3.5x5", 261, 369, DYESUB_LANDSCAPE),
-  DEFINE_PAPER_SIMPLE( "w360h504",	"5x7", 369, 514, DYESUB_PORTRAIT),
-  DEFINE_PAPER_SIMPLE( "w432h576",	"6x8", 442, 588, DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w288h432", "4x6", PT1(1382,334), PT1(2048,334), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "B7", "3.5x5", PT1(1210,334), PT1(1710,334), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w360h504", "5x7", PT1(1710,334), PT1(2380,334), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w432h576", "6x8", PT1(2048,334), PT1(2724,334), DYESUB_PORTRAIT),
 };
 
 LIST(dyesub_pagesize_list_t, updr100_page_list, dyesub_pagesize_t, updr100_page);
@@ -1720,9 +1720,9 @@ static void upcr10_printer_end_func(stp_vars_t *v)
 /* Fujifilm CX-400 */
 static const dyesub_pagesize_t cx400_page[] =
 {
-  DEFINE_PAPER( "w288h432", "4x6", 295, 428, 24, 24, 23, 22, DYESUB_PORTRAIT),
-  DEFINE_PAPER( "w288h387", "4x5 3/8", 295, 386, 24, 24, 23, 23, DYESUB_PORTRAIT),
-  DEFINE_PAPER( "w288h504", "4x7", 295, 513, 24, 24, 23, 22, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "w288h432", "4x6", PT1(1268,310), PT1(1658,310), 24, 24, 23, 22, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "w288h387", "4x5 3/8", PT1(1268,310), PT1(1842,310), 24, 24, 23, 23, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "w288h504", "4x7", PT1(1268,310), PT1(2208,310), 24, 24, 23, 22, DYESUB_PORTRAIT),
 };
 
 LIST(dyesub_pagesize_list_t, cx400_page_list, dyesub_pagesize_t, cx400_page);
@@ -1769,7 +1769,6 @@ static void cx400_printer_init_func(stp_vars_t *v)
   stp_putc('\1', v);
 }
 
-
 /* Fujifilm NX-500 */
 static const dyesub_resolution_t res_306dpi[] =
 {
@@ -1780,7 +1779,7 @@ LIST(dyesub_resolution_list_t, res_306dpi_list, dyesub_resolution_t, res_306dpi)
 
 static const dyesub_pagesize_t nx500_page[] =
 {
-  DEFINE_PAPER( "Postcard", "Postcard", -1, -1, 21, 21, 29, 29, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "Postcard", "Postcard", PT1(1024,306), PT1(1518,306), 21, 21, 29, 29, DYESUB_PORTRAIT),
 };
 
 LIST(dyesub_pagesize_list_t, nx500_page_list, dyesub_pagesize_t, nx500_page);
