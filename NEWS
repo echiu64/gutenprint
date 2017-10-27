@@ -273,6 +273,14 @@ A) GENERAL USER-VISIBLE CHANGES
    1) It is now possible to specify units in fractional point sizes,
       allowing more precise placements and page sizes.
 
+   2) Added support for the following printers:
+
+	Canon SELPHY CP-1300 (EXPERIMENTAL)
+
+   3) Enhanced support and bugfixes for the following printers:
+
+	Fujifilm ASK-300
+	Sony UP-DR150 and UP-DR200
 
 B) NEW FUNCTIONALITY
 
