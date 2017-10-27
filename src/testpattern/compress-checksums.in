@@ -99,6 +99,8 @@ $sub_table{"Color"} = "c;";
 $sub_table{"MediaType"} = "M;";
 $sub_table{"InputSlot"} = "I;";
 
+my ($spc) = unpack("C", " ");
+
 sub compress_chunk($) {
     my ($chunk) = @_;
     if (defined $sub_table{$chunk}) {
@@ -183,5 +185,17 @@ foreach my $sum (sort keys %checksums) {
 	$out =~ s/__/>/g;
 	@pchunks = @chunks;
     }
+    $out =~ s/^([0-9a-f]+ )P;_BW_/$1./;
+    $out =~ s/^([0-9a-f]+ )P;_c;_/$1,/;
+    my (@bytes) = unpack("C*", $out);
+    my (@nbytes) = $bytes[0];
+    foreach my $i (1..$#bytes) {
+	if ($bytes[$i] == $spc) {
+	    $nbytes[$#nbytes] += 128;
+	} else {
+	    push @nbytes, $bytes[$i];
+	}
+    }
+    $out = pack("C*", @nbytes);
     print "$out\n";
 }

@@ -19,6 +19,7 @@ use strict;
 
 my (%old_modes, %old_printers, %new_modes, %new_printers);
 my ($detail1) = 0;
+my ($spc) = unpack("C", " ");
 
 while ($#ARGV >= 0 && $ARGV[0] eq '-d') {
     $detail1++;
@@ -114,30 +115,55 @@ sub initialize_file($) {
     return \%ctx;
 }
 
+sub fetch_next_line($) {
+    my ($ctx) = @_;
+    my ($fh) = $$ctx{"fh"};
+    my ($inline);
+    if (! ($inline = <$fh>)) {
+	close($fh) if ($fh != \*STDIN);
+	$$ctx{"active"} = 0;
+	return 0;
+    }
+    chomp $inline;
+    # Whitespace optimization -- set high bit.
+    if (! ($inline =~ / /)) {
+	my (@bytes) = unpack("C*", $inline);
+	my (@nbytes) = ();
+	foreach my $i (0..$#bytes) {
+	    if ($bytes[$i] >= 128) {
+		$bytes[$i] -= 128;
+		push @nbytes, $bytes[$i];
+		push @nbytes, $spc;
+	    } else {
+		push @nbytes, $bytes[$i];
+	    }
+	}
+	$inline = pack("C*", @nbytes);
+    }
+    # All lines start with hash followed by printing mode, so if compression
+    # removed that, we need to restore it.
+    $inline =~ s/^([0-9a-f]+ )\./$1P;_BW_/;
+    $inline =~ s/^([0-9a-f]+ )\,/$1P;_c;_/;
+    $inline =~ s/([=!",'%>])/$$ctx{"us_table"}{$1}/go;
+    $inline =~ s/([PSDRCcMI];)/$$ctx{"sub_table"}{$1}/go;
+    $inline =~ s/(^| )\*/$1/go;
+    $inline =~ s/\.prn( |$)/$1/go;
+    my ($sum, @keys) = split(/ /o, $inline);
+    my $osum = $$ctx{"sum"};
+    $$ctx{"kvals"} = \@keys;
+    if ($osum ne "" && ((length $sum) < (length $osum))) {
+	$sum = substr($osum, 0, ((length $osum) - (length $sum))) . $sum;
+    }
+    $$ctx{"sum"} = $sum;
+    $$ctx{"pchunks"} = [];
+    return 1;
+}
+
 sub get_next_datum($) {
     my ($ctx) = @_;
     return undef if (! $$ctx{"active"});
     if ((scalar @{$$ctx{"kvals"}}) == 0) {
-	my ($fh) = $$ctx{"fh"};
-	my ($inline);
-	if (! ($inline = <$fh>)) {
-	    close($fh) if ($fh != \*STDIN);
-	    $$ctx{"active"} = 0;
-	    return undef;
-	}
-	chomp $inline;
-	$inline =~ s/([=!",'%>])/$$ctx{"us_table"}{$1}/go;
-	$inline =~ s/([PSDRCcMI];)/$$ctx{"sub_table"}{$1}/go;
-	$inline =~ s/(^| )\*/$1/go;
-	$inline =~ s/\.prn( |$)/$1/go;
-	my ($sum, @keys) = split(/ /o, $inline);
-	my $osum = $$ctx{"sum"};
-	$$ctx{"kvals"} = \@keys;
-	if ($osum ne "" && ((length $sum) < (length $osum))) {
-	    $sum = substr($osum, 0, ((length $osum) - (length $sum))) . $sum;
-	}
-	$$ctx{"sum"} = $sum;
-	$$ctx{"pchunks"} = [];
+	return undef if (! fetch_next_line($ctx));
     }
     my (@chunks) = split(/_/o, shift(@{$$ctx{"kvals"}}), -1);
     my $pchunks = $$ctx{"pchunks"};
