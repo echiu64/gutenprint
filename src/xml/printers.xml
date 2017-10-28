@@ -1176,7 +1176,8 @@
       <printer translate="name" name="Canon E410 series" driver="bjc-E410-series" manufacturer="Canon" model="12000400" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA E410" driver="bjc-PIXMA-E410" manufacturer="Canon" model="12000400" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA E414" driver="bjc-PIXMA-E414" manufacturer="Canon" model="12000400" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="Canon PIXMA E417" driver="bjc-PIXMA-E417" manufacturer="Canon" model="12000400" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>          <printer translate="name" name="Canon PIXMA E418" driver="bjc-PIXMA-E418" manufacturer="Canon" model="12000400" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA E417" driver="bjc-PIXMA-E417" manufacturer="Canon" model="12000400" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA E418" driver="bjc-PIXMA-E418" manufacturer="Canon" model="12000400" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <!-- Canon E460 family -->
       <printer translate="name" name="Canon E460 series" driver="bjc-E460-series" manufacturer="Canon" model="12000460" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA E460" driver="bjc-PIXMA-E460" manufacturer="Canon" model="12000460" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
@@ -1265,6 +1266,12 @@
       <printer translate="name" name="Canon PIXMA P200" driver="bjc-PIXMA-P200" manufacturer="Canon" model="13000200" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <!-- Canon TS3100 family -->
       <printer translate="name" name="Canon TS3100 series" driver="bjc-TS3100-series" manufacturer="Canon" model="12003100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS3110" driver="bjc-PIXMA-TS3110" manufacturer="Canon" model="12003100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS3120" driver="bjc-PIXMA-TS3120" manufacturer="Canon" model="12003100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS3130" driver="bjc-PIXMA-TS3130" manufacturer="Canon" model="12003100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS3140" driver="bjc-PIXMA-TS3140" manufacturer="Canon" model="12003100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS3150" driver="bjc-PIXMA-TS3150" manufacturer="Canon" model="12003100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA TS3160" driver="bjc-PIXMA-TS3160" manufacturer="Canon" model="12003100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA TS3170" driver="bjc-PIXMA-TS3170" manufacturer="Canon" model="12003100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <!-- Canon TS5000 family -->
       <printer translate="name" name="Canon TS5000 series" driver="bjc-TS5000-series" manufacturer="Canon" model="18005000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
