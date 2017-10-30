@@ -63,6 +63,8 @@ sub open_file($) {
 	open($in, '-|', "@XZ@ -d -c $file") || die("Can't open checksum file $file: $!\n");
     } elsif ($file =~ /.lrz$/) {
 	open($in, '-|', "cat $file | @LRZIP@ -d -q") || die("Can't open checksum file $file: $!\n");
+    } elsif ($file =~ /.zpaq$/) {
+	open($in, '-|', "@top_builddir@/scripts/wzpaq -d -c $file") || die("Can't open checksum file $file: $!\n");
     } elsif ($file =~ /.rz$/) {
 	open($in, '-|', "@RZIP@ -d -c $file") || die("Can't open checksum file $file: $!\n");
     } else {
@@ -112,6 +114,7 @@ sub initialize_file($) {
     $ctx{"active"} = 1;
     my ($us_table) = create_underscore_table();
     $ctx{"us_table"} = $us_table;
+    $ctx{"lastdup"} = 0;
     return \%ctx;
 }
 
@@ -173,6 +176,9 @@ sub get_next_datum($) {
 	} else {
 	    if ($chunks[$i] =~ /^([0-9]+)\+(.*)/o) {
 		$chunks[$i] = substr($$pchunks[$i], 0, $1) . $2;
+		$$ctx{"lastdup"} = $1;
+	    } elsif ($chunks[$i] =~ /^\+(.*)/o) {
+		$chunks[$i] = substr($$pchunks[$i], 0, $$ctx{"lastdup"}) . $1;
 	    } elsif ($chunks[$i] =~ /^\*(.*)/o) {
 		$chunks[$i] = substr($$pchunks[$i], 0, 2) . $1;
 	    }

@@ -73,6 +73,9 @@ Checksums:
 checksums: testpattern run-testpattern-2 ./compress-checksums Checksums
 	./run-testpattern-2 -q -M - | ./compress-checksums | $(COMPRESS) > "$(CSUM_FILE)@CSUF@"
 
+checksums-fast: testpattern run-testpattern-2 ./compress-checksums Checksums
+	./run-testpattern-2 -s -q -M - | ./compress-checksums | $(COMPRESS) > "$(CSUM_FILE)@CSUF@"
+
 checksums-release: testpattern run-testpattern-2 ./compress-checksums Checksums
 	./run-testpattern-2 -q -M - | ./compress-checksums | $(COMPRESS) > "$(CSUM_RELEASE_FILE)@CSUF@"
 endif

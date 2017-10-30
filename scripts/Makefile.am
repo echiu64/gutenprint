@@ -29,9 +29,10 @@ EXTRA_DIST = \
 	autogen.sh \
 	global.mk \
 	mkgitlog \
-	gversion
+	gversion \
+	wzpaq
 
-noinst_SCRIPTS=gversion
+noinst_SCRIPTS=gversion wzpaq mkgitlog
 
 ## Clean
 

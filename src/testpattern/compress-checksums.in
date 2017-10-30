@@ -126,6 +126,7 @@ foreach my $sum (sort keys %checksums) {
 	my ($mode) = get_mode($_);
 	"${mode}_:$printer"
     } @{$checksums{$sum}};
+    my ($lastdup) = 0;
     foreach my $run (@runs) {
 	my (@chunks) = split(/[_]/, $run);
 	@chunks = map { compress_chunk($_) } @chunks;
@@ -161,10 +162,15 @@ foreach my $sum (sort keys %checksums) {
 		if ($dup == 2) {
 		    $out .= '*' . substr($chunk, $dup);
 		} elsif ($dup > 2) {
-		    $out .= "$dup+" . substr($chunk, $dup);
+		    if ($dup == $lastdup) {
+			$out .= "+" . substr($chunk, $dup);
+		    } else {
+			$out .= "$dup+" . substr($chunk, $dup);
+		    }
 		} else {
 		    $out .= "$chunk";
 		}
+		$lastdup = $dup;
 	    } else {
 		$out .= "";
 	    }

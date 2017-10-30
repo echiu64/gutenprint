@@ -574,7 +574,12 @@ AC_PATH_PROG([GZIP], [gzip])
 AC_PATH_PROG([BZIP2], [bzip2])
 AC_PATH_PROG([LRZIP], [lrzip])
 AC_PATH_PROG([RZIP], [rzip])
-if test x${LRZIP} != x ; then
+AC_PATH_PROG([ZPAQ], [zpaq])
+AC_PATH_PROG([BASH], [bash])
+if test x${ZPAQ} != x ; then
+  COMPRESS='$(top_builddir)/scripts/wzpaq -z -q'
+  CSUF=.zpaq
+elif test x${LRZIP} != x ; then
   COMPRESS="${LRZIP} -z -q"
   CSUF=.lrz
 elif test x${XZ} != x ; then
@@ -1072,6 +1077,8 @@ AC_CONFIG_FILES([scripts/mkgitlog],
 		[chmod +x scripts/mkgitlog])
 AC_CONFIG_FILES([scripts/gversion],
 		[chmod +x scripts/gversion])
+AC_CONFIG_FILES([scripts/wzpaq],
+		[chmod +x scripts/wzpaq])
 AC_CONFIG_COMMANDS([default], [
 echo
 ],
