@@ -611,7 +611,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
       if (parallel < 1 || parallel > 256)
 	parallel = 1;
     }
-  if (parallel)
+  if (parallel > 1)
     {
       subprocesses = stp_malloc(sizeof(pid_t) * parallel);
       for (rotor = 0; rotor < parallel; rotor++)
