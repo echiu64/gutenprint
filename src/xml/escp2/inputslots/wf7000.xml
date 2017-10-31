@@ -29,7 +29,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 
  <slot translate="text" name="tray2" text="Tray 2">
   <Duplex><Tumble/></Duplex>
-  <InitSequence>PP\003\000\000\001\001</InitSequence>
+  <InitSequence>PP\003\000\000\001\002</InitSequence>
  </slot>
 </escp2InputSlots>
 </gutenprint>
