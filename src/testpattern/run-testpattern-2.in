@@ -921,7 +921,7 @@ sub runit() {
 	$valopts = '--tool=memcheck';
     }
     if ($gdb_attach) {
-	$valopts .= ' --db-attach=yes';
+	$valopts .= ' --vgdb=yes';
     }
     if ($valgrind == 1) {
 	$valgrind_command = "valgrind $valopts -q --num-callers=50 --error-limit=no --leak-check=yes";
