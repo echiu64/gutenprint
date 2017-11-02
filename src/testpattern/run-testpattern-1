@@ -72,7 +72,7 @@ set_args() {
 	    -h*|--h*) usage ;;
 	    -v|--valgrind) valopts='--tool=memcheck' ; valgrind=`expr $valgrind + 1` ;;
 	    -c|--cachegrind) valopts='--skin=cachegrind'; valgrind=4 ;;
-	    -g|--gdb-attach) valopts='--gdb-attach=yes' ;;
+	    -g|--gdb-attach) valopts='--vgdb=yes' ;;
 	    -p|--parameter) shift; set_opt "$1" ;;
     	    -n|--dontrun) dontrun=1 ;;
 	    -O|--output) shift; output="$1" ;;

@@ -30,7 +30,8 @@ pkgxmldata_DATA =				\
 	dither-matrix-1x1.xml			\
 	dither-matrix-2x1.xml			\
 	dither-matrix-4x1.xml			\
-	papers.xml				\
+	papers/standard.xml			\
+	papers/labels.xml			\
 	printers.xml
 
 ## Rules

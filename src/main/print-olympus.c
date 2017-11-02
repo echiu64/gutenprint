@@ -120,32 +120,29 @@ typedef struct {
 } dyesub_resolution_list_t;
 
 typedef struct {
-  const char* name;
-  const char* text;
-  stp_dimension_t width;
-  stp_dimension_t height;
-  stp_dimension_t left;
-  stp_dimension_t right;
-  stp_dimension_t top;
-  stp_dimension_t bottom;
+  stp_papersize_t psize;
   int print_mode;
 } dyesub_pagesize_t;
 
 #define DEFINE_PAPER(__n, __t, __w, __h, __bl, __br, __bt, __bb, __pm)	\
-	{ .name = __n, .text = N_(__t),					\
-			.width = __w, .height = __h,			\
-			.left = __bl,					\
-			.right = __br,					\
-			.top = __bt,					\
-			.bottom = __bb,					\
-			.print_mode = __pm,				\
-			}
+	{								\
+	  .psize = {							\
+	    .name = __n,						\
+	    .text = N_(__t),						\
+	    .width = __w,						\
+	    .height = __h,						\
+	    .top = __bt,						\
+	    .left = __bl,						\
+	    .bottom = __bb,						\
+	    .right = __br,						\
+	    .paper_unit = PAPERSIZE_ENGLISH_STANDARD,			\
+	    .paper_size_type = PAPERSIZE_TYPE_STANDARD,			\
+	  },								\
+	    .print_mode = __pm,						\
+	    }
 
-#define DEFINE_PAPER_SIMPLE(__n, __t, __w, __h, __pm)			\
-	{ .name = __n, .text = N_(__t),					\
-			.width = __w, .height = __h,			\
-			.print_mode = __pm,				\
-			}
+#define DEFINE_PAPER_SIMPLE(__n, __t, __w, __h, __pm)	\
+	DEFINE_PAPER(__n, __t, __w, __h, 0, 0, 0, 0, __pm)
 
 typedef struct {
   const dyesub_pagesize_t *item;
@@ -8219,10 +8216,12 @@ dyesub_parameters(const stp_vars_t *v, const char *name,
       for (i = 0; i < p->n_items; i++)
 	{
 	  stp_string_list_add_string(description->bounds.str,
-				     p->item[i].name, gettext(p->item[i].text));
-	  if (! default_specified && p->item[i].width > 0 && p->item[i].height > 0)
+				     p->item[i].psize.name,
+				     gettext(p->item[i].psize.text));
+	  if (! default_specified &&
+	      p->item[i].psize.width > 0 && p->item[i].psize.height > 0)
 	    {
-	      description->deflt.str = p->item[i].name;
+	      description->deflt.str = p->item[i].psize.name;
 	      default_specified = 1;
 	    }
 	}
@@ -8350,20 +8349,38 @@ dyesub_parameters(const stp_vars_t *v, const char *name,
 
 
 static const dyesub_pagesize_t*
-dyesub_current_pagesize(const stp_vars_t *v)
+dyesub_get_pagesize(const stp_vars_t *v, const char *page)
 {
-  const char *page = stp_get_string_parameter(v, "PageSize");
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(
 		  				stp_get_model_id(v));
   const dyesub_pagesize_list_t *p = caps->pages;
   int i;
+  if (page == NULL)
+    return NULL;
 
   for (i = 0; i < p->n_items; i++)
     {
-      if (strcmp(p->item[i].name,page) == 0)
+      if (strcmp(p->item[i].psize.name,page) == 0)
           return &(p->item[i]);
     }
   return NULL;
+}
+
+static const dyesub_pagesize_t*
+dyesub_current_pagesize(const stp_vars_t *v)
+{
+  const char *page = stp_get_string_parameter(v, "PageSize");
+  return dyesub_get_pagesize(v, page);
+}
+
+static const stp_papersize_t *
+dyesub_describe_papersize(const stp_vars_t *v, const char *name)
+{
+  const dyesub_pagesize_t *pagesize = dyesub_get_pagesize(v, name);
+  if (pagesize)
+    return &(pagesize->psize);
+  else
+    return NULL;
 }
 
 static void
@@ -8374,10 +8391,10 @@ dyesub_media_size(const stp_vars_t *v,
   const dyesub_pagesize_t *pt = dyesub_current_pagesize(v);
   stp_default_media_size(v, width, height);
 
-  if (pt && pt->width > 0)
-    *width = pt->width;
-  if (pt && pt->height > 0)
-    *height = pt->height;
+  if (pt && pt->psize.width > 0)
+    *width = pt->psize.width;
+  if (pt && pt->psize.height > 0)
+    *height = pt->psize.height;
 }
 
 static void
@@ -8407,10 +8424,10 @@ dyesub_imageable_area_internal(const stp_vars_t *v,
     }
   else
     {
-      *left = pt->left;
-      *top  = pt->top;
-      *right  = width  - pt->right;
-      *bottom = height - pt->bottom;
+      *left = pt->psize.left;
+      *top  = pt->psize.top;
+      *right  = width  - pt->psize.right;
+      *bottom = height - pt->psize.bottom;
     }
   if (pt)
     *print_mode = pt->print_mode;
@@ -9254,7 +9271,8 @@ static const stp_printfuncs_t print_dyesub_printfuncs =
   dyesub_verify_printer_params,
   dyesub_job_start,
   dyesub_job_end,
-  NULL
+  NULL,
+  dyesub_describe_papersize
 };
 
 static stp_family_t print_dyesub_module_data =
@@ -9266,14 +9284,14 @@ static stp_family_t print_dyesub_module_data =
 static int
 print_dyesub_module_init(void)
 {
-  return stp_family_register(print_dyesub_module_data.printer_list);
+  return stpi_family_register(print_dyesub_module_data.printer_list);
 }
 
 
 static int
 print_dyesub_module_exit(void)
 {
-  return stp_family_unregister(print_dyesub_module_data.printer_list);
+  return stpi_family_unregister(print_dyesub_module_data.printer_list);
 }
 
 

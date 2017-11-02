@@ -2283,7 +2283,6 @@ escp2_parameters(const stp_vars_t *v, const char *name,
     }
   else if (strcmp(name, "PageSize") == 0)
     {
-      int papersizes = stp_known_papersizes();
       const input_slot_t *slot = stp_escp2_get_input_slot(v);
       description->bounds.str = stp_string_list_create();
       if (slot && slot->is_cd &&
@@ -2298,12 +2297,17 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	}
       else
 	{
-	  for (i = 0; i < papersizes; i++)
+	  const stp_papersize_list_t *paper_sizes =
+	    stpi_get_standard_papersize_list();
+	  const stp_papersize_list_item_t *ptli =
+	    stpi_papersize_list_get_start(paper_sizes);
+	  while (ptli)
 	    {
-	      const stp_papersize_t *pt = stp_get_papersize_by_index(i);
+	      const stp_papersize_t *pt = stpi_paperlist_item_get_data(ptli);
 	      if (verify_papersize(v, pt))
 		stp_string_list_add_string(description->bounds.str,
 					   pt->name, gettext(pt->text));
+	      ptli = stpi_paperlist_item_next(ptli);
 	    }
 	}
       description->deflt.str =
@@ -2897,7 +2901,7 @@ escp2_media_size(const stp_vars_t *v,	/* I */
       const char *page_size = stp_get_string_parameter(v, "PageSize");
       const stp_papersize_t *papersize = NULL;
       if (page_size)
-	papersize = stp_get_papersize_by_name(page_size);
+	papersize = stp_describe_papersize(v, page_size);
       if (!papersize)
 	{
 	  *width = 1;
@@ -2913,7 +2917,7 @@ escp2_media_size(const stp_vars_t *v,	/* I */
 	  const input_slot_t *slot = stp_escp2_get_input_slot(v);
 	  if (slot && slot->is_cd)
 	    {
-	      papersize = stp_get_papersize_by_name("CDCustom");
+	      papersize = stp_describe_papersize(v, "CDCustom");
 	      if (papersize)
 		{
 		  if (*width == 0)
@@ -2924,11 +2928,13 @@ escp2_media_size(const stp_vars_t *v,	/* I */
 	    }
 	  else
 	    {
-	      int papersizes = stp_known_papersizes();
-	      int i;
-	      for (i = 0; i < papersizes; i++)
+	      const stp_papersize_list_t *paper_sizes =
+		stpi_get_standard_papersize_list();
+	      const stp_papersize_list_item_t *ptli =
+		stpi_papersize_list_get_start(paper_sizes);
+	      while (ptli)
 		{
-		  papersize = stp_get_papersize_by_index(i);
+		  papersize = stpi_paperlist_item_get_data(ptli);
 		  if (verify_papersize(v, papersize))
 		    {
 		      if (*width == 0)
@@ -2937,9 +2943,11 @@ escp2_media_size(const stp_vars_t *v,	/* I */
 			*height = papersize->height;
 		      break;
 		    }
+		  ptli = stpi_paperlist_item_next(ptli);
 		}
 	    }
 	}
+      /* FIXME When we support A4/letter */
       if (*width == 0)
 	*width = 612;
       if (*height == 0)
@@ -2966,7 +2974,7 @@ internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
   const input_slot_t *input_slot = NULL;
 
   if (media_size)
-    pt = stp_get_papersize_by_name(media_size);
+    pt = stp_describe_papersize(v, media_size);
 
   input_slot = stp_escp2_get_input_slot(v);
   if (input_slot)
@@ -4599,7 +4607,8 @@ static const stp_printfuncs_t print_escp2_printfuncs =
   stp_verify_printer_params,
   escp2_job_start,
   escp2_job_end,
-  NULL
+  NULL,
+  stpi_standard_describe_papersize
 };
 
 static stp_family_t print_escp2_module_data =
@@ -4621,14 +4630,14 @@ print_escp2_module_init(void)
      "</sequence>\n"
      "</curve>\n"
      "</gutenprint>");
-  return stp_family_register(print_escp2_module_data.printer_list);
+  return stpi_family_register(print_escp2_module_data.printer_list);
 }
 
 
 static int
 print_escp2_module_exit(void)
 {
-  return stp_family_unregister(print_escp2_module_data.printer_list);
+  return stpi_family_unregister(print_escp2_module_data.printer_list);
 }
 
 

@@ -43,6 +43,7 @@ all_models=''
 verbose=''
 valgrind=0
 make_ppds=1
+skip_simplified=0
 md5dir=''
 outdir=''
 cupsargs=''
@@ -79,6 +80,7 @@ set_args() {
 	    -p|--pages) shift; npages="$1" ;;
 	    -P|--postscript) shift; postscript=1 ;;
 	    -t|--parallel) shift; jobs="$1" ;;
+	    -S|--skip-simplified) skip_simplified=1 ;;
 	    --) shift; args="$@"; return ;;
 	    *) return ;;
 	esac
@@ -86,7 +88,7 @@ set_args() {
     done
 }
 
-set_args `getopt hvcgsVnO:m:o:p: "$@"`
+set_args `getopt hvcgsVnO:m:o:p:S "$@"`
 
 if [ "$valgrind" -gt 0 -a "$enable_shared" != "no" ] ; then
     echo 'Valgrind is not compatible with --enable-shared in tree.' 1>&2
@@ -232,8 +234,12 @@ get_ppds() {
 }
 
 if [ -n "$make_ppds" -o ! -d ppd/C ] ; then
-    rm -rf ppd/C		# Clean out any leftover simplified PPDs
-    make ppd-nonls-a		# that double the time for the test
+    rm -rf ppd/C
+    if [ "$skip_simplified" = 1 ] ; then
+        make ppd-nonls
+    else
+        make ppd-nonls-a
+    fi
 ## not all systems can work with gzipped PPDs
     find ppd/C -name '*.ppd.gz' | xargs gunzip -f
 fi

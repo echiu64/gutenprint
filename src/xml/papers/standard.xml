@@ -43,7 +43,7 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
-  <paperdef>
+  <paperdef name="standard">
 <!-- GROUP: Imperial -->
     <paper name="Letter">
       <description translate="value" value="Letter"/>
@@ -115,13 +115,6 @@
       <height value="360"/>
       <unit value="english-extended"/>
     </paper>
-    <paper name="w252h338">
-      <description translate="value" value="3.5x4.7"/>
-      <comment value="Only used by CW-01/OP900 dyesub printers"/>
-      <width value="252"/>
-      <height value="338"/>
-      <unit value="english-extended"/>
-    </paper>
     <paper name="w252h360">
       <description translate="value" value="3 1/2 x5"/>
       <width value="252"/>
@@ -152,13 +145,6 @@
       <height value="432"/>
       <unit value="english"/>
     </paper>
-    <paper name="w324h432">
-      <description translate="value" value="4.5x6"/>
-      <comment value="Only used by DS620 dyesub printer"/>
-      <width value="324"/>
-      <height value="432"/>
-      <unit value="english-extended"/>
-    </paper>
     <paper name="w324h495">
       <description translate="value" value="Epson 4x6 Photo Paper (tear-off borders)"/>
       <width value="324"/>
@@ -185,13 +171,6 @@
       <height value="576"/>
       <unit value="english-extended"/>
     </paper>
-    <paper name="w338h504">
-      <description translate="value" value="4.7x7"/>
-      <comment value="Only used by CW-01/OP900 dyesub printers"/>
-      <width value="338"/>
-      <height value="504"/>
-      <unit value="english-extended"/>
-    </paper>
     <paper name="w360h504">
       <description translate="value" value="5x7"/>
       <width value="360"/>
@@ -210,24 +189,10 @@
       <height value="576"/>
       <unit value="english-extended"/>
     </paper>
-    <paper name="w432h432">
-      <description translate="value" value="6x6"/>
-      <comment value="Only used by certain dyesub models"/>
-      <width value="432"/>
-      <height value="432"/>
-      <unit value="english-extended"/>
-    </paper>
     <paper name="w432h576">
       <description translate="value" value="6x8"/>
       <width value="432"/>
       <height value="576"/>
-      <unit value="english-extended"/>
-    </paper>
-    <paper name="w432h612">
-      <description translate="value" value="6x8.5"/>
-      <comment value="Only used by certain Mitsubishi dyesub models"/>
-      <width value="432"/>
-      <height value="612"/>
       <unit value="english-extended"/>
     </paper>
     <paper name="w432h648">
@@ -278,73 +243,10 @@
 <!--
     Other common photographic paper sizes
 -->
-    <paper name="w213h284">
-      <description translate="value" value="1280x960"/>
-      <comment value="Only used by Mitsubishi P95DW"/>
-      <width value="213"/>
-      <height value="284"/>
-      <unit value="english-extended"/>
-    </paper>
-    <paper name="w227h284">
-      <description translate="value" value="1280x1024"/>
-      <comment value="Only used by Mitsubishi P95DW"/>
-      <width value="227"/>
-      <height value="284"/>
-      <unit value="english-extended"/>
-    </paper>
-    <paper name="w284h284">
-      <description translate="value" value="1280x1280"/>
-      <comment value="Only used by Mitsubishi P95DW"/>
-      <width value="284"/>
-      <height value="284"/>
-      <unit value="english-extended"/>
-    </paper>
-    <paper name="w284h426">
-      <description translate="value" value="1280x1920"/>
-      <comment value="Only used by Mitsubishi P95DW"/>
-      <width value="284"/>
-      <height value="426"/>
-      <unit value="english-extended"/>
-    </paper>
-    <paper name="w284h1277">
-      <description translate="value" value="1280x5760"/>
-      <comment value="Only used by Mitsubishi P95DW"/>
-      <width value="284"/>
-      <height value="1277"/>
-      <unit value="english-extended"/>
-    </paper>
     <paper name="w360h360">
       <description translate="value" value="5x5"/>
       <width value="360"/>
       <height value="360"/>
-      <unit value="english-extended"/>
-    </paper>
-    <paper name="w504h576">
-      <description translate="value" value="8x7"/>
-      <comment value="Only used by DS820 dyesub printer"/>
-      <width value="576"/>
-      <height value="504"/>
-      <unit value="english-extended"/>
-    </paper>
-    <paper name="w576h576">
-      <description translate="value" value="8x8"/>
-      <comment value="Only used by certain dyesub models"/>
-      <width value="576"/>
-      <height value="576"/>
-      <unit value="english-extended"/>
-    </paper>
-    <paper name="w576h648">
-      <description translate="value" value="8x9"/>
-      <comment value="Only used by DS820 dyesub printer"/>
-      <width value="576"/>
-      <height value="648"/>
-      <unit value="english-extended"/>
-    </paper>
-    <paper name="w576h774">
-      <description translate="value" value="8x10.75"/>
-      <comment value="Only used by DS80DX dyesub printer"/>
-      <width value="576"/>
-      <height value="774"/>
       <unit value="english-extended"/>
     </paper>
     <paper name="w576h864">
@@ -353,20 +255,6 @@
       <width value="576"/>
       <height value="864"/>
       <unit value="english-extended"/>
-    </paper>
-    <paper name="w576h842">
-      <description translate="value" value="8x11.7"/>
-      <comment value="Only used by DS80, DS80DX, DS820 dyesub printers"/>
-      <width value="576"/>
-      <height value="842"/>
-      <unit value="english-extended"/>
-    </paper>
-    <paper name="w612h864">
-      <description translate="value" value="8.5x12"/>
-      <comment value="Only used by Kodak 1400 and 805 dyesub printers"/>
-      <width value="612"/>
-      <height value="864"/>
-      <unit value="english"/>
     </paper>
     <paper name="w720h864J">
       <description translate="value" value="YonKire"/>
@@ -1471,441 +1359,6 @@
       <width value="612"/>
       <height value="966"/>
       <unit value="metric-extended"/>
-    </paper>
-
-<!-- Group Labels -->
-    <paper name="d-o400x600">
-      <description translate="value" value="4.00x6.00 in label"/>
-      <width value="288"/>
-      <height value="432"/>
-      <unit value="english"/>
-    </paper>
-    <paper name="d-o100x400">
-      <description translate="value" value="1.00x4.00 in label"/>
-      <width value="72"/>
-      <height value="288"/>
-      <unit value="english"/>
-    </paper>
-    <paper name="d-o131x400">
-      <description translate="value" value="1.31x4.00 in label"/>
-      <width value="94"/>
-      <height value="288"/>
-      <unit value="english"/>
-    </paper>
-    <paper name="d-o056x344">
-      <description translate="value" value="0.56x3.44 in label"/>
-      <width value="40"/>
-      <height value="248"/>
-      <unit value="english"/>
-    </paper>
-    <paper name="d-o319x350">
-      <description translate="value" value="3.19x3.50 in label"/>
-      <width value="230"/>
-      <height value="252"/>
-      <unit value="english"/>
-    </paper>
-    <paper name="d-o100x263">
-      <description translate="value" value="1.00x2.63 in label"/>
-      <width value="72"/>
-      <height value="189"/>
-      <unit value="english"/>
-    </paper>
-    <paper name="d-o200x100">
-      <description translate="value" value="2.00x1.00 in label"/>
-      <width value="144"/>
-      <height value="72"/>
-      <unit value="english"/>
-    </paper>
-    <paper name="d-o200x150">
-      <description translate="value" value="2.00x1.50 in label"/>
-      <width value="144"/>
-      <height value="108"/>
-      <unit value="english"/>
-    </paper>
-    <paper name="d-o200x400">
-      <description translate="value" value="2.00x4.00 in label"/>
-      <width value="144"/>
-      <height value="288"/>
-      <unit value="english"/>
-    </paper>
-    <paper name="d-o225x550">
-      <description translate="value" value="2.25x5.50 in label"/>
-      <width value="162"/>
-      <height value="396"/>
-      <unit value="english"/>
-    </paper>
-    <paper name="d-o300x200">
-      <description translate="value" value="3.00x2.00 in label"/>
-      <width value="216"/>
-      <height value="144"/>
-      <unit value="english"/>
-    </paper>
-    <paper name="d-o300x300">
-      <description translate="value" value="3.00x3.00 in label"/>
-      <width value="216"/>
-      <height value="216"/>
-      <unit value="english"/>
-    </paper>
-    <paper name="d-o319x175">
-      <description translate="value" value="3.19x1.75 in label"/>
-      <width value="230"/>
-      <height value="126"/>
-      <unit value="english"/>
-    </paper>
-    <paper name="d-o350x200">
-      <description translate="value" value="3.50x2.00 in label"/>
-      <width value="252"/>
-      <height value="144"/>
-      <unit value="english"/>
-    </paper>
-    <paper name="d-o400x200">
-      <description translate="value" value="4.00x2.00 in label"/>
-      <width value="288"/>
-      <height value="144"/>
-      <unit value="english"/>
-    </paper>
-    <paper name="d-o400x300">
-      <description translate="value" value="4.00x3.00 in label"/>
-      <width value="288"/>
-      <height value="216"/>
-      <unit value="english"/>
-    </paper>
-    <paper name="d-o400x400">
-      <description translate="value" value="4.00x4.00 in label"/>
-      <width value="288"/>
-      <height value="288"/>
-      <unit value="english"/>
-    </paper>
-    <paper name="d-o400x500">
-      <description translate="value" value="4.00x5.00 in label"/>
-      <width value="288"/>
-      <height value="360"/>
-      <unit value="english"/>
-    </paper>
-    <paper name="d-o400x650">
-      <description translate="value" value="4.00x6.50 in label"/>
-      <width value="288"/>
-      <height value="468"/>
-      <unit value="english"/>
-    </paper>
-    <paper name="d-o400x800">
-      <description translate="value" value="4.00x8.00 in label"/>
-      <width value="288"/>
-      <height value="576"/>
-      <unit value="english"/>
-    </paper>
-    <paper name="d-o400x1300">
-      <description translate="value" value="4.00x13.00 in label"/>
-      <width value="288"/>
-      <height value="936"/>
-      <unit value="english"/>
-    </paper>
-    <paper name="d-o600x200">
-      <description translate="value" value="6.00x2.00 in label"/>
-      <width value="432"/>
-      <height value="144"/>
-      <unit value="english"/>
-    </paper>
-    <paper name="d-o600x300">
-      <description translate="value" value="6.00x3.00 in label"/>
-      <width value="432"/>
-      <height value="216"/>
-      <unit value="english"/>
-    </paper>
-    <paper name="d-o600x400">
-      <description translate="value" value="6.00x4.00 in label"/>
-      <width value="432"/>
-      <height value="288"/>
-      <unit value="english"/>
-    </paper>
-    <paper name="d-o600x500">
-      <description translate="value" value="6.00x5.00 in label"/>
-      <width value="432"/>
-      <height value="360"/>
-      <unit value="english"/>
-    </paper>
-    <paper name="d-o600x600">
-      <description translate="value" value="6.00x6.00 in label"/>
-      <width value="432"/>
-      <height value="432"/>
-      <unit value="english"/>
-    </paper>
-    <paper name="d-o800x1200">
-      <description translate="value" value="8.00x12.00 in label"/>
-      <width value="576"/>
-      <height value="864"/>
-      <unit value="english"/>
-    </paper>
-    <paper name="d-o850x600">
-      <description translate="value" value="8.50x6.00 in label"/>
-      <width value="612"/>
-      <height value="432"/>
-      <unit value="english"/>
-    </paper>
-    <paper name="d-o850x1100">
-      <description translate="value" value="8.50x11.00 in label"/>
-      <width value="612"/>
-      <height value="792"/>
-      <unit value="english"/>
-    </paper>
-    <paper name="d-o250x313">
-      <description translate="value" value="2.50x3.13 in label"/>
-      <width value="180"/>
-      <height value="225"/>
-      <unit value="english"/>
-    </paper>
-    <paper name="d-o050x175">
-      <description translate="value" value="0.50x1.75 in label"/>
-      <width value="36"/>
-      <height value="126"/>
-      <unit value="english"/>
-    </paper>
-    <paper name="d-o175x300">
-      <description translate="value" value="1.75x3.00 in label"/>
-      <width value="126"/>
-      <height value="216"/>
-      <unit value="english"/>
-    </paper>
-    <paper name="d-o075x575">
-      <description translate="value" value="0.75x5.75 label"/>
-      <width value="54"/>
-      <height value="414"/>
-      <unit value="english"/>
-    </paper>
-    <paper name="d-o44x31">
-      <description translate="value" value="44x31 mm label"/>
-      <width value="125"/>
-      <height value="88"/>
-      <unit value="metric"/>
-    </paper>
-    <paper name="d-o62x44">
-      <description translate="value" value="62x44 mm label"/>
-      <width value="176"/>
-      <height value="125"/>
-      <unit value="metric"/>
-    </paper>
-    <paper name="d-o74x52">
-      <description translate="value" value="74x52 mm label"/>
-      <width value="210"/>
-      <height value="147"/>
-      <unit value="metric"/>
-    </paper>
-    <paper name="d-o88x62">
-      <description translate="value" value="88x62 mm label"/>
-      <width value="249"/>
-      <height value="176"/>
-      <unit value="metric"/>
-    </paper>
-    <paper name="d-o105x74">
-      <description translate="value" value="105x74 mm label"/>
-      <width value="298"/>
-      <height value="210"/>
-      <unit value="metric"/>
-    </paper>
-    <paper name="d-o125x88">
-      <description translate="value" value="125x88 mm label"/>
-      <width value="354"/>
-      <height value="249"/>
-      <unit value="metric"/>
-    </paper>
-    <paper name="d-o148x105">
-      <description translate="value" value="148x105 mm label"/>
-      <width value="420"/>
-      <height value="298"/>
-      <unit value="metric"/>
-    </paper>
-    <paper name="d-o176x125">
-      <description translate="value" value="176x125 mm label"/>
-      <width value="499"/>
-      <height value="354"/>
-      <unit value="metric"/>
-    </paper>
-    <paper name="d-o210x148">
-      <description translate="value" value="210x148 mm label"/>
-      <width value="595"/>
-      <height value="420"/>
-      <unit value="metric"/>
-    </paper>
-    <paper name="d-o250x176">
-      <description translate="value" value="250x176 mm label"/>
-      <width value="709"/>
-      <height value="499"/>
-      <unit value="metric"/>
-    </paper>
-    <paper name="d-o297x210">
-      <description translate="value" value="297x210 mm label"/>
-      <width value="842"/>
-      <height value="595"/>
-      <unit value="metric"/>
-    </paper>
-
-    <!--
-	Special dyesub-specific sizes
-
-        These are all used solely to expose multicut parameters
-
-        They can be removed once we figure out a better paper API
-    -->
-    <paper name="A4-div2">
-      <description translate="value" value="A5*2"/>
-      <comment value="Only used by DNP DS820"/>
-      <width value="595"/>
-      <height value="842"/>
-      <unit value="metric"/>
-    </paper>
-    <paper name="A4x4inch">
-      <description translate="value" value="A4 width * 4inch"/>
-      <comment value="Only used by DNP DS820"/>
-      <width value="595"/>
-      <height value="288"/>
-      <unit value="metric"/>
-    </paper>
-    <paper name="A4x5inch">
-      <description translate="value" value="A4 width * 5inch"/>
-      <comment value="Only used by DNP DS820"/>
-      <width value="595"/>
-      <height value="360"/>
-      <unit value="metric"/>
-    </paper>
-    <paper name="A4x6inch">
-      <description translate="value" value="A4 width * 6inch"/>
-      <comment value="Only used by DNP DS820"/>
-      <width value="595"/>
-      <height value="432"/>
-      <unit value="metric"/>
-    </paper>
-    <paper name="A4x8inch">
-      <description translate="value" value="A4 width * 8inch"/>
-      <comment value="Only used by DNP DS820"/>
-      <width value="595"/>
-      <height value="576"/>
-      <unit value="metric"/>
-    </paper>
-    <paper name="A4x10inch">
-      <description translate="value" value="A4 width * 10inch"/>
-      <comment value="Only used by DNP DS820"/>
-      <width value="595"/>
-      <height value="720"/>
-      <unit value="metric"/>
-    </paper>
-    <paper name="A4x10inch-div2">
-      <description translate="value" value="A4 width * 5 inch x2"/>
-      <comment value="Only used by DNP DS820"/>
-      <width value="595"/>
-      <height value="720"/>
-      <unit value="metric"/>
-    </paper>
-    <paper name="w288h432-div2">
-      <description translate="value" value="2x6*2"/>
-      <width value="288"/>
-      <height value="432"/>
-      <unit value="english"/>
-      <type value="special"/>
-    </paper>
-    <paper name="w360h504-div2">
-      <description translate="value" value="3.5x5*2"/>
-      <width value="360"/>
-      <height value="504"/>
-      <unit value="english-extended"/>
-      <type value="special"/>
-    </paper>
-    <paper name="w432h576-div2">
-      <description translate="value" value="4x6*2"/>
-      <width value="432"/>
-      <height value="576"/>
-      <unit value="english-extended"/>
-      <type value="special"/>
-    </paper>
-    <paper name="w432h576-div4">
-      <description translate="value" value="2x6*4"/>
-      <width value="432"/>
-      <height value="576"/>
-      <unit value="english-extended"/>
-      <type value="special"/>
-    </paper>
-    <paper name="w432h576-w432h432_w432h144">
-      <description translate="value" value="6x6+2x6"/>
-      <width value="432"/>
-      <height value="576"/>
-      <unit value="english-extended"/>
-      <type value="special"/>
-    </paper>
-    <paper name="w432h648-div2">
-      <description translate="value" value="4.5x6*2"/>
-      <width value="432"/>
-      <height value="648"/>
-      <unit value="english-extended"/>
-      <type value="special"/>
-    </paper>
-    <paper name="w576h576-div2">
-      <description translate="value" value="4x8*2"/>
-      <width value="576"/>
-      <height value="576"/>
-      <unit value="english-extended"/>
-      <type value="special"/>
-    </paper>
-    <paper name="w576h648-w576h360_w576h288">
-      <description translate="value" value="8x5+8x4"/>
-      <width value="576"/>
-      <height value="648"/>
-      <unit value="english-extended"/>
-    </paper>
-    <paper name="c8x10-div2">
-      <description translate="value" value="8x5*2"/>
-      <width value="576"/>
-      <height value="720"/>
-      <unit value="english-extended"/>
-      <type value="special"/>
-    </paper>
-    <paper name="c8x10-w576h432_w576h288">
-      <description translate="value" value="8x6+8x4"/>
-      <width value="576"/>
-      <height value="720"/>
-      <unit value="english-extended"/>
-      <type value="special"/>
-    </paper>
-    <paper name="w576h774-w576h756">
-      <description translate="value" value="8x10.5"/>
-      <comment value="Only used by DS80DX dyesub printer"/>
-      <width value="576"/>
-      <height value="774"/>
-      <unit value="english-extended"/>
-      <type value="special"/>
-    </paper>
-    <paper name="w576h792-w576h432_w576h360">
-      <description translate="value" value="8x6+8x5"/>
-      <width value="576"/>
-      <height value="792"/>
-      <unit value="english-extended"/>
-      <type value="special"/>
-    </paper>
-    <paper name="w576h864-div2">
-      <description translate="value" value="8x6*2"/>
-      <width value="576"/>
-      <height value="864"/>
-      <unit value="english-extended"/>
-      <type value="special"/>
-    </paper>
-    <paper name="w576h864-div3">
-      <description translate="value" value="8x4*3"/>
-      <width value="576"/>
-      <height value="864"/>
-      <unit value="english-extended"/>
-      <type value="special"/>
-    </paper>
-    <paper name="w576h864-div3sheet">
-      <description translate="value" value="8x4*3"/>
-      <width value="576"/>
-      <height value="864"/>
-      <unit value="english-extended"/>
-      <type value="special"/>
-    </paper>
-    <paper name="w576h864-w576h576_w576h288">
-      <description translate="value" value="8x8+8x4"/>
-      <width value="576"/>
-      <height value="864"/>
-      <unit value="english-extended"/>
-      <type value="special"/>
     </paper>
 
 <!--

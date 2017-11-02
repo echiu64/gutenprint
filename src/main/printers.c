@@ -552,6 +552,14 @@ stp_get_external_options(const stp_vars_t *v)
     return NULL;
 }
 
+const stp_papersize_t *
+stpi_printer_describe_papersize(const stp_vars_t *v, const char *name)
+{
+  const stp_printfuncs_t *printfuncs =
+    stpi_get_printfuncs(stp_get_printer(v));
+  return (printfuncs->describe_papersize)(v, name);
+}
+
 static int
 verify_string_param(const stp_vars_t *v, const char *parameter,
 		    stp_parameter_t *desc, int quiet)
@@ -943,7 +951,7 @@ stp_find_params(const char *name, const char *family)
 }
 
 int
-stp_family_register(stp_list_t *family)
+stpi_family_register(stp_list_t *family)
 {
   stp_list_item_t *printer_item;
   const stp_printer_t *printer;
@@ -976,7 +984,7 @@ stp_family_register(stp_list_t *family)
 }
 
 int
-stp_family_unregister(stp_list_t *family)
+stpi_family_unregister(stp_list_t *family)
 {
   stp_list_item_t *printer_item;
   stp_list_item_t *old_printer_item;

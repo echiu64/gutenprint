@@ -2555,7 +2555,9 @@ canon_printhead_colors(const stp_vars_t*v)
 static unsigned char
 canon_size_type(const stp_vars_t *v, const canon_cap_t * caps)
 {
-  const stp_papersize_t *pp = stp_get_papersize_by_size(stp_get_page_height(v),
+  const stp_papersize_list_t *list = stpi_get_standard_papersize_list();
+  const stp_papersize_t *pp = stpi_get_papersize_by_size(list,
+							stp_get_page_height(v),
 							stp_get_page_width(v));
 
   stp_deprintf(STP_DBG_CANON,"canon: entered canon_size_type\n");
@@ -2861,7 +2863,6 @@ canon_parameters(const stp_vars_t *v, const char *name,
     {
       const char* input_slot = stp_get_string_parameter(v, "InputSlot");
       unsigned int height_limit, width_limit;
-      int papersizes = stp_known_papersizes();
       description->bounds.str = stp_string_list_create();
 
       width_limit = caps->max_width;
@@ -2875,17 +2876,23 @@ canon_parameters(const stp_vars_t *v, const char *name,
         stp_string_list_add_string
           (description->bounds.str, "CDCustom", _("CD - Custom"));
       }else{
-        for (i = 0; i < papersizes; i++) {
-          const stp_papersize_t *pt = stp_get_papersize_by_index(i);
-	  if (pt->paper_size_type != PAPERSIZE_TYPE_STANDARD &&
-	      pt->paper_size_type != PAPERSIZE_TYPE_ENVELOPE)
-	    continue;
-          if (strlen(pt->name) > 0 &&
-	      pt->width <= width_limit && pt->height <= height_limit){
-	    stp_string_list_add_string(description->bounds.str,
-				     pt->name, gettext(pt->text));
-           }
-        }
+	  const stp_papersize_list_t *paper_sizes =
+	    stpi_get_standard_papersize_list();
+	  const stp_papersize_list_item_t *ptli =
+	    stpi_papersize_list_get_start(paper_sizes);
+	  while (ptli)
+	    {
+	      const stp_papersize_t *pt = stpi_paperlist_item_get_data(ptli);
+	      if (pt->paper_size_type == PAPERSIZE_TYPE_STANDARD ||
+		  pt->paper_size_type == PAPERSIZE_TYPE_ENVELOPE) {
+		if (strlen(pt->name) > 0 &&
+		    pt->width <= width_limit && pt->height <= height_limit){
+		  stp_string_list_add_string(description->bounds.str,
+					     pt->name, gettext(pt->text));
+		}
+	      }
+	      ptli = stpi_paperlist_item_next(ptli);
+	    }
       }
       description->deflt.str =
         stp_string_list_param(description->bounds.str, 0)->name;
@@ -3310,7 +3317,7 @@ internal_imageable_area(const stp_vars_t *v,   /* I */
   const canon_cap_t * caps= canon_get_model_capabilities(v);
 
   if (media_size)
-    pt = stp_get_papersize_by_name(media_size);
+    pt = stp_describe_papersize(v, media_size);
 
   if(input_slot && !strcmp(input_slot,"CD"))
     cd = 1;
@@ -4426,7 +4433,7 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
     return;
 
   /*  if (media_size)
-      pt = stp_get_papersize_by_name(media_size); */
+      pt = stp_describe_papersize(v, media_size); */
   stp_default_media_size(v, &width, &length);
   if (tray_upper || tray_lower)
     tray_user_select=1;
@@ -4589,7 +4596,7 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
       if ( !(strcmp(init->caps->name,"PIXMA TS8000"))  ) {
 	arg_ESCP_1 = 0xbc;
       }
-      
+
     }
   }
       /*  850i:  CD Tray custom: none --- no ESC (P */
@@ -5705,7 +5712,8 @@ static void setup_page(stp_vars_t* v,canon_privdata_t* privdata){
 
 #if 0
   /* needed in workaround for Oufuku Hagaki */
-  const stp_papersize_t *pp = stp_get_papersize_by_size(stp_get_page_height(v),
+  const stp_papersize_t *pp = stpi_get_papersize_by_size(v,
+							stp_get_page_height(v),
 							stp_get_page_width(v));
 
   if (pp)
@@ -6397,7 +6405,8 @@ static const stp_printfuncs_t print_canon_printfuncs =
   stp_verify_printer_params,
   canon_start_job,
   canon_end_job,
-  NULL
+  NULL,
+  stpi_standard_describe_papersize
 };
 
 static void
@@ -6758,14 +6767,14 @@ static stp_family_t print_canon_module_data =
 static int
 print_canon_module_init(void)
 {
-  return stp_family_register(print_canon_module_data.printer_list);
+  return stpi_family_register(print_canon_module_data.printer_list);
 }
 
 
 static int
 print_canon_module_exit(void)
 {
-  return stp_family_unregister(print_canon_module_data.printer_list);
+  return stpi_family_unregister(print_canon_module_data.printer_list);
 }
 
 

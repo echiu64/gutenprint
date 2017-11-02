@@ -28,6 +28,7 @@
 #include <gutenprint/gutenprint-intl-internal.h>
 #include "print-escp2.h"
 #include <limits.h>
+#include <sys/param.h>
 
 typedef struct
 {
@@ -390,11 +391,11 @@ stp_escp2_load_model(const stp_vars_t *v, int model)
 {
   stp_list_t *dirlist = stpi_data_path();
   stp_list_item_t *item;
-  char buf[1024];
+  char buf[MAXPATHLEN+1];
   int found = 0;
 
   stp_xml_init();
-  sprintf(buf, "escp2/model/model_%d.xml", model);
+  snprintf(buf, MAXPATHLEN, "escp2/model/model_%d.xml", model);
   item = stp_list_get_start(dirlist);
   while (item)
     {

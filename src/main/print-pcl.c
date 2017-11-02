@@ -2020,14 +2020,20 @@ pcl_parameters(const stp_vars_t *v, const char *name,
 
   if (strcmp(name, "PageSize") == 0)
     {
-      int papersizes = stp_known_papersizes();
+      const stp_papersize_list_t *paper_sizes =
+	((caps->stp_printer_type & PCL_PRINTER_LABEL) ?
+	 stpi_get_papersize_list_named("labels", "") :
+	 stpi_get_standard_papersize_list());
+      const stp_papersize_list_item_t *ptli =
+	stpi_papersize_list_get_start(paper_sizes);
       description->bounds.str = stp_string_list_create();
-      for (i = 0; i < papersizes; i++)
+      while (ptli)
 	{
-	  const stp_papersize_t *pt = stp_get_papersize_by_index(i);
+	  const stp_papersize_t *pt = stpi_paperlist_item_get_data(ptli);
 	  if (strlen(pt->name) > 0 && pcl_papersize_valid(pt, model))
 	    stp_string_list_add_string(description->bounds.str,
 				       pt->name, gettext(pt->text));
+	  ptli = stpi_paperlist_item_next(ptli);
 	}
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
@@ -2286,6 +2292,7 @@ internal_imageable_area(const stp_vars_t *v,     /* I */
   stp_dimension_t right_margin = 0;
   stp_dimension_t bottom_margin = 0;
   stp_dimension_t top_margin = 0;
+  const stp_papersize_list_t *papersize_list = stpi_get_standard_papersize_list();
 
   caps = pcl_get_model_capabilities(stp_get_model_id(v));
 
@@ -2299,8 +2306,8 @@ internal_imageable_area(const stp_vars_t *v,     /* I */
   if (!media_size)
     media_size = "";
   if (strlen(media_size) == 0 &&
-      ((pp = stp_get_papersize_by_size(stp_get_page_height(v),
-				       stp_get_page_width(v))) != NULL))
+      ((pp = stpi_get_papersize_by_size(papersize_list, stp_get_page_height(v),
+					stp_get_page_width(v))) != NULL))
     media_size = pp->name;
 
   stp_deprintf(STP_DBG_PCL, "pcl_imageable_area(): media_size: '%s'\n",
@@ -2308,7 +2315,7 @@ internal_imageable_area(const stp_vars_t *v,     /* I */
 
   pcl_media_size = pcl_convert_media_size(media_size, stp_get_model_id(v));
   if (media_size)
-    pp = stp_get_papersize_by_name(media_size);
+    pp = stp_describe_papersize(v, media_size);
   if (pp && use_paper_margins)
     {
       left_margin = pp->left;
@@ -2385,6 +2392,16 @@ pcl_describe_output(const stp_vars_t *v)
     }
   else
     return "Grayscale";
+}
+
+static const stp_papersize_t *
+pcl_describe_papersize(const stp_vars_t *v, const char *name)
+{
+  const pcl_cap_t *caps= pcl_get_model_capabilities(stp_get_model_id(v));
+  if (caps->stp_printer_type & PCL_PRINTER_LABEL)
+    return stpi_get_listed_papersize(name, "labels");
+  else
+    return stpi_get_listed_papersize(name, "standard");
 }
 
 /*
@@ -2565,6 +2582,7 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
   int		extra_left_margin = 0;
   double        density;
   int           label = 0;
+  const stp_papersize_list_t *paper_sizes = stpi_get_standard_papersize_list();
 
   if (!stp_verify(v))
     {
@@ -2650,8 +2668,8 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
   if (!media_size)
     media_size = "";
   if (strlen(media_size) == 0 &&
-      ((pp = stp_get_papersize_by_size(stp_get_page_height(v),
-				       stp_get_page_width(v))) != NULL))
+      ((pp = stpi_get_papersize_by_size(paper_sizes, stp_get_page_height(v),
+					stp_get_page_width(v))) != NULL))
     media_size = pp->name;
 
   pcl_media_size = pcl_convert_media_size(media_size, model);
@@ -3365,7 +3383,8 @@ static const stp_printfuncs_t print_pcl_printfuncs =
   stp_verify_printer_params,
   NULL,
   NULL,
-  NULL
+  NULL,
+  pcl_describe_papersize
 };
 
 
@@ -3420,14 +3439,14 @@ static stp_family_t print_pcl_module_data =
 static int
 print_pcl_module_init(void)
 {
-  return stp_family_register(print_pcl_module_data.printer_list);
+  return stpi_family_register(print_pcl_module_data.printer_list);
 }
 
 
 static int
 print_pcl_module_exit(void)
 {
-  return stp_family_unregister(print_pcl_module_data.printer_list);
+  return stpi_family_unregister(print_pcl_module_data.printer_list);
 }
 
 
