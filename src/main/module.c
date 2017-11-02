@@ -31,6 +31,7 @@
 #include <libgen.h>
 #include <errno.h>
 #include <unistd.h>
+#include <sys/param.h>
 
 
 typedef struct stpi_internal_module_class
@@ -317,6 +318,13 @@ static int stp_module_register(stp_module_t *module /* Module to register */)
   if (stp_list_item_create(module_list, NULL, module))
     return 1;
 
+  if (module->class == STP_MODULE_CLASS_FAMILY)
+    {
+      char buf[MAXPATHLEN+1];
+      (void) snprintf(buf, MAXPATHLEN, "printers/%s.xml", module->name);
+      stp_deprintf(STP_DBG_MODULE, "stp-module: attempting to load: %s\n", buf);
+      stp_xml_parse_file_named(buf);
+    }
   stp_deprintf(STP_DBG_MODULE, "stp-module: register: %s\n", module->name);
   return 0;
 }

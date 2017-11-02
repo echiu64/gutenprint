@@ -27,12 +27,19 @@ SUBDIRS = escp2
 pkgxmldatadir = $(pkgdatadir)/@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@/xml
 
 pkgxmldata_DATA =				\
-	dither-matrix-1x1.xml			\
-	dither-matrix-2x1.xml			\
-	dither-matrix-4x1.xml			\
+	dither/matrix-1x1.xml			\
+	dither/matrix-2x1.xml			\
+	dither/matrix-4x1.xml			\
 	papers/standard.xml			\
 	papers/labels.xml			\
-	printers.xml
+	printers/canon.xml			\
+	printers/dpl.xml			\
+	printers/dyesub.xml			\
+	printers/escp2.xml			\
+	printers/lexmark.xml			\
+	printers/pcl.xml			\
+	printers/ps.xml				\
+	printers/raw.xml
 
 ## Rules
 

@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+
+<!--
+
+   XML description of printers known to libgutenprint
+   You can add additional printers here, but the underlying driver has
+   to know about the model number.  You can have different printers
+   with the same model number but different parameters; this means
+   printers that are functionally identical but have different ink
+   characteristics.
+
+   Each printer must have a unique driver name (even if the underlying
+   driver is identical) to allow a unique mapping between driver
+   name and printer name (the mapping is done both ways).
+
+   NOTE TO TRANSLATORS: Printer names should not be translated into
+   their equivalents (the same printer sold under a different name)
+   in other countries.  The correct way to handle this is to add
+   another printer to this list.  Translations should be done for
+   e. g. character sets.
+
+   For example, a Japanese printer will have the same model name wherever
+   it is used and with whatever language the user speaks.
+-->
+
+<gutenprint xmlns="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd">
+<copyright>
+ *   Copyright 2008 Robert Krawitz (rlk@alum.mit.edu)
+ *
+ *   This program is free software; you can redistribute it and/or modify it
+ *   under the terms of the GNU General Public License as published by the Free
+ *   Software Foundation; either version 2 of the License, or (at your option)
+ *   any later version.
+ *
+ *   This program is distributed in the hope that it will be useful, but
+ *   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ *   or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ *   for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program; if not, write to the Free Software
+ *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+</copyright>
+  <printdef>
+    <family name="lexmark">
+      <parameters name="standard_params">
+        <parameter type="float" name="MagentaGamma">0.95</parameter>
+        <parameter type="float" name="Gamma">0.5</parameter>
+        <parameter type="float" name="Density">2.0</parameter>
+      </parameters>
+      <printer translate="name" name="Compaq IJ1200" driver="compaq-ij1200" manufacturer="Compaq" model="10042" parameters="standard_params" />
+      <printer translate="name" name="Lexmark X73" deviceid="MFG:Lexmark;MDL:Lexmark X73;DES:Lexmark X73;CMD:LNPAP;" driver="lexmark-x73" manufacturer="Lexmark" model="10042" parameters="standard_params" />
+      <printer translate="name" name="Lexmark Z42" deviceid="MFG:Lexmark;MDL:Lexmark Z42;DES:Lexmark Z42;CMD:LNPAP;" driver="lexmark-z42" manufacturer="Lexmark" model="10042" parameters="standard_params" />
+      <printer translate="name" name="Lexmark Z43" driver="lexmark-z43" manufacturer="Lexmark" model="10042" parameters="standard_params" />
+      <printer translate="name" name="Lexmark Z52" deviceid="MFG:Lexmark;MDL:Lexmark Z52;DES:Lexmark Z52;" driver="lexmark-z52" manufacturer="Lexmark" model="10052" parameters="standard_params" />
+      <printer translate="name" name="Lexmark Z53" driver="lexmark-z53" manufacturer="Lexmark" model="10052" parameters="standard_params" />
+    </family>
+  </printdef>
+</gutenprint>

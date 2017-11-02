@@ -33,6 +33,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "dither-impl.h"
+#include <sys/param.h>
 
 #ifdef __GNUC__
 #define inline __inline__
@@ -665,8 +666,8 @@ stp_xml_get_dither_array(int x, int y)
 
   if (!cachedval)
     {
-      char buf[1024];
-      (void) sprintf(buf, "dither-matrix-%dx%d.xml", x, y);
+      char buf[MAXPATHLEN+1];
+      (void) snprintf(buf, MAXPATHLEN, "dither/matrix-%dx%d.xml", x, y);
       stp_xml_parse_file_named(buf);
       cachedval = stp_xml_dither_cache_get(x, y);
       if (cachedval == NULL || cachedval->filename == NULL)

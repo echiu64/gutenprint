@@ -51,6 +51,8 @@ static stp_list_t *stpi_xml_registry;
 
 static stp_list_t *stpi_xml_preloads;
 
+static stp_list_t *stpi_xml_files_loaded;
+
 static const char *
 xml_registry_namefunc(const void *item)
 {
@@ -130,15 +132,23 @@ static int xml_is_initialised;                 /* Flag for init */
 void
 stp_xml_preinit(void)
 {
-  static int xml_is_preinitialized = 0;
-  if (!xml_is_preinitialized)
+  if (! stpi_xml_registry)
     {
       stpi_xml_registry = stp_list_create();
       stp_list_set_freefunc(stpi_xml_registry, xml_registry_freefunc);
       stp_list_set_namefunc(stpi_xml_registry, xml_registry_namefunc);
+    }
+  if (! stpi_xml_preloads)
+    {
       stpi_xml_preloads = stp_list_create();
       stp_list_set_freefunc(stpi_xml_preloads, xml_preload_freefunc);
       stp_list_set_namefunc(stpi_xml_preloads, xml_preload_namefunc);
+    }
+  if (! stpi_xml_files_loaded)
+    {
+      stpi_xml_files_loaded = stp_list_create();
+      stp_list_set_freefunc(stpi_xml_files_loaded, xml_preload_freefunc);
+      stp_list_set_namefunc(stpi_xml_files_loaded, xml_preload_namefunc);
     }
 }
 
@@ -198,20 +208,18 @@ stp_xml_exit(void)
 void
 stp_xml_parse_file_named(const char *name)
 {
-  stp_list_t *file_list = stpi_list_files_on_data_path(name); /* List of XML files */
-  stp_list_item_t *item;                 /* Pointer to current list item */
-  item = stp_list_get_start(file_list);
-  while (item)
+  stp_xml_preinit();
+  stp_deprintf(STP_DBG_XML, "stp_xml_parse_file_named(%s)\n", name);
+  if (! stp_list_get_item_by_name(stpi_xml_files_loaded, name))
     {
-      stp_deprintf(STP_DBG_XML,
-		   "stp_xml_parse_file_named: source file: %s\n",
-		   (const char *) stp_list_item_get_data(item));
-      stp_xml_parse_file((const char *) stp_list_item_get_data(item));
-      item = stp_list_item_next(item);
+      char *file_name = stp_path_find_file(NULL, name);
+      if (file_name)
+	{
+	  stp_xml_parse_file(file_name);
+	  free(file_name);
+	}
     }
-  stp_list_destroy(file_list);
 }
-
 
 /*
  * Read all available XML files.

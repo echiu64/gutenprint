@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+
+<!--
+
+   XML description of printers known to libgutenprint
+   You can add additional printers here, but the underlying driver has
+   to know about the model number.  You can have different printers
+   with the same model number but different parameters; this means
+   printers that are functionally identical but have different ink
+   characteristics.
+
+   Each printer must have a unique driver name (even if the underlying
+   driver is identical) to allow a unique mapping between driver
+   name and printer name (the mapping is done both ways).
+
+   NOTE TO TRANSLATORS: Printer names should not be translated into
+   their equivalents (the same printer sold under a different name)
+   in other countries.  The correct way to handle this is to add
+   another printer to this list.  Translations should be done for
+   e. g. character sets.
+
+   For example, a Japanese printer will have the same model name wherever
+   it is used and with whatever language the user speaks.
+-->
+
+<gutenprint xmlns="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd">
+<copyright>
+ *   Copyright 2008 Robert Krawitz (rlk@alum.mit.edu)
+ *
+ *   This program is free software; you can redistribute it and/or modify it
+ *   under the terms of the GNU General Public License as published by the Free
+ *   Software Foundation; either version 2 of the License, or (at your option)
+ *   any later version.
+ *
+ *   This program is distributed in the hope that it will be useful, but
+ *   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ *   or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ *   for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program; if not, write to the Free Software
+ *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+</copyright>
+  <printdef>
+    <family name="dpl">
+      <parameters name="dpl_params">
+        <parameter type="float" name="Gamma">1.000</parameter>
+        <parameter type="float" name="Density">1.000</parameter>
+      </parameters>
+      <printer translate="name" name="Datamax-ONeil I4212e Mark II" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:I4212e Mark II;" color="false" driver="datamax_oneil_I4212e" manufacturer="DatamaxONeil" model="10017" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil I4310e Mark II" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:I4310e Mark II;" color="false" driver="datamax_oneil_I4310e" manufacturer="DatamaxONeil" model="10018" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil I4606e Mark II" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:I4606e Mark II;" color="false" driver="datamax_oneil_I4606e" manufacturer="DatamaxONeil" model="10020" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil E4204B Mark III" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:E4204B Mark III;" color="false" driver="datamax_oneil_E4204B" manufacturer="DatamaxONeil" model="10021" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil E4304B Mark III" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:E4304B Mark III;" color="false" driver="datamax_oneil_E4304B" manufacturer="DatamaxONeil" model="10022" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil E4205A Mark III" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:E4205A Mark III;" color="false" driver="datamax_oneil_E4205A" manufacturer="DatamaxONeil" model="10023" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil E4305A Mark III" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:E4305A Mark III;" color="false" driver="datamax_oneil_E4305A" manufacturer="DatamaxONeil" model="10024" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil E4206P Mark III" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:E4206P Mark III;" color="false" driver="datamax_oneil_E4206P" manufacturer="DatamaxONeil" model="10025" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil E4305P Mark III" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:E4305P Mark III;" color="false" driver="datamax_oneil_E4305P" manufacturer="DatamaxONeil" model="10026" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil E4206L Mark III" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:E4206L Mark III;" color="false" driver="datamax_oneil_E4206L" manufacturer="DatamaxONeil" model="10027" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil E4305L Mark III" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:E4305L Mark III;" color="false" driver="datamax_oneil_E4305L" manufacturer="DatamaxONeil" model="10028" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil RL3e" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:RL3e;" color="false" driver="datamax_oneil_RL3e" manufacturer="DatamaxONeil" model="10029" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil RL4e" deviceid="MFG:Datamax-O'Neil;CMD:DPL;MDL:RL4e;" color="false" driver="datamax_oneil_RL4e" manufacturer="DatamaxONeil" model="10030" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil H4212" deviceid="MFG:Datamax;CMD:DPL;MDL:H4212;" color="false" driver="datamax_oneil_H4212" manufacturer="DatamaxONeil" model="10031" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil H4212X" deviceid="MFG:Datamax;CMD:DPL;MDL:H4212X;" color="false" driver="datamax_oneil_H4212X" manufacturer="DatamaxONeil" model="10032" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil H4310" deviceid="MFG:Datamax;CMD:DPL;MDL:H4310;" color="false" driver="datamax_oneil_H4310" manufacturer="DatamaxONeil" model="10033" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil H4310X" deviceid="MFG:Datamax;CMD:DPL;MDL:H4310X;" color="false" driver="datamax_oneil_H4310X" manufacturer="DatamaxONeil" model="10034" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil H4408" deviceid="MFG:Datamax;CMD:DPL;MDL:H4408;" color="false" driver="datamax_oneil_H4408" manufacturer="DatamaxONeil" model="10035" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil H4606" deviceid="MFG:Datamax;CMD:DPL;MDL:H4606;" color="false" driver="datamax_oneil_H4606" manufacturer="DatamaxONeil" model="10036" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil H4606X" deviceid="MFG:Datamax;CMD:DPL;MDL:H4606X;" color="false" driver="datamax_oneil_H4606X" manufacturer="DatamaxONeil" model="10037" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil H6210" deviceid="MFG:Datamax;CMD:DPL;MDL:H6210;" color="false" driver="datamax_oneil_H6210" manufacturer="DatamaxONeil" model="10038" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil H6210X" deviceid="MFG:Datamax;CMD:DPL;MDL:H6210X;" color="false" driver="datamax_oneil_H6210X" manufacturer="DatamaxONeil" model="10039" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil H6212" deviceid="MFG:Datamax;CMD:DPL;MDL:H6212;" color="false" driver="datamax_oneil_H6212" manufacturer="DatamaxONeil" model="10040" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil H6212X" deviceid="MFG:Datamax;CMD:DPL;MDL:H6212X;" color="false" driver="datamax_oneil_H6212X" manufacturer="DatamaxONeil" model="10041" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil H6308" deviceid="MFG:Datamax;CMD:DPL;MDL:H6308;" color="false" driver="datamax_oneil_H6308" manufacturer="DatamaxONeil" model="10042" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil H6310X" deviceid="MFG:Datamax;CMD:DPL;MDL:H6310X;" color="false" driver="datamax_oneil_H6310X" manufacturer="DatamaxONeil" model="10043" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil H8308" deviceid="MFG:Datamax;CMD:DPL;MDL:H8308;" color="false" driver="datamax_oneil_H8308" manufacturer="DatamaxONeil" model="10044" parameters="dpl_params" />
+      <printer translate="name" name="Datamax-ONeil H8308X" deviceid="MFG:Datamax;CMD:DPL;MDL:H8308X;" color="false" driver="datamax_oneil_H8308X" manufacturer="DatamaxONeil" model="10045" parameters="dpl_params" />
+      <printer translate="name" name="Honeywell RP2" deviceid="MFG:Honeywell ;CMD:DPL;MDL:RP2;" color="false" driver="honeywell_rp2" manufacturer="Honeywell" model="10046" parameters="dpl_params" />
+      <printer translate="name" name="Honeywell RP4" deviceid="MFG:Honeywell ;CMD:DPL;MDL:RP4;" color="false" driver="honeywell_rp4" manufacturer="Honeywell" model="10047" parameters="dpl_params" />
+    </family>
+  </printdef>
+</gutenprint>

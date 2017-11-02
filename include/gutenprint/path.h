@@ -48,8 +48,17 @@ extern stp_list_t *stpi_data_path(void);
 
 extern stp_list_t *stpi_list_files_on_data_path(const char *name);
 
+/*
+ * Join a path and filename together.
+ */
 extern char *stpi_path_merge(const char *path, const char *file);
 
+/*
+ * Find the first occurrence of <file> on <path>.
+ * File must be a plain file and readable.
+ * Return value must be freed
+ */
+extern char *stp_path_find_file(const char *path, const char *file);
 
 #ifdef __cplusplus
   }
