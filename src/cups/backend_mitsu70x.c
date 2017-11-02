@@ -455,7 +455,7 @@ static char *mitsu70x_jobstatuses(uint8_t *sts)
 			default:
 				return "Unknown 'End Header' status2";
 			}
-			break;			
+			break;
 		case JOB_STATUS1_END_PRINT:
 			switch(sts[2]) {
 			case JOB_STATUS2_END_PRINT_MEDIA:
