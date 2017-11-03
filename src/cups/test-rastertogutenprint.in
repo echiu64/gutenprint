@@ -60,35 +60,46 @@ else
 fi
 
 usage() {
-    echo "Usage: test-rastertogutenprint [-s] [-v|--valgrind]"
+    echo "Usage: test-rastertogutenprint [options] [PPD files...]"
+    echo "  Options:"
+    echo "    -s        Run only one PPD file with a given model ID/family"
+    echo "    -v        Use valgrind"
+    echo "    -c        Use cachegrind"
+    echo "    -g        Use GDB attach in valgrind"
+    echo "    -V        Verbose output"
+    echo "    -n        Don't build PPD files prior to run"
+    echo "    -O dir    Save output in specified directory"
+    echo "    -o opt    Set option on CUPS command line"
+    echo "    -m dir    Save MD5 checksums in specified directory"
+    echo "    -p pages  Specify page range of input document to use"
+    echo "    -P        Use PostScript rather than PDF input"
+    echo "    -t jobs   Run jobs in parallel (alternatively, use STP_PARALLEL)"
+    echo "    -S        Skip simplified PPD files"
     exit 0;
 }
 
-set_args() {
-    while true ; do
-	case "$1" in
-	    -s) single=1 ;;
-	    -h*|--h*) usage ;;
-	    -v|--valgrind) valopts='--tool=memcheck' ; valgrind=$((valgrind + 1)) ;;
-	    -c|--cachegrind) valopts='--tool=cachegrind'; valgrind=4 ;;
-	    -g|--gdb-attach) valopts='--gdb-attach=yes' ;;
-	    -V|--verbose) verbose=1 ;;
-	    -n|--no-make-ppds) make_ppds='' ;;
-	    -O|--output) shift; outdir="$1" ;;
-	    -o|--option) shift; cupsargs="$cupsargs $1" ;;
-	    -m|--md5dir) shift; md5dir="$1" ;;
-	    -p|--pages) shift; npages="$1" ;;
-	    -P|--postscript) shift; postscript=1 ;;
-	    -t|--parallel) shift; jobs="$1" ;;
-	    -S|--skip-simplified) skip_simplified=1 ;;
-	    --) shift; args="$@"; return ;;
-	    *) return ;;
-	esac
-    shift
-    done
-}
+while getopts "hvcgsVnO:m:o:p:St:" opt ; do
+    case "$opt" in
+	h*) usage ;;
+	v) valopts='--tool=memcheck' ; valgrind=$((valgrind + 1)) ;;
+	c) valopts='--tool=cachegrind'; valgrind=4 ;;
+	g) valopts='--vgdb=yes' ;;
+	s) single=1 ;;
+	V) verbose=1 ;;
+	n) make_ppds='' ;;
+	O) outdir="$OPTARG" ;;
+	o) cupsargs="$cupsargs $OPTARG" ;;
+	m) md5dir="$OPTARG" ;;
+	p) npages="$OPTARG" ;;
+	P) postscript=1 ;;
+	t) jobs="$OPTARG" ;;
+	S) skip_simplified=1 ;;
+	\?) usage ;;
+	*) echo "Unknown argument $opt"; usage ;;
+    esac
+done
 
-set_args `getopt hvcgsVnO:m:o:p:S "$@"`
+shift $((OPTIND - 1))
 
 if [ "$valgrind" -gt 0 -a "$enable_shared" != "no" ] ; then
     echo 'Valgrind is not compatible with --enable-shared in tree.' 1>&2
