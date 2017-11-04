@@ -2,7 +2,7 @@
 
 # Wrap zpaq as a more generic compression utility
 #
-# Copyright 2007-2017 Robert Krawitz (rlk@alum.mit.edu)
+# Copyright 2017 Robert Krawitz (rlk@alum.mit.edu)
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
