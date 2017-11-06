@@ -82,7 +82,7 @@ print_dpl_la_LDFLAGS = -module -avoid-version
 print_ps_la_SOURCES = print-ps.c xmlppd.c xmlppd.h
 print_ps_la_LDFLAGS = -module -avoid-version
 
-print_dyesub_la_SOURCES = print-olympus.c
+print_dyesub_la_SOURCES = print-dyesub.c
 print_dyesub_la_LDFLAGS = -module -avoid-version
 
 print_raw_la_SOURCES = print-raw.c
