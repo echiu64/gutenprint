@@ -41,6 +41,9 @@
 extern "C" {
 #endif
 
+extern void stp_channel_set_subchannel_curve(stp_vars_t *v, unsigned channel,
+					     unsigned subchannel,
+					     const stp_curve_t *curve);
 
 extern void stp_channel_reset(stp_vars_t *v);
 extern void stp_channel_reset_channel(stp_vars_t *v, int channel);

@@ -31,6 +31,10 @@
 #include <string.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <strings.h>
 
 
 struct stp_array
@@ -169,6 +173,81 @@ stp_array_get_sequence(const stp_array_t *array)
   return array->data;
 }
 
+static stp_array_t *
+xml_doc_get_array(stp_mxml_node_t *doc)
+{
+  stp_mxml_node_t *cur;
+  stp_mxml_node_t *xmlarray;
+  stp_array_t *array = NULL;
+
+  if (doc == NULL )
+    {
+      stp_deprintf(STP_DBG_ARRAY_ERRORS,
+		   "xml_doc_get_array: XML file not parsed successfully.\n");
+      return NULL;
+    }
+
+  cur = doc->child;
+
+  if (cur == NULL)
+    {
+      stp_deprintf(STP_DBG_ARRAY_ERRORS,
+		   "xml_doc_get_array: empty document\n");
+      return NULL;
+    }
+
+  xmlarray = stp_xml_get_node(cur, "gutenprint", "array", NULL);
+
+  if (xmlarray)
+    array = stp_array_create_from_xmltree(xmlarray);
+
+  return array;
+}
+
+stp_array_t *
+stp_array_create_from_file(const char* file)
+{
+  stp_array_t *array = NULL;
+  stp_mxml_node_t *doc;
+  FILE *fp = NULL;
+  if (file[0] != '/' && strncmp(file, "./", 2) && strncmp(file, "../", 3))
+    {
+      char *fn = stp_path_find_file(NULL, file);
+      if (fn)
+	{
+	  fp = fopen(file, "r");
+	  free(fn);
+	}
+    }
+  else if (file)
+    {
+      fp = fopen(file, "r");
+    }
+  if (!fp)
+    {
+      stp_deprintf(STP_DBG_ARRAY_ERRORS,
+		   "stp_array_create_from_file: unable to open %s: %s\n",
+		    file, strerror(errno));
+      return NULL;
+    }
+  stp_deprintf(STP_DBG_XML, "stp_array_create_from_file: reading `%s'...\n",
+	       file);
+
+  stp_xml_init();
+
+  doc = stp_mxmlLoadFile(NULL, fp, STP_MXML_NO_CALLBACK);
+
+  array = xml_doc_get_array(doc);
+
+  if (doc)
+    stp_mxmlDelete(doc);
+
+  stp_xml_exit();
+  (void) fclose(fp);
+  return array;
+
+}
+
 stp_array_t *
 stp_array_create_from_xmltree(stp_mxml_node_t *array)  /* The array node */
 {
@@ -179,6 +258,9 @@ stp_array_create_from_xmltree(stp_mxml_node_t *array)  /* The array node */
   stp_sequence_t *seq = NULL;
   stp_array_t *ret = NULL;
 
+  /* FIXME Need protection against unlimited recursion */
+  if ((stmp = stp_mxmlElementGetAttr(array, "src")) != NULL)
+    return stp_array_create_from_file(stmp);
   stmp = stp_mxmlElementGetAttr(array, "x-size");
   if (stmp)
     {
@@ -268,4 +350,145 @@ stp_xmltree_create_from_array(const stp_array_t *array)  /* The array */
   stp_xml_exit();
 
   return arraynode;
+}
+
+static stp_mxml_node_t *
+xmldoc_create_from_array(const stp_array_t *array)
+{
+  stp_mxml_node_t *xmldoc;
+  stp_mxml_node_t *rootnode;
+  stp_mxml_node_t *arraynode;
+
+  /* Get array details */
+  arraynode = stp_xmltree_create_from_array(array);
+  if (arraynode == NULL)
+    {
+      stp_deprintf(STP_DBG_ARRAY_ERRORS,
+		   "xmldoc_create_from_array: error creating array node\n");
+      return NULL;
+    }
+  /* Create the XML tree */
+  xmldoc = stp_xmldoc_create_generic();
+  if (xmldoc == NULL)
+    {
+      stp_deprintf(STP_DBG_ARRAY_ERRORS,
+		   "xmldoc_create_from_array: error creating XML document\n");
+      return NULL;
+    }
+  rootnode = xmldoc->child;
+  if (rootnode == NULL)
+    {
+      stp_mxmlDelete(xmldoc);
+      stp_deprintf(STP_DBG_ARRAY_ERRORS,
+		   "xmldoc_create_from_array: error getting XML document root node\n");
+      return NULL;
+    }
+
+  stp_mxmlAdd(rootnode, STP_MXML_ADD_AFTER, NULL, arraynode);
+
+  return xmldoc;
+}
+
+static int
+array_whitespace_callback(stp_mxml_node_t *node, int where)
+{
+  if (node->type != STP_MXML_ELEMENT)
+    return 0;
+  if (strcasecmp(node->value.element.name, "gutenprint") == 0)
+    {
+      switch (where)
+	{
+	case STP_MXML_WS_AFTER_OPEN:
+	case STP_MXML_WS_BEFORE_CLOSE:
+	case STP_MXML_WS_AFTER_CLOSE:
+	  return '\n';
+	case STP_MXML_WS_BEFORE_OPEN:
+	default:
+	  return 0;
+	}
+    }
+  else if (strcasecmp(node->value.element.name, "array") == 0)
+    {
+      switch (where)
+	{
+	case STP_MXML_WS_AFTER_OPEN:
+	  return '\n';
+	case STP_MXML_WS_BEFORE_CLOSE:
+	case STP_MXML_WS_AFTER_CLOSE:
+	case STP_MXML_WS_BEFORE_OPEN:
+	default:
+	  return 0;
+	}
+    }
+  else if (strcasecmp(node->value.element.name, "sequence") == 0)
+    {
+      const char *count;
+      switch (where)
+	{
+	case STP_MXML_WS_BEFORE_CLOSE:
+	  count = stp_mxmlElementGetAttr(node, "count");
+	  if (strcmp(count, "0") == 0)
+	    return 0;
+	  else
+	    return '\n';
+	case STP_MXML_WS_AFTER_OPEN:
+	case STP_MXML_WS_AFTER_CLOSE:
+	  return '\n';
+	case STP_MXML_WS_BEFORE_OPEN:
+	default:
+	  return 0;
+	}
+    }
+  else
+    return 0;
+}
+
+
+int
+stp_array_write(FILE *file, const stp_array_t *array)  /* The array */
+{
+  stp_mxml_node_t *xmldoc = NULL;
+
+  stp_xml_init();
+
+  xmldoc = xmldoc_create_from_array(array);
+  if (xmldoc == NULL)
+    {
+      stp_xml_exit();
+      return 1;
+    }
+
+  stp_mxmlSaveFile(xmldoc, file, array_whitespace_callback);
+
+  if (xmldoc)
+    stp_mxmlDelete(xmldoc);
+
+  stp_xml_exit();
+
+  return 0;
+}
+
+char *
+stp_array_write_string(const stp_array_t *array)  /* The array */
+{
+  stp_mxml_node_t *xmldoc = NULL;
+  char *retval;
+
+  stp_xml_init();
+
+  xmldoc = xmldoc_create_from_array(array);
+  if (xmldoc == NULL)
+    {
+      stp_xml_exit();
+      return NULL;
+    }
+
+  retval = stp_mxmlSaveAllocString(xmldoc, array_whitespace_callback);
+
+  if (xmldoc)
+    stp_mxmlDelete(xmldoc);
+
+  stp_xml_exit();
+
+  return retval;
 }

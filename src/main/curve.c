@@ -1447,6 +1447,9 @@ stp_curve_create_from_xmltree(stp_mxml_node_t *curve)  /* The curve node */
   int piecewise = 0;
 
   stp_xml_init();
+  /* FIXME Need protection against unlimited recursion */
+  if ((stmp = stp_mxmlElementGetAttr(curve, "src")) != NULL)
+    return stp_curve_create_from_file(stmp);
   /* Get curve type */
   stmp = stp_mxmlElementGetAttr(curve, "type");
   if (stmp)
@@ -1862,7 +1865,20 @@ stp_curve_create_from_file(const char* file)
 {
   stp_curve_t *curve = NULL;
   stp_mxml_node_t *doc;
-  FILE *fp = fopen(file, "r");
+  FILE *fp = NULL;
+  if (file[0] != '/' && strncmp(file, "./", 2) && strncmp(file, "../", 3))
+    {
+      char *fn = stp_path_find_file(NULL, file);
+      if (fn)
+	{
+	  fp = fopen(file, "r");
+	  free(fn);
+	}
+    }
+  else if (file)
+    {
+      fp = fopen(file, "r");
+    }
   if (!fp)
     {
       stp_deprintf(STP_DBG_CURVE_ERRORS,

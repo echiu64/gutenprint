@@ -49,6 +49,7 @@ typedef struct
   double upper;
   double cutoff;
   unsigned short s_density;
+  stp_curve_t *curve;
 } stpi_subchannel_t;
 
 typedef struct
@@ -106,6 +107,16 @@ clear_a_channel(stpi_channel_group_t *cg, int channel)
 {
   if (channel < cg->channel_count)
     {
+      int i;
+      for (i = 0 ; i < cg->c[channel].subchannel_count ; i++)
+        {
+	  if (cg->c[channel].sc[i].curve)
+	    {
+	      stp_curve_destroy(cg->c[channel].sc[i].curve);
+	      cg->c[channel].sc[i].curve = NULL;
+	    }
+        }
+
       STP_SAFE_FREE(cg->c[channel].sc);
       STP_SAFE_FREE(cg->c[channel].lut);
       if (cg->c[channel].curve)
@@ -223,6 +234,51 @@ stp_channel_add(stp_vars_t *v, unsigned channel, unsigned subchannel,
   chan->sc[subchannel].value = value;
   chan->sc[subchannel].s_density = 65535;
   chan->sc[subchannel].cutoff = 0.75;
+  if (chan->sc[subchannel].curve)
+    {
+      stp_curve_destroy(chan->sc[subchannel].curve);
+      chan->sc[subchannel].curve = NULL;
+    }
+}
+
+void
+stp_channel_set_subchannel_curve(stp_vars_t *v, 
+				 unsigned channel, unsigned subchannel,
+				 const stp_curve_t *curve)
+{
+  stpi_subchannel_t *sch = get_channel(v, channel, subchannel);
+  if (sch)
+    {
+      /* Destroy old curve */
+      if (sch->curve)
+	stp_curve_destroy(sch->curve);
+      sch->curve = NULL;
+
+      if (curve)
+        {
+	  double lo, hi;
+	  /* Duplicate input curve */
+	  sch->curve = stp_curve_create_copy(curve);
+	  if (!sch->curve)
+	    return;
+
+	  /* Figure out the bounds */
+	  stp_curve_get_bounds(sch->curve, &lo, &hi);
+	  if (lo != 0)
+	    { /* If low point is not 0, we need to fix that. */
+	      lo = - lo;
+	      stp_curve_rescale(sch->curve, lo, STP_CURVE_COMPOSE_ADD, STP_CURVE_BOUNDS_RESCALE);
+	      stp_curve_get_bounds(sch->curve, &lo, &hi);
+	    }
+	  if (hi != 65535)
+	    {
+	      hi = 65535 / hi; /* Compute scaling factor so that the highest value is 65535 */
+	      stp_curve_rescale(sch->curve, hi, STP_CURVE_COMPOSE_MULTIPLY, STP_CURVE_BOUNDS_RESCALE);
+	    }
+	  if (stp_curve_count_points(sch->curve) != 65536)
+	    stp_curve_resample(sch->curve, 65536); /* Make sure there are 64K points */
+	}
+    }
 }
 
 double
@@ -499,9 +555,30 @@ stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
 	}
       if (sc > 1)
 	{
+	  int next_breakpoint = 0;
 	  int val = 0;
-	  int next_breakpoint;
+
 	  c->lut = stp_zalloc(sizeof(unsigned short) * sc * 65536);
+
+	  for (k = 0 ; k < sc ; k++)
+	    {
+	      for (j = 0 ; j < 65536; j++)
+	        {
+		  if (c->sc[k].curve)
+		    {
+		      double data = 0;
+		      stp_curve_get_point(c->sc[k].curve, j, &data);
+		      c->lut[j * sc + k] = data;
+		    }
+		  else
+		    {
+		      goto traditional;
+		    }
+		}
+	    }
+	  goto lut_done;
+
+	traditional:
 	  next_breakpoint = c->sc[0].value * 65535 * c->sc[0].cutoff;
 	  if (next_breakpoint > 65535)
 	    next_breakpoint = 65535;
@@ -544,6 +621,8 @@ stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
 	      val++;
 	    }
 	}
+
+lut_done:
       if (cg->gloss_channel != i && c->subchannel_count > 0)
 	cg->aux_output_channels++;
       cg->total_channels += c->subchannel_count;
@@ -657,11 +736,17 @@ stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
 	{
 	  stpi_subchannel_t *sch = &(cg->c[i].sc[j]);
 	  stp_dprintf(STP_DBG_INK, v, "      Subchannel %d:\n", j);
-	  stp_dprintf(STP_DBG_INK, v, "         value   %.3f:\n", sch->value);
-	  stp_dprintf(STP_DBG_INK, v, "         lower   %.3f:\n", sch->lower);
-	  stp_dprintf(STP_DBG_INK, v, "         upper   %.3f:\n", sch->upper);
-	  stp_dprintf(STP_DBG_INK, v, "         cutoff  %.3f:\n", sch->cutoff);
-	  stp_dprintf(STP_DBG_INK, v, "         density %d:\n", sch->s_density);
+	  stp_dprintf(STP_DBG_INK, v, "         value   %.3f\n", sch->value);
+	  stp_dprintf(STP_DBG_INK, v, "         lower   %.3f\n", sch->lower);
+	  stp_dprintf(STP_DBG_INK, v, "         upper   %.3f\n", sch->upper);
+	  stp_dprintf(STP_DBG_INK, v, "         cutoff  %.3f\n", sch->cutoff);
+	  if (sch->curve)
+	    {
+	      char *curve = stp_curve_write_string(sch->curve);
+	      stp_dprintf(STP_DBG_INK, v, "         curve   %s\n", curve);
+	      stp_free(curve);
+	    }
+	  stp_dprintf(STP_DBG_INK, v, "         density %d\n", sch->s_density);
 	}
     }
 }
@@ -960,6 +1045,10 @@ split_channels(const stp_vars_t *v, unsigned *zero_mask)
 	  for (j = 0; j < cg->channel_count; j++)
 	    {
 	      stpi_channel_t *c = &(cg->c[j]);
+
+	      if (cg->gloss_channel == j) // FIXME workaround.
+		continue;
+
 	      int s_count = c->subchannel_count;
 	      if (s_count >= 1)
 		{
@@ -1094,6 +1183,7 @@ generate_gloss(const stp_vars_t *v, unsigned *zero_mask)
       if (channel_sum < cg->gloss_limit)
 	{
 	  unsigned gloss_required = cg->gloss_limit - channel_sum;
+	  // FIXME IJM apply gloss LuT?
 	  if (gloss_required > 65535)
 	    gloss_required = 65535;
 	  output[cg->gloss_physical_channel] = gloss_required;

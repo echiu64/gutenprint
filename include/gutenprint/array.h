@@ -159,6 +159,70 @@ extern int stp_array_get_point(const stp_array_t *array, int x, int y,
    */
 extern const stp_sequence_t *stp_array_get_sequence(const stp_array_t *array);
 
+/**
+ * Write an array to a file.
+ * The printable representation is guaranteed to contain only 7-bit
+ * printable ASCII characters, and is null-terminated.  The array will
+ * not contain any space, newline, single quote, or comma characters.
+ * Furthermore, a printed array will be read back correctly in all locales.
+ * These calls are not guaranteed to provide more than 6 decimal places
+ * of precision or +/-0.5e-6 accuracy, whichever is less.
+ * @warning NOTE that these calls are not thread-safe!  These
+ * routines may manipulate the locale to achieve a safe
+ * representation.
+ * @param file the file to write.
+ * @param array the array to use.
+ * @returns 1 on success, 0 on failure.
+ */
+extern int stp_array_write(FILE *file, const stp_array_t *array);
+
+/**
+ * Write an array to a string.
+ * The printable representation is guaranteed to contain only 7-bit
+ * printable ASCII characters, and is null-terminated.  The array will
+ * not contain any space, newline, or comma characters.  Furthermore,
+ * a printed array will be read back correctly in all locales.
+ * These calls are not guaranteed to provide more than 6 decimal places
+ * of precision or +/-0.5e-6 accuracy, whichever is less.
+ * @warning NOTE that these calls are not thread-safe!  These
+ * routines may manipulate the locale to achieve a safe
+ * representation.
+ * @param array the array to use.
+ * @returns a pointer to a string.  This is allocated on the heap, and
+ * it is the caller's responsibility to free it.
+ */
+extern char *stp_array_write_string(const stp_array_t *array);
+
+/**
+ * Create an array from a stream.
+ * @warning NOTE that these calls are not thread-safe!  These
+ * routines may manipulate the locale to achieve a safe
+ * representation.
+ * @param fp the stream to read.
+ * @returns the newly created array, or NULL if an error occurred.
+ */
+extern stp_array_t *stp_array_create_from_stream(FILE* fp);
+
+/**
+ * Create an array from a stream.
+ * @warning NOTE that these calls are not thread-safe!  These
+ * routines may manipulate the locale to achieve a safe
+ * representation.
+ * @param file the file to read.
+ * @returns the newly created array, or NULL if an error occurred.
+ */
+extern stp_array_t *stp_array_create_from_file(const char* file);
+
+/**
+ * Create an array from a string.
+ * @warning NOTE that these calls are not thread-safe!  These
+ * routines may manipulate the locale to achieve a safe
+ * representation.
+ * @param string the string to read.
+ * @returns the newly created array, or NULL if an error occurred.
+ */
+extern stp_array_t *stp_array_create_from_string(const char* string);
+
   /** @} */
 
 #ifdef __cplusplus

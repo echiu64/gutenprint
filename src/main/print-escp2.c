@@ -141,6 +141,15 @@ static const double ink_darknesses[] =
   STP_PARAMETER_LEVEL_INTERNAL, 0, 1, STP_CHANNEL_NONE, 1, 0	\
 }
 
+#define PARAMETER_LUT(s)					\
+{								\
+  #s "Lut", #s " LUT",						\
+  "Color=Yes,Category=Advanced Printer Functionality", NULL,	\
+  STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,		\
+  STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, 3, 1, 0			\
+}
+    
+
 typedef struct
 {
   const stp_parameter_t param;
@@ -462,7 +471,22 @@ static const stp_parameter_t the_parameters[] =
   PARAMETER_RAW(preinit_sequence),
   PARAMETER_RAW(preinit_remote_sequence),
   PARAMETER_RAW(postinit_remote_sequence),
-  PARAMETER_RAW(vertical_borderless_sequence)
+  PARAMETER_RAW(vertical_borderless_sequence),
+  PARAMETER_LUT(Black),
+  PARAMETER_LUT(LightBlack),
+  PARAMETER_LUT(LightLightBlack),
+  PARAMETER_LUT(Cyan),
+  PARAMETER_LUT(LightCyan),
+  PARAMETER_LUT(Magenta),
+  PARAMETER_LUT(LightMagenta),
+  PARAMETER_LUT(Yellow),
+  PARAMETER_LUT(DarkYellow),
+  PARAMETER_LUT(Red),
+  PARAMETER_LUT(Orange),
+  PARAMETER_LUT(Blue),
+  PARAMETER_LUT(Green),
+  PARAMETER_LUT(Purple),
+  PARAMETER_LUT(Gloss),
 };
 
 static const int the_parameter_count =
@@ -3509,6 +3533,14 @@ setup_inks(stp_vars_t *v)
 			      drops->numdropsizes, drops->dropsizes);
 	  for (j = 0; j < channel->n_subchannels; j++)
 	    {
+	      char buf[64];
+	      (void) snprintf(buf, 63, "%sLut", channel->subchannels[j].name);
+	      const stp_curve_t *curve = stp_get_curve_parameter(v, buf);
+	      if (curve)
+		stp_channel_set_subchannel_curve(v, i, j, curve);
+	    }
+	  for (j = 0; j < channel->n_subchannels; j++)
+	    {
 	      const char *subparam =
 		channel->subchannels[j].subchannel_scale;
 	      double scale = userval * get_double_param(v, subparam);
@@ -3579,6 +3611,14 @@ setup_inks(stp_vars_t *v)
 	      stp_dither_set_inks(v, ch, 1.0, ink_darknesses[ch % 8],
 				  channel->n_subchannels, shades->shades,
 				  drops->numdropsizes, drops->dropsizes);
+	      for (j = 0; j < channel->n_subchannels; j++)
+		{
+		  char buf[64];
+		  (void) snprintf(buf, 63, "%sLut", channel->subchannels[j].name);
+		  const stp_curve_t *curve = stp_get_curve_parameter(v, buf);
+		  if (curve)
+		    stp_channel_set_subchannel_curve(v, i, j, curve);
+		}
 	      for (j = 0; j < channel->n_subchannels; j++)
 		{
 		  const char *subparam =
