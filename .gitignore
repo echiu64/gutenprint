@@ -169,3 +169,6 @@ ylwrap
 CATALOG.local
 suse-html.dsl
 suse-print.dsl
+
+# Things that we *do* need
+!src/xml/printers

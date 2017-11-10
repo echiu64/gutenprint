@@ -1,4 +1,4 @@
-## Copyright (C) 2008 Robert Krawitz
+## Copyright (C) 2017 Robert Krawitz
 ##
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -20,44 +20,25 @@
 
 include $(top_srcdir)/scripts/global.mk
 
-SUBDIRS = dither escp2 papers printers
-
 ## Variables
 
-pkgxmldatadir = $(pkgdatadir)/@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@/xml
+pkgxmldatadir = $(pkgdatadir)/@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@/xml/dither
 
-## Rules
+pkgxmldata_DATA =				\
+	matrix-1x1.xml				\
+	matrix-2x1.xml				\
+	matrix-4x1.xml
 
-noinst_PROGRAMS = extract-strings
 
-extract_strings_SOURCES = extract-strings.c
-extract_strings_LDADD = $(GUTENPRINT_LIBS)
-
-xml-stamp: $(pkgxmldata_DATA) $(addsuffix /xml-stamp, $(SUBDIRS)) Makefile.am
+xml-stamp: $(pkgxmldata_DATA) Makefile.am
 	-rm -f $@ $@.tmp
 	touch $@.tmp
-	for dir in $(SUBDIRS) ; do \
-	  sed "s;^;$$dir/;" $${dir}/xml-stamp >> $@.tmp ; \
-	done
 	for f in $(pkgxmldata_DATA) ; do echo $$f >> $@.tmp; done
 	mv $@.tmp $@
 
-all-local: xmli18n-tmp.h xml-stamp
+all-local: xml-stamp
 
-
-xmli18n-tmp.h: xml-stamp extract-strings
-	-rm -f $@ $@.tmp
-	./extract-strings `cat xml-stamp | sed -e 's;^;$(srcdir)/;'` > $@.tmp
-	mv $@.tmp $@
-
-
-dist-hook: xmli18n-tmp.h xml-stamp
-# xmli18n-tmp.h is needed by po/POTFILES.in at dist time
-
-## Clean
-
-CLEANFILES = xmli18n-tmp.h xmli18n-tmp.h.tmp xml-stamp xml-stamp.tmp
+dist-hook: xml-stamp
+CLEANFILES = xmli18n-tmp.h xml-stamp xml-stamp.tmp
 
 EXTRA_DIST = $(pkgxmldata_DATA)
-
-MAINTAINERCLEANFILES = Makefile.in
