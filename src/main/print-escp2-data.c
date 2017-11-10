@@ -56,19 +56,30 @@ static stpi_escp2_printer_t *escp2_model_capabilities;
 static int escp2_model_count = 0;
 
 static void
-load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
+load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model,
+		     int depth)
 {
   stp_mxml_node_t *tmp = xmod->child;
   stpi_escp2_printer_t *p = stp_escp2_get_printer(v);
-  int found_black_head_config = 0;
-  int found_fast_head_config = 0;
-  p->max_black_resolution = -1;
-  p->cd_x_offset = -1;
-  p->cd_y_offset = -1;
-  p->duplex_left_margin = SHRT_MIN;
-  p->duplex_right_margin = SHRT_MIN;
-  p->duplex_top_margin = SHRT_MIN;
-  p->duplex_bottom_margin = SHRT_MIN;
+  const char *stmp = stp_mxmlElementGetAttr(xmod, "base");
+  if (depth == 0)
+    {
+      p->max_black_resolution = -1;
+      p->cd_x_offset = -1;
+      p->cd_y_offset = -1;
+      p->duplex_left_margin = SHRT_MIN;
+      p->duplex_right_margin = SHRT_MIN;
+      p->duplex_top_margin = SHRT_MIN;
+      p->duplex_bottom_margin = SHRT_MIN;
+    }
+  /* Allow recursive definitions */
+  if (stmp)
+    {
+      stp_mxml_node_t *node = 
+	stp_xml_parse_file_from_path_safe(stmp, "escp2Model", NULL);
+      load_model_from_file(v, node, model, depth + 1);
+      stp_mxmlDeleteRoot(node);
+    }
   while (tmp)
     {
       if (tmp->type == STP_MXML_ELEMENT)
@@ -77,6 +88,7 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
 	  const char *target = stp_mxmlElementGetAttr(tmp, "src");
 	  if (target)
 	    {
+	      /* FIXME need to allow override of these! */
 	      if (!strcmp(name, "media"))
 		stp_escp2_load_media(v, target);
 	      else if (!strcmp(name, "inputSlots"))
@@ -171,14 +183,14 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
 		      p->min_nozzles = data[1];
 		      p->nozzle_start = data[2];
 		      p->nozzle_separation = data[3];
-		      if (!found_black_head_config)
+		      if (p->black_nozzles == 0)
 			{
 			  p->black_nozzles = data[0];
 			  p->min_black_nozzles = data[1];
 			  p->black_nozzle_start = data[2];
 			  p->black_nozzle_separation = data[3];
 			}
-		      if (!found_fast_head_config)
+		      if (p->fast_nozzles == 0)
 			{
 			  p->fast_nozzles = data[0];
 			  p->min_fast_nozzles = data[1];
@@ -192,7 +204,6 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
 		      p->min_black_nozzles = data[1];
 		      p->black_nozzle_start = data[2];
 		      p->black_nozzle_separation = data[3];
-		      found_black_head_config = 1;
 		    }
 		  else if (!strcmp(htype, "fast"))
 		    {
@@ -200,7 +211,6 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
 		      p->min_fast_nozzles = data[1];
 		      p->fast_nozzle_start = data[2];
 		      p->fast_nozzle_separation = data[3];
-		      found_fast_head_config = 1;
 		    }
 		}
 	      else if (!strcmp(name, "margins"))
@@ -389,41 +399,14 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
 void
 stp_escp2_load_model(const stp_vars_t *v, int model)
 {
-  stp_list_t *dirlist = stpi_data_path();
-  stp_list_item_t *item;
   char buf[MAXPATHLEN+1];
-  int found = 0;
-
-  stp_xml_init();
   snprintf(buf, MAXPATHLEN, "escp2/model/model_%d.xml", model);
-  item = stp_list_get_start(dirlist);
-  while (item)
-    {
-      const char *dn = (const char *) stp_list_item_get_data(item);
-      char *fn = stpi_path_merge(dn, buf);
-      stp_mxml_node_t *doc = stp_mxmlLoadFromFile(NULL, fn, STP_MXML_NO_CALLBACK);
-      stp_free(fn);
-      if (doc)
-	{
-	  stp_mxml_node_t *node =
-	    stp_mxmlFindElement(doc, doc, "escp2Model", NULL, NULL,
-				STP_MXML_DESCEND);
-	  if (node)
-	    {
-	      const char *stmp = stp_mxmlElementGetAttr(node, "id");
-	      STPI_ASSERT(stmp && stp_xmlstrtol(stmp) == model, v);
-	      load_model_from_file(v, node, model);
-	      found = 1;
-	    }
-	  stp_mxmlDelete(doc);
-	  if (found)
-	    break;
-	}
-      item = stp_list_item_next(item);
-    }
-  stp_xml_exit();
-  stp_list_destroy(dirlist);
-  STPI_ASSERT(found, v);
+  stp_mxml_node_t *node = 
+    stp_xml_parse_file_from_path_safe(buf, "escp2Model", NULL);
+  const char *stmp = stp_mxmlElementGetAttr(node, "id");
+  STPI_ASSERT(stmp && stp_xmlstrtol(stmp) == model, v);
+  load_model_from_file(v, node, model, 0);
+  stp_mxmlDeleteRoot(node);
 }
 
 stpi_escp2_printer_t *

@@ -20,9 +20,14 @@
 
 include $(top_srcdir)/scripts/global.mk
 
+SUBDIRS =					\
+	base
+
 ## Variables
 
 pkgxmldatadir = $(pkgdatadir)/@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@/xml/escp2/model
+
+# rlk 20171111: models 19, 33, 59, 111 are unused.
 
 pkgxmldata_DATA =				\
 	model_0.xml				\
@@ -44,7 +49,6 @@ pkgxmldata_DATA =				\
 	model_16.xml				\
 	model_17.xml				\
 	model_18.xml				\
-	model_19.xml				\
 	model_20.xml				\
 	model_21.xml				\
 	model_22.xml				\
@@ -58,7 +62,6 @@ pkgxmldata_DATA =				\
 	model_30.xml				\
 	model_31.xml				\
 	model_32.xml				\
-	model_33.xml				\
 	model_34.xml				\
 	model_35.xml				\
 	model_36.xml				\
@@ -84,7 +87,6 @@ pkgxmldata_DATA =				\
 	model_56.xml				\
 	model_57.xml				\
 	model_58.xml				\
-	model_59.xml				\
 	model_60.xml				\
 	model_61.xml				\
 	model_62.xml				\
@@ -136,7 +138,6 @@ pkgxmldata_DATA =				\
 	model_108.xml				\
 	model_109.xml				\
 	model_110.xml				\
-	model_111.xml				\
 	model_112.xml				\
 	model_113.xml				\
 	model_114.xml				\
@@ -158,9 +159,12 @@ pkgxmldata_DATA =				\
 	model_130.xml				\
 	model_131.xml
 
-xml-stamp: $(pkgxmldata_DATA) Makefile.am
+xml-stamp: $(pkgxmldata_DATA) $(addsuffix /xml-stamp, $(SUBDIRS)) Makefile.am
 	-rm -f $@ $@.tmp
 	touch $@.tmp
+	for dir in $(SUBDIRS) ; do \
+	  sed "s;^;$$dir/;" $${dir}/xml-stamp >> $@.tmp ; \
+	done
 	for f in $(pkgxmldata_DATA) ; do echo $$f >> $@.tmp; done
 	mv $@.tmp $@
 

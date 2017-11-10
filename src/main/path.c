@@ -147,8 +147,8 @@ stpi_path_check(const struct dirent *module, /* File to check */
   return status;
 }
 
-static stp_list_t *
-stpi_generate_path(const char *path)
+stp_list_t *
+stp_generate_path(const char *path)
 {
   stp_list_t *dir_list;                  /* List of directories to scan */
   if (!(dir_list = stp_list_create()))
@@ -159,18 +159,18 @@ stpi_generate_path(const char *path)
 }
 
 stp_list_t *
-stpi_data_path(void)
+stp_data_path(void)
 {
   if (getenv("STP_DATA_PATH"))
-    return stpi_generate_path(getenv("STP_DATA_PATH"));
+    return stp_generate_path(getenv("STP_DATA_PATH"));
   else
-    return stpi_generate_path(PKGXMLDATADIR);
+    return stp_generate_path(PKGXMLDATADIR);
 }
 
 stp_list_t *
 stpi_list_files_on_data_path(const char *name)
 {
-  stp_list_t *dir_list = stpi_data_path(); /* List of directories to scan */
+  stp_list_t *dir_list = stp_data_path(); /* List of directories to scan */
   stp_list_t *file_list = stp_path_search(dir_list, name);
   stp_list_destroy(dir_list);
   return file_list;
@@ -205,9 +205,9 @@ stp_path_find_file(const char *path, /* Path, or NULL for STP_DATA_PATH */
   stp_list_t *path_to_search;
   stp_list_item_t *dir;
   if (path)
-    path_to_search = stpi_generate_path(path);
+    path_to_search = stp_generate_path(path);
   else
-    path_to_search = stpi_data_path();
+    path_to_search = stp_data_path();
   dir = stp_list_get_start(path_to_search);
   while (dir)
     {

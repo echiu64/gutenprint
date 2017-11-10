@@ -27,25 +27,16 @@ SUBDIRS =					\
 	media					\
 	mediasizes				\
 	qualitypresets				\
+	resolutions				\
 	weaves
 
-xml-stamp: media/xml-stamp			\
-	   model/xml-stamp			\
-	   inputslots/xml-stamp			\
-	   inks/xml-stamp			\
-	   mediasizes/xml-stamp			\
-	   qualitypresets/Makefile.am		\
-	   weaves/Makefile.am			\
-	   Makefile.am
+xml-stamp: $(pkgxmldata_DATA) $(addsuffix /xml-stamp, $(SUBDIRS)) Makefile.am
 	-rm -f $@ $@.tmp
 	touch $@.tmp
-	sed 's;^;media/;' media/xml-stamp >> $@.tmp
-	sed 's;^;model/;' model/xml-stamp >> $@.tmp
-	sed 's;^;inputslots/;' inputslots/xml-stamp >> $@.tmp
-	sed 's;^;inks/;' inks/xml-stamp >> $@.tmp
-	sed 's;^;mediasizes/;' mediasizes/xml-stamp >> $@.tmp
-	sed 's;^;weaves/;' weaves/xml-stamp >> $@.tmp
-	sed 's;^;qualitypresets/;' qualitypresets/xml-stamp >> $@.tmp
+	for dir in $(SUBDIRS) ; do \
+	  sed "s;^;$$dir/;" $${dir}/xml-stamp >> $@.tmp ; \
+	done
+	for f in $(pkgxmldata_DATA) ; do echo $$f >> $@.tmp; done
 	mv $@.tmp $@
 
 all-local: xml-stamp

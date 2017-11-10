@@ -259,5 +259,7 @@ main(int argc, char **argv)
 	}
       stp_vars_destroy(pv);
     }
+  if (printer_list)
+    stp_string_list_destroy(printer_list);
   return 0;
 }

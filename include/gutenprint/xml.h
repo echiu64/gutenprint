@@ -81,6 +81,18 @@ extern void stp_vars_fill_from_xmltree_ref(stp_mxml_node_t *da,
 extern stp_mxml_node_t *stp_xmltree_create_from_vars(const stp_vars_t *v);
 
 extern void stp_xml_parse_file_named(const char *name);
+extern stp_mxml_node_t *stp_xml_parse_file_from_path(const char *name,
+						     const char *topnodename,
+						     const char *path);
+/*
+ * Abort if we don't find the matching file
+ * It is not necessary to check that the return is not NULL
+ */
+extern stp_mxml_node_t *stp_xml_parse_file_from_path_safe(const char *name,
+							  const char *topnodename,
+							  const char *path);
+
+extern void stpi_print_xml_node(stp_mxml_node_t *node);
 
 #ifdef __cplusplus
 }

@@ -399,56 +399,34 @@ load_inklist(stp_mxml_node_t *node, stp_mxml_node_t *root, inklist_t *ikl)
 static inkgroup_t *
 load_inkgroup(const char *name)
 {
-  stp_list_t *dirlist = stpi_data_path();
-  stp_list_item_t *item;
-  inkgroup_t *igl = NULL;
-  item = stp_list_get_start(dirlist);
-  while (item)
+  stp_mxml_node_t *node = 
+    stp_xml_parse_file_from_path_safe(name, "escp2InkGroup", NULL);
+  stp_mxml_node_t *child = node->child;
+  inkgroup_t *igl = stp_zalloc(sizeof(inkgroup_t));
+  size_t count = 0;
+  while (child)
     {
-      const char *dn = (const char *) stp_list_item_get_data(item);
-      char *ffn = stpi_path_merge(dn, name);
-      stp_mxml_node_t *inkgroup =
-	stp_mxmlLoadFromFile(NULL, ffn, STP_MXML_NO_CALLBACK);
-      stp_free(ffn);
-      if (inkgroup)
-	{
-	  int count = 0;
-	  stp_mxml_node_t *node = stp_mxmlFindElement(inkgroup, inkgroup,
-						      "escp2InkGroup", NULL,
-						      NULL, STP_MXML_DESCEND);
-	  if (node)
-	    {
-	      stp_mxml_node_t *child = node->child;
-	      igl = stp_zalloc(sizeof(inkgroup_t));
-	      while (child)
-		{
-		  if (child->type == STP_MXML_ELEMENT &&
-		      !strcmp(child->value.element.name, "InkList"))
-		    count++;
-		  child = child->next;
-		}
-	      igl->n_inklists = count;
-	      if (stp_mxmlElementGetAttr(node, "name"))
-		igl->name = stp_strdup(stp_mxmlElementGetAttr(node, "name"));
-	      else
-		igl->name = stp_strdup(name);
-	      igl->inklists = stp_zalloc(sizeof(inklist_t) * count);
-	      child = node->child;
-	      count = 0;
-	      while (child)
-		{
-		  if (child->type == STP_MXML_ELEMENT &&
-		      !strcmp(child->value.element.name, "InkList"))
-		    load_inklist(child, node, &(igl->inklists[count++]));
-		  child = child->next;
-		}
-	    }
-	  stp_mxmlDelete(inkgroup);
-	  break;
-	}
-      item = stp_list_item_next(item);
+      if (child->type == STP_MXML_ELEMENT &&
+	  !strcmp(child->value.element.name, "InkList"))
+	count++;
+      child = child->next;
     }
-  stp_list_destroy(dirlist);
+  igl->n_inklists = count;
+  if (stp_mxmlElementGetAttr(node, "name"))
+    igl->name = stp_strdup(stp_mxmlElementGetAttr(node, "name"));
+  else
+    igl->name = stp_strdup(name);
+  igl->inklists = stp_zalloc(sizeof(inklist_t) * count);
+  child = node->child;
+  count = 0;
+  while (child)
+    {
+      if (child->type == STP_MXML_ELEMENT &&
+	  !strcmp(child->value.element.name, "InkList"))
+	load_inklist(child, node, &(igl->inklists[count++]));
+      child = child->next;
+    }
+  stp_mxmlDeleteRoot(node);
   return igl;
 }
 
