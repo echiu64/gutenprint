@@ -29,11 +29,11 @@
 #include "print-escp2.h"
 
 
-int
-stp_escp2_load_printer_weaves_from_xml(const stp_vars_t *v,
+static int
+stpi_escp2_load_printer_weaves_from_xml(const stp_vars_t *v,
 				       stp_mxml_node_t *node)
 {
-  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  stpi_escp2_printer_t *printdef = stpi_escp2_get_printer(v);
   printer_weave_list_t *xpw = stp_malloc(sizeof(printer_weave_list_t));
   int count = 0;
   stp_mxml_node_t *child = node->child;
@@ -44,6 +44,7 @@ stp_escp2_load_printer_weaves_from_xml(const stp_vars_t *v,
 	count++;
       child = child->next;
     }
+  STPI_ASSERT(!(printdef->printer_weaves), v);
   printdef->printer_weaves = xpw;
   if (stp_mxmlElementGetAttr(node, "name"))
     xpw->name = stp_strdup(stp_mxmlElementGetAttr(node, "name"));
@@ -73,19 +74,19 @@ stp_escp2_load_printer_weaves_from_xml(const stp_vars_t *v,
 }
 
 int
-stp_escp2_load_printer_weaves(const stp_vars_t *v, const char *name)
+stpi_escp2_load_printer_weaves(const stp_vars_t *v, const char *name)
 {
   stp_mxml_node_t *node =
     stp_xml_parse_file_from_path_safe(name, "escp2PrinterWeaves", NULL);
-  stp_escp2_load_printer_weaves_from_xml(v, node);
+  stpi_escp2_load_printer_weaves_from_xml(v, node);
   stp_mxmlDeleteRoot(node);
   return 1;
 }
 
 int
-stp_escp2_load_resolutions_from_xml(const stp_vars_t *v, stp_mxml_node_t *node)
+stpi_escp2_load_resolutions_from_xml(const stp_vars_t *v, stp_mxml_node_t *node)
 {
-  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  stpi_escp2_printer_t *printdef = stpi_escp2_get_printer(v);
   resolution_list_t *xrs = stp_malloc(sizeof(resolution_list_t));
   int count = 0;
   stp_mxml_node_t *child = node->child;
@@ -98,6 +99,7 @@ stp_escp2_load_resolutions_from_xml(const stp_vars_t *v, stp_mxml_node_t *node)
 	}
       child = child->next;
     }
+  STPI_ASSERT(!(printdef->resolutions), v);
   printdef->resolutions = xrs;
   if (stp_mxmlElementGetAttr(node, "name"))
     xrs->name = stp_strdup(stp_mxmlElementGetAttr(node, "name"));
@@ -168,9 +170,9 @@ stp_escp2_load_resolutions_from_xml(const stp_vars_t *v, stp_mxml_node_t *node)
 }
 
 int
-stp_escp2_load_resolutions(const stp_vars_t *v, const char *name)
+stpi_escp2_load_resolutions(const stp_vars_t *v, const char *name)
 {
-  stp_mxml_node_t *node = 
+  stp_mxml_node_t *node =
     stp_xml_parse_file_from_path_safe(name, "escp2Resolutions", NULL);
   stp_mxml_node_t *child = node->child;
   int found = 0;
@@ -179,7 +181,7 @@ stp_escp2_load_resolutions(const stp_vars_t *v, const char *name)
       if (child->type == STP_MXML_ELEMENT &&
 	  !strcmp(child->value.element.name, "resolutions"))
 	{
-	  stp_escp2_load_resolutions_from_xml(v, child);
+	  stpi_escp2_load_resolutions_from_xml(v, child);
 	  found = 1;
 	}
       child = child->next;
@@ -188,10 +190,10 @@ stp_escp2_load_resolutions(const stp_vars_t *v, const char *name)
   return found;
 }
 
-int
-stp_escp2_load_quality_presets_from_xml(const stp_vars_t *v, stp_mxml_node_t *node)
+static int
+stpi_escp2_load_quality_presets_from_xml(const stp_vars_t *v, stp_mxml_node_t *node)
 {
-  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  stpi_escp2_printer_t *printdef = stpi_escp2_get_printer(v);
   quality_list_t *qpw = stp_malloc(sizeof(quality_list_t));
   int count = 0;
   stp_mxml_node_t *child = node->child;
@@ -202,6 +204,7 @@ stp_escp2_load_quality_presets_from_xml(const stp_vars_t *v, stp_mxml_node_t *no
 	count++;
       child = child->next;
     }
+  STPI_ASSERT(!(printdef->quality_list), v);
   printdef->quality_list = qpw;
   if (stp_mxmlElementGetAttr(node, "name"))
     qpw->name = stp_strdup(stp_mxmlElementGetAttr(node, "name"));
@@ -259,11 +262,11 @@ stp_escp2_load_quality_presets_from_xml(const stp_vars_t *v, stp_mxml_node_t *no
 }
 
 int
-stp_escp2_load_quality_presets(const stp_vars_t *v, const char *name)
+stpi_escp2_load_quality_presets(const stp_vars_t *v, const char *name)
 {
   stp_mxml_node_t *node =
     stp_xml_parse_file_from_path_safe(name, "escp2QualityPresets", NULL);
-  stp_escp2_load_quality_presets_from_xml(v, node);
+  stpi_escp2_load_quality_presets_from_xml(v, node);
   stp_mxmlDeleteRoot(node);
   return 1;
 }

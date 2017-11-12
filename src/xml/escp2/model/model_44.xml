@@ -20,7 +20,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
-<escp2Model id="44" base="escp2/model/base/c8x.xml">
+<escp2Model id="44" base="escp2/model/base/c8x_base.xml">
  <media src="escp2/media/c80.xml"/>
  <inkGroup src="escp2/inks/c80.xml"/>
  <borderless>No</borderless>
