@@ -26,6 +26,39 @@ while ($#ARGV >= 0 && $ARGV[0] eq '-d') {
     shift @ARGV;
 }
 
+my (@ptable) =
+    (["=+", pack("C", 27)],
+     ["!+", pack("C", 26)],
+     ['"+', pack("C", 25)],
+     [",+", pack("C", 24)],
+     ["'+", pack("C", 23)],
+     ["%+", pack("C", 22)],
+     [">+", pack("C", 21)],
+     ["20+", pack("C", 20)],
+     ["19+", pack("C", 19)],
+     ["18+", pack("C", 18)],
+     ["17+", pack("C", 17)],
+     ["16+", pack("C", 16)],
+     ["15+", pack("C", 15)],
+     ["14+", pack("C", 14)],
+     ["13+", pack("C", 13)],
+     ["12+", pack("C", 12)],
+     ["11+", pack("C", 11)],
+     ["10+", pack("C", 9)],	# 0xa is newline!
+     ["9+", pack("C", 8)],
+     ["8+", pack("C", 7)],
+     ["7+", pack("C", 6)],
+     ["6+", pack("C", 5)],
+     ["5+", pack("C", 4)],
+     ["4+", pack("C", 3)],
+     ["3+", pack("C", 2)],
+     ["2\+", pack("C", 1)]);
+
+my $psub_code = '';
+foreach my $psub (reverse @ptable) {
+    $psub_code .= "    \$inline =~ s/$$psub[1]/$$psub[0]/g;\n";
+}
+
 if ($#ARGV <= 0) {
     print_file($ARGV[0]);
 } elsif ($#ARGV == 1) {
@@ -128,6 +161,7 @@ sub fetch_next_line($) {
 	return 0;
     }
     chomp $inline;
+    eval $psub_code;
     # Whitespace optimization -- set high bit.
     if (! ($inline =~ / /)) {
 	my (@bytes) = unpack("C*", $inline);
