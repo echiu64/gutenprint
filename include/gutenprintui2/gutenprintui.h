@@ -34,7 +34,9 @@ extern "C" {
 
 
 #ifdef __GNUC__
+#ifndef inline
 #define inline __inline__
+#endif
 #endif
 
 #pragma GCC diagnostic push

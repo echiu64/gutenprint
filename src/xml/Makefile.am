@@ -20,26 +20,11 @@
 
 include $(top_srcdir)/scripts/global.mk
 
-SUBDIRS = escp2
+SUBDIRS = dither escp2 papers printers
 
 ## Variables
 
 pkgxmldatadir = $(pkgdatadir)/@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@/xml
-
-pkgxmldata_DATA =				\
-	dither/matrix-1x1.xml			\
-	dither/matrix-2x1.xml			\
-	dither/matrix-4x1.xml			\
-	papers/standard.xml			\
-	papers/labels.xml			\
-	printers/canon.xml			\
-	printers/dpl.xml			\
-	printers/dyesub.xml			\
-	printers/escp2.xml			\
-	printers/lexmark.xml			\
-	printers/pcl.xml			\
-	printers/ps.xml				\
-	printers/raw.xml
 
 ## Rules
 
@@ -48,10 +33,12 @@ noinst_PROGRAMS = extract-strings
 extract_strings_SOURCES = extract-strings.c
 extract_strings_LDADD = $(GUTENPRINT_LIBS)
 
-xml-stamp: $(pkgxmldata_DATA) escp2/xml-stamp Makefile.am
+xml-stamp: $(pkgxmldata_DATA) $(addsuffix /xml-stamp, $(SUBDIRS)) Makefile.am
 	-rm -f $@ $@.tmp
 	touch $@.tmp
-	sed 's;^;escp2/;' escp2/xml-stamp >> $@.tmp
+	for dir in $(SUBDIRS) ; do \
+	  sed "s;^;$$dir/;" $${dir}/xml-stamp >> $@.tmp ; \
+	done
 	for f in $(pkgxmldata_DATA) ; do echo $$f >> $@.tmp; done
 	mv $@.tmp $@
 

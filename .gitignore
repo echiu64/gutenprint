@@ -75,7 +75,7 @@ commandtoepson
 compare-checksums
 compress-checksums
 cups-calibrate
-cups-genppd.5.2
+cups-genppd.5.*
 cups-genppdupdate
 cups-gutenprint.list
 curve
@@ -89,7 +89,7 @@ genppd
 gen-printer-list
 git-version-stamp
 gutenprint
-gutenprint.5.2
+gutenprint.5.*
 gutenprint.aux
 gutenprint.cp
 gutenprint.cps
@@ -135,7 +135,7 @@ printers
 printrcl.c
 printrcy.c
 printrcy.h
-rastertogutenprint.5.2
+rastertogutenprint.5.*
 reference-html
 run-testpattern-2
 stamp-cat-id
@@ -159,6 +159,7 @@ uncompress-checksums
 unprint
 users-guide
 users-guide.aux
+wzpaq
 xml-curve
 xmli18n-tmp.h
 xml-stamp
@@ -168,3 +169,6 @@ ylwrap
 CATALOG.local
 suse-html.dsl
 suse-print.dsl
+
+# Things that we *do* need
+!src/xml/printers

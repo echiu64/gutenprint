@@ -240,6 +240,27 @@ stp_mxmlDelete(stp_mxml_node_t *node)		/* I - Node to delete */
   free(node);
 }
 
+/*
+ * 'stp_mxmlDeleteRoot()' - Delete the entire tree contaning the node
+ */
+
+void
+stp_mxmlDeleteRoot(stp_mxml_node_t *node)
+{
+  while (node->parent && node->parent != node)
+    node = node->parent;
+  stp_mxmlDelete(node);
+}
+
+/*
+ * 'stp_mxmlParent()' - Return the parent of a node or NULL if none.
+ */
+
+stp_mxml_node_t *
+stp_mxmlParent(stp_mxml_node_t *node) /* I - node to return parent from */
+{
+  return node->parent;
+}
 
 /*
  * 'stp_mxmlNewElement()' - Create a new element node.

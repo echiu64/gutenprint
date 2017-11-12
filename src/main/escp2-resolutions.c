@@ -75,33 +75,11 @@ stp_escp2_load_printer_weaves_from_xml(const stp_vars_t *v,
 int
 stp_escp2_load_printer_weaves(const stp_vars_t *v, const char *name)
 {
-  stp_list_t *dirlist = stpi_data_path();
-  stp_list_item_t *item;
-  int found = 0;
-  item = stp_list_get_start(dirlist);
-  while (item)
-    {
-      const char *dn = (const char *) stp_list_item_get_data(item);
-      char *ffn = stpi_path_merge(dn, name);
-      stp_mxml_node_t *weaves =
-	stp_mxmlLoadFromFile(NULL, ffn, STP_MXML_NO_CALLBACK);
-      stp_free(ffn);
-      if (weaves)
-	{
-	  stp_mxml_node_t *node = stp_mxmlFindElement(weaves, weaves,
-						      "escp2PrinterWeaves", NULL,
-						      NULL, STP_MXML_DESCEND);
-	  if (node)
-	    stp_escp2_load_printer_weaves_from_xml(v, node);
-	  stp_mxmlDelete(weaves);
-	  found = 1;
-	  break;
-	}
-      item = stp_list_item_next(item);
-    }
-  stp_list_destroy(dirlist);
-  STPI_ASSERT(found, v);
-  return found;
+  stp_mxml_node_t *node =
+    stp_xml_parse_file_from_path_safe(name, "escp2PrinterWeaves", NULL);
+  stp_escp2_load_printer_weaves_from_xml(v, node);
+  stp_mxmlDeleteRoot(node);
+  return 1;
 }
 
 int
@@ -115,7 +93,9 @@ stp_escp2_load_resolutions_from_xml(const stp_vars_t *v, stp_mxml_node_t *node)
     {
       if (child->type == STP_MXML_ELEMENT &&
 	  !strcmp(child->value.element.name, "resolution"))
-	count++;
+	{
+	  count++;
+	}
       child = child->next;
     }
   printdef->resolutions = xrs;
@@ -190,32 +170,21 @@ stp_escp2_load_resolutions_from_xml(const stp_vars_t *v, stp_mxml_node_t *node)
 int
 stp_escp2_load_resolutions(const stp_vars_t *v, const char *name)
 {
-  stp_list_t *dirlist = stpi_data_path();
-  stp_list_item_t *item;
+  stp_mxml_node_t *node = 
+    stp_xml_parse_file_from_path_safe(name, "escp2Resolutions", NULL);
+  stp_mxml_node_t *child = node->child;
   int found = 0;
-  item = stp_list_get_start(dirlist);
-  while (item)
+  while (child)
     {
-      const char *dn = (const char *) stp_list_item_get_data(item);
-      char *ffn = stpi_path_merge(dn, name);
-      stp_mxml_node_t *resolutions =
-	stp_mxmlLoadFromFile(NULL, ffn, STP_MXML_NO_CALLBACK);
-      stp_free(ffn);
-      if (resolutions)
+      if (child->type == STP_MXML_ELEMENT &&
+	  !strcmp(child->value.element.name, "resolutions"))
 	{
-	  stp_mxml_node_t *node = stp_mxmlFindElement(resolutions, resolutions,
-						      "escp2Resolutions", NULL,
-						      NULL, STP_MXML_DESCEND);
-	  if (node)
-	    stp_escp2_load_resolutions_from_xml(v, node);
-	  stp_mxmlDelete(resolutions);
+	  stp_escp2_load_resolutions_from_xml(v, child);
 	  found = 1;
-	  break;
 	}
-      item = stp_list_item_next(item);
+      child = child->next;
     }
-  stp_list_destroy(dirlist);
-  STPI_ASSERT(found, v);
+  stp_mxmlDeleteRoot(node);
   return found;
 }
 
@@ -292,31 +261,9 @@ stp_escp2_load_quality_presets_from_xml(const stp_vars_t *v, stp_mxml_node_t *no
 int
 stp_escp2_load_quality_presets(const stp_vars_t *v, const char *name)
 {
-  stp_list_t *dirlist = stpi_data_path();
-  stp_list_item_t *item;
-  int found = 0;
-  item = stp_list_get_start(dirlist);
-  while (item)
-    {
-      const char *dn = (const char *) stp_list_item_get_data(item);
-      char *ffn = stpi_path_merge(dn, name);
-      stp_mxml_node_t *qualities =
-	stp_mxmlLoadFromFile(NULL, ffn, STP_MXML_NO_CALLBACK);
-      stp_free(ffn);
-      if (qualities)
-	{
-	  stp_mxml_node_t *node = stp_mxmlFindElement(qualities, qualities,
-						      "escp2QualityPresets", NULL,
-						      NULL, STP_MXML_DESCEND);
-	  if (node)
-	    stp_escp2_load_quality_presets_from_xml(v, node);
-	  stp_mxmlDelete(qualities);
-	  found = 1;
-	  break;
-	}
-      item = stp_list_item_next(item);
-    }
-  stp_list_destroy(dirlist);
-  STPI_ASSERT(found, v);
-  return found;
+  stp_mxml_node_t *node =
+    stp_xml_parse_file_from_path_safe(name, "escp2QualityPresets", NULL);
+  stp_escp2_load_quality_presets_from_xml(v, node);
+  stp_mxmlDeleteRoot(node);
+  return 1;
 }

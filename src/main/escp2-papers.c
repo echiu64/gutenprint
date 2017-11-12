@@ -40,7 +40,7 @@ int
 stp_escp2_load_media_sizes(const stp_vars_t *v, const char *name)
 {
   stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
-  stp_list_t *dirlist = stpi_data_path();
+  stp_list_t *dirlist = stp_data_path();
   stp_list_item_t *item;
   int found = 0;
   item = stp_list_get_start(dirlist);
@@ -101,53 +101,26 @@ int
 stp_escp2_load_media(const stp_vars_t *v, const char *name)
 {
   stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
-  stp_list_t *dirlist = stpi_data_path();
-  stp_list_item_t *item;
-  int found = 0;
-  item = stp_list_get_start(dirlist);
-  while (item)
+  stp_mxml_node_t *node = 
+    stp_xml_parse_file_from_path_safe(name, "escp2Papers", NULL);
+  stp_mxml_node_t **xnode = (stp_mxml_node_t **) &(printdef->media);
+  stp_list_t **xlist = (stp_list_t **) &(printdef->media_cache);
+  stp_string_list_t **xpapers = (stp_string_list_t **) &(printdef->papers);
+  *xnode = node->parent;
+  *xlist = stp_list_create();
+  stp_list_set_namefunc(*xlist, paper_namefunc);
+  *xpapers = stp_string_list_create();
+  node = node->child;
+  while (node)
     {
-      const char *dn = (const char *) stp_list_item_get_data(item);
-      char *ffn = stpi_path_merge(dn, name);
-      stp_mxml_node_t *media =
-	stp_mxmlLoadFromFile(NULL, ffn, STP_MXML_NO_CALLBACK);
-      stp_free(ffn);
-      if (media)
-	{
-	  stp_mxml_node_t **xnode =
-	    (stp_mxml_node_t **) &(printdef->media);
-	  stp_list_t **xlist =
-	    (stp_list_t **) &(printdef->media_cache);
-	  stp_string_list_t **xpapers =
-	    (stp_string_list_t **) &(printdef->papers);
-	  stp_mxml_node_t *node = stp_mxmlFindElement(media, media,
-						      "escp2Papers", NULL,
-						      NULL, STP_MXML_DESCEND);
-	  *xnode = media;
-	  *xlist = stp_list_create();
-	  stp_list_set_namefunc(*xlist, paper_namefunc);
-	  *xpapers = stp_string_list_create();
-	  if (node)
-	    {
-	      node = node->child;
-	      while (node)
-		{
-		  if (node->type == STP_MXML_ELEMENT &&
-		      strcmp(node->value.element.name, "paper") == 0)
-		    stp_string_list_add_string(*xpapers,
-					       stp_mxmlElementGetAttr(node, "name"),
-					       stp_mxmlElementGetAttr(node, "text"));
-		  node = node->next;
-		}
-	    }
-	  found = 1;
-	  break;
-	}
-      item = stp_list_item_next(item);
+      if (node->type == STP_MXML_ELEMENT &&
+	  strcmp(node->value.element.name, "paper") == 0)
+	stp_string_list_add_string(*xpapers,
+				   stp_mxmlElementGetAttr(node, "name"),
+				   stp_mxmlElementGetAttr(node, "text"));
+      node = node->next;
     }
-  stp_list_destroy(dirlist);
-  STPI_ASSERT(found, v);
-  return found;
+  return 1;
 }
 
 static stp_mxml_node_t *
@@ -326,53 +299,26 @@ int
 stp_escp2_load_input_slots(const stp_vars_t *v, const char *name)
 {
   stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
-  stp_list_t *dirlist = stpi_data_path();
-  stp_list_item_t *item;
-  int found = 0;
-  item = stp_list_get_start(dirlist);
-  while (item)
+  stp_mxml_node_t *node =
+    stp_xml_parse_file_from_path_safe(name, "escp2InputSlots", NULL);
+  stp_mxml_node_t **xnode = (stp_mxml_node_t **) &(printdef->slots);
+  stp_list_t **xlist = (stp_list_t **) &(printdef->slots_cache);
+  stp_string_list_t **xslots = (stp_string_list_t **) &(printdef->input_slots);
+  *xnode = node->parent;
+  *xlist = stp_list_create();
+  stp_list_set_namefunc(*xlist, slots_namefunc);
+  *xslots = stp_string_list_create();
+  node = node->child;
+  while (node)
     {
-      const char *dn = (const char *) stp_list_item_get_data(item);
-      char *ffn = stpi_path_merge(dn, name);
-      stp_mxml_node_t *slots =
-	stp_mxmlLoadFromFile(NULL, ffn, STP_MXML_NO_CALLBACK);
-      stp_free(ffn);
-      if (slots)
-	{
-	  stp_mxml_node_t **xnode =
-	    (stp_mxml_node_t **) &(printdef->slots);
-	  stp_list_t **xlist =
-	    (stp_list_t **) &(printdef->slots_cache);
-	  stp_string_list_t **xslots =
-	    (stp_string_list_t **) &(printdef->input_slots);
-	  stp_mxml_node_t *node = stp_mxmlFindElement(slots, slots,
-						      "escp2InputSlots", NULL,
-						      NULL, STP_MXML_DESCEND);
-	  *xnode = slots;
-	  *xlist = stp_list_create();
-	  stp_list_set_namefunc(*xlist, slots_namefunc);
-	  *xslots = stp_string_list_create();
-	  if (node)
-	    {
-	      node = node->child;
-	      while (node)
-		{
-		  if (node->type == STP_MXML_ELEMENT &&
-		      strcmp(node->value.element.name, "slot") == 0)
-		    stp_string_list_add_string(*xslots,
-					       stp_mxmlElementGetAttr(node, "name"),
-					       stp_mxmlElementGetAttr(node, "text"));
-		  node = node->next;
-		}
-	    }
-	  found = 1;
-	  break;
-	}
-      item = stp_list_item_next(item);
+      if (node->type == STP_MXML_ELEMENT &&
+	  strcmp(node->value.element.name, "slot") == 0)
+	stp_string_list_add_string(*xslots,
+				   stp_mxmlElementGetAttr(node, "name"),
+				   stp_mxmlElementGetAttr(node, "text"));
+      node = node->next;
     }
-  stp_list_destroy(dirlist);
-  STPI_ASSERT(found, v);
-  return found;
+  return 1;
 }
 
 static stp_mxml_node_t *

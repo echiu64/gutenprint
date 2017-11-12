@@ -467,10 +467,7 @@ stpi_get_papersize_list_named(const char *name, const char *file)
     }
   else
     {
-      stp_list_t *dirlist;
-      int found = 0;
       char buf[MAXPATHLEN+1];
-
       stp_deprintf(STP_DBG_PAPER, "Loading paper list %s from %s\n",
 		   name, file ? file : "(null)");
       if (! file)
@@ -479,44 +476,17 @@ stpi_get_papersize_list_named(const char *name, const char *file)
 	(void) snprintf(buf, MAXPATHLEN, "papers/%s.xml", name);
       else
 	strncpy(buf, file, MAXPATHLEN);
-      stp_xml_init();
-      dirlist = stpi_data_path();
-      item = stp_list_get_start(dirlist);
-      while (item)
-	{
-	  const char *dn = (const char *) stp_list_item_get_data(item);
-	  char *fn = stpi_path_merge(dn, buf);
-	  stp_mxml_node_t *doc = stp_mxmlLoadFromFile(NULL, fn,
-						      STP_MXML_NO_CALLBACK);
-	  stp_deprintf(STP_DBG_PAPER, "  Trying %s => %p\n", fn, (void *)doc);
-	  stp_free(fn);
-	  if (doc)
-	    {
-	      stp_mxml_node_t *node =
-		stp_mxmlFindElement(doc, doc, "paperdef", NULL, NULL,
-				    STP_MXML_DESCEND);
-	      if (node)
-		{
-		  const char *stmp = stp_mxmlElementGetAttr(node, "name");
-		  STPI_ASSERT(stmp && !strcmp(name, stmp), NULL);
-		  impl = stp_malloc(sizeof(papersize_list_impl_t));
-		  impl->name = stp_strdup(name);
-		  impl->list = stpi_create_papersize_list();
-		  stp_deprintf(STP_DBG_PAPER, "    Loading %s\n", stmp);
-		  stp_list_item_create(list_of_papersize_lists, NULL, impl);
-		  stp_xml_process_papersize_def(node, buf, impl->list);
-		  found = 1;
-		}
-	      stp_mxmlDelete(doc);
-	      if (found)
-		break;
-	    }
-	  item = stp_list_item_next(item);
-	}
-      stp_xml_exit();
-      stp_list_destroy(dirlist);
-      if (!found)
-	return NULL;
+      stp_mxml_node_t *node =
+	stp_xml_parse_file_from_path_safe(buf, "paperdef", NULL);
+      const char *stmp = stp_mxmlElementGetAttr(node, "name");
+      STPI_ASSERT(stmp && !strcmp(name, stmp), NULL);
+      impl = stp_malloc(sizeof(papersize_list_impl_t));
+      impl->name = stp_strdup(name);
+      impl->list = stpi_create_papersize_list();
+      stp_deprintf(STP_DBG_PAPER, "    Loading %s\n", stmp);
+      stp_list_item_create(list_of_papersize_lists, NULL, impl);
+      stp_xml_process_papersize_def(node, buf, impl->list);
+      stp_mxmlDeleteRoot(node);
     }
   return impl->list;
 }

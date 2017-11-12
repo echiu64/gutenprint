@@ -44,7 +44,14 @@ extern stp_list_t *stp_path_search(stp_list_t *dirlist,
 extern void stp_path_split(stp_list_t *list,
 			   const char *path);
 
-extern stp_list_t *stpi_data_path(void);
+/*
+ * Split a path (colon-separated list of strings) into
+ * its components.  The components may be anything that does not contain
+ * a token.
+ */
+extern stp_list_t *stp_generate_path(const char *path);
+
+extern stp_list_t *stp_data_path(void);
 
 extern stp_list_t *stpi_list_files_on_data_path(const char *name);
 

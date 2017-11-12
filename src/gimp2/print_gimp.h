@@ -29,7 +29,9 @@
 #define __PRINT_GIMP_H__
 
 #ifdef __GNUC__
+#ifndef inline
 #define inline __inline__
+#endif
 #endif
 
 #include <gutenprint/gutenprint.h>

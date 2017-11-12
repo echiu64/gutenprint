@@ -307,6 +307,56 @@ stp_xml_parse_file(const char *file) /* File to parse */
   return 0;
 }
 
+stp_mxml_node_t *
+stp_xml_parse_file_from_path(const char *name, const char *topnodename,
+			     const char *path)
+{
+  stp_list_t *path_to_search;
+  stp_mxml_node_t *answer = NULL;
+  stp_list_item_t *item;
+  if (path)
+    path_to_search = stp_generate_path(path);
+  else
+    path_to_search = stp_data_path();
+  item = stp_list_get_start(path_to_search);
+  while (item)
+    {
+      const char *dn = (const char *) stp_list_item_get_data(item);
+      char *ffn = stpi_path_merge(dn, name);
+      stp_mxml_node_t *root =
+	stp_mxmlLoadFromFile(NULL, ffn, STP_MXML_NO_CALLBACK);
+      stp_free(ffn);
+      if (root)
+	{
+	  stp_mxml_node_t *node = stp_mxmlFindElement(root, root,
+						      topnodename, NULL,
+						      NULL, STP_MXML_DESCEND);
+	  if (node)
+	    {
+	      answer = node;
+	      break;
+	    }
+	}
+      item = stp_list_item_next(item);
+    }
+  stp_list_destroy(path_to_search);
+  return answer;
+}
+
+stp_mxml_node_t *
+stp_xml_parse_file_from_path_safe(const char *name, const char *topnodename,
+			     const char *path)
+{
+  stp_mxml_node_t *answer = stp_xml_parse_file_from_path(name, topnodename,
+							 path);
+  if (! answer)
+    {
+      stp_erprintf("Cannot find file %s of type %s\n", name, topnodename);
+      stp_abort();
+    }
+  return answer;
+}
+
 /*
  * Convert a text string into an integer.
  */
@@ -565,4 +615,47 @@ stp_xmldoc_create_generic(void)
      "http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd");
 
   return doc;
+}
+
+void
+stpi_print_xml_node(stp_mxml_node_t *node)
+{
+  int i;
+  stp_erprintf("Node @%p:\n", (void *) node);
+  stp_erprintf("    Type %d\n", node->type);
+  stp_erprintf("    Next @%p\n", (void *) node->next);
+  stp_erprintf("    Prev @%p\n", (void *) node->prev);
+  stp_erprintf("    Parent @%p\n", (void *) node->parent);
+  stp_erprintf("    Child @%p\n", (void *) node->child);
+  stp_erprintf("    Last @%p\n", (void *) node->last_child);
+  stp_erprintf("    Value: ");
+  switch (node->type)
+    {
+    case STP_MXML_ELEMENT:
+      stp_erprintf("\n        Element, name: %s\n", node->value.element.name);
+      stp_erprintf("        Attrs: %d\n", node->value.element.num_attrs);
+      for (i = 0; i < node->value.element.num_attrs; i++)
+	stp_erprintf("            %s    =>    %s\n",
+		     node->value.element.attrs[i].name,
+		     node->value.element.attrs[i].value);
+      break;
+    case STP_MXML_INTEGER:
+      stp_erprintf(" Integer:    %d\n", node->value.integer);
+      break;
+    case STP_MXML_REAL:
+      stp_erprintf(" Real:       %f\n", node->value.real);
+      break;
+    case STP_MXML_DIMENSION:
+      stp_erprintf(" Dimension:  %f\n", node->value.real);
+      break;
+    case STP_MXML_OPAQUE:
+      stp_erprintf(" Opaque:    '%s'\n", node->value.opaque);
+      break;
+    case STP_MXML_TEXT:
+      stp_erprintf(" Text:       %d '%s'\n", node->value.text.whitespace, 
+		   node->value.text.string);
+      break;
+    default:
+      stp_erprintf("UNKNOWN!\n");
+    }
 }

@@ -153,6 +153,8 @@ extern stp_mxml_node_t	*stp_mxmlNewDimension(stp_mxml_node_t *parent,
 					      stp_dimension_t real);
 extern stp_mxml_node_t	*stp_mxmlNewText(stp_mxml_node_t *parent, int whitespace,
 			             const char *string);
+extern stp_mxml_node_t	*stp_mxmlParent(stp_mxml_node_t *node);
+extern void		stp_mxmlDeleteRoot(stp_mxml_node_t *node);
 extern void		stp_mxmlRemove(stp_mxml_node_t *node);
 extern char		*stp_mxmlSaveAllocString(stp_mxml_node_t *node,
 			        	     int (*cb)(stp_mxml_node_t *, int));

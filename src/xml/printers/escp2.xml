@@ -117,7 +117,7 @@
       <printer translate="name" name="Epson Stylus C46" deviceid="MFG:EPSON;MDL:Stylus C46;DES:EPSON Stylus C46;CMD:ESCPL2,BDC,D4;" driver="escp2-c46" manufacturer="Epson" model="43" parameters="480_params" />
       <printer translate="name" name="Epson Stylus C48" deviceid="MFG:EPSON;MDL:Stylus C48;DES:EPSON Stylus C48;CMD:ESCPL2,BDC,D4;" driver="escp2-c48" manufacturer="Epson" model="43" parameters="480_params" />
       <printer translate="name" name="Epson Stylus C50" driver="escp2-c50" manufacturer="Epson" model="56" parameters="480_params" />
-      <printer translate="name" name="Epson Stylus C60" deviceid="MFG:EPSON;MDL:Stylus C60;DES:EPSON Stylus C60;CMD:ESCPL2,BDC,D4;" driver="escp2-c60" manufacturer="Epson" model="33" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus C60" deviceid="MFG:EPSON;MDL:Stylus C60;DES:EPSON Stylus C60;CMD:ESCPL2,BDC,D4;" driver="escp2-c60" manufacturer="Epson" model="32" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus C61" driver="escp2-c61" manufacturer="Epson" model="52" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus C62" deviceid="MFG:EPSON;MDL:Stylus C62;DES:EPSON Stylus C62;CMD:ESCPL2,BDC,D4;" driver="escp2-c62" manufacturer="Epson" model="52" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus C63" driver="escp2-c63" manufacturer="Epson" model="61" parameters="standard_params" />
@@ -156,13 +156,13 @@
       <printer translate="name" name="Epson Stylus Color 670" deviceid="MFG:EPSON;MDL:Stylus COLOR 670;DES:EPSON Stylus COLOR 670;CMD:ESCPL2,BDC,D4;" driver="escp2-670" manufacturer="Epson" model="25" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Color 680" deviceid="MFG:EPSON;MDL:Stylus COLOR 680;DES:EPSON Stylus COLOR 680;CMD:ESCPL2,BDC,D4;" driver="escp2-680" manufacturer="Epson" model="32" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Color 740" deviceid="MFG:EPSON;MDL:Stylus COLOR 740;DES:EPSON Stylus COLOR 740;CMD:ESCPL2,BDC,D4;" driver="escp2-740" manufacturer="Epson" model="12" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Color 760" deviceid="MFG:EPSON;MDL:Stylus COLOR 760;DES:EPSON Stylus COLOR 760;CMD:ESCPL2,BDC,D4;" driver="escp2-760" manufacturer="Epson" model="19" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Color 760" deviceid="MFG:EPSON;MDL:Stylus COLOR 760;DES:EPSON Stylus COLOR 760;CMD:ESCPL2,BDC,D4;" driver="escp2-760" manufacturer="Epson" model="16" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Color 777" deviceid="MFG:EPSON;MDL:Stylus COLOR 777;DES:EPSON Stylus COLOR 777;CMD:ESCPL2,BDC,D4;" driver="escp2-777" manufacturer="Epson" model="32" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Color 800" deviceid="MFG:EPSON;MDL:Stylus COLOR 800;CMD:ESCPL2,PRPXL24,BDC;" driver="escp2-800" manufacturer="Epson" model="4" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Color 850" driver="escp2-850" manufacturer="Epson" model="5" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Color 860" driver="escp2-860" manufacturer="Epson" model="16" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Color 880" deviceid="MFG:EPSON;MDL:Stylus COLOR 880;DES:EPSON Stylus COLOR 880;CMD:ESCPL2,BDC,D4;" driver="escp2-880" manufacturer="Epson" model="33" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Color 8 3" driver="escp2-83" manufacturer="Epson" model="33" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Color 880" deviceid="MFG:EPSON;MDL:Stylus COLOR 880;DES:EPSON Stylus COLOR 880;CMD:ESCPL2,BDC,D4;" driver="escp2-880" manufacturer="Epson" model="32" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Color 8 3" driver="escp2-83" manufacturer="Epson" model="32" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Color 900" deviceid="MFG:EPSON;MDL:Stylus COLOR 900;DES:EPSON Stylus COLOR 900;CMD:ESCPL2,PRPXL24,BDC,D4;" driver="escp2-900" manufacturer="Epson" model="13" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Color 980" deviceid="MFG:Epson;MDL:Stylus Color 980;CMD:ESC/P2;" driver="escp2-980" manufacturer="Epson" model="34" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Color 1160" driver="escp2-1160" manufacturer="Epson" model="17" parameters="standard_params" />
@@ -299,8 +299,7 @@
       <printer translate="name" name="Epson Stylus Pro 7800" driver="escp2-7800" manufacturer="Epson" model="103" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Pro 7880" driver="escp2-7880" manufacturer="Epson" model="89" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Pro 7890" driver="escp2-7890" manufacturer="Epson" model="89" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Pro 7900" deviceid="MFG:EPSON;CMD:ESCPL2,BDC,D4,D4PX;MDL:Stylus Pro 7900;CLS:PRINTER;DES:EPSON Stylus Pro 7900;
-" driver="escp2-7900" manufacturer="Epson" model="116" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Pro 7900" deviceid="MFG:EPSON;CMD:ESCPL2,BDC,D4,D4PX;MDL:Stylus Pro 7900;CLS:PRINTER;DES:EPSON Stylus Pro 7900;" driver="escp2-7900" manufacturer="Epson" model="116" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Pro 9000" driver="escp2-9000" manufacturer="Epson" model="30" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Pro 9500" driver="escp2-9500" manufacturer="Epson" model="31" parameters="pro_5500_params" />
       <printer translate="name" name="Epson Stylus Pro 9600" driver="escp2-9600" manufacturer="Epson" model="49" parameters="standard_params" />
