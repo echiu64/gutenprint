@@ -399,7 +399,7 @@ load_inklist(stp_mxml_node_t *node, stp_mxml_node_t *root, inklist_t *ikl)
 static inkgroup_t *
 load_inkgroup(const char *name)
 {
-  stp_mxml_node_t *node = 
+  stp_mxml_node_t *node =
     stp_xml_parse_file_from_path_safe(name, "escp2InkGroup", NULL);
   stp_mxml_node_t *child = node->child;
   inkgroup_t *igl = stp_zalloc(sizeof(inkgroup_t));
@@ -431,11 +431,12 @@ load_inkgroup(const char *name)
 }
 
 int
-stp_escp2_load_inkgroup(const stp_vars_t *v, const char *name)
+stpi_escp2_load_inkgroup(const stp_vars_t *v, const char *name)
 {
-  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  stpi_escp2_printer_t *printdef = stpi_escp2_get_printer(v);
   inkgroup_t *igl = load_inkgroup(name);
   STPI_ASSERT(igl, v);
+  STPI_ASSERT(!(printdef->inkgroup), v);
   printdef->inkgroup = igl;
   return (igl != NULL);
 }

@@ -30,6 +30,7 @@ pkgxmldata_DATA =				\
 	c2x.xml					\
 	c4x.xml					\
 	c7xx.xml				\
+	c8x_base.xml				\
 	c8x.xml					\
 	cpro.xml				\
 	photo2.xml				\

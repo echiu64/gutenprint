@@ -60,7 +60,7 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model,
 		     int depth)
 {
   stp_mxml_node_t *tmp = xmod->child;
-  stpi_escp2_printer_t *p = stp_escp2_get_printer(v);
+  stpi_escp2_printer_t *p = stpi_escp2_get_printer(v);
   const char *stmp = stp_mxmlElementGetAttr(xmod, "base");
   if (depth == 0)
     {
@@ -75,7 +75,7 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model,
   /* Allow recursive definitions */
   if (stmp)
     {
-      stp_mxml_node_t *node = 
+      stp_mxml_node_t *node =
 	stp_xml_parse_file_from_path_safe(stmp, "escp2Model", NULL);
       load_model_from_file(v, node, model, depth + 1);
       stp_mxmlDeleteRoot(node);
@@ -90,19 +90,19 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model,
 	    {
 	      /* FIXME need to allow override of these! */
 	      if (!strcmp(name, "media"))
-		stp_escp2_load_media(v, target);
+		stpi_escp2_load_media(v, target);
 	      else if (!strcmp(name, "inputSlots"))
-		stp_escp2_load_input_slots(v, target);
+		stpi_escp2_load_input_slots(v, target);
 	      else if (!strcmp(name, "mediaSizes"))
-		stp_escp2_load_media_sizes(v, target);
+		stpi_escp2_load_media_sizes(v, target);
 	      else if (!strcmp(name, "printerWeaves"))
-		stp_escp2_load_printer_weaves(v, target);
+		stpi_escp2_load_printer_weaves(v, target);
 	      else if (!strcmp(name, "qualityPresets"))
-		stp_escp2_load_quality_presets(v, target);
+		stpi_escp2_load_quality_presets(v, target);
 	      else if (!strcmp(name, "resolutions"))
-		stp_escp2_load_resolutions(v, target);
+		stpi_escp2_load_resolutions(v, target);
 	      else if (!strcmp(name, "inkGroup"))
-		stp_escp2_load_inkgroup(v, target);
+		stpi_escp2_load_inkgroup(v, target);
 	    }
 	  else if (tmp->child && tmp->child->type == STP_MXML_TEXT)
 	    {
@@ -370,7 +370,7 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model,
 		    }
 		}
 	      else if (!strcmp(name, "resolutions"))
-		stp_escp2_load_resolutions_from_xml(v, tmp);
+		stpi_escp2_load_resolutions_from_xml(v, tmp);
 	    }
 	  else
 	    {
@@ -389,7 +389,7 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model,
 	      else if (!strcmp(name, "hasInterchangeableInkCartridges"))
 		p->flags |= MODEL_INTERCHANGEABLE_INK_YES;
 	      else if (!strcmp(name, "resolutions"))
-		stp_escp2_load_resolutions_from_xml(v, tmp);
+		stpi_escp2_load_resolutions_from_xml(v, tmp);
 	    }
 	}
       tmp = tmp->next;
@@ -397,11 +397,11 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model,
 }
 
 void
-stp_escp2_load_model(const stp_vars_t *v, int model)
+stpi_escp2_load_model(const stp_vars_t *v, int model)
 {
   char buf[MAXPATHLEN+1];
   snprintf(buf, MAXPATHLEN, "escp2/model/model_%d.xml", model);
-  stp_mxml_node_t *node = 
+  stp_mxml_node_t *node =
     stp_xml_parse_file_from_path_safe(buf, "escp2Model", NULL);
   const char *stmp = stp_mxmlElementGetAttr(node, "id");
   STPI_ASSERT(stmp && stp_xmlstrtol(stmp) == model, v);
@@ -410,7 +410,7 @@ stp_escp2_load_model(const stp_vars_t *v, int model)
 }
 
 stpi_escp2_printer_t *
-stp_escp2_get_printer(const stp_vars_t *v)
+stpi_escp2_get_printer(const stp_vars_t *v)
 {
   int model = stp_get_model_id(v);
   STPI_ASSERT(model >= 0, v);
@@ -436,7 +436,7 @@ stp_escp2_get_printer(const stp_vars_t *v)
       setlocale(LC_ALL, "C");
 #endif
       escp2_model_capabilities[model].active = 1;
-      stp_escp2_load_model(v, model);
+      stpi_escp2_load_model(v, model);
 #ifdef HAVE_LOCALE_H
       setlocale(LC_ALL, locale);
       stp_free(locale);
@@ -446,9 +446,9 @@ stp_escp2_get_printer(const stp_vars_t *v)
 }
 
 model_featureset_t
-stp_escp2_get_cap(const stp_vars_t *v, escp2_model_option_t feature)
+stpi_escp2_get_cap(const stp_vars_t *v, escp2_model_option_t feature)
 {
-  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  stpi_escp2_printer_t *printdef = stpi_escp2_get_printer(v);
   model_featureset_t featureset =
     (((1ul << escp2_printer_attrs[feature].bit_width) - 1ul) <<
      escp2_printer_attrs[feature].bit_shift);
@@ -456,10 +456,10 @@ stp_escp2_get_cap(const stp_vars_t *v, escp2_model_option_t feature)
 }
 
 int
-stp_escp2_has_cap(const stp_vars_t *v, escp2_model_option_t feature,
+stpi_escp2_has_cap(const stp_vars_t *v, escp2_model_option_t feature,
 		  model_featureset_t class)
 {
-  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  stpi_escp2_printer_t *printdef = stpi_escp2_get_printer(v);
   model_featureset_t featureset =
     (((1ul << escp2_printer_attrs[feature].bit_width) - 1ul) <<
      escp2_printer_attrs[feature].bit_shift);

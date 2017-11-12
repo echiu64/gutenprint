@@ -652,7 +652,7 @@ stpi_print_xml_node(stp_mxml_node_t *node)
       stp_erprintf(" Opaque:    '%s'\n", node->value.opaque);
       break;
     case STP_MXML_TEXT:
-      stp_erprintf(" Text:       %d '%s'\n", node->value.text.whitespace, 
+      stp_erprintf(" Text:       %d '%s'\n", node->value.text.whitespace,
 		   node->value.text.string);
       break;
     default:

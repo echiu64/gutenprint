@@ -32,42 +32,24 @@
 static stp_mxml_node_t *
 get_media_size_xml(const stp_vars_t *v)
 {
-  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  stpi_escp2_printer_t *printdef = stpi_escp2_get_printer(v);
   return printdef->media_sizes;
 }
 
 int
-stp_escp2_load_media_sizes(const stp_vars_t *v, const char *name)
+stpi_escp2_load_media_sizes(const stp_vars_t *v, const char *name)
 {
-  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
-  stp_list_t *dirlist = stp_data_path();
-  stp_list_item_t *item;
-  int found = 0;
-  item = stp_list_get_start(dirlist);
-  while (item)
-    {
-      const char *dn = (const char *) stp_list_item_get_data(item);
-      char *ffn = stpi_path_merge(dn, name);
-      stp_mxml_node_t *sizes =
-	stp_mxmlLoadFromFile(NULL, ffn, STP_MXML_NO_CALLBACK);
-      stp_free(ffn);
-      if (sizes)
-	{
-	  stp_mxml_node_t **xnode =
-	    (stp_mxml_node_t **) &(printdef->media_sizes);
-	  *xnode = sizes;
-	  found = 1;
-	  break;
-	}
-      item = stp_list_item_next(item);
-    }
-  stp_list_destroy(dirlist);
-  STPI_ASSERT(found, v);
-  return found;
+  stpi_escp2_printer_t *printdef = stpi_escp2_get_printer(v);
+  stp_mxml_node_t *node =
+    stp_xml_parse_file_from_path_safe(name, "escp2MediaSizes", NULL);
+  stp_mxml_node_t **xnode = (stp_mxml_node_t **) &(printdef->media_sizes);
+  STPI_ASSERT(!(printdef->media_sizes), v);
+  *xnode = node;
+  return 1;
 }
 
 void
-stp_escp2_set_media_size(stp_vars_t *v, const stp_vars_t *src)
+stpi_escp2_set_media_size(stp_vars_t *v, const stp_vars_t *src)
 {
   const char *name = stp_get_string_parameter(src, "PageSize");
   if (name)
@@ -98,14 +80,15 @@ paper_namefunc(const void *item)
 }
 
 int
-stp_escp2_load_media(const stp_vars_t *v, const char *name)
+stpi_escp2_load_media(const stp_vars_t *v, const char *name)
 {
-  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
-  stp_mxml_node_t *node = 
+  stpi_escp2_printer_t *printdef = stpi_escp2_get_printer(v);
+  stp_mxml_node_t *node =
     stp_xml_parse_file_from_path_safe(name, "escp2Papers", NULL);
   stp_mxml_node_t **xnode = (stp_mxml_node_t **) &(printdef->media);
   stp_list_t **xlist = (stp_list_t **) &(printdef->media_cache);
   stp_string_list_t **xpapers = (stp_string_list_t **) &(printdef->papers);
+  STPI_ASSERT(!(printdef->media), v);
   *xnode = node->parent;
   *xlist = stp_list_create();
   stp_list_set_namefunc(*xlist, paper_namefunc);
@@ -126,19 +109,19 @@ stp_escp2_load_media(const stp_vars_t *v, const char *name)
 static stp_mxml_node_t *
 get_media_xml(const stp_vars_t *v)
 {
-  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  stpi_escp2_printer_t *printdef = stpi_escp2_get_printer(v);
   return printdef->media;
 }
 
 static stp_list_t *
 get_media_cache(const stp_vars_t *v)
 {
-  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  stpi_escp2_printer_t *printdef = stpi_escp2_get_printer(v);
   return printdef->media_cache;
 }
 
 int
-stp_escp2_has_media_feature(const stp_vars_t *v, const char *name)
+stpi_escp2_has_media_feature(const stp_vars_t *v, const char *name)
 {
   stp_mxml_node_t *doc = get_media_xml(v);
   if (doc)
@@ -219,10 +202,10 @@ get_media_type_named(const stp_vars_t *v, const char *name,
 {
   paper_t *answer = NULL;
   int i;
-  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  stpi_escp2_printer_t *printdef = stpi_escp2_get_printer(v);
   const stp_string_list_t *p = printdef->papers;
-  const res_t *res = ignore_res ? NULL : stp_escp2_find_resolution(v);
-  const inklist_t *inklist = stp_escp2_inklist(v);
+  const res_t *res = ignore_res ? NULL : stpi_escp2_find_resolution(v);
+  const inklist_t *inklist = stpi_escp2_inklist(v);
   char *media_id = build_media_id(name, inklist, res);
   stp_list_t *cache = get_media_cache(v);
   stp_list_item_t *li = stp_list_get_item_by_name(cache, media_id);
@@ -260,9 +243,9 @@ get_media_type_named(const stp_vars_t *v, const char *name,
 }
 
 const paper_t *
-stp_escp2_get_media_type(const stp_vars_t *v, int ignore_res)
+stpi_escp2_get_media_type(const stp_vars_t *v, int ignore_res)
 {
-  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  stpi_escp2_printer_t *printdef = stpi_escp2_get_printer(v);
   const stp_string_list_t *p = printdef->papers;
   if (p)
     {
@@ -274,9 +257,9 @@ stp_escp2_get_media_type(const stp_vars_t *v, int ignore_res)
 }
 
 const paper_t *
-stp_escp2_get_default_media_type(const stp_vars_t *v)
+stpi_escp2_get_default_media_type(const stp_vars_t *v)
 {
-  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  stpi_escp2_printer_t *printdef = stpi_escp2_get_printer(v);
   const stp_string_list_t *p = printdef->papers;
   if (p)
     {
@@ -296,14 +279,15 @@ slots_namefunc(const void *item)
 }
 
 int
-stp_escp2_load_input_slots(const stp_vars_t *v, const char *name)
+stpi_escp2_load_input_slots(const stp_vars_t *v, const char *name)
 {
-  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  stpi_escp2_printer_t *printdef = stpi_escp2_get_printer(v);
   stp_mxml_node_t *node =
     stp_xml_parse_file_from_path_safe(name, "escp2InputSlots", NULL);
   stp_mxml_node_t **xnode = (stp_mxml_node_t **) &(printdef->slots);
   stp_list_t **xlist = (stp_list_t **) &(printdef->slots_cache);
   stp_string_list_t **xslots = (stp_string_list_t **) &(printdef->input_slots);
+  STPI_ASSERT(!(printdef->slots), v);
   *xnode = node->parent;
   *xlist = stp_list_create();
   stp_list_set_namefunc(*xlist, slots_namefunc);
@@ -324,14 +308,14 @@ stp_escp2_load_input_slots(const stp_vars_t *v, const char *name)
 static stp_mxml_node_t *
 get_slots_xml(const stp_vars_t *v)
 {
-  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  stpi_escp2_printer_t *printdef = stpi_escp2_get_printer(v);
   return printdef->slots;
 }
 
 static stp_list_t *
 get_slots_cache(const stp_vars_t *v)
 {
-  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  stpi_escp2_printer_t *printdef = stpi_escp2_get_printer(v);
   return printdef->slots_cache;
 }
 
@@ -384,7 +368,7 @@ build_input_slot(const stp_vars_t *v, const char *name)
 }
 
 int
-stp_escp2_printer_supports_rollfeed(const stp_vars_t *v)
+stpi_escp2_printer_supports_rollfeed(const stp_vars_t *v)
 {
   stp_mxml_node_t *node = get_slots_xml(v);
   if (stp_mxmlFindElement(node, node, "RollFeed", NULL, NULL, STP_MXML_DESCEND))
@@ -394,7 +378,7 @@ stp_escp2_printer_supports_rollfeed(const stp_vars_t *v)
 }
 
 int
-stp_escp2_printer_supports_print_to_cd(const stp_vars_t *v)
+stpi_escp2_printer_supports_print_to_cd(const stp_vars_t *v)
 {
   stp_mxml_node_t *node = get_slots_xml(v);
   if (stp_mxmlFindElement(node, node, "CD", NULL, NULL, STP_MXML_DESCEND))
@@ -404,7 +388,7 @@ stp_escp2_printer_supports_print_to_cd(const stp_vars_t *v)
 }
 
 int
-stp_escp2_printer_supports_duplex(const stp_vars_t *v)
+stpi_escp2_printer_supports_duplex(const stp_vars_t *v)
 {
   stp_mxml_node_t *node = get_slots_xml(v);
   if (stp_mxmlFindElement(node, node, "Duplex", NULL, NULL, STP_MXML_DESCEND))
@@ -418,7 +402,7 @@ get_input_slot_named(const stp_vars_t *v, const char *name)
 {
   input_slot_t *answer = NULL;
   int i;
-  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  stpi_escp2_printer_t *printdef = stpi_escp2_get_printer(v);
   const stp_string_list_t *p = printdef->input_slots;
   stp_list_t *cache = get_slots_cache(v);
   stp_list_item_t *li = stp_list_get_item_by_name(cache, name);
@@ -450,9 +434,9 @@ get_input_slot_named(const stp_vars_t *v, const char *name)
 }
 
 const input_slot_t *
-stp_escp2_get_input_slot(const stp_vars_t *v)
+stpi_escp2_get_input_slot(const stp_vars_t *v)
 {
-  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  stpi_escp2_printer_t *printdef = stpi_escp2_get_printer(v);
   const stp_string_list_t *p = printdef->input_slots;
   if (p)
     {
