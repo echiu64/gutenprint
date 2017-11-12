@@ -23,6 +23,8 @@
  *
  *          [http://www.gnu.org/licenses/gpl-2.0.html]
  *
+ *   SPDX-License-Identifier: GPL-2.0+
+ *
  */
 
 #include <stdio.h>
@@ -127,6 +129,7 @@ enum {
 	P_DNP_DS620,
 	P_DNP_DS820,
 	P_FUJI_ASK300,
+	P_MAGICARD,
 	P_END,
 };
 
