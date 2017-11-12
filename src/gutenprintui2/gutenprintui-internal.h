@@ -29,7 +29,9 @@
 #define GUTENPRINTUI_INTERNAL_H
 
 #ifdef __GNUC__
+#ifndef inline
 #define inline __inline__
+#endif
 #endif
 
 #include <sys/types.h>

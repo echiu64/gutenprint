@@ -38,7 +38,9 @@ extern "C" {
 #include <limits.h>
 
 #ifdef __GNUC__
+#ifndef inline
 #define inline __inline__
+#endif
 #endif
 
 #define D_FLOYD_HYBRID 0
