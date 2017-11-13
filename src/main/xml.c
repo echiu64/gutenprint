@@ -53,6 +53,8 @@ static stp_list_t *stpi_xml_preloads;
 
 static stp_list_t *stpi_xml_files_loaded;
 
+static stp_string_list_t *cached_xml_files;
+
 static const char *
 xml_registry_namefunc(const void *item)
 {
@@ -149,6 +151,10 @@ stp_xml_preinit(void)
       stpi_xml_files_loaded = stp_list_create();
       stp_list_set_freefunc(stpi_xml_files_loaded, xml_preload_freefunc);
       stp_list_set_namefunc(stpi_xml_files_loaded, xml_preload_namefunc);
+    }
+  if (! cached_xml_files)
+    {
+      cached_xml_files = stp_string_list_create();
     }
 }
 
@@ -307,9 +313,9 @@ stp_xml_parse_file(const char *file) /* File to parse */
   return 0;
 }
 
-stp_mxml_node_t *
-stp_xml_parse_file_from_path(const char *name, const char *topnodename,
-			     const char *path)
+static stp_mxml_node_t *
+xml_parse_file_from_path(const char *name, const char *topnodename, 
+			 const char *path, const char *cache)
 {
   stp_list_t *path_to_search;
   stp_mxml_node_t *answer = NULL;
@@ -328,33 +334,106 @@ stp_xml_parse_file_from_path(const char *name, const char *topnodename,
       stp_free(ffn);
       if (root)
 	{
-	  stp_mxml_node_t *node = stp_mxmlFindElement(root, root,
-						      topnodename, NULL,
-						      NULL, STP_MXML_DESCEND);
-	  if (node)
-	    {
-	      answer = node;
-	      break;
-	    }
+	  answer = stp_mxmlFindElement(root, root, topnodename, NULL,
+				       NULL, STP_MXML_DESCEND);
+	  if (answer)
+	    break;
 	}
       item = stp_list_item_next(item);
     }
   stp_list_destroy(path_to_search);
+  if (answer)
+    {
+      char *addr_string;
+      if (cache)
+	stp_refcache_add_item(cache, name, answer);
+      stp_asprintf(&addr_string, "%p", (void *) answer);
+      /*
+       * A given XML object should never be in multiple caches!
+       */
+      STPI_ASSERT(! stp_string_list_is_present(cached_xml_files, addr_string), NULL);
+      if (cache)
+	stp_string_list_add_string_unsafe(cached_xml_files, addr_string, cache);
+      else
+	stp_string_list_add_string_unsafe(cached_xml_files, addr_string, "");
+      stp_free(addr_string);
+    }
   return answer;
 }
 
 stp_mxml_node_t *
-stp_xml_parse_file_from_path_safe(const char *name, const char *topnodename,
-			     const char *path)
+stp_xml_parse_file_from_path_uncached(const char *name, const char *topnodename,
+				      const char *path)
 {
-  stp_mxml_node_t *answer = stp_xml_parse_file_from_path(name, topnodename,
-							 path);
+  return xml_parse_file_from_path(name, topnodename, path, NULL);
+}
+
+stp_mxml_node_t *
+stp_xml_parse_file_from_path_uncached_safe(const char *name,
+					   const char *topnodename,
+					   const char *path)
+{
+  stp_mxml_node_t *answer = 
+    xml_parse_file_from_path(name, topnodename, path, NULL);
   if (! answer)
     {
       stp_erprintf("Cannot find file %s of type %s\n", name, topnodename);
       stp_abort();
     }
   return answer;
+}
+
+stp_mxml_node_t *
+stp_xml_parse_file_from_path(const char *name, const char *topnodename,
+			     const char *path)
+{
+  char *cache;
+  void *data;
+  stp_asprintf(&cache, "%s_%s_%s", "xml_cache", topnodename,
+	       path ? path : "DEFAULT");
+  data = stp_refcache_find_item(cache, name);
+  if (! data)
+    data = xml_parse_file_from_path(name, topnodename, path, cache);
+  stp_free(cache);
+  return (stp_mxml_node_t *) data;
+}
+
+stp_mxml_node_t *
+stp_xml_parse_file_from_path_safe(const char *name, const char *topnodename,
+				  const char *path)
+{
+  stp_mxml_node_t *answer = stp_xml_parse_file_from_path(name, topnodename, 
+							 path);
+  if (! answer)
+    {
+      stp_erprintf("FATAL: Cannot find file %s of type %s\n", name, topnodename);
+      stp_abort();
+    }
+  return answer;
+}
+
+void
+stp_xml_free_parsed_file(stp_mxml_node_t *node)
+{
+  char *addr_string;
+  /* free(NULL) is legal and a no-op. */
+  if (! node)
+    return;
+  stp_asprintf(&addr_string, "%p", (void *) node);
+  stp_param_string_t *cache_entry = 
+    stp_string_list_find(cached_xml_files, addr_string);
+  if (! cache_entry)
+    {
+      stp_erprintf("FATAL: Trying to free unrecorded node %s\n", addr_string);
+      stp_abort();
+    }
+  if (cache_entry->text && cache_entry->text[0] != '\0')
+    stp_refcache_remove_item(cache_entry->text, addr_string);
+  stp_string_list_remove_string(cached_xml_files, addr_string);
+  stp_free(addr_string);
+  while (node->parent && node->parent != node)
+    node = node->parent;
+  stp_mxmlDelete(node);
 }
 
 /*

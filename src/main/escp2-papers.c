@@ -43,7 +43,6 @@ stpi_escp2_load_media_sizes(const stp_vars_t *v, const char *name)
   stp_mxml_node_t *node =
     stp_xml_parse_file_from_path_safe(name, "escp2MediaSizes", NULL);
   stp_mxml_node_t **xnode = (stp_mxml_node_t **) &(printdef->media_sizes);
-  STPI_ASSERT(!(printdef->media_sizes), v);
   *xnode = node;
   return 1;
 }
@@ -86,22 +85,33 @@ stpi_escp2_load_media(const stp_vars_t *v, const char *name)
   stp_mxml_node_t *node =
     stp_xml_parse_file_from_path_safe(name, "escp2Papers", NULL);
   stp_mxml_node_t **xnode = (stp_mxml_node_t **) &(printdef->media);
-  stp_list_t **xlist = (stp_list_t **) &(printdef->media_cache);
+  stp_list_t **xcache = (stp_list_t **) &(printdef->media_cache);
   stp_string_list_t **xpapers = (stp_string_list_t **) &(printdef->papers);
-  STPI_ASSERT(!(printdef->media), v);
+  static const char *xcache_cache = "escp2Papers_xcache";
+  static const char *xpapers_cache = "escp2Papers_xpapers";
   *xnode = node->parent;
-  *xlist = stp_list_create();
-  stp_list_set_namefunc(*xlist, paper_namefunc);
-  *xpapers = stp_string_list_create();
-  node = node->child;
-  while (node)
+  *xcache = (stp_list_t *) stp_refcache_find_item(xcache_cache, name);
+  if (! *xcache)
     {
-      if (node->type == STP_MXML_ELEMENT &&
-	  strcmp(node->value.element.name, "paper") == 0)
-	stp_string_list_add_string(*xpapers,
-				   stp_mxmlElementGetAttr(node, "name"),
-				   stp_mxmlElementGetAttr(node, "text"));
-      node = node->next;
+      *xcache = stp_list_create();
+      stp_list_set_namefunc(*xcache, paper_namefunc);
+      stp_refcache_add_item(xcache_cache, name, *xcache);
+    }
+  *xpapers = (stp_string_list_t *) stp_refcache_find_item(xpapers_cache, name);
+  if (! *xpapers)
+    {
+      *xpapers = stp_string_list_create();
+      stp_refcache_add_item(xpapers_cache, name, *xpapers);
+      node = node->child;
+      while (node)
+	{
+	  if (node->type == STP_MXML_ELEMENT &&
+	      strcmp(node->value.element.name, "paper") == 0)
+	    stp_string_list_add_string(*xpapers,
+				       stp_mxmlElementGetAttr(node, "name"),
+				       stp_mxmlElementGetAttr(node, "text"));
+	  node = node->next;
+	}
     }
   return 1;
 }
@@ -285,22 +295,35 @@ stpi_escp2_load_input_slots(const stp_vars_t *v, const char *name)
   stp_mxml_node_t *node =
     stp_xml_parse_file_from_path_safe(name, "escp2InputSlots", NULL);
   stp_mxml_node_t **xnode = (stp_mxml_node_t **) &(printdef->slots);
-  stp_list_t **xlist = (stp_list_t **) &(printdef->slots_cache);
+  stp_list_t **xcache = (stp_list_t **) &(printdef->slots_cache);
   stp_string_list_t **xslots = (stp_string_list_t **) &(printdef->input_slots);
-  STPI_ASSERT(!(printdef->slots), v);
+  static const char *xcache_cache = "escp2InputSlots_xcache";
+  static const char *xslots_cache = "escp2InputSlots_slots";
+
   *xnode = node->parent;
-  *xlist = stp_list_create();
-  stp_list_set_namefunc(*xlist, slots_namefunc);
-  *xslots = stp_string_list_create();
-  node = node->child;
-  while (node)
+  *xcache = (stp_list_t *) stp_refcache_find_item(xcache_cache, name);
+  if (! *xcache)
     {
-      if (node->type == STP_MXML_ELEMENT &&
-	  strcmp(node->value.element.name, "slot") == 0)
-	stp_string_list_add_string(*xslots,
-				   stp_mxmlElementGetAttr(node, "name"),
-				   stp_mxmlElementGetAttr(node, "text"));
-      node = node->next;
+      *xcache = stp_list_create();
+      stp_list_set_namefunc(*xcache, slots_namefunc);
+      stp_refcache_add_item(xcache_cache, name, *xcache);
+    }
+
+  *xslots = (stp_string_list_t *) stp_refcache_find_item(xslots_cache, name);
+  if (! *xslots)
+    {
+      *xslots = stp_string_list_create();
+      stp_refcache_add_item(xslots_cache, name, *xslots);
+      node = node->child;
+      while (node)
+	{
+	  if (node->type == STP_MXML_ELEMENT &&
+	      strcmp(node->value.element.name, "slot") == 0)
+	    stp_string_list_add_string(*xslots,
+				       stp_mxmlElementGetAttr(node, "name"),
+				       stp_mxmlElementGetAttr(node, "text"));
+	  node = node->next;
+	}
     }
   return 1;
 }

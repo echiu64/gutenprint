@@ -84,6 +84,9 @@ extern void stp_xml_parse_file_named(const char *name);
 extern stp_mxml_node_t *stp_xml_parse_file_from_path(const char *name,
 						     const char *topnodename,
 						     const char *path);
+extern stp_mxml_node_t *stp_xml_parse_file_from_path_uncached(const char *name,
+							      const char *topnodename,
+							      const char *path);
 /*
  * Abort if we don't find the matching file
  * It is not necessary to check that the return is not NULL
@@ -91,6 +94,11 @@ extern stp_mxml_node_t *stp_xml_parse_file_from_path(const char *name,
 extern stp_mxml_node_t *stp_xml_parse_file_from_path_safe(const char *name,
 							  const char *topnodename,
 							  const char *path);
+extern stp_mxml_node_t *stp_xml_parse_file_from_path_uncached_safe(const char *name,
+								   const char *topnodename,
+								   const char *path);
+
+extern void stp_xml_free_parsed_file(stp_mxml_node_t *node);
 
 extern void stpi_print_xml_node(stp_mxml_node_t *node);
 

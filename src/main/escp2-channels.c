@@ -396,37 +396,46 @@ load_inklist(stp_mxml_node_t *node, stp_mxml_node_t *root, inklist_t *ikl)
     }
 }
 
+/*
+ * This is structured differently from the other XML loaders because of
+ * the default black inkset
+ */
 static inkgroup_t *
 load_inkgroup(const char *name)
 {
-  stp_mxml_node_t *node =
-    stp_xml_parse_file_from_path_safe(name, "escp2InkGroup", NULL);
-  stp_mxml_node_t *child = node->child;
-  inkgroup_t *igl = stp_zalloc(sizeof(inkgroup_t));
-  size_t count = 0;
-  while (child)
+  inkgroup_t *igl = (inkgroup_t *) stp_refcache_find_item("escp2Inkgroup", name);
+  if (! igl)
     {
-      if (child->type == STP_MXML_ELEMENT &&
-	  !strcmp(child->value.element.name, "InkList"))
-	count++;
-      child = child->next;
+      stp_mxml_node_t *node =
+	stp_xml_parse_file_from_path_uncached_safe(name, "escp2InkGroup", NULL);
+      stp_mxml_node_t *child = node->child;
+      igl = stp_zalloc(sizeof(inkgroup_t));
+      stp_refcache_add_item("escpInkgroup", name, igl);
+      size_t count = 0;
+      while (child)
+	{
+	  if (child->type == STP_MXML_ELEMENT &&
+	      !strcmp(child->value.element.name, "InkList"))
+	    count++;
+	  child = child->next;
+	}
+      igl->n_inklists = count;
+      if (stp_mxmlElementGetAttr(node, "name"))
+	igl->name = stp_strdup(stp_mxmlElementGetAttr(node, "name"));
+      else
+	igl->name = stp_strdup(name);
+      igl->inklists = stp_zalloc(sizeof(inklist_t) * count);
+      child = node->child;
+      count = 0;
+      while (child)
+	{
+	  if (child->type == STP_MXML_ELEMENT &&
+	      !strcmp(child->value.element.name, "InkList"))
+	    load_inklist(child, node, &(igl->inklists[count++]));
+	  child = child->next;
+	}
+      stp_xml_free_parsed_file(node);
     }
-  igl->n_inklists = count;
-  if (stp_mxmlElementGetAttr(node, "name"))
-    igl->name = stp_strdup(stp_mxmlElementGetAttr(node, "name"));
-  else
-    igl->name = stp_strdup(name);
-  igl->inklists = stp_zalloc(sizeof(inklist_t) * count);
-  child = node->child;
-  count = 0;
-  while (child)
-    {
-      if (child->type == STP_MXML_ELEMENT &&
-	  !strcmp(child->value.element.name, "InkList"))
-	load_inklist(child, node, &(igl->inklists[count++]));
-      child = child->next;
-    }
-  stp_mxmlDeleteRoot(node);
   return igl;
 }
 
@@ -435,10 +444,8 @@ stpi_escp2_load_inkgroup(const stp_vars_t *v, const char *name)
 {
   stpi_escp2_printer_t *printdef = stpi_escp2_get_printer(v);
   inkgroup_t *igl = load_inkgroup(name);
-  STPI_ASSERT(igl, v);
-  STPI_ASSERT(!(printdef->inkgroup), v);
   printdef->inkgroup = igl;
-  return (igl != NULL);
+  return 1;
 }
 
 const inkname_t *

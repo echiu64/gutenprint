@@ -241,18 +241,6 @@ stp_mxmlDelete(stp_mxml_node_t *node)		/* I - Node to delete */
 }
 
 /*
- * 'stp_mxmlDeleteRoot()' - Delete the entire tree contaning the node
- */
-
-void
-stp_mxmlDeleteRoot(stp_mxml_node_t *node)
-{
-  while (node->parent && node->parent != node)
-    node = node->parent;
-  stp_mxmlDelete(node);
-}
-
-/*
  * 'stp_mxmlParent()' - Return the parent of a node or NULL if none.
  */
 

@@ -486,7 +486,6 @@ stpi_get_papersize_list_named(const char *name, const char *file)
       stp_deprintf(STP_DBG_PAPER, "    Loading %s\n", stmp);
       stp_list_item_create(list_of_papersize_lists, NULL, impl);
       stp_xml_process_papersize_def(node, buf, impl->list);
-      stp_mxmlDeleteRoot(node);
     }
   return impl->list;
 }

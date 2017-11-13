@@ -25,29 +25,30 @@ include $(top_srcdir)/scripts/global.mk
 
 noinst_HEADERS = gutenprint-intl.h gutenprint-intl-internal.h
 
-pkginclude_HEADERS = \
-	gutenprint.h \
-	gutenprint-module.h \
-	array.h \
-	bit-ops.h \
-	channel.h \
-	color.h \
-	curve-cache.h \
-	curve.h \
-	dither.h \
-	image.h \
-	list.h \
-	module.h \
-	mxml.h \
-	paper.h \
-	path.h \
-	printers.h \
-	sequence.h \
-	string-list.h \
-	types.h \
-	util.h \
-	vars.h \
-	weave.h \
+pkginclude_HEADERS =				\
+	gutenprint.h				\
+	gutenprint-module.h			\
+	array.h					\
+	bit-ops.h				\
+	channel.h				\
+	color.h					\
+	curve-cache.h				\
+	curve.h					\
+	dither.h				\
+	image.h					\
+	list.h					\
+	module.h				\
+	mxml.h					\
+	paper.h					\
+	path.h					\
+	printers.h				\
+	refcache.h				\
+	sequence.h				\
+	string-list.h				\
+	types.h					\
+	util.h					\
+	vars.h					\
+	weave.h					\
 	xml.h
 
 nodist_pkginclude_HEADERS = gutenprint-version.h
