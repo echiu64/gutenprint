@@ -9037,7 +9037,6 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
 	      w_dpi, h_dpi
 	      );
 
-  /* FIXME: move this into print_init_drv */
   ink_type = dyesub_describe_output_internal(v, &pv);
   stp_set_string_parameter(v, "STPIOutputType", ink_type);
   stp_channel_reset(v);
@@ -9112,7 +9111,6 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
       stp_free(pd);
       return 2;
     }
-  /* /FIXME */
 
   /* FIXME:  Provide a way of disabling/altering these curves */
   /* XXX reuse 'UseLUT' from mitsu70x?  or 'SimpleGamma' ? */
