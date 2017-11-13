@@ -44,7 +44,6 @@
 
 #define MITSU70X_8BPP
 //#define S6145_YMC
-//#define CANONSELPHYNEO_CMY
 
 #define DYESUB_FEATURE_NONE		 0x00000000
 #define DYESUB_FEATURE_FULL_WIDTH	 0x00000001
@@ -60,9 +59,6 @@
 #define DYESUB_FEATURE_BIGENDIAN         0x00000400
 #define DYESUB_FEATURE_DUPLEX            0x00000800
 #define DYESUB_FEATURE_MONOCHROME        0x00001000
-#ifndef CANONSELPHYNEO_CMY
-#define DYESUB_FEATURE_RGBtoYCBCR        0x00002000
-#endif
 
 #define DYESUB_PORTRAIT  0
 #define DYESUB_LANDSCAPE 1
@@ -1203,11 +1199,7 @@ static void cp910_printer_init_func(stp_vars_t *v)
   stp_putc(pg, v);
 
   dyesub_nputc(v, '\0', 4);
-#ifdef CANONSELPHYNEO_CMY
   stp_putc(0x01, v);
-#else
-  stp_putc(0x00, v);
-#endif
 
   stp_put32_le(pd->w_size, v);
   stp_put32_le(pd->h_size, v);
@@ -6967,32 +6959,18 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Canon CP820, CP910, CP1000, CP1200 */
     1011,
-#ifdef CANONSELPHYNEO_CMY
     &cmy_ink_list,
-#else
-    &rgb_ink_list,
-#endif
     &res_300dpi_list,
     &cp910_page_list,
     &cp910_printsize_list,
     SHRT_MAX,
-#ifdef CANONSELPHYNEO_CMY
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
       | DYESUB_FEATURE_PLANE_INTERLACE,
-#else
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_RGBtoYCBCR,
-#endif
     &cp910_printer_init_func, NULL,
     NULL, NULL,
     NULL, NULL,
-#ifdef CANONSELPHYNEO_CMY
     cpx00_adjust_curves,
-#else
-    NULL,
-#endif
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -8715,45 +8693,18 @@ dyesub_render_pixel(unsigned short *src, char *dest,
   /* copy out_channel (image) to equiv ink_channel (printer) */
   for (i = start; i < end; i++)
     {
-#ifndef CANONSELPHYNEO_CMY
-      if (dyesub_feature(caps, DYESUB_FEATURE_RGBtoYCBCR))
-        {
-	  /* Convert RGB -> YCbCr (JPEG YCbCr444 coefficients) */
-	  double R, G, B;
-	  R = src[0];
-	  G = src[1];
-	  B = src[2];
-
-	  if (i == 0) /* Y */
-	    ink[i] = R * 0.299 + G * 0.587 + B * 0.114;
-	  else if (i == 1) /* Cb */
-	    ink[i] = R * -0.168736 + G * -0.331264 + B * 0.5 + (1 << (16 -1)); // Math is 16bpp here.
-	  else if (i == 2) /* Cr */
-	    ink[i] = R * 0.5 + G * -0.418688 + B * -0.081312 + (1 << (16 -1)); // Math is 16bpp here.
-	    /* FIXME:  Natively support YCbCr "inks" in the
-	       Gutenprint core and allow that as an input
-	       into the dyesub driver. */
-	}
-      else
-#endif
-        {
-	   ink[i] = src[i];
-        }
+      ink[i] = src[i];
 
       /* Downscale 16bpp to output bpp */
       if (pv->bytes_per_ink_channel == 1)
         {
 	  unsigned char *ink_u8 = (unsigned char *) ink;
-#ifndef CANONSELPHYNEO_CMY
 #if 0
-	  /* FIXME:  Do we want to round? */
-          if (dyesub_feature(caps, DYESUB_FEATURE_RGBtoYCBCR))
-            ink_u8[i] = ink[i] >> 8;
-	  else
+	  ink_u8[i] = ink[i] >> 8; // XXX Do we want to just truncate/round instead?
+#else
+	  ink_u8[i] = ink[i] / 257;
 #endif
-#endif
-            ink_u8[i] = ink[i] / 257;
-        }
+	}
       else /* ie 2 bytes per channel */
         {
 	  /* Scale down to output bits */
@@ -8763,7 +8714,7 @@ dyesub_render_pixel(unsigned short *src, char *dest,
 	  /* Byteswap if needed */
 	  if (pv->byteswap)
 	    ink[i] = ((ink[i] >> 8) & 0xff) | ((ink[i] & 0xff) << 8);
-        }
+	}
     }
 
   /* If we use plane or row interlacing, only write the plane's channel */
@@ -9076,30 +9027,29 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   }
 
   pv.image_data = dyesub_read_image(v, &pv, image);
-  if (ink_type) {
-#ifndef CANONSELPHYNEO_CMY
-	  if (dyesub_feature(caps, DYESUB_FEATURE_RGBtoYCBCR)) {
-		  pv.empty_byte[0] = 0xff; /* Y */
-		  pv.empty_byte[1] = 0x80; /* Cb */
-		  pv.empty_byte[2] = 0x80; /* Cr */
-	  } else
-#endif
-	  if (strcmp(ink_type, "RGB") == 0 ||
-	      strcmp(ink_type, "BGR") == 0 ||
-	      strcmp(ink_type, "Whitescale") == 0) {
-		  pv.empty_byte[0] = 0xff;
-		  pv.empty_byte[1] = 0xff;
-		  pv.empty_byte[2] = 0xff;
-	  } else {
-		  pv.empty_byte[0] = 0x0;
-		  pv.empty_byte[1] = 0x0;
-		  pv.empty_byte[2] = 0x0;
-	  }
-  } else {
+  if (ink_type)
+    {
+      if (strcmp(ink_type, "RGB") == 0 ||
+	  strcmp(ink_type, "BGR") == 0 ||
+	  strcmp(ink_type, "Whitescale") == 0)
+        {
+	  pv.empty_byte[0] = 0xff;
+	  pv.empty_byte[1] = 0xff;
+	  pv.empty_byte[2] = 0xff;
+	}
+      else
+        {
 	  pv.empty_byte[0] = 0x0;
 	  pv.empty_byte[1] = 0x0;
 	  pv.empty_byte[2] = 0x0;
-  }
+	}
+    }
+  else
+    {
+      pv.empty_byte[0] = 0x0;
+      pv.empty_byte[1] = 0x0;
+      pv.empty_byte[2] = 0x0;
+    }
 
   pv.plane_interlacing = dyesub_feature(caps, DYESUB_FEATURE_PLANE_INTERLACE);
   pv.row_interlacing = dyesub_feature(caps, DYESUB_FEATURE_ROW_INTERLACE);
