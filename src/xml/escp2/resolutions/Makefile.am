@@ -36,7 +36,7 @@ pkgxmldata_DATA =				\
 	sp720.xml				\
 	wf6xx.xml
 
-xml-stamp: $(pkgxmldata_DATA) $(addsuffix /xml-stamp, $(SUBDIRS)) Makefile.am
+xml-stamp: $(pkgxmldata_DATA) $(STAMPS) Makefile.am
 	-rm -f $@ $@.tmp
 	touch $@.tmp
 	for dir in $(SUBDIRS) ; do \

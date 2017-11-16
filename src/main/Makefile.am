@@ -144,6 +144,7 @@ libgutenprint_la_SOURCES =			\
 	print-version.c				\
 	print-weave.c				\
 	printers.c				\
+	refcache.c				\
 	sequence.c				\
 	string-list.c				\
 	xml.c					\

@@ -475,8 +475,8 @@ extern int stpi_escp2_load_media_sizes(const stp_vars_t *v, const char *name);
 extern void stpi_escp2_set_media_size(stp_vars_t *v, const stp_vars_t *src);
 
 /* From escp2-resolutions.c: */
-extern int stpi_escp2_load_resolutions(const stp_vars_t *v, const char *name);
-extern int stpi_escp2_load_resolutions_from_xml(const stp_vars_t *v, stp_mxml_node_t *node);
+extern int stpi_escp2_load_resolutions(const stp_vars_t *v, const char *name,
+				       stp_mxml_node_t *node);
 extern int stpi_escp2_load_printer_weaves(const stp_vars_t *v, const char *name);
 extern int stpi_escp2_load_quality_presets(const stp_vars_t *v, const char *name);
 

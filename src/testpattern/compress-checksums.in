@@ -15,7 +15,24 @@
 ## along with this program; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
+# Compress 
+
 use strict;
+
+# Compression levels (cumulative):
+#
+# 0 - none
+# 1 - elide duplicate hashes
+# 2 - use global minimum hash length prefix
+# 3 - use pairwise minimum hash length prefix
+# 4 - use substitution table for common option names
+# 5 - common prefix/suffix elimination for chunks
+# 6 - pack multiple consecutive identical chunks
+# 7 - eliminate BW/color prefix
+# 8 - replace space (inter-record gaps) with high bit set on last byte
+# 9 - compact subexpression elimination (5 and 6)
+
+my ($comp_level) = 9;
 
 my (%checksums);
 
@@ -52,24 +69,25 @@ foreach my $psub (@ptable) {
     $psub_code .= "    \$out =~ s/$$psub[0]/$$psub[1]/g;\n";
 }
 
-while (<>) {
-    chomp;
-    my ($sum, @keys) = split;
-    my (@pchunks) = ();
-    foreach my $k (@keys) {
-	my (@chunks) = split(/_/, $k, -1);
-	foreach my $i (0..$#chunks) {
-	    if ($chunks[$i] eq '') {
-		$chunks[$i] = $pchunks[$i];
-	    } elsif ($chunks[$i] =~ /^([0-9]+)\+(.*)/) {
-		$chunks[$i] = substr($pchunks[$i], 0, $1) . $2;
-	    }
-	}
-	my $key = join('_', @chunks), '.prn';
-	if (! defined $checksums{$sum}) {
-	    $checksums{$sum} = [];
-	}
-	push @{$checksums{$sum}}, $key;
+my (%sub_table) = (
+    "PrintingMode" => "P;",
+    "PageSize" => "S;",
+    "DitherAlgorithm" => "D;",
+    "Resolution" => "R;",
+    "ColorCorrection" => "C;",
+    "Color" => "c;",
+    "MediaType" => "M;",
+    "InputSlot" => "I;"
+    );
+
+my ($spc) = unpack("C", " ");
+
+sub compress_chunk($) {
+    my ($chunk) = @_;
+    if (defined $sub_table{$chunk}) {
+	return $sub_table{$chunk};
+    } else {
+	return $chunk;
     }
 }
 
@@ -118,34 +136,47 @@ sub get_mode($) {
     return $mode;
 }
 
-my $min_prefix = find_min_nonunique_prefix(keys %checksums);
+if ($comp_level == 0) {
+    while (<>) {
+	print;
+    }
+    exit;
+}
 
-my ($last_sum) = "";
-
-my (%sub_table);
-$sub_table{"PrintingMode"} = "P;";
-$sub_table{"PageSize"} = "S;";
-$sub_table{"DitherAlgorithm"} = "D;";
-$sub_table{"Resolution"} = "R;";
-$sub_table{"ColorCorrection"} = "C;";
-$sub_table{"Color"} = "c;";
-$sub_table{"MediaType"} = "M;";
-$sub_table{"InputSlot"} = "I;";
-
-my ($spc) = unpack("C", " ");
-
-sub compress_chunk($) {
-    my ($chunk) = @_;
-    if (defined $sub_table{$chunk}) {
-	return $sub_table{$chunk};
-    } else {
-	return $chunk;
+while (<>) {
+    chomp;
+    my ($sum, @keys) = split;
+    my (@pchunks) = ();
+    foreach my $k (@keys) {
+	my (@chunks) = split(/_/, $k, -1);
+	foreach my $i (0..$#chunks) {
+	    if ($chunks[$i] eq '') {
+		$chunks[$i] = $pchunks[$i];
+	    } elsif ($chunks[$i] =~ /^([0-9]+)\+(.*)/) {
+		$chunks[$i] = substr($pchunks[$i], 0, $1) . $2;
+	    }
+	}
+	my $key = join('_', @chunks), '.prn';
+	if (! defined $checksums{$sum}) {
+	    $checksums{$sum} = [];
+	}
+	push @{$checksums{$sum}}, $key;
     }
 }
 
+my $min_prefix;
+
+if ($comp_level > 1) {
+    $min_prefix = find_min_nonunique_prefix(keys %checksums);
+} else {
+    $min_prefix = length((keys %checksums)[0]);
+}
+
+my ($last_sum) = "";
+
 foreach my $sum (sort keys %checksums) {
     my ($out) = substr($sum, 0, $min_prefix);
-    if ($last_sum ne "") {
+    if ($last_sum ne "" && $comp_level > 2) {
 	$out = substr($out, find_min_nonunique_prefix($sum, $last_sum) - 1);
     }
     $last_sum = $sum;
@@ -162,7 +193,9 @@ foreach my $sum (sort keys %checksums) {
     my ($lastdup) = 0;
     foreach my $run (@runs) {
 	my (@chunks) = split(/[_]/, $run);
-	@chunks = map { compress_chunk($_) } @chunks;
+	if ($comp_level > 3) {
+	    @chunks = map { compress_chunk($_) } @chunks;
+	}
 	my ($mchunks) = min(scalar @pchunks, scalar @chunks);
 	my ($i) = 0;
 	$out .= " ";
@@ -171,41 +204,43 @@ foreach my $sum (sort keys %checksums) {
 		$out .= '_';
 	    }
 	    if ($chunks[$i] ne $pchunks[$i]) {
-		my ($plen) = length $pchunks[$i];
-		my ($len) = length $chunks[$i];
-		my ($maxc) = min($len, $plen);
-		my ($dup) = 0;
-		my ($tail) = 0;
-		while ($dup < $maxc) {
-		    last if (substr($pchunks[$i], $dup, 1) ne
-			     substr($chunks[$i], $dup, 1));
-		    $dup++;
-		}
-		while ($tail < $maxc - $dup) {
-		    last if (substr($pchunks[$i], -1 - $tail, 1) ne
-			     substr($chunks[$i], -1 - $tail, 1));
-		    $tail++;
-		}
-		my ($chunk) = $chunks[$i];
-		if ($tail == 2) {
-		    $chunk = substr($chunk, 0, -$tail) . '\\';
-		} elsif ($tail > 2) {
-		    $chunk = substr($chunk, 0, -$tail) . "/$tail";
-		}
-		if ($dup == 2) {
-		    $out .= '*' . substr($chunk, $dup);
-		} elsif ($dup > 2) {
-		    if ($dup == $lastdup) {
-			$out .= "+" . substr($chunk, $dup);
-		    } else {
-			$out .= "$dup+" . substr($chunk, $dup);
+		if ($comp_level > 4) {
+		    my ($plen) = length $pchunks[$i];
+		    my ($len) = length $chunks[$i];
+		    my ($maxc) = min($len, $plen);
+		    my ($dup) = 0;
+		    my ($tail) = 0;
+		    while ($dup < $maxc) {
+			last if (substr($pchunks[$i], $dup, 1) ne
+				 substr($chunks[$i], $dup, 1));
+			$dup++;
 		    }
+		    while ($tail < $maxc - $dup) {
+			last if (substr($pchunks[$i], -1 - $tail, 1) ne
+				 substr($chunks[$i], -1 - $tail, 1));
+			$tail++;
+		    }
+		    my ($chunk) = $chunks[$i];
+		    if ($tail == 2) {
+			$chunk = substr($chunk, 0, -$tail) . '\\';
+		    } elsif ($tail > 2) {
+			$chunk = substr($chunk, 0, -$tail) . "/$tail";
+		    }
+		    if ($dup == 2) {
+			$out .= '*' . substr($chunk, $dup);
+		    } elsif ($dup > 2) {
+			if ($dup == $lastdup) {
+			    $out .= "+" . substr($chunk, $dup);
+			} else {
+			    $out .= "$dup+" . substr($chunk, $dup);
+			}
+		    } else {
+			$out .= "$chunk";
+		    }
+		    $lastdup = $dup;
 		} else {
-		    $out .= "$chunk";
+		    $out .= $chunks[$i];
 		}
-		$lastdup = $dup;
-	    } else {
-		$out .= "";
 	    }
 	    $i++;
 	}
@@ -215,6 +250,9 @@ foreach my $sum (sort keys %checksums) {
 	    }
 	    $out .= join("_", @chunks[$i..$#chunks]);
 	}
+	@pchunks = @chunks;
+    }
+    if ($comp_level > 5) {
 	$out =~ s/________/=/g;
 	$out =~ s/_______/!/g;
 	$out =~ s/______/"/g;
@@ -222,20 +260,25 @@ foreach my $sum (sort keys %checksums) {
 	$out =~ s/____/'/g;
 	$out =~ s/___/%/g;
 	$out =~ s/__/>/g;
-	@pchunks = @chunks;
     }
-    $out =~ s/^([0-9a-f]+ )P;_BW_/$1./;
-    $out =~ s/^([0-9a-f]+ )P;_c;_/$1,/;
-    my (@bytes) = unpack("C*", $out);
-    my (@nbytes) = $bytes[0];
-    foreach my $i (1..$#bytes) {
-	if ($bytes[$i] == $spc) {
-	    $nbytes[$#nbytes] += 128;
-	} else {
-	    push @nbytes, $bytes[$i];
+    if ($comp_level > 6) {
+	$out =~ s/^([0-9a-f]+ )P;_BW_/$1./;
+	$out =~ s/^([0-9a-f]+ )P;_c;_/$1,/;
+    }
+    if ($comp_level > 7) {
+	my (@bytes) = unpack("C*", $out);
+	my (@nbytes) = $bytes[0];
+	foreach my $i (1..$#bytes) {
+	    if ($bytes[$i] == $spc) {
+		$nbytes[$#nbytes] += 128;
+	    } else {
+		push @nbytes, $bytes[$i];
+	    }
 	}
+	$out = pack("C*", @nbytes);
     }
-    $out = pack("C*", @nbytes);
-    eval $psub_code;
+    if ($comp_level > 8) {
+	eval $psub_code;
+    }
     print "$out\n";
 }

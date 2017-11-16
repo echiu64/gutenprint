@@ -51,6 +51,7 @@ extern "C" {
 #include <gutenprint/image.h>
 #include <gutenprint/paper.h>
 #include <gutenprint/printers.h>
+#include <gutenprint/refcache.h>
 #include <gutenprint/sequence.h>
 #include <gutenprint/string-list.h>
 #include <gutenprint/util.h>

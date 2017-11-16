@@ -23,6 +23,9 @@ include $(top_srcdir)/scripts/global.mk
 SUBDIRS =					\
 	base
 
+STAMPS=						\
+	base/xml-stamp
+
 ## Variables
 
 pkgxmldatadir = $(pkgdatadir)/@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@/xml/escp2/model
@@ -159,7 +162,7 @@ pkgxmldata_DATA =				\
 	model_130.xml				\
 	model_131.xml
 
-xml-stamp: $(pkgxmldata_DATA) $(addsuffix /xml-stamp, $(SUBDIRS)) Makefile.am
+xml-stamp: $(pkgxmldata_DATA) $(STAMPS) Makefile.am
 	-rm -f $@ $@.tmp
 	touch $@.tmp
 	for dir in $(SUBDIRS) ; do \
