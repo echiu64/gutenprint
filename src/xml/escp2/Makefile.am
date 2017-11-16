@@ -30,7 +30,18 @@ SUBDIRS =					\
 	resolutions				\
 	weaves
 
-xml-stamp: $(pkgxmldata_DATA) $(addsuffix /xml-stamp, $(SUBDIRS)) Makefile.am
+STAMPS =					\
+	inks/xml-stamp				\
+	inputslots/xml-stamp			\
+	model/xml-stamp				\
+	media/xml-stamp				\
+	mediasizes/xml-stamp			\
+	qualitypresets/xml-stamp		\
+	resolutions/xml-stamp			\
+	weaves/xml-stamp
+
+
+xml-stamp: $(pkgxmldata_DATA) $(STAMPS) Makefile.am
 	-rm -f $@ $@.tmp
 	touch $@.tmp
 	for dir in $(SUBDIRS) ; do \

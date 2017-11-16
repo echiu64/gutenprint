@@ -20,7 +20,18 @@
 
 include $(top_srcdir)/scripts/global.mk
 
-SUBDIRS = dither escp2 papers printers
+SUBDIRS = 					\
+	dither					\
+	escp2					\
+	papers					\
+	printers
+
+STAMPS = 					\
+	dither/xml-stamp			\
+	escp2/xml-stamp				\
+	papers/xml-stamp			\
+	printers/xml-stamp
+
 
 ## Variables
 
@@ -33,7 +44,7 @@ noinst_PROGRAMS = extract-strings
 extract_strings_SOURCES = extract-strings.c
 extract_strings_LDADD = $(GUTENPRINT_LIBS)
 
-xml-stamp: $(pkgxmldata_DATA) $(addsuffix /xml-stamp, $(SUBDIRS)) Makefile.am
+xml-stamp: $(pkgxmldata_DATA) $(STAMPS) Makefile.am
 	-rm -f $@ $@.tmp
 	touch $@.tmp
 	for dir in $(SUBDIRS) ; do \
