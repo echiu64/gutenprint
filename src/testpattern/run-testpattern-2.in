@@ -216,7 +216,8 @@ Usage: run-testpattern-2 [opts] [model ...]
                     Default:
                         $options
     -o+             Any options specified with -o will be tested in addition
-                    to those specified.
+                    to those specified (-o -option removes the specified
+		    from the list of options to be tested).
     -p page count   Specify number of pages to print per printer.  Default $std_pages.
     -P page count   Specify number of pages to print per printer when testing
                     duplex mode.  Default $duplex_pages.
@@ -262,7 +263,7 @@ if (@special_options) {
 	%options = ();
     }
     foreach my $opt (@special_options) {
-	next if $_ eq '+';
+	next if $opt eq '+';
 	if ($opt =~ /^-/) {
 	    $opt = substr($opt, 1);
 	    delete $options{$opt};
