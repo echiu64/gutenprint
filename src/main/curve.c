@@ -1521,7 +1521,7 @@ stp_curve_create_from_xmltree(stp_mxml_node_t *curve)  /* The curve node */
   ret = stp_curve_create(wrap_mode);
   stp_curve_set_interpolation_type(ret, curve_type);
 
-  child = stp_mxmlFindElement(curve, curve, "sequence", NULL, NULL, STP_MXML_DESCEND);
+  child = stp_xml_get_node(curve, "sequence", NULL);
   if (child)
     seq = stp_sequence_create_from_xmltree(child);
 
