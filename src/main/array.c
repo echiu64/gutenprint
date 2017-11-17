@@ -203,7 +203,7 @@ stp_array_create_from_xmltree(stp_mxml_node_t *array)  /* The array node */
 
   /* Get the sequence data */
 
-  child = stp_mxmlFindElement(array, array, "sequence", NULL, NULL, STP_MXML_DESCEND);
+  child = stp_xml_get_node(array, "sequence", NULL);
   if (child)
     seq = stp_sequence_create_from_xmltree(child);
 

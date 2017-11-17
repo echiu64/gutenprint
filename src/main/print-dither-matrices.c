@@ -581,7 +581,7 @@ stpi_dither_array_create_from_xmltree(stp_mxml_node_t *dm, int x, int y) /* Dith
     }
 
   /* Now read in the array */
-  child = stp_mxmlFindElement(dm, dm, "array", NULL, NULL, STP_MXML_DESCEND);
+  child = stp_xml_get_node(dm, "array", NULL);
   if (child)
     return stp_array_create_from_xmltree(child);
   else

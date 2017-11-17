@@ -406,8 +406,10 @@ void
 stpi_escp2_load_model(const stp_vars_t *v, int model)
 {
   char buf[MAXPATHLEN+1];
+  stp_xml_init();
   snprintf(buf, MAXPATHLEN, "escp2/model/model_%d.xml", model);
   int model_id_from_file = load_model_from_file(v, buf, 0);
+  stp_xml_exit();
   STPI_ASSERT(model_id_from_file == model, v);
 }
 
@@ -433,16 +435,10 @@ stpi_escp2_get_printer(const stp_vars_t *v)
     }
   if (!(escp2_model_capabilities[model].active))
     {
-#ifdef HAVE_LOCALE_H
-      char *locale = stp_strdup(setlocale(LC_ALL, NULL));
-      setlocale(LC_ALL, "C");
-#endif
+      stp_xml_init();
       escp2_model_capabilities[model].active = 1;
       stpi_escp2_load_model(v, model);
-#ifdef HAVE_LOCALE_H
-      setlocale(LC_ALL, locale);
-      stp_free(locale);
-#endif
+      stp_xml_exit();
     }
   return &(escp2_model_capabilities[model]);
 }

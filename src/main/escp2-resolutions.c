@@ -82,7 +82,9 @@ stpi_escp2_load_printer_weaves(const stp_vars_t *v, const char *name)
 	stp_xml_parse_file_from_path_uncached_safe(name, "escp2PrinterWeaves", NULL);
       stp_dprintf(STP_DBG_ESCP2_XML, v,
 		  ">>>Loading printer weave data from %s (%p)...", name, (void *) node);
+      stp_xml_init();
       pw = stpi_escp2_load_printer_weaves_from_xml(node);
+      stp_xml_exit();
       stp_refcache_add_item(weave_cache, name, pw);
       stp_xml_free_parsed_file(node);
     }
@@ -199,8 +201,10 @@ stpi_escp2_load_resolutions(const stp_vars_t *v, const char *name,
 	  if (node->type == STP_MXML_ELEMENT &&
 	      !strcmp(node->value.element.name, "resolutions"))
 	    {
+	      stp_xml_init();
 	      pr = stpi_escp2_load_resolutions_from_xml(node);
 	      stp_refcache_add_item(res_cache, name, pr);
+	      stp_xml_exit();
 	      found = 1;
 	      break;
 	    }
@@ -296,9 +300,11 @@ stpi_escp2_load_quality_presets(const stp_vars_t *v, const char *name)
     {
       stp_mxml_node_t *node =
 	stp_xml_parse_file_from_path_uncached_safe(name, "escp2QualityPresets", NULL);
+      stp_xml_init();
       qpw = stpi_escp2_load_quality_presets_from_xml(node);
       stp_refcache_add_item(quality_cache, name, qpw);
       stp_xml_free_parsed_file(node);
+      stp_xml_exit();
     }
   printdef->quality_list = qpw;
   stp_dprintf(STP_DBG_ESCP2_XML, v, "(%p) done!", (void *) qpw);

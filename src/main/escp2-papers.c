@@ -231,15 +231,9 @@ get_media_type_named(const stp_vars_t *v, const char *name,
 	{
 	  if (!strcmp(name, stp_string_list_param(p, i)->name))
 	    {
-#ifdef HAVE_LOCALE_H
-	      char *locale = stp_strdup(setlocale(LC_ALL, NULL));
-	      setlocale(LC_ALL, "C");
-#endif
+	      stp_xml_init();
 	      answer = build_media_type(v, name, inklist, res);
-#ifdef HAVE_LOCALE_H
-	      setlocale(LC_ALL, locale);
-	      stp_free(locale);
-#endif
+	      stp_xml_exit();
 	      break;
 	    }
 	}
@@ -356,35 +350,35 @@ build_input_slot(const stp_vars_t *v, const char *name)
   answer = stp_zalloc(sizeof(input_slot_t));
   answer->name = stp_mxmlElementGetAttr(node, "name");
   answer->text = gettext(stp_mxmlElementGetAttr(node, "text"));
-  n1 = stp_mxmlFindElement(node, node, "CD", NULL, NULL, STP_MXML_DESCEND);
+  n1 = stp_xml_get_node(node, "CD", NULL);
   if (n1)
     answer->is_cd = 1;
-  n1 = stp_mxmlFindElement(node, node, "RollFeed", NULL, NULL, STP_MXML_DESCEND);
+  n1 = stp_xml_get_node(node, "RollFeed", NULL);
   if (n1)
     {
       answer->is_roll_feed = 1;
-      if (stp_mxmlFindElement(n1, n1, "CutAll", NULL, NULL, STP_MXML_DESCEND))
+      if (stp_xml_get_node(n1, "CutAll", NULL))
 	answer->roll_feed_cut_flags |= ROLL_FEED_CUT_ALL;
-      if (stp_mxmlFindElement(n1, n1, "CutLast", NULL, NULL, STP_MXML_DESCEND))
+      if (stp_xml_get_node(n1, "CutLast", NULL))
 	answer->roll_feed_cut_flags |= ROLL_FEED_CUT_LAST;
-      if (stp_mxmlFindElement(n1, n1, "DontEject", NULL, NULL, STP_MXML_DESCEND))
+      if (stp_xml_get_node(n1, "DontEject", NULL))
 	answer->roll_feed_cut_flags |= ROLL_FEED_DONT_EJECT;
     }
-  n1 = stp_mxmlFindElement(node, node, "Duplex", NULL, NULL, STP_MXML_DESCEND);
+  n1 = stp_xml_get_node(node, "Duplex", NULL);
   if (n1)
     {
-      if (stp_mxmlFindElement(n1, n1, "Tumble", NULL, NULL, STP_MXML_DESCEND))
+      if (stp_xml_get_node(n1, "Tumble", NULL))
 	answer->duplex |= DUPLEX_TUMBLE;
-      if (stp_mxmlFindElement(n1, n1, "NoTumble", NULL, NULL, STP_MXML_DESCEND))
+      if (stp_xml_get_node(n1, "NoTumble", NULL))
 	answer->duplex |= DUPLEX_NO_TUMBLE;
     }
-  n1 = stp_mxmlFindElement(node, node, "InitSequence", NULL, NULL, STP_MXML_DESCEND);
+  n1 = stp_xml_get_node(node, "InitSequence", NULL);
   if (n1 && n1->child && n1->child->type == STP_MXML_TEXT)
     answer->init_sequence = stp_xmlstrtoraw(n1->child->value.text.string);
-  n1 = stp_mxmlFindElement(node, node, "DeinitSequence", NULL, NULL, STP_MXML_DESCEND);
+  n1 = stp_xml_get_node(node, "DeinitSequence", NULL);
   if (n1 && n1->child && n1->child->type == STP_MXML_TEXT)
     answer->deinit_sequence = stp_xmlstrtoraw(n1->child->value.text.string);
-  n1 = stp_mxmlFindElement(node, node, "ExtraHeight", NULL, NULL, STP_MXML_DESCEND);
+  n1 = stp_xml_get_node(node, "ExtraHeight", NULL);
   if (n1 && n1->child && n1->child->type == STP_MXML_TEXT)
     answer->extra_height = stp_xmlstrtoul(n1->child->value.text.string);
   return answer;
@@ -394,7 +388,7 @@ int
 stpi_escp2_printer_supports_rollfeed(const stp_vars_t *v)
 {
   stp_mxml_node_t *node = get_slots_xml(v);
-  if (stp_mxmlFindElement(node, node, "RollFeed", NULL, NULL, STP_MXML_DESCEND))
+  if (stp_xml_get_node(node, "RollFeed", NULL))
     return 1;
   else
     return 0;
@@ -404,7 +398,7 @@ int
 stpi_escp2_printer_supports_print_to_cd(const stp_vars_t *v)
 {
   stp_mxml_node_t *node = get_slots_xml(v);
-  if (stp_mxmlFindElement(node, node, "CD", NULL, NULL, STP_MXML_DESCEND))
+  if (stp_xml_get_node(node, "CD", NULL))
     return 1;
   else
     return 0;
@@ -414,7 +408,7 @@ int
 stpi_escp2_printer_supports_duplex(const stp_vars_t *v)
 {
   stp_mxml_node_t *node = get_slots_xml(v);
-  if (stp_mxmlFindElement(node, node, "Duplex", NULL, NULL, STP_MXML_DESCEND))
+  if (stp_xml_get_node(node, "Duplex", NULL))
     return 1;
   else
     return 0;
@@ -438,15 +432,9 @@ get_input_slot_named(const stp_vars_t *v, const char *name)
 	{
 	  if (!strcmp(name, stp_string_list_param(p, i)->name))
 	    {
-#ifdef HAVE_LOCALE_H
-	      char *locale = stp_strdup(setlocale(LC_ALL, NULL));
-	      setlocale(LC_ALL, "C");
-#endif
+	      stp_xml_init();
 	      answer = build_input_slot(v, name);
-#ifdef HAVE_LOCALE_H
-	      setlocale(LC_ALL, locale);
-	      stp_free(locale);
-#endif
+	      stp_xml_exit();
 	      break;
 	    }
 	}
