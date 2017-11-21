@@ -60,10 +60,19 @@ my (@ptable) =
      ["3+", pack("C", 2)],
      ["2\+", pack("C", 1)]);
 
-my $psub_code = '';
+my $psub_code = <<\EOF;
+sub psub($) {
+    my ($inline) = @_;
+EOF
 foreach my $psub (reverse @ptable) {
     $psub_code .= "    \$inline =~ s/$$psub[1]/$$psub[0]/g;\n";
 }
+$psub_code .= <<\EOF;
+    return $inline;
+}
+EOF
+
+eval $psub_code;
 
 if ($#ARGV <= 0) {
     print_file($ARGV[0]);
@@ -160,7 +169,7 @@ sub initialize_file($) {
 
 sub break_subgroup($$$) {
     my ($pref, $group, $shared) = @_;
-    if ($group =~ /^([^_]*)_(.*)/) {
+    if ($group =~ /^([^_]*)_(.*)/o) {
 	my ($option) = $1;
 	my ($values) = $2;
 	my (@values) = split(/&/, $values);
@@ -173,11 +182,11 @@ sub break_group($$) {
     my (@subgroups);
     my ($rest);
     if ($group =~ /\?/) {
-	$group =~ /(^.*\?[^?_]*_[^?_]*)(_.*)/;
+	$group =~ /(^.*\?[^?_]*_[^?_]*)(_.*)/o;
 	$rest = $2;
 	my ($stuff) = $1;
 	@subgroups = split(/\?/, $stuff);
-    } elsif ($group =~ /^([^_]*_[^_]*)(_.*$)/) {
+    } elsif ($group =~ /^([^_]*_[^_]*)(_.*$)/o) {
 	@subgroups = ($1);
 	$rest = $2;
     }
@@ -201,19 +210,18 @@ sub fetch_next_line($) {
     }
     delete $$ctx{"literal"};
     # Level 10
-    eval $psub_code;
+    $inline = psub($inline);
     # Level 9
     # Whitespace optimization -- set high bit.
     if (! ($inline =~ / /)) {
 	my (@bytes) = unpack("C*", $inline);
 	my (@nbytes) = ();
-	foreach my $i (0..$#bytes) {
-	    if ($bytes[$i] >= 128) {
-		$bytes[$i] -= 128;
-		push @nbytes, $bytes[$i];
+	foreach my $byte (@bytes) {
+	    if ($byte >= 128) {
+		push @nbytes, $byte - 128;
 		push @nbytes, $spc;
 	    } else {
-		push @nbytes, $bytes[$i];
+		push @nbytes, $byte;
 	    }
 	}
 	$inline = pack("C*", @nbytes);
@@ -221,20 +229,19 @@ sub fetch_next_line($) {
     # All lines start with hash followed by printing mode, so if compression
     # removed that, we need to restore it.
     # Level 8
-    $inline =~ s/^([0-9a-f]+ )\./$1P;_BW_/;
-    $inline =~ s/^([0-9a-f]+ )\,/$1P;_c;_/;
+    $inline =~ s/^([0-9a-f]+ )\./$1P;_BW_/o;
+    $inline =~ s/^([0-9a-f]+ )\,/$1P;_c;_/o;
     # Level 7
     $inline =~ s/([=!",'%>])/$$ctx{"us_table"}{$1}/go;
     # Level 3
     my ($tmpline) = "";
-    while ($inline =~ /(([^()]*) )?([^() _]*_[^() _]*_)\(([^()_]+_)([^()_]+)(_[^()]*)((\))(.*)|$)/) {
+    while ($inline =~ /(([^()]*) )?([^() _]*_[^() _]*_)\(([^()_]+_)([^()_]+)(_[^()]*)((\))(.*)|$)/o) {
 	my ($head) = $2;
 	my ($pref) = $3;
 	my ($stuff) = "$4$5$6";
 	my ($tail) = $9;
 	$tmpline .= "$head " . break_group($pref, $stuff);
 	$inline = $tail;
-	my ($noise) = join(" | ", ($1, $2, $3, $4, $5, $6, $7, $8, $9));
     }
     $inline = "$tmpline$inline";
     #  Level 5
@@ -294,35 +301,14 @@ sub get_next_datum($) {
     }
     my ($val) = join('_', @chunks);
     $val =~ s/(^[^:]*)_:(.*)/$2_$1/o;
-    # Level 5: finally convert the = back to _.
     # Level 5 (global)
-    # We initially convert _ to = to keep the chunks in sync.  We will
-    # undo this at the very end.
     if ($$ctx{"undo_packed_components"}) {
-	$val =~ s/\{600d([^?&_]*)\}/600x600dpi_draft$1/go;
-	$val =~ s/\{600h([^?&_]*)\}/600x600dpi_high$1/go;
-	$val =~ s/\{600m([^?&_]*)\}/600x600dpi_mono$1/go;
-	$val =~ s/\{600p([^?&_]*)\}/600x600dpi_photo$1/go;
-	$val =~ s/\{600s([^?&_]*)\}/600x600dpi_std$1/go;
-	$val =~ s/\{600t([^?&_]*)\}/600x600dpi_tshirt$1/go;
-	$val =~ s/\{720d([^?&_]*)\}/720x720dpi_draft$1/go;
-	$val =~ s/\{720h([^?&_]*)\}/720x720dpi_high$1/go;
-	$val =~ s/\{720m([^?&_]*)\}/720x720dpi_mono$1/go;
-	$val =~ s/\{720p([^?&_]*)\}/720x720dpi_photo$1/go;
-	$val =~ s/\{720s([^?&_]*)\}/720x720dpi_std$1/go;
-	$val =~ s/\{720t([^?&_]*)\}/720x720dpi_tshirt$1/go;
-	$val =~ s/\{300d([^?&_]*)\}/300x300dpi_draft$1/go;
-	$val =~ s/\{300h([^?&_]*)\}/300x300dpi_high$1/go;
-	$val =~ s/\{300m([^?&_]*)\}/300x300dpi_mono$1/go;
-	$val =~ s/\{300p([^?&_]*)\}/300x300dpi_photo$1/go;
-	$val =~ s/\{300s([^?&_]*)\}/300x300dpi_std$1/go;
-	$val =~ s/\{300t([^?&_]*)\}/300x300dpi_tshirt$1/go;
-	$val =~ s/\{360d([^?&_]*)\}/360x360dpi_draft$1/go;
-	$val =~ s/\{360h([^?&_]*)\}/360x360dpi_high$1/go;
-	$val =~ s/\{360m([^?&_]*)\}/360x360dpi_mono$1/go;
-	$val =~ s/\{360p([^?&_]*)\}/360x360dpi_photo$1/go;
-	$val =~ s/\{360s([^?&_]*)\}/360x360dpi_std$1/go;
-	$val =~ s/\{360t([^?&_]*)\}/360x360dpi_tshirt$1/go;
+	$val =~ s/\{([0-9]*)d([^|]*)\}/$1x$1dpi_draft$2/go;
+	$val =~ s/\{([0-9]*)h([^|]*)\}/$1x$1dpi_high$2/go;
+	$val =~ s/\{([0-9]*)m([^|]*)\}/$1x$1dpi_mono$2/go;
+	$val =~ s/\{([0-9]*)p([^|]*)\}/$1x$1dpi_photo$2/go;
+	$val =~ s/\{([0-9]*)s([^|]*)\}/$1x$1dpi_std$2/go;
+	$val =~ s/\{([0-9]*)t([^|]*)\}/$1x$1dpi_tshirt$2/go;
     }
     $val =~ s/Z\;/DitherAlgorithm/go;
     $$ctx{"pchunks"} = \@chunks;
