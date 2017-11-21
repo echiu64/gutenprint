@@ -104,17 +104,17 @@
 
 # Method	Size	Packed	Time	Ratio	Packed	  bzip2	Bits/case
 # 0	    75512435   1970522	0.08	  1.0	  38.3	6998640 42.69
-# 1	    11066295   1316628	3.60	  6.8	  57.3	1620995 28.52
-# 2	     8924474	228519	4.11	  8.4	 330.4	 453281  4.95
-# 3	     6632965	216037	4.51	 11.3	 349.5	 383805  4.68
-# 4	     6581895	205435	4.86	 11.4	 367.5	 354349  4.45
-# 5	     5306533	195594	6.14	 14.2	 386.0	 316775	 4.24
-# 6	     4788102	182921	6.58	 15.7	 412.8	 290248  3.96
-# 7b	     3266449	180295	7.19	 23.1	 417.3	 221237  3.91
-# 7a	     2401276	126804	7.32	 31.4	 548.7	 200778  2.75
-# 7	     2312771	126487	7.37	 32.6	 595.5	 200371  2.74
-# 8	     2110942	122762	7.62	 35.7	 615.1	 197529  2.66
-# 9	     1891341	121970 10.11	 39.9	 619.1	 187040  2.64
+# 1	    11066295   1316628	2.82	  6.8	  57.3	1620995 28.52
+# 2	     8924474	228519	2.94	  8.4	 330.4	 453281  4.95
+# 3	     5925516	216037	3.16	 11.3	 349.5	 383805  4.68
+# 4	     5874446	205435	3.22	 11.4	 367.5	 354349  4.45
+# 5	     5306533	195594	3.61	 14.2	 386.0	 316775	 4.24
+# 6	     4788102	182921	3.88	 15.7	 412.8	 290248  3.96
+# 7b	     3266449	180295	    	 23.1	 417.3	 221237  3.91
+# 7a	     2401276	126804	    	 31.4	 548.7	 200778  2.75
+# 7	     2312771	126487	4.67	 32.6	 595.5	 200371  2.74
+# 8	     2110942	122762	5.12	 35.7	 615.1	 197529  2.66
+# 9	     1891341	121970  5.30	 39.9	 619.1	 187040  2.64
 
 # Currently reserved special characters:
 #
@@ -126,9 +126,10 @@
 # High bit set is reserved for level 8.
 # Non-printable ASCII (0-31) is reserved for level 9.
 # (- _) are used as parts of tokens and token separators.
+# | is reserved for use as a temporary.
 
 # Non-alphanumeric characters currently unreserved are:
-# ` ~ @ # $ ^ [ ] | <
+# ` ~ @ # $ ^ [ ] <
 
 use strict;
 use Getopt::Long;
@@ -166,10 +167,19 @@ my (@ptable) =
      ["3\\+", pack("C", 2)],
      ["2\\+", pack("C", 1)]);
 
-my $psub_code = '';
+my $psub_code = <<\EOF;
+sub psub($) {
+    my ($out) = @_;
+EOF
 foreach my $psub (@ptable) {
-    $psub_code .= "    \$out =~ s/$$psub[0]/$$psub[1]/g;\n";
+    $psub_code .= "    \$out =~ s/$$psub[0]/$$psub[1]/go;\n";
 }
+$psub_code .= <<\EOF;
+    return $out
+}
+EOF
+
+eval $psub_code;
 
 my (%sub_table) = (
     "PrintingMode" => "P;",
@@ -183,15 +193,6 @@ my (%sub_table) = (
     );
 
 my ($spc) = unpack("C", " ");
-
-sub compress_chunk($) {
-    my ($chunk) = @_;
-    if (defined $sub_table{$chunk}) {
-	return $sub_table{$chunk};
-    } else {
-	return $chunk;
-    }
-}
 
 sub precompress($) {
     my ($run) = @_;
@@ -210,51 +211,24 @@ sub precompress($) {
     # hack, but 1891341 with it -- about 2.5% savings.  The zpaq archive
     # is 123645 bytes without and 121970 with, or 1.3%.
     $run =~ s/DitherAlgorithm/Z;/go;
-    $run =~ s/600x600dpi_draft([^?&_]*)/{600d$1}/go;
-    $run =~ s/600x600dpi_high([^?&_]*)/{600h$1}/go;
-    $run =~ s/600x600dpi_mono([^?&_]*)/{600m$1}/go;
-    $run =~ s/600x600dpi_photo([^?&_]*)/{600p$1}/go;
-    $run =~ s/600x600dpi_std([^?&_]*)/{600s$1}/go;
-    $run =~ s/600x600dpi_tshirt([^?&_]*)/{600t$1}/go;
-    $run =~ s/720x720dpi_draft([^?&_]*)/{720d$1}/go;
-    $run =~ s/720x720dpi_high([^?&_]*)/{720h$1}/go;
-    $run =~ s/720x720dpi_mono([^?&_]*)/{720m$1}/go;
-    $run =~ s/720x720dpi_photo([^?&_]*)/{720p$1}/go;
-    $run =~ s/720x720dpi_std([^?&_]*)/{720s$1}/go;
-    $run =~ s/720x720dpi_tshirt([^?&_]*)/{720t$1}/go;
-    $run =~ s/300x300dpi_draft([^?&_]*)/{300d$1}/go;
-    $run =~ s/300x300dpi_high([^?&_]*)/{300h$1}/go;
-    $run =~ s/300x300dpi_mono([^?&_]*)/{300m$1}/go;
-    $run =~ s/300x300dpi_photo([^?&_]*)/{300p$1}/go;
-    $run =~ s/300x300dpi_std([^?&_]*)/{300s$1}/go;
-    $run =~ s/300x300dpi_tshirt([^?&_]*)/{300t$1}/go;
-    $run =~ s/360x360dpi_draft([^?&_]*)/{360d$1}/go;
-    $run =~ s/360x360dpi_high([^?&_]*)/{360h$1}/go;
-    $run =~ s/360x360dpi_mono([^?&_]*)/{360m$1}/go;
-    $run =~ s/360x360dpi_photo([^?&_]*)/{360p$1}/go;
-    $run =~ s/360x360dpi_std([^?&_]*)/{360s$1}/go;
-    $run =~ s/360x360dpi_tshirt([^?&_]*)/{360t$1}/go;
+    $run =~s/600x600dpi_(draft|high|mono|photo|std|tshirt)([^?&_]*)/{600|$1|$2}/go;
+    $run =~s/720x720dpi_(draft|high|mono|photo|std|tshirt)([^?&_]*)/{720|$1|$2}/go;
+    $run =~s/300x300dpi_(draft|high|mono|photo|std|tshirt)([^?&_]*)/{300|$1|$2}/go;
+    $run =~s/360x360dpi_(draft|high|mono|photo|std|tshirt)([^?&_]*)/{360|$1|$2}/go;
+    $run =~s/\{([0-9]*)\|([^|])[^|]*\|([^?&_]*)\}/{$1$2$3}/go;
     return $run;
 }
 
 sub find_min_nonunique_prefix(@) {
     my (@sums) = sort @_;
-    my ($last) = "";
+    my ($last) = shift @sums;
+    my ($maxlen) = length $last;
     my ($max_prefix) = 1;
-    my ($lc) = 0;
 
     foreach my $sum (@sums) {
-	$lc++;
-	if ($last eq "") {
-	    $last = $sum;
-	    next;
-	}
-	foreach my $l ($max_prefix..length $sum) {
-	    if (substr($sum, 0, $l) eq substr($last, 0, $l)) {
-		$max_prefix++;
-	    } else {
-		next;
-	    }
+	foreach my $l ($max_prefix..$maxlen) {
+	    last if (substr($sum, 0, $l) ne substr($last, 0, $l));
+	    $max_prefix++;
 	}
 	$last = $sum;
     }
@@ -290,7 +264,7 @@ sub scan_next_block($$$$$$$) {
 	return "";
     }
     my ($run0) = $$runs[$start];
-    $run0 =~ /^([^:]+):(.*)$/;
+    $run0 =~ /^([^:]+):(.*)$/o;
     my ($data) = $1;
     my ($printer) = $2;
     # Printer does not match the first printer on the list.
@@ -315,7 +289,7 @@ sub scan_next_block($$$$$$$) {
     my $i;
     for ($i = 1; $i < $blocksize; $i++) {
 	my ($run) = $$runs[$start + $i];
-	$run =~ /^([^:]+):(.*)$/;
+	$run =~ /^([^:]+):(.*)$/o;
 	$data = $1;
 	$printer = $2;
 	# Different printer that what we expect!
@@ -363,7 +337,7 @@ sub scan_for_block($$) {
     # the same.  The printer should be the same as the first printer we
     # find.
     my ($run0) = $$runs[$start];
-    $run0 =~ /^([^:]+):(.*)$/;
+    $run0 =~ /^([^:]+):(.*)$/o;
     my ($data) = $1;
     my ($printer) = $2;
     my (@elts) = split(/_/, $data);
@@ -376,7 +350,7 @@ sub scan_for_block($$) {
     $idx++;
     while ($idx < $limit) {
 	my ($run) = $$runs[$idx];
-	$run =~ /^([^:]+):(.*)$/;
+	$run =~ /^([^:]+):(.*)$/o;
 	$data = $1;
 	$printer = $2;
 	@elts = split(/_/, $data);
@@ -442,8 +416,8 @@ sub scan_for_block($$) {
 	    my ($val) = $item->[1];
 	    if ($last_option ne $opt) {
 		if ($last_option ne "") {
-		    if ($comp_level >= 5) {
-			$last_option = compress_chunk($last_option);
+		    if ($comp_level >= 5 && defined $sub_table{$last_option}) {
+			$last_option = $sub_table{$last_option};
 		    }
 		    push @optstrs, "${last_option}_" . join("&", @valstrs);
 		}
@@ -452,8 +426,8 @@ sub scan_for_block($$) {
 	    }
 	    push @valstrs, $val;
 	}
-	if ($comp_level >= 5) {
-	    $last_option = compress_chunk($last_option);
+	if ($comp_level >= 5 && defined $sub_table{$last_option}) {
+	    $last_option = $sub_table{$last_option};
 	}
 	push @optstrs, "${last_option}_" . join("&", @valstrs);;
 	my ($valstr) = join("?", @optstrs);
@@ -472,23 +446,11 @@ if ($comp_level <= 0) {
 
 while (<>) {
     chomp;
-    my ($sum, @keys) = split;
-    my (@pchunks) = ();
-    foreach my $k (@keys) {
-	my (@chunks) = split(/_/, $k, -1);
-	foreach my $i (0..$#chunks) {
-	    if ($chunks[$i] eq '') {
-		$chunks[$i] = $pchunks[$i];
-	    } elsif ($chunks[$i] =~ /^([0-9]+)\+(.*)/) {
-		$chunks[$i] = substr($pchunks[$i], 0, $1) . $2;
-	    }
-	}
-	my $key = join('_', @chunks), '.prn';
-	if (! defined $checksums{$sum}) {
-	    $checksums{$sum} = [];
-	}
-	push @{$checksums{$sum}}, $key;
+    my ($sum, $key) = split;
+    if (! defined $checksums{$sum}) {
+	$checksums{$sum} = [];
     }
+    push @{$checksums{$sum}}, $key;
 }
 
 my $min_prefix;
@@ -546,7 +508,11 @@ foreach my $sum (sort keys %checksums) {
 	    }
 	}
 	if ($comp_level >= 5) {
-	    @chunks = map { compress_chunk($_) } @chunks;
+	    map {
+		if (defined $sub_table{$chunks[$_]}) {
+		    $chunks[$_] = $sub_table{$chunks[$_]};
+		}
+	    } (0..$#chunks);
 	}
 	my ($mchunks) = min(scalar @pchunks, scalar @chunks);
 	my ($i) = 0;
@@ -570,9 +536,9 @@ foreach my $sum (sort keys %checksums) {
 		if ($comp_level >= 7) {
 		    my ($plen) = length $pchunks[$i];
 		    my ($len) = length $chunks[$i];
-		    my ($maxc) = min($len, $plen);
+		    my ($maxc) = $len;
+		    $maxc = $plen if $plen< $len;
 		    my ($dup) = 0;
-		    my ($tail) = 0;
 		    my ($chunk) = $chunks[$i];
 		    if (substr($pchunks[$i], 0, 1) ne '(') {
 			while ($dup < $maxc) {
@@ -580,12 +546,13 @@ foreach my $sum (sort keys %checksums) {
 				     substr($chunks[$i], $dup, 1));
 			    $dup++;
 			}
-			while ($tail < $maxc - $dup) {
-			    last if (substr($pchunks[$i], -1 - $tail, 1) ne
-				     substr($chunks[$i], -1 - $tail, 1));
-			    $tail++;
-			}
 			if (! $found_block_first_time) {
+			    my ($tail) = 0;
+			    while ($tail < $maxc - $dup) {
+				last if (substr($pchunks[$i], -1 - $tail, 1) ne
+					 substr($chunks[$i], -1 - $tail, 1));
+				$tail++;
+			    }
 			    if ($tail == 2) {
 				$chunk = substr($chunk, 0, -$tail) . '\\';
 			    } elsif ($tail > 2) {
@@ -628,13 +595,13 @@ foreach my $sum (sort keys %checksums) {
     }
     $out =~ s/\(_/(/g;
     if ($comp_level >= 7) {
-	$out =~ s/________/=/g;
-	$out =~ s/_______/!/g;
-	$out =~ s/______/"/g;
-	$out =~ s/_____/,/g;
-	$out =~ s/____/'/g;
-	$out =~ s/___/%/g;
-	$out =~ s/__/>/g;
+	$out =~ s/________/=/go;
+	$out =~ s/_______/!/go;
+	$out =~ s/______/"/go;
+	$out =~ s/_____/,/go;
+	$out =~ s/____/'/go;
+	$out =~ s/___/%/go;
+	$out =~ s/__/>/go;
     }
     if ($comp_level >= 7) {
 	$out =~ s/^([0-9a-f]+ )P;_BW_/$1./;
@@ -654,7 +621,7 @@ foreach my $sum (sort keys %checksums) {
     }
     $out =~ s/\|$//;
     if ($comp_level >= 9) {
-	eval $psub_code;
+	$out = psub($out);
     }
     print "$out\n";
 }
