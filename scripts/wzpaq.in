@@ -57,7 +57,7 @@ usage() {
     echo "With no FILE, or when only FILE is -, read standard input"
     exit $USTATUS
 }
-    
+
 while getopts "qvcdhfknNz0123456789" opt ; do
     case "$opt" in
 	q)     VERBOSE=			;;
@@ -95,7 +95,7 @@ g() {
     else
 	echo "$BASEDIR/$1"
     fi
-}    
+}
 
 build_file_list() {
     for f in "$@" ; do
@@ -237,7 +237,7 @@ compress_file() {
     if [[ $? > 0 ]] ; then
 	return 1
     elif [[ -n "$ZPCAT" ]] ; then
-	# zpaq won't send anything to stdout; we have to 
+	# zpaq won't send anything to stdout; we have to
 	cat "$DEST"
 	RM "$DEST"
     elif [[ -z $KEEP ]] ; then

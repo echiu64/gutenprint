@@ -191,7 +191,7 @@ sub break_group($$) {
 	$rest = $2;
     }
     return join(" ", map {break_subgroup($pref, $_, $rest)} @subgroups);
-}	
+}
 
 sub fetch_next_line($) {
     my ($ctx) = @_;

@@ -33,3 +33,6 @@
 # STP_* macros
 AC_DEFUN([STP_INIT],
 [m4_pattern_forbid([STP_])])
+
+AC_DEFUN([CONFIG_FILE_EXEC],
+[AC_CONFIG_FILES([$1], [chmod +x $1])])

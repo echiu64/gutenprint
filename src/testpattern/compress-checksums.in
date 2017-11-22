@@ -175,7 +175,7 @@ foreach my $psub (@ptable) {
     $psub_code .= "    \$out =~ s/$$psub[0]/$$psub[1]/go;\n";
 }
 $psub_code .= <<\EOF;
-    return $out
+    return $out;
 }
 EOF
 

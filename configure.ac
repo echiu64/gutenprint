@@ -1045,17 +1045,16 @@ AC_CONFIG_FILES([samples/Makefile])
 AC_CONFIG_FILES([src/Makefile])
 AC_CONFIG_FILES([src/cups/Makefile])
 AC_CONFIG_FILES([src/cups/Info.plist])
-AC_CONFIG_FILES([src/cups/cups-genppdupdate],
-                [chmod +x src/cups/cups-genppdupdate])
+CONFIG_FILE_EXEC([src/cups/cups-genppdupdate])
+CONFIG_FILE_EXEC([src/cups/test-ppds])
 AC_CONFIG_FILES([src/escputil/Makefile])
-AC_CONFIG_FILES([src/testpattern/run-testpattern-2],
-                [chmod +x src/testpattern/run-testpattern-2])
-AC_CONFIG_FILES([src/testpattern/compare-checksums],
-                [chmod +x src/testpattern/compare-checksums])
-AC_CONFIG_FILES([src/testpattern/compress-checksums],
-                [chmod +x src/testpattern/compress-checksums])
-AC_CONFIG_FILES([src/cups/test-rastertogutenprint],
-                [chmod +x src/cups/test-rastertogutenprint])
+CONFIG_FILE_EXEC([src/testpattern/compare-image-files])
+CONFIG_FILE_EXEC([src/testpattern/run-testpattern])
+CONFIG_FILE_EXEC([src/testpattern/run-testpattern-1])
+CONFIG_FILE_EXEC([src/testpattern/run-testpattern-2])
+CONFIG_FILE_EXEC([src/testpattern/compare-checksums])
+CONFIG_FILE_EXEC([src/testpattern/compress-checksums])
+CONFIG_FILE_EXEC([src/cups/test-rastertogutenprint])
 AC_CONFIG_FILES([src/testpattern/Makefile])
 AC_CONFIG_FILES([src/gimp2/Makefile])
 AC_CONFIG_FILES([src/main/Makefile])
@@ -1077,13 +1076,19 @@ AC_CONFIG_FILES([src/xml/escp2/resolutions/Makefile])
 AC_CONFIG_FILES([src/gutenprintui2/Makefile])
 AC_CONFIG_FILES([src/gutenprintui2/gutenprintui2.pc])
 AC_CONFIG_FILES([test/Makefile])
+CONFIG_FILE_EXEC([test/compress-5level.sh])
+CONFIG_FILE_EXEC([test/compress-6level.sh])
+CONFIG_FILE_EXEC([test/uncompress-5level.sh])
+CONFIG_FILE_EXEC([test/uncompress-6level.sh])
+CONFIG_FILE_EXEC([test/parse-bjc])
+CONFIG_FILE_EXEC([test/parse-escp2])
+CONFIG_FILE_EXEC([test/run-testdither])
+CONFIG_FILE_EXEC([test/run-weavetest])
 AC_CONFIG_FILES([scripts/Makefile])
-AC_CONFIG_FILES([scripts/mkgitlog],
-		[chmod +x scripts/mkgitlog])
-AC_CONFIG_FILES([scripts/gversion],
-		[chmod +x scripts/gversion])
-AC_CONFIG_FILES([scripts/wzpaq],
-		[chmod +x scripts/wzpaq])
+CONFIG_FILE_EXEC([scripts/mkgitlog])
+CONFIG_FILE_EXEC([scripts/gversion])
+CONFIG_FILE_EXEC([scripts/test-gversion])
+CONFIG_FILE_EXEC([scripts/wzpaq])
 AC_CONFIG_COMMANDS([default], [
 echo
 ],

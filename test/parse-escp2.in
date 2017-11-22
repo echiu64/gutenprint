@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!@PERL@
 
 # Copyright 2000-2008 Robert Krawitz <rlk@alum.mit.edu>
 #
@@ -213,16 +213,16 @@ sub increment_curpos($) {
 sub print_remote_SN($) {
     my ($skipchars) = @_;
     if ($skipchars == 1) {
-	print(" (Setup)"); 
+	print(" (Setup)");
     } elsif ($skipchars == 3) {
 	my ($subcmd) = get_byte_at(1);
 	my ($arg) = get_byte_at(2);
 	if ($subcmd == 0) {
-	    print(" (Feed Sequence $arg)"); 
+	    print(" (Feed Sequence $arg)");
 	} elsif ($subcmd == 4) {
-	    print(" (Feed Adjustment $arg)"); 
+	    print(" (Feed Adjustment $arg)");
 	} elsif ($subcmd == 5) {
-	    print(" (Vacuum Intensity $arg)"); 
+	    print(" (Vacuum Intensity $arg)");
 	} else {
 	    print(" (Unknown command $subcmd, arg $arg)");
 	}
@@ -584,7 +584,7 @@ sub do_xcmd_S($) {
 	    $height = get_short_at(7);
 	}
 	indent_cmd($skipchars);
-	printf (" (paper size %d %d %.2f %.2f)", $width, $height, 
+	printf (" (paper size %d %d %.2f %.2f)", $width, $height,
 		$width / $page_mgmt_unit, $height / $page_mgmt_unit);
     }
 }
@@ -683,7 +683,7 @@ sub do_xcmd_d($) {
 
 sub do_xcmd_m($) {
     my ($skipchars) = @_;
-    if ($opt_v) { 
+    if ($opt_v) {
 	indent_cmd($skipchars);
 	printf(" (print method %x)", get_byte_at(5));
     }
@@ -699,7 +699,7 @@ sub do_xcmd_e($) {
 
 sub do_xcmd_G($) {
     my ($skipchars) = @_;
-    if ($opt_v) { 
+    if ($opt_v) {
 	indent_cmd($skipchars);
 	print(" (set graphics mode)");
     }
