@@ -167,6 +167,9 @@ my (@ptable) =
      ["3\\+", pack("C", 2)],
      ["2\\+", pack("C", 1)]);
 
+my (%asc_table);
+map { $asc_table{pack("C", $_)} = pack("C", $_ + 128); } (0..127);
+
 my $psub_code = <<\EOF;
 sub psub($) {
     my ($out) = @_;
@@ -602,26 +605,15 @@ foreach my $sum (sort keys %checksums) {
 	$out =~ s/____/'/go;
 	$out =~ s/___/%/go;
 	$out =~ s/__/>/go;
-    }
-    if ($comp_level >= 7) {
 	$out =~ s/^([0-9a-f]+ )P;_BW_/$1./;
 	$out =~ s/^([0-9a-f]+ )P;_c;_/$1,/;
-    }
-    if ($comp_level >= 8) {
-	my (@bytes) = unpack("C*", $out);
-	my (@nbytes) = $bytes[0];
-	foreach my $i (1..$#bytes) {
-	    if ($bytes[$i] == $spc) {
-		$nbytes[$#nbytes] += 128;
-	    } else {
-		push @nbytes, $bytes[$i];
+	if ($comp_level >= 8) {
+	    $out =~ s/(.) /$asc_table{$1}/g;
+	    if ($comp_level >= 9) {
+		$out = psub($out);
 	    }
 	}
-	$out = pack("C*", @nbytes);
     }
     $out =~ s/\|$//;
-    if ($comp_level >= 9) {
-	$out = psub($out);
-    }
     print "$out\n";
 }

@@ -32,47 +32,61 @@ while ($#ARGV >= 0 && $ARGV[0] eq '-d') {
     shift @ARGV;
 }
 
-my (@ptable) =
-    (["=+", pack("C", 27)],
-     ["!+", pack("C", 26)],
-     ['"+', pack("C", 25)],
-     [",+", pack("C", 24)],
-     ["'+", pack("C", 23)],
-     ["%+", pack("C", 22)],
-     [">+", pack("C", 21)],
-     ["20+", pack("C", 20)],
-     ["19+", pack("C", 19)],
-     ["18+", pack("C", 18)],
-     ["17+", pack("C", 17)],
-     ["16+", pack("C", 16)],
-     ["15+", pack("C", 15)],
-     ["14+", pack("C", 14)],
-     ["13+", pack("C", 13)],
-     ["12+", pack("C", 12)],
-     ["11+", pack("C", 11)],
-     ["10+", pack("C", 9)],	# 0xa is newline!
-     ["9+", pack("C", 8)],
-     ["8+", pack("C", 7)],
-     ["7+", pack("C", 6)],
-     ["6+", pack("C", 5)],
-     ["5+", pack("C", 4)],
-     ["4+", pack("C", 3)],
-     ["3+", pack("C", 2)],
-     ["2\+", pack("C", 1)]);
+my (%asc_table);
+map { $asc_table{pack("C", $_ + 128)} = pack("C", $_) . " "; } (0..127);
+$asc_table{pack("C", 27)} = "=+";
+$asc_table{pack("C", 26)} = "!+";
+$asc_table{pack("C", 25)} = '"+';
+$asc_table{pack("C", 24)} = ",+";
+$asc_table{pack("C", 23)} = "'+";
+$asc_table{pack("C", 22)} = "%+";
+$asc_table{pack("C", 21)} = ">+";
+$asc_table{pack("C", 20)} = "20+";
+$asc_table{pack("C", 19)} = "19+";
+$asc_table{pack("C", 18)} = "18+";
+$asc_table{pack("C", 17)} = "17+";
+$asc_table{pack("C", 16)} = "16+";
+$asc_table{pack("C", 15)} = "15+";
+$asc_table{pack("C", 14)} = "14+";
+$asc_table{pack("C", 13)} = "13+";
+$asc_table{pack("C", 12)} = "12+";
+$asc_table{pack("C", 11)} = "11+";
+$asc_table{pack("C", 9)} = "10+";	# 0xa is newline
+$asc_table{pack("C", 8)} = "9+";
+$asc_table{pack("C", 7)} = "8+";
+$asc_table{pack("C", 6)} = "7+";
+$asc_table{pack("C", 5)} = "6+";
+$asc_table{pack("C", 4)} = "5+";
+$asc_table{pack("C", 3)} = "4+";
+$asc_table{pack("C", 2)} = "3+";
+$asc_table{pack("C", 1)} = "2\+";
 
-my $psub_code = <<\EOF;
-sub psub($) {
-    my ($inline) = @_;
-EOF
-foreach my $psub (reverse @ptable) {
-    $psub_code .= "    \$inline =~ s/$$psub[1]/$$psub[0]/g;\n";
-}
-$psub_code .= <<\EOF;
-    return $inline;
-}
-EOF
+my (%respack_tbl);
+$respack_tbl{"d"} = "draft";
+$respack_tbl{"h"} = "high";
+$respack_tbl{"m"} = "mono";
+$respack_tbl{"p"} = "photo";
+$respack_tbl{"s"} = "std";
+$respack_tbl{"t"} = "tshirt";
 
-eval $psub_code;
+my (%sub_table);
+$sub_table{"P;"} = "PrintingMode";
+$sub_table{"S;"} = "PageSize";
+$sub_table{"D;"} = "DitherAlgorithm";
+$sub_table{"R;"} = "Resolution";
+$sub_table{"C;"} = "ColorCorrection";
+$sub_table{"c;"} = "Color";
+$sub_table{"M;"} = "MediaType";
+$sub_table{"I;"} = "InputSlot";
+
+my (%us_table);
+$us_table{'>'} = "__";
+$us_table{'%'} = "___";
+$us_table{"'"} = "____";
+$us_table{','} = "_____";
+$us_table{'"'} = "______";
+$us_table{'!'} = "_______";
+$us_table{'='} = "________";
 
 if ($#ARGV <= 0) {
     print_file($ARGV[0]);
@@ -92,12 +106,6 @@ sub get_mode($) {
     my ($mode) = @_;
     $mode =~ s/.*_PrintingMode/PrintingMode/o;
     return $mode;
-}
-
-sub uncompress_chunk($$) {
-    my ($chunk, $sub_table) = @_;
-    $$sub_table{$chunk} = $chunk if (! defined $$sub_table{$chunk});
-    return $$sub_table{$chunk};
 }
 
 sub open_file($) {
@@ -122,30 +130,6 @@ sub open_file($) {
     return $in;
 }
 
-sub create_underscore_table() {
-    my (%us_table);
-    my (@chars) = ('>', '%', "'", ',', '"', '!', '=');
-    my ($us) = '__';
-    foreach my $char (@chars) {
-	$us_table{$char} = $us;
-	$us = $us . "_";
-    }
-    return \%us_table;
-}
-
-sub create_substitution_table() {
-    my (%sub_table);
-    $sub_table{"P;"} = "PrintingMode";
-    $sub_table{"S;"} = "PageSize";
-    $sub_table{"D;"} = "DitherAlgorithm";
-    $sub_table{"R;"} = "Resolution";
-    $sub_table{"C;"} = "ColorCorrection";
-    $sub_table{"c;"} = "Color";
-    $sub_table{"M;"} = "MediaType";
-    $sub_table{"I;"} = "InputSlot";
-    return \%sub_table;
-}
-
 sub initialize_file($) {
     my ($file) = @_;
     my (%ctx);
@@ -157,13 +141,9 @@ sub initialize_file($) {
     $ctx{"sum"} = "";
     $ctx{"last_sum"} = "";
     $ctx{"kvals"} = [];
-    $ctx{"sub_table"} = create_substitution_table();
     $ctx{"pchunks"} = [];
     $ctx{"active"} = 1;
-    my ($us_table) = create_underscore_table();
-    $ctx{"us_table"} = $us_table;
     $ctx{"lastdup"} = 0;
-    $ctx{"undo_packed_components"} = 0;
     return \%ctx;
 }
 
@@ -203,36 +183,23 @@ sub fetch_next_line($) {
 	return 0;
     }
     chomp $inline;
-    if ($inline =~ /^[0-9a-f]+ \*/) {
+    if ($inline =~ /^[0-9a-f]+ \*/o) {
 	# Uncompressed!
 	$$ctx{"literal"} = $inline;
 	return 1;
     }
     delete $$ctx{"literal"};
     # Level 10
-    $inline = psub($inline);
     # Level 9
     # Whitespace optimization -- set high bit.
-    if (! ($inline =~ / /)) {
-	my (@bytes) = unpack("C*", $inline);
-	my (@nbytes) = ();
-	foreach my $byte (@bytes) {
-	    if ($byte >= 128) {
-		push @nbytes, $byte - 128;
-		push @nbytes, $spc;
-	    } else {
-		push @nbytes, $byte;
-	    }
-	}
-	$inline = pack("C*", @nbytes);
-    }
+    $inline =~ s/([\x01-\x09\x0b-\x1b\x80-\xff])/$asc_table{$1}/go;
     # All lines start with hash followed by printing mode, so if compression
     # removed that, we need to restore it.
     # Level 8
     $inline =~ s/^([0-9a-f]+ )\./$1P;_BW_/o;
     $inline =~ s/^([0-9a-f]+ )\,/$1P;_c;_/o;
     # Level 7
-    $inline =~ s/([=!",'%>])/$$ctx{"us_table"}{$1}/go;
+    $inline =~ s/([=!",'%>])/$us_table{$1}/go;
     # Level 3
     my ($tmpline) = "";
     while ($inline =~ /(([^()]*) )?([^() _]*_[^() _]*_)\(([^()_]+_)([^()_]+)(_[^()]*)((\))(.*)|$)/o) {
@@ -245,7 +212,7 @@ sub fetch_next_line($) {
     }
     $inline = "$tmpline$inline";
     #  Level 5
-    $inline =~ s/([PSDRCcMI];)/$$ctx{"sub_table"}{$1}/go;
+    $inline =~ s/([PSDRCcMI];)/$sub_table{$1}/go;
     # Restore printer name
     $inline =~ s/(^| )\*/$1/go;
     $inline =~ s/\.prn( |$)/$1/go;
@@ -253,7 +220,6 @@ sub fetch_next_line($) {
     my ($sum, @keys) = split(/ /o, $inline);
     $$ctx{"kvals"} = \@keys;
     $$ctx{"pchunks"} = [];
-    $$ctx{"undo_packed_components"} = ($inline =~ /\}/);
 
     # Level 4
     # Level 2 is subsumed here, because the checksum lengths will always
@@ -275,7 +241,7 @@ sub get_next_datum($) {
     if (defined $$ctx{"literal"}) {
 	my ($sum, $val) = split(/ /, $$ctx{"literal"});
 	$val = substr($val, 1, -4);
-	return [$sum, $val];
+	return [$sum, get_mode($val), get_printer($val)];
     }
     my (@chunks) = split(/_/o, shift(@{$$ctx{"kvals"}}), -1);
     my $pchunks = $$ctx{"pchunks"};
@@ -284,35 +250,33 @@ sub get_next_datum($) {
 	if ($chunks[$i] eq '') {
 	    $chunks[$i] = $$pchunks[$i];
 	} else {
-	    if ($chunks[$i] =~ /^([0-9]+)\+(.*)/o) {
+	    if (substr($chunks[$i], 0, 1) eq '+') {
+		substr($chunks[$i], 0, 1) = 
+		    substr($$pchunks[$i], 0, $$ctx{"lastdup"});
+	    } elsif (substr($chunks[$i], 0, 1) eq '*') {
+		substr($chunks[$i], 0, 1) = substr($$pchunks[$i], 0, 2);
+	    } elsif ($chunks[$i] =~ /^([0-9]+)\+(.*)/o) {
 		$chunks[$i] = substr($$pchunks[$i], 0, $1) . $2;
 		$$ctx{"lastdup"} = $1;
-	    } elsif ($chunks[$i] =~ /^\+(.*)/o) {
-		$chunks[$i] = substr($$pchunks[$i], 0, $$ctx{"lastdup"}) . $1;
-	    } elsif ($chunks[$i] =~ /^\*(.*)/o) {
-		$chunks[$i] = substr($$pchunks[$i], 0, 2) . $1;
-	    }
-	    if ($chunks[$i] =~ m,(.*)/([0-9]+)$,o) {
+	    }  
+
+	    if (substr($chunks[$i], -1) eq "\\") {
+		substr($chunks[$i], -1) = substr($$pchunks[$i], -2);
+	    } elsif ($chunks[$i] =~ m,(.*)/([0-9]+)$,o) {
 		$chunks[$i] = $1 . substr($$pchunks[$i], -$2);
-	    } elsif ($chunks[$i] =~ /([^\\]*)\\$/o) {
-		$chunks[$i] = $1 . substr($$pchunks[$i], -2);
 	    }
 	}
     }
     my ($val) = join('_', @chunks);
-    $val =~ s/(^[^:]*)_:(.*)/$2_$1/o;
+    # Restore printer names
+    my ($sep) = rindex($val, ':');
+    my ($prn) = substr($val, $sep + 1);
+    substr($val, $sep - 1) = '';
     # Level 5 (global)
-    if ($$ctx{"undo_packed_components"}) {
-	$val =~ s/\{([0-9]*)d([^|]*)\}/$1x$1dpi_draft$2/go;
-	$val =~ s/\{([0-9]*)h([^|]*)\}/$1x$1dpi_high$2/go;
-	$val =~ s/\{([0-9]*)m([^|]*)\}/$1x$1dpi_mono$2/go;
-	$val =~ s/\{([0-9]*)p([^|]*)\}/$1x$1dpi_photo$2/go;
-	$val =~ s/\{([0-9]*)s([^|]*)\}/$1x$1dpi_std$2/go;
-	$val =~ s/\{([0-9]*)t([^|]*)\}/$1x$1dpi_tshirt$2/go;
-    }
+    $val =~ s/\{([0-9]*)([dhmpst])([^|]*)\}/$1x$1dpi_${respack_tbl{$2}}$3/go;
     $val =~ s/Z\;/DitherAlgorithm/go;
     $$ctx{"pchunks"} = \@chunks;
-    return [$$ctx{"sum"}, $val];
+    return [$$ctx{"sum"}, $val, $prn];
 }
 
 sub load_file($\%\%) {
@@ -322,8 +286,9 @@ sub load_file($\%\%) {
     while ($answer = get_next_datum($ctx)) {
 	my ($sum) = $$answer[0];
 	my ($val) = $$answer[1];
+	my ($prn) = $$answer[2];
 	$$modes{$val} = $sum;
-	$$printers{get_printer($val)} = 1;
+	$$printers{$prn} = 1;
     }
 }
 
@@ -422,6 +387,7 @@ sub print_file($) {
     while ($answer = get_next_datum($ctx)) {
 	my ($sum) = $$answer[0];
 	my ($val) = $$answer[1];
-	print "$sum *$val.prn\n";
+	my ($prn) = $$answer[2];
+	print "$sum *${prn}_$val.prn\n";
     }
 }
