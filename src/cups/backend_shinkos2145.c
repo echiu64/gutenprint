@@ -27,6 +27,8 @@
  *
  *          [http://www.gnu.org/licenses/gpl-2.0.html]
  *
+ *   SPDX-License-Identifier: GPL-2.0+
+ *
  */
 
 #include <stdio.h>
@@ -163,7 +165,7 @@ static char *cmd_names(uint16_t v) {
 	default:
 		return "Unknown Command";
 	}
-};
+}
 
 struct s2145_print_cmd {
 	struct s2145_cmd_hdr hdr;
@@ -1764,8 +1766,8 @@ struct dyesub_backend shinkos2145_backend = {
 	.main_loop = shinkos2145_main_loop,
 	.query_serno = shinkos2145_query_serno,
 	.devices = {
-	{ USB_VID_SHINKO, USB_PID_SHINKO_S2145, P_SHINKO_S2145, ""},
-	{ 0, 0, 0, ""}
+	{ USB_VID_SHINKO, USB_PID_SHINKO_S2145, P_SHINKO_S2145, NULL},
+	{ 0, 0, 0, NULL}
 	}
 };
 
