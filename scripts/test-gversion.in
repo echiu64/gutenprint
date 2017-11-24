@@ -1,4 +1,4 @@
-#!/bin/bash
+#!@SHELL@
 
 # Copyright (C) 2017 Robert Krawitz
 #

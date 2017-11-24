@@ -44,7 +44,6 @@
 
 #define MITSU70X_8BPP
 //#define S6145_YMC
-//#define CANONSELPHYNEO_CMY
 
 #define DYESUB_FEATURE_NONE		 0x00000000
 #define DYESUB_FEATURE_FULL_WIDTH	 0x00000001
@@ -60,9 +59,6 @@
 #define DYESUB_FEATURE_BIGENDIAN         0x00000400
 #define DYESUB_FEATURE_DUPLEX            0x00000800
 #define DYESUB_FEATURE_MONOCHROME        0x00001000
-#ifndef CANONSELPHYNEO_CMY
-#define DYESUB_FEATURE_RGBtoYCBCR        0x00002000
-#endif
 
 #define DYESUB_PORTRAIT  0
 #define DYESUB_LANDSCAPE 1
@@ -247,6 +243,24 @@ typedef struct
   char commentbuf[19];  /* With one extra byte for null termination */
 } mitsu_p95d_privdata_t;
 
+typedef struct
+{
+  int resin_k;
+  int reject;
+  int colorsure;
+  int holokote;
+  int holokote_custom;
+  int holopatch;
+  int overcoat;
+  const char *overcoat_hole; /* XXX TODO: add custom option? */
+  int align_start;
+  int align_end;
+  int power_color;
+  int power_resin;
+  int power_overcoat;
+  int gamma;
+} magicard_privdata_t;
+
 /* Private data for dyesub driver as a whole */
 typedef struct
 {
@@ -272,6 +286,7 @@ typedef struct
    kodak8500_privdata_t k8500;
    shinko1245_privdata_t s1245;
    mitsu_p95d_privdata_t m95d;
+   magicard_privdata_t magicard;
   } privdata;
 } dyesub_privdata_t;
 
@@ -1203,11 +1218,7 @@ static void cp910_printer_init_func(stp_vars_t *v)
   stp_putc(pg, v);
 
   dyesub_nputc(v, '\0', 4);
-#ifdef CANONSELPHYNEO_CMY
   stp_putc(0x01, v);
-#else
-  stp_putc(0x00, v);
-#endif
 
   stp_put32_le(pd->w_size, v);
   stp_put32_le(pd->h_size, v);
@@ -6678,6 +6689,416 @@ static void citizen_cw01_plane_init(stp_vars_t *v)
   }
 }
 
+/* Magicard Series */
+static const dyesub_pagesize_t magicard_page[] =
+{
+  DEFINE_PAPER( "w155h244", "ID-1/CR80", PT1(672,300), PT1(1016,300), PT1(15, 300), PT1(15,300), 0, 0, DYESUB_PORTRAIT),
+};
+
+LIST(dyesub_pagesize_list_t, magicard_page_list, dyesub_pagesize_t, magicard_page);
+
+static const dyesub_printsize_t magicard_printsize[] =
+{
+  { "300x300", "w155h244", 672, 1016},
+};
+
+LIST(dyesub_printsize_list_t, magicard_printsize_list, dyesub_printsize_t, magicard_printsize);
+
+static const laminate_t magicard_laminate[] =
+{
+  {"Off",  N_("Off"),  {3, "OFF"}},
+  {"On",  N_("On"),  {2, "ON"}},
+};
+
+LIST(laminate_list_t, magicard_laminate_list, laminate_t, magicard_laminate);
+
+static void magicard_printer_init(stp_vars_t *v)
+{
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  dyesub_nputc(v, 0x05, 64);  /* ATTN/Clear */
+  stp_putc(0x01, v);       /* Start command sequence */
+  stp_zprintf(v, ",NOC1");
+  stp_zprintf(v, ",VER%d.%d.%d", STP_MAJOR_VERSION, STP_MINOR_VERSION, STP_MICRO_VERSION); // XXX include "pre" or other tag.
+  stp_zprintf(v, ",LANENG"); // Dunno about other options.
+  stp_zprintf(v, ",TDT%08X", (unsigned int)time(NULL)); /* Some sort of timestamp. Unknown epoch. */
+//  stp_zprintf(v, ",LC%d", 1); // Force media type.  LC1/LC3/LC6/LC8 for YMCKO/MONO/KO/YMCKOK
+  stp_zprintf(v, ",REJ%s", pd->privdata.magicard.reject ? "ON" : "OFF"); /* Faulty card rejection. */
+  stp_zprintf(v, ",ESS%d", pd->copies); /* Number of copies */
+  stp_zprintf(v, ",KEE,RT2,DPXOFF,PAG1"); // ?? DPX+PAG are for duplexing?
+  stp_zprintf(v, ",SLW%s", pd->privdata.magicard.colorsure ? "ON" : "OFF"); /* "Colorsure printing" */
+  stp_zprintf(v, ",IMF%s", "BGR"); /* Image format -- as opposed to K, BGRK and others. */
+  stp_zprintf(v, ",XCO0,YCO0"); // ??
+  stp_zprintf(v, ",WID%u,HGT%u", (unsigned int)pd->h_size - 40, (unsigned int)pd->w_size); /* Width & Height */
+  stp_zprintf(v, ",OVR%s", pd->privdata.magicard.overcoat ? "ON" : "OFF" ); /* Overcoat. */
+  if (pd->privdata.magicard.overcoat && pd->privdata.magicard.overcoat_hole)
+  {
+    if (!strcmp("SmartCard", pd->privdata.magicard.overcoat_hole))
+      stp_zprintf(v, ",NCT%d,%d,%d,%d", 90, 295, 260, 450);
+    else if (!strcmp("SmartCardLarge", pd->privdata.magicard.overcoat_hole))
+      stp_zprintf(v, ",NCT%d,%d,%d,%d", 75, 275, 280, 470);
+    else if (!strcmp("MagStripe", pd->privdata.magicard.overcoat_hole))
+      stp_zprintf(v, ",NCT%d,%d,%d,%d", 0, 420, 1025, 590);
+    else if (!strcmp("MagStripeLarge", pd->privdata.magicard.overcoat_hole))
+      stp_zprintf(v, ",NCT%d,%d,%d,%d", 0, 400, 1025, 610);
+    /* XXX TODO: Add ability to specify custom hole sizes */
+  }
+  stp_zprintf(v, ",NNNOFF"); // ??
+  stp_zprintf(v, ",USF%s", pd->privdata.magicard.holokote ? "ON" : "OFF");  /* Disable Holokote. */
+  if (pd->privdata.magicard.holokote)
+  {
+    stp_zprintf(v, ",HKT%d,", pd->privdata.magicard.holokote);
+    stp_zprintf(v, ",CKI%s", pd->privdata.magicard.holokote_custom? "ON" : "OFF");
+    stp_zprintf(v, ",HKMFFFFFF,TRO0"); // HKM == area. each bit is a separate area, 1-24.  Not sure about TRO
+  }
+  if (pd->privdata.magicard.holopatch)
+  {
+    stp_zprintf(v, ",HPHON,PAT%d", pd->privdata.magicard.holopatch);
+  }
+
+  stp_zprintf(v, ",PCT%d,%d,%d,%d", 0, 0, 1025, 641); // print area? (seen 1025/1015/999,641)
+  stp_zprintf(v, ",ICC%d", pd->privdata.magicard.gamma);  /* Gamma curve. 0-2 */
+  if (pd->privdata.magicard.power_color != 50)
+    stp_zprintf(v, ",CPW%d", pd->privdata.magicard.power_color); /* RGB/Color power. 0-100 */
+  if (pd->privdata.magicard.power_overcoat != 50)
+    stp_zprintf(v, ",OPW%d", pd->privdata.magicard.power_overcoat); /* Overcoat power. 0-100 */
+  if (pd->privdata.magicard.power_resin != 50)
+    stp_zprintf(v, ",KPW%d", pd->privdata.magicard.power_resin); /* Black/Resin power. 0-100 */
+  if (pd->privdata.magicard.align_start != 50)
+    stp_zprintf(v, ",SOI%d", pd->privdata.magicard.align_start); /* Card Start alignment, 0-100 */
+  if (pd->privdata.magicard.align_end != 50)
+    stp_zprintf(v, ",EOI%d", pd->privdata.magicard.align_end); /* Card End alignment, 0-100 */
+  stp_zprintf(v, ",DDD50"); // ??
+  stp_zprintf(v, ",X-GP-8");  /* GP extension, tells backend data is 8bpp */
+  if (pd->privdata.magicard.resin_k)
+    stp_zprintf(v, ",X-GP-RK"); /* GP extension, tells backend to extract resin-K layer */
+  stp_zprintf(v, ",SZB%d", (int)(pd->w_size * pd->h_size));  /* 8bpp, needs to be 6bpp */
+  stp_zprintf(v, ",SZG%d", (int)(pd->w_size * pd->h_size));
+  stp_zprintf(v, ",SZR%d", (int)(pd->w_size * pd->h_size));
+//  stp_zprintf(v, ",SZK%d", (int)(pd->w_size * pd->h_size)); /* 8bpp, needs to be 1bpp */
+  stp_putc(0x1c, v);  /* Terminate command data */
+}
+
+static void magicard_printer_end(stp_vars_t *v)
+{
+  stp_putc(0x03, v);  /* Terminate the command sequence */
+}
+
+static void magicard_plane_end(stp_vars_t *v)
+{
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  stp_putc(0x1c, v); /* Terminate the image data */
+  switch (pd->plane)
+  {
+  case 3:
+    stp_putc(0x42, v); /* Blue */
+    break;
+  case 2:
+    stp_putc(0x47, v); /* Green */
+    break;
+  case 1:
+    stp_putc(0x52, v); /* Red */
+    break;
+  default:
+//    stp_putc(0x4b, v); /* Black/Resin */
+    break;
+  }
+  stp_putc(0x3a, v);
+}
+
+static const dyesub_stringitem_t magicard_black_types[] =
+{
+  { "Composite",   N_ ("Composite (CMY)") },
+  { "Resin",       N_ ("Resin Black") },
+};
+LIST(dyesub_stringlist_t, magicard_black_types_list, dyesub_stringitem_t, magicard_black_types);
+
+static const stp_parameter_t magicard_parameters[] =
+{
+  {
+    "BlackType", N_("Black Type"), "Color=No,Category=Advanced Printer Setup",
+    N_("Black Type"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 0, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "RejectBad", N_("Reject Bad Cards"), "Color=No,Category=Advanced Printer Setup",
+    N_("Reject Bad Cards"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 0, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "ColorSure", N_("Enable Colorsure"), "Color=No,Category=Advanced Printer Setup",
+    N_("Enable Colorsure"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 0, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "GammaCurve", N_("Printer Gamma Curve"), "Color=No,Category=Advanced Printer Setup",
+    N_("Internal Gamma Curve to apply (0 is none)"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "PowerColor", N_("Color Power Level"), "Color=No,Category=Advanced Printer Setup",
+    N_("Power level for color passes"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "PowerBlack", N_("Black Power Level"), "Color=No,Category=Advanced Printer Setup",
+    N_("Power level for black pass"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "PowerOC", N_("Overcoat Power Level"), "Color=No,Category=Advanced Printer Setup",
+    N_("Power level for overcoat pass"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "AlignStart", N_("Card Start Alignment"), "Color=No,Category=Advanced Printer Setup",
+    N_("Fine-tune card start position"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "AlignEnd", N_("Card End Alignment"), "Color=No,Category=Advanced Printer Setup",
+    N_("Fine-tune card end position"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "Holokote", N_("Holokote"), "Color=No,Category=Advanced Printer Setup",
+    N_("Holokote option"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "HolokoteCustom", N_("Custom Holokote Key"), "Color=No,Category=Advanced Printer Setup",
+    N_("Use an optional custom Holokote key"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "Holopatch", N_("HoloPatch"), "Color=No,Category=Advanced Printer Setup",
+    N_("Position of the HoloPatch"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "OvercoatHole", N_("Overcoat Hole"), "Color=No,Category=Advanced Printer Setup",
+    N_("Area to not cover with an overcoat layer"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+};
+#define magicard_parameter_count (sizeof(magicard_parameters) / sizeof(const stp_parameter_t))
+
+static const dyesub_stringitem_t magicard_holokotes[] =
+{
+  { "Off",      N_ ("Off") },
+  { "UltraSecure",    N_ ("Ultra Secure") },
+  { "Rings", N_ ("Interlocking Rings") },
+  { "Flex", N_ ("Flex") },
+};
+LIST(dyesub_stringlist_t, magicard_holokotes_list, dyesub_stringitem_t, magicard_holokotes);
+
+static const dyesub_stringitem_t magicard_overcoat_holes[] =
+{
+  { "None",      N_ ("None") },
+  { "SmartCard",    N_ ("Smart Card Chip") },
+  { "SmartCardLarge", N_ ("Smart Card Chip (Large)") },
+  { "MagStripe", N_ ("Magnetic Stripe") },
+  { "MagStripeLarge", N_ ("Magnetic Stripe (Large)") },
+};
+LIST(dyesub_stringlist_t, magicard_overcoat_holes_list, dyesub_stringitem_t, magicard_overcoat_holes);
+
+static int
+magicard_load_parameters(const stp_vars_t *v, const char *name,
+			 stp_parameter_t *description)
+{
+  int	i;
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+		  				stp_get_model_id(v));
+
+  if (caps->parameter_count && caps->parameters)
+    {
+      for (i = 0; i < caps->parameter_count; i++)
+        if (strcmp(name, caps->parameters[i].name) == 0)
+          {
+	    stp_fill_parameter_settings(description, &(caps->parameters[i]));
+	    break;
+          }
+    }
+
+  if (strcmp(name, "BlackType") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+
+      const dyesub_stringlist_t *mlist = &magicard_black_types_list;
+      for (i = 0; i < mlist->n_items; i++)
+        {
+	  const dyesub_stringitem_t *m = &(mlist->item[i]);
+	  stp_string_list_add_string(description->bounds.str,
+				       m->name, m->text); /* Do *not* want this translated, otherwise use gettext(m->text) */
+	}
+      description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "RejectBad") == 0)
+    {
+      description->deflt.boolean = 0;
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "ColorSure") == 0)
+    {
+      description->deflt.boolean = 1;
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "GammaCurve") == 0)
+    {
+      description->deflt.integer = 1;
+      description->bounds.integer.lower = 0;
+      description->bounds.integer.upper = 2;
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "PowerColor") == 0)
+    {
+      description->deflt.integer = 0;
+      description->bounds.integer.lower = -50;
+      description->bounds.integer.upper = 50;
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "PowerBlack") == 0)
+    {
+      description->deflt.integer = 0;
+      description->bounds.integer.lower = -50;
+      description->bounds.integer.upper = 50;
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "PowerOC") == 0)
+    {
+      description->deflt.integer = 0;
+      description->bounds.integer.lower = -50;
+      description->bounds.integer.upper = 50;
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "AlignStart") == 0)
+    {
+      description->deflt.integer = 0;
+      description->bounds.integer.lower = -50;
+      description->bounds.integer.upper = 50;
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "AlignEnd") == 0)
+    {
+      description->deflt.integer = 0;
+      description->bounds.integer.lower = -50;
+      description->bounds.integer.upper = 50;
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "Holokote") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+
+      const dyesub_stringlist_t *mlist = &magicard_holokotes_list;
+      for (i = 0; i < mlist->n_items; i++)
+        {
+	  const dyesub_stringitem_t *m = &(mlist->item[i]);
+	  stp_string_list_add_string(description->bounds.str,
+				       m->name, m->text); /* Do *not* want this translated, otherwise use gettext(m->text) */
+	}
+      description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "HolokoteCustom") == 0)
+    {
+      description->deflt.boolean = 0;
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "Holopatch") == 0)
+    {
+      description->deflt.integer = 0;
+      description->bounds.integer.lower = 0;
+      description->bounds.integer.upper = 24;
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "OvercoatHole") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+
+      const dyesub_stringlist_t *mlist = &magicard_overcoat_holes_list;
+      for (i = 0; i < mlist->n_items; i++)
+        {
+	  const dyesub_stringitem_t *m = &(mlist->item[i]);
+	  stp_string_list_add_string(description->bounds.str,
+				       m->name, m->text); /* Do *not* want this translated, otherwise use gettext(m->text) */
+	}
+      description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
+      description->is_active = 1;
+    }
+  else
+    {
+       return 0;
+    }
+  return 1;
+}
+
+static int magicard_parse_parameters(stp_vars_t *v)
+{
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  const char *lpar = stp_get_string_parameter(v, "Laminate");
+  const char *holokote = stp_get_string_parameter(v, "Holokote");
+  int holopatch = stp_get_int_parameter(v, "Holopatch");
+  const char *overcoat_hole = stp_get_string_parameter(v, "OvercoatHole");
+  int holokote_custom = stp_get_boolean_parameter(v, "HolokoteCustom");
+
+  if (!strcmp("None", overcoat_hole))
+    overcoat_hole = NULL;
+
+  /* If overcoat is off, we can't use holokote or holopatch */
+  if (strcmp("On", lpar)) {
+    if (strcmp(holokote, "Off") || holopatch || overcoat_hole || holokote_custom) {
+      stp_eprintf(v, _("Holokote, Holopatch, and Overcoat hole features require Overcoat to be enabled!\n"));
+      return 0;
+    }
+  }
+  
+  if (pd) {
+    const char *blacktype = stp_get_string_parameter(v, "BlackType");
+
+    pd->privdata.magicard.overcoat = !strcmp("On", lpar);
+    pd->privdata.magicard.resin_k = !strcmp("Resin",blacktype);
+    pd->privdata.magicard.reject = stp_get_boolean_parameter(v, "RejectBad");
+    pd->privdata.magicard.colorsure = stp_get_boolean_parameter(v, "ColorSure");
+    pd->privdata.magicard.gamma = stp_get_int_parameter(v, "GammaCurve");
+    pd->privdata.magicard.power_color = stp_get_int_parameter(v, "PowerColor") + 50;
+    pd->privdata.magicard.power_resin = stp_get_int_parameter(v, "PowerBlack") + 50;
+    pd->privdata.magicard.power_overcoat = stp_get_int_parameter(v, "PowerOC") + 50;
+    pd->privdata.magicard.align_start = stp_get_int_parameter(v, "AlignStart") + 50;
+    pd->privdata.magicard.align_end = stp_get_int_parameter(v, "AlignEnd") + 50;
+    pd->privdata.magicard.holopatch = holopatch;
+    pd->privdata.magicard.overcoat_hole = overcoat_hole;
+
+    if (!strcmp(holokote, "UltraSecure")) {
+      pd->privdata.magicard.holokote = 1;
+    } else if (!strcmp(holokote, "InterlockingRings")) {
+      pd->privdata.magicard.holokote = 2;
+    } else if (!strcmp(holokote, "Flex")) {
+      pd->privdata.magicard.holokote = 3;
+    } else {
+      pd->privdata.magicard.holokote = 0;
+    }
+    pd->privdata.magicard.holokote_custom = holokote_custom;
+  }
+
+  return 1;
+}
+
 /* Model capabilities */
 
 static const dyesub_cap_t dyesub_model_capabilities[] =
@@ -6967,32 +7388,18 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Canon CP820, CP910, CP1000, CP1200 */
     1011,
-#ifdef CANONSELPHYNEO_CMY
     &cmy_ink_list,
-#else
-    &rgb_ink_list,
-#endif
     &res_300dpi_list,
     &cp910_page_list,
     &cp910_printsize_list,
     SHRT_MAX,
-#ifdef CANONSELPHYNEO_CMY
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
       | DYESUB_FEATURE_PLANE_INTERLACE,
-#else
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_RGBtoYCBCR,
-#endif
     &cp910_printer_init_func, NULL,
     NULL, NULL,
     NULL, NULL,
-#ifdef CANONSELPHYNEO_CMY
     cpx00_adjust_curves,
-#else
-    NULL,
-#endif
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -7933,6 +8340,26 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     ds820_load_parameters,
     ds820_parse_parameters,
   },
+  { /* Magicard Series */
+    7000,
+    &ymc_ink_list,
+    &res_300dpi_list,
+    &magicard_page_list,
+    &magicard_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_WHITE_BORDER
+      | DYESUB_FEATURE_PLANE_INTERLACE,
+    &magicard_printer_init, &magicard_printer_end,
+    NULL, magicard_plane_end,
+    NULL, NULL,
+    NULL,
+    &magicard_laminate_list, NULL,
+    NULL, NULL,
+    magicard_parameters,
+    magicard_parameter_count,
+    magicard_load_parameters,
+    magicard_parse_parameters,
+  },
 };
 
 static const stp_parameter_t the_parameters[] =
@@ -8715,45 +9142,18 @@ dyesub_render_pixel(unsigned short *src, char *dest,
   /* copy out_channel (image) to equiv ink_channel (printer) */
   for (i = start; i < end; i++)
     {
-#ifndef CANONSELPHYNEO_CMY
-      if (dyesub_feature(caps, DYESUB_FEATURE_RGBtoYCBCR))
-        {
-	  /* Convert RGB -> YCbCr (JPEG YCbCr444 coefficients) */
-	  double R, G, B;
-	  R = src[0];
-	  G = src[1];
-	  B = src[2];
-
-	  if (i == 0) /* Y */
-	    ink[i] = R * 0.299 + G * 0.587 + B * 0.114;
-	  else if (i == 1) /* Cb */
-	    ink[i] = R * -0.168736 + G * -0.331264 + B * 0.5 + (1 << (16 -1)); // Math is 16bpp here.
-	  else if (i == 2) /* Cr */
-	    ink[i] = R * 0.5 + G * -0.418688 + B * -0.081312 + (1 << (16 -1)); // Math is 16bpp here.
-	    /* FIXME:  Natively support YCbCr "inks" in the
-	       Gutenprint core and allow that as an input
-	       into the dyesub driver. */
-	}
-      else
-#endif
-        {
-	   ink[i] = src[i];
-        }
+      ink[i] = src[i];
 
       /* Downscale 16bpp to output bpp */
       if (pv->bytes_per_ink_channel == 1)
         {
 	  unsigned char *ink_u8 = (unsigned char *) ink;
-#ifndef CANONSELPHYNEO_CMY
 #if 0
-	  /* FIXME:  Do we want to round? */
-          if (dyesub_feature(caps, DYESUB_FEATURE_RGBtoYCBCR))
-            ink_u8[i] = ink[i] >> 8;
-	  else
+	  ink_u8[i] = ink[i] >> 8; // XXX Do we want to just truncate/round instead?
+#else
+	  ink_u8[i] = ink[i] / 257;
 #endif
-#endif
-            ink_u8[i] = ink[i] / 257;
-        }
+	}
       else /* ie 2 bytes per channel */
         {
 	  /* Scale down to output bits */
@@ -8763,7 +9163,7 @@ dyesub_render_pixel(unsigned short *src, char *dest,
 	  /* Byteswap if needed */
 	  if (pv->byteswap)
 	    ink[i] = ((ink[i] >> 8) & 0xff) | ((ink[i] & 0xff) << 8);
-        }
+	}
     }
 
   /* If we use plane or row interlacing, only write the plane's channel */
@@ -9037,7 +9437,6 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
 	      w_dpi, h_dpi
 	      );
 
-  /* FIXME: move this into print_init_drv */
   ink_type = dyesub_describe_output_internal(v, &pv);
   stp_set_string_parameter(v, "STPIOutputType", ink_type);
   stp_channel_reset(v);
@@ -9077,30 +9476,29 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   }
 
   pv.image_data = dyesub_read_image(v, &pv, image);
-  if (ink_type) {
-#ifndef CANONSELPHYNEO_CMY
-	  if (dyesub_feature(caps, DYESUB_FEATURE_RGBtoYCBCR)) {
-		  pv.empty_byte[0] = 0xff; /* Y */
-		  pv.empty_byte[1] = 0x80; /* Cb */
-		  pv.empty_byte[2] = 0x80; /* Cr */
-	  } else
-#endif
-	  if (strcmp(ink_type, "RGB") == 0 ||
-	      strcmp(ink_type, "BGR") == 0 ||
-	      strcmp(ink_type, "Whitescale") == 0) {
-		  pv.empty_byte[0] = 0xff;
-		  pv.empty_byte[1] = 0xff;
-		  pv.empty_byte[2] = 0xff;
-	  } else {
-		  pv.empty_byte[0] = 0x0;
-		  pv.empty_byte[1] = 0x0;
-		  pv.empty_byte[2] = 0x0;
-	  }
-  } else {
+  if (ink_type)
+    {
+      if (strcmp(ink_type, "RGB") == 0 ||
+	  strcmp(ink_type, "BGR") == 0 ||
+	  strcmp(ink_type, "Whitescale") == 0)
+        {
+	  pv.empty_byte[0] = 0xff;
+	  pv.empty_byte[1] = 0xff;
+	  pv.empty_byte[2] = 0xff;
+	}
+      else
+        {
 	  pv.empty_byte[0] = 0x0;
 	  pv.empty_byte[1] = 0x0;
 	  pv.empty_byte[2] = 0x0;
-  }
+	}
+    }
+  else
+    {
+      pv.empty_byte[0] = 0x0;
+      pv.empty_byte[1] = 0x0;
+      pv.empty_byte[2] = 0x0;
+    }
 
   pv.plane_interlacing = dyesub_feature(caps, DYESUB_FEATURE_PLANE_INTERLACE);
   pv.row_interlacing = dyesub_feature(caps, DYESUB_FEATURE_ROW_INTERLACE);
@@ -9112,7 +9510,6 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
       stp_free(pd);
       return 2;
     }
-  /* /FIXME */
 
   /* FIXME:  Provide a way of disabling/altering these curves */
   /* XXX reuse 'UseLUT' from mitsu70x?  or 'SimpleGamma' ? */

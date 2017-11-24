@@ -1,4 +1,4 @@
-#!/bin/sh
+#!@SHELL@
 
 if [ -z "$srcdir" -o "$srcdir" = "." ] ; then
     sdir=`pwd`

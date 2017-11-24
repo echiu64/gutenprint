@@ -23,6 +23,8 @@
  *
  *          [http://www.gnu.org/licenses/gpl-2.0.html]
  *
+ *   SPDX-License-Identifier: GPL-2.0+
+ *
  */
 
 #include <stdio.h>
@@ -1914,13 +1916,13 @@ struct dyesub_backend mitsu70x_backend = {
 	.main_loop = mitsu70x_main_loop,
 	.query_serno = mitsu70x_query_serno,
 	.devices = {
-		{ USB_VID_MITSU, USB_PID_MITSU_D70X, P_MITSU_D70X, ""},
-		{ USB_VID_MITSU, USB_PID_MITSU_K60, P_MITSU_K60, ""},
-		{ USB_VID_MITSU, USB_PID_MITSU_D80, P_MITSU_D80, ""},
-//		{ USB_VID_MITSU, USB_PID_MITSU_D90, P_MITSU_D90, ""},
-		{ USB_VID_KODAK, USB_PID_KODAK305, P_KODAK_305, ""},
-		{ USB_VID_FUJIFILM, USB_PID_FUJI_ASK300, P_FUJI_ASK300, ""},
-	{ 0, 0, 0, ""}
+		{ USB_VID_MITSU, USB_PID_MITSU_D70X, P_MITSU_D70X, NULL},
+		{ USB_VID_MITSU, USB_PID_MITSU_K60, P_MITSU_K60, NULL},
+		{ USB_VID_MITSU, USB_PID_MITSU_D80, P_MITSU_D80, NULL},
+//		{ USB_VID_MITSU, USB_PID_MITSU_D90, P_MITSU_D90, NULL},
+		{ USB_VID_KODAK, USB_PID_KODAK305, P_KODAK_305, NULL},
+		{ USB_VID_FUJIFILM, USB_PID_FUJI_ASK300, P_FUJI_ASK300, NULL},
+	{ 0, 0, 0, NULL}
 	}
 };
 

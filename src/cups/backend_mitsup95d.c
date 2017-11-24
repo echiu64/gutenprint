@@ -27,6 +27,8 @@
  *
  *          [http://www.gnu.org/licenses/gpl-2.0.html]
  *
+ *   SPDX-License-Identifier: GPL-2.0+
+ *
  */
 
 #include <stdio.h>
@@ -491,9 +493,9 @@ struct dyesub_backend mitsup95d_backend = {
 	.read_parse = mitsup95d_read_parse,
 	.main_loop = mitsup95d_main_loop,
 	.devices = {
-	{ USB_VID_MITSU, USB_PID_MITSU_P93D, P_MITSU_P93D, ""},
-	{ USB_VID_MITSU, USB_PID_MITSU_P95D, P_MITSU_P95D, ""},
-	{ 0, 0, 0, ""}
+	{ USB_VID_MITSU, USB_PID_MITSU_P93D, P_MITSU_P93D, NULL},
+	{ USB_VID_MITSU, USB_PID_MITSU_P95D, P_MITSU_P95D, NULL},
+	{ 0, 0, 0, NULL}
 	}
 };
 

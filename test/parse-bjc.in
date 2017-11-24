@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!@PERL@
 
 while (<>) {
     $stuff .= $_;

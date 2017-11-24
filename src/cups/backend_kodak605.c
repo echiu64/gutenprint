@@ -23,6 +23,8 @@
  *
  *          [http://www.gnu.org/licenses/gpl-2.0.html]
  *
+ *   SPDX-License-Identifier: GPL-2.0+
+ *
  */
 
 #include <stdio.h>
@@ -685,7 +687,7 @@ struct dyesub_backend kodak605_backend = {
 	.main_loop = kodak605_main_loop,
 	.devices = {
 	{ USB_VID_KODAK, USB_PID_KODAK_605, P_KODAK_605, "Kodak"},
-	{ 0, 0, 0, ""}
+	{ 0, 0, 0, NULL}
 	}
 };
 
