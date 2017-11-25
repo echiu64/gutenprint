@@ -7067,7 +7067,7 @@ static int magicard_parse_parameters(stp_vars_t *v)
       return 0;
     }
   }
-  
+
   if (pd) {
     const char *blacktype = stp_get_string_parameter(v, "BlackType");
 

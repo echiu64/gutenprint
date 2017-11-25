@@ -1911,7 +1911,7 @@ struct dyesub_backend shinkos6245_backend = {
 	.query_serno = shinkos6245_query_serno,
 	.devices = {
 	{ USB_VID_SHINKO, USB_PID_SHINKO_S6245, P_SHINKO_S6245, NULL},
-	{ USB_VID_HITI, USB_PID_HITI_P910L, P_SHINKO_S6245, NULL},	
+	{ USB_VID_HITI, USB_PID_HITI_P910L, P_SHINKO_S6245, NULL},
 	{ 0, 0, 0, NULL}
 	}
 };
