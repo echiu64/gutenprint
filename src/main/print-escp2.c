@@ -148,7 +148,7 @@ static const double ink_darknesses[] =
   STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,		\
   STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, 3, 1, 0			\
 }
-    
+
 
 typedef struct
 {

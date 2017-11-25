@@ -242,7 +242,7 @@ stp_channel_add(stp_vars_t *v, unsigned channel, unsigned subchannel,
 }
 
 void
-stp_channel_set_subchannel_curve(stp_vars_t *v, 
+stp_channel_set_subchannel_curve(stp_vars_t *v,
 				 unsigned channel, unsigned subchannel,
 				 const stp_curve_t *curve)
 {
