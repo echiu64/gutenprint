@@ -597,10 +597,10 @@ abort_release:
 abort_close:
 
 	libusb_close(dev);
-	
+
 abort:
 	if (config) libusb_free_config_descriptor(config);
-	
+
 	/* Clean up the dictionary */
 	while (dlen--) {
 		free (dict[dlen].key);

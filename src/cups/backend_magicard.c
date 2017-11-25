@@ -167,7 +167,7 @@ static uint8_t * magicard_parse_resp(uint8_t *buf, uint16_t len, uint16_t *respl
 	struct magicard_resp_header *hdr = (struct magicard_resp_header *) buf;
 
 	*resplen = len - sizeof(hdr->guard) - sizeof(hdr->subcmd_arg) - 2;
-	
+
 	return hdr->data;
 }
 
@@ -210,7 +210,7 @@ static int magicard_query_status(struct magicard_ctx *ctx)
 	int ret = 0;
 	int i;
 	uint8_t buf[256];
-	
+
 	for (i = 0 ; ; i++) {
 		uint16_t resplen = 0;
 		uint8_t *resp;
@@ -227,16 +227,16 @@ static int magicard_query_status(struct magicard_ctx *ctx)
 			return ret;
 
 		memset(buf, 0, sizeof(buf));
-		
+
 		ret = read_data(ctx->dev, ctx->endp_up,
 				buf, sizeof(buf), &num);
-		
+
 		if (ret < 0)
 			return ret;
 
 		resp = magicard_parse_resp(buf, num, &resplen);
 		resp[resplen] = 0;
-		switch(magicard_sta_requests[i].type) {		
+		switch(magicard_sta_requests[i].type) {
 		case TYPE_IPADDR: {
 			int32_t ipaddr;
 			uint8_t *addr = (uint8_t *) &ipaddr;
@@ -277,7 +277,7 @@ static int magicard_query_status(struct magicard_ctx *ctx)
 			     resp);
 		}
 	}
-	
+
 	return ret;
 }
 
@@ -397,7 +397,7 @@ static int magicard_read_parse(void *vctx, int data_fd) {
 	uint8_t *in_y, *in_m, *in_c;
 	uint8_t *out_y, *out_m, *out_c, *out_k;
 	uint32_t len_y = 0, len_m = 0, len_c = 0, len_k = 0;
-	
+
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
 
@@ -528,7 +528,7 @@ static int magicard_read_parse(void *vctx, int data_fd) {
 			ctx->datalen += sprintf((char*)ctx->databuf + ctx->datalen, ",SZK%u", len_k);
 		}
 	}
-	
+
 	/* Terminate command stream */
 	ctx->databuf[ctx->datalen++] = 0x1c;
 
@@ -736,7 +736,7 @@ struct dyesub_backend magicard_backend = {
     * Each plane terminates with 0x1c __ 0x3a, where __ is 0x42, 0x47, 0x52,
       and 0x4b for B/G/R/K respectively.  Terminator is _not_ part of length.
     * Image data is 6bpp for B/G/R and 1bpp for K, 672*1016 pixels
-      * Organized in a series of 84-byte rows.  
+      * Organized in a series of 84-byte rows.
       * Byte data is LSB first.
       * Each row is a single stripe of a single bit of a pixel, so
         color data is b0b0b0b0.. b1b1b1b1.. .. b5b5b5b5.

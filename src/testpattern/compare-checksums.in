@@ -251,14 +251,14 @@ sub get_next_datum($) {
 	    $chunks[$i] = $$pchunks[$i];
 	} else {
 	    if (substr($chunks[$i], 0, 1) eq '+') {
-		substr($chunks[$i], 0, 1) = 
+		substr($chunks[$i], 0, 1) =
 		    substr($$pchunks[$i], 0, $$ctx{"lastdup"});
 	    } elsif (substr($chunks[$i], 0, 1) eq '*') {
 		substr($chunks[$i], 0, 1) = substr($$pchunks[$i], 0, 2);
 	    } elsif ($chunks[$i] =~ /^([0-9]+)\+(.*)/o) {
 		$chunks[$i] = substr($$pchunks[$i], 0, $1) . $2;
 		$$ctx{"lastdup"} = $1;
-	    }  
+	    }
 
 	    if (substr($chunks[$i], -1) eq "\\") {
 		substr($chunks[$i], -1) = substr($$pchunks[$i], -2);
