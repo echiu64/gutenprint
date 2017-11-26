@@ -18,8 +18,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  *          [http://www.gnu.org/licenses/gpl-2.0.html]
  *
@@ -676,8 +675,7 @@ or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License\n\
 for more details.\n\
 \n\
 You should have received a copy of the GNU General Public License\n\
-along with this program; if not, write to the Free Software\n\
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n\
+along with this program.  If not, see <https://www.gnu.org/licenses/>.\n\
 \n          [http://www.gnu.org/licenses/gpl-2.0.html]\n\n";
 
 	fprintf(stderr, "%s", license);

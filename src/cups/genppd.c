@@ -14,8 +14,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * Contents:
  *
@@ -1114,8 +1113,7 @@ print_ppd_header(gpFile fp, ppd_type_t ppd_type, int model, const char *driver,
   gpputs(fp, "*% for more details.\n");
   gpputs(fp, "*%\n");
   gpputs(fp, "*% You should have received a copy of the GNU General Public License\n");
-  gpputs(fp, "*% along with this program; if not, write to the Free Software\n");
-  gpputs(fp, "*% Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n");
+  gpputs(fp, "*% along with this program.  If not, see <https://www.gnu.org/licenses/>.\n");
   gpputs(fp, "*%\n");
   gpputs(fp, "*FormatVersion:	\"4.3\"\n");
   if (use_base_version)
