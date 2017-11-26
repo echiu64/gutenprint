@@ -46,14 +46,6 @@
 #include <stdarg.h>
 #endif
 
-#ifdef CUPS_DRIVER_INTERFACE
-#  ifdef HAVE_LIBZ
-#    undef HAVE_LIBZ
-#  endif /* HAVE_LIBZ */
-#endif /* CUPS_DRIVER_INTERFACE */
-#ifdef HAVE_LIBZ
-#endif
-
 const char *ppdext = ".ppd";
 const char *cups_modeldir = CUPS_MODELDIR;
 const char *gpext = "";
