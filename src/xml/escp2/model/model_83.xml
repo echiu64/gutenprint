@@ -17,8 +17,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *   along with this program.  If not, see https://www.gnu.org/licenses/.
 </copyright>
 <escp2Model id="83" base="escp2/model/base/r240.xml">
  <verticalBorderlessSequence>SNP\000\000\014\027\000\000\000\000\000\000\000\003\000\001\001X\002\320\004G\001G\002\000\000\000\000P\010\204\020\030\025\310\031\340=\240\017\214\0120\005\214\000\012\001,\001\000\000\000\000\017\017\017\017\017\017\017\017\004\012\004\017\017\017\017\017\006\004\017\017\000\000\001\001\000\0010\010</verticalBorderlessSequence>
