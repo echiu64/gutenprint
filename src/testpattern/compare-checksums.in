@@ -23,6 +23,8 @@
 
 use strict;
 
+my ($progname) = $0;
+
 my (%old_modes, %old_printers, %new_modes, %new_printers);
 my ($detail1) = 0;
 my ($spc) = unpack("C", " ");
@@ -121,7 +123,12 @@ sub open_file($) {
     } elsif ($file =~ /.lrz$/) {
 	open($in, '-|', "cat $file | @LRZIP@ -d -q") || die("Can't open checksum file $file: $!\n");
     } elsif ($file =~ /.zpaq$/) {
-	open($in, '-|', "@top_builddir@/scripts/wzpaq -d -c $file") || die("Can't open checksum file $file: $!\n");
+	my ($zpaq_base) = "@top_builddir@/scripts/wzpaq";
+	if (substr($zpaq_base, 0, 1) ne '/') { # Relative path
+	    $progname =~ s,[^/]*$,,;
+	    $zpaq_base = "$progname$zpaq_base";
+	}
+	open($in, '-|', "$zpaq_base -d -c $file") || die("Can't open checksum file $file: $!\n");
     } elsif ($file =~ /.rz$/) {
 	open($in, '-|', "@RZIP@ -d -c $file") || die("Can't open checksum file $file: $!\n");
     } else {
