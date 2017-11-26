@@ -2,7 +2,7 @@
 
 # Generate Git history.
 #
-# Copyright 2016 Robert Krawitz (rlk@alum.mit.edu)
+# Copyright 2016-2017 Robert Krawitz (rlk@alum.mit.edu)
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -49,27 +49,32 @@ sub print_it {
     if ($#files >= 0) {
 	my ($add) = 0;
 	my ($remove) = 0;
-	map { $add += $addlines{$_} } @files;
-	map { $remove += $removelines{$_} } @files;
-	print "	Lines: +$add, -$remove\n";
-	print "	Files:";
+	my $file_detail;
+	$file_detail .=  "	Files:";
 	my ($fcount) = 0;
 	foreach my $fn (@files) {
 	    if ($fcount++ == 0) {
-		print "	$fn (";
+		$file_detail .=  "	$fn (";
 	    } else {
-		print "		$fn (";
+		$file_detail .=  "		$fn (";
 	    }
 	    if ($filechanges{$fn} eq 'D') {
-		print "removed -$removelines{$fn}";
+		$file_detail .=  "removed -$removelines{$fn}";
+		$remove += $removelines{$fn};
 	    } elsif ($filechanges{$fn} eq 'C') {
-		    print "added +$addlines{$fn}";
+		$file_detail .=  "added +$addlines{$fn}";
+		$add += +$addlines{$fn};
 	    } else {
-		print "+$addlines{$fn}, -$removelines{$fn}";
+		$file_detail .=  "+$addlines{$fn}, -$removelines{$fn}";
+		if (! ($fn =~ /\.po$/)) {
+		    $remove += $removelines{$fn};
+		    $add += +$addlines{$fn};
+		}
 	    }
-	    print ")\n";
+	    $file_detail .=  ")\n";
 	}
-	print "\n";
+	print "	Lines: +$add, -$remove\n";
+	print "$file_detail\n";
     }
     print "$curmsg\n";
     $autline = "";
