@@ -277,6 +277,7 @@ typedef struct
   const char* duplex_mode;
   int page_number;
   int copies;
+  int horiz_offset;
   union {
    dnp_privdata_t dnp;
    mitsu9550_privdata_t m9550;
@@ -6870,6 +6871,12 @@ static const stp_parameter_t magicard_parameters[] =
     STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
+    "CardOffset", N_("Horizontal Card offset"), "Color=No,Category=Advanced Printer Setup",
+    N_("Fine-tune card horizontal centering"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
     "Holokote", N_("Holokote"), "Color=No,Category=Advanced Printer Setup",
     N_("Holokote option"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
@@ -6999,6 +7006,13 @@ magicard_load_parameters(const stp_vars_t *v, const char *name,
       description->bounds.integer.upper = 50;
       description->is_active = 1;
     }
+  else if (strcmp(name, "CardOffset") == 0)
+    {
+      description->deflt.integer = 0;
+      description->bounds.integer.lower = -15;
+      description->bounds.integer.upper = 15;
+      description->is_active = 1;
+    }
   else if (strcmp(name, "Holokote") == 0)
     {
       description->bounds.str = stp_string_list_create();
@@ -7082,6 +7096,8 @@ static int magicard_parse_parameters(stp_vars_t *v)
     pd->privdata.magicard.align_end = stp_get_int_parameter(v, "AlignEnd") + 50;
     pd->privdata.magicard.holopatch = holopatch;
     pd->privdata.magicard.overcoat_hole = overcoat_hole;
+
+    pd->horiz_offset = stp_get_int_parameter(v, "CardOffset");
 
     if (!strcmp(holokote, "UltraSecure")) {
       pd->privdata.magicard.holokote = 1;
@@ -9406,7 +9422,7 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   pv.outt_px = MIN(PX(out_pt_top  - page_pt_top, h_dpi),
 			pv.prnh_px - pv.outh_px);
   pv.outr_px = pv.outl_px + pv.outw_px;
-  pv.outb_px = pv.outt_px  + pv.outh_px;
+  pv.outb_px = pv.outt_px + pv.outh_px;
 
   /* Swap back so that everything that follows will work. */
   if (page_mode == DYESUB_LANDSCAPE)
@@ -9510,10 +9526,6 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
       return 2;
     }
 
-  /* FIXME:  Provide a way of disabling/altering these curves */
-  /* XXX reuse 'UseLUT' from mitsu70x?  or 'SimpleGamma' ? */
-  dyesub_exec(v, caps->adjust_curves, "caps->adjust_curves");
-
   if (dyesub_feature(caps, DYESUB_FEATURE_FULL_HEIGHT))
     {
       pv.prnt_px = 0;
@@ -9557,6 +9569,18 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
       dyesub_swap_ints(&pv.imgh_px, &pv.imgw_px);
     }
 
+  /* Adjust margins if the driver asks, to fine-tune horizontal position. */
+  pv.outl_px += pd->horiz_offset;
+  pv.outr_px += pd->horiz_offset;
+  /* Make sure we're still legal */
+  if (pv.outl_px < 0)
+    pv.outl_px = 0;
+  if (pv.outr_px > pv.prnw_px)
+    pv.outr_px = pv.prnw_px;
+
+  /* By this point, we're finally DONE mangling the pv structure,
+     and can start calling into the bulk of the driver code. */
+
   /* assign private data *after* swaping image dimensions */
   pd->w_dpi = w_dpi;
   pd->h_dpi = h_dpi;
@@ -9564,6 +9588,10 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   pd->h_size = pv.prnh_px;
   pd->print_mode = pv.print_mode;
   pd->bpp = pv.bits_per_ink_channel;
+
+  /* FIXME:  Provide a way of disabling/altering these curves */
+  /* XXX reuse 'UseLUT' from mitsu70x?  or 'SimpleGamma' ? */
+  dyesub_exec(v, caps->adjust_curves, "caps->adjust_curves");
 
   /* printer init */
   dyesub_exec(v, caps->printer_init_func, "caps->printer_init");
