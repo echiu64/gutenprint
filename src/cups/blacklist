@@ -218,3 +218,5 @@
 # Fujifilm ASK-300
 0x04cb 0x5006 blacklist
 
+# Magicard Tango 2E
+0x0c1f 0x1800 blacklist
