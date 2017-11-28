@@ -170,6 +170,40 @@ static uint8_t * magicard_parse_resp(uint8_t *buf, uint16_t len, uint16_t *respl
 	return hdr->data;
 }
 
+static int magicard_query_sensors(struct magicard_ctx *ctx)
+{
+	int ret = 0;
+	int i;
+	uint8_t buf[256];
+	char buf2[24];
+
+	for (i = 1 ; ; i++) {
+		int num = 0;
+
+		snprintf(buf2, sizeof(buf2), "SNR%d", i);
+		ret = magicard_build_cmd_simple(buf, buf2);
+
+		if ((ret = send_data(ctx->dev, ctx->endp_down,
+				     buf, ret)))
+			return ret;
+
+		memset(buf, 0, sizeof(buf));
+
+		ret = read_data(ctx->dev, ctx->endp_up,
+				buf, sizeof(buf), &num);
+
+		if (ret < 0)
+			return ret;
+
+		if (!memcmp(buf, "END", 3))
+			break;
+
+		buf[num] = 0;
+		INFO("%s\n", buf);
+	}
+	return 0;
+}
+
 static int magicard_query_printer(struct magicard_ctx *ctx)
 {
 	int ret = 0;
@@ -599,10 +633,11 @@ static int magicard_read_parse(void *vctx, int data_fd) {
 				      out_y, out_m, out_c, out_k);
 
 		/* Pad out the length appropriately. */
-		ctx->datalen += ((len_c * 6 / 8) * 3) + (len_c / 8) + 3 * 3;
+		ctx->datalen += ((len_c * 6 / 8) + 3) * 3;
 
-		/* Terminate the K plane */
+		/* If there's a K plane, compute length.. */
 		if (out_k) {
+			ctx->datalen += (len_c / 8);
 			ctx->databuf[ctx->datalen++] = 0x1c;
 			ctx->databuf[ctx->datalen++] = 0x4b;
 			ctx->databuf[ctx->datalen++] = 0x3a;
@@ -681,7 +716,7 @@ static int magicard_cmdline_arg(void *vctx, int argc, char **argv)
 	if (!ctx)
 		return -1;
 
-	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "sq")) >= 0) {
+	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "sqI")) >= 0) {
 		switch(i) {
 		GETOPT_PROCESS_GLOBAL
 		case 's':
@@ -689,6 +724,9 @@ static int magicard_cmdline_arg(void *vctx, int argc, char **argv)
 			break;
 		case 'q':
 			j = magicard_query_printer(ctx);
+			break;
+		case 'I':
+			j = magicard_query_sensors(ctx);
 			break;
 		}
 
@@ -700,7 +738,7 @@ static int magicard_cmdline_arg(void *vctx, int argc, char **argv)
 
 struct dyesub_backend magicard_backend = {
 	.name = "Magicard family",
-	.version = "0.04",
+	.version = "0.06",
 	.uri_prefix = "magicard",
 	.cmdline_arg = magicard_cmdline_arg,
 	.cmdline_usage = magicard_cmdline,
@@ -740,6 +778,24 @@ struct dyesub_backend magicard_backend = {
       * Each row is a single stripe of a single bit of a pixel, so
         color data is b0b0b0b0.. b1b1b1b1.. .. b5b5b5b5.
   * Job ends with 0x03
+
+  ** ** ** ** ** **
+
+  Firmware updates:
+
+  0x05 (x9) 0x01 REQ,FRM###### 0x1c
+
+  Where ###### is the length of the firmware image.
+
+  Then send over 64 bytes at a time until it's done.
+
+  Then send 0x03 to mark end of job.
+
+  Follow it with:
+
+  0x01 STA,CHK########, 0x03   (8-digit checksum?)
+
+  0x05 (x9) 0x01 REQ,UPG, 0x1c 0x03
 
 
 
