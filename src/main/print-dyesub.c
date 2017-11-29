@@ -258,6 +258,10 @@ typedef struct
   int power_resin;
   int power_overcoat;
   int gamma;
+  char mag1[79];  /* Mag stripe row 1, 78 alphanumeric */
+  char mag2[40];  /* Mag stripe row 2, 39 numeric */
+  char mag3[107]; /* Mag stripe row 3, 106 numeric */
+  int mag_coer;   /* 1 = high, 0 = low */
 } magicard_privdata_t;
 
 /* Private data for dyesub driver as a whole */
@@ -6756,6 +6760,23 @@ static void magicard_printer_init(stp_vars_t *v)
     stp_zprintf(v, ",HPHON,PAT%d", pd->privdata.magicard.holopatch);
   }
 
+  /* Magnetic stripe */
+  if (pd->privdata.magicard.mag1[0]) {
+	  stp_zprintf(v, ",MAG1,BPI210,MPC7,COE%c,%s",
+		      pd->privdata.magicard.mag_coer ? 'H': 'L',
+		  pd->privdata.magicard.mag1);
+  }
+  if (pd->privdata.magicard.mag2[0]) {
+	  stp_zprintf(v, ",MAG2,BPI75,MPC5,COE%c,%s",
+		      pd->privdata.magicard.mag_coer ? 'H': 'L',
+		  pd->privdata.magicard.mag2);
+  }
+  if (pd->privdata.magicard.mag3[0]) {
+	  stp_zprintf(v, ",MAG3,BPI210,MPC7,COE%c,%s",
+		      pd->privdata.magicard.mag_coer ? 'H': 'L',
+		  pd->privdata.magicard.mag3);
+  }
+
   stp_zprintf(v, ",PCT%d,%d,%d,%d", 0, 0, 1025, 641); // print area? (seen 1025/1015/999,641)
   stp_zprintf(v, ",ICC%d", pd->privdata.magicard.gamma);  /* Gamma curve. 0-2 */
   if (pd->privdata.magicard.power_color != 50)
@@ -6813,6 +6834,13 @@ static const dyesub_stringitem_t magicard_black_types[] =
   { "Resin",       N_ ("Resin Black") },
 };
 LIST(dyesub_stringlist_t, magicard_black_types_list, dyesub_stringitem_t, magicard_black_types);
+
+static const dyesub_stringitem_t magicard_mag_coer[] =
+{
+  { "Low", N_ ("Low") },
+  { "High", N_ ("High") },
+};
+LIST(dyesub_stringlist_t, magicard_mag_coer_list, dyesub_stringitem_t, magicard_mag_coer);
 
 static const stp_parameter_t magicard_parameters[] =
 {
@@ -6899,6 +6927,30 @@ static const stp_parameter_t magicard_parameters[] =
     N_("Area to not cover with an overcoat layer"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "MagCoer", N_("Magnetic Stripe Coercivity"), "Color=No,Category=Advanced Printer Setup",
+    N_("Magnetic Stripe Coercivity Type"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "MagStripe1", N_("Magnetic Stripe Row 1"), "Color=No,Category=Advanced Printer Setup",
+    N_("ISO 7811 alphanumeric data to be encoded in the first magnetic stripe row (0-79 characters)"),
+    STP_PARAMETER_TYPE_RAW, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 0, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "MagStripe2", N_("Magnetic Stripe Row 2"), "Color=No,Category=Advanced Printer Setup",
+    N_("ISO 7811 alphanumeric data to be encoded in the second magnetic stripe row (0-40 digits)"),
+    STP_PARAMETER_TYPE_RAW, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 0, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "MagStripe3", N_("Magnetic Stripe Row 3"), "Color=No,Category=Advanced Printer Setup",
+    N_("ISO 7811 alphanumeric data to be encoded in the third magnetic stripe row (0-107 digits)"),
+    STP_PARAMETER_TYPE_RAW, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 0, 1, STP_CHANNEL_NONE, 1, 0
   },
 };
 #define magicard_parameter_count (sizeof(magicard_parameters) / sizeof(const stp_parameter_t))
@@ -7053,6 +7105,32 @@ magicard_load_parameters(const stp_vars_t *v, const char *name,
       description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
       description->is_active = 1;
     }
+  else if (strcmp(name, "MagCoer") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+
+      const dyesub_stringlist_t *mlist = &magicard_mag_coer_list;
+      for (i = 0; i < mlist->n_items; i++)
+        {
+	  const dyesub_stringitem_t *m = &(mlist->item[i]);
+	  stp_string_list_add_string(description->bounds.str,
+				       m->name, m->text); /* Do *not* want this translated, otherwise use gettext(m->text) */
+	}
+      description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "MagStripe1") == 0)
+    {
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "MagStripe2") == 0)
+    {
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "MagStripe3") == 0)
+    {
+      description->is_active = 1;
+    }
   else
     {
        return 0;
@@ -7065,10 +7143,15 @@ static int magicard_parse_parameters(stp_vars_t *v)
   dyesub_privdata_t *pd = get_privdata(v);
 
   const char *lpar = stp_get_string_parameter(v, "Laminate");
+  const char *mag_coer = stp_get_string_parameter(v, "MagCoer");  
   const char *holokote = stp_get_string_parameter(v, "Holokote");
   int holopatch = stp_get_int_parameter(v, "Holopatch");
   const char *overcoat_hole = stp_get_string_parameter(v, "OvercoatHole");
   int holokote_custom = stp_get_boolean_parameter(v, "HolokoteCustom");
+  const char *blacktype = stp_get_string_parameter(v, "BlackType");
+  const stp_raw_t *magstripe1 = NULL;
+  const stp_raw_t *magstripe2 = NULL;
+  const stp_raw_t *magstripe3 = NULL;
 
   if (!strcmp("None", overcoat_hole))
     overcoat_hole = NULL;
@@ -7081,36 +7164,121 @@ static int magicard_parse_parameters(stp_vars_t *v)
     }
   }
 
-  if (pd) {
-    const char *blacktype = stp_get_string_parameter(v, "BlackType");
-
-    pd->privdata.magicard.overcoat = !strcmp("On", lpar);
-    pd->privdata.magicard.resin_k = !strcmp("Resin",blacktype);
-    pd->privdata.magicard.reject = stp_get_boolean_parameter(v, "RejectBad");
-    pd->privdata.magicard.colorsure = stp_get_boolean_parameter(v, "ColorSure");
-    pd->privdata.magicard.gamma = stp_get_int_parameter(v, "GammaCurve");
-    pd->privdata.magicard.power_color = stp_get_int_parameter(v, "PowerColor") + 50;
-    pd->privdata.magicard.power_resin = stp_get_int_parameter(v, "PowerBlack") + 50;
-    pd->privdata.magicard.power_overcoat = stp_get_int_parameter(v, "PowerOC") + 50;
-    pd->privdata.magicard.align_start = stp_get_int_parameter(v, "AlignStart") + 50;
-    pd->privdata.magicard.align_end = stp_get_int_parameter(v, "AlignEnd") + 50;
-    pd->privdata.magicard.holopatch = holopatch;
-    pd->privdata.magicard.overcoat_hole = overcoat_hole;
-
-    pd->horiz_offset = stp_get_int_parameter(v, "CardOffset");
-
-    if (!strcmp(holokote, "UltraSecure")) {
-      pd->privdata.magicard.holokote = 1;
-    } else if (!strcmp(holokote, "InterlockingRings")) {
-      pd->privdata.magicard.holokote = 2;
-    } else if (!strcmp(holokote, "Flex")) {
-      pd->privdata.magicard.holokote = 3;
-    } else {
-      pd->privdata.magicard.holokote = 0;
+  /* Sanity check magstripe */
+  if (stp_check_raw_parameter(v, "MagStripe1", STP_PARAMETER_ACTIVE)) {
+    magstripe1 = stp_get_raw_parameter(v, "MagStripe1");
+    if (magstripe1->bytes >= 79) {
+      stp_eprintf(v, _("StpMagStripe1 must be between 0 and 78 bytes!\n"));
+      return 0;
     }
-    pd->privdata.magicard.holokote_custom = holokote_custom;
+  }
+  if (stp_check_raw_parameter(v, "MagStripe2", STP_PARAMETER_ACTIVE)) {
+    magstripe2 = stp_get_raw_parameter(v, "MagStripe2");
+    if (magstripe2->bytes >= 40) {
+      stp_eprintf(v, _("StpMagStripe2 must be between 0 and 39 bytes!\n"));
+      return 0;
+    }
+  }
+  if (stp_check_raw_parameter(v, "MagStripe3", STP_PARAMETER_ACTIVE)) {
+    magstripe1 = stp_get_raw_parameter(v, "MagStripe3");
+    if (magstripe1->bytes >= 107) {
+      stp_eprintf(v, _("StpMagStripe3 must be between 0 and 106 bytes!\n"));
+      return 0;
+    }
   }
 
+  /* No need to set global params if there's no privdata yet */
+  if (!pd)
+    return 1;
+
+  pd->privdata.magicard.overcoat = !strcmp("On", lpar);
+  pd->privdata.magicard.resin_k = !strcmp("Resin",blacktype);
+  pd->privdata.magicard.reject = stp_get_boolean_parameter(v, "RejectBad");
+  pd->privdata.magicard.colorsure = stp_get_boolean_parameter(v, "ColorSure");
+  pd->privdata.magicard.gamma = stp_get_int_parameter(v, "GammaCurve");
+  pd->privdata.magicard.power_color = stp_get_int_parameter(v, "PowerColor") + 50;
+  pd->privdata.magicard.power_resin = stp_get_int_parameter(v, "PowerBlack") + 50;
+  pd->privdata.magicard.power_overcoat = stp_get_int_parameter(v, "PowerOC") + 50;
+  pd->privdata.magicard.align_start = stp_get_int_parameter(v, "AlignStart") + 50;
+  pd->privdata.magicard.align_end = stp_get_int_parameter(v, "AlignEnd") + 50;
+  pd->privdata.magicard.holopatch = holopatch;
+  pd->privdata.magicard.overcoat_hole = overcoat_hole;
+
+  pd->horiz_offset = stp_get_int_parameter(v, "CardOffset");
+
+  if (!strcmp(holokote, "UltraSecure")) {
+    pd->privdata.magicard.holokote = 1;
+  } else if (!strcmp(holokote, "InterlockingRings")) {
+    pd->privdata.magicard.holokote = 2;
+  } else if (!strcmp(holokote, "Flex")) {
+    pd->privdata.magicard.holokote = 3;
+  } else {
+    pd->privdata.magicard.holokote = 0;
+  }
+  pd->privdata.magicard.holokote_custom = holokote_custom;
+
+  pd->privdata.magicard.mag_coer = !strcmp("High", mag_coer);
+
+  if (magstripe1 && magstripe1->bytes) {
+    int i;
+    memcpy(pd->privdata.magicard.mag1, magstripe1->data, magstripe1->bytes);
+    pd->privdata.magicard.mag1[magstripe1->bytes] = 0;
+    for (i = 0 ; i < magstripe1->bytes ; i++) {
+      if (pd->privdata.magicard.mag1[i] < 0x20 ||
+	  pd->privdata.magicard.mag1[i] > 0x5f) {
+	stp_eprintf(v, _("Illegal Alphanumeric in Magstripe, 0x20->0x5F ASCII only\n"));
+	return 0;
+      }
+    }
+    if (pd->privdata.magicard.mag1[0] != '%') {
+      stp_eprintf(v, _("Magstripe alphanumeric data must start with '%%'\n"));
+      return 0;
+    }
+    if (pd->privdata.magicard.mag1[magstripe1->bytes - 1] != '?') {
+      stp_eprintf(v, _("Magstripe string must end with '?'\n"));
+      return 0;
+    }
+  }
+  if (magstripe2 && magstripe2->bytes) {
+    int i;
+    memcpy(pd->privdata.magicard.mag2, magstripe2->data, magstripe2->bytes);
+    pd->privdata.magicard.mag2[magstripe2->bytes] = 0;
+    for (i = 0 ; i < magstripe2->bytes ; i++) {
+      if (pd->privdata.magicard.mag2[i] < 0x30 ||
+	  pd->privdata.magicard.mag2[i] > 0x3f) {
+	stp_eprintf(v, _("Illegal Numeric in Magstripe, 0x30->0x3F ASCII only\n"));
+	return 0;
+      }
+    }
+    if (pd->privdata.magicard.mag2[0] != ';') {
+      stp_eprintf(v, _("Magstripe numeric data must start with ';'\n"));
+      return 0;
+    }
+    if (pd->privdata.magicard.mag2[magstripe2->bytes - 1] != '?') {
+      stp_eprintf(v, _("Magstripe data must end with '?'\n"));
+      return 0;
+    }
+  }
+  if (magstripe3 && magstripe3->bytes) {
+    int i;
+    memcpy(pd->privdata.magicard.mag3, magstripe3->data, magstripe3->bytes);
+    pd->privdata.magicard.mag3[magstripe3->bytes] = 0;
+    for (i = 0 ; i < magstripe3->bytes ; i++) {
+      if (pd->privdata.magicard.mag3[i] < 0x30 ||
+	  pd->privdata.magicard.mag3[i] > 0x3f) {
+	stp_eprintf(v, _("Illegal Numeric in Magstripe, 0x30->0x3F ASCII only\n"));
+	return 0;
+      }
+    }
+    if (pd->privdata.magicard.mag3[0] != ';') {
+      stp_eprintf(v, _("Magstripe numeric data must start with ';'\n"));
+      return 0;
+    }
+    if (pd->privdata.magicard.mag3[magstripe3->bytes - 1] != '?') {
+      stp_eprintf(v, _("Magstripe data must end with '?'\n"));
+      return 0;
+    }
+  }
   return 1;
 }
 
