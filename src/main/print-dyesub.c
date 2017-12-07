@@ -4530,7 +4530,7 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
   stp_putc(0x1b, v);
   stp_putc(0x5a, v);
   stp_putc(0x54, v);
-  stp_putc(model, v); /* k60 == x02, 305 == x90, d70x/d80 == x01 */
+  stp_putc(model, v); /* k60 == x00, EK305 == x90, d70x/d80 == x01, ask300 = 0x80 */
   dyesub_nputc(v, 0x00, 12);
 
   stp_put16_be(pd->w_size, v);
@@ -5037,11 +5037,13 @@ static void mitsu_cpd90_printer_end(stp_vars_t *v)
 static const dyesub_pagesize_t fuji_ask300_page[] =
 {
   DEFINE_PAPER_SIMPLE( "B7", "3.5x5", PT1(1076,300), PT1(1568,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w288h432-div2", "2x6*2", PT1(1228,300), PT1(1864,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER_SIMPLE( "w288h432", "4x6", PT1(1228,300), PT1(1864,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER_SIMPLE( "w360h504", "5x7", PT1(1568,300), PT1(2128,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w360h504-div2", "3.5x5*2", PT1(1568,300), PT1(2128,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w432h576", "6x8", PT1(1864,300), PT1(2422,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w432h648", "6x9", PT1(1864,300), PT1(2730,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w432h576-div2", "4x6*2", PT1(1864,300), PT1(2730,300), DYESUB_PORTRAIT),
 };
 
 LIST(dyesub_pagesize_list_t, fuji_ask300_page_list, dyesub_pagesize_t, fuji_ask300_page);
@@ -5050,10 +5052,12 @@ static const dyesub_printsize_t fuji_ask300_printsize[] =
 {
   { "300x300", "B7", 1076, 1568},
   { "300x300", "w288h432", 1228, 1864},
+  { "300x300", "w288h432-div2", 1228, 1864},
   { "300x300", "w360h504", 1568, 2128},
   { "300x300", "w360h504-div2", 1568, 2128},
   { "300x300", "w432h576", 1864, 2422},
   { "300x300", "w432h648", 1864, 2730},
+  { "300x300", "w432h576-div2", 1864, 2730},
 };
 
 LIST(dyesub_printsize_list_t, fuji_ask300_printsize_list, dyesub_printsize_t, fuji_ask300_printsize);
@@ -8200,7 +8204,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, &mitsu_cpd70x_plane_end,
     NULL, NULL, /* No block funcs */
     NULL,
-    NULL, NULL,
+    &mitsu_cpd70x_laminate_list, NULL,
     NULL, NULL,
     mitsu70x_parameters,
     mitsu70x_parameter_count,
