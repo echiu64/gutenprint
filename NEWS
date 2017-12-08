@@ -85,6 +85,12 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
   notes from Gutenprint 5.2.13 and the Overall Changes from 5.2.13
   below.
 
+* Canon driver
+
+  * improved support for following printer models
+
+    BJC-85
+    BJC-1000
 
 ================================================================
 
