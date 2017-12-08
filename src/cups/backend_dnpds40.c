@@ -1569,7 +1569,7 @@ top:
 	}
 	sleep(1);  /* Give things a moment */
 
-	if (fast_return) {
+	if (fast_return && !ctx->manual_copies) {
 		INFO("Fast return mode enabled.\n");
 	} else {
 		INFO("Waiting for job to complete...\n");
@@ -2487,7 +2487,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS40/DS80/DSRX1/DS620",
-	.version = "0.92",
+	.version = "0.93",
 	.uri_prefix = "dnpds40",
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,

@@ -346,7 +346,7 @@ top:
 			return CUPS_BACKEND_STOP;
 		}
 
-		if (rdback.data[0] > 0x02 && fast_return) {
+		if (rdback.data[0] > 0x02 && fast_return && copies <= 1) {
 			INFO("Fast return mode enabled.\n");
 			break;
 		}
@@ -396,7 +396,7 @@ static void selphyneo_cmdline(void)
 
 struct dyesub_backend canonselphyneo_backend = {
 	.name = "Canon SELPHY CPneo",
-	.version = "0.09",
+	.version = "0.10",
 	.uri_prefix = "canonselphyneo",
 	.cmdline_usage = selphyneo_cmdline,
 	.cmdline_arg = selphyneo_cmdline_arg,
