@@ -105,9 +105,17 @@ DECLARE_MODEUSES(canon_BJC_30);
 /* ----------------------------------- Canon BJC 85 ----------------------------------- */
 /* TODO: mode-media correlation */
 static const char* canon_BJC_85_modeuses_plain[] = {
-  "720x360dpi",
-  "360x360dmt",
-  "360x360dpi",
+  "360x360dmt_high",
+  "360x360dmt", /* original */
+  "360x360dpi_high"
+  "360x360dpi", /* original */
+  "720x360dpi_high",
+  "720x360dpi", /* original */
+  "720x360dpi_draft",
+  "360x360dpi_draft",
+  "180x180dpi_high",
+  "180x180dpi",
+  "180x180dpi_draft",
   NULL
 };
 
