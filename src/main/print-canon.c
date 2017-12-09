@@ -546,6 +546,8 @@ static const char* canon_families[] = {
  "PIXMA MPC", /* 16 */
  "PIXMA G",   /* 17 */
  "PIXMA TS",  /* 18 */
+ "PIXMA TR",  /* 19 */
+ "PIXMA XK",  /* 20 */
 };
 
 /* canon model ids look like the following
