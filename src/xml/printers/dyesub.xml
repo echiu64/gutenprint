@@ -134,7 +134,7 @@
       <printer translate="name" name="Kodak Printer-Dock-Plus" driver="kodak-dock-plus" manufacturer="Kodak" model="4000" />
       <printer translate="name" name="Kodak Printer-Dock-Plus-S3" driver="kodak-dock-plus-s3" manufacturer="Kodak" model="4000" />
       <printer translate="name" name="Magicard Tango 2E" deviceid="MFG:Magicard ; CMD:PCL,MPL;MDL:RioTango2D" driver="magicard-tango-2e" manufacturer="Magicard" model="7000" parameters="nativecopies">EXPERIMENTAL</printer>
-      <printer translate="name" name="Magicard Rio 2E" driver="magicard-rio-2e" manufacturer="Magicard" model="7000" parameters="nativecopies">EXPERIMENTAL</printer>
+      <printer translate="name" name="Magicard Rio 2E" driver="magicard-rio-2e" manufacturer="Magicard" model="7001" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-3020D" driver="mitsubishi-3020d" manufacturer="Mitsubishi" model="4101" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-3020DA" driver="mitsubishi-3020da" manufacturer="Mitsubishi" model="4102" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-3020DAE" driver="mitsubishi-3020dae" manufacturer="Mitsubishi" model="4102" parameters="nativecopies">EXPERIMENTAL</printer>

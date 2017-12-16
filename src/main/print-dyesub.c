@@ -258,6 +258,7 @@ typedef struct
   int power_resin;
   int power_overcoat;
   int gamma;
+  int duplex;
   char mag1[79];  /* Mag stripe row 1, 78 alphanumeric */
   char mag2[40];  /* Mag stripe row 2, 39 numeric */
   char mag3[107]; /* Mag stripe row 3, 106 numeric */
@@ -6733,7 +6734,22 @@ static void magicard_printer_init(stp_vars_t *v)
 //  stp_zprintf(v, ",LC%d", 1); // Force media type.  LC1/LC3/LC6/LC8 for YMCKO/MONO/KO/YMCKOK
   stp_zprintf(v, ",REJ%s", pd->privdata.magicard.reject ? "ON" : "OFF"); /* Faulty card rejection. */
   stp_zprintf(v, ",ESS%d", pd->copies); /* Number of copies */
-  stp_zprintf(v, ",KEE,RT2,DPXOFF,PAG1"); // ?? DPX+PAG are for duplexing?
+  stp_zprintf(v, ",KEE,RT2");
+  if (strcmp(pd->duplex_mode, "None")) /* Duplex enabled? */
+    {
+      stp_zprintf(v, ",DPXON,PAG%d", 1 + (pd->page_number & 1));
+      if (!(pd->page_number & 1))
+        {
+          /* Color format of BACk side -- eg CKO or KO or C or CO or K.  We don't support K/KO-only! */
+          stp_zprintf(v, ",BAC%s%s",
+		      pd->privdata.magicard.resin_k ? "CK" : "C",
+		      pd->privdata.magicard.overcoat ? "O" : "");
+	}
+    }
+  else
+    {
+      stp_zprintf(v, ",DPXOFF,PAG1");
+    }
   stp_zprintf(v, ",SLW%s", pd->privdata.magicard.colorsure ? "ON" : "OFF"); /* "Colorsure printing" */
   stp_zprintf(v, ",IMF%s", "BGR"); /* Image format -- as opposed to K, BGRK and others. */
   stp_zprintf(v, ",XCO0,YCO0"); // ??
@@ -8527,8 +8543,28 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     ds820_load_parameters,
     ds820_parse_parameters,
   },
-  { /* Magicard Series */
+  { /* Magicard Series w Duplex */
     7000,
+    &ymc_ink_list,
+    &res_300dpi_list,
+    &magicard_page_list,
+    &magicard_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_WHITE_BORDER
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_DUPLEX,
+    &magicard_printer_init, &magicard_printer_end,
+    NULL, magicard_plane_end,
+    NULL, NULL,
+    NULL,
+    &magicard_laminate_list, NULL,
+    NULL, NULL,
+    magicard_parameters,
+    magicard_parameter_count,
+    magicard_load_parameters,
+    magicard_parse_parameters,
+  },
+  { /* Magicard Series w/o Duplex */
+    7001,
     &ymc_ink_list,
     &res_300dpi_list,
     &magicard_page_list,
