@@ -313,8 +313,8 @@ ps_parameters_internal(const stp_vars_t *v, const char *name,
 	      nickname = stp_mxmlElementGetAttr(m_ppd, "nickname");
 	    else
 	      nickname = _("None; please provide a PPD file");
-	    stp_string_list_add_string(description->bounds.str,
-				       nickname, nickname);
+	    stp_string_list_add_string_unsafe(description->bounds.str,
+					      nickname, nickname);
 	    description->deflt.str = nickname;
 	    description->is_active = 1;
 	    return;
@@ -483,7 +483,7 @@ ps_describe_papersize(const stp_vars_t *v, const char *name)
 	    stpi_find_papersize_list_named(papersize_list_name);
 	  const stp_papersize_t *papersize;
 	  const stp_papersize_t *standard_papersize =
-	    stpi_get_listed_papersize("standard", name);
+	    stpi_get_listed_papersize(name, "standard");
 
 	  if (! ourlist)
 	    ourlist = stpi_new_papersize_list(papersize_list_name);
