@@ -979,11 +979,13 @@ int main(int argc, char *argv[])
     command_t command;
     int i, j;				/* Loop/general variables */
     int image_row_counter = -1;		/* Count of current row */
+    int total_image_rows = 0;		/* All rows seen */
     int current_data_row = -1;		/* Count of data rows received for this output row */
     int expected_data_rows_per_row = -1;
 					/* Expected no of data rows per output row */
     image_t image_data;			/* Data concerning image */
     long filepos = -1;
+    int wrote_header = 0;
 
 /*
  * Holders for the decoded lines
@@ -1128,6 +1130,7 @@ int main(int argc, char *argv[])
 
 	    case PCL_START_RASTER :
 		print_command(command_index, numeric_arg);
+		fprintf(stderr, "\n");
 
 /* Make sure we have all the stuff needed to work out what we are going
    to write out. */
@@ -1165,8 +1168,9 @@ int main(int argc, char *argv[])
 		    fprintf(stderr, "WARNING: Light magenta dithers not yet handled.\n");
 		}
 
-		if ((image_data.compression_type != PCL_COMPRESSION_NONE) &&
-			(image_data.compression_type != PCL_COMPRESSION_TIFF)) {
+		if (image_data.compression_type != PCL_COMPRESSION_NONE &&
+		    image_data.compression_type != PCL_COMPRESSION_TIFF &&
+		    image_data.compression_type != PCL_COMPRESSION_DELTA) {
 		    fprintf(stderr,
 			"Sorry, only 'no compression' or 'tiff compression' handled.\n");
 		    i++;
@@ -1178,23 +1182,25 @@ int main(int argc, char *argv[])
 		}
 
 		if (skip_output == 0) {
-		    if (image_data.colour_type == PCL_MONO &&
-			image_data.pixel_type == PCL_MONO)
-			(void) fputs("P5\n", write_fd);	/* Raw, Grey */
-		    else
-			(void) fputs("P6\n", write_fd);	/* Raw, RGB */
+		    if (! wrote_header) {
+			if (image_data.colour_type == PCL_MONO &&
+			    image_data.pixel_type == PCL_MONO)
+			    (void) fputs("P5\n", write_fd);	/* Raw, Grey */
+			else
+			    (void) fputs("P6\n", write_fd);	/* Raw, RGB */
 
-		    (void) fputs("# Written by pclunprint.\n", write_fd);
+			(void) fputs("# Written by pclunprint.\n", write_fd);
 
-/*
- * Remember the file position where we wrote the image width and height
- * (you don't want to know why!)
- */
+    /*
+     * Remember the file position where we wrote the image width and height
+     * (you don't want to know why!)
+     */
 
-		    filepos = ftell(write_fd);
+			filepos = ftell(write_fd);
 
-		    fprintf(write_fd, "%10d %10d\n", image_data.image_width,
-			image_data.image_height);
+			fprintf(write_fd, "%10d %10d\n", image_data.image_width,
+			    image_data.image_height);
+		    }
 
 /*
  * Write the depth of the image
@@ -1204,10 +1210,14 @@ int main(int argc, char *argv[])
 			output_data.output_depth = image_data.black_depth - 1;
 		    else
 			output_data.output_depth = image_data.cyan_depth - 1;
-		    if (output_data.pixels_depth > 1)
-		        fprintf(write_fd, "%d\n", 255);
-		    else
-			fprintf(write_fd, "%d\n", output_data.output_depth);
+		    if (! wrote_header) {
+			if (output_data.pixels_depth > 1)
+			    fprintf(write_fd, "%d\n", 255);
+			else
+			    fprintf(write_fd, "%d\n", output_data.output_depth);
+		    }
+		    wrote_header = 1;
+
 
 		    image_row_counter = 0;
 		    current_data_row = 0;
@@ -1303,9 +1313,10 @@ int main(int argc, char *argv[])
 
 		    if (image_data.image_height == -1) {
 			image_data.image_height = image_row_counter;
+			total_image_rows += image_row_counter;
 			if (fseek(write_fd, filepos, SEEK_SET) != -1) {
 			    fprintf(write_fd, "%10d %10d\n", image_data.image_width,
-				image_data.image_height);
+				total_image_rows);
 			    fseek(write_fd, 0L, SEEK_END);
 			}
 		    }
@@ -1578,6 +1589,7 @@ int main(int argc, char *argv[])
 			image_row_counter++;
 		    }
 		}
+		fprintf(stderr, "\n");
 		break;
 
 	    case PCL_DUPLEX :

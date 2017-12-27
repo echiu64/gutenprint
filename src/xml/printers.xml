@@ -2132,8 +2132,12 @@
       <printer translate="name" name="Brother HL-1870N" driver="brother-hl-1870n" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-2060" driver="brother-hl-2060" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-2250DN" driver="brother-hl-2250dn" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-2400CeN" driver="brother-hl-2400cen" manufacturer="Brother" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Brother HL-2460" deviceid="MFG:Brother;MDL:Brother HL-2460 series;" driver="brother-hl-2460" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-2460N" driver="brother-hl-2460n" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-2600CN" driver="brother-hl-2600cn" manufacturer="Brother" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Brother HL-3400CN" driver="brother-hl-3400cn" manufacturer="Brother" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Brother HL-3450CN" driver="brother-hl-3450cn" manufacturer="Brother" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Brother HL-4Ve" driver="brother-hl-4ve" manufacturer="Brother" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-5030" driver="brother-hl-5030" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-5040" deviceid="MFG:Brother;MDL:HL-5040 series;CMD:PJL,PCL,PCLXL;" driver="brother-hl-5040" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
@@ -2159,7 +2163,22 @@
       <printer translate="name" name="Canon LBP-1260" driver="canon-lbp-1260" manufacturer="Canon" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Canon LBP-1760" driver="canon-lbp-1760" manufacturer="Canon" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Canon LBP-3360" driver="canon-lbp-3360" manufacturer="Canon" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Canon LBP-5360" driver="canon-lbp-5360" manufacturer="Canon" model="50000" parameters="pcl_laser_params" />
+      <printer translate="name" name="Canon LBP-5390" driver="canon-lbp-5390" manufacturer="Canon" model="50000" parameters="pcl_laser_params" />
       <printer translate="name" name="Canon imageRunner 330s" driver="canon-ir_330s" manufacturer="Canon" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Canon imageRunner C2570" driver="canon-ir_c2570" manufacturer="Canon" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon imageRunner C2570i" driver="canon-ir_c2570i" manufacturer="Canon" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon imageRunner C2570N" driver="canon-ir_c2570N" manufacturer="Canon" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon imageRunner C2620N" driver="canon-ir_c2620N" manufacturer="Canon" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon imageRunner C3100" driver="canon-ir_c3100" manufacturer="Canon" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon imageRunner C3170" driver="canon-ir_c3170" manufacturer="Canon" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon imageRunner C3170i" driver="canon-ir_c3170i" manufacturer="Canon" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon imageRunner C3200" driver="canon-ir_c3200" manufacturer="Canon" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon imageRunner C5180" driver="canon-ir_c5180" manufacturer="Canon" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon imageRunner C5800" driver="canon-ir_c5800" manufacturer="Canon" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon imageRunner C5870U" driver="canon-ir_c5870U" manufacturer="Canon" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon imageRunner C6800" driver="canon-ir_c6800" manufacturer="Canon" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon imageRunner C6870U" driver="canon-ir_c6870u" manufacturer="Canon" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Citizen ProJet II" driver="citizen-projet_ii" manufacturer="Citizen" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="Datamax-ONeil p1115" deviceid="MFG:DatamaxOneil_;MDL:p1115;" color="false" driver="datamax_oneil_p1115" manufacturer="DatamaxONeil" model="10010" parameters="pcl_laser_params" />
       <printer translate="name" name="Datamax-ONeil p1115s" deviceid="MFG:DatamaxOneil_;MDL:p1115s;" color="false" driver="datamax_oneil_p1115s" manufacturer="DatamaxONeil" model="10011" parameters="pcl_laser_params" />
@@ -2176,8 +2195,8 @@
       <printer translate="name" name="Epson AL-C2000 PS3" deviceid="MFG:Epson;MDL:AL-C2000 PS3;" driver="epson-acl_c2000ps" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Epson AL-C8500" driver="epson-acl_c8500" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Epson AL-C8500PS" driver="epson-acl_c8500ps" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Epson AL-C8600" driver="epson-acl_c8600" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Epson AL-C8600 PS3" deviceid="MFG:Epson;MDL:AL-C8600 PS3;" driver="epson-acl_c8600ps" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Epson AL-C8600" driver="epson-acl_c8600" manufacturer="Epson" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Epson AL-C8600 PS3" deviceid="MFG:Epson;MDL:AL-C8600 PS3;" driver="epson-acl_c8600ps" manufacturer="Epson" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Epson EPL-5200" driver="epson-epl-5200" manufacturer="Epson" model="3" parameters="pcl_laser_params" />
       <printer translate="name" name="Epson EPL-5200+" driver="epson-epl-5200plus" manufacturer="Epson" model="3" parameters="pcl_laser_params" />
       <printer translate="name" name="Epson EPL-5700" deviceid="MFG:EPSON;MDL:EPL-5700;DES:EPSON EPL-5700;CMD:PJL,EJL,ESCPL2-00,ESCP9-84,PRPXL24-01,HP ENHANCED PCL5,HPGL2-01,;" driver="epson-epl-5700" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
@@ -2217,6 +2236,11 @@
       <printer translate="name" name="Generic PCL 6 Printer wide margin" driver="pcl-g_6_a4" manufacturer="Generic" model="62" parameters="pcl_laser_params" />
       <printer translate="name" name="Generic PCL 6 LF Printer wide margin" driver="pcl-g_6_lf_a4" manufacturer="Generic" model="63" parameters="pcl_laser_params" />
       <printer translate="name" name="Generic PCL 6 Tabl Printer wide margin" driver="pcl-g_6_tabloid_a4" manufacturer="Generic" model="64" parameters="pcl_laser_params" />
+      <printer translate="name" name="Generic PCL Color Laser" driver="pcl-g_c" manufacturer="Generic" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Generic PCL Color Laser LF Printer" driver="pcl-g_c_l" manufacturer="Generic" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Generic PCL Color wide margin" driver="pcl-g_c_a4" manufacturer="Generic" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Generic PCL Color LF wide margin" driver="pcl-g_c_lf_a4" manufacturer="Generic" model="50003" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Generic PCL Color Tabl wide margin" driver="pcl-g_c_tabloid_a4" manufacturer="Generic" model="50004" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Gestetner 10512" driver="gestetner-10512" manufacturer="Gestetner" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Gestetner 2212" driver="gestetner-2212" manufacturer="Gestetner" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Gestetner 2712" driver="gestetner-2712" manufacturer="Gestetner" model="61" parameters="pcl_laser_params" />
@@ -2275,14 +2299,98 @@
       <printer translate="name" name="HP Business Inkjet 2280" deviceid="MFG:HEWLETT-PACKARD;MDL:HP BUSINESS INKJET 2280;DES:Hewlett-Packard Business Inkjet 2280;CMD:MLC,PML,PJL,PCL5,POSTSCRIPT;" driver="hp-bij_2280" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP Color Inkjet Printer CP1160" driver="hp-cij_cp1160" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP Color Inkjet Printer CP1700" deviceid="MFG:HEWLETT-PACKARD;MDL:HP Color Inkjet CP1700;DES:HP Color Inkjet CP1700;" driver="hp-cij_cp1700" manufacturer="HP" model="901" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP Color LaserJet 2500" deviceid="MFG:Hewlett-Packard;MDL:hp color LaserJet 2500;CMD:PJL,MLC,BIDI-ECP,POSTSCRIPT,PJL,PCLXL,PCL;" driver="hp-clj_2500" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP Color LaserJet 4500" deviceid="MFG:Hewlett-Packard;MDL:LaserJet Color 4500;" driver="hp-clj_4500" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP Color LaserJet 4550" deviceid="MFG:Hewlett-Packard;MDL:HP Color LaserJet 4550 ;DES:Hewlett-Packard Color LaserJet 4550;CMD:PJL,MLC,PCL,POSTSCRIPT,PCLXL,PJL;" driver="hp-clj_4550" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP Color LaserJet 4600" deviceid="MFG:Hewlett-Packard;MDL:hp color LaserJet 4600;DES:Hewlett-Packard color LaserJet 4600;" driver="hp-clj_4600" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP Color LaserJet 5" driver="hp-clj_5" manufacturer="HP" model="3" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP Color LaserJet 5000" driver="hp-clj_5000" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP Color LaserJet 5500" driver="hp-clj_5500" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP Color LaserJet 8550GN" driver="hp-clj_8550gn" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP Color LaserJet 2500" deviceid="MFG:Hewlett-Packard;MDL:hp color LaserJet 2500;CMD:PJL,MLC,BIDI-ECP,POSTSCRIPT,PJL,PCLXL,PCL;" driver="hp-clj_2500" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 3000" driver="hp-clj_3000" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 3000n" driver="hp-clj_3000n" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 3000dn" driver="hp-clj_3000dn" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 3000dtn" driver="hp-clj_3000dtn" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 3700" driver="hp-clj_3700" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 3700n" driver="hp-clj_3700n" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 3800" driver="hp-clj_3800" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 3800n" driver="hp-clj_3800n" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 3800dn" driver="hp-clj_3800dn" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 3800dtn" driver="hp-clj_3800dtn" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 4500" deviceid="MFG:Hewlett-Packard;MDL:LaserJet Color 4500;" driver="hp-clj_4500" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 4550" deviceid="MFG:Hewlett-Packard;MDL:HP Color LaserJet 4550 ;DES:Hewlett-Packard Color LaserJet 4550;CMD:PJL,MLC,PCL,POSTSCRIPT,PCLXL,PJL;" driver="hp-clj_4550" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 4600" deviceid="MFG:Hewlett-Packard;MDL:hp color LaserJet 4600;DES:Hewlett-Packard color LaserJet 4600;" driver="hp-clj_4600" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 4610" deviceid="MFG:Hewlett-Packard;MDL:hp color LaserJet 4610;DES:Hewlett-Packard color LaserJet 4610;" driver="hp-clj_4610" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 4650" deviceid="MFG:Hewlett-Packard;MDL:hp color LaserJet 4650;DES:Hewlett-Packard color LaserJet 4650;" driver="hp-clj_4650" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 4700" driver="hp-clj_4700" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 4700n" driver="hp-clj_4700n" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 4700dn" driver="hp-clj_4700dn" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 4700dtn" driver="hp-clj_4700dtn" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 4700ph+" driver="hp-clj_4700phplus" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 5" driver="hp-clj_5" manufacturer="HP" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 5m" driver="hp-clj_5m" manufacturer="HP" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 5000" driver="hp-clj_5000" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 5500" driver="hp-clj_5500" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 5500n" driver="hp-clj_5500n" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 5500dn" driver="hp-clj_5500dn" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 5500dtn" driver="hp-clj_5500dtn" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 5500hdn" driver="hp-clj_5500hdn" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 8500" driver="hp-clj_8500" manufacturer="HP" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 8500n" driver="hp-clj_8500n" manufacturer="HP" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 8500dn" driver="hp-clj_8500dn" manufacturer="HP" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 8550" driver="hp-clj_8550" manufacturer="HP" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 8550DN" driver="hp-clj_8550dn" manufacturer="HP" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 8550GN" driver="hp-clj_8550gn" manufacturer="HP" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 8550MN" driver="hp-clj_8550mn" manufacturer="HP" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 9500" driver="hp-clj_9500" manufacturer="HP" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 9500n" driver="hp-clj_9500n" manufacturer="HP" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 9500hdn" driver="hp-clj_9500hdn" manufacturer="HP" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 9500gp" driver="hp-clj_9500gp" manufacturer="HP" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CM1312" driver="hp-clj_cm1312" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CM1312nfi" driver="hp-clj_9500nfi" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CM1411fn" driver="hp-clj_cm1411fn" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CM1412fn" driver="hp-clj_cm1412fn" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CM1413fn" driver="hp-clj_cm1413fn" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CM1415fn" driver="hp-clj_cm1415fn" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CM1415fnw" driver="hp-clj_cm1415fn2" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CM1416fnw" driver="hp-clj_cm1416fn2" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CM1417fnw" driver="hp-clj_cm1417fn2" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CM1418fnw" driver="hp-clj_cm1418fn2" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CM2320 MFP" driver="hp-clj_cm2320" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CM2320FXI MFP" driver="hp-clj_cm2320fxi" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CM2320N MFP" driver="hp-clj_cm2320n" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CM2320NF MFP" driver="hp-clj_cm2320nf" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CM3530 MFP" driver="hp-clj_cm3530_mfp" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CM4540 MFP" driver="hp-clj_cm4540_mfp" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CM4730 MFP" driver="hp-clj_cm4730_mfp" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CM6030 MFP" driver="hp-clj_cm6030_mfp" manufacturer="HP" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CM6040 MFP" driver="hp-clj_cm6040_mfp" manufacturer="HP" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CM6040f MFP" driver="hp-clj_cm6040f_mfp" manufacturer="HP" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CM6049f MFP" driver="hp-clj_cm6049f_mfp" manufacturer="HP" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CP1514n" driver="hp-clj_cp1514n" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CP1515n" driver="hp-clj_cp1515n" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CP1518ni" driver="hp-clj_cp1518ni" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CP2025" driver="hp-clj_cp2025" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CP2025dn" driver="hp-clj_cp2025dn" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CP2025n" driver="hp-clj_cp2025n" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CP2025x" driver="hp-clj_cp2025x" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CP3505" driver="hp-clj_cp3505" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CP3505dn" driver="hp-clj_cp3505dn" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CP3505n" driver="hp-clj_cp3505n" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CP3505x" driver="hp-clj_cp3505x" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CP3525" driver="hp-clj_cp3525" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CP3525dn" driver="hp-clj_cp3525dn" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CP3525n" driver="hp-clj_cp3525n" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CP3525x" driver="hp-clj_cp3525x" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CP4005" driver="hp-clj_cp4005" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CP4005dn" driver="hp-clj_cp4005dn" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CP4005n" driver="hp-clj_cp4005n" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CP4020" driver="hp-clj_cp4020" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CP4500" driver="hp-clj_cp4500" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CP4520" driver="hp-clj_cp4520" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CP4540 MFP" driver="hp-clj_cp4540" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CP5225" driver="hp-clj_cp5225" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CP5225dn" driver="hp-clj_cp5225dn" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CP5225n" driver="hp-clj_cp5225n" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CP5520" driver="hp-clj_cp5520" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CP6015dn" driver="hp-clj_cp6015dn" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CP6015de" driver="hp-clj_cp6015de" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CP6015n" driver="hp-clj_cp6015n" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CP6015x" driver="hp-clj_cp6015x" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet CP6015xh" driver="hp-clj_cp6015xh" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="HP DesignJet 230" driver="pcl-desnj-230" manufacturer="HP" model="10230" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DesignJet 250C" driver="pcl-desnj-250" manufacturer="HP" model="10250" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DesignJet 430" driver="pcl-desnj-430" manufacturer="HP" model="10230" parameters="pcl_inkjet_params" />
@@ -2610,6 +2718,18 @@
       <printer translate="name" name="Infotec MP 5000" driver="infotec-mp_5000" manufacturer="Infotec" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Infotec MP 5000B" driver="infotec-mp_5000b" manufacturer="Infotec" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera CS-1815" driver="kyocera-cs-1815" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera CS-2525E" driver="kyocera-cs-2525e" manufacturer="Kyocera" model="50003" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera CS-3225E" driver="kyocera-cs-3225e" manufacturer="Kyocera" model="50003" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera CS-3232E" driver="kyocera-cs-3232e" manufacturer="Kyocera" model="50003" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera CS-4035E" driver="kyocera-cs-4035e" manufacturer="Kyocera" model="50003" parameters="pcl_laser_params" />
+
+      <printer translate="name" name="Kyocera CS-250ci" driver="kyocera-cs-250ci" manufacturer="Kyocera" model="50003" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera CS-300ci" driver="kyocera-cs-300ci" manufacturer="Kyocera" model="50003" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera CS-3050ci" driver="kyocera-cs-3050ci" manufacturer="Kyocera" model="50003" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera CS-3550ci" driver="kyocera-cs-3550ci" manufacturer="Kyocera" model="50003" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera CS-400ci" driver="kyocera-cs-400ci" manufacturer="Kyocera" model="50003" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera CS-500ci" driver="kyocera-cs-500ci" manufacturer="Kyocera" model="50003" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera Ci-1100" driver="kyocera-ci-1100" manufacturer="Kyocera" model="50002" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera F-1010" deviceid="MFG:Kyocera;MDL:F-1010;DES:Kyocera F-1010;" driver="kyocera-f-1010" manufacturer="Kyocera" model="22" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera FS-600 - KPDL-2" driver="kyocera-fs-600_kpdl-2" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera FS-600" deviceid="MFG:Kyocera;MDL:Kyocera FS-600;DES:Kyocera FS-600;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-600" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
@@ -2649,8 +2769,8 @@
       <printer translate="name" name="Kyocera FS-3830N" driver="kyocera-fs-3830n" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera FS-3900DN" driver="kyocera-fs-3900dn" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera FS-4000DN" driver="kyocera-fs-4000dn" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera FS-5800C" deviceid="MFG:Kyocera;MDL:Kyocera FS-5800C;DES:Kyocera FS-5800C;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-5800c" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera FS-5900C" deviceid="MFG:Kyocera;MDL:Kyocera FS-5900C;DES:Kyocera FS-5900C;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-5900c" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera FS-5800C" deviceid="MFG:Kyocera;MDL:Kyocera FS-5800C;DES:Kyocera FS-5800C;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-5800c" manufacturer="Kyocera" model="50003" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera FS-5900C" deviceid="MFG:Kyocera;MDL:Kyocera FS-5900C;DES:Kyocera FS-5900C;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-5900c" manufacturer="Kyocera" model="50003" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Kyocera FS-6020" driver="kyocera-fs-6020" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera FS-6026" driver="kyocera-fs-6026" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera FS-6300" driver="kyocera-fs-6300" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" />
@@ -2663,12 +2783,25 @@
       <printer translate="name" name="Kyocera FS-7000" deviceid="MFG:Kyocera;MDL:Kyocera FS-7000;DES:Kyocera FS-7000;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-7000" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera FS-7000+" driver="kyocera-fs-7000plus" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera FS-7028M" driver="kyocera-fs-7028m" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera FS-8000C" deviceid="MFG:Kyocera Mita;MDL:Kyocera Mita FS-8000C;DES:Kyocera FS-8000C;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-8000c" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera FS-8000C" deviceid="MFG:Kyocera Mita;MDL:Kyocera Mita FS-8000C;DES:Kyocera FS-8000C;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-8000c" manufacturer="Kyocera" model="50004" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Kyocera FS-9000" deviceid="MFG:Kyocera;MDL:Kyocera FS-9000;DES:Kyocera FS-9000;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-9000" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera FS-9100DN" deviceid="MFG:Kyocera Mita;MDL:Kyocera Mita FS-9100DN;DES:Kyocera FS-9100DN;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-9100dn" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera FS-9130DN" driver="kyocera-fs-9130dn" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera FS-9500DN" deviceid="MFG:Kyocera Mita;MDL:Kyocera Mita FS-9500DN;DES:Kyocera FS-9500DN;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-9500dn" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera FS-9530DN" driver="kyocera-fs-9530dn" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera FS-C5015N" driver="kyocera-fs-c5015n" manufacturer="Kyocera" model="50004" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera FS-C5016N" driver="kyocera-fs-c5016n" manufacturer="Kyocera" model="50004" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera FS-C5020N" driver="kyocera-fs-c5020n" manufacturer="Kyocera" model="50004" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera FS-C5025N" driver="kyocera-fs-c5025n" manufacturer="Kyocera" model="50004" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera FS-C5030N" driver="kyocera-fs-c5030n" manufacturer="Kyocera" model="50004" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera FS-C5100DN" driver="kyocera-fs-c5100dn" manufacturer="Kyocera" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera FS-C5200DN" driver="kyocera-fs-c5200dn" manufacturer="Kyocera" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera FS-C5300DN" driver="kyocera-fs-c5300dn" manufacturer="Kyocera" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera FS-C5350DN" driver="kyocera-fs-c5350dn" manufacturer="Kyocera" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera FS-C5400DN" driver="kyocera-fs-c5400dn" manufacturer="Kyocera" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera FS-C8008N" driver="kyocera-fs-c8008n" manufacturer="Kyocera" model="50003" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera FS-C8100DN" driver="kyocera-fs-c8100dn" manufacturer="Kyocera" model="50003" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera FS-C8100DN+" driver="kyocera-fs-c8100dnplus" manufacturer="Kyocera" model="50003" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Kyocera KM-1510" driver="kyocera-km-1510" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera KM-1530" deviceid="MFG:Kyocera Mita;MDL:KM-1530;DES:Kyocera Mita KM-1530;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-km-1530" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera KM-1810" deviceid="MFG:Kyocera Mita;MDL:KM-1810;DES:Kyocera Mita KM-1810;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-km-1810" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
@@ -2688,6 +2821,20 @@
       <printer translate="name" name="Kyocera KM-6030" driver="kyocera-km-6030" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera KM-6230" deviceid="MFG:Kyocera Mita;MDL:KM-6230;DES:Kyocera Mita KM-6230;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-km-6230" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera KM-8030" driver="kyocera-km-8030" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera KM-C830" driver="kyocera-km-c830" manufacturer="Kyocera" model="50004 parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera KM-C850" driver="kyocera-km-c850" manufacturer="Kyocera" model="50004 parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera KM-C2520" driver="kyocera-km-c2520" manufacturer="Kyocera" model="50004 parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera KM-C2525E" driver="kyocera-km-c2525e" manufacturer="Kyocera" model="50004 parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera KM-C2630" driver="kyocera-km-c2630" manufacturer="Kyocera" model="50004 parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera KM-C3225" driver="kyocera-km-c3225" manufacturer="Kyocera" model="50004 parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera KM-C3225E" driver="kyocera-km-c3225e" manufacturer="Kyocera" model="50004 parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera KM-C3232" driver="kyocera-km-c3232" manufacturer="Kyocera" model="50004 parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera KM-C3232E" driver="kyocera-km-c3232e" manufacturer="Kyocera" model="50004 parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera KM-C4035E" driver="kyocera-km-c4035e" manufacturer="Kyocera" model="50004 parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera TASKalfa 250ci" driver="kyocera-km-taskalfa-250ci" manufacturer="Kyocera" model="50004" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera TASKalfa 300ci" driver="kyocera-km-taskalfa-300ci" manufacturer="Kyocera" model="50004" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera TASKalfa 400ci" driver="kyocera-km-taskalfa-400ci" manufacturer="Kyocera" model="50004" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera TASKalfa 500ci" driver="kyocera-km-taskalfa-500ci" manufacturer="Kyocera" model="50004" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Lanier 5622" driver="lanier-5622" manufacturer="Lanier" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Lanier 5627" driver="lanier-5627" manufacturer="Lanier" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Lanier 5632" driver="lanier-5632" manufacturer="Lanier" model="61" parameters="pcl_laser_params" />
@@ -2814,6 +2961,11 @@
       <printer translate="name" name="Oki B401d" driver="oki-b401d" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Oki B430" driver="oki-b430" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Oki B4350" driver="oki-b4350" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Oki C5300" driver="oki-c5300" manufacturer="Oki" model="50003" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Oki C5400" driver="oki-c5400" manufacturer="Oki" model="50003" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Oki C7300" driver="oki-c7300" manufacturer="Oki" model="50003" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Oki C9200" driver="oki-c9200" manufacturer="Oki" model="50003" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Oki C9400" driver="oki-c9400" manufacturer="Oki" model="50003" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Oki OL400" driver="okidata-ol400" manufacturer="Oki" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="Oki OL400e" driver="okidata-ol400e" manufacturer="Oki" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="Oki OL400ex" driver="okidata-ol400ex" manufacturer="Oki" model="2" parameters="pcl_laser_params" />
@@ -2974,6 +3126,20 @@
       <printer translate="name" name="Savin 9050b" driver="savin-9050b" manufacturer="Savin" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Seiko SpeedJET 200" driver="seiko-sj_200" manufacturer="Seiko" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="Sharp AR-161" deviceid="MFG:SHARP;MDL:AR-160/200 series;DES:None;CMD:PCL;" driver="sharp-ar-161" manufacturer="Sharp" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Sharp AR-BC260" driver="sharp-ar-bc260" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Sharp AR-BC320" driver="sharp-ar-bc320" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Sharp AR-C170M" driver="sharp-ar-c170m" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Sharp AR-C172M" driver="sharp-ar-c172m" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Sharp AR-C260" driver="sharp-ar-c260" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Sharp AR-C260F" driver="sharp-ar-c260F" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Sharp AR-C260M" driver="sharp-ar-c260M" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Sharp AR-C260P" driver="sharp-ar-c260P" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Sharp AR-C260S" driver="sharp-ar-c260S" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Sharp AR-C261F" driver="sharp-ar-c261F" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Sharp AR-C261M" driver="sharp-ar-c261M" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Sharp AR-C261S" driver="sharp-ar-c261S" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Sharp AR-C262M" driver="sharp-ar-c262M" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Sharp AR-C262S" driver="sharp-ar-c262S" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Sharp AR-M257" driver="sharp-ar-m257" manufacturer="Sharp" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Sony IJP-V100" deviceid="MFG:Sony;MDL:All-in-One IJP-V100;CMD:MLC,PCL,PML;" driver="sony-ijp-v100" manufacturer="Sony" model="601" parameters="pcl_inkjet_params" />
       <printer translate="name" name="Star LS-04" driver="star-ls-04" manufacturer="Star" model="2" parameters="pcl_laser_params" />
@@ -2985,7 +3151,7 @@
       <printer translate="name" name="Tektronix Phaser 750P" driver="tektronix-phaser_750p" manufacturer="Tektronix" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Xerox Able 1406" driver="xerox-able_1406" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Xerox DocuPrint 4508" driver="xerox-dp_4508" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Xerox DocuPrint C20" driver="xerox-dp_c20" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Xerox DocuPrint C20" driver="xerox-dp_c20" manufacturer="Xerox" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Xerox DocuPrint N4512" driver="xerox-dp_n4512" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Xerox DocuPrint N4512PS" driver="xerox-dp_n4512ps" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Xerox DocuPrint P12" deviceid="MFG:XEROX;MDL:DocuPrint P12;DES:Xerox DocuPrint P12;CMD:PrintGear,PCL,PJL;" driver="xerox-dp_p12" manufacturer="Xerox" model="2" parameters="pcl_laser_params" />
@@ -2993,6 +3159,7 @@
       <printer translate="name" name="Xerox DocuPrint P8e" deviceid="MFG:Xerox;MDL:DocuPrint P8e;CMD:PCL5E2;" driver="xerox-dp_p8e" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Xerox Document Centre 400" driver="xerox-dc_400" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Xerox Phaser 2135" driver="xerox-phaser_2135" manufacturer="Xerox" model="63" parameters="pcl_laser_params" />
+      <printer translate="name" name="Xerox Phaser 3160N" driver="xerox-phaser_3160n" manufacturer="Xerox" model="50003" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Xerox Phaser 4400B" driver="xerox-phaser_4400b" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Xerox Phaser 4400DT" driver="xerox-phaser_4400dt" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Xerox Phaser 4400DX" driver="xerox-phaser_4400dx" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
@@ -3060,7 +3227,9 @@
       <printer translate="name" name="Xerox Phaser 8550DT" driver="xerox-phaser_8550dt" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Xerox Phaser 8550DX" driver="xerox-phaser_8550dx" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Xerox Phaser 8560DN" driver="xerox-phaser_8560dn" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Xerox WorkCentre 7345" driver="xerox-workcentre_7345" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Xerox Phaser 8860" driver="xerox-phaser_8860" manufacturer="Xerox" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Xerox WorkCentre 7345" driver="xerox-workcentre_7345" manufacturer="Xerox" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Xerox WorkCentre C2424" driver="xerox-workcentre_c2424" manufacturer="Xerox" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Xerox WorkCentre M118" deviceid="MFG:XEROX;MDL:WorkCentre M118;DES:XEROX WorkCentre M118;" driver="xerox-wc_m118" manufacturer="Xerox" model="61" parameters="pcl_laser_params" />
     </family>
     <family name="lexmark">
