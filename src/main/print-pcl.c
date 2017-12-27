@@ -51,6 +51,7 @@ typedef struct
 {
   int do_blank;
   int blank_lines;
+  unsigned char *row_buf;	/* For color laser */
   unsigned char *comp_buf;
   void (*writefunc)(stp_vars_t *, unsigned char *, int, int);	/* PCL output function */
   int do_cret;
@@ -65,6 +66,7 @@ typedef struct
   unsigned int h_offset;      /* decipoints */
   unsigned int v_offset;      /* decipoints */
   int darkness;
+  int nodither;
 } pcl_privdata_t;
 
 /*
@@ -323,6 +325,7 @@ typedef struct {
 #define PCL_COLOR_CMYK4		4	/* CRet printing */
 #define PCL_COLOR_CMYKcm	8	/* CMY + Photo Cart */
 #define PCL_COLOR_CMYK4b	16	/* CRet for HP840c */
+#define PCL_COLOR_RGB		32	/* RGB for color lasers */
 
 #define PCL_PRINTER_LJ		1
 #define PCL_PRINTER_DJ		2
@@ -334,6 +337,7 @@ typedef struct {
 #define PCL_PRINTER_BLANKLINE	64	/* Blank line removal supported */
 #define PCL_PRINTER_DUPLEX	128	/* Printer can have duplexer */
 #define PCL_PRINTER_LABEL       256     /* Datamax-O'Neil PCL Label Printer */
+#define PCL_PRINTER_LJ_COLOR	512	/* Color laser printers */
 
 /*
  * FIXME - the 520 shouldn't be lumped in with the 500 as it supports
@@ -1394,6 +1398,76 @@ static const pcl_cap_t pcl_model_capabilities[] =
     emptylist,
     laserjet_papersources,
   },
+  /* Color laser printer, small format */
+  { 60000,
+    17 * 72 / 2, 14 * 72,
+    1, 1,				/* Min paper size */
+    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600,
+    {12, 12, 18, 18},
+    {12, 12, 10, 10},	/* Check/Fix */
+    PCL_COLOR_RGB,
+    PCL_PRINTER_LJ_COLOR | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE |
+      PCL_PRINTER_DUPLEX,
+    ljsmall_papersizes,
+    emptylist,
+    laserjet_papersources,
+  },
+  /* Color laser printer, large format */
+  { 60001,
+    13 * 72, 19 * 72,
+    1, 1,				/* Min paper size */
+    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600,
+    {12, 12, 18, 18},
+    {12, 12, 10, 10},	/* Check/Fix */
+    PCL_COLOR_RGB,
+    PCL_PRINTER_LJ_COLOR | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE |
+      PCL_PRINTER_DUPLEX,
+    ljbig_papersizes,
+    emptylist,
+    laserjet_papersources,
+  },
+  /* Color laser printer, small format, no expanded A4 margins */
+  { 60002,
+    17 * 72 / 2, 14 * 72,
+    1, 1,				/* Min paper size */
+    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600,
+    {12, 12, 18, 18},
+    {12, 12, 18, 18},	/* Check/Fix */
+    PCL_COLOR_RGB,
+    PCL_PRINTER_LJ_COLOR | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE |
+      PCL_PRINTER_DUPLEX,
+    ljsmall_papersizes,
+    emptylist,
+    laserjet_papersources,
+  },
+  /* Color laser printer with large paper, no expanded A4 margins */
+  { 60003,
+    13 * 72, 19 * 72,
+    1, 1,				/* Min paper size */
+    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600,
+    {12, 12, 18, 18},
+    {12, 12, 18, 18},	/* Check/Fix */
+    PCL_COLOR_RGB,
+    PCL_PRINTER_LJ_COLOR | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE |
+      PCL_PRINTER_DUPLEX,
+    ljbig_papersizes,
+    emptylist,
+    laserjet_papersources,
+  },
+  /* Color laser printer with tabloid paper, no expanded A4 margins */
+  { 60004,
+    118 * 72 / 10, 17 * 72,	/* 11.8*17 */
+    1, 1,				/* Min paper size */
+    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600,
+    {12, 12, 18, 18},
+    {12, 12, 18, 18},	/* Check/Fix */
+    PCL_COLOR_RGB,
+    PCL_PRINTER_LJ_COLOR | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE |
+      PCL_PRINTER_DUPLEX,
+    ljtabloid_papersizes,
+    emptylist,
+    laserjet_papersources,
+  },
 };
 
 #pragma GCC diagnostic push
@@ -1559,6 +1633,30 @@ static const float_param_t float_parameters[] =
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 3, 1, 0
     }, 0.0, 2.0, 1.0, 1
+  },
+  {
+    {
+      "RedDensity", N_("Red Density"), "Color=Yes,Category=Output Level Adjustment",
+      N_("Adjust the red density"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 5, 1, 0
+    }, 0.0, 1.0, 1.0, 1
+  },
+  {
+    {
+      "GreenDensity", N_("Green Density"), "Color=Yes,Category=Output Level Adjustment",
+      N_("Adjust the green density"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 5, 1, 0
+    }, 0.0, 1.0, 1.0, 1
+  },
+  {
+    {
+      "BlueDensity", N_("Blue Density"), "Color=Yes,Category=Output Level Adjustment",
+      N_("Adjust the blue density"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 4, 1, 0
+    }, 0.0, 1.0, 1.0, 1
   },
   {
     {
@@ -2217,7 +2315,18 @@ pcl_parameters(const stp_vars_t *v, const char *name,
 	   strcmp(name, "YellowDensity") == 0 ||
 	   strcmp(name, "BlackDensity") == 0)
     {
-      if (caps->color_type != PCL_COLOR_NONE &&
+      if ((caps->color_type & ~PCL_COLOR_RGB) != PCL_COLOR_NONE && 
+	  stp_check_string_parameter(v, "PrintingMode", STP_PARAMETER_DEFAULTED) &&
+	  strcmp(stp_get_string_parameter(v, "PrintingMode"), "Color") == 0)
+	description->is_active = 1;
+      else
+	description->is_active = 0;
+    }
+  else if (strcmp(name, "RedDensity") == 0 ||
+	   strcmp(name, "GreenDensity") == 0 ||
+	   strcmp(name, "BlueDensity") == 0)
+    {
+      if (caps->color_type & PCL_COLOR_RGB &&
 	  stp_check_string_parameter(v, "PrintingMode", STP_PARAMETER_DEFAULTED) &&
 	  strcmp(stp_get_string_parameter(v, "PrintingMode"), "Color") == 0)
 	description->is_active = 1;
@@ -2252,6 +2361,8 @@ pcl_parameters(const stp_vars_t *v, const char *name,
 	description->deflt.integer = 6;
       else if (caps->color_type == PCL_COLOR_NONE)
 	description->deflt.integer = 1;
+      else if (caps->color_type & PCL_COLOR_RGB)
+	description->deflt.integer = 3;
       else
 	description->deflt.integer = 4;
       description->bounds.integer.lower = -1;
@@ -2384,7 +2495,9 @@ pcl_describe_output(const stp_vars_t *v)
     printing_color = 0;
   if (printing_color)
     {
-      if ((caps->color_type & PCL_COLOR_CMY) == PCL_COLOR_CMY)
+      if ((caps->color_type & PCL_COLOR_RGB) == PCL_COLOR_RGB)
+	return "RGB";
+      else if ((caps->color_type & PCL_COLOR_CMY) == PCL_COLOR_CMY)
 	return "CMY";
       else
 	return "CMYK";
@@ -2529,6 +2642,48 @@ get_double_param(stp_vars_t *v, const char *param)
     return 1.0;
 }
 
+static void
+initialize_lj_color(stp_vars_t *v)
+{
+  /* Magic initialization sequence */
+  stp_zprintf(v, "\033*v6W%c%c%c%c%c%c", 0, 3, 8, 8, 8, 8); /* RTL config */
+  stp_puts("\033*t3J", v);			      /* Render alg (best) */
+  stp_zprintf(v, "\033*o3W%c%c%c", 6, 4, 6);	      /* Driver config */
+  stp_puts("\033*v255A", v);     /* Color comp 1) */
+  stp_puts("\033*v255B", v);     /* Color comp 2) */
+  stp_puts("\033*v255C", v);     /* Color comp 3) */
+  stp_puts("\033*v0I", v);	 /* Assign color idx 0 (white)*/
+  stp_puts("\033*v255A", v);     /* Color comp 1) */
+  stp_puts("\033*v0B", v);	 /* Color comp 2) */
+  stp_puts("\033*v0C", v);	 /* Color comp 3) */
+  stp_puts("\033*v6I", v);	 /* Assign color idx 1 (red) */
+  stp_puts("\033*v0A", v);	 /* Color comp 1) */
+  stp_puts("\033*v255B", v);     /* Color comp 2) */
+  stp_puts("\033*v0C", v);	 /* Color comp 3) */
+  stp_puts("\033*v5I", v);	 /* Assign color idx 5 (green) */
+  stp_puts("\033*v0A", v);	 /* Color comp 1) */
+  stp_puts("\033*v0B", v);	 /* Color comp 2) */
+  stp_puts("\033*v255C", v);     /* Color comp 3) */
+  stp_puts("\033*v4I", v);	 /* Assign color idx 4 (blue) */
+  stp_puts("\033*v255A", v);     /* Color comp 1) */
+  stp_puts("\033*v255B", v);     /* Color comp 2) */
+  stp_puts("\033*v0C", v);	 /* Color comp 3) */
+  stp_puts("\033*v3I", v);	 /* Assign color idx 3 (yellow) */
+  stp_puts("\033*v255A", v);     /* Color comp 1) */
+  stp_puts("\033*v0B", v);	 /* Color comp 2) */
+  stp_puts("\033*v255C", v);     /* Color comp 3) */
+  stp_puts("\033*v2I", v);	 /* Assign color idx 2 (green)*/
+  stp_puts("\033*v0A", v);	 /* Color comp 1) */
+  stp_puts("\033*v255B", v);     /* Color comp 2) */
+  stp_puts("\033*v255C", v);     /* Color comp 3) */
+  stp_puts("\033*v1I", v);	 /* Assign color idx 1 (magenta) */
+  stp_puts("\033*v0A", v);	 /* Color comp 1) */
+  stp_puts("\033*v0B", v);	 /* Color comp 2) */
+  stp_puts("\033*v0C", v);	 /* Color comp 3) */
+  stp_puts("\033*v7I", v);	 /* Assign color idx (black) */
+  stp_puts("\033*v7S", v);	 /* Set Foreground Color (black) */
+}
+
 static int
 pcl_do_print(stp_vars_t *v, stp_image_t *image)
 {
@@ -2570,6 +2725,7 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
 		errlast;	/* Last raster line loaded */
   unsigned	zero_mask;
   int           image_height;
+  int           image_width;
   const pcl_cap_t *caps;		/* Printer capabilities */
   int		planes = 3;	/* # of output planes */
   int		pcl_media_size; /* PCL media size code */
@@ -2590,6 +2746,8 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
     }
   if (strcmp(print_mode, "Color") == 0)
     printing_color = 1;
+
+  (void) memset(&privdata, 0, sizeof(privdata));
 
   caps = pcl_get_model_capabilities(model);
 
@@ -2613,6 +2771,9 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
       return 0;
     }
 
+  if (printing_color && (caps->stp_printer_type & PCL_PRINTER_LJ_COLOR)) {
+    privdata.nodither = 1;
+  }
  /*
   * Choose the correct color conversion function...
   */
@@ -2659,6 +2820,7 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
   top -= page_top;
 
   image_height = stp_image_height(image);
+  image_width = stp_image_width(image);
 
  /*
   * Set media size here because it is needed by the margin calculation code.
@@ -2886,7 +3048,9 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
   * Set DJ print quality to "best" if resolution >= 300
   */
 
-      if ((xdpi >= 300) && ((caps->stp_printer_type & PCL_PRINTER_DJ) == PCL_PRINTER_DJ))
+      if (caps->stp_printer_type & PCL_PRINTER_LJ_COLOR)
+	stp_zprintf(v, "\033&l%dM", pcl_media_type);
+      else if ((xdpi >= 300) && ((caps->stp_printer_type & PCL_PRINTER_DJ) == PCL_PRINTER_DJ))
       {
         if ((caps->stp_printer_type & PCL_PRINTER_MEDIATYPE) == PCL_PRINTER_MEDIATYPE)
         {
@@ -2964,7 +3128,7 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
     */
 
     if (printing_color)
-      if ((caps->color_type & PCL_COLOR_CMY) == PCL_COLOR_CMY)
+      if (caps->color_type & (PCL_COLOR_CMY | PCL_COLOR_RGB))
         planes = 3;
       else
         if (privdata.do_6color)
@@ -2996,7 +3160,7 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
   else
   {
     stp_zprintf(v, "\033*t%dR", (int) xdpi);		/* Simple resolution */
-    if (printing_color)
+    if (printing_color && ! (caps->stp_printer_type & PCL_PRINTER_LJ_COLOR))
     {
       if ((caps->color_type & PCL_COLOR_CMY) == PCL_COLOR_CMY)
         stp_puts("\033*r-3U", v);		/* Simple CMY color */
@@ -3062,6 +3226,12 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
   stp_zprintf(v, "\033*r%dS", out_width);		/* Set raster width */
   stp_zprintf(v, "\033*r%dT", out_height);	/* Set raster height */
 
+  if (printing_color && caps->stp_printer_type & PCL_PRINTER_LJ_COLOR)
+    {
+      privdata.row_buf = stp_malloc(out_width * out_height);
+      initialize_lj_color(v);
+    }
+
   if (privdata.do_cretb)
     {
       /* Move to top left of printed area */
@@ -3077,6 +3247,8 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
   privdata.height = (out_width + 7) / 8;
   if (privdata.do_cret)
     privdata.height *= 2;
+  else if (printing_color && caps->stp_printer_type & PCL_PRINTER_LJ_COLOR)
+    privdata.height = out_width * 3;
 
   if (!printing_color)
   {
@@ -3093,7 +3265,7 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
     magenta = stp_malloc(privdata.height);
     yellow  = stp_malloc(privdata.height);
 
-    if ((caps->color_type & PCL_COLOR_CMY) == PCL_COLOR_CMY)
+    if (caps->color_type & (PCL_COLOR_CMY | PCL_COLOR_RGB))
       black = NULL;
     else
       black = stp_malloc(privdata.height);
@@ -3116,6 +3288,8 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
       else
 	stp_set_string_parameter(v, "STPIOutputType", "Grayscale");
     }
+  else if (caps->color_type & PCL_COLOR_RGB)
+    stp_set_string_parameter(v, "STPIOutputType", "RGB");
   else
     stp_set_string_parameter(v, "STPIOutputType", "CMY");
 
@@ -3143,21 +3317,37 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
 #endif
   stp_dither_init(v, image, out_width, xdpi, ydpi);
 
-  if (black)
+  if (privdata.nodither)
     {
-      stp_dither_add_channel(v, black, STP_ECOLOR_K, 0);
-      stp_channel_set_black_channel(v, STP_ECOLOR_K);
+      int i = 0;
+      stp_channel_reset(v);
+      if (black)
+	stp_channel_add(v, i++, 0, 1.0);
+      if (cyan)
+	stp_channel_add(v, i++, 0, 1.0);
+      if (magenta)
+	stp_channel_add(v, i++, 0, 1.0);
+      if (yellow)
+	stp_channel_add(v, i++, 0, 1.0);
     }
-  if (cyan)
-    stp_dither_add_channel(v, cyan, STP_ECOLOR_C, 0);
-  if (lcyan)
-    stp_dither_add_channel(v, lcyan, STP_ECOLOR_C, 1);
-  if (magenta)
-    stp_dither_add_channel(v, magenta, STP_ECOLOR_M, 0);
-  if (lmagenta)
-    stp_dither_add_channel(v, lmagenta, STP_ECOLOR_M, 1);
-  if (yellow)
-    stp_dither_add_channel(v, yellow, STP_ECOLOR_Y, 0);
+  else
+    {
+      if (black)
+	{
+	  stp_dither_add_channel(v, black, STP_ECOLOR_K, 0);
+	  stp_channel_set_black_channel(v, STP_ECOLOR_K);
+	}
+      if (cyan)
+	stp_dither_add_channel(v, cyan, STP_ECOLOR_C, 0);
+      if (lcyan)
+	stp_dither_add_channel(v, lcyan, STP_ECOLOR_C, 1);
+      if (magenta)
+	stp_dither_add_channel(v, magenta, STP_ECOLOR_M, 0);
+      if (lmagenta)
+	stp_dither_add_channel(v, lmagenta, STP_ECOLOR_M, 1);
+      if (yellow)
+	stp_dither_add_channel(v, yellow, STP_ECOLOR_Y, 0);
+    }
 
 /* Ensure that density does not exceed 1.0 */
 
@@ -3265,7 +3455,10 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
       stp_curve_destroy(lum_adjustment);
     }
 
-  (void) stp_color_init(v, image, 65536);
+  if (printing_color && (caps->stp_printer_type & PCL_PRINTER_LJ_COLOR))
+    (void) stp_color_init(v, image, 256);
+  else
+    (void) stp_color_init(v, image, 65536);
 
   errdiv  = image_height / out_height;
   errmod  = image_height % out_height;
@@ -3294,8 +3487,51 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
 	  break;
 	}
     }
-    stp_dither(v, y, duplicate_line, zero_mask, NULL);
-    pcl_printfunc(v);
+    if (privdata.nodither)
+      {
+	if (! duplicate_line)
+	  {
+	    unsigned row_errdiv = image_width / out_width;
+	    unsigned row_errmod = image_width % out_width;
+	    unsigned row_errval = 0;
+	    unsigned row_errlast = -1;
+	    unsigned row_errcol = 0;
+	    unsigned short *output = stp_channel_get_output(v);
+	    unsigned char *optr = privdata.row_buf;
+	    int x;
+	    for (x = 0; x < out_width; x++)
+	      {
+		if (row_errcol != row_errlast)
+		  {
+		    row_errlast = row_errcol;
+		    optr[0] = output[0] / (unsigned short) 257;
+		    optr[1] = output[1] / (unsigned short) 257;
+		    optr[2] = output[2] / (unsigned short) 257;
+		    output += 3;
+		  }
+		else
+		  {
+		    optr[0] = optr[-3];
+		    optr[1] = optr[-2];
+		    optr[2] = optr[-1];
+		  }
+		optr += 3;
+		row_errval += row_errmod;
+		row_errcol += row_errdiv;
+		if (row_errval >= out_width)
+		  {
+		    row_errval -= out_width;
+		    row_errcol++;
+		  }
+	      }
+	  }
+	(*(privdata.writefunc))(v, privdata.row_buf, privdata.height, 1);
+      }
+    else
+      {
+	stp_dither(v, y, duplicate_line, zero_mask, NULL);
+	pcl_printfunc(v);
+      }
     stp_deprintf(STP_DBG_PCL,"pcl_print: y = %d, line = %d, val = %d, mod = %d, height = %d\n",
 		  y, errline, errval, errmod, out_height);
     errval += errmod;
@@ -3339,6 +3575,8 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
 
   if (privdata.comp_buf != NULL)
     stp_free(privdata.comp_buf);
+  if (privdata.row_buf != NULL)
+    stp_free(privdata.row_buf);
 
   if ((caps->stp_printer_type & PCL_PRINTER_NEW_ERG) == PCL_PRINTER_NEW_ERG)
     stp_puts("\033*rC", v);

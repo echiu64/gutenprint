@@ -171,6 +171,11 @@
       <printer translate="name" name="Generic PCL 6 Printer wide margin" driver="pcl-g_6_a4" manufacturer="Generic" model="62" parameters="pcl_laser_params" />
       <printer translate="name" name="Generic PCL 6 LF Printer wide margin" driver="pcl-g_6_lf_a4" manufacturer="Generic" model="63" parameters="pcl_laser_params" />
       <printer translate="name" name="Generic PCL 6 Tabl Printer wide margin" driver="pcl-g_6_tabloid_a4" manufacturer="Generic" model="64" parameters="pcl_laser_params" />
+      <printer translate="name" name="Generic PCL Color Laser" driver="pcl-g_c" manufacturer="Generic" model="60000" parameters="pcl_laser_params" />
+      <printer translate="name" name="Generic PCL Color Laser LF Printer" driver="pcl-g_c_l" manufacturer="Generic" model="60001" parameters="pcl_laser_params" />
+      <printer translate="name" name="Generic PCL Color wide margin" driver="pcl-g_c_a4" manufacturer="Generic" model="60002" parameters="pcl_laser_params" />
+      <printer translate="name" name="Generic PCL Color LF wide margin" driver="pcl-g_c_lf_a4" manufacturer="Generic" model="60003" parameters="pcl_laser_params" />
+      <printer translate="name" name="Generic PCL Color Tabl wide margin" driver="pcl-g_c_tabloid_a4" manufacturer="Generic" model="60004" parameters="pcl_laser_params" />
       <printer translate="name" name="Gestetner 10512" driver="gestetner-10512" manufacturer="Gestetner" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Gestetner 2212" driver="gestetner-2212" manufacturer="Gestetner" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Gestetner 2712" driver="gestetner-2712" manufacturer="Gestetner" model="61" parameters="pcl_laser_params" />
@@ -230,13 +235,13 @@
       <printer translate="name" name="HP Color Inkjet Printer CP1160" driver="hp-cij_cp1160" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP Color Inkjet Printer CP1700" deviceid="MFG:HEWLETT-PACKARD;MDL:HP Color Inkjet CP1700;DES:HP Color Inkjet CP1700;" driver="hp-cij_cp1700" manufacturer="HP" model="901" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP Color LaserJet 2500" deviceid="MFG:Hewlett-Packard;MDL:hp color LaserJet 2500;CMD:PJL,MLC,BIDI-ECP,POSTSCRIPT,PJL,PCLXL,PCL;" driver="hp-clj_2500" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP Color LaserJet 4500" deviceid="MFG:Hewlett-Packard;MDL:LaserJet Color 4500;" driver="hp-clj_4500" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP Color LaserJet 4550" deviceid="MFG:Hewlett-Packard;MDL:HP Color LaserJet 4550 ;DES:Hewlett-Packard Color LaserJet 4550;CMD:PJL,MLC,PCL,POSTSCRIPT,PCLXL,PJL;" driver="hp-clj_4550" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP Color LaserJet 4600" deviceid="MFG:Hewlett-Packard;MDL:hp color LaserJet 4600;DES:Hewlett-Packard color LaserJet 4600;" driver="hp-clj_4600" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP Color LaserJet 5" driver="hp-clj_5" manufacturer="HP" model="3" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP Color LaserJet 5000" driver="hp-clj_5000" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP Color LaserJet 5500" driver="hp-clj_5500" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP Color LaserJet 8550GN" driver="hp-clj_8550gn" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP Color LaserJet 4500" deviceid="MFG:Hewlett-Packard;MDL:LaserJet Color 4500;" driver="hp-clj_4500" manufacturer="HP" model="60000" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP Color LaserJet 4550" deviceid="MFG:Hewlett-Packard;MDL:HP Color LaserJet 4550 ;DES:Hewlett-Packard Color LaserJet 4550;CMD:PJL,MLC,PCL,POSTSCRIPT,PCLXL,PJL;" driver="hp-clj_4550" manufacturer="HP" model="60000" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP Color LaserJet 4600" deviceid="MFG:Hewlett-Packard;MDL:hp color LaserJet 4600;DES:Hewlett-Packard color LaserJet 4600;" driver="hp-clj_4600" manufacturer="HP" model="60000" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP Color LaserJet 5" driver="hp-clj_5" manufacturer="HP" model="60000" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP Color LaserJet 5000" driver="hp-clj_5000" manufacturer="HP" model="60000" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP Color LaserJet 5500" driver="hp-clj_5500" manufacturer="HP" model="60000" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP Color LaserJet 8550GN" driver="hp-clj_8550gn" manufacturer="HP" model="60000" parameters="pcl_laser_params" />
       <printer translate="name" name="HP DesignJet 230" driver="pcl-desnj-230" manufacturer="HP" model="10230" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DesignJet 250C" driver="pcl-desnj-250" manufacturer="HP" model="10250" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DesignJet 430" driver="pcl-desnj-430" manufacturer="HP" model="10230" parameters="pcl_inkjet_params" />

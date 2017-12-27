@@ -1920,59 +1920,77 @@ RAW_TO_RAW_RAW_FUNC(unsigned short, 16)
 GENERIC_COLOR_FUNC(raw, raw_raw)
 
 
-#define CONVERSION_FUNCTION_WITH_FAST(from, to, from2)		\
-static unsigned							\
-generic_##from##_to_##to(const stp_vars_t *v,			\
-			 const unsigned char *in,		\
-			 unsigned short *out)			\
-{								\
-  lut_t *lut = (lut_t *)(stp_get_component_data(v, "Color"));	\
-  switch (lut->color_correction->correction)			\
-    {								\
-    case COLOR_CORRECTION_UNCORRECTED:				\
-      return from2##_to_##to##_fast(v, in, out);		\
-    case COLOR_CORRECTION_ACCURATE:				\
-    case COLOR_CORRECTION_BRIGHT:				\
-    case COLOR_CORRECTION_HUE:					\
-      return from2##_to_##to(v, in, out);			\
-    case COLOR_CORRECTION_DESATURATED:				\
-      return from2##_to_##to##_desaturated(v, in, out);		\
-    case COLOR_CORRECTION_THRESHOLD:				\
-    case COLOR_CORRECTION_PREDITHERED:				\
-      return from2##_to_##to##_threshold(v, in, out);		\
-    case COLOR_CORRECTION_DENSITY:				\
-    case COLOR_CORRECTION_RAW:					\
-      return from2##_to_##to##_raw(v, in, out);			\
-    default:							\
-      return (unsigned) -1;					\
-    }								\
+#define CONVERSION_FUNCTION_WITH_FAST(from, to, from2)			\
+static unsigned								\
+generic_##from##_to_##to(const stp_vars_t *v,				\
+			 const unsigned char *in,			\
+			 unsigned short *out)				\
+{									\
+  lut_t *lut = (lut_t *)(stp_get_component_data(v, "Color"));		\
+  switch (lut->color_correction->correction)				\
+    {									\
+    case COLOR_CORRECTION_UNCORRECTED:					\
+      stp_dprintf(STP_DBG_COLORFUNC, v,					\
+		  "Colorfunc: %s_to_%s_fast\n", #from2, #to);		\
+      return from2##_to_##to##_fast(v, in, out);			\
+    case COLOR_CORRECTION_ACCURATE:					\
+    case COLOR_CORRECTION_BRIGHT:					\
+    case COLOR_CORRECTION_HUE:						\
+      stp_dprintf(STP_DBG_COLORFUNC, v,					\
+		  "Colorfunc: %s_to_%s\n", #from2, #to);		\
+      return from2##_to_##to(v, in, out);				\
+    case COLOR_CORRECTION_DESATURATED:					\
+      stp_dprintf(STP_DBG_COLORFUNC, v,					\
+		  "Colorfunc: %s_to_%s_desaturated\n", #from2, #to);	\
+      return from2##_to_##to##_desaturated(v, in, out);			\
+    case COLOR_CORRECTION_THRESHOLD:					\
+    case COLOR_CORRECTION_PREDITHERED:					\
+      stp_dprintf(STP_DBG_COLORFUNC, v,					\
+		  "Colorfunc: %s_to_%s_threshold\n", #from2, #to);	\
+      return from2##_to_##to##_threshold(v, in, out);			\
+    case COLOR_CORRECTION_DENSITY:					\
+    case COLOR_CORRECTION_RAW:						\
+      stp_dprintf(STP_DBG_COLORFUNC, v,					\
+		  "Colorfunc: %s_to_%s_raw\n", #from2, #to);		\
+      return from2##_to_##to##_raw(v, in, out);				\
+    default:								\
+      return (unsigned) -1;						\
+    }									\
 }
 
-#define CONVERSION_FUNCTION_WITHOUT_FAST(from, to, from2)	\
-static unsigned							\
-generic_##from##_to_##to(const stp_vars_t *v,			\
-			 const unsigned char *in,		\
-			 unsigned short *out)			\
-{								\
-  lut_t *lut = (lut_t *)(stp_get_component_data(v, "Color"));	\
-  switch (lut->color_correction->correction)			\
-    {								\
-    case COLOR_CORRECTION_UNCORRECTED:				\
-    case COLOR_CORRECTION_ACCURATE:				\
-    case COLOR_CORRECTION_BRIGHT:				\
-    case COLOR_CORRECTION_HUE:					\
-      return from2##_to_##to(v, in, out);			\
-    case COLOR_CORRECTION_DESATURATED:				\
-      return from2##_to_##to##_desaturated(v, in, out);		\
-    case COLOR_CORRECTION_THRESHOLD:				\
-    case COLOR_CORRECTION_PREDITHERED:				\
-      return from2##_to_##to##_threshold(v, in, out);		\
-    case COLOR_CORRECTION_DENSITY:				\
-    case COLOR_CORRECTION_RAW:					\
-      return from2##_to_##to##_raw(v, in, out);			\
-    default:							\
-      return (unsigned) -1;					\
-    }								\
+#define CONVERSION_FUNCTION_WITHOUT_FAST(from, to, from2)		\
+static unsigned								\
+generic_##from##_to_##to(const stp_vars_t *v,				\
+			 const unsigned char *in,			\
+			 unsigned short *out)				\
+{									\
+  lut_t *lut = (lut_t *)(stp_get_component_data(v, "Color"));		\
+  switch (lut->color_correction->correction)				\
+    {									\
+    case COLOR_CORRECTION_UNCORRECTED:					\
+    case COLOR_CORRECTION_ACCURATE:					\
+    case COLOR_CORRECTION_BRIGHT:					\
+    case COLOR_CORRECTION_HUE:						\
+      stp_dprintf(STP_DBG_COLORFUNC, v,					\
+		  "Colorfunc: %s_to_%s\n", #from2, #to);		\
+      return from2##_to_##to(v, in, out);				\
+    case COLOR_CORRECTION_DESATURATED:					\
+      stp_dprintf(STP_DBG_COLORFUNC, v,					\
+		  "Colorfunc: %s_to_%s_desaturated\n", #from2, #to);	\
+      return from2##_to_##to##_desaturated(v, in, out);			\
+    case COLOR_CORRECTION_THRESHOLD:					\
+    case COLOR_CORRECTION_PREDITHERED:					\
+      stp_dprintf(STP_DBG_COLORFUNC, v,					\
+		  "Colorfunc: %s_to_%s_threshold\n", #from2, #to);	\
+      return from2##_to_##to##_threshold(v, in, out);			\
+    case COLOR_CORRECTION_DENSITY:					\
+    case COLOR_CORRECTION_RAW:						\
+      stp_dprintf(STP_DBG_COLORFUNC, v,					\
+		  "Colorfunc: %s_to_%s_raw\n", #from2, #to);		\
+      return from2##_to_##to##_raw(v, in, out);				\
+    default:								\
+      return (unsigned) -1;						\
+    }									\
 }
 
 #define CONVERSION_FUNCTION_WITHOUT_DESATURATED(from, to, from2)	\
@@ -1989,12 +2007,18 @@ generic_##from##_to_##to(const stp_vars_t *v,				\
     case COLOR_CORRECTION_BRIGHT:					\
     case COLOR_CORRECTION_HUE:						\
     case COLOR_CORRECTION_DESATURATED:					\
+      stp_dprintf(STP_DBG_COLORFUNC, v,					\
+		  "Colorfunc: %s_to_%s\n", #from2, #to);		\
       return from2##_to_##to(v, in, out);				\
     case COLOR_CORRECTION_THRESHOLD:					\
     case COLOR_CORRECTION_PREDITHERED:					\
+      stp_dprintf(STP_DBG_COLORFUNC, v,					\
+		  "Colorfunc: %s_to_%s_threshold\n", #from2, #to);	\
       return from2##_to_##to##_threshold(v, in, out);			\
     case COLOR_CORRECTION_DENSITY:					\
     case COLOR_CORRECTION_RAW:						\
+      stp_dprintf(STP_DBG_COLORFUNC, v,					\
+		  "Colorfunc: %s_to_%s_raw\n", #from2, #to);		\
       return from2##_to_##to##_raw(v, in, out);				\
     default:								\
       return (unsigned) -1;						\
@@ -2087,16 +2111,19 @@ stpi_color_convert_raw(const stp_vars_t *v,
     {
     case COLOR_CORRECTION_THRESHOLD:
     case COLOR_CORRECTION_PREDITHERED:
+      stp_dprintf(STP_DBG_COLORFUNC, v, "Colorfunc: raw_to_raw_threshold\n");
       return raw_to_raw_threshold(v, in, out);
     case COLOR_CORRECTION_UNCORRECTED:
     case COLOR_CORRECTION_BRIGHT:
     case COLOR_CORRECTION_HUE:
     case COLOR_CORRECTION_ACCURATE:
     case COLOR_CORRECTION_DESATURATED:
+      stp_dprintf(STP_DBG_COLORFUNC, v, "Colorfunc: raw_to_raw_desaturated\n");
       return raw_to_raw(v, in, out);
     case COLOR_CORRECTION_RAW:
     case COLOR_CORRECTION_DEFAULT:
     case COLOR_CORRECTION_DENSITY:
+      stp_dprintf(STP_DBG_COLORFUNC, v, "Colorfunc: raw_to_raw_raw\n");
       return raw_to_raw_raw(v, in, out);
     default:
       return (unsigned) -1;

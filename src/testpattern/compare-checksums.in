@@ -293,7 +293,7 @@ sub load_file($\%\%) {
 	my ($sum) = $$answer[0];
 	my ($val) = $$answer[1];
 	my ($prn) = $$answer[2];
-	$$modes{$val} = $sum;
+	$$modes{"*${prn}_$val"} = $sum;
 	$$printers{$prn} = 1;
     }
 }

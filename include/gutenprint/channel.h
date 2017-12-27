@@ -81,6 +81,7 @@ extern void stp_channel_convert(const stp_vars_t *v, unsigned *zero_mask);
 extern unsigned short * stp_channel_get_input(const stp_vars_t *v);
 
 extern unsigned short * stp_channel_get_output(const stp_vars_t *v);
+extern unsigned char * stp_channel_get_output_8bit(const stp_vars_t *v);
 
 #ifdef __cplusplus
   }
