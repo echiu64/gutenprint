@@ -121,11 +121,11 @@
       <printer translate="name" name="Canon imageRunner C2570" driver="canon-ir_c2570" manufacturer="Canon" model="60001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon imageRunner C2570i" driver="canon-ir_c2570i" manufacturer="Canon" model="60001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon imageRunner C2570N" driver="canon-ir_c2620N" manufacturer="Canon" model="60001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="Canon imageRunner C2570" driver="canon-ir_c3100" manufacturer="Canon" model="60001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="Canon imageRunner C2570" driver="canon-ir_c3170" manufacturer="Canon" model="60001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="Canon imageRunner C2570i" driver="canon-ir_c3170i" manufacturer="Canon" model="60001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="Canon imageRunner C2570" driver="canon-ir_c5800" manufacturer="Canon" model="60001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="Canon imageRunner C2570U" driver="canon-ir_c5870U" manufacturer="Canon" model="60001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon imageRunner C3100" driver="canon-ir_c3100" manufacturer="Canon" model="60001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon imageRunner C3170" driver="canon-ir_c3170" manufacturer="Canon" model="60001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon imageRunner C3170i" driver="canon-ir_c3170i" manufacturer="Canon" model="60001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon imageRunner C5800" driver="canon-ir_c5800" manufacturer="Canon" model="60001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon imageRunner C5870U" driver="canon-ir_c5870U" manufacturer="Canon" model="60001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon imageRunner C6800" driver="canon-ir_c6800" manufacturer="Canon" model="60001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon imageRunner C6870U" driver="canon-ir_c6870u" manufacturer="Canon" model="60001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Citizen ProJet II" driver="citizen-projet_ii" manufacturer="Citizen" model="2" parameters="pcl_laser_params" />
