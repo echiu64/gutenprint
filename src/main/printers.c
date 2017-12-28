@@ -968,6 +968,7 @@ stp_family_register(stp_list_t *family)
 
   if (family)
     {
+      int duplicate_printers = 0;
       printer_item = stp_list_get_start(family);
 
       while(printer_item)
@@ -976,8 +977,16 @@ stp_family_register(stp_list_t *family)
 	  if (!stp_list_get_item_by_name(printer_list, printer->driver))
 	    stp_list_item_create(printer_list, NULL, printer);
 	  else
-	    stp_erprintf("Duplicate printer entry `%s' (%s)\n",
-			 printer->driver, printer->long_name);
+	    {
+	      stp_erprintf("Duplicate printer entry `%s' (%s)\n",
+			   printer->driver, printer->long_name);
+	      duplicate_printers++;
+	    }
+	  if (duplicate_printers)
+	    {
+	      stp_erprintf("FATAL Duplicate printers in printer list.  Aborting!\n");
+	      stp_abort();
+	    }
 	  printer_item = stp_list_item_next(printer_item);
 	}
     }
