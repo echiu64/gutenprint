@@ -3486,10 +3486,9 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
 		if (row_errcol != row_errlast)
 		  {
 		    row_errlast = row_errcol;
-		    optr[0] = output[0] / (unsigned short) 257;
-		    optr[1] = output[1] / (unsigned short) 257;
-		    optr[2] = output[2] / (unsigned short) 257;
-		    output += 3;
+		    optr[0] = output[(row_errcol * 3) + 0] / (unsigned short) 257;
+		    optr[1] = output[(row_errcol * 3) + 1] / (unsigned short) 257;
+		    optr[2] = output[(row_errcol * 3) + 2] / (unsigned short) 257;
 		  }
 		else
 		  {
