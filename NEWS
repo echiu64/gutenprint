@@ -38,15 +38,16 @@ you will also need an ANSI C compiler, such as gcc (recommended).  A
 compiler is not required if you are installing a pre-compiled package.
 
 Processor and memory requirements vary depending upon the printer and
-runtime options selected; it is suggested that you have at least 64 MB
-of memory for general purpose printing, 256 MB or more for high
-quality printing on a good printer, and 1 GB or more for large format
-printing at high resolution.  You should have at least 50 MB of free
-disk space to compile and install Gutenprint.  Disk space requirements
-for printing will vary depending upon how you use Gutenprint, but are
-generally modest except as noted below.  We recommend a processor
-speed of at least 300 MHz.  Fast printers may require a faster
-processor to achieve maximum printing speed.
+runtime options selected; any system dating from 2005 or later should
+easily suffice.  We suggest that you have at least 64 MB of memory for
+general purpose printing, 256 MB or more for high quality printing on
+a good printer, and 1 GB or more for large format printing at high
+resolution.  You should have at least 50 MB of free disk space to
+compile and install Gutenprint.  Disk space requirements for printing
+will vary depending upon how you use Gutenprint, but are generally
+modest except as noted below.  We recommend a processor speed of at
+least 300 MHz.  Fast printers may require a faster processor to
+achieve maximum printing speed.
 
 For general use, you should have the Common UNIX Printing System, CUPS
 (version 1.1.15 or above).  Please the rest of the release notes, in
