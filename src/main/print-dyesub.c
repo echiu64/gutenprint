@@ -6735,7 +6735,7 @@ static void magicard_printer_init(stp_vars_t *v)
   stp_zprintf(v, ",REJ%s", pd->privdata.magicard.reject ? "ON" : "OFF"); /* Faulty card rejection. */
   stp_zprintf(v, ",ESS%d", pd->copies); /* Number of copies */
   stp_zprintf(v, ",KEE,RT2");
-  if (strcmp(pd->duplex_mode, "None")) /* Duplex enabled? */
+  if (pd->duplex_mode && strcmp(pd->duplex_mode, "None")) /* Duplex enabled? */
     {
       stp_zprintf(v, ",DPXON,PAG%d", 1 + (pd->page_number & 1));
       if (!(pd->page_number & 1))
