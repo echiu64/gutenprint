@@ -2320,7 +2320,7 @@
       <printer translate="name" name="HP Color LaserJet 4700dn" driver="hp-clj_4700dn" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="HP Color LaserJet 4700dtn" driver="hp-clj_4700dtn" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="HP Color LaserJet 4700ph+" driver="hp-clj_4700phplus" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="HP Color LaserJet 5" driver="hp-clj_5" manufacturer="HP" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="HP Color LaserJet 5" driver="hp-clj_5" manufacturer="HP" model="50012" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="HP Color LaserJet 5m" driver="hp-clj_5m" manufacturer="HP" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="HP Color LaserJet 5000" driver="hp-clj_5000" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="HP Color LaserJet 5500" driver="hp-clj_5500" manufacturer="HP" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>

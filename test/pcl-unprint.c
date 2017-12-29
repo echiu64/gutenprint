@@ -926,6 +926,7 @@ int decode_delta(char *in_buffer,		/* I: Data buffer */
 void pcl_reset(image_t *i)
 {
     i->colour_type = PCL_MONO;
+    i->pixel_type = PCL_MONO;
     i->black_depth = 2;		/* Assume mono */
     i->cyan_depth = 0;
     i->magenta_depth = 0;

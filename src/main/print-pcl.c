@@ -1468,6 +1468,20 @@ static const pcl_cap_t pcl_model_capabilities[] =
     emptylist,
     laserjet_papersources,
   },
+  /* Special case the Color LaserJet 5 */
+  { 50012,
+    17 * 72 / 2, 14 * 72,
+    1, 1,				/* Min paper size */
+    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600,
+    {12, 12, 18, 18},
+    {12, 12, 18, 18},	/* Check/Fix */
+    PCL_COLOR_RGB,
+    PCL_PRINTER_LJ_COLOR | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE |
+      PCL_PRINTER_DUPLEX,
+    ljsmall_papersizes,
+    emptylist,
+    laserjet_papersources,
+  },
 };
 
 #pragma GCC diagnostic push
@@ -3030,7 +3044,7 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
   * Set DJ print quality to "best" if resolution >= 300
   */
 
-      if (caps->stp_printer_type & PCL_PRINTER_LJ_COLOR)
+      if (printing_color && (caps->stp_printer_type & PCL_PRINTER_LJ_COLOR))
 	stp_zprintf(v, "\033&l%dM", pcl_media_type);
       else if ((xdpi >= 300) && ((caps->stp_printer_type & PCL_PRINTER_DJ) == PCL_PRINTER_DJ))
       {
