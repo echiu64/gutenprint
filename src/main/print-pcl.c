@@ -1399,7 +1399,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     laserjet_papersources,
   },
   /* Color laser printer, small format */
-  { 60000,
+  { 50000,
     17 * 72 / 2, 14 * 72,
     1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600,
@@ -1413,7 +1413,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     laserjet_papersources,
   },
   /* Color laser printer, large format */
-  { 60001,
+  { 50001,
     13 * 72, 19 * 72,
     1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600,
@@ -1427,7 +1427,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     laserjet_papersources,
   },
   /* Color laser printer, small format, no expanded A4 margins */
-  { 60002,
+  { 50002,
     17 * 72 / 2, 14 * 72,
     1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600,
@@ -1441,7 +1441,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     laserjet_papersources,
   },
   /* Color laser printer with large paper, no expanded A4 margins */
-  { 60003,
+  { 50003,
     13 * 72, 19 * 72,
     1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600,
@@ -1455,7 +1455,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     laserjet_papersources,
   },
   /* Color laser printer with tabloid paper, no expanded A4 margins */
-  { 60004,
+  { 50004,
     118 * 72 / 10, 17 * 72,	/* 11.8*17 */
     1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600,

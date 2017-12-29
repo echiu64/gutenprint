@@ -979,12 +979,12 @@ stpi_family_register(stp_list_t *family)
 			   printer->driver, printer->long_name);
 	      duplicate_printers++;
 	    }
-	  if (duplicate_printers)
-	    {
-	      stp_erprintf("FATAL Duplicate printers in printer list.  Aborting!\n");
-	      stp_abort();
-	    }
 	  printer_item = stp_list_item_next(printer_item);
+	}
+      if (duplicate_printers)
+	{
+	  stp_erprintf("FATAL Duplicate printers in printer list.  Aborting!\n");
+	  stp_abort();
 	}
     }
 
