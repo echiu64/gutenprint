@@ -320,7 +320,7 @@ runall() {
 
 retval=0
 if [ -d ppd/C ] ; then
-    files=$(get_ppds $args)
+    files=$(get_ppds "$@")
     if [ -n "$single" ] ; then
 	all_models=""
 	nondup_files=""
