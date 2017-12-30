@@ -971,7 +971,8 @@ stpi_family_register(stp_list_t *family)
       while(printer_item)
 	{
 	  printer = (const stp_printer_t *) stp_list_item_get_data(printer_item);
-	  if (!stp_list_get_item_by_name(printer_list, printer->driver))
+	  if (!stp_list_get_item_by_name(printer_list, printer->driver) &&
+	      !stp_list_get_item_by_long_name(printer_list, printer->long_name))
 	    stp_list_item_create(printer_list, NULL, printer);
 	  else
 	    {
