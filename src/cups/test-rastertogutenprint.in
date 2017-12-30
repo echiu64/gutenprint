@@ -294,22 +294,6 @@ find_quality() {
     fi
 }
 
-run_rastertogp() {
-    qualarg=$(find_quality "$PPD")
-    vg="valgrind $valopts --log-fd=3"
-    vg1="$vg --num-callers=50 --leak-check=yes --error-limit=no"
-    rgpc="$rgp 1 1 1 1"
-    qarg="$qualarg $cupsargs"
-    case "$valgrind" in
-	1) $vg -q $rgpc ;;
-	2) $vg --leak-resolution=high $rgpc "$qarg" ;;
-	3) $vg --leak-resolution=high --show-reachable=yes $rgpc "$qarg";;
-	4) $vg $rgpc "$qarg" ;;
-	5) cat ;;
-	*) $rgp 1 1 1 1 "$qarg"
-    esac
-}
-
 xgrep() {
     pat=$1
     file=$2
@@ -317,20 +301,6 @@ xgrep() {
 	egrep -m1 $pat $file
     else
 	zgrep $pat $file
-    fi
-}
-
-do_output() {
-    driver=$(xgrep '^\*StpDriverName:' "$PPD" |awk '{print $2}' | sed 's/"//g')
-    if [[ -n $outdir ]] ; then
-	cat > "$outdir/$driver.prn"
-	if [[ -n $md5dir ]] ; then
-	    md5sum < "$outdir/$driver.prn" | sed "s/-/\*$driver/" > "$md5dir/$driver.md5"
-	fi
-    elif [[ -n $md5dir ]] ; then
-	cat | md5sum | sed "s/-/\*$driver/" > "$md5dir/$driver.md5"
-    else
-	cat >/dev/null
     fi
 }
 
@@ -354,11 +324,42 @@ runcmd() {
     fi
 }
 
+do_output() {
+    driver=$(xgrep '^\*StpDriverName:' "$PPD" |awk '{print $2}' | sed 's/"//g')
+    if [[ -n $outdir ]] ; then
+	cat > "$outdir/$driver.prn"
+	if [[ -n $md5dir ]] ; then
+	    md5sum < "$outdir/$driver.prn" | sed "s/-/\*$driver/" > "$md5dir/$driver.md5"
+	fi
+    elif [[ -n $md5dir ]] ; then
+	cat | md5sum | sed "s/-/\*$driver/" > "$md5dir/$driver.md5"
+    else
+	cat >/dev/null
+    fi
+}
+
+run_rastertogp() {
+    qualarg=$(find_quality "$PPD")
+    vg="valgrind $valopts --log-fd=3"
+    vg1="$vg --num-callers=50 --leak-check=yes --error-limit=no"
+    rgpc="$rgp 1 1 1 1"
+    qarg="$qualarg $cupsargs"
+    case "$valgrind" in
+	1) $vg -q $rgpc ;;
+	2) $vg --leak-resolution=high $rgpc "$qarg" ;;
+	3) $vg --leak-resolution=high --show-reachable=yes $rgpc "$qarg";;
+	4) $vg $rgpc "$qarg" ;;
+	5) cat ;;
+	*) $rgp 1 1 1 1 "$qarg"
+    esac
+}
+
 runme() {
     f="$1"
-    p=$(echo -n "$(basename $f |sed -e 's/stp-//' -e 's/@GUTENPRINT_RELEASE_VERSION@.ppd.*$//')" "... ")
+    p=${f#*stp-}
+    p=${p/@GUTENPRINT_RELEASE_VERSION@./}
     export PPD=$f
-    output="$p $( (runcmd 2>/dev/null | run_rastertogp | do_output) 2>&1 3>&2)"
+    output="${p%.ppd*}...$( (runcmd 2>/dev/null | run_rastertogp | do_output) 2>&1 3>&2)"
     return $?
 }
 
