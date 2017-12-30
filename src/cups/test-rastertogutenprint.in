@@ -1,4 +1,4 @@
-#!@SHELL@
+#!@BASH@
 
 # Driver for rastertogutenprint tester.
 #
@@ -19,72 +19,71 @@
 
 retval=0
 
-if [ -z "$srcdir" -o "$srcdir" = "." ] ; then
-    sdir=`pwd`
-elif [ -n "`echo $srcdir |grep '^/'`" ] ; then
+if [[ -z $srcdir || $srcdir = . ]] ; then
+    sdir=$(pwd)
+elif [[ $srcdir =~ ^/ ]] ; then
     sdir="$srcdir"
 else
-    sdir="`pwd`/$srcdir"
+    sdir="$(pwd)/$srcdir"
 fi
 
-if [ -z "$STP_DATA_PATH" ] ; then
-    STP_DATA_PATH="$sdir/../xml"
-    export STP_DATA_PATH
-fi
+export STP_DATA_PATH=${STP_DATA_PATH:-"$sdir/../xml"}
+export STP_MODULE_PATH=${STP_MODULE_PATH:-"$sdir/../main:$sdir/../main/.libs"}
 
-if [ -z "$STP_MODULE_PATH" ] ; then
-    STP_MODULE_PATH="$sdir/../main:$sdir/../main/.libs"
-    export STP_MODULE_PATH
-fi
+declare single=0
+declare verbose=0
+declare valgrind=0
+declare make_ppds=1
+declare skip_simplified=0
+declare postscript=0
+declare use_explicit_quality=1
 
-single=''
-all_models=''
-verbose=''
-valgrind=0
-make_ppds=1
-skip_simplified=0
-md5dir=''
-outdir=''
-cupsargs=''
-postscript=''
-qualarg=''
-use_explicit_quality=1
-npages=3
-jobs=${STP_PARALLEL:-1}
-enable_static='@ENABLE_STATIC@'
-enable_shared='@ENABLE_SHARED@'
+declare family=''
+declare all_models=''
+declare md5dir=''
+declare outdir=''
+declare cupsargs=''
+declare qualarg=''
+declare npages=3
+declare jobs=${STP_PARALLEL:-1}
+declare enable_static='@ENABLE_STATIC@'
+declare enable_shared='@ENABLE_SHARED@'
+declare -A all_models=
 
-if [ -r "$sdir/../../src/cups/gutenprint-users-manual.pdf" ] ; then
+if [[ -r $sdir/../../src/cups/gutenprint-users-manual.pdf ]] ; then
     testfile="$sdir/../../src/cups/gutenprint-users-manual.pdf"
 else
     testfile="$sdir/../../doc/gutenprint-users-manual.pdf"
 fi
 
-quality_presets="FastEconomy Economy Draft Standard High Photo HighPhoto UltraPhoto Best"
+quality_presets=(FastEconomy Economy Draft Standard High Photo HighPhoto UltraPhoto Best)
 
 usage() {
-    echo "Usage: test-rastertogutenprint [options] [PPD files...]"
-    echo "  Options:"
-    echo "    -s        Run only one PPD file with a given model ID/family"
-    echo "    -v        Use valgrind"
-    echo "    -c        Use cachegrind"
-    echo "    -g        Use GDB attach in valgrind"
-    echo "    -V        Verbose output"
-    echo "    -n        Don't build PPD files prior to run"
-    echo "    -O dir    Save output in specified directory"
-    echo "    -o opt    Set option on CUPS command line"
-    echo "    -m dir    Save MD5 checksums in specified directory"
-    echo "    -p pages  Specify page range of input document to use"
-    echo "    -P        Use PostScript rather than PDF input"
-    echo "    -t jobs   Run jobs in parallel (alternatively, use STP_PARALLEL)"
-    echo "    -S        Skip simplified PPD files"
-    echo "    -l        Use lowest available quality setting"
-    echo "    -L        Use highest available quality setting"
-    echo "    -X        Don't use explicit quality setting"
-    exit 0;
+    cat <<'EOF'
+Usage: test-rastertogutenprint [options] [PPD files...]
+  Options:
+    -s        Run only one PPD file with a given model ID/family
+    -v        Use valgrind
+    -c        Use cachegrind
+    -g        Use GDB attach in valgrind
+    -V        Verbose output
+    -n        Don't build PPD files prior to run
+    -O dir    Save output in specified directory
+    -o opt    Set option on CUPS command line
+    -m dir    Save MD5 checksums in specified directory
+    -p pages  Specify page range of input document to use
+    -P        Use PostScript rather than PDF input
+    -t jobs   Run jobs in parallel (alternatively, use STP_PARALLEL)
+    -f family Run printers only in the particular family
+    -S        Skip simplified PPD files
+    -l        Use lowest available quality setting
+    -L        Use highest available quality setting
+    -X        Don't use explicit quality setting
+EOF
+exit 0;
 }
 
-while getopts "hvcgsVnO:m:o:p:St:lLX" opt ; do
+while getopts "hvcgsVnO:m:o:p:St:lLXf:" opt ; do
     case "$opt" in
 	h*) usage ;;
 	v) valopts='--tool=memcheck' ; valgrind=$((valgrind + 1)) ;;
@@ -93,12 +92,13 @@ while getopts "hvcgsVnO:m:o:p:St:lLX" opt ; do
 	s) single=1 ;;
 	V) verbose=1 ;;
 	n) make_ppds='' ;;
-	O) outdir="$OPTARG" ;;
+	O) outdir="$OPTARG"; mkdir -p "$outdir" ;;
 	o) cupsargs="$cupsargs $OPTARG" ;;
-	m) md5dir="$OPTARG" ;;
+	m) md5dir="$OPTARG"; mkdir -p "$md5dir" ;;
 	p) npages="$OPTARG" ;;
 	P) postscript=1 ;;
 	t) jobs="$OPTARG" ;;
+	f) family="$OPTARG" ;;
 	S) skip_simplified=1 ;;
 	X) use_explicit_quality=0 ;;
 	l) use_explicit_quality=1 ;;
@@ -110,69 +110,57 @@ done
 
 shift $((OPTIND - 1))
 
-if [ "$valgrind" -gt 0 -a "$enable_shared" != "no" ] ; then
+if [[ $valgrind > 0 && $enable_shared != no ]] ; then
     echo 'Valgrind is not compatible with --enable-shared in tree.' 1>&2
     echo 'Please use autogen.sh --disable-shared.' 1>&2
     exit 1
 fi
 
-if [ -n "$outdir" -a ! -d "$outdir" ] ; then
-    mkdir -p "$outdir"
-fi
-if [ -n "$md5dir" -a ! -d "$md5dir" ] ; then
-    mkdir -p "$md5dir"
-fi
-
 version="@GUTENPRINT_RELEASE_VERSION@";
-cupsdir="/usr/lib/cups/filter"
-if [ -x "$cupsdir/pstoraster" -o -x "$cupsdir/gstoraster" -o -x "$cupsdir/cgpdftoraster" ] ; then
-    pages="24-`expr 24 + $npages - 1`"
-    if [ -n "$postscript" ] ; then
-	pages="page-ranges=$pages"
-    fi
-else
-    pages=''
-fi
+rgp="./rastertogutenprint.$version"
+cupsdir="$(cups-config --serverbin)/filter"
+cgpdftoraster="$cupsdir/cgpdftoraster"
+gstoraster="$cupsdir/gstoraster"
+imagetoraster="$cupsdir/imagetoraster"
+pdftops="$cupsdir/pdftops"
+pstops="$cupsdir/pstops"
+pstoraster="$cupsdir/pstoraster"
 
-if [ ! -x "$cupsdir/cgpdftoraster" -a ! -x "$cupsdir/pdftops" -a ! -x "$cupsdir/gstoraster" ] ; then
+if [[ ! -x $cupsdir/cgpdftoraster && ! -x $cupsdir/pdftops && ! -x $cupsdir/gstoraster ]] ; then
     echo 'CUPS does not appear to be installed, skipping test'
     exit 0
 fi
 
+if [[ -x $cupsdir/pstoraster || -x $cupsdir/gstoraster || -x $cupsdir/cgpdftoraster ]] ; then
+    pages="24-$((24 + $npages - 1))"
+    (( $postscript > 0 )) && pages="page-ranges=$pages"
+else
+    pages=''
+fi
+
 cleanup() {
-    if [ -f "$tfile" ] ; then
-	rm -f $tfile
-    fi
+    [[ -n $tfile ]] && rm -f "$tfile"
     exit 1
 }
 
-pdfjam="`which pdfjam`"
-if [ -z "$pdfjam" ] ; then
-    postscript=1
-fi
+pdfjam=$(type -p pdfjam)
+[[ -n $pdfjam ]] && postscript=1
 
-if [ -n "$postscript" ] ; then
-    pdftops="`type -p pdftops`"
+if (( $postscript > 0 )) ; then
+    pdftops=$(type -p pdftops)
 
-    if [ ! -n "$pdftops" -o ! -x "$pdftops" ] ; then
-	pdftops="`whence pdftops`"
-    fi
-
-    if [ -n "$pdftops" -a ! -x "$cupsdir/cgpdftoraster" ] ; then
-	tfile=`mktemp`
+    if [[ -n $pdftops && ! -x $cupsdir/cgpdftoraster ]] ; then
+	tfile=$(mktemp)
 	trap cleanup 1 2 3 6 14 15 30
-	"$pdftops" -f 24 -l `expr 24 + $npages - 1` "$testfile" $tfile
+	"$pdftops" -f 24 -l $((24 + $npages - 1)) "$testfile" $tfile
     fi
 else
-    tfile=`mktemp`
+    tfile=$(mktemp)
     trap cleanup 1 2 3 6 14 15 30
     "$pdfjam" -q "$testfile" "$pages" -o $tfile
 fi
 
-if [ -z "$verbose" ] ; then
-    STP_SUPPRESS_MESSAGES=1
-    export STP_SUPPRESS_MESSAGES
-fi
+(( $verbose == 0 )) && export STP_SUPPRESS_MESSAGES=1
 
 # Note that using CUPS arguments may trigger valgrind memory leaks in
 # CUPS.
@@ -181,70 +169,54 @@ fi
 #cupsargs='PageSize=w324h495 Resolution=180dpi'
 #cupsargs='PageSize=A8'
 
-run_rastertogp() {
-    case "$valgrind" in
-	1) valgrind $valopts -q --log-fd=3 --num-callers=50 --leak-check=yes --error-limit=no ./rastertogutenprint.$version 1 1 1 1 "$qualarg $cupsargs" ;;
-	2) valgrind $valopts --log-fd=3 --num-callers=50 --leak-resolution=high --leak-check=yes --error-limit=no ./rastertogutenprint.$version 1 1 1 1 "$qualarg $cupsargs" ;;
-	3) valgrind $valopts --log-fd=3 --error-limit=no --num-callers=50 --show-reachable=yes --leak-resolution=high --leak-check=yes ./rastertogutenprint.$version 1 1 1 1 "$qualarg $cupsargs" ;;
-	4) valgrind $valopts --log-fd=3 ./rastertogutenprint.$version 1 1 1 1 "$qualarg $cupsargs" ;;
-	5) cat ;;
-	*) ./rastertogutenprint.$version 1 1 1 1 "$qualarg $cupsargs" ;;
-    esac
-    if [ $? -ne 0 ] ; then
-	retval=1
-    fi
-    exit $retval
-}
-
 get_ppds() {
-    args="$@"
-    if [ -n "$args" ] ; then
+    if [[ -n $@ ]] ; then
 	for f in "$@" ; do
-	    if [ -r "$f" ] ; then
+	    if [[ -r $f ]] ; then
 		echo $f
-	    elif [ -r "ppd/C/$f" ] ; then
+	    elif [[ -r ppd/C/$f ]] ; then
 		echo "ppd/C/$f"
-	    elif [ -f "ppd/C/${f}.ppd" ] ; then
+	    elif [[ -f ppd/C/${f}.ppd ]] ; then
 		echo "ppd/C/${f}.ppd"
-	    elif [ -f "ppd/C/${f}.ppd.gz" ] ; then
+	    elif [[ -f ppd/C/${f}.ppd.gz ]] ; then
 		echo "ppd/C/${f}.ppd.gz"
-	    elif [ -f "ppd/C/${f}.ppd.GZ" ] ; then
+	    elif [[ -f ppd/C/${f}.ppd.GZ ]] ; then
 		echo "ppd/C/${f}.ppd.GZ"
-	    elif [ -f "ppd/C/${f}.ppd.bz2" ] ; then
+	    elif [[ -f ppd/C/${f}.ppd.bz2 ]] ; then
 		echo "ppd/C/${f}.ppd.bz2"
-	    elif [ -f "ppd/C/${f}.ppd.BZ2" ] ; then
+	    elif [[ -f ppd/C/${f}.ppd.BZ2 ]] ; then
 		echo "ppd/C/${f}.ppd.BZ2"
-	    elif [ -f "ppd/C/${f}.ppd.z" ] ; then
+	    elif [[ -f ppd/C/${f}.ppd.z ]] ; then
 		echo "ppd/C/${f}.ppd.z"
-	    elif [ -f "ppd/C/${f}.ppd.Z" ] ; then
+	    elif [[ -f ppd/C/${f}.ppd.Z ]] ; then
 		echo "ppd/C/${f}.ppd.Z"
-	    elif [ -f "ppd/C/stp-${f}.ppd" ] ; then
+	    elif [[ -f ppd/C/stp-${f}.ppd ]] ; then
 		echo "ppd/C/stp-${f}.ppd"
-	    elif [ -f "ppd/C/stp-${f}.ppd.gz" ] ; then
+	    elif [[ -f ppd/C/stp-${f}.ppd.gz ]] ; then
 		echo "ppd/C/stp-${f}.ppd.gz"
-	    elif [ -f "ppd/C/stp-${f}.ppd.GZ" ] ; then
+	    elif [[ -f ppd/C/stp-${f}.ppd.GZ ]] ; then
 		echo "ppd/C/stp-${f}.ppd.GZ"
-	    elif [ -f "ppd/C/stp-${f}.ppd.bz2" ] ; then
+	    elif [[ -f ppd/C/stp-${f}.ppd.bz2 ]] ; then
 		echo "ppd/C/stp-${f}.ppd.bz2"
-	    elif [ -f "ppd/C/stp-${f}.ppd.BZ2" ] ; then
+	    elif [[ -f ppd/C/stp-${f}.ppd.BZ2 ]] ; then
 		echo "ppd/C/stp-${f}.ppd.BZ2"
-	    elif [ -f "ppd/C/stp-${f}.ppd.z" ] ; then
+	    elif [[ -f ppd/C/stp-${f}.ppd.z ]] ; then
 		echo "ppd/C/stp-${f}.ppd.z"
-	    elif [ -f "ppd/C/stp-${f}.ppd.Z" ] ; then
+	    elif [[ -f ppd/C/stp-${f}.ppd.Z ]] ; then
 		echo "ppd/C/stp-${f}.ppd.Z"
-	    elif [ -f "ppd/C/stp-${f}.${version}.ppd" ] ; then
+	    elif [[ -f ppd/C/stp-${f}.${version}.ppd ]] ; then
 		echo "ppd/C/stp-${f}.${version}.ppd"
-	    elif [ -f "ppd/C/stp-${f}.${version}.ppd.gz" ] ; then
+	    elif [[ -f ppd/C/stp-${f}.${version}.ppd.gz ]] ; then
 		echo "ppd/C/stp-${f}.${version}.ppd.gz"
-	    elif [ -f "ppd/C/stp-${f}.${version}.ppd.GZ" ] ; then
+	    elif [[ -f ppd/C/stp-${f}.${version}.ppd.GZ ]] ; then
 		echo "ppd/C/stp-${f}.${version}.ppd.GZ"
-	    elif [ -f "ppd/C/stp-${f}.${version}.ppd.bz2" ] ; then
+	    elif [[ -f ppd/C/stp-${f}.${version}.ppd.bz2 ]] ; then
 		echo "ppd/C/stp-${f}.${version}.ppd.bz2"
-	    elif [ -f "ppd/C/stp-${f}.${version}.ppd.BZ2" ] ; then
+	    elif [[ -f ppd/C/stp-${f}.${version}.ppd.BZ2 ]] ; then
 		echo "ppd/C/stp-${f}.${version}.ppd.BZ2"
-	    elif [ -f "ppd/C/stp-${f}.${version}.ppd.z" ] ; then
+	    elif [[ -f ppd/C/stp-${f}.${version}.ppd.z ]] ; then
 		echo "ppd/C/stp-${f}.${version}.ppd.z"
-	    elif [ -f "ppd/C/stp-${f}.${version}.ppd.Z" ] ; then
+	    elif [[ -f ppd/C/stp-${f}.${version}.ppd.Z ]] ; then
 		echo "ppd/C/stp-${f}.${version}.ppd.Z"
 	    fi
 	done
@@ -253,102 +225,68 @@ get_ppds() {
     fi
 }
 
-if [ -n "$make_ppds" -o ! -d ppd/C ] ; then
+if [[ -n $make_ppds || ! -d ppd/C ]] ; then
     rm -rf ppd/C
 ## not all systems can work with gzipped PPDs
-    if [ "$skip_simplified" = 1 ] ; then
+    if [[ $skip_simplified == 1 ]] ; then
         EXTRA_GENPPD_OPTS=-Z make ppd-nonls
     else
         EXTRA_GENPPD_OPTS=-Z make ppd-nonls-a
     fi
 fi
 
-do_output() {
-    if [ -n "`echo "$PPD" |grep '\.gz$'`" ] ; then
-	driver=`gunzip -c "$PPD" | grep '^\*StpDriverName:' |awk '{print $2}' | sed 's/"//g'`
-    else
-	driver=`grep '^\*StpDriverName:' "$PPD" |awk '{print $2}' | sed 's/"//g'`
-    fi
-    if [ -n "$outdir" ] ; then
-	cat > "$outdir/$driver.prn"
-	if [ -n "$md5dir" ] ; then
-	    (cd "$outdir"; cat "$driver.prn") | md5sum | sed "s/-/\*$driver/" > "$md5dir/$driver.md5"
-	fi
-    elif [ -n "$md5dir" ] ; then
-	cat | md5sum | sed "s/-/\*$driver/" > "$md5dir/$driver.md5"
-    else
-	cat >/dev/null
-    fi
-}
-
 find_resolution() {
     ppd=$1
-    if [ ! -r "$ppd" ] ; then
-	echo "Can't find $ppd!"
-	exit 1;
-    fi
-    resolutions=`grep "^\\*Resolution " "$ppd" |sed -e 's,/.*,,' -e 's/.* //'`
-    if [ -z "$resolutions" ] ; then
-	return;
-    fi
+    resolutions=$(grep "^\\*Resolution " "$ppd" |sed -e 's,/.*,,' -e 's/.* //')
+    [[ -z "$resolutions" ]] && return
     low_resolution=9999999999
     low_resolution_name=''
     high_resolution=0
     high_resolution_name=''
     for r in $resolutions ; do
-	res=`echo "$r" | sed -e 's/dpi//' -e 's/x/ \\\* /' -e 's/^\([0-9]*\)$/\1 \\\* \1/'`
-	resnum=`eval "expr $res"`
-	if [ "$resnum" -gt $high_resolution ] ; then
+	res=$(sed -e 's/dpi//' -e 's/x/ \\\* /' -e 's/^\([0-9]*\)$/\1 \\\* \1/' <<< $r)
+	resnum=$(eval "expr $res")
+	if (( $resnum > $high_resolution )) ; then
 	    high_resolution=$resnum
 	    high_resolution_name=$r
 	fi
-	if [ "$resnum" -lt $low_resolution ] ; then
+	if (( $resnum < $low_resolution )) ; then
 	    low_resolution=$resnum
 	    low_resolution_name=$r
 	fi
     done
-    if [ $use_explicit_quality -eq 1 ] ; then
+    if (( $use_explicit_quality == 1 )) ; then
 	echo "Resolution=$low_resolution_name"
-    elif [ $use_explicit_quality -eq 2 ] ; then
+    elif (( $use_explicit_quality == 2 )) ; then
 	echo "Resolution=$high_resolution_name"
     fi
 }
 
 find_quality_preset() {
     ppd=$1
-    if [ ! -r "$ppd" ] ; then
-	echo "Can't find $ppd!"
-	exit 1;
-    fi
-    if [ "$use_explicit_quality" -eq 1 ] ; then
-	for q in $quality_presets ; do
+    if (( $use_explicit_quality == 1 )) ; then
+	for q in ${quality_presets[@]} ; do
 	    if grep -q "^\\*StpQuality $q" "$ppd" ; then
 		echo "StpQuality=$q"
 		return
 	    fi
 	done
-    elif [ "$use_explicit_quality" -eq 2 ] ; then
+    elif (( "$use_explicit_quality" == 2 )) ; then
 	best_quality=''
-	for q in $quality_presets ; do
-	    if grep -q "^\\*StpQuality $q" "$ppd" ; then
-		best_quality=$q
-	    fi
+	for q in ${quality_presets[@]} ; do
+	    grep -q "^\\*StpQuality $q" "$ppd" && best_quality=$q
 	done
-	if [ -n "$best_quality" ] ; then
-	    echo "StpQuality=$best_quality"
-	fi
+	[[ -n $best_quality ]] && echo "StpQuality=$best_quality"
     fi
 }
 
 find_quality() {
     ppd=$1
-    if [ ! -r "$ppd" ] ; then
-	echo "Can't find $ppd!"
+    if [[ ! -r $ppd ]] ; then
+	echo "Can't find $ppd!" 1>&2
 	exit 1;
     fi
-    if [ "$use_explicit_quality" -eq 0 ] ; then
-	return;
-    fi
+    (( "$use_explicit_quality" == 0 )) && return
     if grep -q '\*Resolution' "$ppd" ; then
 	find_resolution $ppd
     else
@@ -356,90 +294,149 @@ find_quality() {
     fi
 }
 
+run_rastertogp() {
+    qualarg=$(find_quality "$PPD")
+    vg="valgrind $valopts --log-fd=3"
+    vg1="$vg --num-callers=50 --leak-check=yes --error-limit=no"
+    rgpc="$rgp 1 1 1 1"
+    qarg="$qualarg $cupsargs"
+    case "$valgrind" in
+	1) $vg -q $rgpc ;;
+	2) $vg --leak-resolution=high $rgpc "$qarg" ;;
+	3) $vg --leak-resolution=high --show-reachable=yes $rgpc "$qarg";;
+	4) $vg $rgpc "$qarg" ;;
+	5) cat ;;
+	*) $rgp 1 1 1 1 "$qarg"
+    esac
+}
+
+xgrep() {
+    pat=$1
+    file=$2
+    if [[ $file == *.gz ]] ; then
+	egrep -m1 $pat $file
+    else
+	zgrep $pat $file
+    fi
+}
+
+do_output() {
+    driver=$(xgrep '^\*StpDriverName:' "$PPD" |awk '{print $2}' | sed 's/"//g')
+    if [[ -n $outdir ]] ; then
+	cat > "$outdir/$driver.prn"
+	if [[ -n $md5dir ]] ; then
+	    md5sum < "$outdir/$driver.prn" | sed "s/-/\*$driver/" > "$md5dir/$driver.md5"
+	fi
+    elif [[ -n $md5dir ]] ; then
+	cat | md5sum | sed "s/-/\*$driver/" > "$md5dir/$driver.md5"
+    else
+	cat >/dev/null
+    fi
+}
+
+runcmd() {
+    qualarg=$(find_quality "$PPD")
+    a='1 1 1 1'
+    qarg="$qualarg $cupsargs"
+    if [[ -x $cgpdftoraster ]] ; then
+	# cgpdftoraster doesn't like arguments.  How rude.
+	$cgpdftoraster $a "" < "$tfile"
+    elif [[ -f $tfile && -x $gstoraster ]] ; then
+	$gstoraster $a "$qarg" < "$tfile"
+    elif [[ -f $tfile ]] ; then
+	$pstops $a $"qarg" < "$tfile"
+    elif [[ -x $pstoraster ]] ; then
+	$pdftops $a "$qarg" < "$tfile" | $pstops $a "$pages$qarg" | $pstoraster
+    elif [[ -x $gstoraster ]] ; then
+	$pdftops $a "$qarg" < "$tfile" | $gstoraster $a "$pages$qarg"
+    else
+	$imagetoraster $a "$qarg" < calibrate.ppm
+    fi
+}
+
 runme() {
     f="$1"
-    p=$(echo -n "`basename $f |sed -e 's/stp-//' -e 's/@GUTENPRINT_RELEASE_VERSION@.ppd.*$//'`... ")
-    PPD=$f
-    export PPD
-    qualarg=`find_quality "$f"`
-    if [ -x "$cupsdir/cgpdftoraster" ] ; then
-	output="$p `($cupsdir/cgpdftoraster 1 1 1 1 "" < "$tfile" 2>/dev/null | run_rastertogp | do_output) 2>&1 3>&2 `"
-    elif [ -f "$tfile" -a -x "$cupsdir/gstoraster" ] ; then
-	output="$p `($cupsdir/gstoraster 1 1 1 1 \"$qualarg $cupsargs\" < "$tfile" 2>/dev/null | run_rastertogp | do_output) 2>&1 3>&2 `"
-    elif [ -f "$tfile" ] ; then
-	output="$p `($cupsdir/pstops 1 1 1 1 \"$qualarg $cupsargs\" < "$tfile" 2>/dev/null | $cupsdir/pstoraster 2>/dev/null | run_rastertogp | do_output) 2>&1 3>&2 `"
-    elif [ -x "$cupsdir/pstoraster" ] ; then
-	output="$p `($cupsdir/pdftops 1 1 1 1 \"$qualarg $cupsargs\" < "$tfile" 2>/dev/null | $cupsdir/pstops 1 1 1 1 \"$pages$qualarg $cupsargs\" 2>/dev/null | $cupsdir/pstoraster 2>/dev/null | run_rastertogp | do_output) 2>&1 3>&2 `"
-    elif [ -x "$cupsdir/gstoraster" ] ; then
-	output="$p `($cupsdir/pdftops 1 1 1 1 \"$qualarg $cupsargs\" < "$tfile" 2>/dev/null | $cupsdir/gstoraster 1 1 1 1 \"$pages$qualarg $cupsargs\" 2>/dev/null | run_rastertogp | do_output) 2>&1 3>&2 `"
-    else
-	output="$p `($cupsdir/imagetoraster 1 1 1 1 \"$qualarg $cupsargs\" < calibrate.ppm 2>/dev/null | run_rastertogp | do_output) 2>&1 3>&2`"
-    fi
+    p=$(echo -n "$(basename $f |sed -e 's/stp-//' -e 's/@GUTENPRINT_RELEASE_VERSION@.ppd.*$//')" "... ")
+    export PPD=$f
+    output="$p $( (runcmd 2>/dev/null | run_rastertogp | do_output) 2>&1 3>&2)"
     return $?
 }
 
 runall() {
     jobs="${1:-1}"
     rotor="${2:-0}"
-    shift
-    shift
+    shift 2
     retval=0
     jobno=0
     for f in "$@" ; do
-	skip=''
-	if [ $((jobno % jobs)) -eq $rotor ] ; then
+	if (( $jobno == $rotor )) ; then
 	    runme "$f"
-	    if [ $? -ne 0 ] ; then
-		retval=1
-	    fi
+	    (( $? != 0 )) && retval=1
 	    echo "$output"
 	    echo "$output" |grep ERROR
-	    if [ $? -eq 0 ] ; then
-		retval=1
-	    fi
+	    (( $? != 0 )) || retval=1
 	fi
-	jobno=$((jobno+1))
+	jobno=$((($jobno+1) % $jobs))
     done
     return $retval
 }
 
+get_models() {
+    re='\*StpDriverModelFamily:	'
+    if (( ${#all_models[*]} <= 1 )) ; then
+	declare -a models=($(xargs grep "^$re" <<< $@ | sed "s/:$re/=/"))
+	for m in ${models[@]} ; do
+	    model=${m#*=}
+	    file=${m%%=*}
+	    all_models[$file]=$model
+	done
+    fi
+}
+
 retval=0
-if [ -d ppd/C ] ; then
-    files=$(get_ppds "$@")
-    if [ -n "$single" ] ; then
-	all_models=""
-	nondup_files=""
-	for f in $files ; do
-	    if [ "$(basename $f .gz)" = "$(basename $f)" ] ; then
-		model=$(grep '^.StpDriverModelFamily' $f | awk '{print $2}')
-	    else
-		model=$(gunzip -c $f | grep '^.StpDriverModelFamily' | awk '{print $2}')
-	    fi
-	    skip=0
-	    for m in $all_models ; do
-		if [ "$model" = "$m" ] ; then
-		    skip=1
-		    break
-		fi
-	    done
-	    if [ "$skip" -eq 0 ] ; then
-		all_models="$model $all_models"
-		nondup_files="$nondup_files $f"
+if [[ -d ppd/C ]] ; then
+    declare -a files=($(get_ppds "$@"))
+    declare -a subproc=($(seq 0 $((jobs-1))))
+    declare -A models
+    declare -a nfiles
+    if (( $skip_simplified > 0 )) ; then
+	for f in ${files[@]} ; do
+	    [[ $f != *.sim.ppd* ]] && nfiles+=($f)
+	done
+	files=(${nfiles[@]})
+    fi
+    if [[ -n $family ]] ; then
+	get_models ${files[@]}
+	nfiles=()
+	for f in ${files[@]} ; do
+	    [[ ${all_models[$f]} =~ $family ]] && nfiles+=($f)
+	done
+	files=(${nfiles[@]})
+    fi
+    if (( $single != 0 )) ; then
+	declare -A seen_models
+	nfiles=()
+	get_models ${files[@]}
+	for f in ${files[@]} ; do
+	    model=${all_models[$f]}
+	    [[ $f == *.sim.ppd ]] && model="${model}_sim"
+	    if [[ -z ${seen_models[$model]} ]] ; then
+		nfiles+=($f)
+		seen_models[$model]=1
 	    fi
 	done
-	files=$nondup_files
+	files=(${nfiles[@]})
     fi
-    for i in $(seq 0 $(($jobs-1))) ; do
-	runall $jobs $i $files &
+    # Fire 'em off in the background...
+    for i in ${subproc[@]} ; do
+	runall $jobs $i ${files[@]} &
     done
-    for i in $(seq 0 $(($jobs-1))) ; do
+    # And wait for them to complete.
+    for i in ${subproc[@]} ; do
 	wait -n
-	if [ "$?" -gt 0 ] ; then
-	    retval=1
-	fi
+	(( $? != 0 )) && retval=1
     done
 fi
-if [ -f "$tfile" ] ; then
-    rm -f $tfile
-fi
+
+[[ -n $tfile ]] && rm -f "$tfile"
 exit $retval
