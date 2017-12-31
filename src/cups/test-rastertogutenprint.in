@@ -38,18 +38,19 @@ declare skip_simplified=0
 declare postscript=0
 declare use_explicit_quality=1
 declare extra_genppd_opts=-Z
+declare cupsargs=''
 
 if [[ -n $STP_FAST_TEST ]] ; then
     single=1
     skip_simplified=1
     extra_genppd_opts+=" -S"
+    cupsargs='StpDitherAlgorithm=VeryFast'
 fi
 
 declare family=''
 declare all_models=''
 declare md5dir=''
 declare outdir=''
-declare cupsargs=''
 declare qualarg=''
 declare npages=3
 declare jobs=${STP_PARALLEL:-1}
