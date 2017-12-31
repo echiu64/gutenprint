@@ -572,6 +572,7 @@ AC_PATH_PROG([GZIP], [gzip])
 AC_PATH_PROG([BZIP2], [bzip2])
 AC_PATH_PROG([LRZIP], [lrzip])
 AC_PATH_PROG([RZIP], [rzip])
+AC_PATH_PROG([BASH], [bash])
 if test x${LRZIP} != x ; then
   COMPRESS="${LRZIP} -z -q"
   CSUF=.lrz

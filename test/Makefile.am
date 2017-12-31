@@ -27,7 +27,9 @@ LOCAL_CPPFLAGS = -I$(top_srcdir)/src/main $(GUTENPRINT_CFLAGS)
 ## run-weavetest is extremely time consuming and provides little value for
 ## release testing since the last material change was made in 2008.
 ## It is essentially a giant unit test for the weave code.
-TESTS = curve run-testdither
+## testdither doesn't actually test anything; there appears to be no way
+## for it to actually return anything.
+TESTS = curve
 
 ## Programs
 

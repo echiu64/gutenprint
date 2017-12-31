@@ -17,9 +17,32 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# Keeping this up to date with changing CUPS versions is a real headache
+################################################################
+#                 TEST FOR PPD FILE COMPLIANCE
+#
+# Keeping this up to date with changing CUPS versions is a real headache.
+# This test, however, is particularly important; PPD conformance failures
+# are one of the most frequently observed problems, and a lot of apps
+# (and CUPS itself) are very sensitive -- arguably overly so -- to
+# violations of the spec.
+#
+# We can't skip the translated PPD files either; sometimes translations
+# blow out token maximum lengths.
+#
+# Arguably we should also test the simplified PPD files...
 
-make EXTRA_GENPPD_OPTS='-b -Z' ppd-clean ppd-global ppd-nls ppd-nonls
+echo "GENERATING PPD FILES:"
+if [[ -n $STP_FAST_TEST ]] ; then
+    make EXTRA_GENPPD_OPTS='-b -Z' ppd-clean ppd-global ppd-nls ppd-nonls
+else
+    make EXTRA_GENPPD_OPTS='-b -Z' ppd-clean ppd-global-a ppd-nls-a ppd-nonls-a
+fi
+
+ppd_count=$(find ppd -name '*.ppd' -print | wc -l)
+
+# Setting a limit on the number of files per invocation improves
+# performance by about a minute by reducing the tail at the end.
+[[ -n $STP_PARALLEL ]] && PARALLEL="-P $STP_PARALLEL -L 200"
 
 # Most non-Macintosh systems won't have the Macintosh-specific profiles
 # installed in Macintosh-specific locations.
@@ -29,15 +52,13 @@ make EXTRA_GENPPD_OPTS='-b -Z' ppd-clean ppd-global ppd-nls ppd-nonls
 # changing tag names.
 cupstestppdopts='-I profiles -W sizes -I filters'
 
-ppd_count=`find ppd \( -name '*.ppd.gz' -o -name '*.ppd' \) -print | wc -l`
+# This lets us report progress
+testcmd="echo -n . 1>&2; cupstestppd $cupstestppdopts "'"$@"'
 
-if [ -n "$STP_PARALLEL" ] ; then
-    PARALLEL="-P $STP_PARALLEL"
-fi
+echo -n "TESTING PPD FILES: "
+failures="$(find ppd -name '*.ppd*' -print | sort -t/ -k3 -k2 | xargs $PARALLEL sh -c "$testcmd" |grep 'FAIL$' | awk -F: '{print $1}')"
 
-failures="`find ppd -name '*.ppd*' -print | sort -t/ -k3 -k2 | xargs $PARALLEL cupstestppd $cupstestppdopts |grep 'FAIL$' | awk -F: '{print $1}'`"
-
-if [ -z "$failures" ] ; then
+if [[ -z "$failures" ]] ; then
     echo "All $ppd_count PPD files pass"
     exit 0
 fi
@@ -48,7 +69,7 @@ fi
 # Use this with PPD files with translated numbers (genppd -N)
 # With normal globalized PPD files this will yield hundreds of megabytes
 # of errors.
-echo $failures | xargs cupstestppd -r $cupstestppdopts 2>&1 |egrep -v 'Missing cupsICCProfile file'
+echo $failures | xargs cupstestppd -r $cupstestppdopts 2>&1
 
 fail_count=`echo "$failures" | wc -l`
 echo "$fail_count/$ppd_count fail"
