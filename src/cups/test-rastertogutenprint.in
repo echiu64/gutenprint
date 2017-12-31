@@ -38,6 +38,8 @@ declare skip_simplified=0
 declare postscript=0
 declare use_explicit_quality=1
 
+[[ -n $STP_FAST_TEST ]] && single=1
+
 declare family=''
 declare all_models=''
 declare md5dir=''
@@ -385,7 +387,7 @@ runall() {
 get_models() {
     re='\*StpDriverModelFamily:	'
     if (( ${#all_models[*]} <= 1 )) ; then
-	declare -a models=($(xargs grep "^$re" <<< $@ | sed "s/:$re/=/"))
+	declare -a models=($(xargs grep -m1 -H "^$re" <<< $@ | sed "s/:$re/=/"))
 	for m in ${models[@]} ; do
 	    model=${m#*=}
 	    file=${m%%=*}

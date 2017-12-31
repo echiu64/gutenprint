@@ -282,7 +282,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
 
 	  if (i % parallel == rotor && printer)
 	    {
-	      if (! verbose && (i % 50) == 0)
+	      if (! verbose && (i % 100) == 0)
 		fputc('.',stderr);
 	      if (generate_model_ppds(prefix, verbose, printer, language,
 				      which_ppds, use_compression))

@@ -122,6 +122,10 @@ if (defined $ENV{"STP_PARALLEL"}) {
     }
 }
 
+if (defined $ENV{"STP_FAST_TEST"}) {
+    $skip_duplicate_printers=1;
+}
+
 GetOptions("C=s" => \$csum_type,
 	   "G=s" => \$geometry,
 	   "H!"  => \$halt_on_error,
