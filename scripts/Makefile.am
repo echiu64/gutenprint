@@ -29,7 +29,8 @@ EXTRA_DIST = \
 	global.mk \
 	mkgitlog \
 	gversion \
-	wzpaq
+	wzpaq \
+	count-cpus
 
 noinst_SCRIPTS=gversion wzpaq mkgitlog
 

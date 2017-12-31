@@ -1087,6 +1087,7 @@ CONFIG_FILE_EXEC([scripts/mkgitlog])
 CONFIG_FILE_EXEC([scripts/gversion])
 CONFIG_FILE_EXEC([scripts/test-gversion])
 CONFIG_FILE_EXEC([scripts/wzpaq])
+CONFIG_FILE_EXEC([scripts/count-cpus])
 AC_CONFIG_COMMANDS([default], [
 echo
 ],

@@ -1,5 +1,9 @@
 #!@SHELL@
 
+if [ -n "$STP_TESTING" ] ; then
+    exit 77
+fi
+
 if [ -z "$srcdir" -o "$srcdir" = "." ] ; then
     sdir=`pwd`
 elif [ -n "`echo $srcdir |grep '^/'`" ] ; then

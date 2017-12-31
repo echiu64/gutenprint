@@ -37,8 +37,13 @@ declare make_ppds=1
 declare skip_simplified=0
 declare postscript=0
 declare use_explicit_quality=1
+declare extra_genppd_opts=-Z
 
-[[ -n $STP_FAST_TEST ]] && single=1
+if [[ -n $STP_FAST_TEST ]] ; then
+    single=1
+    skip_simplified=1
+    extra_genppd_opts+=" -S"
+fi
 
 declare family=''
 declare all_models=''
@@ -231,9 +236,9 @@ if [[ -n $make_ppds || ! -d ppd/C ]] ; then
     rm -rf ppd/C
 ## not all systems can work with gzipped PPDs
     if [[ $skip_simplified == 1 ]] ; then
-        EXTRA_GENPPD_OPTS=-Z make ppd-nonls
+        EXTRA_GENPPD_OPTS="$extra_genppd_opts" make ppd-nonls
     else
-        EXTRA_GENPPD_OPTS=-Z make ppd-nonls-a
+        EXTRA_GENPPD_OPTS="$extra_genppd_opts" make ppd-nonls-a
     fi
 fi
 
