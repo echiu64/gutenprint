@@ -20,6 +20,10 @@
 
 retval=0
 
+if [ -n "$STP_FAST_TEST" ] ; then
+    exit 77
+fi
+
 if [ -z "$srcdir" -o "$srcdir" = "." ] ; then
     sdir=`pwd`
 elif [ -n "`echo $srcdir |grep '^/'`" ] ; then

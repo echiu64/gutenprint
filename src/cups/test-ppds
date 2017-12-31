@@ -28,21 +28,21 @@
 #
 # We can't skip the translated PPD files either; sometimes translations
 # blow out token maximum lengths.
-#
-# Arguably we should also test the simplified PPD files...
 
+PPD_PARALLEL=200
 echo "GENERATING PPD FILES:"
 if [[ -n $STP_FAST_TEST ]] ; then
-    make EXTRA_GENPPD_OPTS='-b -Z' ppd-clean ppd-global ppd-nls ppd-nonls
+    make EXTRA_GENPPD_OPTS='-b -Z -S' ppd-clean ppd-nonls
+    PPD_PARALLEL=20
 else
-    make EXTRA_GENPPD_OPTS='-b -Z' ppd-clean ppd-global-a ppd-nls-a ppd-nonls-a
+    make EXTRA_GENPPD_OPTS='-b -Z' ppd-clean ppd-global-a ppd-nls-a ppd-nonls-a 
 fi
 
 ppd_count=$(find ppd -name '*.ppd' -print | wc -l)
 
 # Setting a limit on the number of files per invocation improves
 # performance by about a minute by reducing the tail at the end.
-[[ -n $STP_PARALLEL ]] && PARALLEL="-P $STP_PARALLEL -L 200"
+[[ -n $STP_PARALLEL ]] && PARALLEL="-P $STP_PARALLEL -L $PPD_PARALLEL"
 
 # Most non-Macintosh systems won't have the Macintosh-specific profiles
 # installed in Macintosh-specific locations.

@@ -28,7 +28,8 @@ EXTRA_DIST = \
 	autogen.sh \
 	global.mk \
 	mkgitlog \
-	gversion
+	gversion \
+	count-cpus
 
 noinst_SCRIPTS=gversion
 

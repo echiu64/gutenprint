@@ -460,7 +460,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
   unsigned      rotor = 0;	    /* Rotor for generating PPD files in parallel */
   pid_t         *subprocesses = NULL;
   int		parent = 1;
-  int		skip_duplicate_ppds = 0
+  int		skip_duplicate_ppds = 0;
 
  /*
   * Parse command-line args...

@@ -1071,6 +1071,8 @@ AC_CONFIG_FILES([scripts/mkgitlog],
 		[chmod +x scripts/mkgitlog])
 AC_CONFIG_FILES([scripts/gversion],
 		[chmod +x scripts/gversion])
+AC_CONFIG_FILES([scripts/count-cpus],
+		[chmod +x scripts/count-cpus])
 AC_CONFIG_COMMANDS([default], [
 echo
 ],

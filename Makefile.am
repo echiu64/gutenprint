@@ -119,6 +119,12 @@ pdf:
 snapshot: scripts/gversion git-version-stamp
 	$(MAKE) dist distdir=$(PACKAGE)-`scripts/gversion`-`date +"%Y%m%d"`
 
+fast-check:
+	STP_FAST_TEST=1 STP_PARALLEL=`scripts/count-cpus` make check
+
+full-check:
+	STP_PARALLEL=`scripts/count-cpus` make check
+
 ## Clean
 
 CLEANSCRIPTS = \

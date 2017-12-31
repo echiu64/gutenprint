@@ -19,6 +19,7 @@
 
 include $(top_srcdir)/scripts/global.mk
 
+AM_TESTS_ENVIRONMENT=STP_TESTING=1
 
 ## Variables
 
@@ -29,7 +30,7 @@ LOCAL_CPPFLAGS = -I$(top_srcdir)/src/main $(GUTENPRINT_CFLAGS)
 ## It is essentially a giant unit test for the weave code.
 ## testdither doesn't actually test anything; there appears to be no way
 ## for it to actually return anything.
-TESTS = curve
+TESTS = curve run-weavetest testdither
 
 ## Programs
 
