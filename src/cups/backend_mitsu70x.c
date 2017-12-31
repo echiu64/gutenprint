@@ -341,12 +341,6 @@ struct mitsu70x_printerstatus_resp {
 	struct mitsu70x_status_deck upper;
 } __attribute__((packed));
 
-#define MK60S_0105_M_CSUM  0x148C  /* 1.05 316M3 1 148C */
-#define EK305_0104_M_CSUM  0x2878  /* 1.04 316F8 3 2878 */
-#define MD70X_0110_M_CSUM  0x064D  /* 1.10 316V1 1 064D */
-#define MD70X_0112_M_CSUM  0x9FC3  /* 1.12 316W1 1 9FC3 */
-#define FA300_XXXX_M_CSUM  0x4431  /* ?.?? 416J2 1 4431 */
-
 struct mitsu70x_memorystatus_resp {
 	uint8_t  hdr[3]; /* E4 56 33 */
 	uint8_t  memory;
@@ -1395,23 +1389,40 @@ static int mitsu70x_set_printermode(struct mitsu70x_ctx *ctx, uint8_t enabled)
 	return 0;
 }
 #endif
-static int mitsu70x_wakeup(struct mitsu70x_ctx *ctx)
+static int mitsu70x_wakeup(struct mitsu70x_ctx *ctx, int wait)
 {
 	int ret;
 	uint8_t buf[512];
+	struct mitsu70x_jobstatus jobstatus;
 
-	memset(buf, 0, sizeof(buf));
-	buf[0] = 0x1b;
-	buf[1] = 0x45;
-	buf[2] = 0x57; // XXX also, 0x53, 0x54 seen.
-	buf[3] = 0x55;
-
-	INFO("Waking up printer...\n");
-	if ((ret = send_data(ctx->dev, ctx->endp_down,
-			     buf, sizeof(buf))))
+top:
+	/* Query job status for jobid 0 (global) */
+	ret = mitsu70x_get_jobstatus(ctx, &jobstatus, 0x0000);
+	if (ret)
 		return CUPS_BACKEND_FAILED;
 
-	return 0;
+	/* Trigger a wakeup if necessary */
+	if (jobstatus.power) {
+		INFO("Waking up printer...\n");
+
+		memset(buf, 0, sizeof(buf));
+		buf[0] = 0x1b;
+		buf[1] = 0x45;
+		buf[2] = 0x57; // XXX also, 0x53, 0x54 seen.
+		buf[3] = 0x55;
+
+		if ((ret = send_data(ctx->dev, ctx->endp_down,
+				     buf, sizeof(buf))))
+			return CUPS_BACKEND_FAILED;
+
+		if (wait) {
+			sleep(1);
+			goto top;
+		}
+	}
+
+
+	return CUPS_BACKEND_OK;
 }
 
 static int d70_library_callback(void *context, void *buffer, uint32_t len)
@@ -1455,21 +1466,17 @@ static int mitsu70x_main_loop(void *vctx, int copies)
 
 	INFO("Waiting for printer idle...\n");
 
+	/* Ensure printer is awake */
+	ret = mitsu70x_wakeup(ctx, 1);
+	if (ret)
+		return CUPS_BACKEND_FAILED;
+
 top:
+
 	/* Query job status for jobid 0 (global) */
 	ret = mitsu70x_get_jobstatus(ctx, &jobstatus, 0x0000);
 	if (ret)
 		return CUPS_BACKEND_FAILED;
-
-	/* Make sure we're awake! */
-	if (jobstatus.power) {
-		ret = mitsu70x_wakeup(ctx);
-		if (ret)
-			return CUPS_BACKEND_FAILED;
-
-		sleep(1);
-		goto top;
-	}
 
 	/* Make sure temperature is sane */
 	if (jobstatus.temperature == TEMPERATURE_COOLING) {
@@ -1518,14 +1525,33 @@ top:
 
 	/* FW sanity checking */
 	if (ctx->type == P_KODAK_305) {
-		if (be16_to_cpu(resp.vers[0].checksum) != EK305_0104_M_CSUM)
-			WARNING("Printer FW out of date. Highly recommend upgrading EK305 to v1.04!\n");
+		/* Known versions:
+		   v1.02: M 316E81 1433   (Add Ultrafine and matte support)
+		   v1.04: M 316F83 2878   (Add 2x6 strip and support "Triton" media)
+		*/
+		if (strncmp(resp.vers[0].ver, "316F83", 6) < 0)
+			WARNING("Printer FW out of date. Highly recommend upgrading EK305 to v1.04 or newer!\n");
 	} else if (ctx->type == P_MITSU_K60) {
-		if (be16_to_cpu(resp.vers[0].checksum) != MK60S_0105_M_CSUM)
-			WARNING("Printer FW out of date. Highly recommend upgrading K60 to v1.05!\n");
+		/* Known versions:
+		   v1.05: M 316M31 148C   (Add HG media support)
+		*/
+		if (strncmp(resp.vers[0].ver, "316M31", 6) < 0)
+			WARNING("Printer FW out of date. Highly recommend upgrading K60 to v1.05 or newer!\n");
 	} else if (ctx->type == P_MITSU_D70X) {
-		if (be16_to_cpu(resp.vers[0].checksum) != MD70X_0112_M_CSUM)
-			WARNING("Printer FW out of date. Highly recommend upgrading D70/D707 to v1.12!\n");
+		/* Known versions:
+		   v1.10: M 316V11 064D   (Add ultrafine mode, 6x6 support, 2x6 strip, and more?)
+		   v1.12: M 316W11 9FC3   (??)
+		   v1.13:                 (??)
+		*/
+		if (strncmp(resp.vers[0].ver, "316W11", 6) < 0)
+			WARNING("Printer FW out of date. Highly recommend upgrading D70/D707 to v1.12 or newer!\n");
+	} else if (ctx->type == P_FUJI_ASK300) {
+		/* Known versions:
+		   v?.??: M 316A21 7998
+		   v?.??: M 316J21 4431
+		*/
+		if (strncmp(resp.vers[0].ver, "316J21", 6) < 0)
+			WARNING("Printer FW out of date. Highly recommend upgrading ASK300 to v?.?? or newer!\n");
 	}
 
 skip_status:
@@ -1768,10 +1794,8 @@ static void mitsu70x_dump_printerstatus(struct mitsu70x_ctx *ctx,
 	}
 	INFO("Standby Timeout: %d minutes\n", resp->sleeptime);
 	INFO("iSerial Reporting: %s\n", resp->iserial ? "No" : "Yes" );
-
 	INFO("Power Status: %s\n", resp->power ? "Sleeping" : "Awake");
-	INFO("Lower Mechanical Status: %s\n",
-	     mitsu70x_mechastatus(resp->lower.mecha_status));
+
 	if (resp->lower.error_status[0]) {
 		INFO("Lower Error Status: %s/%s -> %s\n",
 		     mitsu70x_errorclass(resp->lower.error_status),
@@ -1779,21 +1803,21 @@ static void mitsu70x_dump_printerstatus(struct mitsu70x_ctx *ctx,
 		     mitsu70x_errorrecovery(resp->lower.error_status));
 	}
 	INFO("Lower Temperature: %s\n", mitsu70x_temperatures(resp->lower.temperature));
-	INFO("Lower Media type:  %s (%02x/%02x)\n",
+	INFO("Lower Mechanical Status: %s\n",
+	     mitsu70x_mechastatus(resp->lower.mecha_status));
+	INFO("Lower Media Type:  %s (%02x/%02x)\n",
 	     mitsu70x_media_types(resp->lower.media_brand, resp->lower.media_type),
 	     resp->lower.media_brand,
 	     resp->lower.media_type);
-	INFO("Lower Prints remaining:  %03d/%03d\n",
+	INFO("Lower Prints Remaining:  %03d/%03d\n",
 	     be16_to_cpu(resp->lower.remain),
 	     be16_to_cpu(resp->lower.capacity));
 	i = packed_bcd_to_uint32((char*)resp->lower.lifetime_prints, 4);
 	if (i)
 		i-= 10;
-	INFO("Lower Lifetime prints:  %u\n", i);
+	INFO("Lower Lifetime Prints:  %u\n", i);
 
 	if (ctx->num_decks == 2) {
-		INFO("Upper Mechanical Status: %s\n",
-		     mitsu70x_mechastatus(resp->upper.mecha_status));
 		if (resp->upper.error_status[0]) {
 			INFO("Upper Error Status: %s/%s -> %s\n",
 			     mitsu70x_errorclass(resp->upper.error_status),
@@ -1801,18 +1825,20 @@ static void mitsu70x_dump_printerstatus(struct mitsu70x_ctx *ctx,
 			     mitsu70x_errorrecovery(resp->upper.error_status));
 		}
 		INFO("Upper Temperature: %s\n", mitsu70x_temperatures(resp->upper.temperature));
-		INFO("Upper Media type:  %s (%02x/%02x)\n",
+		INFO("Upper Mechanical Status: %s\n",
+		     mitsu70x_mechastatus(resp->upper.mecha_status));
+		INFO("Upper Media Type:  %s (%02x/%02x)\n",
 		     mitsu70x_media_types(resp->upper.media_brand, resp->upper.media_type),
 		     resp->upper.media_brand,
 		     resp->upper.media_type);
-		INFO("Upper Prints remaining:  %03d/%03d\n",
+		INFO("Upper Prints Remaining:  %03d/%03d\n",
 		     be16_to_cpu(resp->upper.remain),
 		     be16_to_cpu(resp->upper.capacity));
 
 		i = packed_bcd_to_uint32((char*)resp->upper.lifetime_prints, 4);
 		if (i)
 			i-= 10;
-		INFO("Upper Lifetime prints:  %u\n", i);
+		INFO("Upper Lifetime Prints:  %u\n", i);
 	}
 }
 
@@ -1834,16 +1860,13 @@ static int mitsu70x_query_jobs(struct mitsu70x_ctx *ctx)
 	INFO("Mechanical Status: %s\n",
 	     mitsu70x_mechastatus(jobstatus.mecha_status));
 	if (jobstatus.error_status[0]) {
-		INFO("%s/%s -> %s:  %02x/%02x/%02x\n",
+		INFO("%s/%s -> %s\n",
 		     mitsu70x_errorclass(jobstatus.error_status),
 		     mitsu70x_errors(jobstatus.error_status),
-		     mitsu70x_errorrecovery(jobstatus.error_status),
-		     jobstatus.error_status[0],
-		     jobstatus.error_status[1],
-		     jobstatus.error_status[2]);
+		     mitsu70x_errorrecovery(jobstatus.error_status));
 	}
 	INFO("Temperature: %s\n", mitsu70x_temperatures(jobstatus.temperature));
-	// memory status
+	// memory status?
 
 #if 0
 	ret = mitsu70x_get_jobs(ctx, &jobs);
@@ -1904,6 +1927,7 @@ static void mitsu70x_cmdline(void)
 	DEBUG("\t\t[ -s ]           # Query printer status\n");
 	DEBUG("\t\t[ -j ]           # Query job status\n");
 	DEBUG("\t\t[ -w ]           # Wake up printer\n");
+	DEBUG("\t\t[ -W ]           # Wake up printer and wait\n");
 	DEBUG("\t\t[ -f ]           # Use fast return mode\n");
 	DEBUG("\t\t[ -k num ]       # Set standby time (1-60 minutes, 0 disables)\n");
 	DEBUG("\t\t[ -x num ]       # Set USB iSerialNumber Reporting (1 on, 0 off)\n");
@@ -1917,7 +1941,7 @@ static int mitsu70x_cmdline_arg(void *vctx, int argc, char **argv)
 	if (!ctx)
 		return -1;
 
-	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "jk:swX:x:")) >= 0) {
+	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "jk:swWX:x:")) >= 0) {
 		switch(i) {
 		GETOPT_PROCESS_GLOBAL
 		case 'j':
@@ -1930,7 +1954,10 @@ static int mitsu70x_cmdline_arg(void *vctx, int argc, char **argv)
 			j = mitsu70x_query_status(ctx);
 			break;
 		case 'w':
-			j = mitsu70x_wakeup(ctx);
+			j = mitsu70x_wakeup(ctx, 0);
+			break;
+		case 'W':
+			j = mitsu70x_wakeup(ctx, 1);
 			break;
 		case 'x':
 			j = mitsu70x_set_iserial(ctx, atoi(optarg));
@@ -1952,7 +1979,7 @@ static int mitsu70x_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend mitsu70x_backend = {
 	.name = "Mitsubishi CP-D70/D707/K60/D80",
-	.version = "0.69",
+	.version = "0.73",
 	.uri_prefix = "mitsu70x",
 	.cmdline_usage = mitsu70x_cmdline,
 	.cmdline_arg = mitsu70x_cmdline_arg,
