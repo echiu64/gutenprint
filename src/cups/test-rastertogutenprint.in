@@ -95,7 +95,7 @@ while getopts "hvcgsVnO:m:o:p:St:lLXf:" opt ; do
     case "$opt" in
 	h*) usage ;;
 	v) valopts='--tool=memcheck' ; valgrind=$((valgrind + 1)) ;;
-	c) valopts='--tool=cachegrind'; valgrind=4 ;;
+	c) valopts='--tool=callgrind --dump-instr=yes --trace-jump=yes'; valgrind=4 ;;
 	g) valopts='--vgdb=yes' ;;
 	s) single=1 ;;
 	V) verbose=1 ;;
