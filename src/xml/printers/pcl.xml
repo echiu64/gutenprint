@@ -925,16 +925,16 @@
       <printer translate="name" name="Kyocera KM-6030" driver="kyocera-km-6030" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera KM-6230" deviceid="MFG:Kyocera Mita;MDL:KM-6230;DES:Kyocera Mita KM-6230;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-km-6230" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera KM-8030" driver="kyocera-km-8030" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera KM-C830" driver="kyocera-km-c830" manufacturer="Kyocera" model="50004 parameters="pcl_laser_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="Kyocera KM-C850" driver="kyocera-km-c850" manufacturer="Kyocera" model="50004 parameters="pcl_laser_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="Kyocera KM-C2520" driver="kyocera-km-c2520" manufacturer="Kyocera" model="50004 parameters="pcl_laser_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="Kyocera KM-C2525E" driver="kyocera-km-c2525e" manufacturer="Kyocera" model="50004 parameters="pcl_laser_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="Kyocera KM-C2630" driver="kyocera-km-c2630" manufacturer="Kyocera" model="50004 parameters="pcl_laser_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="Kyocera KM-C3225" driver="kyocera-km-c3225" manufacturer="Kyocera" model="50004 parameters="pcl_laser_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="Kyocera KM-C3225E" driver="kyocera-km-c3225e" manufacturer="Kyocera" model="50004 parameters="pcl_laser_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="Kyocera KM-C3232" driver="kyocera-km-c3232" manufacturer="Kyocera" model="50004 parameters="pcl_laser_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="Kyocera KM-C3232E" driver="kyocera-km-c3232e" manufacturer="Kyocera" model="50004 parameters="pcl_laser_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="Kyocera KM-C4035E" driver="kyocera-km-c4035e" manufacturer="Kyocera" model="50004 parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera KM-C830" driver="kyocera-km-c830" manufacturer="Kyocera" model="50004" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera KM-C850" driver="kyocera-km-c850" manufacturer="Kyocera" model="50004" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera KM-C2520" driver="kyocera-km-c2520" manufacturer="Kyocera" model="50004" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera KM-C2525E" driver="kyocera-km-c2525e" manufacturer="Kyocera" model="50004" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera KM-C2630" driver="kyocera-km-c2630" manufacturer="Kyocera" model="50004" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera KM-C3225" driver="kyocera-km-c3225" manufacturer="Kyocera" model="50004" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera KM-C3225E" driver="kyocera-km-c3225e" manufacturer="Kyocera" model="50004" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera KM-C3232" driver="kyocera-km-c3232" manufacturer="Kyocera" model="50004" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera KM-C3232E" driver="kyocera-km-c3232e" manufacturer="Kyocera" model="50004" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kyocera KM-C4035E" driver="kyocera-km-c4035e" manufacturer="Kyocera" model="50004" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Kyocera TASKalfa 250ci" driver="kyocera-km-taskalfa-250ci" manufacturer="Kyocera" model="50004" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Kyocera TASKalfa 300ci" driver="kyocera-km-taskalfa-300ci" manufacturer="Kyocera" model="50004" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Kyocera TASKalfa 400ci" driver="kyocera-km-taskalfa-400ci" manufacturer="Kyocera" model="50004" parameters="pcl_laser_params">EXPERIMENTAL</printer>
