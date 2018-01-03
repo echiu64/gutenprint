@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.2.13!  Please read these notes carefully.
+Welcome to Gutenprint 5.2.14-pre1!  Please read these notes carefully.
 
 *** NOTE TO PACKAGERS: Please read the file README.package for issues
     that are of interest to distributors and packagers of Gutenprint.
@@ -15,7 +15,7 @@ I) INTRODUCTION
     that replaces the print plug-in packaged with the GIMP
     distribution.
 
-    Gutenprint 5.2.13 is a stable release of Gutenprint 5.2.
+    Gutenprint 5.2.14-pre1 is a pre-release of Gutenprint 5.2.14.
 
     Gutenprint was renamed from its original name of Gimp-Print in
     order to clearly distinguish it from GIMP.  While this package
@@ -112,7 +112,7 @@ A) OVERVIEW
 	gimp-print-devel@lists.sourceforge.net
 
 	================================================================
-	  Release: gutenprint 5.2.13 generated on 16 Jul 2017
+	  Release: gutenprint 5.2.14-pre1 generated on 02 Jan 2018
 
 	  Features:
 	    Build CUPS:                                 yes, installing in /usr
@@ -147,7 +147,7 @@ A) OVERVIEW
 	    Generate debugging symbols:                 no
 	    Use modules:                                static
 	    Use readline libraries:                     yes, extra arguments: -lncurses
-	    uname -a output:                            Linux dsl092-065-009 4.12.0-3.gae25ff8-default #1 SMP PREEMPT Mon Jul 10 07:44:59 UTC 2017 (ae25ff8) x86_64 x86_64 x86_64 GNU/Linux
+	    uname -a output:                            Linux rlk-mobile.rlk 4.4.92-31-default #1 SMP Sun Oct 22 06:56:24 UTC 2017 (1d80e8a) x86_64 x86_64 x86_64 GNU/Linux
 	================================================================
 
     The CUPS and GIMP components require that the appropriate packages

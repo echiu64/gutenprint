@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.2.13, a stable release of Gutenprint 5.2.
+Welcome to Gutenprint 5.2.14-pre1, a pre-release of Gutenprint 5.2.14.
 Please read these release notes carefully.
 
 Gutenprint is a suite of printer drivers for UNIX, Linux, and
@@ -250,195 +250,200 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
 * Changes from 5.2.13
 
-1) The PCL driver now supports color laser printers that use PCL 5c
-   natively (as opposed to emulation).  The support is considered to
-   be preliminary at this time.
+  1) The PCL driver now supports color laser printers that use PCL 5c
+     natively (as opposed to emulation).  The support is considered to
+     be preliminary at this time.
 
-   * The following printers now support color printing:
+     * The following printers now support color printing:
 
-     Epson ActionLaser AL-C8600
-     Epson ActionLaser AL-C8600 PS3
-     HP Color LaserJet 2500
-     HP Color LaserJet 5
-     HP Color LaserJet 5000
-     HP Color LaserJet 8550GN
-     Kyocera FS-5800C
-     Kyocera FS-5900C
-     Kyocera FS-8000C
-     Xerox DocuPrint C20
-     Xerox WorkCentre 7345
+       Epson ActionLaser AL-C8600
+       Epson ActionLaser AL-C8600 PS3
+       HP Color LaserJet 2500
+       HP Color LaserJet 5
+       HP Color LaserJet 5000
+       HP Color LaserJet 8550GN
+       Kyocera FS-5800C
+       Kyocera FS-5900C
+       Kyocera FS-8000C
+       Xerox DocuPrint C20
+       Xerox WorkCentre 7345
 
-  * The following new printers have been added, with color support:
+    * The following new printers have been added, with color support:
 
-     Brother HL-2400CeN
-     Brother HL-2600CN
-     Brother HL-3400CN
-     Brother HL-3450CN
-     Canon LBP-5360
-     Canon LBP-5390
-     Canon imageRunner C2570
-     Canon imageRunner C2570i
-     Canon imageRunner C2620N
-     Canon imageRunner C3100
-     Canon imageRunner C3170
-     Canon imageRunner C3170i
-     Canon imageRunner C3200
-     Canon imageRunner C5030
-     Canon imageRunner C5180
-     Canon imageRunner C5800
-     Canon imageRunner C5870U
-     Canon imageRunner C6800
-     Canon imageRunner C6870U
-     HP Color LaserJet 5m
-     HP Color LaserJet 2500
-     HP Color LaserJet 2500
-     HP Color LaserJet 3000
-     HP Color LaserJet 3000dn
-     HP Color LaserJet 3000dtn
-     HP Color LaserJet 3000n
-     HP Color LaserJet 3700
-     HP Color LaserJet 3700n
-     HP Color LaserJet 3800
-     HP Color LaserJet 3800dn
-     HP Color LaserJet 3800dtn
-     HP Color LaserJet 3800n
-     HP Color LaserJet 4600
-     HP Color LaserJet 4610
-     HP Color LaserJet 4650
-     HP Color LaserJet 4700
-     HP Color LaserJet 4700dn
-     HP Color LaserJet 4700dtn
-     HP Color LaserJet 4700n
-     HP Color LaserJet 4700ph+
-     HP Color LaserJet 5500dn
-     HP Color LaserJet 5500dtn
-     HP Color LaserJet 5500hdn
-     HP Color LaserJet 5500n
-     HP Color LaserJet 8500
-     HP Color LaserJet 8500dn
-     HP Color LaserJet 8500n
-     HP Color LaserJet 8550
-     HP Color LaserJet 8550DN
-     HP Color LaserJet 8550GN
-     HP Color LaserJet 9500
-     HP Color LaserJet 9500gp
-     HP Color LaserJet 9500hdn
-     HP Color LaserJet 9500n
-     HP Color LaserJet CM1312
-     HP Color LaserJet CM1312nfi
-     HP Color LaserJet CM1411FN
-     HP Color LaserJet CM1412FN
-     HP Color LaserJet CM1413FN
-     HP Color LaserJet CM1415FN
-     HP Color LaserJet CM1415FNW
-     HP Color LaserJet CM1416FNW
-     HP Color LaserJet CM1417FNW
-     HP Color LaserJet CM1418FNW
-     HP Color LaserJet CM2320 MFP
-     HP Color LaserJet CM2320FXI MFP
-     HP Color LaserJet CM2320N MFP
-     HP Color LaserJet CM2320NF MFP
-     HP Color LaserJet CM3530 MFP
-     HP Color LaserJet CM4540 MFP
-     HP Color LaserJet CM4730 MFP
-     HP Color LaserJet CM6030 MFP
-     HP Color LaserJet CM6040 MFP
-     HP Color LaserJet CM6040f MFP
-     HP Color LaserJet CM6049f MFP
-     HP Color LaserJet CP1514n
-     HP Color LaserJet CP1515n
-     HP Color LaserJet CP1518ni
-     HP Color LaserJet CP2025
-     HP Color LaserJet CP2025dn
-     HP Color LaserJet CP2025n
-     HP Color LaserJet CP2025x
-     HP Color LaserJet CP3505
-     HP Color LaserJet CP3505dn
-     HP Color LaserJet CP3505n
-     HP Color LaserJet CP3505x
-     HP Color LaserJet CP3525
-     HP Color LaserJet CP3525dn
-     HP Color LaserJet CP3525n
-     HP Color LaserJet CP3525x
-     HP Color LaserJet CP4005
-     HP Color LaserJet CP4005dn
-     HP Color LaserJet CP4005n
-     HP Color LaserJet CP4020
-     HP Color LaserJet CP4500
-     HP Color LaserJet CP4520
-     HP Color LaserJet CP4540
-     HP Color LaserJet CP5225
-     HP Color LaserJet CP5225dn
-     HP Color LaserJet CP5225n
-     HP Color LaserJet CP5520
-     HP Color LaserJet CP6015de
-     HP Color LaserJet CP6015dn
-     HP Color LaserJet CP6015n
-     HP Color LaserJet CP6015x
-     HP Color LaserJet CP6015xh
-     Kyocera Ci-1100
-     Kyocera CS-250ci
-     Kyocera CS-2525E
-     Kyocera CS-300ci
-     Kyocera CS-400ci
-     Kyocera CS-500ci
-     Kyocera CS-3050ci
-     Kyocera CS-3225E
-     Kyocera CS-3232E
-     Kyocera CS-3550ci
-     Kyocera CS-4035E
-     Kyocera FS-5800C
-     Kyocera FS-5900C
-     Kyocera FS-8000C
-     Kyocera FS-C5015N
-     Kyocera FS-C5016N
-     Kyocera FS-C5020N
-     Kyocera FS-C5025N
-     Kyocera FS-C5030N
-     Kyocera FS-C5100DN
-     Kyocera FS-C5200DN
-     Kyocera FS-C5300DN
-     Kyocera FS-C5350DN
-     Kyocera FS-C5400DN
-     Kyocera FS-C8008N
-     Kyocera FS-C8100DN
-     Kyocera FS-C8100DN+
-     Kyocera KM-C830
-     Kyocera KM-C850
-     Kyocera KM-C2520
-     Kyocera KM-C2525E
-     Kyocera KM-C2630
-     Kyocera KM-C3225
-     Kyocera KM-C3225E
-     Kyocera KM-C3232
-     Kyocera KM-C3232E
-     Kyocera KM-C4035E
-     Kyocera TASKalfa 250ci
-     Kyocera TASKalfa 300ci
-     Kyocera TASKalfa 400ci
-     Kyocera TASKalfa 500ci
-     Oki C5300
-     Oki C5400
-     Oki C7300
-     Oki C9200
-     Oki C9400
-     Sharp AR-BC260
-     Sharp AR-BC320
-     Sharp AR-C170M
-     Sharp AR-C172M
-     Sharp AR-C260
-     Sharp AR-C260F
-     Sharp AR-C260M
-     Sharp AR-C260P
-     Sharp AR-C260S
-     Sharp AR-C261F
-     Sharp AR-C261M
-     Sharp AR-C261S
-     Sharp AR-C262M
-     Sharp AR-C262S
-     Xerox Phaser 3160N
-     Xerox Phaser 8860
-     Xerox WorkCentre C2424
+       Brother HL-2400CeN
+       Brother HL-2600CN
+       Brother HL-3400CN
+       Brother HL-3450CN
+       Canon LBP-5360
+       Canon LBP-5390
+       Canon imageRunner C2570
+       Canon imageRunner C2570i
+       Canon imageRunner C2620N
+       Canon imageRunner C3100
+       Canon imageRunner C3170
+       Canon imageRunner C3170i
+       Canon imageRunner C3200
+       Canon imageRunner C5030
+       Canon imageRunner C5180
+       Canon imageRunner C5800
+       Canon imageRunner C5870U
+       Canon imageRunner C6800
+       Canon imageRunner C6870U
+       HP Color LaserJet 5m
+       HP Color LaserJet 2500
+       HP Color LaserJet 2500
+       HP Color LaserJet 3000
+       HP Color LaserJet 3000dn
+       HP Color LaserJet 3000dtn
+       HP Color LaserJet 3000n
+       HP Color LaserJet 3700
+       HP Color LaserJet 3700n
+       HP Color LaserJet 3800
+       HP Color LaserJet 3800dn
+       HP Color LaserJet 3800dtn
+       HP Color LaserJet 3800n
+       HP Color LaserJet 4600
+       HP Color LaserJet 4610
+       HP Color LaserJet 4650
+       HP Color LaserJet 4700
+       HP Color LaserJet 4700dn
+       HP Color LaserJet 4700dtn
+       HP Color LaserJet 4700n
+       HP Color LaserJet 4700ph+
+       HP Color LaserJet 5500dn
+       HP Color LaserJet 5500dtn
+       HP Color LaserJet 5500hdn
+       HP Color LaserJet 5500n
+       HP Color LaserJet 8500
+       HP Color LaserJet 8500dn
+       HP Color LaserJet 8500n
+       HP Color LaserJet 8550
+       HP Color LaserJet 8550DN
+       HP Color LaserJet 8550GN
+       HP Color LaserJet 9500
+       HP Color LaserJet 9500gp
+       HP Color LaserJet 9500hdn
+       HP Color LaserJet 9500n
+       HP Color LaserJet CM1312
+       HP Color LaserJet CM1312nfi
+       HP Color LaserJet CM1411FN
+       HP Color LaserJet CM1412FN
+       HP Color LaserJet CM1413FN
+       HP Color LaserJet CM1415FN
+       HP Color LaserJet CM1415FNW
+       HP Color LaserJet CM1416FNW
+       HP Color LaserJet CM1417FNW
+       HP Color LaserJet CM1418FNW
+       HP Color LaserJet CM2320 MFP
+       HP Color LaserJet CM2320FXI MFP
+       HP Color LaserJet CM2320N MFP
+       HP Color LaserJet CM2320NF MFP
+       HP Color LaserJet CM3530 MFP
+       HP Color LaserJet CM4540 MFP
+       HP Color LaserJet CM4730 MFP
+       HP Color LaserJet CM6030 MFP
+       HP Color LaserJet CM6040 MFP
+       HP Color LaserJet CM6040f MFP
+       HP Color LaserJet CM6049f MFP
+       HP Color LaserJet CP1514n
+       HP Color LaserJet CP1515n
+       HP Color LaserJet CP1518ni
+       HP Color LaserJet CP2025
+       HP Color LaserJet CP2025dn
+       HP Color LaserJet CP2025n
+       HP Color LaserJet CP2025x
+       HP Color LaserJet CP3505
+       HP Color LaserJet CP3505dn
+       HP Color LaserJet CP3505n
+       HP Color LaserJet CP3505x
+       HP Color LaserJet CP3525
+       HP Color LaserJet CP3525dn
+       HP Color LaserJet CP3525n
+       HP Color LaserJet CP3525x
+       HP Color LaserJet CP4005
+       HP Color LaserJet CP4005dn
+       HP Color LaserJet CP4005n
+       HP Color LaserJet CP4020
+       HP Color LaserJet CP4500
+       HP Color LaserJet CP4520
+       HP Color LaserJet CP4540
+       HP Color LaserJet CP5225
+       HP Color LaserJet CP5225dn
+       HP Color LaserJet CP5225n
+       HP Color LaserJet CP5520
+       HP Color LaserJet CP6015de
+       HP Color LaserJet CP6015dn
+       HP Color LaserJet CP6015n
+       HP Color LaserJet CP6015x
+       HP Color LaserJet CP6015xh
+       Kyocera Ci-1100
+       Kyocera CS-250ci
+       Kyocera CS-2525E
+       Kyocera CS-300ci
+       Kyocera CS-400ci
+       Kyocera CS-500ci
+       Kyocera CS-3050ci
+       Kyocera CS-3225E
+       Kyocera CS-3232E
+       Kyocera CS-3550ci
+       Kyocera CS-4035E
+       Kyocera FS-5800C
+       Kyocera FS-5900C
+       Kyocera FS-8000C
+       Kyocera FS-C5015N
+       Kyocera FS-C5016N
+       Kyocera FS-C5020N
+       Kyocera FS-C5025N
+       Kyocera FS-C5030N
+       Kyocera FS-C5100DN
+       Kyocera FS-C5200DN
+       Kyocera FS-C5300DN
+       Kyocera FS-C5350DN
+       Kyocera FS-C5400DN
+       Kyocera FS-C8008N
+       Kyocera FS-C8100DN
+       Kyocera FS-C8100DN+
+       Kyocera KM-C830
+       Kyocera KM-C850
+       Kyocera KM-C2520
+       Kyocera KM-C2525E
+       Kyocera KM-C2630
+       Kyocera KM-C3225
+       Kyocera KM-C3225E
+       Kyocera KM-C3232
+       Kyocera KM-C3232E
+       Kyocera KM-C4035E
+       Kyocera TASKalfa 250ci
+       Kyocera TASKalfa 300ci
+       Kyocera TASKalfa 400ci
+       Kyocera TASKalfa 500ci
+       Oki C5300
+       Oki C5400
+       Oki C7300
+       Oki C9200
+       Oki C9400
+       Sharp AR-BC260
+       Sharp AR-BC320
+       Sharp AR-C170M
+       Sharp AR-C172M
+       Sharp AR-C260
+       Sharp AR-C260F
+       Sharp AR-C260M
+       Sharp AR-C260P
+       Sharp AR-C260S
+       Sharp AR-C261F
+       Sharp AR-C261M
+       Sharp AR-C261S
+       Sharp AR-C262M
+       Sharp AR-C262S
+       Xerox Phaser 3160N
+       Xerox Phaser 8860
+       Xerox WorkCentre C2424
+
+     * Many other color laser printers, too numerous to list, have
+       been added on specification; please report success or failure
+       with any other color laser printer using the Generic PCL Color
+       drivers.
 
   2) Support for the Brother HL-2030 and HL-2035 has been removed.  We
      have determined that these printers do not use standard PCL; they
