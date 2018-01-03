@@ -2174,6 +2174,7 @@
       <printer translate="name" name="Canon imageRunner C3170" driver="canon-ir_c3170" manufacturer="Canon" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon imageRunner C3170i" driver="canon-ir_c3170i" manufacturer="Canon" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon imageRunner C3200" driver="canon-ir_c3200" manufacturer="Canon" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon imageRunner C5030" driver="canon-ir_c5030" manufacturer="Canon" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon imageRunner C5180" driver="canon-ir_c5180" manufacturer="Canon" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon imageRunner C5800" driver="canon-ir_c5800" manufacturer="Canon" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon imageRunner C5870U" driver="canon-ir_c5870U" manufacturer="Canon" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
