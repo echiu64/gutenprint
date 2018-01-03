@@ -443,7 +443,10 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      * Many other color laser printers, too numerous to list, have
        been added on specification; please report success or failure
        with any other color laser printer using the Generic PCL Color
-       drivers.
+       drivers.  Printers that we know about that may be supported are
+       listed as UNTESTED Automatically Generated.  Based on feedback
+       from this pre-release, some or all of these printers may be
+       removed from the list prior to 5.2.14 release.
 
   2) Support for the Brother HL-2030 and HL-2035 has been removed.  We
      have determined that these printers do not use standard PCL; they

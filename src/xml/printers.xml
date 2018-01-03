@@ -2139,6 +2139,7 @@
       <printer translate="name" name="Brother HL-3400CN" driver="brother-hl-3400cn" manufacturer="Brother" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Brother HL-3450CN" driver="brother-hl-3450cn" manufacturer="Brother" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Brother HL-4Ve" driver="brother-hl-4ve" manufacturer="Brother" model="2" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-4040CN" driver="brother-hl-4040cn" manufacturer="Brother" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
       <printer translate="name" name="Brother HL-5030" driver="brother-hl-5030" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-5040" deviceid="MFG:Brother;MDL:HL-5040 series;CMD:PJL,PCL,PCLXL;" driver="brother-hl-5040" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-5050" deviceid="MFG:Brother;MDL:Brother HL-5050 series;" driver="brother-hl-5050" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
@@ -2146,6 +2147,7 @@
       <printer translate="name" name="Brother HL-5140" deviceid="MFG:Brother;MDL:HL-5140 series;CMD:PJL,PCL,PCLXL;" driver="brother-hl-5140" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-5150D" deviceid="MFG:Brother;MDL:Brother HL-5150D series;CMD:PJL,PCL,PCLXL,POSTSCRIPT;" driver="brother-hl-5150d" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-5170DN" deviceid="MFG:Brother;MDL:Brother HL-5170DN series;CMD:PJL,PCL,PCLXL,POSTSCRIPT;" driver="brother-hl-5170dn" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-5340D" deviceid="MFG:Brother;CMD:PJL,PCL,PCLXL;MDL:HL-5340D series;CLS:PRINTER;" driver="brother-hl-5340d" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-630" driver="brother-hl-630" manufacturer="Brother" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-660" driver="brother-hl-660" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-7050" deviceid="MFG:Brother;MDL:Brother HL-7050 series;" driver="brother-hl-7050" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
@@ -2166,6 +2168,7 @@
       <printer translate="name" name="Canon LBP-5360" driver="canon-lbp-5360" manufacturer="Canon" model="50000" parameters="pcl_laser_params" />
       <printer translate="name" name="Canon LBP-5390" driver="canon-lbp-5390" manufacturer="Canon" model="50000" parameters="pcl_laser_params" />
       <printer translate="name" name="Canon imageRunner 330s" driver="canon-ir_330s" manufacturer="Canon" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Canon imageRunner C2550" driver="canon-imagerunner_c2550" manufacturer="Canon" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
       <printer translate="name" name="Canon imageRunner C2570" driver="canon-ir_c2570" manufacturer="Canon" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon imageRunner C2570i" driver="canon-ir_c2570i" manufacturer="Canon" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon imageRunner C2570N" driver="canon-ir_c2570N" manufacturer="Canon" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
@@ -2175,7 +2178,11 @@
       <printer translate="name" name="Canon imageRunner C3170i" driver="canon-ir_c3170i" manufacturer="Canon" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon imageRunner C3200" driver="canon-ir_c3200" manufacturer="Canon" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon imageRunner C5030" driver="canon-ir_c5030" manufacturer="Canon" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon imageRunner C5058" driver="canon-imagerunner_c5058" manufacturer="Canon" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Canon imageRunner C5068" driver="canon-imagerunner_c5068" manufacturer="Canon" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
       <printer translate="name" name="Canon imageRunner C5180" driver="canon-ir_c5180" manufacturer="Canon" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon imageRunner C5185" driver="canon-imagerunner_c5185" manufacturer="Canon" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Canon imageRunner C5185i" driver="canon-imagerunner_c5185i" manufacturer="Canon" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
       <printer translate="name" name="Canon imageRunner C5800" driver="canon-ir_c5800" manufacturer="Canon" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon imageRunner C5870U" driver="canon-ir_c5870U" manufacturer="Canon" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon imageRunner C6800" driver="canon-ir_c6800" manufacturer="Canon" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
@@ -2190,6 +2197,8 @@
       <printer translate="name" name="Datamax-ONeil H8308p" deviceid="MFG:DatamaxOneil_;MDL:H8308p;" color="false" driver="datamax_oneil_H8308p" manufacturer="DatamaxONeil" model="10016" parameters="pcl_laser_params" />
       <printer translate="name" name="DEC 1800" driver="dec-1800" manufacturer="DEC" model="3" parameters="pcl_laser_params" />
       <printer translate="name" name="DEC LN17" driver="dec-ln17" manufacturer="DEC" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Dell 3000cn" driver="dell-3000cn" manufacturer="Dell" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Dell 3100cn" driver="dell-3100cn" manufacturer="Dell" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
       <printer translate="name" name="Epson ActionLaser 1100" driver="epson-actl_1100" manufacturer="Epson" model="3" parameters="pcl_laser_params" />
       <printer translate="name" name="Epson ActionLaser II" driver="epson-actl_ii" manufacturer="Epson" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="Epson AL-C2000" driver="epson-acl_c2000" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
@@ -2253,6 +2262,24 @@
       <printer translate="name" name="Gestetner 6002" driver="gestetner-6002" manufacturer="Gestetner" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Gestetner 7502" driver="gestetner-7502" manufacturer="Gestetner" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Gestetner 9002" driver="gestetner-9002" manufacturer="Gestetner" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Gestetner CS555" driver="gestetner-cs555" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner DSc1020" driver="gestetner-dsc1020" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner DSc1025" driver="gestetner-dsc1025" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner DSc1030" driver="gestetner-dsc1030" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner DSc1045" driver="gestetner-dsc1045" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner DSc1060" driver="gestetner-dsc1060" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner DSc1120" driver="gestetner-dsc1120" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner DSc1220" driver="gestetner-dsc1220" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner DSc1225" driver="gestetner-dsc1225" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner DSc1230" driver="gestetner-dsc1230" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner DSc1245" driver="gestetner-dsc1245" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner DSc1260" driver="gestetner-dsc1260" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner DSc424" driver="gestetner-dsc424" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner DSc428" driver="gestetner-dsc428" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner DSc432" driver="gestetner-dsc432" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner DSc435" driver="gestetner-dsc435" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner DSc445" driver="gestetner-dsc445" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner DSc460" driver="gestetner-dsc460" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
       <printer translate="name" name="Gestetner DSm415" driver="gestetner-dsm415" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Gestetner DSm615" driver="gestetner-dsm615" manufacturer="Gestetner" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Gestetner DSm616" driver="gestetner-dsm616" manufacturer="Gestetner" model="61" parameters="pcl_laser_params" />
@@ -2293,6 +2320,59 @@
       <printer translate="name" name="Gestetner MP 4000B" driver="gestetner-mp_4000b" manufacturer="Gestetner" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Gestetner MP 5000" driver="gestetner-mp_5000" manufacturer="Gestetner" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Gestetner MP 5000B" driver="gestetner-mp_5000b" manufacturer="Gestetner" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Gestetner MPC1500/GS106" driver="gestetner-mpc1500_gs106" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MPC2500/DSc525" driver="gestetner-mpc2500_dsc525" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MPC3000/DSc530" driver="gestetner-mpc3000_dsc530" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MPC3500/DSc535" driver="gestetner-mpc3500_dsc535" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MPC4500/DSc545" driver="gestetner-mpc4500_dsc545" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C2003" driver="gestetner-mp_c2003" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C2004" driver="gestetner-mp_c2004" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C2011" driver="gestetner-mp_c2011" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C2050" driver="gestetner-mp_c2050" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C2051" driver="gestetner-mp_c2051" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C2503" driver="gestetner-mp_c2503" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C2504" driver="gestetner-mp_c2504" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C2550" driver="gestetner-mp_c2550" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C2551" driver="gestetner-mp_c2551" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C2800" driver="gestetner-mp_c2800" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C300" driver="gestetner-mp_c300" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C3001" driver="gestetner-mp_c3001" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C3002" driver="gestetner-mp_c3002" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C3003" driver="gestetner-mp_c3003" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C3004" driver="gestetner-mp_c3004" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C300SR" driver="gestetner-mp_c300sr" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C3300" driver="gestetner-mp_c3300" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C3501" driver="gestetner-mp_c3501" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C3502" driver="gestetner-mp_c3502" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C3503" driver="gestetner-mp_c3503" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C3504" driver="gestetner-mp_c3504" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C400" driver="gestetner-mp_c400" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C4000" driver="gestetner-mp_c4000" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C400SR" driver="gestetner-mp_c400sr" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C4501" driver="gestetner-mp_c4501" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C4501A" driver="gestetner-mp_c4501a" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C4502" driver="gestetner-mp_c4502" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C4502A" driver="gestetner-mp_c4502a" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C4503" driver="gestetner-mp_c4503" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C4504" driver="gestetner-mp_c4504" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C5000" driver="gestetner-mp_c5000" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C5501" driver="gestetner-mp_c5501" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C5501A" driver="gestetner-mp_c5501a" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C5502" driver="gestetner-mp_c5502" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C5502A" driver="gestetner-mp_c5502a" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C5503" driver="gestetner-mp_c5503" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C6000" driver="gestetner-mp_c6000" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C6003" driver="gestetner-mp_c6003" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C6004" driver="gestetner-mp_c6004" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C6501" driver="gestetner-mp_c6501" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C6502" driver="gestetner-mp_c6502" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C6503" driver="gestetner-mp_c6503" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C7500" driver="gestetner-mp_c7500" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C7501" driver="gestetner-mp_c7501" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C8002" driver="gestetner-mp_c8002" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner MP C8003" driver="gestetner-mp_c8003" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner Pro C5200S" driver="gestetner-pro_c5200s" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Gestetner Pro C5210S" driver="gestetner-pro_c5210s" manufacturer="Gestetner" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
       <printer translate="name" name="HP Business Inkjet 2200" deviceid="MFG:HEWLETT-PACKARD;MDL:HP BUSINESS INKJET 2200;DES:Hewlett-Packard Business Inkjet 2200;CMD:MLC,PML,PJL;" driver="hp-bij_2200" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP Business Inkjet 2230" deviceid="MFG:HEWLETT-PACKARD;MDL:HP BUSINESS INKJET 2230;DES:Hewlett-Packard Business Inkjet 2230;CMD:MLC,PML,PJL;" driver="hp-bij_2230" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP Business Inkjet 2250" deviceid="MFG:HEWLETT-PACKARD;MDL:HP BUSINESS INKJET 2250;DES:Hewlett-Packard Business Inkjet 2250;CMD:MLC,PML,PJL,PCL5,POSTSCRIPT;" driver="hp-bij_2250" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
@@ -2710,6 +2790,18 @@
       <printer translate="name" name="Infotec IS 3090" driver="infotec-is_3090" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Infotec IS 3110" driver="infotec-is_3110" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Infotec IS 3135" driver="infotec-is_3135" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Infotec ISC 1024c" driver="infotec-isc_1024c" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec ISC 1032c" driver="infotec-isc_1032c" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec ISC 2428" driver="infotec-isc_2428" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec ISC 2525" driver="infotec-isc_2525" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec ISC 2835" driver="infotec-isc_2835" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec ISC 3030" driver="infotec-isc_3030" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec ISC 3535" driver="infotec-isc_3535" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec ISC 3545" driver="infotec-isc_3545" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec ISC 4045" driver="infotec-isc_4045" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec ISC 4560" driver="infotec-isc_4560" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec ISC 5560" driver="infotec-isc_5560" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec ISC 615G" driver="infotec-isc_615g" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
       <printer translate="name" name="Infotec MP 2550" driver="infotec-mp_2550" manufacturer="Infotec" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Infotec MP 2550B" driver="infotec-mp_2550b" manufacturer="Infotec" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Infotec MP 3350" driver="infotec-mp_3350" manufacturer="Infotec" model="61" parameters="pcl_laser_params" />
@@ -2718,6 +2810,63 @@
       <printer translate="name" name="Infotec MP 4000B" driver="infotec-mp_4000b" manufacturer="Infotec" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Infotec MP 5000" driver="infotec-mp_5000" manufacturer="Infotec" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Infotec MP 5000B" driver="infotec-mp_5000b" manufacturer="Infotec" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Infotec MP C2003" driver="infotec-mp_c2003" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C2003Z" driver="infotec-mp_c2003z" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C2004" driver="infotec-mp_c2004" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C2011" driver="infotec-mp_c2011" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C2050" driver="infotec-mp_c2050" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C2051" driver="infotec-mp_c2051" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C2503" driver="infotec-mp_c2503" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C2503Z" driver="infotec-mp_c2503z" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C2504" driver="infotec-mp_c2504" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C2550" driver="infotec-mp_c2550" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C2551" driver="infotec-mp_c2551" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C2800" driver="infotec-mp_c2800" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C300" driver="infotec-mp_c300" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C3001" driver="infotec-mp_c3001" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C3002" driver="infotec-mp_c3002" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C3003" driver="infotec-mp_c3003" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C3004" driver="infotec-mp_c3004" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C300SR" driver="infotec-mp_c300sr" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C3300" driver="infotec-mp_c3300" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C3501" driver="infotec-mp_c3501" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C3502" driver="infotec-mp_c3502" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C3503" driver="infotec-mp_c3503" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C3504" driver="infotec-mp_c3504" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C400" driver="infotec-mp_c400" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C4000" driver="infotec-mp_c4000" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C400SR" driver="infotec-mp_c400sr" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C4501" driver="infotec-mp_c4501" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C4501A" driver="infotec-mp_c4501a" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C4502" driver="infotec-mp_c4502" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C4502A" driver="infotec-mp_c4502a" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C4503" driver="infotec-mp_c4503" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C4504" driver="infotec-mp_c4504" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C5000" driver="infotec-mp_c5000" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C5501" driver="infotec-mp_c5501" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C5501A" driver="infotec-mp_c5501a" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C5502" driver="infotec-mp_c5502" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C5502A" driver="infotec-mp_c5502a" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C5503" driver="infotec-mp_c5503" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C5504" driver="infotec-mp_c5504" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C6000" driver="infotec-mp_c6000" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C6003" driver="infotec-mp_c6003" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C6004" driver="infotec-mp_c6004" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C6501" driver="infotec-mp_c6501" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C6502" driver="infotec-mp_c6502" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C6503" driver="infotec-mp_c6503" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C7500" driver="infotec-mp_c7500" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C7501" driver="infotec-mp_c7501" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C8002" driver="infotec-mp_c8002" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec MP C8003" driver="infotec-mp_c8003" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec Pro C5100S" driver="infotec-pro_c5100s" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec Pro C5110S" driver="infotec-pro_c5110s" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec Pro C5200S" driver="infotec-pro_c5200s" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec Pro C5210S" driver="infotec-pro_c5210s" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec Pro C7100" driver="infotec-pro_c7100" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec Pro C7100S" driver="infotec-pro_c7100s" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec Pro C7110" driver="infotec-pro_c7110" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Infotec Pro C7110S" driver="infotec-pro_c7110s" manufacturer="Infotec" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
       <printer translate="name" name="Kyocera CS-1815" driver="kyocera-cs-1815" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera CS-2525E" driver="kyocera-cs-2525e" manufacturer="Kyocera" model="50003" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera CS-3225E" driver="kyocera-cs-3225e" manufacturer="Kyocera" model="50003" parameters="pcl_laser_params" />
@@ -2841,6 +2990,7 @@
       <printer translate="name" name="Lanier 5632" driver="lanier-5632" manufacturer="Lanier" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Lanier 5635" driver="lanier-5635" manufacturer="Lanier" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Lanier 5645" driver="lanier-5645" manufacturer="Lanier" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Lanier LC155" driver="lanier-lc155" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
       <printer translate="name" name="Lanier LD0105" driver="lanier-ld0105" manufacturer="Lanier" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Lanier LD015" driver="lanier-ld015" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Lanier LD035" driver="lanier-ld035" manufacturer="Lanier" model="61" parameters="pcl_laser_params" />
@@ -2855,17 +3005,29 @@
       <printer translate="name" name="Lanier LD120" driver="lanier-ld120" manufacturer="Lanier" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Lanier LD120d" driver="lanier-ld120d" manufacturer="Lanier" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Lanier LD122" driver="lanier-ld122" manufacturer="Lanier" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Lanier LD124c" driver="lanier-ld124c" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
       <printer translate="name" name="Lanier LD127" driver="lanier-ld127" manufacturer="Lanier" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Lanier LD132" driver="lanier-ld132" manufacturer="Lanier" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Lanier LD132c" driver="lanier-ld132c" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
       <printer translate="name" name="Lanier LD135" driver="lanier-ld135" manufacturer="Lanier" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Lanier LD145" driver="lanier-ld145" manufacturer="Lanier" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Lanier LD151" driver="lanier-ld151" manufacturer="Lanier" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Lanier LD160" driver="lanier-ld160" manufacturer="Lanier" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Lanier LD160c" driver="lanier-ld160c" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
       <printer translate="name" name="Lanier LD175" driver="lanier-ld175" manufacturer="Lanier" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Lanier LD225" driver="lanier-ld225" manufacturer="Lanier" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Lanier LD230" driver="lanier-ld230" manufacturer="Lanier" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Lanier LD235" driver="lanier-ld235" manufacturer="Lanier" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Lanier LD245" driver="lanier-ld245" manufacturer="Lanier" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Lanier LD328c" driver="lanier-ld328c" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier LD335c" driver="lanier-ld335c" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier LD345c" driver="lanier-ld345c" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier LD 130C" driver="lanier-ld_130c" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier LD 130CSR" driver="lanier-ld_130csr" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier LD 140C" driver="lanier-ld_140c" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier LD 140CSR" driver="lanier-ld_140csr" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier LD 620C" driver="lanier-ld_620c" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier LD 625C" driver="lanier-ld_625c" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
       <printer translate="name" name="Lanier MP2500/LD125" driver="lanier-ld125" manufacturer="Lanier" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Lanier MP 1100/LD1100" driver="lanier-ld1100" manufacturer="Lanier" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Lanier MP 1350/LD1135" driver="lanier-ld1135" manufacturer="Lanier" model="61" parameters="pcl_laser_params" />
@@ -2888,6 +3050,65 @@
       <printer translate="name" name="Lanier MP 6500/LD265" driver="lanier-ld265" manufacturer="Lanier" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Lanier MP 7500/LD275" driver="lanier-ld275" manufacturer="Lanier" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Lanier MP 9000/LD190" driver="lanier-ld190" manufacturer="Lanier" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Lanier MP C1500/LD215c" driver="lanier-mp_c1500" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C4501A/LD645CA" driver="lanier-mp_c4501a" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C5501A/LD655CA" driver="lanier-mp_c5501a" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C2003" driver="lanier-mp_c2003" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C2004" driver="lanier-mp_c2004" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C2050/LD520C" driver="lanier-mp_c2050_ld520c" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C2500/LD425c" driver="lanier-mp_c2500_ld425c" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C2503" driver="lanier-mp_c2503" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C2504" driver="lanier-mp_c2504" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C2550/LD525C" driver="lanier-mp_c2550_ld525c" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C2800/LD528C" driver="lanier-mp_c2800_ld528c" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C300" driver="lanier-mp_c300" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C3000/LD430c" driver="lanier-mp_c3000_ld430c" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C3001/LD630C" driver="lanier-mp_c3001_ld630c" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C3002" driver="lanier-mp_c3002" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C3003" driver="lanier-mp_c3003" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C3004" driver="lanier-mp_c3004" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C300SR" driver="lanier-mp_c300sr" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C3300/LD533C" driver="lanier-mp_c3300_ld533c" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C3500/LD435c" driver="lanier-mp_c3500_ld435c" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C3501/LD635C" driver="lanier-mp_c3501_ld635c" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C3502" driver="lanier-mp_c3502" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C3503" driver="lanier-mp_c3503" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C3504" driver="lanier-mp_c3504" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C400" driver="lanier-mp_c400" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C4000/LD540C" driver="lanier-mp_c4000_ld540c" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C400SR" driver="lanier-mp_c400sr" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C4500/LD445c" driver="lanier-mp_c4500_ld445c" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C4501/LD645C" driver="lanier-mp_c4501_ld645c" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C4502" driver="lanier-mp_c4502" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C4502A" driver="lanier-mp_c4502a" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C4503" driver="lanier-mp_c4503" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C4504" driver="lanier-mp_c4504" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C5000/LD550C" driver="lanier-mp_c5000_ld550c" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C5501/LD655C" driver="lanier-mp_c5501_ld655c" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C5502" driver="lanier-mp_c5502" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C5502A" driver="lanier-mp_c5502a" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C5503" driver="lanier-mp_c5503" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C6000/LD260c" driver="lanier-mp_c6000_ld260c" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C6003" driver="lanier-mp_c6003" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C6004" driver="lanier-mp_c6004" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C6501/LD365C" driver="lanier-mp_c6501_ld365c" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C6502" driver="lanier-mp_c6502" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C6503" driver="lanier-mp_c6503" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C7500/LD275c" driver="lanier-mp_c7500_ld275c" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C7501/LD375C" driver="lanier-mp_c7501_ld375c" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C8002" driver="lanier-mp_c8002" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier MP C8003" driver="lanier-mp_c8003" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier Pro C5100S" driver="lanier-pro_c5100s" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier Pro C5110S" driver="lanier-pro_c5110s" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier Pro C5200S" driver="lanier-pro_c5200s" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier Pro C5210S" driver="lanier-pro_c5210s" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier Pro C7100" driver="lanier-pro_c7100" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier Pro C7100S" driver="lanier-pro_c7100s" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier Pro C7110" driver="lanier-pro_c7110" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier Pro C7110S" driver="lanier-pro_c7110s" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier SG3110DN" driver="lanier-sg3110dn" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier SG3110DNw" driver="lanier-sg3110dnw" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Lanier SG3110SFNw" driver="lanier-sg3110sfnw" manufacturer="Lanier" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
       <printer translate="name" name="Lexmark 4076" driver="lexmark-4076" manufacturer="Lexmark" model="500" parameters="pcl_inkjet_params" />
       <printer translate="name" name="Lexmark Optra E" driver="lexmark-optra_e" manufacturer="Lexmark" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Lexmark Optra E+" driver="lexmark-optra_eplus" manufacturer="Lexmark" model="6" parameters="pcl_laser_params" />
@@ -2918,6 +3139,13 @@
       <printer translate="name" name="NRG 6002/6005/6008" driver="nrg-6008" manufacturer="NRG" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="NRG 7502/7505/7508" driver="nrg-7508" manufacturer="NRG" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="NRG 9005/9008/9002" driver="nrg-9002" manufacturer="NRG" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="NRG CS555" driver="nrg-cs555" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG DSc424" driver="nrg-dsc424" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG DSc428" driver="nrg-dsc428" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG DSc432" driver="nrg-dsc432" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG DSc435" driver="nrg-dsc435" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG DSc445" driver="nrg-dsc445" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG DSc460" driver="nrg-dsc460" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
       <printer translate="name" name="NRG DSm415" driver="nrg-dsm415" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="NRG DSm615" driver="nrg-dsm615" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="NRG DSm616" driver="nrg-dsm616" manufacturer="NRG" model="61" parameters="pcl_laser_params" />
@@ -2959,12 +3187,78 @@
       <printer translate="name" name="NRG MP 6500" driver="nrg-mp_6500" manufacturer="NRG" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="NRG MP 7500" driver="nrg-mp_7500" manufacturer="NRG" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="NRG MP 9000" driver="nrg-mp_9000" manufacturer="NRG" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="NRG MP C1500sp" driver="nrg-mp_c1500sp" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C2003" driver="nrg-mp_c2003" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C2003Z" driver="nrg-mp_c2003z" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C2004" driver="nrg-mp_c2004" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C2011" driver="nrg-mp_c2011" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C2050" driver="nrg-mp_c2050" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C2051" driver="nrg-mp_c2051" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C2500" driver="nrg-mp_c2500" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C2503" driver="nrg-mp_c2503" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C2503Z" driver="nrg-mp_c2503z" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C2504" driver="nrg-mp_c2504" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C2550" driver="nrg-mp_c2550" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C2551" driver="nrg-mp_c2551" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C2800" driver="nrg-mp_c2800" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C300" driver="nrg-mp_c300" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C3000" driver="nrg-mp_c3000" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C3001" driver="nrg-mp_c3001" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C3002" driver="nrg-mp_c3002" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C3003" driver="nrg-mp_c3003" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C3004" driver="nrg-mp_c3004" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C300SR" driver="nrg-mp_c300sr" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C3300" driver="nrg-mp_c3300" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C3500" driver="nrg-mp_c3500" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C3501" driver="nrg-mp_c3501" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C3502" driver="nrg-mp_c3502" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C3503" driver="nrg-mp_c3503" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C3504" driver="nrg-mp_c3504" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C400" driver="nrg-mp_c400" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C4000" driver="nrg-mp_c4000" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C400SR" driver="nrg-mp_c400sr" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C4500" driver="nrg-mp_c4500" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C4501" driver="nrg-mp_c4501" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C4501A" driver="nrg-mp_c4501a" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C4502" driver="nrg-mp_c4502" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C4502A" driver="nrg-mp_c4502a" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C4503" driver="nrg-mp_c4503" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C4504" driver="nrg-mp_c4504" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C5000" driver="nrg-mp_c5000" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C5501" driver="nrg-mp_c5501" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C5501A" driver="nrg-mp_c5501a" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C5502" driver="nrg-mp_c5502" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C5502A" driver="nrg-mp_c5502a" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C5503" driver="nrg-mp_c5503" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C5504" driver="nrg-mp_c5504" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C6000" driver="nrg-mp_c6000" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C6003" driver="nrg-mp_c6003" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C6004" driver="nrg-mp_c6004" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C6501" driver="nrg-mp_c6501" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C6502" driver="nrg-mp_c6502" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C6503" driver="nrg-mp_c6503" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C7500" driver="nrg-mp_c7500" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C7501" driver="nrg-mp_c7501" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C8002" driver="nrg-mp_c8002" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG MP C8003" driver="nrg-mp_c8003" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG Pro C5100S" driver="nrg-pro_c5100s" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG Pro C5110S" driver="nrg-pro_c5110s" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG Pro C5200S" driver="nrg-pro_c5200s" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG Pro C5210S" driver="nrg-pro_c5210s" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG Pro C7100" driver="nrg-pro_c7100" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG Pro C7100S" driver="nrg-pro_c7100s" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG Pro C7110" driver="nrg-pro_c7110" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG Pro C7110S" driver="nrg-pro_c7110s" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG SG3110DN" driver="nrg-sg3110dn" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG SG3110DNw" driver="nrg-sg3110dnw" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="NRG SG3110SFNw" driver="nrg-sg3110sfnw" manufacturer="NRG" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
       <printer translate="name" name="Oki B401d" driver="oki-b401d" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Oki B430" driver="oki-b430" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Oki B4350" driver="oki-b4350" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Oki C5300" driver="oki-c5300" manufacturer="Oki" model="50003" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Oki C5400" driver="oki-c5400" manufacturer="Oki" model="50003" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Oki C7300" driver="oki-c7300" manufacturer="Oki" model="50003" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Oki C8800" driver="oki-c8800" manufacturer="Oki" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
       <printer translate="name" name="Oki C9200" driver="oki-c9200" manufacturer="Oki" model="50003" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Oki C9400" driver="oki-c9400" manufacturer="Oki" model="50003" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Oki OL400" driver="okidata-ol400" manufacturer="Oki" model="2" parameters="pcl_laser_params" />
@@ -2985,66 +3279,152 @@
       <printer translate="name" name="Olivetti JP350S" driver="olivetti-jp350s" manufacturer="Olivetti" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="Olivetti PG 306" driver="olivetti-pg_306" manufacturer="Olivetti" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="PCPI 1030" driver="pcpi-1030" manufacturer="PCPI" model="2" parameters="pcl_laser_params" />
+      <printer translate="name" name="Panasonic DP-180" driver="panasonic-dp-180" manufacturer="Panasonic" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Panasonic DP-C265" driver="panasonic-dp-c265" manufacturer="Panasonic" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Panasonic DP-C305" driver="panasonic-dp-c305" manufacturer="Panasonic" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Panasonic DP-C322" driver="panasonic-dp-c322" manufacturer="Panasonic" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Panasonic DP-C405" driver="panasonic-dp-c405" manufacturer="Panasonic" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
       <printer translate="name" name="Panasonic KX-P4410" driver="panasonic-kx-p4410" manufacturer="Panasonic" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="Panasonic KX-P4450" driver="panasonic-kx-p4450" manufacturer="Panasonic" model="3" parameters="pcl_laser_params" />
       <printer translate="name" name="Panasonic KX-P6150" driver="panasonic-kx-p6150" manufacturer="Panasonic" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="Panasonic KX-P6500" deviceid="MFG:Panasonic;MDL:KX-P6500;DES:(no such line for this device);CMD:GDI;" driver="panasonic-kx-p6500" manufacturer="Panasonic" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="Raven LP-410" driver="raven-lp-410" manufacturer="Raven" model="2" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 1022" driver="ricoh-afc_1022" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 1027" driver="ricoh-afc_1027" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 1032" driver="ricoh-afc_1032" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 1035" driver="ricoh-afc_1035" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 1045" driver="ricoh-afc_1045" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 1060" driver="ricoh-afc_1060" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 1075" driver="ricoh-afc_1075" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 1515" driver="ricoh-afc_1515" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2015" driver="ricoh-afc_2015" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2016" driver="ricoh-afc_2016" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2018" driver="ricoh-afc_2018" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2018D" driver="ricoh-afc_2018d" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2020" driver="ricoh-afc_2020" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2020D" driver="ricoh-afc_2020d" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2022" driver="ricoh-afc_2022" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2027" driver="ricoh-afc_2027" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2032" driver="ricoh-afc_2032" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2035" driver="ricoh-afc_2035" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2035e" driver="ricoh-afc_2035e" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2045" driver="ricoh-afc_2045" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2045e" driver="ricoh-afc_2045e" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2051" driver="ricoh-afc_2051" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2060" driver="ricoh-afc_2060" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2075" driver="ricoh-afc_2075" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2090" driver="ricoh-afc_2090" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2105" driver="ricoh-afc_2105" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 220" driver="ricoh-afc_220" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 3025" driver="ricoh-afc_3025" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 3030" driver="ricoh-afc_3030" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 3035" driver="ricoh-afc_3035" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 3045" driver="ricoh-afc_3045" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 401" driver="ricoh-afc_401" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 700" driver="ricoh-afc_700" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 1100" driver="ricoh-afc_mp_1100" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 1350" driver="ricoh-afc_mp_1350" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 1600" driver="ricoh-afc_mp_1600" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 161" driver="ricoh-afc_mp_161" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 2000" driver="ricoh-afc_mp_2000" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 2500" driver="ricoh-afc_mp_2500" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 2510" driver="ricoh-afc_mp_2510" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 2550" driver="ricoh-afc_mp_2550" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 2550B" driver="ricoh-afc_mp_2550b" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 3010" driver="ricoh-afc_mp_3010" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 3350" driver="ricoh-afc_mp_3350" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 3350B" driver="ricoh-afc_mp_3350b" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 3500" driver="ricoh-afc_mp_3500" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 4000" driver="ricoh-afc_mp_4000" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 4000B" driver="ricoh-afc_mp_4000b" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 4500" driver="ricoh-afc_mp_4500" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 5000" driver="ricoh-afc_mp_5000" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 5000B" driver="ricoh-afc_mp_5000b" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 5500" driver="ricoh-afc_mp_5500" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 6500" driver="ricoh-afc_mp_6500" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 7500" driver="ricoh-afc_mp_7500" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 9000" driver="ricoh-afc_mp_9000" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 401" driver="ricoh-aficio_401" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 700" driver="ricoh-aficio_700" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 1022" driver="ricoh-aficio_1022" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 1027" driver="ricoh-aficio_1027" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 1032" driver="ricoh-aficio_1032" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 1035" driver="ricoh-aficio_1035" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 1045" driver="ricoh-aficio_1045" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 1060" driver="ricoh-aficio_1060" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 1075" driver="ricoh-aficio_1075" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 1515" driver="ricoh-aficio_1515" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2015" driver="ricoh-aficio_2015" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2016" driver="ricoh-aficio_2016" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2018" driver="ricoh-aficio_2018" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2018D" driver="ricoh-aficio_2018d" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2020" driver="ricoh-aficio_2020" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2020D" driver="ricoh-aficio_2020d" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2022" driver="ricoh-aficio_2022" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2027" driver="ricoh-aficio_2027" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2032" driver="ricoh-aficio_2032" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2035" driver="ricoh-aficio_2035" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2035e" driver="ricoh-aficio_2035e" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2045" driver="ricoh-aficio_2045" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2045e" driver="ricoh-aficio_2045e" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2051" driver="ricoh-aficio_2051" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2060" driver="ricoh-aficio_2060" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2075" driver="ricoh-aficio_2075" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2090" driver="ricoh-aficio_2090" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2105" driver="ricoh-aficio_2105" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 220" driver="ricoh-aficio_220" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 3025" driver="ricoh-aficio_3025" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 3030" driver="ricoh-aficio_3030" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 3035" driver="ricoh-aficio_3035" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 3045" driver="ricoh-aficio_3045" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 3224C" driver="ricoh-aficio_3224c" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio 3228C" driver="ricoh-aficio_3228c" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio 3232C" driver="ricoh-aficio_3232c" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio 3235C" driver="ricoh-aficio_3235c" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio 3245C" driver="ricoh-aficio_3245c" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio 3260C" driver="ricoh-aficio_3260c" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio Color 5560" driver="ricoh-aficio_color_5560" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP 1100" driver="ricoh-aficio_mp_1100" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 1350" driver="ricoh-aficio_mp_1350" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 1600" driver="ricoh-aficio_mp_1600" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 161" driver="ricoh-aficio_mp_161" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 2000" driver="ricoh-aficio_mp_2000" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 2500" driver="ricoh-aficio_mp_2500" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 2510" driver="ricoh-aficio_mp_2510" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 2550" driver="ricoh-aficio_mp_2550" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 2550B" driver="ricoh-aficio_mp_2550b" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 3010" driver="ricoh-aficio_mp_3010" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 3350" driver="ricoh-aficio_mp_3350" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 3350B" driver="ricoh-aficio_mp_3350b" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 3500" driver="ricoh-aficio_mp_3500" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 4000" driver="ricoh-aficio_mp_4000" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 4000B" driver="ricoh-aficio_mp_4000b" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 4500" driver="ricoh-aficio_mp_4500" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 5000" driver="ricoh-aficio_mp_5000" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 5000B" driver="ricoh-aficio_mp_5000b" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 5500" driver="ricoh-aficio_mp_5500" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 6500" driver="ricoh-aficio_mp_6500" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 7500" driver="ricoh-aficio_mp_7500" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 9000" driver="ricoh-aficio_mp_9000" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP C2050" driver="ricoh-aficio_mp_c2050" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C2051" driver="ricoh-aficio_mp_c2051" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C2500" driver="ricoh-aficio_mp_c2500" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C2550" driver="ricoh-aficio_mp_c2550" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C2551" driver="ricoh-aficio_mp_c2551" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C2800" driver="ricoh-aficio_mp_c2800" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C300" driver="ricoh-aficio_mp_c300" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C3000" driver="ricoh-aficio_mp_c3000" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C3001" driver="ricoh-aficio_mp_c3001" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C3002" driver="ricoh-aficio_mp_c3002" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C300SR" driver="ricoh-aficio_mp_c300sr" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C3300" driver="ricoh-aficio_mp_c3300" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C3500" driver="ricoh-aficio_mp_c3500" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C3501" driver="ricoh-aficio_mp_c3501" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C3502" driver="ricoh-aficio_mp_c3502" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C400" driver="ricoh-aficio_mp_c400" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C4000" driver="ricoh-aficio_mp_c4000" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C400SR" driver="ricoh-aficio_mp_c400sr" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C4500" driver="ricoh-aficio_mp_c4500" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C4501" driver="ricoh-aficio_mp_c4501" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C4501A" driver="ricoh-aficio_mp_c4501a" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C4502" driver="ricoh-aficio_mp_c4502" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C4502A" driver="ricoh-aficio_mp_c4502a" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C5000" driver="ricoh-aficio_mp_c5000" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C5501" driver="ricoh-aficio_mp_c5501" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C5501A" driver="ricoh-aficio_mp_c5501a" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C5502" driver="ricoh-aficio_mp_c5502" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C5502A" driver="ricoh-aficio_mp_c5502a" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C6000" driver="ricoh-aficio_mp_c6000" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C6501" driver="ricoh-aficio_mp_c6501" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C7500" driver="ricoh-aficio_mp_c7500" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C7501" driver="ricoh-aficio_mp_c7501" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio SG 3110DN" driver="ricoh-aficios_g_3110dn" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh GX 3050N" driver="ricoh-gx_3050n" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh GX 3050SFN" driver="ricoh-gx_3050sfn" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh GX 5050N" driver="ricoh-gx_5050n" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh GX E3350N" driver="ricoh-gx_e3350n" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh GX E5550N" driver="ricoh-gx_e5550n" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh MP C1500/615C" driver="ricoh-mp_c1500_615c" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh MP C2003" driver="ricoh-mp_c2003" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh MP C2003Z" driver="ricoh-mp_c2003z" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh MP C2004" driver="ricoh-mp_c2004" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh MP C2011" driver="ricoh-mp_c2011" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh MP C2094J" driver="ricoh-mp_c2094j" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh MP C2503" driver="ricoh-mp_c2503" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh MP C2503Z" driver="ricoh-mp_c2503z" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh MP C2504" driver="ricoh-mp_c2504" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh MP C2594J" driver="ricoh-mp_c2594j" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh MP C3003" driver="ricoh-mp_c3003" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh MP C3004" driver="ricoh-mp_c3004" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh MP C3503" driver="ricoh-mp_c3503" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh MP C3504" driver="ricoh-mp_c3504" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh MP C4503" driver="ricoh-mp_c4503" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh MP C4504" driver="ricoh-mp_c4504" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh MP C5503" driver="ricoh-mp_c5503" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh MP C5504" driver="ricoh-mp_c5504" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh MP C6003" driver="ricoh-mp_c6003" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh MP C6004" driver="ricoh-mp_c6004" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh MP C6502" driver="ricoh-mp_c6502" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh MP C6503" driver="ricoh-mp_c6503" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh MP C8002" driver="ricoh-mp_c8002" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh MP C8003" driver="ricoh-mp_c8003" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Pro C5100S" driver="ricoh-pro_c5100s" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Pro C5110S" driver="ricoh-pro_c5110s" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Pro C5200S" driver="ricoh-pro_c5200s" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Pro C5210S" driver="ricoh-pro_c5210s" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Pro C7100" driver="ricoh-pro_c7100" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Pro C7100S" driver="ricoh-pro_c7100s" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Pro C7110" driver="ricoh-pro_c7110" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Pro C7110S" driver="ricoh-pro_c7110s" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh SG3120BSFNw" driver="ricoh-sg3120bsfnw" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Samsung CLP-620" driver="samsung-clp-620" manufacturer="Samsung" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Samsung CLP-660N" driver="samsung-clp-660n" manufacturer="Samsung" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Samsung CLP-660ND" driver="samsung-clp-660nd" manufacturer="Samsung" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
       <printer translate="name" name="Samsung ML-85" driver="samsung-ml-85" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Samsung ML-1250" driver="samsung-ml-1250" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Samsung ML-1450" deviceid="MFG:Samsung;MDL:ML-1450;" driver="samsung-ml-1450" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
@@ -3125,23 +3505,108 @@
       <printer translate="name" name="Savin 9040b" driver="savin-9040b" manufacturer="Savin" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Savin 9050" driver="savin-9050" manufacturer="Savin" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Savin 9050b" driver="savin-9050b" manufacturer="Savin" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Savin C2410" driver="savin-c2410" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin C2525" driver="savin-c2525" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin C2824" driver="savin-c2824" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin C2828" driver="savin-c2828" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin C3030" driver="savin-c3030" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin C3210e" driver="savin-c3210e" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin C3333" driver="savin-c3333" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin C3528" driver="savin-c3528" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin C3535" driver="savin-c3535" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin C4040" driver="savin-c4040" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin C4535" driver="savin-c4535" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin C4540" driver="savin-c4540" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin C5050" driver="savin-c5050" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin C6045" driver="savin-c6045" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin C6055" driver="savin-c6055" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin C7570" driver="savin-c7570" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin C9020" driver="savin-c9020" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin C9025" driver="savin-c9025" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin C9065" driver="savin-c9065" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin C9075" driver="savin-c9075" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin C9120" driver="savin-c9120" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin C9125" driver="savin-c9125" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin C9130" driver="savin-c9130" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin C9135" driver="savin-c9135" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin C9145" driver="savin-c9145" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin C9145A" driver="savin-c9145a" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin C9155" driver="savin-c9155" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin C9155A" driver="savin-c9155a" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin C 230" driver="savin-c_230" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin C 230SR" driver="savin-c_230sr" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin C 240" driver="savin-c_240" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin C 240SR" driver="savin-c_240sr" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin MP C2003" driver="savin-mp_c2003" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin MP C2004" driver="savin-mp_c2004" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin MP C2503" driver="savin-mp_c2503" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin MP C2504" driver="savin-mp_c2504" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin MP C3002" driver="savin-mp_c3002" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin MP C3003" driver="savin-mp_c3003" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin MP C3004" driver="savin-mp_c3004" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin MP C3502" driver="savin-mp_c3502" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin MP C3503" driver="savin-mp_c3503" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin MP C3504" driver="savin-mp_c3504" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin MP C4502" driver="savin-mp_c4502" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin MP C4502A" driver="savin-mp_c4502a" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin MP C4503" driver="savin-mp_c4503" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin MP C4504" driver="savin-mp_c4504" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin MP C5502" driver="savin-mp_c5502" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin MP C5502A" driver="savin-mp_c5502a" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin MP C5503" driver="savin-mp_c5503" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin MP C6003" driver="savin-mp_c6003" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin MP C6004" driver="savin-mp_c6004" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin MP C6502" driver="savin-mp_c6502" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin MP C6503" driver="savin-mp_c6503" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin MP C8002" driver="savin-mp_c8002" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin MP C8003" driver="savin-mp_c8003" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin Pro C5100S" driver="savin-pro_c5100s" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin Pro C5110S" driver="savin-pro_c5110s" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin Pro C5200S" driver="savin-pro_c5200s" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin Pro C5210S" driver="savin-pro_c5210s" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin Pro C7100" driver="savin-pro_c7100" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin Pro C7100S" driver="savin-pro_c7100s" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin Pro C7110" driver="savin-pro_c7110" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin Pro C7110S" driver="savin-pro_c7110s" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin SDC555" driver="savin-sdc555" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin SG3110DN" driver="savin-sg3110dn" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Savin SGC 1506" driver="savin-sgc_1506" manufacturer="Savin" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
       <printer translate="name" name="Seiko SpeedJET 200" driver="seiko-sj_200" manufacturer="Seiko" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="Sharp AR-161" deviceid="MFG:SHARP;MDL:AR-160/200 series;DES:None;CMD:PCL;" driver="sharp-ar-161" manufacturer="Sharp" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Sharp AR-BC260" driver="sharp-ar-bc260" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Sharp AR-BC320" driver="sharp-ar-bc320" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Sharp AR-C170FP" driver="sharp-ar-c170fp" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
       <printer translate="name" name="Sharp AR-C170M" driver="sharp-ar-c170m" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Sharp AR-C172FP" driver="sharp-ar-c172fp" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
       <printer translate="name" name="Sharp AR-C172M" driver="sharp-ar-c172m" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Sharp AR-C260" driver="sharp-ar-c260" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Sharp AR-C260F" driver="sharp-ar-c260F" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="Sharp AR-C260M" driver="sharp-ar-c260M" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="Sharp AR-C260P" driver="sharp-ar-c260P" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Sharp AR-C260FP" driver="sharp-ar-c260fp" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Sharp AR-C260M" driver="sharp-ar-c260m" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Sharp AR-C260P" driver="sharp-ar-c260p" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Sharp AR-C260S" driver="sharp-ar-c260S" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="Sharp AR-C261F" driver="sharp-ar-c261F" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="Sharp AR-C261M" driver="sharp-ar-c261M" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="Sharp AR-C261S" driver="sharp-ar-c261S" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="Sharp AR-C262M" driver="sharp-ar-c262M" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="Sharp AR-C262S" driver="sharp-ar-c262S" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Sharp AR-C261F" driver="sharp-ar-c261f" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Sharp AR-C261FP" driver="sharp-ar-c261fp" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Sharp AR-C261M" driver="sharp-ar-c261m" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Sharp AR-C261S" driver="sharp-ar-c261s" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Sharp AR-C262FP" driver="sharp-ar-c262fp" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Sharp AR-C262M" driver="sharp-ar-c262m" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Sharp AR-C262S" driver="sharp-ar-c262s" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Sharp AR-M257" driver="sharp-ar-m257" manufacturer="Sharp" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Sharp MX-2300FG" driver="sharp-mx-2300fg" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Sharp MX-2300G" driver="sharp-mx-2300g" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Sharp MX-2300N" driver="sharp-mx-2300n" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Sharp MX-2700FG" driver="sharp-mx-2700fg" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Sharp MX-2700G" driver="sharp-mx-2700g" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Sharp MX-2700N" driver="sharp-mx-2700n" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Sharp MX-3500FN" driver="sharp-mx-3500fn" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Sharp MX-3500N" driver="sharp-mx-3500n" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Sharp MX-3501FN" driver="sharp-mx-3501fn" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Sharp MX-3501N" driver="sharp-mx-3501n" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Sharp MX-4500FN" driver="sharp-mx-4500fn" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Sharp MX-4500N" driver="sharp-mx-4500n" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Sharp MX-4501FN" driver="sharp-mx-4501fn" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Sharp MX-4501N" driver="sharp-mx-4501n" manufacturer="Sharp" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
       <printer translate="name" name="Sony IJP-V100" deviceid="MFG:Sony;MDL:All-in-One IJP-V100;CMD:MLC,PCL,PML;" driver="sony-ijp-v100" manufacturer="Sony" model="601" parameters="pcl_inkjet_params" />
       <printer translate="name" name="Star LS-04" driver="star-ls-04" manufacturer="Star" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="Star LaserPrinter 8" driver="star-lp_8" manufacturer="Star" model="2" parameters="pcl_laser_params" />
@@ -3150,6 +3615,12 @@
       <printer translate="name" name="Tektronix Phaser 750DX" driver="tektronix-phaser_750dx" manufacturer="Tektronix" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Tektronix Phaser 750N" driver="tektronix-phaser_750n" manufacturer="Tektronix" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Tektronix Phaser 750P" driver="tektronix-phaser_750p" manufacturer="Tektronix" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Toshiba e-Studio 220cp" driver="toshiba-e-studio_220cp" manufacturer="Toshiba" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Toshiba e-Studio 2830c" driver="toshiba-e-studio_2830c" manufacturer="Toshiba" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Toshiba e-Studio 3530c" driver="toshiba-e-studio_3530c" manufacturer="Toshiba" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Toshiba e-Studio 4500c" driver="toshiba-e-studio_4500c" manufacturer="Toshiba" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Toshiba e-Studio 4520c" driver="toshiba-e-studio_4520c" manufacturer="Toshiba" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Toshiba e-Studio 5500c" driver="toshiba-e-studio_5500c" manufacturer="Toshiba" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
       <printer translate="name" name="Xerox Able 1406" driver="xerox-able_1406" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Xerox DocuPrint 4508" driver="xerox-dp_4508" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Xerox DocuPrint C20" driver="xerox-dp_c20" manufacturer="Xerox" model="50000" parameters="pcl_laser_params">EXPERIMENTAL</printer>
