@@ -1219,7 +1219,7 @@ static int mitsu70x_get_jobs(struct mitsu70x_ctx *ctx, struct mitsu70x_jobs *res
 }
 #endif
 
-static int mitsu70x_get_memorystatus(struct mitsu70x_ctx *ctx, struct mitsu70x_memorystatus_resp *resp)
+static int mitsu70x_get_memorystatus(struct mitsu70x_ctx *ctx, uint8_t mcut, struct mitsu70x_memorystatus_resp *resp)
 {
 	uint8_t cmdbuf[CMDBUF_LEN];
 
@@ -1235,7 +1235,17 @@ static int mitsu70x_get_memorystatus(struct mitsu70x_ctx *ctx, struct mitsu70x_m
 	cmdbuf[3] = 0x00;
 	tmp = cpu_to_be16(ctx->cols);
 	memcpy(cmdbuf + 4, &tmp, 2);
-	tmp = cpu_to_be16(ctx->rows);
+
+	/* We have to lie about print sizes in 4x6*2 multicut modes */
+	tmp = ctx->rows;
+	if (tmp == 2730 && mcut == 1) {
+		if (ctx->type == P_MITSU_D70X ||
+		    ctx->type == P_FUJI_ASK300) {
+			tmp = 2422;
+		}
+	}
+
+	tmp = cpu_to_be16(tmp);
 	memcpy(cmdbuf + 6, &tmp, 2);
 	cmdbuf[8] = ctx->matte ? 0x80 : 0x00;
 	cmdbuf[9] = 0x00;
@@ -1547,11 +1557,12 @@ top:
 			WARNING("Printer FW out of date. Highly recommend upgrading D70/D707 to v1.12 or newer!\n");
 	} else if (ctx->type == P_FUJI_ASK300) {
 		/* Known versions:
-		   v?.??: M 316A21 7998
-		   v?.??: M 316J21 4431
+		   v?.??: M 316A21 7998   (ancient. no matte or ultrafine)
+		   v?.??: M 316H21 F8EB
+		   v4.20a: M 316J21 4431  (Add 2x6 strip support)
 		*/
 		if (strncmp(resp.vers[0].ver, "316J21", 6) < 0)
-			WARNING("Printer FW out of date. Highly recommend upgrading ASK300 to v?.?? or newer!\n");
+			WARNING("Printer FW out of date. Highly recommend upgrading ASK300 to v4.20a or newer!\n");
 	}
 
 skip_status:
@@ -1560,7 +1571,7 @@ skip_status:
 		struct mitsu70x_memorystatus_resp memory;
 		INFO("Checking Memory availability\n");
 
-		ret = mitsu70x_get_memorystatus(ctx, &memory);
+		ret = mitsu70x_get_memorystatus(ctx, hdr->multicut, &memory);
 		if (ret)
 			return CUPS_BACKEND_FAILED;
 
@@ -1619,7 +1630,7 @@ skip_status:
 		DEBUG("Rewind Inhibit? %02x %02x\n", hdr->rewind[0], hdr->rewind[1]);
 	}
 
-	/* Any other fixups? */
+	/* K60 and EK305 need the mcut type 1 specified for 4x6 prints! */
 	if ((ctx->type == P_MITSU_K60 || ctx->type == P_KODAK_305) &&
 	    ctx->cols == 0x0748 &&
 	    ctx->rows == 0x04c2 && !hdr->multicut) {
@@ -1979,7 +1990,7 @@ static int mitsu70x_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend mitsu70x_backend = {
 	.name = "Mitsubishi CP-D70/D707/K60/D80",
-	.version = "0.73",
+	.version = "0.74",
 	.uri_prefix = "mitsu70x",
 	.cmdline_usage = mitsu70x_cmdline,
 	.cmdline_arg = mitsu70x_cmdline_arg,
