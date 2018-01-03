@@ -22,6 +22,8 @@
  *
  *          [http://www.gnu.org/licenses/gpl-2.0.html]
  *
+ *   SPDX-License-Identifier: GPL-2.0+
+ *
  */
 
 #include <stdio.h>
@@ -116,7 +118,7 @@ enum {
 	P_MITSU_9800,
 	P_MITSU_9800S,
 	P_MITSU_9810,
-	P_MITSU_P93D,	
+	P_MITSU_P93D,
 	P_MITSU_P95D,
 	P_DNP_DS40,
 	P_DNP_DS80,

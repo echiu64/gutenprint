@@ -28,6 +28,8 @@
  *
  *          [http://www.gnu.org/licenses/gpl-2.0.html]
  *
+ *   SPDX-License-Identifier: GPL-2.0+
+ *
  */
 
 //#define DNP_ONLY
@@ -1567,7 +1569,7 @@ top:
 	}
 	sleep(1);  /* Give things a moment */
 
-	if (fast_return) {
+	if (fast_return && !ctx->manual_copies) {
 		INFO("Fast return mode enabled.\n");
 	} else {
 		INFO("Waiting for job to complete...\n");
@@ -2485,7 +2487,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS40/DS80/DSRX1/DS620",
-	.version = "0.92",
+	.version = "0.93",
 	.uri_prefix = "dnpds40",
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
@@ -2496,14 +2498,14 @@ struct dyesub_backend dnpds40_backend = {
 	.main_loop = dnpds40_main_loop,
 	.query_serno = dnpds40_query_serno,
 	.devices = {
-	{ USB_VID_CITIZEN, USB_PID_DNP_DS40, P_DNP_DS40, ""},
-	{ USB_VID_CITIZEN, USB_PID_DNP_DS80, P_DNP_DS80, ""},
-	{ USB_VID_CITIZEN, USB_PID_DNP_DSRX1, P_DNP_DSRX1, ""},
-	{ USB_VID_CITIZEN, USB_PID_DNP_DS620_OLD, P_DNP_DS620, ""},
-	{ USB_VID_DNP, USB_PID_DNP_DS620, P_DNP_DS620, ""},
-	{ USB_VID_DNP, USB_PID_DNP_DS80D, P_DNP_DS80D, ""},
-	{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW02, P_DNP_DS40, ""},
-	{ USB_VID_DNP, USB_PID_DNP_DS820, P_DNP_DS820, ""},
-	{ 0, 0, 0, ""}
+	{ USB_VID_CITIZEN, USB_PID_DNP_DS40, P_DNP_DS40, NULL},
+	{ USB_VID_CITIZEN, USB_PID_DNP_DS80, P_DNP_DS80, NULL},
+	{ USB_VID_CITIZEN, USB_PID_DNP_DSRX1, P_DNP_DSRX1, NULL},
+	{ USB_VID_CITIZEN, USB_PID_DNP_DS620_OLD, P_DNP_DS620, NULL},
+	{ USB_VID_DNP, USB_PID_DNP_DS620, P_DNP_DS620, NULL},
+	{ USB_VID_DNP, USB_PID_DNP_DS80D, P_DNP_DS80D, NULL},
+	{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW02, P_DNP_DS40, NULL},
+	{ USB_VID_DNP, USB_PID_DNP_DS820, P_DNP_DS820, NULL},
+	{ 0, 0, 0, NULL}
 	}
 };

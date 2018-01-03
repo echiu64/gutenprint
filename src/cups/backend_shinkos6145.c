@@ -32,6 +32,8 @@
  *   You must still adhere to all other terms of the license to this program
  *   (ie GPLv2) and the license of the libS6145ImageProcess library.
  *
+ *   SPDX-License-Identifier: GPL-2.0+ with special exception
+ *
  */
 
 #include <stdio.h>
@@ -2498,9 +2500,9 @@ struct dyesub_backend shinkos6145_backend = {
 	.main_loop = shinkos6145_main_loop,
 	.query_serno = shinkos6145_query_serno,
 	.devices = {
-	{ USB_VID_SHINKO, USB_PID_SHINKO_S6145, P_SHINKO_S6145, ""},
-	{ USB_VID_SHINKO, USB_PID_SHINKO_S6145D, P_SHINKO_S6145D, ""},
-	{ 0, 0, 0, ""}
+	{ USB_VID_SHINKO, USB_PID_SHINKO_S6145, P_SHINKO_S6145, NULL},
+	{ USB_VID_SHINKO, USB_PID_SHINKO_S6145D, P_SHINKO_S6145D, NULL},
+	{ 0, 0, 0, NULL}
 	}
 };
 

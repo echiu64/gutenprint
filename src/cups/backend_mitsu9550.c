@@ -22,6 +22,8 @@
  *
  *          [http://www.gnu.org/licenses/gpl-2.0.html]
  *
+ *   SPDX-License-Identifier: GPL-2.0+
+ *
  */
 
 #include <stdio.h>
@@ -1192,7 +1194,7 @@ static int mitsu9550_cmdline_arg(void *vctx, int argc, char **argv)
 
 /* Exported */
 struct dyesub_backend mitsu9550_backend = {
-	.name = "Mitsubishi CP-9550 family",
+	.name = "Mitsubishi CP-9xxx family",
 	.version = "0.29",
 	.uri_prefix = "mitsu9550",
 	.cmdline_usage = mitsu9550_cmdline,
@@ -1204,23 +1206,23 @@ struct dyesub_backend mitsu9550_backend = {
 	.main_loop = mitsu9550_main_loop,
 	.query_serno = mitsu9550_query_serno,
 	.devices = {
-	{ USB_VID_MITSU, USB_PID_MITSU_9000AM, P_MITSU_9550, ""},
-	{ USB_VID_MITSU, USB_PID_MITSU_9000D, P_MITSU_9550, ""},
-	{ USB_VID_MITSU, USB_PID_MITSU_9500D, P_MITSU_9550, ""},
-	{ USB_VID_MITSU, USB_PID_MITSU_9550D, P_MITSU_9550, ""},
-	{ USB_VID_MITSU, USB_PID_MITSU_9550DS, P_MITSU_9550S, ""},
-	{ USB_VID_MITSU, USB_PID_MITSU_9600D, P_MITSU_9600, ""},
-//	{ USB_VID_MITSU, USB_PID_MITSU_9600D, P_MITSU_9600S, ""},
-	{ USB_VID_MITSU, USB_PID_MITSU_9800D, P_MITSU_9800, ""},
-	{ USB_VID_MITSU, USB_PID_MITSU_9800DS, P_MITSU_9800S, ""},
-	{ USB_VID_MITSU, USB_PID_MITSU_98__D, P_MITSU_9810, ""},
-//	{ USB_VID_MITSU, USB_PID_MITSU_9810D, P_MITSU_9810, ""},
-//	{ USB_VID_MITSU, USB_PID_MITSU_9820DS, P_MITSU_9820S, ""},
-	{ 0, 0, 0, ""}
+	{ USB_VID_MITSU, USB_PID_MITSU_9000AM, P_MITSU_9550, NULL},
+	{ USB_VID_MITSU, USB_PID_MITSU_9000D, P_MITSU_9550, NULL},
+	{ USB_VID_MITSU, USB_PID_MITSU_9500D, P_MITSU_9550, NULL},
+	{ USB_VID_MITSU, USB_PID_MITSU_9550D, P_MITSU_9550, NULL},
+	{ USB_VID_MITSU, USB_PID_MITSU_9550DS, P_MITSU_9550S, NULL},
+	{ USB_VID_MITSU, USB_PID_MITSU_9600D, P_MITSU_9600, NULL},
+//	{ USB_VID_MITSU, USB_PID_MITSU_9600D, P_MITSU_9600S, NULL},
+	{ USB_VID_MITSU, USB_PID_MITSU_9800D, P_MITSU_9800, NULL},
+	{ USB_VID_MITSU, USB_PID_MITSU_9800DS, P_MITSU_9800S, NULL},
+	{ USB_VID_MITSU, USB_PID_MITSU_98__D, P_MITSU_9810, NULL},
+//	{ USB_VID_MITSU, USB_PID_MITSU_9810D, P_MITSU_9810, NULL},
+//	{ USB_VID_MITSU, USB_PID_MITSU_9820DS, P_MITSU_9820S, NULL},
+	{ 0, 0, 0, NULL}
 	}
 };
 
-/* Mitsubish CP-9550/9600/9800/9810 spool format:
+/* Mitsubish CP-9500/9550/9600/9800/9810 spool format:
 
    Spool file consists of 3 (or 4) 50-byte headers, followed by three
    image planes, each with a 12-byte header, then a 4-byte footer.
@@ -1239,12 +1241,12 @@ struct dyesub_backend mitsu9550_backend = {
    1b 57 21 2e 00 80 00 22  QQ QQ 00 00 00 00 00 00 :: ZZ ZZ = num copies (>= 0x01)
    00 00 00 00 00 00 00 00  00 00 00 00 ZZ ZZ 00 00 :: YY = 00/80 Fine/SuperFine (9550), 10/80 Fine/Superfine (98x0), 00 (9600)
    XX 00 00 00 00 00 YY 00  00 00 00 00 00 00 00 00 :: XX = 00 normal, 83 Cut 2x6 (9550 only!)
-   00 01                                            :: QQ QQ = 0x0803 on 9550, 0x0801 on 98x0, 0x0003 on 9600
+   00 01                                            :: QQ QQ = 0x0803 on 9550, 0x0801 on 98x0, 0x0003 on 9600, 0xa803 on 9500
 
    ~~~ Header 3 (9550 and 9800-S only..)
 
-   1b 57 22 2e 00 40 00 00  00 00 00 XX 00 00 00 00 :: XX = 00 normal, 01 FineDeep
-   00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+   1b 57 22 2e 00 QQ 00 00  00 00 00 XX 00 00 00 00 :: XX = 00 normal, 01 FineDeep
+   00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00 :: QQ = 0xf0 on 9500, 0x40 on the rest
    00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
    00 00
 
@@ -1252,7 +1254,7 @@ struct dyesub_backend mitsu9550_backend = {
 
    1b 57 26 2e 00 QQ 00 00  00 00 00 SS RR 01 00 00 :: QQ = 0x70 on 9550/98x0, 0x60 on 9600 or 9800S
    00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00 :: RR = 0x01 on 9550/98x0, 0x00 on 9600
-   00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00 :: SS = 0x01 on 9800S
+   00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00 :: SS = 0x01 on 9800S, 0x00 otherwise.
    00 00
 
   ~~~~ Data follows:
@@ -1277,11 +1279,14 @@ struct dyesub_backend mitsu9550_backend = {
 
   ~~~~ Footer:
 
+   1b 50 57 00  (9500)
    1b 50 46 00  (9550)
    1b 50 47 00  (9550-S)
    1b 50 48 00  (9600)
-   1b 50 4c 00  (98x0)
+   1b 50 4c 00  (9800/9810)
    1b 50 4e 00  (9800-S)
+
+   Unknown: 9600-S, 9820-S
 
   ~~~~ Lamination data follows (on 9810 only, if matte selected)
 
@@ -1387,7 +1392,7 @@ struct dyesub_backend mitsu9550_backend = {
 
     Followed by image plane #3 (Red), XXXX * YYYY bytes
 
-  [[ Unknown -- End Data aka START print? ]]
+  [[ Footer -- End Data aka START print?  See above for other models ]]
 
  -> 1b 50 47 00  [9550S]
  -> 1b 50 4e 00  [9800S]

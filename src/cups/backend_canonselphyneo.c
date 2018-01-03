@@ -1,7 +1,7 @@
 /*
  *   Canon SELPHY CPneo series CUPS backend -- libusb-1.0 version
  *
- *   (c) 2016 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2016-2017 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -21,6 +21,8 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  *          [http://www.gnu.org/licenses/gpl-2.0.html]
+ *
+ *   SPDX-License-Identifier: GPL-2.0+
  *
  */
 
@@ -44,6 +46,7 @@
 #define USB_PID_CANON_CP910  0x327a
 #define USB_PID_CANON_CP1000 0x32ae
 #define USB_PID_CANON_CP1200 0x32b1
+#define USB_PID_CANON_CP1300 XXXXX
 
 /* Header data structure */
 struct selphyneo_hdr {
@@ -96,6 +99,8 @@ static char *selphyneo_errors(uint8_t err)
 		return "Paper Feed";
 	case 0x03:
 		return "No Paper";
+	case 0x05:
+		return "Incorrect Paper loaded";
 	case 0x06:
 		return "Ink Cassette Empty";
 	case 0x07:
@@ -104,6 +109,8 @@ static char *selphyneo_errors(uint8_t err)
 		return "No Paper and Ink";
 	case 0x0A:
 		return "Incorrect media for job";
+	case 0x0B:
+		return "Paper jam";
 	default:
 		return "Unknown Error";
 	}
@@ -339,7 +346,7 @@ top:
 			return CUPS_BACKEND_STOP;
 		}
 
-		if (rdback.data[0] > 0x02 && fast_return) {
+		if (rdback.data[0] > 0x02 && fast_return && copies <= 1) {
 			INFO("Fast return mode enabled.\n");
 			break;
 		}
@@ -389,7 +396,7 @@ static void selphyneo_cmdline(void)
 
 struct dyesub_backend canonselphyneo_backend = {
 	.name = "Canon SELPHY CPneo",
-	.version = "0.08",
+	.version = "0.10",
 	.uri_prefix = "canonselphyneo",
 	.cmdline_usage = selphyneo_cmdline,
 	.cmdline_arg = selphyneo_cmdline_arg,
@@ -399,11 +406,12 @@ struct dyesub_backend canonselphyneo_backend = {
 	.read_parse = selphyneo_read_parse,
 	.main_loop = selphyneo_main_loop,
 	.devices = {
-	{ USB_VID_CANON, USB_PID_CANON_CP820, P_CP910, ""},
-	{ USB_VID_CANON, USB_PID_CANON_CP910, P_CP910, ""},
-	{ USB_VID_CANON, USB_PID_CANON_CP1000, P_CP910, ""},
-	{ USB_VID_CANON, USB_PID_CANON_CP1200, P_CP910, ""},
-	{ 0, 0, 0, ""}
+	{ USB_VID_CANON, USB_PID_CANON_CP820, P_CP910, NULL},
+	{ USB_VID_CANON, USB_PID_CANON_CP910, P_CP910, NULL},
+	{ USB_VID_CANON, USB_PID_CANON_CP1000, P_CP910, NULL},
+	{ USB_VID_CANON, USB_PID_CANON_CP1200, P_CP910, NULL},
+//	{ USB_VID_CANON, USB_PID_CANON_CP1300, P_CP910, NULL},
+	{ 0, 0, 0, NULL}
 	}
 };
 /*
@@ -467,9 +475,11 @@ struct dyesub_backend canonselphyneo_backend = {
    00  None
    02  No Paper (?)
    03  No Paper
+   05  Wrong Paper
    07  No Ink
    09  No Paper and Ink
    0A  Media/Job mismatch
+   0B  Paper Jam
 
  ZZ == Media?
 

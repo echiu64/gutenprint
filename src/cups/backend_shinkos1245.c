@@ -24,6 +24,8 @@
  *
  *          [http://www.gnu.org/licenses/gpl-2.0.html]
  *
+ *   SPDX-License-Identifier: GPL-2.0+
+ *
  */
 
 #include <stdio.h>
@@ -1650,8 +1652,8 @@ struct dyesub_backend shinkos1245_backend = {
 	.main_loop = shinkos1245_main_loop,
 	.query_serno = shinkos1245_query_serno,
 	.devices = {
-	{ USB_VID_SHINKO, USB_PID_SHINKO_S1245, P_SHINKO_S1245, ""},
-	{ 0, 0, 0, ""}
+	{ USB_VID_SHINKO, USB_PID_SHINKO_S1245, P_SHINKO_S1245, NULL},
+	{ 0, 0, 0, NULL}
 	}
 };
 
