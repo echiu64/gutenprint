@@ -4400,7 +4400,7 @@ static const dyesub_pagesize_t mitsu_cpd70x_page[] =
   						DYESUB_PORTRAIT},
   { "w432h648", "6x9", PT1(1864,300), PT1(2730,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h576-div2", "4x6*2", PT1(1864,300), PT1(2730,300), 0, 0, 0, 0,
+  { "w432h576-div2", "4x6*2", PT1(1864,300), PT1(2730,300), 0, 0, PT1(236,300), PT1(236,300),
   						DYESUB_PORTRAIT},
 };
 
@@ -4794,7 +4794,7 @@ static const dyesub_pagesize_t mitsu_cpd80_page[] =
   						DYESUB_PORTRAIT},
   { "w432h576", "6x8", PT1(1864,300), PT1(2422,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h576-div2", "4x6*2", PT1(1864,300), PT1(2730,300), 0, 0, 0, 0,
+  { "w432h576-div2", "4x6*2", PT1(1864,300), PT1(2730,300), 0, 0, PT1(236,300), PT1(236,300),
   						DYESUB_PORTRAIT},
 };
 
@@ -5108,8 +5108,10 @@ static const dyesub_pagesize_t fuji_ask300_page[] =
   						DYESUB_PORTRAIT},
   { "w432h576", "6x8", PT1(1864,300), PT1(2422,300), 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h648", "6x9", PT1(1864,300), PT1(2730,300), 0, 0, 0, 0,
+  { "w432h576-div2", "4x6*2", PT1(1864,300), PT1(2730,300), 0, 0, PT1(236,300), PT1(236,300),
   						DYESUB_PORTRAIT},
+  { "w432h648", "6x9", PT1(1864,300), PT1(2730,300), 0, 0, 0, 0,
+						DYESUB_PORTRAIT},
 };
 
 LIST(dyesub_pagesize_list_t, fuji_ask300_page_list, dyesub_pagesize_t, fuji_ask300_page);
@@ -5535,12 +5537,12 @@ static const dyesub_pagesize_t shinko_chcs6245_page[] =
   { "w360h576", "8x5", PT1(1536,300), PT1(2464,300), 0, 0, 0, 0, DYESUB_LANDSCAPE},
   { "w432h576", "8x6", PT1(1836,300), PT1(2464,300), 0, 0, 0, 0, DYESUB_LANDSCAPE},
   { "w576h576", "8x8", PT1(2436,300), PT1(2464,300), 0, 0, 0, 0, DYESUB_LANDSCAPE},
-  { "w576h576-div2", "8x4*2", PT1(2464,300), PT1(2494,300), 0, 0, PT(0,300), PT(0,300), DYESUB_PORTRAIT},
+  { "w576h576-div2", "8x4*2", PT1(2464,300), PT1(2494,300), 0, 0, 0, 0, DYESUB_PORTRAIT},
   { "c8x10", "8x10", PT1(2464,300), PT1(3036,300), 0, 0, 0, 0, DYESUB_PORTRAIT},
-  { "c8x10-div2", "8x5*2", PT1(2464,300), PT1(3094,300), 0, 0, PT(0,300), PT(0,300), DYESUB_PORTRAIT},
+  { "c8x10-div2", "8x5*2", PT1(2464,300), PT1(3094,300), 0, 0, 0, 0, DYESUB_PORTRAIT},
   { "w576h864", "8x12", PT1(2464,300), PT1(3636,300), 0, 0, 0, 0, DYESUB_PORTRAIT},
-  { "w576h864-div2", "8x6*2", PT1(2464,300), PT1(3694,300), 0, 0, PT(0,300), PT(0,300), DYESUB_PORTRAIT},
-  { "w576h864-div3", "8x4*3", PT1(2464,300), PT1(3742,300), 0, 0, PT(0,300), PT(0,300), DYESUB_PORTRAIT},
+  { "w576h864-div2", "8x6*2", PT1(2464,300), PT1(3694,300), 0, 0, 0, 0, DYESUB_PORTRAIT},
+  { "w576h864-div3", "8x4*3", PT1(2464,300), PT1(3742,300), 0, 0, 0, 0, DYESUB_PORTRAIT},
 };
 
 LIST(dyesub_pagesize_list_t, shinko_chcs6245_page_list, dyesub_pagesize_t, shinko_chcs6245_page);
@@ -7535,12 +7537,12 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cpd70x_printsize_list,
     SHRT_MAX,
 #ifdef MITSU70X_8BPP
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_WHITE_BORDER,
     &mitsu_cpd70x_printer_init, NULL,
 #else
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_16BPP
-      | DYESUB_FEATURE_BIGENDIAN,
+      | DYESUB_FEATURE_BIGENDIAN | DYESUB_FEATURE_WHITE_BORDER,
     &mitsu_cpd70x_printer_init, &mitsu_cpd70x_printer_end,
 #endif
     NULL, &mitsu_cpd70x_plane_end,
@@ -7595,12 +7597,12 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cpd80_printsize_list,
     SHRT_MAX,
 #ifdef MITSU70X_8BPP
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_WHITE_BORDER,
     &mitsu_cpd70x_printer_init, NULL,
 #else
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_16BPP
-      | DYESUB_FEATURE_BIGENDIAN,
+      | DYESUB_FEATURE_BIGENDIAN | DYESUB_FEATURE_WHITE_BORDER,
     &mitsu_cpd70x_printer_init, &mitsu_cpd70x_printer_end,
 #endif
     NULL, &mitsu_cpd70x_plane_end,
@@ -7711,12 +7713,12 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &fuji_ask300_printsize_list,
     SHRT_MAX,
 #ifdef MITSU70X_8BPP
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_WHITE_BORDER,
     &fuji_ask300_printer_init, NULL,
 #else
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_16BPP
-      | DYESUB_FEATURE_BIGENDIAN,
+      | DYESUB_FEATURE_BIGENDIAN | DYESUB_FEATURE_WHITE_BORDER,
     &fuji_ask300_printer_init, &mitsu_cpd70x_printer_end,
 #endif
     NULL, &mitsu_cpd70x_plane_end,
