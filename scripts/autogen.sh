@@ -217,17 +217,24 @@ test "$openjade_err" -eq 0 && {
   }
 }
 
-# Check for ps2pdf
+db2htmlloc=`type -p db2html`
 
-ps2pdfloc=`type -p ps2pdf`
-
-test -z "ps2pdfloc" && {
+test -z "$db2htmlloc" && {
   echo " "
-  echo "***Warning***: You must have \"ps2pdf\" installed to"
+  echo "***Warning***: You must have \"db2html\" installed to"
   echo "build the Gutenprint user's guide."
-  echo "\"ps2pdf\" comes from the GNU Ghostscript software package."
-  echo "Get ftp://ftp.gnu.org/gnu/ghostscript/ghostscript-6.5.1.tar.gz"
-  echo "(or a newer version if available)"
+  echo "This usually comes from packages named docbook-utils or docbook-toys."
+  echo " "
+}
+
+db2pdfloc=`type -p db2pdf`
+
+test -z "$db2pdfloc" && {
+  echo " "
+  echo "***Warning***: You must have \"db2pdf\" installed to"
+  echo "build the Gutenprint user's guide."
+  echo "This usually comes from packages named docbook-utils-pdf"
+  echo "or docbook-toys."
   echo " "
 }
 
@@ -257,7 +264,7 @@ test "$sgmltools_err" -eq 0 && {
     echo " "
     echo "***Warning***: You must have \"sgmltools-lite\" version 3.0.2"
     echo "or newer installed to build the Gutenprint user's guide."
-    echo "Get http://prdownloads.sourceforge.net/projects/sgmltools-lite/sgmltools-lite-3.0.2.tar.gz"
+    echo "Get https://sourceforge.net/projects/sgmltools-lite/files/latest/download"
     echo "(or a newer version if available)"
     echo " "
   }
