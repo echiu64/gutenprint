@@ -6753,7 +6753,9 @@ static void magicard_printer_init(stp_vars_t *v)
   stp_zprintf(v, ",REJ%s", pd->privdata.magicard.reject ? "ON" : "OFF"); /* Faulty card rejection. */
   stp_zprintf(v, ",ESS%d", pd->copies); /* Number of copies */
   stp_zprintf(v, ",KEE,RT2");
-  if (pd->duplex_mode && strcmp(pd->duplex_mode, "None")) /* Duplex enabled? */
+  if (pd->duplex_mode &&
+      strcmp(pd->duplex_mode, "None") &&
+      strcmp(pd->duplex_mode, "Standard")) /* Duplex enabled? */
     {
       stp_zprintf(v, ",DPXON,PAG%d", 1 + (pd->page_number & 1));
       if (!(pd->page_number & 1))
@@ -6771,7 +6773,7 @@ static void magicard_printer_init(stp_vars_t *v)
   stp_zprintf(v, ",SLW%s", pd->privdata.magicard.colorsure ? "ON" : "OFF"); /* "Colorsure printing" */
   stp_zprintf(v, ",IMF%s", "BGR"); /* Image format -- as opposed to K, BGRK and others. */
   stp_zprintf(v, ",XCO0,YCO0"); // ??
-  stp_zprintf(v, ",WID%u,HGT%u", (unsigned int)pd->h_size - 40, (unsigned int)pd->w_size); /* Width & Height */
+  stp_zprintf(v, ",WID%u,HGT%u", (unsigned int)pd->h_size, (unsigned int)pd->w_size - 30); /* Width & Height */
   stp_zprintf(v, ",OVR%s", pd->privdata.magicard.overcoat ? "ON" : "OFF" ); /* Overcoat. */
   if (pd->privdata.magicard.overcoat && pd->privdata.magicard.overcoat_hole)
   {
@@ -6789,7 +6791,7 @@ static void magicard_printer_init(stp_vars_t *v)
   stp_zprintf(v, ",USF%s", pd->privdata.magicard.holokote ? "ON" : "OFF");  /* Disable Holokote. */
   if (pd->privdata.magicard.holokote)
   {
-    stp_zprintf(v, ",HKT%d,", pd->privdata.magicard.holokote);
+    stp_zprintf(v, ",HKT%d", pd->privdata.magicard.holokote);
     stp_zprintf(v, ",CKI%s", pd->privdata.magicard.holokote_custom? "ON" : "OFF");
     stp_zprintf(v, ",HKMFFFFFF,TRO0"); // HKM == area. each bit is a separate area, 1-24.  Not sure about TRO
   }
@@ -8561,7 +8563,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     ds820_load_parameters,
     ds820_parse_parameters,
   },
-  { /* Magicard Series w Duplex */
+  { /* Magicard Series w/ Duplex */
     7000,
     &ymc_ink_list,
     &res_300dpi_list,
