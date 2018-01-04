@@ -1243,101 +1243,101 @@
       <printer translate="name" name="Panasonic KX-P6150" driver="panasonic-kx-p6150" manufacturer="Panasonic" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="Panasonic KX-P6500" deviceid="MFG:Panasonic;MDL:KX-P6500;DES:(no such line for this device);CMD:GDI;" driver="panasonic-kx-p6500" manufacturer="Panasonic" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="Raven LP-410" driver="raven-lp-410" manufacturer="Raven" model="2" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 401" driver="ricoh-aficio_401" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 700" driver="ricoh-aficio_700" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 1022" driver="ricoh-aficio_1022" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 1027" driver="ricoh-aficio_1027" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 1032" driver="ricoh-aficio_1032" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 1035" driver="ricoh-aficio_1035" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 1045" driver="ricoh-aficio_1045" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 1060" driver="ricoh-aficio_1060" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 1075" driver="ricoh-aficio_1075" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 1515" driver="ricoh-aficio_1515" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2015" driver="ricoh-aficio_2015" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2016" driver="ricoh-aficio_2016" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2018" driver="ricoh-aficio_2018" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2018D" driver="ricoh-aficio_2018d" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2020" driver="ricoh-aficio_2020" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2020D" driver="ricoh-aficio_2020d" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2022" driver="ricoh-aficio_2022" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2027" driver="ricoh-aficio_2027" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2032" driver="ricoh-aficio_2032" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2035" driver="ricoh-aficio_2035" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2035e" driver="ricoh-aficio_2035e" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2045" driver="ricoh-aficio_2045" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2045e" driver="ricoh-aficio_2045e" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2051" driver="ricoh-aficio_2051" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2060" driver="ricoh-aficio_2060" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2075" driver="ricoh-aficio_2075" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2090" driver="ricoh-aficio_2090" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 2105" driver="ricoh-aficio_2105" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 220" driver="ricoh-aficio_220" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 3025" driver="ricoh-aficio_3025" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 3030" driver="ricoh-aficio_3030" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 3035" driver="ricoh-aficio_3035" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 3045" driver="ricoh-aficio_3045" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio 3224C" driver="ricoh-aficio_3224c" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio 3228C" driver="ricoh-aficio_3228c" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio 3232C" driver="ricoh-aficio_3232c" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio 3235C" driver="ricoh-aficio_3235c" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio 3245C" driver="ricoh-aficio_3245c" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio 3260C" driver="ricoh-aficio_3260c" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio Color 5560" driver="ricoh-aficio_color_5560" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio MP 1100" driver="ricoh-aficio_mp_1100" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 1350" driver="ricoh-aficio_mp_1350" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 1600" driver="ricoh-aficio_mp_1600" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 161" driver="ricoh-aficio_mp_161" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 2000" driver="ricoh-aficio_mp_2000" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 2500" driver="ricoh-aficio_mp_2500" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 2510" driver="ricoh-aficio_mp_2510" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 2550" driver="ricoh-aficio_mp_2550" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 2550B" driver="ricoh-aficio_mp_2550b" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 3010" driver="ricoh-aficio_mp_3010" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 3350" driver="ricoh-aficio_mp_3350" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 3350B" driver="ricoh-aficio_mp_3350b" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 3500" driver="ricoh-aficio_mp_3500" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 4000" driver="ricoh-aficio_mp_4000" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 4000B" driver="ricoh-aficio_mp_4000b" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 4500" driver="ricoh-aficio_mp_4500" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 5000" driver="ricoh-aficio_mp_5000" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 5000B" driver="ricoh-aficio_mp_5000b" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 5500" driver="ricoh-aficio_mp_5500" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 6500" driver="ricoh-aficio_mp_6500" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 7500" driver="ricoh-aficio_mp_7500" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 9000" driver="ricoh-aficio_mp_9000" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP C2050" driver="ricoh-aficio_mp_c2050" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio MP C2051" driver="ricoh-aficio_mp_c2051" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio MP C2500" driver="ricoh-aficio_mp_c2500" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio MP C2550" driver="ricoh-aficio_mp_c2550" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio MP C2551" driver="ricoh-aficio_mp_c2551" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio MP C2800" driver="ricoh-aficio_mp_c2800" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio MP C300" driver="ricoh-aficio_mp_c300" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio MP C3000" driver="ricoh-aficio_mp_c3000" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio MP C3001" driver="ricoh-aficio_mp_c3001" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio MP C3002" driver="ricoh-aficio_mp_c3002" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio MP C300SR" driver="ricoh-aficio_mp_c300sr" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio MP C3300" driver="ricoh-aficio_mp_c3300" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio MP C3500" driver="ricoh-aficio_mp_c3500" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio MP C3501" driver="ricoh-aficio_mp_c3501" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio MP C3502" driver="ricoh-aficio_mp_c3502" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio MP C400" driver="ricoh-aficio_mp_c400" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio MP C4000" driver="ricoh-aficio_mp_c4000" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio MP C400SR" driver="ricoh-aficio_mp_c400sr" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio MP C4500" driver="ricoh-aficio_mp_c4500" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio MP C4501" driver="ricoh-aficio_mp_c4501" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio MP C4501A" driver="ricoh-aficio_mp_c4501a" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio MP C4502" driver="ricoh-aficio_mp_c4502" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio MP C4502A" driver="ricoh-aficio_mp_c4502a" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio MP C5000" driver="ricoh-aficio_mp_c5000" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio MP C5501" driver="ricoh-aficio_mp_c5501" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio MP C5501A" driver="ricoh-aficio_mp_c5501a" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio MP C5502" driver="ricoh-aficio_mp_c5502" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio MP C5502A" driver="ricoh-aficio_mp_c5502a" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio MP C6000" driver="ricoh-aficio_mp_c6000" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio MP C6501" driver="ricoh-aficio_mp_c6501" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio MP C7500" driver="ricoh-aficio_mp_c7500" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio MP C7501" driver="ricoh-aficio_mp_c7501" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Ricoh Aficio SG 3110DN" driver="ricoh-aficios_g_3110dn" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio 401" driver="ricoh-afc_401" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 700" driver="ricoh-afc_700" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 1022" driver="ricoh-afc_1022" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 1027" driver="ricoh-afc_1027" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 1032" driver="ricoh-afc_1032" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 1035" driver="ricoh-afc_1035" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 1045" driver="ricoh-afc_1045" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 1060" driver="ricoh-afc_1060" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 1075" driver="ricoh-afc_1075" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 1515" driver="ricoh-afc_1515" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2015" driver="ricoh-afc_2015" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2016" driver="ricoh-afc_2016" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2018" driver="ricoh-afc_2018" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2018D" driver="ricoh-afc_2018d" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2020" driver="ricoh-afc_2020" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2020D" driver="ricoh-afc_2020d" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2022" driver="ricoh-afc_2022" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2027" driver="ricoh-afc_2027" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2032" driver="ricoh-afc_2032" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2035" driver="ricoh-afc_2035" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2035e" driver="ricoh-afc_2035e" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2045" driver="ricoh-afc_2045" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2045e" driver="ricoh-afc_2045e" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2051" driver="ricoh-afc_2051" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2060" driver="ricoh-afc_2060" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2075" driver="ricoh-afc_2075" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2090" driver="ricoh-afc_2090" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 2105" driver="ricoh-afc_2105" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 220" driver="ricoh-afc_220" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 3025" driver="ricoh-afc_3025" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 3030" driver="ricoh-afc_3030" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 3035" driver="ricoh-afc_3035" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 3045" driver="ricoh-afc_3045" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio 3224C" driver="ricoh-afc_3224c" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio 3228C" driver="ricoh-afc_3228c" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio 3232C" driver="ricoh-afc_3232c" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio 3235C" driver="ricoh-afc_3235c" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio 3245C" driver="ricoh-afc_3245c" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio 3260C" driver="ricoh-afc_3260c" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio Color 5560" driver="ricoh-afc_color_5560" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP 1100" driver="ricoh-afc_mp_1100" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 1350" driver="ricoh-afc_mp_1350" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 1600" driver="ricoh-afc_mp_1600" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 161" driver="ricoh-afc_mp_161" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 2000" driver="ricoh-afc_mp_2000" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 2500" driver="ricoh-afc_mp_2500" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 2510" driver="ricoh-afc_mp_2510" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 2550" driver="ricoh-afc_mp_2550" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 2550B" driver="ricoh-afc_mp_2550b" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 3010" driver="ricoh-afc_mp_3010" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 3350" driver="ricoh-afc_mp_3350" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 3350B" driver="ricoh-afc_mp_3350b" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 3500" driver="ricoh-afc_mp_3500" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 4000" driver="ricoh-afc_mp_4000" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 4000B" driver="ricoh-afc_mp_4000b" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 4500" driver="ricoh-afc_mp_4500" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 5000" driver="ricoh-afc_mp_5000" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 5000B" driver="ricoh-afc_mp_5000b" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 5500" driver="ricoh-afc_mp_5500" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 6500" driver="ricoh-afc_mp_6500" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 7500" driver="ricoh-afc_mp_7500" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 9000" driver="ricoh-afc_mp_9000" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP C2050" driver="ricoh-afc_mp_c2050" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C2051" driver="ricoh-afc_mp_c2051" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C2500" driver="ricoh-afc_mp_c2500" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C2550" driver="ricoh-afc_mp_c2550" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C2551" driver="ricoh-afc_mp_c2551" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C2800" driver="ricoh-afc_mp_c2800" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C300" driver="ricoh-afc_mp_c300" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C3000" driver="ricoh-afc_mp_c3000" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C3001" driver="ricoh-afc_mp_c3001" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C3002" driver="ricoh-afc_mp_c3002" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C300SR" driver="ricoh-afc_mp_c300sr" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C3300" driver="ricoh-afc_mp_c3300" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C3500" driver="ricoh-afc_mp_c3500" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C3501" driver="ricoh-afc_mp_c3501" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C3502" driver="ricoh-afc_mp_c3502" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C400" driver="ricoh-afc_mp_c400" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C4000" driver="ricoh-afc_mp_c4000" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C400SR" driver="ricoh-afc_mp_c400sr" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C4500" driver="ricoh-afc_mp_c4500" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C4501" driver="ricoh-afc_mp_c4501" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C4501A" driver="ricoh-afc_mp_c4501a" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C4502" driver="ricoh-afc_mp_c4502" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C4502A" driver="ricoh-afc_mp_c4502a" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C5000" driver="ricoh-afc_mp_c5000" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C5501" driver="ricoh-afc_mp_c5501" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C5501A" driver="ricoh-afc_mp_c5501a" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C5502" driver="ricoh-afc_mp_c5502" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C5502A" driver="ricoh-afc_mp_c5502a" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C6000" driver="ricoh-afc_mp_c6000" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C6501" driver="ricoh-afc_mp_c6501" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C7500" driver="ricoh-afc_mp_c7500" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio MP C7501" driver="ricoh-afc_mp_c7501" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh Aficio SG 3110DN" driver="ricoh-afc_sg_3110dn" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
       <printer translate="name" name="Ricoh GX 3050N" driver="ricoh-gx_3050n" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
       <printer translate="name" name="Ricoh GX 3050SFN" driver="ricoh-gx_3050sfn" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
       <printer translate="name" name="Ricoh GX 5050N" driver="ricoh-gx_5050n" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
