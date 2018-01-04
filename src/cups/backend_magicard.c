@@ -9,7 +9,7 @@
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
- *   Software Foundation; either version 3 of the License, or (at your option)
+ *   Software Foundation; either version 2 of the License, or (at your option)
  *   any later version.
  *
  *   This program is distributed in the hope that it will be useful, but
@@ -20,9 +20,9 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- *          [http://www.gnu.org/licenses/gpl-3.0.html]
+ *          [http://www.gnu.org/licenses/gpl-2.0.html]
  *
- *   SPDX-License-Identifier: GPL-3.0+
+ *   SPDX-License-Identifier: GPL-2.0+
  *
  */
 
@@ -45,6 +45,66 @@
 /* Exported */
 #define USB_VID_MAGICARD     0x0C1F
 #define USB_PID_MAGICARD_TANGO2E 0x1800
+
+/* Gamma tables computed with this perl program:
+
+  my $input_bpp = 8;
+  my $output_bpp = 6;
+  my $gamma = 1/1.8;  # or 1/2.2 or whatever.
+
+  my $i;
+
+  for (my $i = 0 ; $i < (2 ** $input_bpp) ; $i++) {
+    my $linear = $i / (2 ** $input_bpp);
+    my $gc = ($linear ** $gamma) * (2 ** $output_bpp);
+    $gc = int($gc);
+    print "$gc, ";
+  }
+
+*/
+
+static uint8_t gammas[2][256] = {
+	/* Gamma = 2.2 */
+	{
+		 0,  5,  7,  8,  9, 10, 11, 12, 13, 13, 14, 15, 15, 16, 17,
+		17, 18, 18, 19, 19, 20, 20, 20, 21, 21, 22, 22, 23, 23, 23,
+		24, 24, 24, 25, 25, 25, 26, 26, 26, 27, 27, 27, 28, 28, 28,
+		29, 29, 29, 29, 30, 30, 30, 31, 31, 31, 31, 32, 32, 32, 32,
+		33, 33, 33, 33, 34, 34, 34, 34, 35, 35, 35, 35, 35, 36, 36,
+		36, 36, 37, 37, 37, 37, 37, 38, 38, 38, 38, 38, 39, 39, 39,
+		39, 39, 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 42, 42, 42,
+		42, 42, 43, 43, 43, 43, 43, 43, 44, 44, 44, 44, 44, 45, 45,
+		45, 45, 45, 45, 46, 46, 46, 46, 46, 46, 47, 47, 47, 47, 47,
+		47, 48, 48, 48, 48, 48, 48, 48, 49, 49, 49, 49, 49, 49, 50,
+		50, 50, 50, 50, 50, 50, 51, 51, 51, 51, 51, 51, 51, 52, 52,
+		52, 52, 52, 52, 52, 53, 53, 53, 53, 53, 53, 53, 54, 54, 54,
+		54, 54, 54, 54, 55, 55, 55, 55, 55, 55, 55, 56, 56, 56, 56,
+		56, 56, 56, 56, 57, 57, 57, 57, 57, 57, 57, 57, 58, 58, 58,
+		58, 58, 58, 58, 58, 59, 59, 59, 59, 59, 59, 59, 59, 60, 60,
+		60, 60, 60, 60, 60, 60, 61, 61, 61, 61, 61, 61, 61, 61, 62,
+		62, 62, 62, 62, 62, 62, 62, 62, 63, 63, 63, 63, 63, 63, 63, 63,
+	},
+	/* Gamma = 1.8 */
+	{
+		  0,  2,  4,  5,  6,  7,  7,  8,  9,  9, 10, 11, 11, 12, 12,
+		 13, 13, 14, 14, 15, 15, 15, 16, 16, 17, 17, 17, 18, 18, 19,
+		 19, 19, 20, 20, 20, 21, 21, 21, 22, 22, 22, 23, 23, 23, 24,
+		 24, 24, 24, 25, 25, 25, 26, 26, 26, 26, 27, 27, 27, 28, 28,
+		 28, 28, 29, 29, 29, 29, 30, 30, 30, 30, 31, 31, 31, 31, 32,
+		 32, 32, 32, 33, 33, 33, 33, 34, 34, 34, 34, 34, 35, 35, 35,
+		 35, 36, 36, 36, 36, 36, 37, 37, 37, 37, 37, 38, 38, 38, 38,
+		 39, 39, 39, 39, 39, 40, 40, 40, 40, 40, 41, 41, 41, 41, 41,
+		 42, 42, 42, 42, 42, 42, 43, 43, 43, 43, 43, 44, 44, 44, 44,
+		 44, 45, 45, 45, 45, 45, 45, 46, 46, 46, 46, 46, 47, 47, 47,
+		 47, 47, 47, 48, 48, 48, 48, 48, 48, 49, 49, 49, 49, 49, 49,
+		 50, 50, 50, 50, 50, 50, 51, 51, 51, 51, 51, 51, 52, 52, 52,
+		 52, 52, 52, 53, 53, 53, 53, 53, 53, 54, 54, 54, 54, 54, 54,
+		 55, 55, 55, 55, 55, 55, 55, 56, 56, 56, 56, 56, 56, 57, 57,
+		 57, 57, 57, 57, 57, 58, 58, 58, 58, 58, 58, 58, 59, 59, 59,
+		 59, 59, 59, 60, 60, 60, 60, 60, 60, 60, 61, 61, 61, 61, 61,
+		 61, 61, 62, 62, 62, 62, 62, 62, 62, 63, 63, 63, 63, 63, 63, 63,
+	}
+};
 
 /* Private data structure */
 struct magicard_ctx {
@@ -104,26 +164,46 @@ enum {
 
 /* Data definitions */
 static struct magicard_requests magicard_sta_requests[] = {
-	{ "MSR", "Serial Number", TYPE_STRING },
+	{ "MSR", "Printer Serial Number", TYPE_STRING },
+	{ "PSR", "Print Head Serial Number", TYPE_STRING },
+	{ "BSR", "PCB Serial Number", TYPE_STRING },
 	{ "VRS", "Firmware Version", TYPE_STRING },
 	{ "FDC", "Head Density", TYPE_STRINGINT },
 	{ "FSP", "Image Start", TYPE_STRINGINT },
 	{ "FEP", "Image End", TYPE_STRINGINT },
+	{ "FSS", "Ramp Adjust", TYPE_STRINGINT },
 	{ "FPP", "Head Position", TYPE_STRINGINT },
 	{ "MDL", "Model", TYPE_MODEL },  /* 0 == Standard.  Others? */
 	{ "PID", "USB PID", TYPE_STRINGINT_HEX }, /* ASCII integer, but needs to be shown as hex */
+	{ "VID", "USB VID", TYPE_STRINGINT_HEX }, /* ASCII integer, but needs to be shown as hex */
+	{ "USN", "USB Serial Number", TYPE_STRING },
+	{ "UPN", "USB Manufacturer", TYPE_STRING },
 	{ "MAC", "Ethernet MAC Address", TYPE_STRING },
 	{ "DYN", "Dynamic Address", TYPE_YESNO }, /* 1 == yes, 0 == no */
 	{ "IPA", "IP Address", TYPE_IPADDR },  /* ASCII signed integer */
 	{ "SNM", "IP Netmask", TYPE_IPADDR },  /* ASCII signed integer */
 	{ "GWY", "IP Gateway", TYPE_IPADDR },  /* ASCII signed integer */
 
-	{ "TCQ", "Total Prints", TYPE_STRINGINT },
-	{ "TCP", "Total Prints on Head", TYPE_STRINGINT },
-	{ "TCN", "Total Cleaning Cycles", TYPE_STRINGINT },
-	{ "CCQ", "Prints After Last Cleaning", TYPE_STRINGINT },
+	{ "TCQ", "Total Cards Printed", TYPE_STRINGINT },
+	{ "TCP", "Prints on Head", TYPE_STRINGINT },
+	{ "TCN", "Cleaning Cycles", TYPE_STRINGINT },
+	{ "CCQ", "Cards Since Last Cleaning", TYPE_STRINGINT },
+	{ "TPQ", "Total Panels Printed", TYPE_STRINGINT },
+	{ "CCP", "Cards between Cleaning Prompts", TYPE_STRINGINT },
+	{ "CPQ", "Panels Since Last Cleaning", TYPE_STRINGINT },
+	{ "DFR", "Panels Remaining", TYPE_STRINGINT },  // cook somehow?
+	{ "CLP", "Cleaning Prompt", TYPE_STRING },
+
+	// CRQ:  OFF  ??  Cleaning overdue?
+	// CHK:  checksum of fw?  (8 chars, hex?)
+	// TES:  ??? signed int?  IP addr?
+	// RAMP:  ??? hangs.
+
 	{ NULL, NULL, 0 }
 };
+
+// Sensors: CAM1 CAM2 TACHO FLIP DYE BARCODE LID FRONT REAR BUTTON TEMP ON OFF
+// Languages: ENG ITA POR FRA DEU ESP SCH
 
 /* Helper functions */
 static int magicard_build_cmd(uint8_t *buf,
@@ -359,7 +439,7 @@ static void magicard_teardown(void *vctx) {
 	free(ctx);
 }
 
-static void downscale_and_extract(uint32_t pixels,
+static void downscale_and_extract(int gamma, uint32_t pixels,
 				  uint8_t *y_i, uint8_t *m_i, uint8_t *c_i,
 				  uint8_t *y_o, uint8_t *m_o, uint8_t *c_o, uint8_t *k_o)
 {
@@ -376,9 +456,18 @@ static void downscale_and_extract(uint32_t pixels,
 		uint8_t b_shift;
 
 		/* Downscale color planes from 8bpp -> 6bpp; */
-		y = *y_i++ >> 2;
-		m = *m_i++ >> 2;
-		c = *c_i++ >> 2;
+		if (gamma) {
+			if (gamma > 2)
+				gamma = 2;
+			gamma--;
+			y = gammas[gamma][*y_i++];
+			m = gammas[gamma][*m_i++];
+			c = gammas[gamma][*c_i++];
+		} else {
+			y = *y_i++ >> 2;
+			m = *m_i++ >> 2;
+			c = *c_i++ >> 2;
+		}
 
 		/* Extract "true black" from ymc data, if enabled */
 		if (k_o && y == 0x3f && m == 0x3f && c == 0x3f) {
@@ -405,7 +494,6 @@ static void downscale_and_extract(uint32_t pixels,
 				m_o[row * 504 + j * 84 + b_offset] |= (1 << b_shift);
 			if (c & (1 << j))
 				c_o[row * 504 + j * 84 + b_offset] |= (1 << b_shift);
-
 		}
 
 		/* And resin black, if enabled */
@@ -430,6 +518,7 @@ static int magicard_read_parse(void *vctx, int data_fd) {
 	uint8_t *in_y, *in_m, *in_c;
 	uint8_t *out_y, *out_m, *out_c, *out_k;
 	uint32_t len_y = 0, len_m = 0, len_c = 0, len_k = 0;
+	int gamma = 0;
 
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
@@ -487,6 +576,10 @@ static int magicard_read_parse(void *vctx, int data_fd) {
 //			/* Strip out copies */
 		} else if (!strcmp("X-GP-RK", ptr)) {
 			ctx->x_gp_rk = 1;
+		} else if (!strncmp("ICC", ptr,3)) {
+			/* Gamma curve is not handled by printer,
+			   strip it out and use it! */
+			gamma = atoi(ptr + 3);
 		} else if (!strncmp("SZ", ptr, 2)) {
 			if (ptr[2] == 'B') {
 				len_y = atoi(ptr + 3);
@@ -629,7 +722,7 @@ static int magicard_read_parse(void *vctx, int data_fd) {
 
 		INFO("Converting image data to printer's native format %s\n", ctx->x_gp_rk ? "and extracting K channel" : "");
 
-		downscale_and_extract(len_y, in_y, in_m, in_c,
+		downscale_and_extract(gamma, len_y, in_y, in_m, in_c,
 				      out_y, out_m, out_c, out_k);
 
 		/* Pad out the length appropriately. */
@@ -738,7 +831,7 @@ static int magicard_cmdline_arg(void *vctx, int argc, char **argv)
 
 struct dyesub_backend magicard_backend = {
 	.name = "Magicard family",
-	.version = "0.06",
+	.version = "0.08",
 	.uri_prefix = "magicard",
 	.cmdline_arg = magicard_cmdline_arg,
 	.cmdline_usage = magicard_cmdline,
@@ -754,7 +847,7 @@ struct dyesub_backend magicard_backend = {
 	}
 };
 
-/* Magicard family Spool file format
+/* Magicard family Spool file format (Tango2e/Rio2e/AvalonE family)
 
   This one was rather fun to figure out.
 
@@ -797,6 +890,105 @@ struct dyesub_backend magicard_backend = {
 
   0x05 (x9) 0x01 REQ,UPG, 0x1c 0x03
 
+  ** ** ** ** ** **
 
+  Known commands seen in print jobs:
+
+  BAC%s    Backside format (CKO, KO, C, CO, K) -- Only used with Duplex.
+  CKI%s    Custom Holokote (ON or OFF)
+  CPW%s    Color power level (0-100, default 50)
+  DPX%s    Duplex (ON or OFF)
+  EOI%d    Card alignment end (0-100, default 50)
+  ESS%d    Number of copies (1-?)
+  HGT%d    Image Height (always seems to be 1016)
+  HKM%06X  Holokote hole.  bitwise number, each bit corresponds to an area.
+  HKT%d    Holokote type (1 is "ultra secure, 2 is "interlocking rings", etc)
+  HPH%s    Holopatch (ON or OFF)
+  IMF%s    Image Data Format (BGR, BGRK, K)
+  KPW%s    Black power level (0-100, default 50)
+  LAN%s    Printer display lanaguage (ENG, ITA, POR, FRA, DEU, ESP, SCH)
+  LC%d     Force media type (LC1, LC3, LC6, LC8 for YMCKO/MONO/KO/YMCKOK)
+  NCT%d,%d,%d,%d  Overcoat hole
+  OPW%s    Overcoat power level (0-100, default 50)
+  OVR%s    Overcoat (ON or OFF)
+  PAG%d    Page number (always 1, except 2 if printing duplex backside)
+  PAT%d    Holopatch area  (0-24)
+  REJ%s    Reject faulty cards (ON or OFF)
+  SOI%d    Card alignment start (0-100, default 50)
+  SLW%s    Colorsure (ON or OFF)
+  SZB%d    Blue data length
+  SZG%d    Green data length
+  SZK%d    Black data length
+  SZR%d    Red data length
+  TDT%08X  Driver-supplied timestamp of print job.
+  USF%s    Holokote (ON or OFF)
+  VER%s    Inform the printer of the driver version  (seems to be ignored)
+  WID%d    Image Width (always seems to be 642)
+
+    Mag-stripe encoding:
+
+  MAG%d   Magstripe position (1, 2, or 3)
+  BPI%d   Bits per Inch (75 or 210)
+  MPC%d   Character encoding (5 or 7)
+  COE%s   'H'igh or 'L'ow coercivity
+
+    Unknown commands seen in print jobs:
+
+  DDD%s    ? (only seen '50')  -- Could it be K alignment?
+  KEE      ?
+  NNN%s    ?  (Seen 'OFF')
+  NOC%d    ?  (Seen '1')  (Seems to start a job)
+  PCT%d,%d,%d,%d  ?  Print area, seems fixed @ 0,0, 1025, 641)
+  RT2      ?
+  TRO%d    ?  (Seen '0', appears with Holokote)
+  XCO%d    ? X start offset (always seems to be 0)
+  YCO%d    ? Y start offset (always seems to be 0)
+
+    Unknown commands:  (Seen in firmware guts)
+
+  AAA
+  AMS
+  BBB%d   Numeric parameter
+  CLR
+  FBF
+  FTC
+  HFD%s   String parameter
+  IPM
+  KKK
+  LBL
+  LLL
+  LRC
+  MGV%s  "ON" or "OFF"  but no idea
+  MMM
+  PAR
+  RDM
+  SNR
+  SSP
+
+   Unknown commands unique to Tango +L (ie w/ Laminator support)
+
+  FRN
+  LAM
+  LAM_DLY
+  LAM_SPD
+  LAM_LEN
+  LAM_END
+  LAM_STA
+  LAM_DEG
+  LAM_FLM
+  LAM_KBD
+  LAM_MOD
+
+    Commands consumed by backend:
+
+  ICC%d    Gamma curve (0, 1, 2) -- off, 2.2, or 1.8 respectively.
+  X-GP-8   Raw data is 8bpp. needs to be converted.
+  X-GP-RK  Extract K channel from color data.
+
+   Open questions:
+
+   * How to query/read magstripe
+   * How to set IP address (etc)
+   * How to set other parameters
 
 */
