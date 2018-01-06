@@ -26,15 +26,6 @@ pkgdatadir = $(datadir)/$(PACKAGE)/samples
 
 ## Programs
 
-if BUILD_TESTPATTERN
-
-TESTS = run-testpattern-1 run-testpattern-2
-
-bin_PROGRAMS = testpattern
-noinst_PROGRAMS = printers printer_options
-noinst_SCRIPTS = run-testpattern-2 compare-checksums compress-checksums
-endif
-
 AM_LFLAGS = -i
 AM_YFLAGS = -d
 
@@ -54,9 +45,23 @@ if INSTALL_SAMPLES
 pkgdata_DATA = testpattern.sample extended.sample
 endif
 
-## Generate checksums
-
 if BUILD_TESTPATTERN
+
+run-testpattern-2.fast: run-testpattern-2
+run-testpattern-2.full: run-testpattern-2
+run-testpattern-2.valgrind: run-testpattern-2
+run-testpattern-2.checksums: run-testpattern-2
+
+TESTS = run-testpattern-1 run-testpattern-2.fast run-testpattern-2.full \
+	run-testpattern-2.valgrind run-testpattern-2.checksums
+
+bin_PROGRAMS = testpattern
+noinst_PROGRAMS = printers printer_options
+noinst_SCRIPTS = run-testpattern-2 compare-checksums compress-checksums \
+	run-testpattern-2.checksums run-testpattern-2.fast \
+	run-testpattern-2.full run-testpattern-1
+CSUM_DEPS=testpattern run-testpattern-2 compress-checksums Checksums \
+	run-testpattern-2.checksums
 
 # This suffix is *not* static during development!
 CSUM_SUFFIX=`@PKGROOT@/scripts/gversion`
@@ -69,14 +74,14 @@ CSUM_RELEASE_FILE=Checksums/sums.$(CSUM_RELEASE_SUFFIX)
 Checksums:
 	$(MKDIR_P) Checksums
 
-checksums: testpattern run-testpattern-2 ./compress-checksums Checksums
-	STP_DATA_PATH='@PKGROOT@/src/xml' ./run-testpattern-2 -q -M - | ./compress-checksums | $(COMPRESS) > "$(CSUM_FILE)@CSUF@"
+checksums: $(CSUM_DEPS)
+	STP_DATA_PATH='@PKGROOT@/src/xml' ./run-testpattern-2.checksums | ./compress-checksums | $(COMPRESS) > "$(CSUM_FILE)@CSUF@"
 
-checksums-fast: testpattern run-testpattern-2 ./compress-checksums Checksums
-	STP_DATA_PATH='@PKGROOT@/src/xml' ./run-testpattern-2 -s -q -M - | ./compress-checksums | $(COMPRESS) > "$(CSUM_FILE)@CSUF@"
+checksums-fast: $(CSUM_DEPS)
+	STP_DATA_PATH='@PKGROOT@/src/xml' ./run-testpattern-2.checksums -s | ./compress-checksums | $(COMPRESS) > "$(CSUM_FILE)@CSUF@"
 
-checksums-release: testpattern run-testpattern-2 ./compress-checksums Checksums
-	STP_DATA_PATH='@PKGROOT@/src/xml' ./run-testpattern-2 -q -M - | ./compress-checksums | $(COMPRESS) > "$(CSUM_RELEASE_FILE)@CSUF@"
+checksums-release: $(CSUM_DEPS)
+	STP_DATA_PATH='@PKGROOT@/src/xml' ./run-testpattern-2.checksums | ./compress-checksums | $(COMPRESS) > "$(CSUM_RELEASE_FILE)@CSUF@"
 endif
 
 ## Clean

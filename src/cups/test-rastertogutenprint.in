@@ -38,16 +38,33 @@ declare skip_simplified=0
 declare postscript=0
 declare use_explicit_quality=1
 declare extra_genppd_opts=-Z
+declare use_smallest_pagesize=0
 declare cupsargs=''
 
-if [[ -n $STP_FAST_TEST ]] ; then
+if [[ $STP_TEST_PROFILE == fast ]] ; then
     single=1
     skip_simplified=1
     extra_genppd_opts+=" -S"
     cupsargs='StpDitherAlgorithm=VeryFast'
+    use_explicit_quality=1
+    use_smallest_pagesize=1
+elif [[ $STP_TEST_PROFILE == valgrind ]] ; then
+    single=1
+    skip_simplified=1
+    extra_genppd_opts+=" -S"
+    cupsargs='StpDitherAlgorithm=VeryFast'
+    use_explicit_quality=1
+    valopts='--tool=memcheck'
+    valgrind=2
+    use_smallest_pagesize=1
 fi
 
-declare family=''
+if [ -n "$STP_TEST_DEBUG" ] ; then
+    echo "Would run with single=$single skip_simplified=$skip_simplified extra_genppd_opts=$extra_genppd_opts cupsargs=$cupsargs use_explicit_quality=$use_explicit_quality valopts=$valopts valgrind=$valgrind"
+    exit 0
+fi
+
+declare family=$STP_TEST_FAMILY
 declare all_models=''
 declare md5dir=''
 declare outdir=''
@@ -87,11 +104,12 @@ Usage: test-rastertogutenprint [options] [PPD files...]
     -l        Use lowest available quality setting
     -L        Use highest available quality setting
     -X        Don't use explicit quality setting
+    -N	      Use the smallest available page size
 EOF
 exit 0;
 }
 
-while getopts "hvcgsVnO:m:o:p:St:lLXf:" opt ; do
+while getopts "hvcgsVnO:m:o:p:St:lLXf:N" opt ; do
     case "$opt" in
 	h*) usage ;;
 	v) valopts='--tool=memcheck' ; valgrind=$((valgrind + 1)) ;;
@@ -111,6 +129,7 @@ while getopts "hvcgsVnO:m:o:p:St:lLXf:" opt ; do
 	X) use_explicit_quality=0 ;;
 	l) use_explicit_quality=1 ;;
 	L) use_explicit_quality=2 ;;
+	N) use_smallest_pagesize=1 ;;
 	\?) usage ;;
 	*) echo "Unknown argument $opt"; usage ;;
     esac
@@ -243,6 +262,14 @@ if [[ -n $make_ppds || ! -d ppd/C ]] ; then
     fi
 fi
 
+find_page_size() {
+    ppd=$1
+    (( $use_smallest_pagesize == 0 )) && return;
+    driver=$(grep '^\*StpDriverName' "$ppd" | sed -e 's/^[^"]*"//' -e 's/"//g')
+    pagesize=$(./min-pagesize "$driver")
+    [[ -n "$pagesize" ]] && echo "PageSize=$pagesize"
+}
+
 find_resolution() {
     ppd=$1
     resolutions=$(grep "^\\*Resolution " "$ppd" |sed -e 's,/.*,,' -e 's/.* //')
@@ -268,6 +295,7 @@ find_resolution() {
     elif (( $use_explicit_quality == 2 )) ; then
 	echo "Resolution=$high_resolution_name"
     fi
+
 }
 
 find_quality_preset() {
@@ -314,8 +342,9 @@ xgrep() {
 
 runcmd() {
     qualarg=$(find_quality "$PPD")
+    sizearg=$(find_page_size "$PPD")
     a='1 1 1 1'
-    qarg="$qualarg $cupsargs"
+    qarg="$qualarg $sizearg $cupsargs"
     if [[ -x $cgpdftoraster ]] ; then
 	# cgpdftoraster doesn't like arguments.  How rude.
 	$cgpdftoraster $a "" < "$tfile"
@@ -348,10 +377,11 @@ do_output() {
 
 run_rastertogp() {
     qualarg=$(find_quality "$PPD")
+    sizearg=$(find_page_size "$PPD")
     vg="valgrind $valopts --log-fd=3"
-    vg1="$vg --num-callers=50 --leak-check=yes --error-limit=no"
+    vg1="$vg --num-callers=50 --leak-check=yes --error-limit=no --error-exitcode=1"
     rgpc="$rgp 1 1 1 1"
-    qarg="$qualarg $cupsargs"
+    qarg="$qualarg $sizearg $cupsargs"
     case "$valgrind" in
 	1) $vg -q $rgpc ;;
 	2) $vg --leak-resolution=high $rgpc "$qarg" ;;
@@ -367,7 +397,11 @@ runme() {
     p=${f#*stp-}
     p=${p/@GUTENPRINT_RELEASE_VERSION@./}
     export PPD=$f
-    output="${p%.ppd*}...$( (runcmd 2>/dev/null | run_rastertogp | do_output) 2>&1 3>&2)"
+    if [[ -n $outdir || -n $md5dir ]] ; then
+	output="${p%.ppd*}...$( (runcmd 2>/dev/null | run_rastertogp | do_output) 2>&1 3>&2)"
+    else
+	output="${p%.ppd*}...$( (runcmd 2>/dev/null | run_rastertogp >/dev/null) 2>&1 3>&2)"
+    fi
     return $?
 }
 
@@ -382,8 +416,8 @@ runall() {
 	    runme "$f"
 	    (( $? != 0 )) && retval=1
 	    echo "$output"
-	    echo "$output" |grep ERROR
-	    (( $? != 0 )) || retval=1
+	    grep 'ERROR:' <<< $output
+	    (( $? == 0 )) && retval=1
 	fi
 	jobno=$((($jobno+1) % $jobs))
     done
@@ -405,7 +439,6 @@ get_models() {
 retval=0
 if [[ -d ppd/C ]] ; then
     declare -a files=($(get_ppds "$@"))
-    declare -a subproc=($(seq 0 $((jobs-1))))
     declare -A models
     declare -a nfiles
     if (( $skip_simplified > 0 )) ; then
@@ -436,6 +469,8 @@ if [[ -d ppd/C ]] ; then
 	done
 	files=(${nfiles[@]})
     fi
+    (( ${#files[@]} < $jobs )) && jobs=${#files[@]}
+    declare -a subproc=($(seq 0 $((jobs-1))))
     # Fire 'em off in the background...
     for i in ${subproc[@]} ; do
 	runall $jobs $i ${files[@]} &

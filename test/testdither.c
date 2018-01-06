@@ -518,8 +518,11 @@ run_standard_testdithers(void)
   int failures = 0;
   int status;
 
-  if (getenv("STP_TESTING"))
-    exit(77);
+  if (getenv("STP_TEST_SUITE"))
+    {
+      puts("Skipping in automated test suite");
+      exit(77);
+    }
 
   stp_set_driver(v, "escp2-ex");
   stp_describe_parameter(v, "DitherAlgorithm", &desc);

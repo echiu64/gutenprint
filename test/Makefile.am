@@ -19,8 +19,6 @@
 
 include $(top_srcdir)/scripts/global.mk
 
-AM_TESTS_ENVIRONMENT=STP_TESTING=1
-
 ## Variables
 
 LOCAL_CPPFLAGS = -I$(top_srcdir)/src/main $(GUTENPRINT_CFLAGS)

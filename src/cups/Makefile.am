@@ -77,6 +77,7 @@ cupsexec_driver_PROGRAMS = gutenprint.@GUTENPRINT_RELEASE_VERSION@
 endif
 
 if BUILD_CUPS
+noinst_PROGRAMS = min-pagesize
 bin_PROGRAMS = cups-calibrate
 sbin_PROGRAMS = cups-genppd.@GUTENPRINT_RELEASE_VERSION@
 sbin_SCRIPTS = cups-genppdupdate
@@ -95,6 +96,7 @@ install-exec-hook:
 	mv $(DESTDIR)$(pkglibdir)/backend/backend_gutenprint "$(DESTDIR)$(pkglibdir)/backend/gutenprint$(GUTENPRINT_MAJOR_VERSION)$(GUTENPRINT_MINOR_VERSION)+usb"
 endif
 
+test-rastertogutenprint: min-pagesize
 TESTS= test-ppds test-rastertogutenprint
 noinst_SCRIPTS=test-ppds test-rastertogutenprint
 endif
@@ -102,6 +104,9 @@ endif
 if BUILD_GENPPD_STATIC
 STATIC_LDOPTS=-static -export-dynamic
 endif
+
+min_pagesize_SOURCES = min-pagesize.c
+min_pagesize_LDADD = $(GUTENPRINT_LIBS)
 
 cups_calibrate_SOURCES = cups-calibrate.c
 cups_calibrate_LDADD = -lm

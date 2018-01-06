@@ -119,11 +119,56 @@ pdf:
 snapshot: scripts/gversion git-version-stamp
 	$(MAKE) dist distdir=$(PACKAGE)-`scripts/gversion`-`date +"%Y%m%d"`
 
-fast-check:
-	STP_FAST_TEST=1 STP_PARALLEL=`scripts/count-cpus` make check
+#################################################################
+#			       TESTING				#
+#################################################################
 
-full-check:
-	STP_PARALLEL=`scripts/count-cpus` make check
+CPUS=`scripts/count-cpus`
+
+# STP_PROFILE=full
+MAKECHECK=STP_TEST_SUITE=1 /usr/bin/time make -k -s check
+MAKEDISTCHECK=STP_TEST_SUITE=1 /usr/bin/time make -k -s distcheck
+MAKECHECK_PARALLEL=STP_PARALLEL=$(CPUS) $(MAKECHECK)
+MAKEDISTCHECK_PARALLEL=STP_PARALLEL=$(CPUS) $(MAKEDISTCHECK)
+
+# ...but we can't do
+# AM_TESTS_ENVIRONMENT=STP_PARALLEL=$(shell scripts/count-cpus)
+# because $(shell...) is (still only) a GNU extension, which we
+# want to avoid.  And we can't do
+# AM_TESTS_ENVIRONMENT=STP_PARALLEL=`scripts/count-cpus`
+# because all expansions are lazy, so anything not in the root directory
+# won't find the script.  And we can't even do
+# AM_TESTS_ENVIRONMENT=STP_PARALLEL=`(at)TOP_BUILDDIR(at)scripts/count-cpus`
+# because TOP_BUILDDIR itself is a relative path.  And, just to make it
+# even more fun, we won't be able to do
+# AM_TESTS_ENVIRONMENT!=
+# syntax even if POSIX approves it because it's only present in GNU make 4,
+# but Apple doesn't use that.
+
+check-parallel: scripts/count-cpus
+	$(MAKECHECK_PARALLEL)
+
+distcheck-parallel: scripts/count-cpus
+	$(MAKEDISTCHECK_PARALLEL)
+
+check-fast: scripts/count-cpus
+	STP_TEST_PROFILE=fast $(MAKECHECK_PARALLEL)
+
+distcheck-fast: scripts/count-cpus
+	STP_TEST_PROFILE=fast $(MAKEDISTCHECK_PARALLEL)
+
+check-full: scripts/count-cpus
+	STP_TEST_PROFILE=full $(MAKECHECK_PARALLEL)
+
+distcheck-full: scripts/count-cpus
+	STP_TEST_PROFILE=full $(MAKEDISTCHECK_PARALLEL)
+
+# distcheck-valgrind won't work because distcheck does not use
+# --disable-shared.  valgrind doesn't work with that type of build because
+# the in-tree executables aren't actually binaries; they're libtool-based
+# shell scripts that invoke the real binaries.
+check-valgrind: scripts/count-cpus
+	STP_TEST_PROFILE=valgrind $(MAKECHECK_PARALLEL)
 
 ## Clean
 

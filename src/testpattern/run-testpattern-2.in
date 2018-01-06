@@ -64,6 +64,7 @@ my @standard_options = ("InkType",
 my $global_status = 1;
 my $run_installed = 0;
 my $use_min_res = 0;
+my $use_min_pagesize = 0;
 my $help = 0;
 my $output = undef;
 my $hsize = 0.1;
@@ -87,6 +88,7 @@ my @messages = ();
 my @global_messages = ();
 my @families = ();
 my %stpdata = ();
+my %resolutions = ();
 my %models_found = ();
 my %models;
 my %families;
@@ -104,15 +106,19 @@ my $verbose = 0;
 my $use_unused_options = 0;
 my $proc_count = 1;
 my $round = 0;
+my $print_family = 0;
+my $res_limit = 0;
 
 my @default_options = ();
 my %base_settings = ("DitherAlgorithm" => "Fast");
 
 my %param_types;
-my %param_classes;
-my %param_levels;
+my %stp_dimension_values;
 my %stp_float_values;
 my %stp_int_values;
+my %min_page_size;
+my %max_page_size;
+my %stp_bools;
 my %rerun_cases;
 
 if (defined $ENV{"STP_PARALLEL"}) {
@@ -122,13 +128,12 @@ if (defined $ENV{"STP_PARALLEL"}) {
     }
 }
 
-if (defined $ENV{"STP_FAST_TEST"}) {
-    $skip_duplicate_printers=1;
-    push @default_options, 'DitherAlgorithm=VeryFast';
-    push @default_options, 'Resolution=MIN';
+if (defined $ENV{"STP_TEST_FAMILY"}) {
+   @families = split(/ +/, $ENV{"STP_TEST_FAMILY"});
 }
 
 GetOptions("C=s" => \$csum_type,
+	   "F"   => \$print_family,
 	   "G=s" => \$geometry,
 	   "H!"  => \$halt_on_error,
 	   "L"   => \$list_options,
@@ -137,6 +142,7 @@ GetOptions("C=s" => \$csum_type,
 	   "P:i" => \$duplex_pages,
 	   "R+"  => \$use_min_res,
 	   "S+"  => \$single,
+	   "T:i" => \$res_limit,
 	   "V+"  => \$verbose,
 	   "X"   => \$rerun,
 	   "Y=s" => \@include_patterns,
@@ -193,6 +199,8 @@ Usage: run-testpattern-2 [opts] [model ...]
     -O out_dir      Generate actual output and place it in the specified
                     directory, one file per run.  Directory will be created
                     if necessary.
+    -F              Report printer name as "family_modelno" rather than
+                    model ID.
 
   Control options:
     -H              Halt on any error.
@@ -210,7 +218,9 @@ Usage: run-testpattern-2 [opts] [model ...]
 
   Test selection/control options:
     -d option=value Test this option with only the specified (default) value,
-                    if available.
+                    if available.  For Resolution and PageSize the special
+                    values MIN and MAX can be used to specify the
+                    lowest/smallest and highest/largest respectively.
     -G geometry     Specify geometry (=(HxV)(+L+T), as fractions of page).
     -o option       Test this option.  Multiple -o options may be specified.
                     option1,option2... tests all combinations of each
@@ -227,6 +237,9 @@ Usage: run-testpattern-2 [opts] [model ...]
                     duplex mode.  Default $duplex_pages.
     -R              Use the minimum resolution (rather than the default)
                     to test other options.  Equivalent to -dResolution=MIN.
+    -T maxres       Limit the tested resolutions to a maximum of maxres in
+                    both dimensions; use the lowest resolution available
+		    if none meet the criterion.
     -X              Repeat specified cases listed on standard input.
     -N              Supply all requested options, even if unused.
     -u              Round all dimensions to the lower point (for
@@ -260,7 +273,8 @@ if ($use_min_res) {
 if (@special_options) {
     my (%options);
     my ($optseq) = 1;
-    if (scalar grep { /^\+$/ } @special_options) {
+    if ((scalar grep { /^\+$/ } @special_options) ||
+	(! scalar grep { /^[^-]/ } @special_options)) {
 	map { $options{$_} = $optseq++; } @standard_options;
     }
     if (scalar grep { /^\-$/ } @special_options) {
@@ -627,25 +641,46 @@ sub build_list($$$$) {
 		    $_
 		}
 	    } @tmp;
+	} elsif ($key eq 'PageSize') {
+	    @tmp = map {
+		if ($_ eq 'MIN') {
+		    $min_page_size{$printer}
+		} elsif ($_ eq 'MAX') {
+		    $max_page_size{$printer}
+		} else {
+		    $_
+		}
+	    } @tmp;
 	}
     } elsif ($param_types{$printer}{$key} == 3) {
-	my ($minv) = $stp_float_values{$printer}{'MINVAL'}{$key};
-	my ($defv) = $stp_float_values{$printer}{'DEFVAL'}{$key};
-	my ($maxv) = $stp_float_values{$printer}{'MAXVAL'}{$key};
+	my (@vals) = @{$stp_float_values{$printer}{$key}};
+	my ($minv) = $vals[2];
+	my ($defv) = $vals[1];
+	my ($maxv) = $vals[3];
 	push @tmp, $minv;
 	push @tmp, ($minv + $defv) / 2.0;
 	push @tmp, $defv;
 	push @tmp, ($defv + $maxv) / 2.0;
 	push @tmp, $maxv;
     } elsif ($param_types{$printer}{$key} == 1) {
-	my ($minv) = $stp_int_values{$printer}{'MINVAL'}{$key};
-	my ($maxv) = $stp_int_values{$printer}{'MAXVAL'}{$key};
+	my (@vals) = @{$stp_int_values{$printer}{$key}};
+	my ($minv) = $vals[2];
+	my ($maxv) = $vals[3];
 	push @tmp, ($minv..$maxv);
     } elsif ($param_types{$printer}{$key} == 2) {
 	push @tmp, 0;
 	push @tmp, 1;
+    } elsif ($key eq "Resolution") {
+	@tmp = keys %{$resolutions{$printer}};
+	if ($res_limit > 0) {
+	    @tmp = grep { $resolutions{$printer}{$_}[0] <= $res_limit &&
+			      $resolutions{$printer}{$_}[1] <= $res_limit} @tmp;
+	}
+	if (! @tmp) {
+	    push @tmp, $min_res;
+	}
     } elsif (defined($param_types{$printer}{$key})) {
-	@tmp = keys %{$stpdata{$printer}{$key}};
+	@tmp = @{$stpdata{$printer}{$key}};
     }
     if (! @tmp) {
 	return @stuff;
@@ -672,21 +707,21 @@ sub build_key($$) {
 
 sub get_min_max_res($) {
     my ($printer) = @_;
-    my (@resolutions) = grep {$_ ne 'None' } keys %{$stpdata{$printer}{'Resolution'}};
+    my (%reslist) = %{$resolutions{$printer}};
     my $min_res_name;
-    my $min_res_value = 0;
+    my $min_res_value = 5760*5760;
     my $max_res_name;
     my $max_res_value = 0;
-    foreach my $res (sort @resolutions) {
-	my $res_value = ($stpdata{$printer}{'x_resolution'}{$res} *
-			 $stpdata{$printer}{'y_resolution'}{$res});
-	if ($min_res_value == 0 || $res_value < $min_res_value) {
+    foreach my $resid (keys %reslist) {
+	my ($res) = $reslist{$resid};
+	my ($res_value) = $$res[0] * $$res[1];
+	if ($res_value < $min_res_value) {
 	    $min_res_value = $res_value;
-	    $min_res_name = $res;
+	    $min_res_name = $resid;
 	}
 	if ($res_value > $max_res_value) {
 	    $max_res_value = $res_value;
-	    $max_res_name = $res;
+	    $max_res_name = $resid;
 	}
     }
     return ($min_res_name, $max_res_name);
@@ -694,7 +729,7 @@ sub get_min_max_res($) {
 
 sub get_printing_modes($) {
     my ($printer) = @_;
-    my (@printing_modes) = grep {$_ ne 'None' } keys %{$stpdata{$printer}{'PrintingMode'}};
+    my (@printing_modes) = grep {$_ ne 'None' } @{$stpdata{$printer}{'PrintingMode'}};
     if ($base_settings{'PrintingMode'}) {
 	if ($base_settings{'PrintingMode'} eq 'Color' &&
 	    grep { $_ eq 'Color' } @printing_modes) {
@@ -729,6 +764,40 @@ sub get_optvals($$$) {
     return %opt_vals;
 }
 
+sub setup_printer_params($) {
+    my ($printer) = @_;
+    if ($stpdata{$printer}) {
+	foreach my $k (keys %{$stpdata{$printer}}) {
+	    my ($vals) = $stpdata{$printer}{$k};
+	    foreach my $v (0..@$vals) {
+		if (substr($$vals[$v], 0, 1) eq '+') {
+		    $$vals[$v] = substr($$vals[$v], 1);
+		    $defaults{$printer}{$k} = $$vals[$v];
+		    last;
+		}
+	    }
+	}
+	map { $param_types{$printer}{$_} = 0 } keys %{$stpdata{$printer}};
+    }
+    $param_types{$printer}{"Resolution"} = 0;
+    if ($stp_int_values{$printer}) {
+	map { $param_types{$printer}{$_} = 1 } keys %{$stp_int_values{$printer}};
+    }
+    if ($stp_bools{$printer}) {
+	map { $param_types{$printer}{$_} = 2 } keys %{$stp_bools{$printer}};
+    }
+    if ($stp_float_values{$printer}) {
+	map { $param_types{$printer}{$_} = 3 } keys %{$stp_float_values{$printer}};
+    }
+    if ($stp_dimension_values{$printer}) {
+	map { $param_types{$printer}{$_} = 8 } keys %{$stp_dimension_values{$printer}};
+    }
+    # curve = 4
+    # file = 5
+    # raw = 6
+    # array = 7
+}
+
 # Resolution needs special handling because of MIN and MAX
 # Duplex needs special handling because of printing multiple pages, and
 #        need to set JobMode
@@ -739,6 +808,7 @@ sub do_printer($$) {
     my $first_time = 1;
     my %opt_vals = {};
 
+    setup_printer_params($printer);
     my (@printing_modes) = get_printing_modes($printer);
     return if (! @printing_modes);
     my ($min_res, $max_res) = get_min_max_res($printer);
@@ -778,6 +848,10 @@ sub do_printer($$) {
 			    $setting = $min_res;
 			} elsif ($_ eq "Resolution" && $setting eq "MAX") {
 			    $setting = $max_res;
+			} elsif ($_ eq "PageSize" && $setting eq "MIN") {
+			    $setting = $min_page_size{$printer};
+			} elsif ($_ eq "PageSize" && $setting eq "MAX") {
+			    $setting = $max_page_size{$printer};
 			}
 			set_opt($_, $setting, $printer);
 			push @ovals, "${_}=$setting";
@@ -792,9 +866,11 @@ sub do_printer($$) {
 		    $pages = $duplex_pages;
 		}
 		my $rawval;
+		my ($pname) = $print_family ?
+		    "${models{$printer}}-$families{$printer}" : $printer;
 		if ($first_time) {
 		    if ($quiet < 2) {
-			set_global_message("$printer\n");
+			set_global_message("$pname\n");
 		    } elsif ($quiet == 2) {
 			set_global_message(".");
 		    }
@@ -803,7 +879,7 @@ sub do_printer($$) {
 		my ($mstring) = join "_", @ovals;
 		$mstring =~ s/=/_/g;
 		my ($ostring) = join "+", @ovals;
-		my $case = "${printer}_PrintingMode_${pmode}_${mstring}";
+		my $case = "${pname}_PrintingMode_${pmode}_${mstring}";
 		$global_case = $case;
 		if (! $rerun || $rerun_cases{$case}) {
 		    $global_messages = $case;
@@ -829,7 +905,7 @@ if ($rerun) {
 my (@nprinter_list);
 foreach my $printer (@printer_list) {
     my $model_id = $models{$printer};
-    my $family_id = $families{$printer};
+     my $family_id = $families{$printer};
     if (($skip_duplicate_printers && $models_found{$family_id}{$model_id}) ||
 	(@families && ! grep { $family_id eq $_ } @families)) {
     } else {
@@ -873,23 +949,32 @@ sub stopit {
     }
 }
 
+sub get_default($$) {
+    my ($printer, $opt) = @_;
+    if (defined $defaults{$printer}{$opt}) {
+	return $defaults{$printer}{$opt};
+    } else {
+	return $stpdata{$printer}{$opt}[0];
+    }
+}
+
 sub list_options() {
     if ($#printer_list > 0) {
 	die "-L must be used with one printer\n";
     }
     my ($printer) = $printer_list[0];
     foreach my $opt (sort keys %{$stpdata{$printer}}) {
-	next if $opt eq "x_resolution";
-	next if $opt eq "y_resolution";
 	print "$opt\n";
 	if ($verbose) {
 	    if ($param_types{$printer}{$opt} == 3) {
-		print "    $stp_float_values{$printer}{'MINVAL'}{$opt}\n";
-		print "  =>$stp_float_values{$printer}{'DEFVAL'}{$opt}\n";
-		print "    $stp_float_values{$printer}{'MAXVAL'}{$opt}\n";
+		my (@vals) = @{$stp_float_values{$printer}{$opt}};
+		print "    $vals[2]\n";
+		print "  =>$vals[1]\n";
+		print "    $vals[3]\n";
 	    } elsif ($param_types{$printer}{$opt} == 1) {
-		print "    $stp_int_values{$printer}{'MINVAL'}{$opt}\n";
-		print "    $stp_int_values{$printer}{'MAXVAL'}{$opt}\n";
+		my (@vals) = @{$stp_float_values{$printer}{$opt}};
+		print "    $vals[2]\n";
+		print "    $vals[3]\n";
 	    } elsif ($param_types{$printer}{$opt} == 2) {
 		if ($defaults{$printer}{$opt}) {
 		    print "    0\n";
@@ -899,8 +984,9 @@ sub list_options() {
 		    print "    1\n";
 		}
 	    } else {
-		foreach my $val (sort keys %{$stpdata{$printer}{$opt}}) {
-		    if ($val eq $defaults{$printer}{$opt}) {
+		my ($default) = get_default($printer, $opt);
+		foreach my $val (sort @{$stpdata{$printer}{$opt}}) {
+		    if ($val eq $default) {
 			print "  =>$val\n";
 		    } else {
 			print "    $val\n";
@@ -929,13 +1015,13 @@ sub runit() {
 	$valopts .= ' --vgdb=yes';
     }
     if ($valgrind == 1) {
-	$valgrind_command = "valgrind $valopts -q --num-callers=50 --error-limit=no --leak-check=yes";
+	$valgrind_command = "valgrind $valopts -q --num-callers=50 --error-limit=no --leak-check=yes --error-exitcode=1";
     } elsif ($valgrind == 2) {
-	$valgrind_command = "valgrind $valopts --num-callers=50 --error-limit=no --leak-resolution=high --leak-check=yes";
+	$valgrind_command = "valgrind $valopts --num-callers=50 --error-limit=no --leak-resolution=high --leak-check=yes --error-exitcode=1";
     } elsif ($valgrind == 3) {
-	$valgrind_command = "valgrind $valopts --error-limit=no --num-callers=50 --show-reachable=yes --leak-resolution=high --leak-check=yes";
+	$valgrind_command = "valgrind $valopts --error-limit=no --num-callers=50 --show-reachable=yes --leak-resolution=high --leak-check=yes --error-exitcode=1";
     } elsif ($valgrind == 4) {
-	$valgrind_command = "valgrind $valopts";
+	$valgrind_command = "valgrind $valopts --error-exitcode=1";
     }
 
     # O U T P U T #
@@ -961,6 +1047,9 @@ sub runit() {
     my (@children);
     my ($child_no);
     my ($kid);
+    if (scalar @printer_list < $proc_count) {
+	$proc_count = scalar @printer_list;
+    }
     if ($proc_count > 1) {
 	for ($child_no = 0; $child_no < $proc_count; $child_no++) {
 	    $kid = fork();
@@ -1009,7 +1098,7 @@ sub runit() {
 		restart_testpattern(1);
 		do_printer($printer, $global_fh);
 		$status |= close $global_fh;
-		$status |= ($? & 255);
+		$error += ($? != 0);
 	    }
 	} else {
 	    $SIG{PIPE} = sub() { restart_testpattern() };

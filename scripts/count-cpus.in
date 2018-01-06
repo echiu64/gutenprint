@@ -17,6 +17,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+# User-specified value takes priority
+if [[ -n $STP_PARALLEL ]] ; then
+    echo $STP_PARALLEL
+    exit 0
+fi
+
 # Linux
 
 nproc=$(type -p nproc)

@@ -29,13 +29,29 @@
 # We can't skip the translated PPD files either; sometimes translations
 # blow out token maximum lengths.
 
+if [ -n "$STP_TEST_DEBUG" ] ; then
+    DEBUG=echo
+fi
+
 PPD_PARALLEL=200
-echo "GENERATING PPD FILES:"
-if [[ -n $STP_FAST_TEST ]] ; then
-    make EXTRA_GENPPD_OPTS='-b -Z -S' ppd-clean ppd-nonls
-    PPD_PARALLEL=20
-else
-    make EXTRA_GENPPD_OPTS='-b -Z' ppd-clean ppd-global-a ppd-nls-a ppd-nonls-a 
+
+[[ -z $STP_TEST_SUITE ]] && STP_TEST_PROFILE=full
+case "$STP_TEST_PROFILE" in
+    full|'')
+	echo "GENERATING PPD FILES:"
+	$DEBUG make EXTRA_GENPPD_OPTS='-b -Z' ppd-clean ppd-global-a ppd-nls-a ppd-nonls-a
+	;;
+    fast)
+	echo "GENERATING PPD FILES:"
+	$DEBUG make EXTRA_GENPPD_OPTS='-b -Z -S' ppd-clean ppd-nonls
+	;;
+    *)
+	exit 77
+esac
+
+if [ -n "$STP_TEST_DEBUG" ] ; then
+    echo "Would run $0 $@"
+    exit 0
 fi
 
 ppd_count=$(find ppd -name '*.ppd' -print | wc -l)
