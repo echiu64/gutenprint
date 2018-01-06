@@ -4768,7 +4768,6 @@ static const dyesub_pagesize_t mitsu_cpd80_page[] =
   DEFINE_PAPER_SIMPLE( "w360h504", "5x7", PT1(1568,300), PT1(2128,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w432h432", "6x6", PT1(1864,300), PT1(1820,300), DYESUB_PORTRAIT),
   DEFINE_PAPER( "w432h576-div2", "4x6*2", PT1(1864,300), PT1(2730,300), 0, 0, PT1(236,300), 0, DYESUB_PORTRAIT),
-  DEFINE_PAPER_SIMPLE( "w432h576-div2", "4x6*2", PT1(1864,300), PT1(2730,300), DYESUB_PORTRAIT),
 };
 
 LIST(dyesub_pagesize_list_t, mitsu_cpd80_page_list, dyesub_pagesize_t, mitsu_cpd80_page);
