@@ -3587,7 +3587,7 @@ canon_init_setColor(const stp_vars_t *v, const canon_privdata_t *init)
 //		  else /* original, not sure which models follow this at all */
 		    arg_63[1] = ((init->pt ? init->pt->media_code_c : 0) << 4)                /* PRINT_MEDIA */
 		      + 1;	/* hardcode to High quality for now */		/* PRINT_QUALITY */
-		    
+
                   canon_cmd(v,ESC28,0x63, 2, arg_63[0], arg_63[1]);
 		break;
 
@@ -3718,7 +3718,7 @@ canon_init_setTray(const stp_vars_t *v, const canon_privdata_t *init)
     if (init->pt) arg_6c_2 = init->pt->media_code_l;                                        /* PRINT_MEDIA */
     break;
   }
-  
+
   /* select between length 2 and 3 byte variations of command */
   /*if(init->caps->model_id >= 3)*/
   if(init->caps->ESC_l_len == 3)

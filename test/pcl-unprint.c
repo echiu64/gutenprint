@@ -1326,7 +1326,7 @@ int main(int argc, char *argv[])
 			fprintf(stderr, "ERROR: Row count mismatch. Expected %d rows, got %d rows.\n",
 			    image_data.image_height, image_row_counter);
 		    else
-			fprintf(stderr, "\t%d rows processed, max %d.\n", 
+			fprintf(stderr, "\t%d rows processed, max %d.\n",
 				image_row_counter, max_data_len);
 
 		    image_data.image_height = -1;
@@ -1831,7 +1831,7 @@ int main(int argc, char *argv[])
 		switch (data_buffer[1]) {
 		case 0:
 		case 1:
-		  fprintf(stderr, "Indexed by %s, %d bits/index", 
+		  fprintf(stderr, "Indexed by %s, %d bits/index",
 			  data_buffer[1] == 0 ? "Plane" : "Pixel",
 			  data_buffer[2]);
 		  output_data.input_depth = data_buffer[2];
@@ -2005,7 +2005,7 @@ int main(int argc, char *argv[])
 		    else if (image_data.compression_type == PCL_COMPRESSION_TIFF) {
 			output_data.active_length = decode_tiff(data_buffer, numeric_arg, received_rows[current_data_row], output_data.buffer_length * output_data.input_depth * output_data.pixels_depth);
 
-		    } 
+		    }
 		    else if (image_data.compression_type == PCL_COMPRESSION_DELTA) {
 			output_data.active_length = decode_delta(data_buffer, numeric_arg, received_rows[current_data_row], output_data.buffer_length * output_data.input_depth * output_data.pixels_depth);
 		    }

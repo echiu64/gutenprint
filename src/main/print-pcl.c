@@ -2329,7 +2329,7 @@ pcl_parameters(const stp_vars_t *v, const char *name,
 	   strcmp(name, "YellowDensity") == 0 ||
 	   strcmp(name, "BlackDensity") == 0)
     {
-      if ((caps->color_type & ~PCL_COLOR_RGB) != PCL_COLOR_NONE && 
+      if ((caps->color_type & ~PCL_COLOR_RGB) != PCL_COLOR_NONE &&
 	  stp_check_string_parameter(v, "PrintingMode", STP_PARAMETER_DEFAULTED) &&
 	  strcmp(stp_get_string_parameter(v, "PrintingMode"), "Color") == 0)
 	description->is_active = 1;

@@ -1190,12 +1190,12 @@ stp_channel_get_output_8bit(const stp_vars_t *v)
   if (cg->valid_8bit)
     return cg->output_data_8bit;
   if (! cg->output_data_8bit)
-    cg->output_data_8bit = stp_malloc(sizeof(unsigned char) * 
+    cg->output_data_8bit = stp_malloc(sizeof(unsigned char) *
 				      cg->total_channels * cg->width);
   int i;
-  (void) memset(cg->output_data_8bit, 0, sizeof(unsigned char) * 
+  (void) memset(cg->output_data_8bit, 0, sizeof(unsigned char) *
 		cg->total_channels * cg->width);
-  for (i = 0; i < cg->width * cg->total_channels; i++) 
+  for (i = 0; i < cg->width * cg->total_channels; i++)
     cg->output_data_8bit[i] = cg->output_data[i] / (unsigned short) 257;
   cg->valid_8bit = 1;
   return cg->output_data_8bit;
