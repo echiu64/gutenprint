@@ -498,6 +498,7 @@ static int shinkos1245_get_media(struct shinkos1245_ctx *ctx)
 
 	shinkos1245_fill_hdr(&cmd.hdr);
 	memset(cmd.pad, 0, sizeof(cmd.pad));
+	ctx->media_8x12 = 0;
 	for (i = 1 ; i <= 3 ; i++) {
 		cmd.cmd[0] = 0x0a | (i << 4);
 
@@ -513,20 +514,21 @@ static int shinkos1245_get_media(struct shinkos1245_ctx *ctx)
 			return -99;
 		}
 
-		if (resp.count > NUM_MEDIAS)
-			resp.count = NUM_MEDIAS;
-
 		/* Store media info */
-		for (j = 0; j < resp.count ; j++) {
+		for (j = 0; j < NUM_MEDIAS && ctx->num_medias < resp.count ; j++) {
 			ctx->medias[ctx->num_medias].code = resp.data[j].code;
 			ctx->medias[ctx->num_medias].columns = be16_to_cpu(resp.data[j].columns);
 			ctx->medias[ctx->num_medias].rows = be16_to_cpu(resp.data[j].rows);
 			ctx->medias[ctx->num_medias].type = resp.data[j].type;
 			ctx->medias[ctx->num_medias].print_type = resp.data[j].print_type;
 			ctx->num_medias++;
+
+			if (ctx->medias[i].rows >= 3636)
+				ctx->media_8x12 = 1;
 		}
 
-		if (resp.count < 5)
+		/* Once we've parsed them all.. we're done */
+		if (ctx->num_medias == resp.count)
 			break;
 	}
 	return ret;
@@ -567,7 +569,7 @@ static int shinkos1245_set_printerid(struct shinkos1245_ctx *ctx,
 
 	for (i = 0 ; i < (int)sizeof(cmd.data) ; i++) {
 		if (*id)
-			cmd.data[i] = (uint8_t) *id;
+			cmd.data[i] = (uint8_t) *id++;
 		else
 			cmd.data[i] = ' ';
 	}
@@ -934,11 +936,12 @@ static void shinkos1245_dump_status(struct shinkos1245_resp_status *sts)
 	INFO("Tone Curve Status: %s\n", detail);
 }
 
-static void shinkos1245_dump_media(struct shinkos1245_mediadesc *medias,
+static void shinkos1245_dump_media(struct shinkos1245_mediadesc *medias, int media_8x12,
 				   int count)
 {
 	int i;
 
+	INFO("Loaded media type: %s\n", media_8x12 ? "8x12" : "8x10");
 	INFO("Supported print sizes: %d\n", count);
 
 	for (i = 0 ; i < count ; i++) {
@@ -946,7 +949,7 @@ static void shinkos1245_dump_media(struct shinkos1245_mediadesc *medias,
 		     medias[i].print_type,
 		     medias[i].columns,
 		     medias[i].rows,
-		     medias[i].code, medias[i].type);
+		     medias[i].type, medias[i].print_type);
 	}
 }
 
@@ -1215,7 +1218,7 @@ int shinkos1245_cmdline_arg(void *vctx, int argc, char **argv)
 		case 'm':
 			j = shinkos1245_get_media(ctx);
 			if (!j)
-				shinkos1245_dump_media(ctx->medias, ctx->num_medias);
+				shinkos1245_dump_media(ctx->medias, ctx->media_8x12, ctx->num_medias);
 			break;
 		case 'R':
 			j = shinkos1245_reset(ctx);
@@ -1405,9 +1408,6 @@ static int shinkos1245_main_loop(void *vctx, int copies) {
 	}
 	/* Make sure print size is supported */
 	for (i = 0 ; i < ctx->num_medias ; i++) {
-		if (ctx->medias[i].rows >= 3636)
-			ctx->media_8x12 = 1;
-
 		if (ctx->hdr.media == ctx->medias[i].code &&
 		    ctx->hdr.method == ctx->medias[i].print_type &&
 		    ctx->hdr.rows == ctx->medias[i].rows &&
@@ -1455,10 +1455,11 @@ top:
 
 	/* Work out the remaining media percentage */
 	{
-		int remain = ctx->media_8x12 ? 230 : 280;
+		int total = ctx->media_8x12 ? 230 : 280;
+		int remain = total - be32_to_cpu(status1.counters.media);
 
-		remain = (remain - be32_to_cpu(status1.counters.media)) * 100 / remain;
-		ATTR("marker-levels=%d\n", remain);
+		ATTR("marker-levels=%d\n", remain * 100 / total);
+		ATTR("marker-message=\"%d prints remaining on ribbon\"\n", remain);
 	}
 
 	last_state = state;
@@ -1641,7 +1642,7 @@ static int shinkos1245_query_serno(struct libusb_device_handle *dev, uint8_t end
 
 struct dyesub_backend shinkos1245_backend = {
 	.name = "Shinko/Sinfonia CHC-S1245",
-	.version = "0.13WIP",
+	.version = "0.17WIP",
 	.uri_prefix = "shinkos1245",
 	.cmdline_usage = shinkos1245_cmdline,
 	.cmdline_arg = shinkos1245_cmdline_arg,
