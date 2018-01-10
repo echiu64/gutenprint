@@ -396,7 +396,7 @@ struct shinkos1245_resp_matte {
 	uint8_t code;
 	uint8_t mode;
 	 int8_t level;
-	uint8_t reserved[3];
+	uint8_t reserved[4];
 } __attribute__((packed));
 
 #define MATTE_MODE_MATTE 0x00
@@ -1517,7 +1517,7 @@ top:
 				if (i < 0)
 					goto printer_error;
 				if (i > 0) {
-					INFO("Can't set matte intensity when printing in progres...\n");
+					INFO("Can't set matte intensity when printing in progress...\n");
 					state = S_IDLE;
 					sleep(1);
 					break;
@@ -1642,7 +1642,7 @@ static int shinkos1245_query_serno(struct libusb_device_handle *dev, uint8_t end
 
 struct dyesub_backend shinkos1245_backend = {
 	.name = "Shinko/Sinfonia CHC-S1245",
-	.version = "0.17WIP",
+	.version = "0.18",
 	.uri_prefix = "shinkos1245",
 	.cmdline_usage = shinkos1245_cmdline,
 	.cmdline_arg = shinkos1245_cmdline_arg,
