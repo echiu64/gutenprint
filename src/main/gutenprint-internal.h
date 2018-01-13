@@ -50,7 +50,6 @@ extern "C" {
 extern void stpi_init_paper(void);
 extern void stpi_init_dither(void);
 extern void stpi_init_printer(void);
-extern void stpi_vars_print_error(const stp_vars_t *v, const char *prefix);
 #define BUFFER_FLAG_FLIP_X	0x1
 #define BUFFER_FLAG_FLIP_Y	0x2
 extern stp_image_t* stpi_buffer_image(stp_image_t* image, unsigned int flags);
@@ -66,7 +65,7 @@ do									\
       stp_erprintf("\nERROR: ***Gutenprint %s assertion %s failed!"	\
 		   " file %s, line %d.  %s\n", PACKAGE_VERSION,		\
 		   #x, __FILE__, __LINE__, "Please report this bug!");	\
-      if ((v)) stpi_vars_print_error((v), "ERROR");			\
+      if ((v)) stp_vars_print_error((v), "ERROR");			\
       stp_abort();							\
     }									\
 } while (0)

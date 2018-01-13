@@ -1456,7 +1456,7 @@ stp_vars_copy(stp_vars_t *vd, const stp_vars_t *vs)
 }
 
 void
-stpi_vars_print_error(const stp_vars_t *v, const char *prefix)
+stp_vars_print_error(const stp_vars_t *v, const char *prefix)
 {
   int i;
   char *cptr;
@@ -1472,13 +1472,15 @@ stpi_vars_print_error(const stp_vars_t *v, const char *prefix)
     "Dimension",
     "(Inactive)"
   };
-  stp_erprintf("%s: Gutenprint: === BEGIN GUTENPRINT SETTINGS ===\n", prefix);
-  stp_erprintf("%s: Gutenprint:     Driver: %s\n", prefix, stp_get_driver(v));
-  stp_erprintf("%s: Gutenprint:     L: %f  T: %f  W: %f  H: %f\n", prefix, stp_get_left(v),
-	       stp_get_top(v), stp_get_width(v), stp_get_height(v));
-  stp_erprintf("%s: Gutenprint:     Page: %fx%f\n", prefix, stp_get_page_width(v),
-	       stp_get_page_height(v));
-  stp_erprintf("%s: Gutenprint:     Conversion: %s\n", prefix, stp_get_color_conversion(v));
+  if (! prefix)
+    prefix = "";
+  stp_eprintf(v, "%s: Gutenprint: === BEGIN GUTENPRINT SETTINGS ===\n", prefix);
+  stp_eprintf(v, "%s: Gutenprint:     Driver: %s\n", prefix, stp_get_driver(v));
+  stp_eprintf(v, "%s: Gutenprint:     L: %f  T: %f  W: %f  H: %f\n", prefix, stp_get_left(v),
+	      stp_get_top(v), stp_get_width(v), stp_get_height(v));
+  stp_eprintf(v, "%s: Gutenprint:     Page: %fx%f\n", prefix, stp_get_page_width(v),
+	      stp_get_page_height(v));
+  stp_eprintf(v, "%s: Gutenprint:     Conversion: %s\n", prefix, stp_get_color_conversion(v));
   for (i = 0; i < STP_PARAMETER_TYPE_INVALID; i++)
     {
       const stp_list_item_t *item =
@@ -1498,9 +1500,9 @@ stpi_vars_print_error(const stp_vars_t *v, const char *prefix)
 		    *cptr = ' ';
 		  cptr++;
 		}
-	      stp_erprintf("%s: Gutenprint:         (%s) (%i) (%s) [%s]\n", prefix,
-			   val->name, val->active, data_types[val->typ],
-			   crep ? crep : "NULL");
+	      stp_eprintf(v, "%s: Gutenprint:         (%s) (%i) (%s) [%s]\n", prefix,
+			  val->name, val->active, data_types[val->typ],
+			  crep ? crep : "NULL");
 	      if (crep)
 		stp_free(crep);
 	      break;
@@ -1510,27 +1512,27 @@ stpi_vars_print_error(const stp_vars_t *v, const char *prefix)
 	    case STP_PARAMETER_TYPE_FILE:
 	    case STP_PARAMETER_TYPE_RAW:
 	      crep = stp_rawtoxmlstr(&(val->value.rval));
-	      stp_erprintf("%s: Gutenprint:         (%s) (%i) (%s) [%s]\n", prefix,
-			   val->name, val->active, data_types[val->typ],
-			   crep ? crep : "NULL");
+	      stp_eprintf(v, "%s: Gutenprint:         (%s) (%i) (%s) [%s]\n", prefix,
+			  val->name, val->active, data_types[val->typ],
+			  crep ? crep : "NULL");
 	      if (crep)
 		stp_free(crep);
 	      break;
 	    case STP_PARAMETER_TYPE_DIMENSION:
-	      stp_erprintf("%s: Gutenprint:         (%s) (%i) (%s) [%f]\n", prefix,
-			   val->name, val->active, data_types[val->typ],
-			   val->value.sval);
+	      stp_eprintf(v, "%s: Gutenprint:         (%s) (%i) (%s) [%f]\n", prefix,
+			  val->name, val->active, data_types[val->typ],
+			  val->value.sval);
 	      break;
 	    case STP_PARAMETER_TYPE_INT:
 	    case STP_PARAMETER_TYPE_BOOLEAN:
-	      stp_erprintf("%s: Gutenprint:         (%s) (%i) (%s) [%d]\n", prefix,
-			   val->name, val->active, data_types[val->typ],
-			   val->value.ival);
+	      stp_eprintf(v, "%s: Gutenprint:         (%s) (%i) (%s) [%d]\n", prefix,
+			  val->name, val->active, data_types[val->typ],
+			  val->value.ival);
 	      break;
 	    case STP_PARAMETER_TYPE_DOUBLE:
-	      stp_erprintf("%s: Gutenprint:         (%s) (%i) (%s) [%f]\n", prefix,
-			   val->name, val->active, data_types[val->typ],
-			   val->value.dval);
+	      stp_eprintf(v, "%s: Gutenprint:         (%s) (%i) (%s) [%f]\n", prefix,
+			  val->name, val->active, data_types[val->typ],
+			  val->value.dval);
 	      break;
 	    default:
 	      break;
@@ -1538,7 +1540,7 @@ stpi_vars_print_error(const stp_vars_t *v, const char *prefix)
 	  item = stp_list_item_next(item);
 	}
     }
-  stp_erprintf("%s: Gutenprint: === END GUTENPRINT SETTINGS ===\n", prefix);
+  stp_eprintf(v, "%s: Gutenprint: === END GUTENPRINT SETTINGS ===\n", prefix);
 }
 
 void

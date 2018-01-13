@@ -55,7 +55,7 @@
  */
 
 int		image_type = IMAGE_MIXED;
-int		stpi_dither_type = DITHER_COLOR;
+int		dither_type = DITHER_COLOR;
 const char     *dither_name = NULL;
 int		dither_bits = 1;
 int		write_image = 1;
@@ -68,7 +68,7 @@ unsigned short	white_line[MAX_IMAGE_WIDTH * 6],
 		color_line[MAX_IMAGE_WIDTH * 6],
 		random_line[MAX_IMAGE_WIDTH * 6];
 
-static const char	*stpi_dither_types[] =	/* Different dithering modes */
+static const char	*dither_types[] =	/* Different dithering modes */
 	      {
 		"gray",
 		"color",
@@ -215,7 +215,7 @@ run_one_testdither(void)
     stp_set_string_parameter(v, "DitherAlgorithm", dither_name);
 
   stp_set_string_parameter(v, "ChannelBitDepth", "8");
-  switch (stpi_dither_type)
+  switch (dither_type)
     {
     case DITHER_GRAY:
       stp_set_string_parameter(v, "PrintingMode", "BW");
@@ -239,7 +239,7 @@ run_one_testdither(void)
   * Now dither the "page"...
   */
 
-  switch (stpi_dither_type)
+  switch (dither_type)
     {
     case DITHER_PHOTO:
       stp_dither_add_channel(v, lcyan, STP_ECOLOR_C, 1);
@@ -263,14 +263,14 @@ run_one_testdither(void)
       stp_dither_add_channel(v, black, STP_ECOLOR_K, 0);
     }
 
-  if (stpi_dither_type == DITHER_PHOTO)
+  if (dither_type == DITHER_PHOTO)
     stp_set_float_parameter(v, "GCRLower", 0.4 / dither_bits + 0.1);
   else
     stp_set_float_parameter(v, "GCRLower", 0.25 / dither_bits);
 
   stp_set_float_parameter(v, "GCRUpper", .5);
 
-  switch (stpi_dither_type)
+  switch (dither_type)
   {
     case DITHER_GRAY :
         switch (dither_bits)
@@ -362,9 +362,9 @@ run_one_testdither(void)
 
 
   sprintf(filename, "%s-%s-%s-%dbit.%s", image_types[image_type],
-	  stpi_dither_types[stpi_dither_type],
+	  dither_types[dither_type],
 	  dither_name ? dither_name : desc.deflt.str, dither_bits,
-	  (stpi_dither_type == DITHER_GRAY) ? "pgm" : "ppm");
+	  (dither_type == DITHER_GRAY) ? "pgm" : "ppm");
 
   stp_parameter_description_destroy(&desc);
 
@@ -378,7 +378,7 @@ run_one_testdither(void)
     {
       if ((fp = fopen(filename, "wb")) != NULL)
 	{
-	  if (stpi_dither_type == DITHER_GRAY)
+	  if (dither_type == DITHER_GRAY)
 	    fputs("P5\n", fp);
 	  else
 	    fputs("P6\n", fp);
@@ -399,7 +399,7 @@ run_one_testdither(void)
       fflush(stdout);
     }
 
-    switch (stpi_dither_type)
+    switch (dither_type)
       {
       case DITHER_GRAY :
           image_get_row(gray, i);
@@ -481,12 +481,12 @@ run_testdither_from_cmdline(int argc, char **argv)
 	}
 
       for (j = 0; j < 5; j ++)
-	if (strcmp(argv[i], stpi_dither_types[j]) == 0)
+	if (strcmp(argv[i], dither_types[j]) == 0)
 	  break;
 
       if (j < 5)
 	{
-	  stpi_dither_type = j;
+	  dither_type = j;
 	  continue;
 	}
 
@@ -541,9 +541,9 @@ run_standard_testdithers(void)
       printf("%s", dither_name);
       fflush(stdout);
       for (dither_bits = 1; dither_bits <= 2; dither_bits++)
-	for (stpi_dither_type = 0;
-	     stpi_dither_type < sizeof(stpi_dither_types) / sizeof(const char *);
-	     stpi_dither_type++)
+	for (dither_type = 0;
+	     dither_type < sizeof(dither_types) / sizeof(const char *);
+	     dither_type++)
 	  for (image_type = 0;
 	       image_type < sizeof(image_types) / sizeof(const char *);
 	       image_type++)
@@ -552,7 +552,7 @@ run_standard_testdithers(void)
 	      if (status)
 		{
 		  printf("%s %d %s %s\n", dither_name, dither_bits,
-			 stpi_dither_types[stpi_dither_type],
+			 dither_types[dither_type],
 			 image_types[image_type]);
 		  failures++;
 		}
@@ -621,7 +621,7 @@ image_get_row(unsigned short *data,
       break;
     }
 
-  switch (stpi_dither_type)
+  switch (dither_type)
     {
     case DITHER_GRAY:
       memcpy(data, src, dimage_width * 2);
@@ -686,7 +686,7 @@ image_init(void)
 
     j = i / (dimage_width / 64);
 
-    switch (stpi_dither_type)
+    switch (dither_type)
       {
       case DITHER_GRAY:
 	*cptr++ = 65535 * j / 63;

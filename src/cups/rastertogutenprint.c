@@ -143,8 +143,6 @@ static const char *save_file_name = NULL;
 static const char *load_file_name = NULL;
 #endif /* ENABLE_CUPS_LOAD_SAVE_OPTIONS */
 
-extern void stpi_vars_print_error(const stp_vars_t *v, const char *prefix);
-
 #pragma GCC diagnostic ignored "-Wformat-nonliteral"
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcast-qual"
@@ -267,7 +265,7 @@ print_debug_block(const stp_vars_t *v, const cups_image_t *cups)
   fprintf(stderr, "DEBUG: Gutenprint:   cupsRowFeed = %d\n", cups->header.cupsRowFeed);
   fprintf(stderr, "DEBUG: Gutenprint:   cupsRowStep = %d\n", cups->header.cupsRowStep);
   fprintf(stderr, "DEBUG: Gutenprint:   shrink page to fit %d\n", cups->shrink_to_fit);
-  stpi_vars_print_error(v, "DEBUG");
+  stp_vars_print_error(v, "DEBUG");
   fprintf(stderr, "DEBUG: Gutenprint: End page data\n");
 }
 
@@ -1066,7 +1064,7 @@ load_options(const char *load_name)
 		fprintf(stderr, "DEBUG: Gutenprint: loading options from %s\n",
 			load_file_name);
 	      if (! suppress_messages)
-		stpi_vars_print_error(settings, "DEBUG");
+		stp_vars_print_error(settings, "DEBUG");
 	    }
 	}
       else
@@ -1360,7 +1358,7 @@ main(int  argc,				/* I - Number of command-line arguments */
       if (! suppress_messages)
 	{
 	  fprintf(stderr, "DEBUG: Gutenprint: Interim page settings:\n");
-	  stpi_vars_print_error(v, "DEBUG");
+	  stp_vars_print_error(v, "DEBUG");
 	}
 
       stp_merge_printvars(v, stp_printer_get_defaults(printer));

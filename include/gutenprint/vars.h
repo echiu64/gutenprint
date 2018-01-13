@@ -205,6 +205,13 @@ typedef const void *stp_const_parameter_list_t;
  */
 typedef void (*stp_outfunc_t) (void *data, const char *buffer, size_t bytes);
 
+/**
+ * Print an stp_vars_t in debugging format.
+ * @param v stp_vars_t to dump
+ * @param prefix Prefix to prepend to each line (null pointer gives
+ *        empty prefix)
+ */
+extern void stp_vars_print_error(const stp_vars_t *v, const char *prefix);
 
 /****************************************************************
 *                                                               *
