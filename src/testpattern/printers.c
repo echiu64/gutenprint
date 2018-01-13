@@ -36,7 +36,8 @@ main(int argc, char **argv)
       const stp_printer_t *p = stp_get_printer_by_index(i);
       if (strcmp(stp_printer_get_family(p), "ps") &&
 	  strcmp(stp_printer_get_family(p), "raw"))
-	printf("%s\n", stp_printer_get_driver(p));
+	printf("%d %s %s\n", stp_printer_get_model(p),
+	       stp_printer_get_family(p), stp_printer_get_driver(p));
     }
   return 0;
 }

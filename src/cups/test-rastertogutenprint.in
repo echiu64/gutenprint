@@ -153,12 +153,12 @@ pdftops="$cupsdir/pdftops"
 pstops="$cupsdir/pstops"
 pstoraster="$cupsdir/pstoraster"
 
-if [[ ! -x $cupsdir/cgpdftoraster && ! -x $cupsdir/pdftops && ! -x $cupsdir/gstoraster ]] ; then
+if [[ ! -x $cgpdftoraster && ! -x $pdftops && ! -x $gstoraster ]] ; then
     echo 'CUPS does not appear to be installed, skipping test'
     exit 0
 fi
 
-if [[ -x $cupsdir/pstoraster || -x $cupsdir/gstoraster || -x $cupsdir/cgpdftoraster ]] ; then
+if [[ -x $pstoraster || -x $gstoraster || -x $cgpdftoraster ]] ; then
     pages="24-$((24 + $npages - 1))"
     (( $postscript > 0 )) && pages="page-ranges=$pages"
 else
@@ -176,7 +176,7 @@ pdfjam=$(type -p pdfjam)
 if (( $postscript > 0 )) ; then
     pdftops=$(type -p pdftops)
 
-    if [[ -n $pdftops && ! -x $cupsdir/cgpdftoraster ]] ; then
+    if [[ -n $pdftops && ! -x $cgpdftoraster ]] ; then
 	tfile=$(mktemp)
 	trap cleanup 1 2 3 6 14 15 30
 	"$pdftops" -f 24 -l $((24 + $npages - 1)) "$testfile" $tfile
@@ -388,6 +388,7 @@ run_rastertogp() {
 	3) $vg --leak-resolution=high --show-reachable=yes $rgpc "$qarg";;
 	4) $vg $rgpc "$qarg" ;;
 	5) cat ;;
+	6) cat > /dev/null ;;
 	*) $rgp 1 1 1 1 "$qarg"
     esac
 }

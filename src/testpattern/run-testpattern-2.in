@@ -523,37 +523,71 @@ EOF
     return $stuff;
 }
 
-map { $exclude_list{$_} = 1; } @exclude_list;
-$include_pattern = join("|", map {"($_)"} @include_patterns);
-$exclude_pattern = join("|", map {"($_)"} @exclude_patterns);
-my $extra_arg = "";
-if ($#ARGV >= 0) {
-    @printer_list = @ARGV;
-    $extra_arg = join " ", @printer_list;
-} else {
-    open PIPE, "./printers|" or die "Cannot run printers: $!\n";
+sub get_printers() {
+    map { $exclude_list{$_} = 1; } @exclude_list;
+    $include_pattern = join("|", map {"($_)"} @include_patterns);
+    $exclude_pattern = join("|", map {"($_)"} @exclude_patterns);
+    my (@nprinter_list);
+    my $extra_arg = "";
+    if ($#ARGV >= 0) {
+	@nprinter_list = @ARGV;
+    } else {
+	my (%families);
+	my (%model_families);
+	map { $families{$_} = 1; } @families;
+	open PIPE, "./printers|" or die "Cannot run printers: $!\n";
+	my ($line_count);
+	my ($printer_count);
+	while(<PIPE>) {
+	    next if m!^#!;
+	    chomp;
+	    $line_count++;
+	    my ($model, $family, $printer) = split;
+	    my ($model_family) = "${model}_${family}";
+	    next if @families && ! defined $families{$family};
+	    next if $exclude_list{$printer};
+	    next if $exclude_pattern ne '' && $printer =~ /$exclude_pattern/;
+	    next if $include_pattern ne '' && ! $printer =~ /$include_pattern/;
+	    next if $skip_duplicate_printers && defined $model_families{$model_family};
+	    $model_families{$model_family} = 1;
+	    $printer_count++;
+	    push @nprinter_list, $printer;
+	}
+	close PIPE;
+	return @nprinter_list;
+    }
+}
+
+sub load_printer_data() {
+    my ($extra_arg) = join(" ", @printer_list);
+    open PIPE, "./printer_options $extra_arg|" or die "Cannot run printer_options: $!\n";
     while(<PIPE>) {
 	next if m!^#!;
-	chomp;
-	next if $exclude_list{$_};
-	next if $exclude_pattern ne '' && /$exclude_pattern/;
-	next if $include_pattern ne '' && ! /$include_pattern/;
-	push @printer_list, $_;
+	eval $_;
     }
-    close PIPE;
-}
+    close PIPE or die "Cannot run printer_options: $!\n";
+    if ($rerun) {
+	while (<>) {
+	    chomp;
+	    s/^[^a-zA-Z]*//;
+	    s/\..*//;
+	    $rerun_cases{$_} = 1;
+	}
+    }
 
-if ($list_printers) {
-    print join("\n", sort @printer_list), "\n";
-    exit 0;
+    my (@nprinter_list);
+    foreach my $printer (@printer_list) {
+	my $model_id = $models{$printer};
+	my $family_id = $families{$printer};
+	if (($skip_duplicate_printers && $models_found{$family_id}{$model_id}) ||
+	    (@families && ! grep { $family_id eq $_ } @families)) {
+	} else {
+	    $models_found{$family_id}{$model_id} = 1;
+	    push @nprinter_list, $printer;
+	}
+    }
+    @printer_list = @nprinter_list;
 }
-
-open PIPE, "./printer_options $extra_arg|" or die "Cannot run printer_options: $!\n";
-while(<PIPE>) {
-    next if m!^#!;
-    eval $_;
-}
-close PIPE or die "Cannot run printer_options: $!\n";
 
 sub do_print($$) {
     my ($output, $fh) = @_;
@@ -893,28 +927,6 @@ sub do_printer($$) {
     }
 }
 
-if ($rerun) {
-    while (<>) {
-	chomp;
-	s/^[^a-zA-Z]*//;
-	s/\..*//;
-	$rerun_cases{$_} = 1;
-    }
-}
-
-my (@nprinter_list);
-foreach my $printer (@printer_list) {
-    my $model_id = $models{$printer};
-     my $family_id = $families{$printer};
-    if (($skip_duplicate_printers && $models_found{$family_id}{$model_id}) ||
-	(@families && ! grep { $family_id eq $_ } @families)) {
-    } else {
-	$models_found{$family_id}{$model_id} = 1;
-	push @nprinter_list, $printer;
-    }
-}
-@printer_list = @nprinter_list;
-
 sub restart_testpattern {
     my ($silent) = @_;
     if (! $silent) {
@@ -1053,23 +1065,17 @@ sub runit() {
     if ($proc_count > 1) {
 	for ($child_no = 0; $child_no < $proc_count; $child_no++) {
 	    $kid = fork();
+	    # Child: select the printers to print, round-robin.
 	    if ($kid == 0) {
+		@printer_list = map { $printer_list[$_] } (grep { $_ % $proc_count == $child_no} (0..$#printer_list));
+		load_printer_data();
 		last;
 	    } else {
 		push @children, $kid;
 	    }
 	}
-
-	# Child: select the printers to print, round-robin.
-	if ($kid == 0) {
-	    my (@xprinter_list);
-	    foreach my $i (0..$#printer_list) {
-		if ($i % $proc_count == $child_no) {
-		    push @xprinter_list, $printer_list[$i];
-		}
-	    }
-	    @printer_list = @xprinter_list;
-	}
+    } else {
+	load_printer_data();
     }
 
     my $status = 1;
@@ -1125,10 +1131,14 @@ sub runit() {
     }
 }
 
-
-if ($list_options) {
+@printer_list = get_printers();
+if ($list_printers) {
+    print join("\n", sort @printer_list), "\n";
+} elsif ($list_options) {
+    load_printer_data();
     list_options();
 } elsif ($dontrun) {
+    load_printer_data();
     map { do_printer($_, \*STDOUT) } @printer_list;
 } else {
     exit(runit());

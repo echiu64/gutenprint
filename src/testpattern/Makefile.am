@@ -93,5 +93,9 @@ EXTRA_DIST = \
 	$(pkgdata_DATA) \
 	run-testpattern \
 	run-testpattern-1 \
+	run-testpattern-2.checksums \
+	run-testpattern-2.fast \
+	run-testpattern-2.full \
+	run-testpattern-2.valgrind \
 	compare-checksums.in \
 	compress-checksums.in
