@@ -571,7 +571,6 @@ verify_string_param(const stp_vars_t *v, const char *parameter,
       const char *checkval = stp_get_string_parameter(v, parameter);
       stp_string_list_t *vptr = desc->bounds.str;
       size_t count = 0;
-      int i;
       stp_dprintf(STP_DBG_VARS, v, "     value %s\n",
 		  checkval ? checkval : "(null)");
       if (vptr)
@@ -590,12 +589,8 @@ verify_string_param(const stp_vars_t *v, const char *parameter,
 	}
       else if (count > 0)
 	{
-	  for (i = 0; i < count; i++)
-	    if (!strcmp(checkval, stp_string_list_param(vptr, i)->name))
-	      {
-		answer = PARAMETER_OK;
-		break;
-	      }
+	  if (stp_string_list_is_present(vptr, checkval))
+	    answer = PARAMETER_OK;
 	  if (!answer && !quiet)
 	    stp_eprintf(v, _("`%s' is not a valid %s\n"), checkval, parameter);
 	}
