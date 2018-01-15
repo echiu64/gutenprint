@@ -30,6 +30,7 @@
 #include <gutenprint/gutenprint.h>
 #include "gutenprint-internal.h"
 #include <gutenprint/gutenprint-intl-internal.h>
+#include <stdint.h>
 #include <math.h>
 #ifdef HAVE_LIMITS_H
 #include <limits.h>
@@ -944,6 +945,74 @@ stp_find_params(const char *name, const char *family)
   return NULL;
 }
 
+/* Why couldn't strcmp be a valid comparison function... */
+static int
+compare_names(const void *n1, const void *n2)
+{
+  return strcmp((const char *) n2, (const char *) n2);
+}
+
+void
+stpi_find_duplicate_printers(void)
+{
+  size_t nelts = stp_list_get_length(printer_list);
+  const char **str_data = stp_zalloc(sizeof(const char *) * nelts);
+  stp_list_item_t *printer_item = stp_list_get_start(printer_list);
+  size_t i = 0;
+  int found_dups = 0;
+  const stp_printer_t *printer;
+  while (printer_item)
+    {
+      printer = stp_list_item_get_data(printer_item);
+      STPI_ASSERT(i < nelts, NULL);
+      str_data[i] = printer->driver;
+      printer_item = stp_list_item_next(printer_item);
+      i++;
+    }
+  qsort(str_data, nelts, sizeof(const char *), compare_names);
+  for (i = 0; i < nelts - 1; i++)
+    {
+      if (!strcmp(str_data[i], str_data[i+1]))
+	{
+	  printer_item =
+	    stp_list_get_item_by_name(printer_list, str_data[i]);
+	  printer = stp_list_item_get_data(printer_item);
+	  stp_erprintf("Duplicate printer entry '%s' (%s)\n",
+		       printer->driver, printer->long_name);
+	  found_dups++;
+	}
+    }
+  printer_item = stp_list_get_start(printer_list);
+  i = 0;
+  while (printer_item)
+    {
+      printer = stp_list_item_get_data(printer_item);
+      STPI_ASSERT(i < nelts, NULL);
+      str_data[i] = printer->long_name;
+      printer_item = stp_list_item_next(printer_item);
+      i++;
+    }
+  qsort(str_data, nelts, sizeof(const char *), compare_names);
+  for (i = 0; i < nelts - 1; i++)
+    {
+      if (!strcmp(str_data[i], str_data[i+1]))
+	{
+	  printer_item =
+	    stp_list_get_item_by_long_name(printer_list, str_data[i]);
+	  printer = stp_list_item_get_data(printer_item);
+	  stp_erprintf("Duplicate printer entry '%s' (%s)\n",
+		       printer->driver, printer->long_name);
+	  found_dups++;
+	}
+    }
+  stp_free(str_data);
+  if (found_dups > 0)
+    {
+      stp_erprintf("FATAL Duplicate printers in printer list.  Aborting!\n");
+      stp_abort();
+    }
+}
+
 int
 stpi_family_register(stp_list_t *family)
 {
@@ -960,31 +1029,16 @@ stpi_family_register(stp_list_t *family)
 
   if (family)
     {
-      int duplicate_printers = 0;
+      /* Check for duplicates after loading printers */
       printer_item = stp_list_get_start(family);
 
       while(printer_item)
 	{
 	  printer = (const stp_printer_t *) stp_list_item_get_data(printer_item);
-	  /* FIXME The time spent in this check is not trivial. */
-	  if (!stp_list_get_item_by_name(printer_list, printer->driver) &&
-	      !stp_list_get_item_by_long_name(printer_list, printer->long_name))
-	    stp_list_item_create(printer_list, NULL, printer);
-	  else
-	    {
-	      stp_erprintf("Duplicate printer entry `%s' (%s)\n",
-			   printer->driver, printer->long_name);
-	      duplicate_printers++;
-	    }
+	  stp_list_item_create(printer_list, NULL, printer);
 	  printer_item = stp_list_item_next(printer_item);
 	}
-      if (duplicate_printers)
-	{
-	  stp_erprintf("FATAL Duplicate printers in printer list.  Aborting!\n");
-	  stp_abort();
-	}
     }
-
   return 0;
 }
 

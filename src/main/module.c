@@ -354,6 +354,7 @@ int stp_module_init(void)
 	}
       module_item = stp_list_item_next(module_item);
     }
+  stpi_find_duplicate_printers();
   return 0;
 }
 

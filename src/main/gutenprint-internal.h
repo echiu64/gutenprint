@@ -240,6 +240,10 @@ extern const stp_papersize_t *stpi_get_papersize_by_size_exact(const stp_papersi
 							       stp_dimension_t length,
 							       stp_dimension_t width);
 
+/**
+ * Check for duplicate printers.  Abort if any duplicates are found.
+ */
+extern void stpi_find_duplicate_printers(void);
 
 #define CAST_IS_SAFE GCC_DIAG_OFF(cast-qual)
 #define CAST_IS_UNSAFE GCC_DIAG_ON(cast-qual)
