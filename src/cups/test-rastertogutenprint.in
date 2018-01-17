@@ -48,6 +48,7 @@ if [[ $STP_TEST_PROFILE == fast ]] ; then
     cupsargs='StpDitherAlgorithm=VeryFast'
     use_explicit_quality=1
     use_smallest_pagesize=1
+    pages=2
 elif [[ $STP_TEST_PROFILE == valgrind ]] ; then
     single=1
     skip_simplified=1
@@ -57,6 +58,7 @@ elif [[ $STP_TEST_PROFILE == valgrind ]] ; then
     valopts='--tool=memcheck'
     valgrind=2
     use_smallest_pagesize=1
+    pages=2
 fi
 
 if [ -n "$STP_TEST_DEBUG" ] ; then
