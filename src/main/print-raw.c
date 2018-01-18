@@ -238,7 +238,6 @@ raw_print(const stp_vars_t *v, stp_image_t *image)
   const char *ink_type = stp_get_string_parameter(nv, "InkType");
   stp_image_init(image);
 
-  stp_prune_inactive_options(nv);
   if (!stp_verify(nv))
     {
       stp_eprintf(nv, _("Print options not verified; cannot print.\n"));

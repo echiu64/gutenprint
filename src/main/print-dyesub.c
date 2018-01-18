@@ -9855,7 +9855,6 @@ dyesub_print(const stp_vars_t *v, stp_image_t *image)
 {
   int status;
   stp_vars_t *nv = stp_vars_create_copy(v);
-  stp_prune_inactive_options(nv);
   status = dyesub_do_print(nv, image);
   stp_vars_destroy(nv);
   return status;
@@ -9867,7 +9866,6 @@ dyesub_job_start(const stp_vars_t *v, stp_image_t *image)
   const dyesub_cap_t *caps;
   stp_vars_t *nv = stp_vars_create_copy(v);
 
-  stp_prune_inactive_options(nv);
   caps = dyesub_get_model_capabilities(stp_get_model_id(nv));
 
   if (caps->job_start_func)
@@ -9883,7 +9881,6 @@ dyesub_job_end(const stp_vars_t *v, stp_image_t *image)
   const dyesub_cap_t *caps;
   stp_vars_t *nv = stp_vars_create_copy(v);
 
-  stp_prune_inactive_options(nv);
   caps = dyesub_get_model_capabilities(stp_get_model_id(nv));
 
   if (caps->job_end_func)

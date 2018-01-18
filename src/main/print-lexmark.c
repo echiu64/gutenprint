@@ -1666,8 +1666,6 @@ lexmark_do_print(stp_vars_t *v, stp_image_t *image)
   const paper_t *media = get_media_type(media_type,caps);
   const lexmark_inkparam_t *ink_parameter;
 
-  stp_prune_inactive_options(v);
-
 #ifdef DEBUG
   dbgfileprn = lex_open_tmp_file(); /* open file with xx */
 #endif

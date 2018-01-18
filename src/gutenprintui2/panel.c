@@ -4583,7 +4583,7 @@ compute_thumbnail(const stp_vars_t *v)
   priv.offset = 0;
   priv.limit = thumbnail_bpp * thumbnail_h * thumbnail_w;
 
-  if (stp_verify(nv) != 1 || stp_print(nv, im) != 1)
+  if (stp_print(nv, im) != 1)
     {
       answer = 0;
       fprintf(stderr, "Could not print thumbnail!\n");

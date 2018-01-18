@@ -4463,7 +4463,6 @@ escp2_do_print(stp_vars_t *v, stp_image_t *image, int print_op)
   int i;
 
   escp2_privdata_t *pd;
-  int page_number = stp_get_int_parameter(v, "PageNumber");
 
   if (strcmp(stp_get_string_parameter(v, "PrintingMode"), "BW") == 0 &&
       (stp_get_string_parameter(v, "InkType") &&
@@ -4490,6 +4489,7 @@ escp2_do_print(stp_vars_t *v, stp_image_t *image, int print_op)
   if (strcmp(stp_get_string_parameter(v, "InputImageType"), "Raw") == 0 &&
       !set_raw_ink_type(v))
     return 0;
+  int page_number = stp_get_int_parameter(v, "PageNumber");
 
   pd = (escp2_privdata_t *) stp_zalloc(sizeof(escp2_privdata_t));
 
@@ -4580,7 +4580,6 @@ escp2_print(const stp_vars_t *v, stp_image_t *image)
   if (!stp_get_string_parameter(v, "JobMode") ||
       strcmp(stp_get_string_parameter(v, "JobMode"), "Page") == 0)
     op = OP_JOB_START | OP_JOB_PRINT | OP_JOB_END;
-  stp_prune_inactive_options(nv);
   status = escp2_do_print(nv, image, op);
   stp_vars_destroy(nv);
   return status;
@@ -4591,7 +4590,6 @@ escp2_job_start(const stp_vars_t *v, stp_image_t *image)
 {
   stp_vars_t *nv = stp_vars_create_copy(v);
   int status;
-  stp_prune_inactive_options(nv);
   status = escp2_do_print(nv, image, OP_JOB_START);
   stp_vars_destroy(nv);
   return status;
@@ -4602,7 +4600,6 @@ escp2_job_end(const stp_vars_t *v, stp_image_t *image)
 {
   stp_vars_t *nv = stp_vars_create_copy(v);
   int status;
-  stp_prune_inactive_options(nv);
   status = escp2_do_print(nv, image, OP_JOB_END);
   stp_vars_destroy(nv);
   return status;

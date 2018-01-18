@@ -6402,7 +6402,6 @@ canon_print(const stp_vars_t *v, stp_image_t *image)
 {
   int status;
   stp_vars_t *nv = stp_vars_create_copy(v);
-  stp_prune_inactive_options(nv);
   status = canon_do_print(nv, image);
   stp_vars_destroy(nv);
   return status;

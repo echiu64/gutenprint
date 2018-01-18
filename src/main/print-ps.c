@@ -1242,7 +1242,6 @@ ps_print(const stp_vars_t *v, stp_image_t *image)
   char *locale;
 #endif
   stp_vars_t *nv = stp_vars_create_copy(v);
-  stp_prune_inactive_options(nv);
   if (!stp_verify(nv))
     {
       stp_eprintf(nv, "Print options not verified; cannot print.\n");

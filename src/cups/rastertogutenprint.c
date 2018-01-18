@@ -1375,15 +1375,6 @@ main(int  argc,				/* I - Number of command-line arguments */
       if (! suppress_messages)
 	print_debug_block(v, &cups);
       print_messages_as_errors = 1;
-      if (!stp_verify(v))
-	{
-	  fprintf(stderr, "DEBUG: Gutenprint: Options failed to verify.\n");
-	  fprintf(stderr, "DEBUG: Gutenprint: Make sure that you are using ESP Ghostscript rather\n");
-	  fprintf(stderr, "DEBUG: Gutenprint: than GNU or AFPL Ghostscript with CUPS.\n");
-	  fprintf(stderr, "DEBUG: Gutenprint: If this is not the cause, set LogLevel to debug to identify the problem.\n");
-	  aborted = 1;
-	  break;
-	}
 
       if (!initialized_job)
 	{
@@ -1393,7 +1384,14 @@ main(int  argc,				/* I - Number of command-line arguments */
 
       if (!stp_print(v, &theImage))
 	{
-	  aborted = 1;
+	  if (Image_status != STP_IMAGE_STATUS_ABORT)
+	    {
+	      fprintf(stderr, "DEBUG: Gutenprint: Options failed to verify.\n");
+	      fprintf(stderr, "DEBUG: Gutenprint: Make sure that you are using ESP Ghostscript rather\n");
+	      fprintf(stderr, "DEBUG: Gutenprint: than GNU or AFPL Ghostscript with CUPS.\n");
+	      fprintf(stderr, "DEBUG: Gutenprint: If this is not the cause, set LogLevel to debug to identify the problem.\n");
+	    }
+	    aborted = 1;
 	  break;
 	}
       print_messages_as_errors = 0;
