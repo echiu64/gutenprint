@@ -1571,9 +1571,9 @@ stp_flush_all(stp_vars_t *v)
 }
 
 static void
-finalize_row(stp_vars_t *v, int row)
+finalize_row(stp_vars_t *v, stpi_softweave_t *sw)
 {
-  stpi_softweave_t *sw = get_sw(v);
+  int row = sw->lineno;
   int i,j;
   stp_dprintf(STP_DBG_ROWS, v, "Finalizing row %d...\n", row);
   for (i = 0; i < sw->oversample; i++)
@@ -1685,7 +1685,7 @@ stp_write_weave(stp_vars_t *v, unsigned char *const cols[])
   sw->current_vertical_subpass++;
   if (sw->current_vertical_subpass >= sw->vertical_oversample)
     {
-      finalize_row(v, sw->lineno);
+      finalize_row(v, sw);
       sw->lineno++;
       sw->current_vertical_subpass = 0;
     }
