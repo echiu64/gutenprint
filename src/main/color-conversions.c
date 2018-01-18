@@ -40,7 +40,16 @@
 
 #ifdef __GNUC__
 #define inline __inline__
+// There's no reason to inline the main loop with the dispatch
+// functions only to fail inlining of calls from the inner loop.
+// Also, inlining the main loop makes it hard to debug because we lose
+// context of which print function is called.
+#define NOINLINE __attribute__ ((noinline))
+#else
+$define NOINLINE
 #endif
+
+#define CFUNC static unsigned NOINLINE
 
 /*
  * RGB to grayscale luminance constants...
@@ -198,7 +207,7 @@ update_saturation(double sat, double adjust, double isat, int bright_colors)
 static inline double
 interpolate_value(const double *vec, double val)
 {
-  double base = floor(val);
+  double base = (double)((int)(val));
   double frac = val - base;
   int ibase = (int) base;
   double lval = vec[ibase];
@@ -247,51 +256,48 @@ adjust_hsl(unsigned short *rgbout, lut_t *lut, double ssat, double isat,
   const double *hue_map = CURVE_CACHE_FAST_DOUBLE(&(lut->hue_map));
   const double *lum_map = CURVE_CACHE_FAST_DOUBLE(&(lut->lum_map));
   const double *sat_map = CURVE_CACHE_FAST_DOUBLE(&(lut->sat_map));
-  if ((split_saturation || lum_map || hue_map || sat_map) &&
-      (rgbout[0] != rgbout[1] || rgbout[0] != rgbout[2]))
+  size_t hue_count = CURVE_CACHE_FAST_COUNT(&(lut->hue_map));
+  size_t lum_count = CURVE_CACHE_FAST_COUNT(&(lut->lum_map));
+  size_t sat_count = CURVE_CACHE_FAST_COUNT(&(lut->sat_map));
+  double h, s, l;
+  double oh;
+  rgbout[0] ^= 65535;
+  rgbout[1] ^= 65535;
+  rgbout[2] ^= 65535;
+  calc_rgb_to_hsl(rgbout, &h, &s, &l);
+  s = update_saturation(s, ssat, isat, 0);
+  if (!adjust_hue_only && lut->sat_map.d_cache)
     {
-      size_t hue_count = CURVE_CACHE_FAST_COUNT(&(lut->hue_map));
-      size_t lum_count = CURVE_CACHE_FAST_COUNT(&(lut->lum_map));
-      size_t sat_count = CURVE_CACHE_FAST_COUNT(&(lut->sat_map));
-      double h, s, l;
-      double oh;
-      rgbout[0] ^= 65535;
-      rgbout[1] ^= 65535;
-      rgbout[2] ^= 65535;
-      calc_rgb_to_hsl(rgbout, &h, &s, &l);
-      s = update_saturation(s, ssat, isat, 0);
-      if (!adjust_hue_only && lut->sat_map.d_cache)
+      double nh = h * sat_count / 6.0;
+      double tmp = interpolate_value(sat_map, nh);
+      if (tmp < .9999 || tmp > 1.0001)
+	s = update_saturation(s, tmp, tmp > 1.0 ? 1.0 / tmp : 1.0,
+			      bright_colors);
+    }
+  oh = h;
+  h = adjust_hue(hue_map, h, hue_count);
+  calc_hsl_to_rgb(rgbout, h, s, l);
+
+  if (!adjust_hue_only && s > 0.00001)
+    {
+      /*
+       * Perform luminosity adjustment only on color component.
+       * This way the luminosity of the gray component won't be affected.
+       * We'll add the gray back at the end.
+       */
+
+      unsigned gray = FMIN(rgbout[0], FMIN(rgbout[1], rgbout[2]));
+      int i;
+      /*
+       * Scale the components by the amount of color left.
+       * This way the luminosity calculations will come out right.
+       */
+      if (gray > 0)
+	for (i = 0; i < 3; i++)
+	  rgbout[i] = (rgbout[i] - gray) * 65535.0 / (65535 - gray);
+
+      if (lut->lum_map.d_cache)
 	{
-	  double nh = h * sat_count / 6.0;
-	  double tmp = interpolate_value(sat_map, nh);
-	  if (tmp < .9999 || tmp > 1.0001)
-	    {
-	      s = update_saturation(s, tmp, tmp > 1.0 ? 1.0 / tmp : 1.0,
-				    bright_colors);
-	    }
-	}
-      oh = h;
-      h = adjust_hue(hue_map, h, hue_count);
-      calc_hsl_to_rgb(rgbout, h, s, l);
-
-      if (!adjust_hue_only && s > 0.00001)
-	{
-	  /*
-	   * Perform luminosity adjustment only on color component.
-	   * This way the luminosity of the gray component won't be affected.
-	   * We'll add the gray back at the end.
-	   */
-
-	  unsigned gray = FMIN(rgbout[0], FMIN(rgbout[1], rgbout[2]));
-	  int i;
-	  /*
-	   * Scale the components by the amount of color left.
-	   * This way the luminosity calculations will come out right.
-	   */
-	  if (gray > 0)
-	    for (i = 0; i < 3; i++)
-	      rgbout[i] = (rgbout[i] - gray) * 65535.0 / (65535 - gray);
-
 	  calc_rgb_to_hsl(rgbout, &h, &s, &l);
 	  if (lut->lum_map.d_cache && l > 0.00001 && l < .99999)
 	    {
@@ -305,115 +311,21 @@ adjust_hsl(unsigned short *rgbout, lut_t *lut, double ssat, double isat,
 		  double g2 = 1.0 - pow(1.0 - l, oel);
 		  l = FMIN(g1, g2);
 		}
+	      calc_hsl_to_rgb(rgbout, h, s, l);
 	    }
-	  calc_hsl_to_rgb(rgbout, h, s, l);
-	  if (gray > 0)
-	    for (i = 0; i < 3; i++)
-	      rgbout[i] = gray + (rgbout[i] * (65535 - gray) / 65535.0);
 	}
-
-      rgbout[0] ^= 65535;
-      rgbout[1] ^= 65535;
-      rgbout[2] ^= 65535;
+      if (gray > 0)
+	for (i = 0; i < 3; i++)
+	  rgbout[i] = gray + (rgbout[i] * (65535 - gray) / 65535.0);
     }
-}
 
-static inline void
-lookup_rgb(lut_t *lut, unsigned short *rgbout,
-	   const unsigned short *red, const unsigned short *green,
-	   const unsigned short *blue, unsigned steps)
-{
-  if (steps == 65536)
-    {
-      rgbout[0] = red[rgbout[0]];
-      rgbout[1] = green[rgbout[1]];
-      rgbout[2] = blue[rgbout[2]];
-    }
-  else
-    {
-      rgbout[0] = red[rgbout[0] / 257];
-      rgbout[1] = green[rgbout[1] / 257];
-      rgbout[2] = blue[rgbout[2] / 257];
-    }
-}
-
-static inline int
-short_eq(const unsigned short *i1, const unsigned short *i2, size_t count)
-{
-#if 1
-  int i;
-  for (i = 0; i < count; i++)
-    if (i1[i] != i2[i])
-      return 0;
-  return 1;
-#else
-  return !memcmp(i1, i2, count * sizeof(unsigned short));
-#endif
-}
-
-static inline void
-short_copy(unsigned short *out, const unsigned short *in, size_t count)
-{
-#if 1
-  int i;
-  for (i = 0; i < count; i++)
-    out[i] = in[i];
-#else
-  (void) memcpy(out, in, count * sizeof(unsigned short));
-#endif
-}
-
-static unsigned
-raw_cmy_to_kcmy(const stp_vars_t *vars, const unsigned short *in,
-		unsigned short *out)
-{
-  lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));
-  int width = lut->image_width;
-
-  int i;
-  int j;
-  unsigned short nz[4];
-  unsigned retval = 0;
-  const unsigned short *input_cache = NULL;
-  const unsigned short *output_cache = NULL;
-
-  memset(nz, 0, sizeof(nz));
-
-  for (i = 0; i < width; i++, out += 4, in += 3)
-    {
-      if (input_cache && short_eq(input_cache, in, 3))
-	short_copy(out, output_cache, 4);
-      else
-	{
-	  int c = in[0];
-	  int m = in[1];
-	  int y = in[2];
-	  int k = FMIN(c, FMIN(m, y));
-	  input_cache = in;
-	  out[0] = 0;
-	  for (j = 0; j < 3; j++)
-	    out[j + 1] = in[j];
-	  if (k > 0)
-	    {
-	      out[0] = k;
-	      out[1] -= k;
-	      out[2] -= k;
-	      out[3] -= k;
-	    }
-	  output_cache = out;
-	  for (j = 0; j < 4; j++)
-	    if (out[j])
-	      nz[j] = 1;
-	}
-    }
-  for (j = 0; j < 4; j++)
-    if (nz[j] == 0)
-      retval |= (1 << j);
-  return retval;
+  rgbout[0] ^= 65535;
+  rgbout[1] ^= 65535;
+  rgbout[2] ^= 65535;
 }
 
 #define GENERIC_COLOR_FUNC(fromname, toname)				\
-static unsigned								\
+CFUNC									\
 fromname##_to_##toname(const stp_vars_t *vars, const unsigned char *in,	\
 		       unsigned short *out)				\
 {									\
@@ -434,203 +346,390 @@ fromname##_to_##toname(const stp_vars_t *vars, const unsigned char *in,	\
     return fromname##_16_to_##toname(vars, in, out);			\
 }
 
-#define COLOR_TO_COLOR_FUNC(T, bits)					     \
-static unsigned								     \
-color_##bits##_to_color(const stp_vars_t *vars, const unsigned char *in,     \
-			unsigned short *out)				     \
-{									     \
-  int i;								     \
-  double isat = 1.0;							     \
-  double ssat = stp_get_float_parameter(vars, "Saturation");		     \
-  double sbright = stp_get_float_parameter(vars, "Brightness");		     \
-  int i0 = -1;								     \
-  int i1 = -1;								     \
-  int i2 = -1;								     \
-  unsigned short o0 = 0;						     \
-  unsigned short o1 = 0;						     \
-  unsigned short o2 = 0;						     \
-  unsigned short nz0 = 0;						     \
-  unsigned short nz1 = 0;						     \
-  unsigned short nz2 = 0;						     \
-  const unsigned short *red;						     \
-  const unsigned short *green;						     \
-  const unsigned short *blue;						     \
-  const unsigned short *brightness;					     \
-  const unsigned short *contrast;					     \
-  const T *s_in = (const T *) in;					     \
-  lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));	     \
-  int compute_saturation = ssat <= .99999 || ssat >= 1.00001;		     \
-  int split_saturation = ssat > 1.4;					     \
-  int bright_color_adjustment = 0;					     \
-  int hue_only_color_adjustment = 0;					     \
-  int do_user_adjustment = 0;						     \
-  if (lut->color_correction->correction == COLOR_CORRECTION_BRIGHT)	     \
-    bright_color_adjustment = 1;					     \
-  if (lut->color_correction->correction == COLOR_CORRECTION_HUE)	     \
-    hue_only_color_adjustment = 1;					     \
-  if (sbright != 1)							     \
-    do_user_adjustment = 1;						     \
-  compute_saturation |= do_user_adjustment;				     \
-									     \
-  for (i = CHANNEL_C; i <= CHANNEL_Y; i++)				     \
+#define BD(bits) (65535u / (unsigned) ((1 << (bits)) - 1))
+
+#define COLOR_TO_COLOR_FUNC(T, bits)					\
+CFUNC									\
+color_##bits##_to_color(const stp_vars_t *vars, const unsigned char *in, \
+			unsigned short *out)				\
+{									\
+  int i;								\
+  double isat = 1.0;							\
+  double ssat = stp_get_float_parameter(vars, "Saturation");		\
+  double sbright = stp_get_float_parameter(vars, "Brightness");		\
+  int i0 = -1;								\
+  int i1 = -1;								\
+  int i2 = -1;								\
+  unsigned short o0 = 0;						\
+  unsigned short o1 = 0;						\
+  unsigned short o2 = 0;						\
+  unsigned short nz0 = 0;						\
+  unsigned short nz1 = 0;						\
+  unsigned short nz2 = 0;						\
+  const unsigned short *red;						\
+  const unsigned short *green;						\
+  const unsigned short *blue;						\
+  const unsigned short *brightness;					\
+  const unsigned short *contrast;					\
+  const T *s_in = (const T *) in;					\
+  lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));	\
+  int compute_saturation = ssat <= .99999 || ssat >= 1.00001;		\
+  int split_saturation = ssat > 1.4;					\
+  int bright_color_adjustment = 0;					\
+  int hue_only_color_adjustment = 0;					\
+  int do_user_adjustment = 0;						\
+  if (lut->color_correction->correction == COLOR_CORRECTION_BRIGHT)	\
+    bright_color_adjustment = 1;					\
+  if (lut->color_correction->correction == COLOR_CORRECTION_HUE)	\
+    hue_only_color_adjustment = 1;					\
+  if (sbright != 1)							\
+    do_user_adjustment = 1;						\
+  compute_saturation |= do_user_adjustment;				\
+									\
+  for (i = CHANNEL_C; i <= CHANNEL_Y; i++)				\
     stp_curve_resample(stp_curve_cache_get_curve(&(lut->channel_curves[i])), \
-		       1 << bits);					     \
-  stp_curve_resample							     \
-    (stp_curve_cache_get_curve(&(lut->brightness_correction)), 65536);	     \
-  stp_curve_resample							     \
-    (stp_curve_cache_get_curve(&(lut->contrast_correction)), 1 << bits);     \
-  red =									     \
-    stp_curve_cache_get_ushort_data(&(lut->channel_curves[CHANNEL_C]));	     \
-  green =								     \
-    stp_curve_cache_get_ushort_data(&(lut->channel_curves[CHANNEL_M]));	     \
-  blue =								     \
-    stp_curve_cache_get_ushort_data(&(lut->channel_curves[CHANNEL_Y]));	     \
-  brightness=								     \
-    stp_curve_cache_get_ushort_data(&(lut->brightness_correction));	     \
-  contrast =								     \
-    stp_curve_cache_get_ushort_data(&(lut->contrast_correction));	     \
-  (void) stp_curve_cache_get_double_data(&(lut->hue_map));		     \
-  (void) stp_curve_cache_get_double_data(&(lut->lum_map));		     \
-  (void) stp_curve_cache_get_double_data(&(lut->sat_map));		     \
-									     \
-  if (split_saturation)							     \
-    ssat = sqrt(ssat);							     \
-  if (ssat > 1)								     \
-    isat = 1.0 / ssat;							     \
-  for (i = 0; i < lut->image_width; i++)				     \
-    {									     \
-      if (i0 == s_in[0] && i1 == s_in[1] && i2 == s_in[2])		     \
-	{								     \
-	  out[0] = o0;							     \
-	  out[1] = o1;							     \
-	  out[2] = o2;							     \
-	}								     \
-      else								     \
-	{								     \
-	  i0 = s_in[0];							     \
-	  i1 = s_in[1];							     \
-	  i2 = s_in[2];							     \
-	  out[0] = i0 * (65535u / (unsigned) ((1 << bits) - 1));	     \
-	  out[1] = i1 * (65535u / (unsigned) ((1 << bits) - 1));	     \
-	  out[2] = i2 * (65535u / (unsigned) ((1 << bits) - 1));	     \
-	  lookup_rgb(lut, out, contrast, contrast, contrast, 1 << bits);     \
-	  if ((compute_saturation))					     \
-	    update_saturation_from_rgb(out, brightness, ssat, isat,	     \
-				       do_user_adjustment);		     \
-	  adjust_hsl(out, lut, ssat, isat, split_saturation,		     \
-		     hue_only_color_adjustment, bright_color_adjustment);    \
-	  lookup_rgb(lut, out, red, green, blue, 1 << bits);		     \
-	  o0 = out[0];							     \
-	  o1 = out[1];							     \
-	  o2 = out[2];							     \
-	  nz0 |= o0;							     \
-	  nz1 |= o1;							     \
-	  nz2 |= o2;							     \
-	}								     \
-      s_in += 3;							     \
-      out += 3;								     \
-    }									     \
-  return (nz0 ? 0 : 1) +  (nz1 ? 0 : 2) +  (nz2 ? 0 : 4);		     \
+		       1 << bits);					\
+  stp_curve_resample							\
+    (stp_curve_cache_get_curve(&(lut->brightness_correction)), 65536);	\
+  stp_curve_resample							\
+    (stp_curve_cache_get_curve(&(lut->contrast_correction)), 1 << bits); \
+  red =									\
+    stp_curve_cache_get_ushort_data(&(lut->channel_curves[CHANNEL_C]));	\
+  green =								\
+    stp_curve_cache_get_ushort_data(&(lut->channel_curves[CHANNEL_M]));	\
+  blue =								\
+    stp_curve_cache_get_ushort_data(&(lut->channel_curves[CHANNEL_Y]));	\
+  brightness=								\
+    stp_curve_cache_get_ushort_data(&(lut->brightness_correction));	\
+  contrast =								\
+    stp_curve_cache_get_ushort_data(&(lut->contrast_correction));	\
+  (void) stp_curve_cache_get_double_data(&(lut->hue_map));		\
+  (void) stp_curve_cache_get_double_data(&(lut->lum_map));		\
+  (void) stp_curve_cache_get_double_data(&(lut->sat_map));		\
+  const double *hue_map = CURVE_CACHE_FAST_DOUBLE(&(lut->hue_map));	\
+  const double *lum_map = CURVE_CACHE_FAST_DOUBLE(&(lut->lum_map));	\
+  const double *sat_map = CURVE_CACHE_FAST_DOUBLE(&(lut->sat_map));	\
+									\
+  if (split_saturation)							\
+    ssat = sqrt(ssat);							\
+  if (ssat > 1)								\
+    isat = 1.0 / ssat;							\
+  for (i = 0; i < lut->image_width; i++)				\
+    {									\
+      if (i0 == s_in[0] && i1 == s_in[1] && i2 == s_in[2])		\
+	{								\
+	  out[0] = o0;							\
+	  out[1] = o1;							\
+	  out[2] = o2;							\
+	}								\
+      else								\
+	{								\
+	  i0 = s_in[0];							\
+	  i1 = s_in[1];							\
+	  i2 = s_in[2];							\
+	  out[0] = contrast[i0];					\
+	  out[1] = contrast[i1];					\
+	  out[2] = contrast[i2];				 	\
+	  if ((compute_saturation))					\
+	    update_saturation_from_rgb(out, brightness, ssat, isat,	\
+				       do_user_adjustment);		\
+	  if ((split_saturation || lum_map || hue_map || sat_map) &&	\
+	      (out[0] != out[1] || out[0] != out[2]))			\
+	    adjust_hsl(out, lut, ssat, isat, split_saturation,		\
+		       hue_only_color_adjustment, bright_color_adjustment); \
+	  out[0] = red[out[0] / BD(bits)];				\
+	  out[1] = green[out[1] / BD(bits)];				\
+	  out[2] = blue[out[2] / BD(bits)];				\
+	  o0 = out[0];							\
+	  o1 = out[1];							\
+	  o2 = out[2];							\
+	  nz0 |= o0;							\
+	  nz1 |= o1;							\
+	  nz2 |= o2;							\
+	}								\
+      s_in += 3;							\
+      out += 3;								\
+    }									\
+  return (nz0 ? 0 : 1) +  (nz1 ? 0 : 2) +  (nz2 ? 0 : 4);		\
 }
 
-COLOR_TO_COLOR_FUNC(unsigned char, 8)
-COLOR_TO_COLOR_FUNC(unsigned short, 16)
+COLOR_TO_COLOR_FUNC(unsigned char, 8) // color_8_to_color
+COLOR_TO_COLOR_FUNC(unsigned short, 16) // color_16_to_color
 GENERIC_COLOR_FUNC(color, color)
+
+#define COLOR_TO_KCMY_FUNC(T, bits)					\
+CFUNC									\
+color_##bits##_to_kcmy(const stp_vars_t *vars, const unsigned char *in,	\
+		      unsigned short *out)				\
+{									\
+  int i;								\
+  double isat = 1.0;							\
+  double ssat = stp_get_float_parameter(vars, "Saturation");		\
+  double sbright = stp_get_float_parameter(vars, "Brightness");		\
+  union {								\
+    unsigned short nz[4];						\
+    unsigned long long nzl;						\
+  } nzx;								\
+  unsigned retval = 0;							\
+  const unsigned short *red;						\
+  const unsigned short *green;						\
+  const unsigned short *blue;						\
+  const unsigned short *brightness;					\
+  const unsigned short *contrast;					\
+  const T *s_in = (const T *) in;					\
+  lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));	\
+  int compute_saturation = ssat <= .99999 || ssat >= 1.00001;		\
+  int split_saturation = ssat > 1.4;					\
+  int bright_color_adjustment = 0;					\
+  int hue_only_color_adjustment = 0;					\
+  int do_user_adjustment = 0;						\
+  if (lut->color_correction->correction == COLOR_CORRECTION_BRIGHT)	\
+    bright_color_adjustment = 1;					\
+  if (lut->color_correction->correction == COLOR_CORRECTION_HUE)	\
+    hue_only_color_adjustment = 1;					\
+  if (sbright != 1)							\
+    do_user_adjustment = 1;						\
+  compute_saturation |= do_user_adjustment;				\
+  nzx.nzl = 0ull;							\
+									\
+  for (i = CHANNEL_C; i <= CHANNEL_Y; i++)				\
+    stp_curve_resample(stp_curve_cache_get_curve(&(lut->channel_curves[i])), \
+		       1 << bits);					\
+  stp_curve_resample							\
+    (stp_curve_cache_get_curve(&(lut->brightness_correction)), 65536);	\
+  stp_curve_resample							\
+    (stp_curve_cache_get_curve(&(lut->contrast_correction)), 1 << bits); \
+  red =									\
+    stp_curve_cache_get_ushort_data(&(lut->channel_curves[CHANNEL_C]));	\
+  green =								\
+    stp_curve_cache_get_ushort_data(&(lut->channel_curves[CHANNEL_M]));	\
+  blue =								\
+    stp_curve_cache_get_ushort_data(&(lut->channel_curves[CHANNEL_Y]));	\
+  brightness=								\
+    stp_curve_cache_get_ushort_data(&(lut->brightness_correction));	\
+  contrast =								\
+    stp_curve_cache_get_ushort_data(&(lut->contrast_correction));	\
+  (void) stp_curve_cache_get_double_data(&(lut->hue_map));		\
+  (void) stp_curve_cache_get_double_data(&(lut->lum_map));		\
+  (void) stp_curve_cache_get_double_data(&(lut->sat_map));		\
+  const double *hue_map = CURVE_CACHE_FAST_DOUBLE(&(lut->hue_map));	\
+  const double *lum_map = CURVE_CACHE_FAST_DOUBLE(&(lut->lum_map));	\
+  const double *sat_map = CURVE_CACHE_FAST_DOUBLE(&(lut->sat_map));	\
+									\
+  if (split_saturation)							\
+    ssat = sqrt(ssat);							\
+  if (ssat > 1)								\
+    isat = 1.0 / ssat;							\
+  for (i = 0; i < lut->image_width; i++, out += 4, s_in += 3)		\
+    {									\
+      out[1] = contrast[s_in[0]];				\
+      out[2] = contrast[s_in[1]];				\
+      out[3] = contrast[s_in[2]];				\
+      if ((compute_saturation))						\
+	update_saturation_from_rgb(out + 1, brightness, ssat, isat,	\
+				   do_user_adjustment);			\
+      if ((split_saturation || lum_map || hue_map || sat_map) &&	\
+	  (out[1] != out[2] || out[1] != out[3]))			\
+	adjust_hsl(out + 1, lut, ssat, isat, split_saturation,		\
+		   hue_only_color_adjustment, bright_color_adjustment);	\
+      out[1] = red[out[1] / BD(bits)];					\
+      out[2] = green[out[2] / BD(bits)];				\
+      out[3] = blue[out[3] / BD(bits)];					\
+      out[0] = FMIN(out[1], FMIN(out[2], out[3]));			\
+      out[1] -= out[0];							\
+      out[2] -= out[0];							\
+      out[3] -= out[0];							\
+      nzx.nzl |= *(unsigned long long *) out;				\
+    }									\
+  for (i = 0; i < 4; i++)						\
+    if (nzx.nz[i] == 0)							\
+      retval |= (1 << i);						\
+  return retval;							\
+}
+
+COLOR_TO_KCMY_FUNC(unsigned char, 8) // color_8_to_kcmy
+COLOR_TO_KCMY_FUNC(unsigned short, 16) // color_16_to_kcmy
+GENERIC_COLOR_FUNC(color, kcmy)
 
 /*
  * 'rgb_to_rgb()' - Convert rgb image data to RGB.
  */
 
-#define FAST_COLOR_TO_COLOR_FUNC(T, bits)				      \
-static unsigned								      \
+#define FAST_COLOR_TO_COLOR_FUNC(T, bits)				\
+CFUNC									\
 color_##bits##_to_color_fast(const stp_vars_t *vars, const unsigned char *in, \
-			     unsigned short *out)			      \
-{									      \
-  int i;								      \
-  int i0 = -1;								      \
-  int i1 = -1;								      \
-  int i2 = -1;								      \
-  int o0 = 0;								      \
-  int o1 = 0;								      \
-  int o2 = 0;								      \
-  int nz0 = 0;								      \
-  int nz1 = 0;								      \
-  int nz2 = 0;								      \
-  const T *s_in = (const T *) in;					      \
-  lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));	      \
-  const unsigned short *red;						      \
-  const unsigned short *green;						      \
-  const unsigned short *blue;						      \
-  const unsigned short *brightness;					      \
-  const unsigned short *contrast;					      \
-  double isat = 1.0;							      \
-  double saturation = stp_get_float_parameter(vars, "Saturation");	      \
-  double sbright = stp_get_float_parameter(vars, "Brightness");		      \
-  int compute_saturation = saturation <= .99999 || saturation >= 1.00001;     \
-  int do_user_adjustment = 0;						      \
-  if (sbright != 1)							      \
-    do_user_adjustment = 1;						      \
-  compute_saturation |= do_user_adjustment;				      \
-									      \
-  for (i = CHANNEL_C; i <= CHANNEL_Y; i++)				      \
-    stp_curve_resample(lut->channel_curves[i].curve, 65536);		      \
-  stp_curve_resample							      \
-    (stp_curve_cache_get_curve(&(lut->brightness_correction)), 65536);	      \
-  stp_curve_resample							      \
-    (stp_curve_cache_get_curve(&(lut->contrast_correction)), 1 << bits);      \
-  red =									      \
-    stp_curve_cache_get_ushort_data(&(lut->channel_curves[CHANNEL_C]));	      \
-  green =								      \
-    stp_curve_cache_get_ushort_data(&(lut->channel_curves[CHANNEL_M]));	      \
-  blue =								      \
-    stp_curve_cache_get_ushort_data(&(lut->channel_curves[CHANNEL_Y]));	      \
-  brightness=								      \
-    stp_curve_cache_get_ushort_data(&(lut->brightness_correction));	      \
-  contrast =								      \
-    stp_curve_cache_get_ushort_data(&(lut->contrast_correction));	      \
-									      \
-  if (saturation > 1)							      \
-    isat = 1.0 / saturation;						      \
-  for (i = 0; i < lut->image_width; i++)				      \
-    {									      \
-      if (i0 == s_in[0] && i1 == s_in[1] && i2 == s_in[2])		      \
-	{								      \
-	  out[0] = o0;							      \
-	  out[1] = o1;							      \
-	  out[2] = o2;							      \
-	}								      \
-      else								      \
-	{								      \
-	  i0 = s_in[0];							      \
-	  i1 = s_in[1];							      \
-	  i2 = s_in[2];							      \
-	  out[0] = contrast[s_in[0]];					      \
-	  out[1] = contrast[s_in[1]];					      \
-	  out[2] = contrast[s_in[2]];					      \
-	  if ((compute_saturation))					      \
+			     unsigned short *out)			\
+{									\
+  int i;								\
+  int i0 = -1;								\
+  int i1 = -1;								\
+  int i2 = -1;								\
+  int o0 = 0;								\
+  int o1 = 0;								\
+  int o2 = 0;								\
+  int nz0 = 0;								\
+  int nz1 = 0;								\
+  int nz2 = 0;								\
+  const T *s_in = (const T *) in;					\
+  lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));	\
+  const unsigned short *red;						\
+  const unsigned short *green;						\
+  const unsigned short *blue;						\
+  const unsigned short *brightness;					\
+  const unsigned short *contrast;					\
+  double isat = 1.0;							\
+  double saturation = stp_get_float_parameter(vars, "Saturation");	\
+  double sbright = stp_get_float_parameter(vars, "Brightness");		\
+  int compute_saturation = saturation <= .99999 || saturation >= 1.00001; \
+  int do_user_adjustment = 0;						\
+  if (sbright != 1)							\
+    do_user_adjustment = 1;						\
+  compute_saturation |= do_user_adjustment;				\
+									\
+  for (i = CHANNEL_C; i <= CHANNEL_Y; i++)				\
+    stp_curve_resample(lut->channel_curves[i].curve, 65536);		\
+  stp_curve_resample							\
+    (stp_curve_cache_get_curve(&(lut->brightness_correction)), 65536);	\
+  stp_curve_resample							\
+    (stp_curve_cache_get_curve(&(lut->contrast_correction)), 1 << bits); \
+  red =									\
+    stp_curve_cache_get_ushort_data(&(lut->channel_curves[CHANNEL_C]));	\
+  green =								\
+    stp_curve_cache_get_ushort_data(&(lut->channel_curves[CHANNEL_M]));	\
+  blue =								\
+    stp_curve_cache_get_ushort_data(&(lut->channel_curves[CHANNEL_Y]));	\
+  brightness=								\
+    stp_curve_cache_get_ushort_data(&(lut->brightness_correction));	\
+  contrast =								\
+    stp_curve_cache_get_ushort_data(&(lut->contrast_correction));	\
+									\
+  if (saturation > 1)							\
+    isat = 1.0 / saturation;						\
+  for (i = 0; i < lut->image_width; i++)				\
+    {									\
+      if (i0 == s_in[0] && i1 == s_in[1] && i2 == s_in[2])		\
+	{								\
+	  out[0] = o0;							\
+	  out[1] = o1;							\
+	  out[2] = o2;							\
+	}								\
+      else								\
+	{								\
+	  i0 = s_in[0];							\
+	  i1 = s_in[1];							\
+	  i2 = s_in[2];							\
+	  out[0] = contrast[s_in[0]];					\
+	  out[1] = contrast[s_in[1]];					\
+	  out[2] = contrast[s_in[2]];					\
+	  if ((compute_saturation))					\
 	    update_saturation_from_rgb(out, brightness, saturation, isat, 1); \
-	  out[0] = red[out[0]];						      \
-	  out[1] = green[out[1]];					      \
-	  out[2] = blue[out[2]];					      \
-	  o0 = out[0];							      \
-	  o1 = out[1];							      \
-	  o2 = out[2];							      \
-	  nz0 |= o0;							      \
-	  nz1 |= o1;							      \
-	  nz2 |= o2;							      \
-	}								      \
-      s_in += 3;							      \
-      out += 3;								      \
-    }									      \
-  return (nz0 ? 0 : 1) +  (nz1 ? 0 : 2) +  (nz2 ? 0 : 4);		      \
+	  out[0] = red[out[0]];						\
+	  out[1] = green[out[1]];					\
+	  out[2] = blue[out[2]];					\
+	  o0 = out[0];							\
+	  o1 = out[1];							\
+	  o2 = out[2];							\
+	  nz0 |= o0;							\
+	  nz1 |= o1;							\
+	  nz2 |= o2;							\
+	}								\
+      s_in += 3;							\
+      out += 3;								\
+    }									\
+  return (nz0 ? 0 : 1) +  (nz1 ? 0 : 2) +  (nz2 ? 0 : 4);		\
 }
 
-FAST_COLOR_TO_COLOR_FUNC(unsigned char, 8)
-FAST_COLOR_TO_COLOR_FUNC(unsigned short, 16)
+FAST_COLOR_TO_COLOR_FUNC(unsigned char, 8) // color_8_to_color_fast
+FAST_COLOR_TO_COLOR_FUNC(unsigned short, 16) // color_16_to_color_fast
 GENERIC_COLOR_FUNC(color, color_fast)
 
+#define FAST_COLOR_TO_KCMY_FUNC(T, bits)				\
+CFUNC									\
+color_##bits##_to_kcmy_fast(const stp_vars_t *vars, const unsigned char *in, \
+			     unsigned short *out)			\
+{									\
+  int i;								\
+  union {								\
+    unsigned short nz[4];						\
+    unsigned long long nzl;						\
+  } nzx;								\
+  unsigned retval = 0;							\
+  unsigned short c, m, y, k;						\
+  const T *s_in = (const T *) in;					\
+  lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));	\
+  const unsigned short *red;						\
+  const unsigned short *green;						\
+  const unsigned short *blue;						\
+  const unsigned short *brightness;					\
+  const unsigned short *contrast;					\
+  double isat = 1.0;							\
+  double saturation = stp_get_float_parameter(vars, "Saturation");	\
+  double sbright = stp_get_float_parameter(vars, "Brightness");		\
+  int compute_saturation = saturation <= .99999 || saturation >= 1.00001; \
+  int do_user_adjustment = 0;						\
+  if (sbright != 1)							\
+    do_user_adjustment = 1;						\
+  compute_saturation |= do_user_adjustment;				\
+  nzx.nzl = 0ull;							\
+									\
+  for (i = CHANNEL_C; i <= CHANNEL_Y; i++)				\
+    stp_curve_resample(lut->channel_curves[i].curve, 65536);		\
+  stp_curve_resample							\
+    (stp_curve_cache_get_curve(&(lut->brightness_correction)), 65536);	\
+  stp_curve_resample							\
+    (stp_curve_cache_get_curve(&(lut->contrast_correction)), 1 << bits); \
+  red =									\
+    stp_curve_cache_get_ushort_data(&(lut->channel_curves[CHANNEL_C]));	\
+  green =								\
+    stp_curve_cache_get_ushort_data(&(lut->channel_curves[CHANNEL_M]));	\
+  blue =								\
+    stp_curve_cache_get_ushort_data(&(lut->channel_curves[CHANNEL_Y]));	\
+  brightness=								\
+    stp_curve_cache_get_ushort_data(&(lut->brightness_correction));	\
+  contrast =								\
+    stp_curve_cache_get_ushort_data(&(lut->contrast_correction));	\
+									\
+  if (saturation > 1)							\
+    isat = 1.0 / saturation;						\
+  for (i = 0; i < lut->image_width; i++, out += 4, s_in += 3)		\
+    {									\
+      c = contrast[s_in[0]];						\
+      m = contrast[s_in[1]];						\
+      y = contrast[s_in[2]];						\
+      if (compute_saturation)						\
+	{								\
+	  unsigned short tmp[3];					\
+	  tmp[0] = c;							\
+	  tmp[1] = m;							\
+	  tmp[2] = y;							\
+	  update_saturation_from_rgb(tmp, brightness, saturation,	\
+				     isat, 1);				\
+	  c = tmp[0];							\
+	  m = tmp[1];							\
+	  y = tmp[2];							\
+	}								\
+      c = red[c];							\
+      m = green[m];							\
+      y = blue[y];							\
+      k = FMIN(c, FMIN(m, y));						\
+      out[0] = k;							\
+      out[1] = c - k;							\
+      out[2] = m - k;							\
+      out[3] = y - k;							\
+      nzx.nzl |= *(unsigned long long *) out;				\
+    }									\
+  for (i = 0; i < 4; i++)						\
+    if (nzx.nz[i] == 0)							\
+      retval |= (1 << i);						\
+  return retval;							\
+}
+
+FAST_COLOR_TO_KCMY_FUNC(unsigned char, 8) // color_8_to_kcmy_fast
+FAST_COLOR_TO_KCMY_FUNC(unsigned short, 16) // color_16_to_color_fast
+GENERIC_COLOR_FUNC(color, kcmy_fast)
+
 #define RAW_COLOR_TO_COLOR_FUNC(T, bits)				    \
-static unsigned								    \
+CFUNC									    \
 color_##bits##_to_color_raw(const stp_vars_t *vars, const unsigned char *in,\
 			    unsigned short *out)			    \
 {									    \
@@ -658,16 +757,56 @@ color_##bits##_to_color_raw(const stp_vars_t *vars, const unsigned char *in,\
   return nz;								    \
 }
 
-RAW_COLOR_TO_COLOR_FUNC(unsigned char, 8)
-RAW_COLOR_TO_COLOR_FUNC(unsigned short, 16)
+RAW_COLOR_TO_COLOR_FUNC(unsigned char, 8) // color_8_to_color_raw
+RAW_COLOR_TO_COLOR_FUNC(unsigned short, 16) // color_16_to_color_raw
 GENERIC_COLOR_FUNC(color, color_raw)
+
+#define RAW_COLOR_TO_KCMY_FUNC(T, bits)					\
+CFUNC									\
+color_##bits##_to_kcmy_raw(const stp_vars_t *vars, const unsigned char *in, \
+			    unsigned short *out)			\
+{									\
+  int i;								\
+  union {								\
+    unsigned short nz[4];						\
+    unsigned long long nzl;						\
+  } nzx;								\
+  unsigned retval = 0;							\
+  const T *s_in = (const T *) in;					\
+  lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));	\
+  unsigned mask = 0;							\
+  if (lut->invert_output)						\
+    mask = 0xffff;							\
+  nzx.nzl = 0ull;							\
+									\
+  for (i = 0; i < lut->image_width; i++, out += 4, s_in += 3)		\
+    {									\
+      unsigned c = (s_in[0] * BD(bits)) ^ mask;				\
+      unsigned m = (s_in[1] * BD(bits)) ^ mask;				\
+      unsigned y = (s_in[2] * BD(bits)) ^ mask;				\
+      unsigned k = FMIN(c, FMIN(m, y));					\
+      out[0] = k;							\
+      out[1] = c - k;							\
+      out[2] = m - k;							\
+      out[3] = y - k;							\
+      nzx.nzl |= *(unsigned long long *) out;				\
+    }									\
+  for (i = 0; i < 4; i++)						\
+    if (nzx.nz[i] == 0)							\
+      retval |= (1 << i);						\
+  return retval;							\
+}
+
+RAW_COLOR_TO_KCMY_FUNC(unsigned char, 8) // color_8_to_kcmy_raw
+RAW_COLOR_TO_KCMY_FUNC(unsigned short, 16) // color_16_to_kcmy_raw
+GENERIC_COLOR_FUNC(color, kcmy_raw)
 
 /*
  * 'gray_to_rgb()' - Convert gray image data to RGB.
  */
 
 #define GRAY_TO_COLOR_FUNC(T, bits)					    \
-static unsigned								    \
+CFUNC									    \
 gray_##bits##_to_color(const stp_vars_t *vars, const unsigned char *in,	    \
 		   unsigned short *out)					    \
 {									    \
@@ -726,12 +865,64 @@ gray_##bits##_to_color(const stp_vars_t *vars, const unsigned char *in,	    \
   return (nz0 ? 0 : 1) +  (nz1 ? 0 : 2) +  (nz2 ? 0 : 4);		    \
 }
 
-GRAY_TO_COLOR_FUNC(unsigned char, 8)
-GRAY_TO_COLOR_FUNC(unsigned short, 16)
+GRAY_TO_COLOR_FUNC(unsigned char, 8) // gray_8_to_color
+GRAY_TO_COLOR_FUNC(unsigned short, 16) // gray_16_to_color
 GENERIC_COLOR_FUNC(gray, color)
 
+#define GRAY_TO_KCMY_FUNC(T, bits)					\
+CFUNC									\
+gray_##bits##_to_kcmy(const stp_vars_t *vars, const unsigned char *in,	\
+		      unsigned short *out)				\
+{									\
+  int i;								\
+  union {								\
+    unsigned short nz[4];						\
+    unsigned long long nzl;						\
+  } nzx;								\
+  unsigned retval = 0;							\
+  const T *s_in = (const T *) in;					\
+  lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));	\
+  const unsigned short *red;						\
+  const unsigned short *green;						\
+  const unsigned short *blue;						\
+  const unsigned short *user;						\
+									\
+  for (i = CHANNEL_C; i <= CHANNEL_Y; i++)				\
+    stp_curve_resample(lut->channel_curves[i].curve, 65536);		\
+  stp_curve_resample							\
+    (stp_curve_cache_get_curve(&(lut->user_color_correction)), 1 << bits); \
+  red =									\
+    stp_curve_cache_get_ushort_data(&(lut->channel_curves[CHANNEL_C]));	\
+  green =								\
+    stp_curve_cache_get_ushort_data(&(lut->channel_curves[CHANNEL_M]));	\
+  blue =								\
+    stp_curve_cache_get_ushort_data(&(lut->channel_curves[CHANNEL_Y]));	\
+  user =								\
+    stp_curve_cache_get_ushort_data(&(lut->user_color_correction));	\
+									\
+  for (i = 0; i < lut->image_width; i++, out += 4, s_in++)		\
+    {									\
+      out[1] = red[user[s_in[0]]];					\
+      out[2] = green[user[s_in[0]]];					\
+      out[3] = blue[user[s_in[0]]];					\
+      out[0] = FMIN(out[1], FMIN(out[2], out[3]));			\
+      out[1] -= out[0];							\
+      out[2] -= out[0];							\
+      out[3] -= out[0];							\
+      nzx.nzl |= *(unsigned long long *) out;				\
+    }									\
+  for (i = 0; i < 4; i++)						\
+    if (nzx.nz[i] == 0)							\
+      retval |= (1 << i);						\
+  return retval;							\
+}
+
+GRAY_TO_KCMY_FUNC(unsigned char, 8) // gray_8_to_kcmy
+GRAY_TO_KCMY_FUNC(unsigned short, 16) // gray_16_to_kcmy
+GENERIC_COLOR_FUNC(gray, kcmy)
+
 #define GRAY_TO_COLOR_RAW_FUNC(T, bits)					   \
-static unsigned								   \
+CFUNC									   \
 gray_##bits##_to_color_raw(const stp_vars_t *vars, const unsigned char *in,\
 			   unsigned short *out)				   \
 {									   \
@@ -757,50 +948,42 @@ gray_##bits##_to_color_raw(const stp_vars_t *vars, const unsigned char *in,\
   return nz;								   \
 }
 
-GRAY_TO_COLOR_RAW_FUNC(unsigned char, 8)
-GRAY_TO_COLOR_RAW_FUNC(unsigned short, 16)
+GRAY_TO_COLOR_RAW_FUNC(unsigned char, 8) // gray_8_to_color_raw
+GRAY_TO_COLOR_RAW_FUNC(unsigned short, 16) // gray_16_to_color_raw
 GENERIC_COLOR_FUNC(gray, color_raw)
 
-#define COLOR_TO_KCMY_FUNC(name, name2, name3, name4, bits)		    \
-static unsigned								    \
-name##_##bits##_to_##name2(const stp_vars_t *vars, const unsigned char *in, \
-			   unsigned short *out)				    \
-{									    \
-  lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));	    \
-  size_t real_steps = lut->steps;					    \
-  unsigned status;							    \
-  if (!lut->cmy_tmp)							    \
-    lut->cmy_tmp = stp_malloc(4 * 2 * lut->image_width);		    \
-  name##_##bits##_to_##name3(vars, in, lut->cmy_tmp);			    \
-  lut->steps = 65536;							    \
-  status = name4##_cmy_to_kcmy(vars, lut->cmy_tmp, out);		    \
-  lut->steps = real_steps;						    \
-  return status;							    \
+#define GRAY_TO_KCMY_RAW_FUNC(T, bits)					\
+CFUNC									\
+gray_##bits##_to_kcmy_raw(const stp_vars_t *vars, const unsigned char *in, \
+			   unsigned short *out)				\
+{									\
+  int i;								\
+  int nz = 7;								\
+  const T *s_in = (const T *) in;					\
+  lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));	\
+  unsigned mask = 0;							\
+  if (lut->invert_output)						\
+    mask = 0xffff;							\
+									\
+  for (i = 0; i < lut->image_width; i++, out += 4, s_in++)		\
+    {									\
+      unsigned outval = (s_in[0] * (65535 / (1 << bits))) ^ mask;	\
+      out[0] = outval;							\
+      out[1] = 0;							\
+      out[2] = 0;							\
+      out[3] = 0;							\
+      if (outval)							\
+	nz = 0;								\
+    }									\
+  return nz;								\
 }
 
-COLOR_TO_KCMY_FUNC(gray, kcmy, color, raw, 8)
-COLOR_TO_KCMY_FUNC(gray, kcmy, color, raw, 16)
-GENERIC_COLOR_FUNC(gray, kcmy)
-
-COLOR_TO_KCMY_FUNC(gray, kcmy_raw, color_raw, raw, 8)
-COLOR_TO_KCMY_FUNC(gray, kcmy_raw, color_raw, raw, 16)
+GRAY_TO_KCMY_RAW_FUNC(unsigned char, 8) // gray_8_to_kcmy_raw
+GRAY_TO_KCMY_RAW_FUNC(unsigned short, 16) // gray_16_to_kcmy_raw
 GENERIC_COLOR_FUNC(gray, kcmy_raw)
 
-COLOR_TO_KCMY_FUNC(color, kcmy, color, raw, 8)
-COLOR_TO_KCMY_FUNC(color, kcmy, color, raw, 16)
-GENERIC_COLOR_FUNC(color, kcmy)
-
-COLOR_TO_KCMY_FUNC(color, kcmy_fast, color_fast, raw, 8)
-COLOR_TO_KCMY_FUNC(color, kcmy_fast, color_fast, raw, 16)
-GENERIC_COLOR_FUNC(color, kcmy_fast)
-
-COLOR_TO_KCMY_FUNC(color, kcmy_raw, color_raw, raw, 8)
-COLOR_TO_KCMY_FUNC(color, kcmy_raw, color_raw, raw, 16)
-GENERIC_COLOR_FUNC(color, kcmy_raw)
-
-
 #define COLOR_TO_KCMY_THRESHOLD_FUNC(T, name)				\
-static unsigned								\
+CFUNC									\
 name##_to_kcmy_threshold(const stp_vars_t *vars,			\
 			const unsigned char *in,			\
 			unsigned short *out)				\
@@ -852,12 +1035,12 @@ name##_to_kcmy_threshold(const stp_vars_t *vars,			\
   return z;								\
 }
 
-COLOR_TO_KCMY_THRESHOLD_FUNC(unsigned char, color_8)
-COLOR_TO_KCMY_THRESHOLD_FUNC(unsigned short, color_16)
+COLOR_TO_KCMY_THRESHOLD_FUNC(unsigned char, color_8) // color_8_to_kcmy_threshold
+COLOR_TO_KCMY_THRESHOLD_FUNC(unsigned short, color_16) // color_16_to_kcmy_threshold
 GENERIC_COLOR_FUNC(color, kcmy_threshold)
 
 #define CMYK_TO_KCMY_THRESHOLD_FUNC(T, name)				\
-static unsigned								\
+CFUNC									\
 name##_to_kcmy_threshold(const stp_vars_t *vars,			\
 			const unsigned char *in,			\
 			unsigned short *out)				\
@@ -899,12 +1082,12 @@ name##_to_kcmy_threshold(const stp_vars_t *vars,			\
   return z;								\
 }
 
-CMYK_TO_KCMY_THRESHOLD_FUNC(unsigned char, cmyk_8)
-CMYK_TO_KCMY_THRESHOLD_FUNC(unsigned short, cmyk_16)
+CMYK_TO_KCMY_THRESHOLD_FUNC(unsigned char, cmyk_8) // cmyk_8_to_kcmy_threshold
+CMYK_TO_KCMY_THRESHOLD_FUNC(unsigned short, cmyk_16) // cmyk_16_to_kcmy_threshodl
 GENERIC_COLOR_FUNC(cmyk, kcmy_threshold)
 
 #define KCMY_TO_KCMY_THRESHOLD_FUNC(T, name)				\
-static unsigned								\
+CFUNC									\
 name##_to_kcmy_threshold(const stp_vars_t *vars,			\
 			 const unsigned char *in,			\
 			 unsigned short *out)				\
@@ -939,12 +1122,12 @@ name##_to_kcmy_threshold(const stp_vars_t *vars,			\
   return z;								\
 }
 
-KCMY_TO_KCMY_THRESHOLD_FUNC(unsigned char, kcmy_8)
-KCMY_TO_KCMY_THRESHOLD_FUNC(unsigned short, kcmy_16)
+KCMY_TO_KCMY_THRESHOLD_FUNC(unsigned char, kcmy_8) // kcmy_8_to_kcmy_threshold
+KCMY_TO_KCMY_THRESHOLD_FUNC(unsigned short, kcmy_16) // kcmy_8_to_kcmy_threshold
 GENERIC_COLOR_FUNC(kcmy, kcmy_threshold)
 
 #define GRAY_TO_COLOR_THRESHOLD_FUNC(T, name, bits, channels)		\
-static unsigned								\
+CFUNC									\
 gray_##bits##_to_##name##_threshold(const stp_vars_t *vars,		\
 				    const unsigned char *in,		\
 				    unsigned short *out)		\
@@ -974,16 +1157,16 @@ gray_##bits##_to_##name##_threshold(const stp_vars_t *vars,		\
 }
 
 
-GRAY_TO_COLOR_THRESHOLD_FUNC(unsigned char, color, 8, 3)
-GRAY_TO_COLOR_THRESHOLD_FUNC(unsigned short, color, 16, 3)
+GRAY_TO_COLOR_THRESHOLD_FUNC(unsigned char, color, 8, 3) // gray_8_to_color_threshold
+GRAY_TO_COLOR_THRESHOLD_FUNC(unsigned short, color, 16, 3) // gray_16_to_color_threshold
 GENERIC_COLOR_FUNC(gray, color_threshold)
 
-GRAY_TO_COLOR_THRESHOLD_FUNC(unsigned char, kcmy, 8, 4)
-GRAY_TO_COLOR_THRESHOLD_FUNC(unsigned short, kcmy, 16, 4)
+GRAY_TO_COLOR_THRESHOLD_FUNC(unsigned char, kcmy, 8, 4) // gray_8_to_kcmy_threshold
+GRAY_TO_COLOR_THRESHOLD_FUNC(unsigned short, kcmy, 16, 4) // gray_16_to_kcmy_threshold
 GENERIC_COLOR_FUNC(gray, kcmy_threshold)
 
 #define COLOR_TO_COLOR_THRESHOLD_FUNC(T, name)				\
-static unsigned								\
+CFUNC									\
 name##_to_color_threshold(const stp_vars_t *vars,			\
 		       const unsigned char *in,				\
 		       unsigned short *out)				\
@@ -1020,12 +1203,12 @@ name##_to_color_threshold(const stp_vars_t *vars,			\
   return z;								\
 }
 
-COLOR_TO_COLOR_THRESHOLD_FUNC(unsigned char, color_8)
-COLOR_TO_COLOR_THRESHOLD_FUNC(unsigned short, color_16)
+COLOR_TO_COLOR_THRESHOLD_FUNC(unsigned char, color_8) // color_8_to_color_threshold
+COLOR_TO_COLOR_THRESHOLD_FUNC(unsigned short, color_16) // color_8_to_color_threshold
 GENERIC_COLOR_FUNC(color, color_threshold)
 
 #define COLOR_TO_GRAY_THRESHOLD_FUNC(T, name, channels, max_channels)	\
-static unsigned								\
+CFUNC									\
 name##_to_gray_threshold(const stp_vars_t *vars,			\
 			const unsigned char *in,			\
 			unsigned short *out)				\
@@ -1058,24 +1241,24 @@ name##_to_gray_threshold(const stp_vars_t *vars,			\
   return z;								\
 }
 
-COLOR_TO_GRAY_THRESHOLD_FUNC(unsigned char, cmyk_8, 4, 4)
-COLOR_TO_GRAY_THRESHOLD_FUNC(unsigned short, cmyk_16, 4, 4)
+COLOR_TO_GRAY_THRESHOLD_FUNC(unsigned char, cmyk_8, 4, 4) // cmyk_8_to_gray_threshold
+COLOR_TO_GRAY_THRESHOLD_FUNC(unsigned short, cmyk_16, 4, 4) // cmyk_16_to_gray_threshold
 GENERIC_COLOR_FUNC(cmyk, gray_threshold)
 
-COLOR_TO_GRAY_THRESHOLD_FUNC(unsigned char, kcmy_8, 4, 4)
-COLOR_TO_GRAY_THRESHOLD_FUNC(unsigned short, kcmy_16, 4, 4)
+COLOR_TO_GRAY_THRESHOLD_FUNC(unsigned char, kcmy_8, 4, 4) // kcmy_8_to_gray_threshold
+COLOR_TO_GRAY_THRESHOLD_FUNC(unsigned short, kcmy_16, 4, 4) // kcmy_16_to_gray_threshold
 GENERIC_COLOR_FUNC(kcmy, gray_threshold)
 
-COLOR_TO_GRAY_THRESHOLD_FUNC(unsigned char, color_8, 3, 3)
-COLOR_TO_GRAY_THRESHOLD_FUNC(unsigned short, color_16, 3, 3)
+COLOR_TO_GRAY_THRESHOLD_FUNC(unsigned char, color_8, 3, 3) // color_8_to_gray_threshold
+COLOR_TO_GRAY_THRESHOLD_FUNC(unsigned short, color_16, 3, 3) // color_16_to_gray_threshold
 GENERIC_COLOR_FUNC(color, gray_threshold)
 
-COLOR_TO_GRAY_THRESHOLD_FUNC(unsigned char, gray_8, 1, 1)
-COLOR_TO_GRAY_THRESHOLD_FUNC(unsigned short, gray_16, 1, 1)
+COLOR_TO_GRAY_THRESHOLD_FUNC(unsigned char, gray_8, 1, 1) // gray_8_to_gray_threshold
+COLOR_TO_GRAY_THRESHOLD_FUNC(unsigned short, gray_16, 1, 1) // gray_16_to_gray_threshold
 GENERIC_COLOR_FUNC(gray, gray_threshold)
 
 #define CMYK_TO_COLOR_FUNC(namein, name2, T, bits, offset)		      \
-static unsigned								      \
+CFUNC									      \
 namein##_##bits##_to_##name2(const stp_vars_t *vars, const unsigned char *in, \
 			   unsigned short *out)				      \
 {									      \
@@ -1120,33 +1303,33 @@ namein##_##bits##_to_##name2(const stp_vars_t *vars, const unsigned char *in, \
   return status;							      \
 }
 
-CMYK_TO_COLOR_FUNC(cmyk, color, unsigned char, 8, 0)
-CMYK_TO_COLOR_FUNC(cmyk, color, unsigned short, 16, 0)
+CMYK_TO_COLOR_FUNC(cmyk, color, unsigned char, 8, 0) // cmyk_8_to_color
+CMYK_TO_COLOR_FUNC(cmyk, color, unsigned short, 16, 0) // cmyk_16_to_color
 GENERIC_COLOR_FUNC(cmyk, color)
-CMYK_TO_COLOR_FUNC(kcmy, color, unsigned char, 8, 1)
-CMYK_TO_COLOR_FUNC(kcmy, color, unsigned short, 16, 1)
+CMYK_TO_COLOR_FUNC(kcmy, color, unsigned char, 8, 1) // kcmy_8_to_color
+CMYK_TO_COLOR_FUNC(kcmy, color, unsigned short, 16, 1) // kcmy_16_to_color
 GENERIC_COLOR_FUNC(kcmy, color)
-CMYK_TO_COLOR_FUNC(cmyk, color_threshold, unsigned char, 8, 0)
-CMYK_TO_COLOR_FUNC(cmyk, color_threshold, unsigned short, 16, 0)
+CMYK_TO_COLOR_FUNC(cmyk, color_threshold, unsigned char, 8, 0) // cmyk_8_to_color_threshold
+CMYK_TO_COLOR_FUNC(cmyk, color_threshold, unsigned short, 16, 0) // cmyk_16_to_color_threshold
 GENERIC_COLOR_FUNC(cmyk, color_threshold)
-CMYK_TO_COLOR_FUNC(kcmy, color_threshold, unsigned char, 8, 1)
-CMYK_TO_COLOR_FUNC(kcmy, color_threshold, unsigned short, 16, 1)
+CMYK_TO_COLOR_FUNC(kcmy, color_threshold, unsigned char, 8, 1) // kcmy_8_to_color_threshold
+CMYK_TO_COLOR_FUNC(kcmy, color_threshold, unsigned short, 16, 1) // kcmy_16_to_color_threshold
 GENERIC_COLOR_FUNC(kcmy, color_threshold)
-CMYK_TO_COLOR_FUNC(cmyk, color_fast, unsigned char, 8, 0)
-CMYK_TO_COLOR_FUNC(cmyk, color_fast, unsigned short, 16, 0)
+CMYK_TO_COLOR_FUNC(cmyk, color_fast, unsigned char, 8, 0) // cmyk_8_to_color_fast
+CMYK_TO_COLOR_FUNC(cmyk, color_fast, unsigned short, 16, 0) // cmyk_16_to_color_fast
 GENERIC_COLOR_FUNC(cmyk, color_fast)
-CMYK_TO_COLOR_FUNC(kcmy, color_fast, unsigned char, 8, 1)
-CMYK_TO_COLOR_FUNC(kcmy, color_fast, unsigned short, 16, 1)
+CMYK_TO_COLOR_FUNC(kcmy, color_fast, unsigned char, 8, 1) // kcmy_8_to_color_fast
+CMYK_TO_COLOR_FUNC(kcmy, color_fast, unsigned short, 16, 1) // kcmy_16_to_color_fast
 GENERIC_COLOR_FUNC(kcmy, color_fast)
-CMYK_TO_COLOR_FUNC(cmyk, color_raw, unsigned char, 8, 0)
-CMYK_TO_COLOR_FUNC(cmyk, color_raw, unsigned short, 16, 0)
+CMYK_TO_COLOR_FUNC(cmyk, color_raw, unsigned char, 8, 0) // cmyk_8_to_color_raw
+CMYK_TO_COLOR_FUNC(cmyk, color_raw, unsigned short, 16, 0) // cmyk_16_to_color_raw
 GENERIC_COLOR_FUNC(cmyk, color_raw)
-CMYK_TO_COLOR_FUNC(kcmy, color_raw, unsigned char, 8, 1)
-CMYK_TO_COLOR_FUNC(kcmy, color_raw, unsigned short, 16, 1)
+CMYK_TO_COLOR_FUNC(kcmy, color_raw, unsigned char, 8, 1) // kcmy_8_to_color_raw
+CMYK_TO_COLOR_FUNC(kcmy, color_raw, unsigned short, 16, 1) // kcmy_16_to_color_raw
 GENERIC_COLOR_FUNC(kcmy, color_raw)
 
 #define CMYK_TO_KCMY_FUNC(T, size)					    \
-static unsigned								    \
+CFUNC									    \
 cmyk_##size##_to_kcmy(const stp_vars_t *vars,				    \
 		      const unsigned char *in,				    \
 		      unsigned short *out)				    \
@@ -1186,12 +1369,12 @@ cmyk_##size##_to_kcmy(const stp_vars_t *vars,				    \
   return retval;							    \
 }
 
-CMYK_TO_KCMY_FUNC(unsigned char, 8)
-CMYK_TO_KCMY_FUNC(unsigned short, 16)
+CMYK_TO_KCMY_FUNC(unsigned char, 8) // cmyk_8_to_kcmy
+CMYK_TO_KCMY_FUNC(unsigned short, 16) // cmyk_16_to_kcmy
 GENERIC_COLOR_FUNC(cmyk, kcmy)
 
 #define KCMY_TO_KCMY_FUNC(T, size)					    \
-static unsigned								    \
+CFUNC									    \
 kcmy_##size##_to_kcmy(const stp_vars_t *vars,				    \
 		      const unsigned char *in,				    \
 		      unsigned short *out)				    \
@@ -1230,13 +1413,13 @@ kcmy_##size##_to_kcmy(const stp_vars_t *vars,				    \
   return retval;							    \
 }
 
-KCMY_TO_KCMY_FUNC(unsigned char, 8)
-KCMY_TO_KCMY_FUNC(unsigned short, 16)
+KCMY_TO_KCMY_FUNC(unsigned char, 8) // kcmy_8_to_kcmy
+KCMY_TO_KCMY_FUNC(unsigned short, 16) // kcmy_16_to_kcmy
 GENERIC_COLOR_FUNC(kcmy, kcmy)
 
 
 #define GRAY_TO_GRAY_FUNC(T, bits)					   \
-static unsigned								   \
+CFUNC									   \
 gray_##bits##_to_gray(const stp_vars_t *vars,				   \
 		      const unsigned char *in,				   \
 		      unsigned short *out)				   \
@@ -1275,12 +1458,12 @@ gray_##bits##_to_gray(const stp_vars_t *vars,				   \
   return nz == 0;							   \
 }
 
-GRAY_TO_GRAY_FUNC(unsigned char, 8)
-GRAY_TO_GRAY_FUNC(unsigned short, 16)
+GRAY_TO_GRAY_FUNC(unsigned char, 8) // gray_8_to_gray
+GRAY_TO_GRAY_FUNC(unsigned short, 16) // gray_16_to_gray
 GENERIC_COLOR_FUNC(gray, gray)
 
 #define COLOR_TO_GRAY_FUNC(T, bits)					      \
-static unsigned								      \
+CFUNC									      \
 color_##bits##_to_gray(const stp_vars_t *vars,				      \
 		       const unsigned char *in,				      \
 		       unsigned short *out)				      \
@@ -1331,13 +1514,13 @@ color_##bits##_to_gray(const stp_vars_t *vars,				      \
   return nz == 0;							      \
 }
 
-COLOR_TO_GRAY_FUNC(unsigned char, 8)
-COLOR_TO_GRAY_FUNC(unsigned short, 16)
+COLOR_TO_GRAY_FUNC(unsigned char, 8) // color_8_to_gray
+COLOR_TO_GRAY_FUNC(unsigned short, 16) // color_16_to_gray
 GENERIC_COLOR_FUNC(color, gray)
 
 
 #define CMYK_TO_GRAY_FUNC(T, bits)					    \
-static unsigned								    \
+CFUNC									    \
 cmyk_##bits##_to_gray(const stp_vars_t *vars,				    \
 		      const unsigned char *in,				    \
 		      unsigned short *out)				    \
@@ -1392,12 +1575,12 @@ cmyk_##bits##_to_gray(const stp_vars_t *vars,				    \
   return nz ? 0 : 1;							    \
 }
 
-CMYK_TO_GRAY_FUNC(unsigned char, 8)
-CMYK_TO_GRAY_FUNC(unsigned short, 16)
+CMYK_TO_GRAY_FUNC(unsigned char, 8) // cmyk_8_to_gray
+CMYK_TO_GRAY_FUNC(unsigned short, 16) // cmyk_16_to_gray
 GENERIC_COLOR_FUNC(cmyk, gray)
 
 #define KCMY_TO_GRAY_FUNC(T, bits)					    \
-static unsigned								    \
+CFUNC									    \
 kcmy_##bits##_to_gray(const stp_vars_t *vars,				    \
 		      const unsigned char *in,				    \
 		      unsigned short *out)				    \
@@ -1452,12 +1635,12 @@ kcmy_##bits##_to_gray(const stp_vars_t *vars,				    \
   return nz ? 0 : 1;							    \
 }
 
-KCMY_TO_GRAY_FUNC(unsigned char, 8)
-KCMY_TO_GRAY_FUNC(unsigned short, 16)
+KCMY_TO_GRAY_FUNC(unsigned char, 8) // kcmy_8_to_gray
+KCMY_TO_GRAY_FUNC(unsigned short, 16) // kcmy_16_to_gray
 GENERIC_COLOR_FUNC(kcmy, gray)
 
 #define GRAY_TO_GRAY_RAW_FUNC(T, bits)					\
-static unsigned								\
+CFUNC									\
 gray_##bits##_to_gray_raw(const stp_vars_t *vars,			\
 			  const unsigned char *in,			\
 			  unsigned short *out)				\
@@ -1483,12 +1666,12 @@ gray_##bits##_to_gray_raw(const stp_vars_t *vars,			\
   return nz == 0;							\
 }
 
-GRAY_TO_GRAY_RAW_FUNC(unsigned char, 8)
-GRAY_TO_GRAY_RAW_FUNC(unsigned short, 16)
+GRAY_TO_GRAY_RAW_FUNC(unsigned char, 8) // gray_8_to_gray_raw
+GRAY_TO_GRAY_RAW_FUNC(unsigned short, 16) // gray_16_to_gray_raw
 GENERIC_COLOR_FUNC(gray, gray_raw)
 
 #define COLOR_TO_GRAY_RAW_FUNC(T, bits, invertable, name2)		\
-static unsigned								\
+CFUNC									\
 color_##bits##_to_gray_##name2(const stp_vars_t *vars,			\
 			       const unsigned char *in,			\
 			       unsigned short *out)			\
@@ -1535,15 +1718,16 @@ color_##bits##_to_gray_##name2(const stp_vars_t *vars,			\
   return nz == 0;							\
 }
 
-COLOR_TO_GRAY_RAW_FUNC(unsigned char, 8, 1, raw)
-COLOR_TO_GRAY_RAW_FUNC(unsigned short, 16, 1, raw)
+COLOR_TO_GRAY_RAW_FUNC(unsigned char, 8, 1, raw) // color_8_to_gray_raw
+COLOR_TO_GRAY_RAW_FUNC(unsigned short, 16, 1, raw) // color_16_to_gray_raw
 GENERIC_COLOR_FUNC(color, gray_raw)
-COLOR_TO_GRAY_RAW_FUNC(unsigned char, 8, 0, noninvert)
-COLOR_TO_GRAY_RAW_FUNC(unsigned short, 16, 0, noninvert)
+COLOR_TO_GRAY_RAW_FUNC(unsigned char, 8, 0, noninvert) // color_8_to_gray_noninvert
+COLOR_TO_GRAY_RAW_FUNC(unsigned short, 16, 0, noninvert) // color_16_to_gray_noninvert
+// GENERIC_COLOR_FUNC(color, gray_noninvert)
 
 
 #define CMYK_TO_GRAY_RAW_FUNC(T, bits, invertable, name2)		    \
-static unsigned								    \
+CFUNC									    \
 cmyk_##bits##_to_gray_##name2(const stp_vars_t *vars,			    \
 			      const unsigned char *in,			    \
 			      unsigned short *out)			    \
@@ -1595,14 +1779,15 @@ cmyk_##bits##_to_gray_##name2(const stp_vars_t *vars,			    \
   return nz ? 0 : 1;							    \
 }
 
-CMYK_TO_GRAY_RAW_FUNC(unsigned char, 8, 1, raw)
-CMYK_TO_GRAY_RAW_FUNC(unsigned short, 16, 1, raw)
+CMYK_TO_GRAY_RAW_FUNC(unsigned char, 8, 1, raw) // cmyk_8_to_gray_raw
+CMYK_TO_GRAY_RAW_FUNC(unsigned short, 16, 1, raw) // cmyk_16_to_gray_raw
 GENERIC_COLOR_FUNC(cmyk, gray_raw)
-CMYK_TO_GRAY_RAW_FUNC(unsigned char, 8, 0, noninvert)
-CMYK_TO_GRAY_RAW_FUNC(unsigned short, 16, 0, noninvert)
+CMYK_TO_GRAY_RAW_FUNC(unsigned char, 8, 0, noninvert) // cmyk_8_to_gray_noninvert
+CMYK_TO_GRAY_RAW_FUNC(unsigned short, 16, 0, noninvert) // cmyk_16_to_gray_noninvert
+// GENERIC_COLOR_FUNC(cmyk, gray_noninvert)
 
 #define KCMY_TO_GRAY_RAW_FUNC(T, bits, invertable, name2)		    \
-static unsigned								    \
+CFUNC									    \
 kcmy_##bits##_to_gray_##name2(const stp_vars_t *vars,			    \
 			      const unsigned char *in,			    \
 			      unsigned short *out)			    \
@@ -1654,14 +1839,15 @@ kcmy_##bits##_to_gray_##name2(const stp_vars_t *vars,			    \
   return nz ? 0 : 1;							    \
 }
 
-KCMY_TO_GRAY_RAW_FUNC(unsigned char, 8, 1, raw)
-KCMY_TO_GRAY_RAW_FUNC(unsigned short, 16, 1, raw)
+KCMY_TO_GRAY_RAW_FUNC(unsigned char, 8, 1, raw) // kcmy_8_to_gray_raw
+KCMY_TO_GRAY_RAW_FUNC(unsigned short, 16, 1, raw) // kcmy_16_to_gray_raw
 GENERIC_COLOR_FUNC(kcmy, gray_raw)
-KCMY_TO_GRAY_RAW_FUNC(unsigned char, 8, 0, noninvert)
-KCMY_TO_GRAY_RAW_FUNC(unsigned short, 16, 0, noninvert)
+KCMY_TO_GRAY_RAW_FUNC(unsigned char, 8, 0, noninvert) // kcmy_8_to_gray_noninvert
+KCMY_TO_GRAY_RAW_FUNC(unsigned short, 16, 0, noninvert) // kcmy_16_to_gray_noninvert
+// GENERIC_COLOR_FUNC(kcmy, gray_noninvert)
 
 #define CMYK_TO_KCMY_RAW_FUNC(T, bits)					\
-static unsigned								\
+CFUNC									\
 cmyk_##bits##_to_kcmy_raw(const stp_vars_t *vars,			\
 			  const unsigned char *in,			\
 			  unsigned short *out)				\
@@ -1691,12 +1877,12 @@ cmyk_##bits##_to_kcmy_raw(const stp_vars_t *vars,			\
   return retval;							\
 }
 
-CMYK_TO_KCMY_RAW_FUNC(unsigned char, 8)
-CMYK_TO_KCMY_RAW_FUNC(unsigned short, 16)
+CMYK_TO_KCMY_RAW_FUNC(unsigned char, 8) // cmyk_8_to_kcmy_raw
+CMYK_TO_KCMY_RAW_FUNC(unsigned short, 16) // cmyk_16_to_kcmy_raw
 GENERIC_COLOR_FUNC(cmyk, kcmy_raw)
 
 #define KCMY_TO_KCMY_RAW_FUNC(T, bits)					\
-static unsigned								\
+CFUNC									\
 kcmy_##bits##_to_kcmy_raw(const stp_vars_t *vars,			\
 			  const unsigned char *in,			\
 			  unsigned short *out)				\
@@ -1725,12 +1911,12 @@ kcmy_##bits##_to_kcmy_raw(const stp_vars_t *vars,			\
   return retval;							\
 }
 
-KCMY_TO_KCMY_RAW_FUNC(unsigned char, 8)
-KCMY_TO_KCMY_RAW_FUNC(unsigned short, 16)
+KCMY_TO_KCMY_RAW_FUNC(unsigned char, 8) // kcmy_8_to_kcmy_raw
+KCMY_TO_KCMY_RAW_FUNC(unsigned short, 16) // kcmy_16_to_kcmy_raw
 GENERIC_COLOR_FUNC(kcmy, kcmy_raw)
 
 #define DESATURATED_FUNC(name, name2, bits)				   \
-static unsigned								   \
+CFUNC									   \
 name##_##bits##_to_##name2##_desaturated(const stp_vars_t *vars,	   \
 				         const unsigned char *in,	   \
 				         unsigned short *out)		   \
@@ -1747,29 +1933,29 @@ name##_##bits##_to_##name2##_desaturated(const stp_vars_t *vars,	   \
   return status;							   \
 }
 
-DESATURATED_FUNC(color, color, 8)
-DESATURATED_FUNC(color, color, 16)
+DESATURATED_FUNC(color, color, 8) // color_8_to_color_desaturated
+DESATURATED_FUNC(color, color, 16) // color_16_to_color_desaturated
 GENERIC_COLOR_FUNC(color, color_desaturated)
-DESATURATED_FUNC(color, kcmy, 8)
-DESATURATED_FUNC(color, kcmy, 16)
+DESATURATED_FUNC(color, kcmy, 8) // color_8_to_kcmy_desaturated
+DESATURATED_FUNC(color, kcmy, 16) // color_8_to_kcmy_desaturated
 GENERIC_COLOR_FUNC(color, kcmy_desaturated)
 
-DESATURATED_FUNC(cmyk, color, 8)
-DESATURATED_FUNC(cmyk, color, 16)
+DESATURATED_FUNC(cmyk, color, 8) // cmyk_8_to_color_desaturated
+DESATURATED_FUNC(cmyk, color, 16) // cmyk_16_to_color_desaturated
 GENERIC_COLOR_FUNC(cmyk, color_desaturated)
-DESATURATED_FUNC(cmyk, kcmy, 8)
-DESATURATED_FUNC(cmyk, kcmy, 16)
+DESATURATED_FUNC(cmyk, kcmy, 8) // cmyk_8_to_kcmy_desaturated
+DESATURATED_FUNC(cmyk, kcmy, 16) // cmyk_16_to_kcmy_desaturated
 GENERIC_COLOR_FUNC(cmyk, kcmy_desaturated)
 
-DESATURATED_FUNC(kcmy, color, 8)
-DESATURATED_FUNC(kcmy, color, 16)
+DESATURATED_FUNC(kcmy, color, 8) // kcmy_8_to_color_desaturated
+DESATURATED_FUNC(kcmy, color, 16) // kcmy_16_to_kcmy_desaturated
 GENERIC_COLOR_FUNC(kcmy, color_desaturated)
-DESATURATED_FUNC(kcmy, kcmy, 8)
-DESATURATED_FUNC(kcmy, kcmy, 16)
+DESATURATED_FUNC(kcmy, kcmy, 8) // kcmy_8_to_color_desaturated
+DESATURATED_FUNC(kcmy, kcmy, 16) // kcmy_16_to_kcmy_desaturated
 GENERIC_COLOR_FUNC(kcmy, kcmy_desaturated)
 
 #define CMYK_DISPATCH(name)						\
-static unsigned								\
+CFUNC									\
 CMYK_to_##name(const stp_vars_t *vars, const unsigned char *in,		\
 	       unsigned short *out)					\
 {									\
@@ -1786,21 +1972,21 @@ CMYK_to_##name(const stp_vars_t *vars, const unsigned char *in,		\
     }									\
 }
 
-CMYK_DISPATCH(color)
-CMYK_DISPATCH(color_raw)
-CMYK_DISPATCH(color_fast)
-CMYK_DISPATCH(color_threshold)
-CMYK_DISPATCH(color_desaturated)
-CMYK_DISPATCH(kcmy)
-CMYK_DISPATCH(kcmy_raw)
-CMYK_DISPATCH(kcmy_threshold)
-CMYK_DISPATCH(kcmy_desaturated)
-CMYK_DISPATCH(gray)
-CMYK_DISPATCH(gray_raw)
-CMYK_DISPATCH(gray_threshold)
+CMYK_DISPATCH(color)		/* CMYK_to_color */
+CMYK_DISPATCH(color_raw)	/* CMYK_to_color_raw */
+CMYK_DISPATCH(color_fast)	/* CMYK_to_color_fast */
+CMYK_DISPATCH(color_threshold)	/* CMYK_to_color_threshold */
+CMYK_DISPATCH(color_desaturated) /* CMYK_to_color_desaturated */
+CMYK_DISPATCH(kcmy)		 /* CMYK_to_kcmy */
+CMYK_DISPATCH(kcmy_raw)		 /* CMYK_to_kcmy_raw */
+CMYK_DISPATCH(kcmy_threshold)	 /* CMYK_to_kcmy_threshold */
+CMYK_DISPATCH(kcmy_desaturated)	 /* CMYK_to_kcmy_desaturated */
+CMYK_DISPATCH(gray)		 /* CMYK_to_gray */
+CMYK_DISPATCH(gray_raw)		 /* CMYK_to_gray_raw */
+CMYK_DISPATCH(gray_threshold)	 /* CMYK_to_gray_threshold */
 
 #define RAW_TO_RAW_THRESHOLD_FUNC(T, name)				\
-static unsigned								\
+CFUNC									\
 name##_to_raw_threshold(const stp_vars_t *vars,				\
 			const unsigned char *in,			\
 			unsigned short *out)				\
@@ -1835,12 +2021,12 @@ name##_to_raw_threshold(const stp_vars_t *vars,				\
   return z;								\
 }
 
-RAW_TO_RAW_THRESHOLD_FUNC(unsigned char, raw_8)
-RAW_TO_RAW_THRESHOLD_FUNC(unsigned short, raw_16)
+RAW_TO_RAW_THRESHOLD_FUNC(unsigned char, raw_8) // raw_8_to_raw_threshold
+RAW_TO_RAW_THRESHOLD_FUNC(unsigned short, raw_16) // raw_16_to_raw_threshold
 GENERIC_COLOR_FUNC(raw, raw_threshold)
 
 #define RAW_TO_RAW_FUNC(T, size)					    \
-static unsigned								    \
+CFUNC									    \
 raw_##size##_to_raw(const stp_vars_t *vars,				    \
 		    const unsigned char *in,				    \
 		    unsigned short *out)				    \
@@ -1879,13 +2065,13 @@ raw_##size##_to_raw(const stp_vars_t *vars,				    \
   return retval;							    \
 }
 
-RAW_TO_RAW_FUNC(unsigned char, 8)
-RAW_TO_RAW_FUNC(unsigned short, 16)
+RAW_TO_RAW_FUNC(unsigned char, 8) // raw_8_to_raw
+RAW_TO_RAW_FUNC(unsigned short, 16) // raw_8_to_raw
 GENERIC_COLOR_FUNC(raw, raw)
 
 
 #define RAW_TO_RAW_RAW_FUNC(T, bits)					\
-static unsigned								\
+CFUNC									\
 raw_##bits##_to_raw_raw(const stp_vars_t *vars,				\
 		        const unsigned char *in,			\
 		        unsigned short *out)				\
@@ -1915,13 +2101,13 @@ raw_##bits##_to_raw_raw(const stp_vars_t *vars,				\
   return retval;							\
 }
 
-RAW_TO_RAW_RAW_FUNC(unsigned char, 8)
-RAW_TO_RAW_RAW_FUNC(unsigned short, 16)
+RAW_TO_RAW_RAW_FUNC(unsigned char, 8) // raw_8_to_raw_raw
+RAW_TO_RAW_RAW_FUNC(unsigned short, 16) // raw_16_to_raw_raw
 GENERIC_COLOR_FUNC(raw, raw_raw)
 
 
 #define CONVERSION_FUNCTION_WITH_FAST(from, to, from2)			\
-static unsigned								\
+CFUNC									\
 generic_##from##_to_##to(const stp_vars_t *v,				\
 			 const unsigned char *in,			\
 			 unsigned short *out)				\
@@ -1959,7 +2145,7 @@ generic_##from##_to_##to(const stp_vars_t *v,				\
 }
 
 #define CONVERSION_FUNCTION_WITHOUT_FAST(from, to, from2)		\
-static unsigned								\
+CFUNC									\
 generic_##from##_to_##to(const stp_vars_t *v,				\
 			 const unsigned char *in,			\
 			 unsigned short *out)				\
@@ -1994,7 +2180,7 @@ generic_##from##_to_##to(const stp_vars_t *v,				\
 }
 
 #define CONVERSION_FUNCTION_WITHOUT_DESATURATED(from, to, from2)	\
-static unsigned								\
+CFUNC									\
 generic_##from##_to_##to(const stp_vars_t *v,				\
 			 const unsigned char *in,			\
 			 unsigned short *out)				\
@@ -2025,15 +2211,15 @@ generic_##from##_to_##to(const stp_vars_t *v,				\
     }									\
 }
 
-CONVERSION_FUNCTION_WITH_FAST(cmyk, color, CMYK)
-CONVERSION_FUNCTION_WITH_FAST(color, color, color)
-CONVERSION_FUNCTION_WITH_FAST(color, kcmy, color)
-CONVERSION_FUNCTION_WITHOUT_FAST(cmyk, kcmy, CMYK)
-CONVERSION_FUNCTION_WITHOUT_DESATURATED(cmyk, gray, CMYK)
-CONVERSION_FUNCTION_WITHOUT_DESATURATED(color, gray, color)
-CONVERSION_FUNCTION_WITHOUT_DESATURATED(gray, gray, gray)
-CONVERSION_FUNCTION_WITHOUT_DESATURATED(gray, color, gray)
-CONVERSION_FUNCTION_WITHOUT_DESATURATED(gray, kcmy, gray)
+CONVERSION_FUNCTION_WITH_FAST(cmyk, color, CMYK) // generic_cmyk_to_color
+CONVERSION_FUNCTION_WITH_FAST(color, color, color) // generic_color_to_color
+CONVERSION_FUNCTION_WITH_FAST(color, kcmy, color) // generic_color_to_kcmy
+CONVERSION_FUNCTION_WITHOUT_FAST(cmyk, kcmy, CMYK) // generic_cmyk_to_kcmy
+CONVERSION_FUNCTION_WITHOUT_DESATURATED(cmyk, gray, CMYK) // generic_cmyk_to_gray
+CONVERSION_FUNCTION_WITHOUT_DESATURATED(color, gray, color) // generic_color_to_gray
+CONVERSION_FUNCTION_WITHOUT_DESATURATED(gray, gray, gray) // generic_gray_to_gray
+CONVERSION_FUNCTION_WITHOUT_DESATURATED(gray, color, gray) // generic_gray_to_color
+CONVERSION_FUNCTION_WITHOUT_DESATURATED(gray, kcmy, gray) // generic_gray_to_kcmy
 
 unsigned
 stpi_color_convert_to_gray(const stp_vars_t *v,

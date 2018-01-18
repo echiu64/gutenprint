@@ -886,6 +886,8 @@ compute_gcr_curve(const stp_vars_t *vars)
     k_lower = stp_get_float_parameter(vars, "GCRLower");
   if (stp_check_float_parameter(vars, "BlackTrans", STP_PARAMETER_DEFAULTED))
     k_trans = stp_get_float_parameter(vars, "BlackTrans");
+  if (k_lower >= 1)
+    return NULL;
   k_upper *= lut->steps;
   k_lower *= lut->steps;
   stp_dprintf(STP_DBG_LUT, vars, " k_lower %.3f\n", k_lower);
