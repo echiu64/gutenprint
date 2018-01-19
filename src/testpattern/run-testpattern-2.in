@@ -51,6 +51,7 @@ my @standard_options = ("InkType",
 			"MediaType",
 			"InputSlot",
 			"ColorCorrection",
+			"TPMode",
 			"ImageType",
 			"FullBleed",
 			"Quality",
@@ -61,6 +62,18 @@ my @standard_options = ("InkType",
 			"CyanDensity",
 			"Orientation",
 			"LabelSeparator");
+my @tp_modes = ("cmyk8",
+		"cmyk16",
+		"kcmy8",
+		"kcmy16",
+		"rgb8",
+		"rgb16",
+		"cmy8",
+		"cmy16",
+		"gray8",
+		"gray16",
+		"white8",
+		"white16");
 my $global_status = 1;
 my $run_installed = 0;
 my $use_min_res = 0;
@@ -414,8 +427,8 @@ sub set_global_message($) {
     push @global_messages, "message \"$message\";\n"
 }
 
-sub print_one_testpattern($$;$) {
-    my ($printer, $pages, $raw) = @_;
+sub print_one_testpattern($$$;$) {
+    my ($printer, $pages, $tp_mode, $raw) = @_;
     my $stuff = join "", @global_messages;
     $stuff .= join "", @job_extras;
     $global_printer = $printer;
@@ -468,8 +481,9 @@ sub print_one_testpattern($$;$) {
 	    $stuff .= ";\n";
 	    $stuff .= "end;\n";
 	} else {
-	    $stuff .= << 'EOF';
-mode rgb 8;
+	    $tp_mode =~ s/([81]+)/ $1/;
+	    $stuff .= << "EOF";
+mode $tp_mode;
 pattern 0.0 0.0 0.0 0.0 0.0 0.0 0.0 1.0  0.0 0.0 1.0  0.0 0.0 1.0  0.0 0.0 1.0 ;
 pattern 1.0 1.0 1.0 1.0 1.0 0.0 0.0 1.0  0.0 1.0 1.0 0.0 0.0 1.0 0.0 0.0 1.0;
 pattern 1.0 1.0 1.0 1.0 1.0 0.0 0.0 1.0  0.0 0.0 1.0 0.0 1.0 1.0 0.0 0.0 1.0;
@@ -704,6 +718,8 @@ sub build_list($$$$) {
     } elsif ($param_types{$printer}{$key} == 2) {
 	push @tmp, 0;
 	push @tmp, 1;
+    } elsif ($key eq "TPMode") {
+	push @tmp, @tp_modes;
     } elsif ($key eq "Resolution") {
 	@tmp = keys %{$resolutions{$printer}};
 	if ($res_limit > 0) {
@@ -735,7 +751,7 @@ sub build_list($$$$) {
 sub build_key($$) {
     my ($keys, $printer) = @_;
     my (@keys) = split (/,/, $keys);
-    my (@answer) = grep { defined $param_types{$printer}{$_} || /=/ } @keys;
+    my (@answer) = grep { $_ eq "TPMode" || defined $param_types{$printer}{$_} || /=/ } @keys;
     return join ",", @answer;
 }
 
@@ -746,7 +762,8 @@ sub get_min_max_res($) {
     my $min_res_value = 5760*5760;
     my $max_res_name;
     my $max_res_value = 0;
-    foreach my $resid (keys %reslist) {
+    # We want to get the same named resolution each time.
+    foreach my $resid (sort keys %reslist) {
 	my ($res) = $reslist{$resid};
 	my ($res_value) = $$res[0] * $$res[1];
 	if ($res_value < $min_res_value) {
@@ -832,7 +849,7 @@ sub setup_printer_params($) {
     # array = 7
 }
 
-# Resolution needs special handling because of MIN and MAX
+# Resolution and PageSize need special handling because of MIN and MAX
 # Duplex needs special handling because of printing multiple pages, and
 #        need to set JobMode
 # RawChannels needs special handling because it's handled specially by
@@ -857,6 +874,7 @@ sub do_printer($$) {
 	    map {$subkeys{$_} = 1} @subkeys;
 	    my $opt;
 	    foreach $opt (@opts) {
+		my ($tp_mode) = "rgb8";
 		@extras = ();
 		@job_extras = ();
 		@messages = ();
@@ -870,6 +888,8 @@ sub do_printer($$) {
 		    next if ($k eq "RawChannels" && $v ne "None" && $pmode ne "Color");
 		    if ($k eq "RawChannels") {
 			$rawval = $v;
+		    } elsif ($k eq "TPMode") {
+			$tp_mode = $v;
 		    } else {
 			set_opt($k, $v, $printer);
 		    }
@@ -891,8 +911,9 @@ sub do_printer($$) {
 			push @ovals, "${_}=$setting";
 		    }
 		} grep { ! defined $subkeys{$_} &&
-			     ($use_unused_options ||
-			      defined $stpdata{$printer}{$_})} (keys %base_settings);
+			     ($use_unused_options || $_ eq "Resolution" ||
+			      $_ eq "TPMode" ||
+			      defined $stpdata{$printer}{$_})} (sort keys %base_settings);
 		my $pages = $std_pages;
 		set_opt("PrintingMode", $pmode, $printer);
 		if ($key =~ /Duplex/) {
@@ -919,7 +940,7 @@ sub do_printer($$) {
 		    $global_messages = $case;
 		    do_output($case);
 		    set_message("    ${pmode}+${ostring}");
-		    my $output = print_one_testpattern($printer, $pages, $rawval);
+		    my $output = print_one_testpattern($printer, $pages, $tp_mode, $rawval);
 		    do_print($output, $global_fh);
 		}
 	    }

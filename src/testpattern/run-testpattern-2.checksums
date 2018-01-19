@@ -5,8 +5,10 @@ if [ -n "$STP_TEST_DEBUG" ] ; then
 fi
 
 if [ "$STP_TEST_PROFILE" == checksums -o -z "$STP_TEST_SUITE" ] ; then
-    $DEBUG /usr/bin/time ./run-testpattern-2 -q -M - "$@"
-    $DEBUG /usr/bin/time ./run-testpattern-2 -F -s -q -M - -o PageSize,Resolution=MIN,DitherAlgorithm=VeryFast "$@"
+    $DEBUG ./run-testpattern-2 -q -M - "$@"
+    $DEBUG ./run-testpattern-2 -F -s -q -M - -o PageSize,Resolution=MIN,DitherAlgorithm=VeryFast "$@"
+    $DEBUG ./run-testpattern-2 -F -s -q -M - -dDitherAlgorithm=VeryFast -dResolution=MIN \
+	   -dPageSize=MIN -o TPMode,ColorCorrection,InkType,UseGloss "$@"
 else
     echo "Skipping in $STP_TEST_PROFILE suite"
     exit 77

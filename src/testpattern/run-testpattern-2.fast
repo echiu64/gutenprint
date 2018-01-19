@@ -10,6 +10,10 @@ if [ "$STP_TEST_PROFILE" == fast -o -z "$STP_TEST_SUITE" ] ; then
 	   -o InkType -o InkSet,RawChannels -o Duplex \
 	   -o MediaType -o InputSlot -o FullBleed -o UseGloss \
 	   -o Orientation -o LabelSeparator -o Resolution -T 720 "$@"
+    $DEBUG ./run-testpattern-2 -s -dDitherAlgorithm=VeryFast \
+	   -dResolution=MIN -dPageSize=MIN \
+	   -o TPMode,ColorCorrection,InkType,UseGloss \
+	   escp2-r1800 escp2-3880 pcl-g_4 pcl-g_5c
 else
     echo "Skipping in $STP_TEST_PROFILE suite"
     exit 77
