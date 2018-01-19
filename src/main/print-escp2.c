@@ -4465,6 +4465,22 @@ escp2_do_print(stp_vars_t *v, stp_image_t *image, int print_op)
   escp2_privdata_t *pd;
   int page_number = stp_get_int_parameter(v, "PageNumber");
 
+  if (strcmp(stp_get_string_parameter(v, "PrintingMode"), "BW") == 0 &&
+      (stp_get_string_parameter(v, "InkType") &&
+       (strcmp(stp_get_string_parameter(v, "InkType"), "RGB") == 0 ||
+	strcmp(stp_get_string_parameter(v, "InkType"), "CMY") == 0 ||
+	strcmp(stp_get_string_parameter(v, "InkType"), "CMYRB") == 0 ||
+	strcmp(stp_get_string_parameter(v, "InkType"), "CMYRBG") == 0 ||
+	strcmp(stp_get_string_parameter(v, "InkType"), "CMYRO") == 0 ||
+	strcmp(stp_get_string_parameter(v, "InkType"), "CMYROG") == 0 ||
+	strcmp(stp_get_string_parameter(v, "InkType"), "PhotoCMY") == 0 ||
+	strcmp(stp_get_string_parameter(v, "InkType"), "RGBG") == 0)))
+    {
+      stp_eprintf(v, "Warning: Inkset %s not available in BW\n",
+		  stp_get_string_parameter(v, "InkType"));
+      stp_set_string_parameter(v, "InkType", "CMYK");
+    }
+
   if (!stp_verify(v))
     {
       stp_eprintf(v, _("Print options not verified; cannot print.\n"));
