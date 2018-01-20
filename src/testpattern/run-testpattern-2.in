@@ -121,6 +121,8 @@ my $proc_count = 1;
 my $round = 0;
 my $print_family = 0;
 my $res_limit = 0;
+my $proc_rotor = 0;
+my $case_no = 0;
 
 my @default_options = ();
 my %base_settings = ("DitherAlgorithm" => "Fast");
@@ -721,7 +723,7 @@ sub build_list($$$$) {
     } elsif ($key eq "TPMode") {
 	push @tmp, @tp_modes;
     } elsif ($key eq "Resolution") {
-	@tmp = keys %{$resolutions{$printer}};
+	@tmp = sort keys %{$resolutions{$printer}};
 	if ($res_limit > 0) {
 	    @tmp = grep { $resolutions{$printer}{$_}[0] <= $res_limit &&
 			      $resolutions{$printer}{$_}[1] <= $res_limit} @tmp;
@@ -818,7 +820,7 @@ sub get_optvals($$$) {
 sub setup_printer_params($) {
     my ($printer) = @_;
     if ($stpdata{$printer}) {
-	foreach my $k (keys %{$stpdata{$printer}}) {
+	foreach my $k (sort keys %{$stpdata{$printer}}) {
 	    my ($vals) = $stpdata{$printer}{$k};
 	    foreach my $v (0..@$vals) {
 		if (substr($$vals[$v], 0, 1) eq '+') {
@@ -874,11 +876,24 @@ sub do_printer($$) {
 	    map {$subkeys{$_} = 1} @subkeys;
 	    my $opt;
 	    foreach $opt (@opts) {
+		@messages = ();
+		@global_messages = ();
+		my ($pname) = $print_family ?
+		    "${models{$printer}}-$families{$printer}" : $printer;
+		if ($first_time) {
+		    if (1 || (($case_no % $proc_count) == $proc_rotor)) {
+			if ($quiet < 2) {
+			    set_global_message("$pname\n");
+			} elsif ($quiet == 2) {
+			    set_global_message(".");
+			}
+		    }
+		    $first_time = 0;
+		}
+		next if (($case_no++ % $proc_count) != $proc_rotor);
 		my ($tp_mode) = "rgb8";
 		@extras = ();
 		@job_extras = ();
-		@messages = ();
-		@global_messages = ();
 		my (@ovals);
 		my $rawval;
 		my (@subopts) = split (/,/, $opt);
@@ -921,16 +936,6 @@ sub do_printer($$) {
 		    $pages = $duplex_pages;
 		}
 		my $rawval;
-		my ($pname) = $print_family ?
-		    "${models{$printer}}-$families{$printer}" : $printer;
-		if ($first_time) {
-		    if ($quiet < 2) {
-			set_global_message("$pname\n");
-		    } elsif ($quiet == 2) {
-			set_global_message(".");
-		    }
-		    $first_time = 0;
-		}
 		my ($mstring) = join "_", @ovals;
 		$mstring =~ s/=/_/g;
 		my ($ostring) = join "+", @ovals;
@@ -1080,23 +1085,20 @@ sub runit() {
     my (@children);
     my ($child_no);
     my ($kid);
-    if (scalar @printer_list < $proc_count) {
-	$proc_count = scalar @printer_list;
-    }
+    load_printer_data();
+    # Note that when testing duplex all pages of the duplex run are done by
+    # one process, but each page counts as a separate test.  So the number
+    # of cases per process may not always be within 1.
     if ($proc_count > 1) {
 	for ($child_no = 0; $child_no < $proc_count; $child_no++) {
 	    $kid = fork();
-	    # Child: select the printers to print, round-robin.
 	    if ($kid == 0) {
-		@printer_list = map { $printer_list[$_] } (grep { $_ % $proc_count == $child_no} (0..$#printer_list));
-		load_printer_data();
 		last;
 	    } else {
 		push @children, $kid;
+		$proc_rotor++;
 	    }
 	}
-    } else {
-	load_printer_data();
     }
 
     my $status = 1;
