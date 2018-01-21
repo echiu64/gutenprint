@@ -118,7 +118,7 @@ while getopts "hvcgsVnO:m:o:p:St:lLXf:N" opt ; do
 	c) valopts='--tool=callgrind --dump-instr=yes --trace-jump=yes'; valgrind=4 ;;
 	g) valopts='--vgdb=yes' ;;
 	s) single=1 ;;
-	V) verbose=1 ;;
+	V) verbose=$((verbose+1)) ;;
 	n) make_ppds='' ;;
 	O) outdir="$OPTARG"; mkdir -p "$outdir" ;;
 	o) cupsargs="$cupsargs $OPTARG" ;;
@@ -189,7 +189,17 @@ else
     "$pdfjam" -q "$testfile" "$pages" -o $tfile
 fi
 
-(( $verbose == 0 )) && export STP_SUPPRESS_MESSAGES=1
+case "$verbose" in
+    1)
+	export STP_SUPPRESS_VERBOSE_MESSAGES=1
+	;;
+    0|'')
+	export STP_SUPPRESS_MESSAGES=1
+	export STP_SUPPRESS_VERBOSE_MESSAGES=1
+	;;
+    *)
+	;;
+esac
 
 # Note that using CUPS arguments may trigger valgrind memory leaks in
 # CUPS.
