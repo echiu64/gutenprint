@@ -545,33 +545,46 @@ sub get_printers() {
     $exclude_pattern = join("|", map {"($_)"} @exclude_patterns);
     my (@nprinter_list);
     my $extra_arg = "";
-    if ($#ARGV >= 0) {
-	@nprinter_list = @ARGV;
-    } else {
-	my (%families);
-	my (%model_families);
-	map { $families{$_} = 1; } @families;
-	open PIPE, "./printers|" or die "Cannot run printers: $!\n";
-	my ($line_count);
-	my ($printer_count);
-	while(<PIPE>) {
-	    next if m!^#!;
-	    chomp;
-	    $line_count++;
-	    my ($model, $family, $printer) = split;
-	    my ($model_family) = "${model}_${family}";
-	    next if @families && ! defined $families{$family};
-	    next if $exclude_list{$printer};
-	    next if $exclude_pattern ne '' && $printer =~ /$exclude_pattern/;
-	    next if $include_pattern ne '' && ! $printer =~ /$include_pattern/;
-	    next if $skip_duplicate_printers && defined $model_families{$model_family};
-	    $model_families{$model_family} = 1;
-	    $printer_count++;
-	    push @nprinter_list, $printer;
+    my (%families);
+    my (%model_families);
+    my (%printer_models);
+    map { $families{$_} = 1; } @families;
+    open PIPE, "./printers|" or die "Cannot run printers: $!\n";
+    my ($line_count);
+    while(<PIPE>) {
+	next if m!^#!;
+	chomp;
+	$line_count++;
+	my ($model, $family, $printer) = split;
+	my ($model_family) = "${model}_${family}";
+	$printer_models{$printer} = $model_family;
+	if (! defined $model_families{$model_family}) {
+	    $model_families{$model_family} = $printer;
 	}
-	close PIPE;
-	return @nprinter_list;
+	next if @families && ! defined $families{$family};
+	next if $exclude_list{$printer};
+	next if $exclude_pattern ne '' && $printer =~ /$exclude_pattern/;
+	next if $include_pattern ne '' && ! $printer =~ /$include_pattern/;
+	next if $skip_duplicate_printers && $model_families{$model_family} ne $printer;
+	push @nprinter_list, $printer;
     }
+    close PIPE;
+    if ($#ARGV >= 0) {
+	my ($bad_printers_found) = 0;
+	@nprinter_list = grep { defined $_ } map {
+	    if (defined $printer_models{$_}) {
+		$_;
+	    } elsif (defined $model_families{$_}) {
+		$model_families{$_};
+	    } else {
+		print STDERR "Unknown printer ${_}!\n";
+		$bad_printers_found = 1;
+		undef;
+	    }
+	} @ARGV;
+    }
+    exit 1 if (! scalar @nprinter_list);
+    return @nprinter_list;
 }
 
 sub load_printer_data() {
