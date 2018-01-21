@@ -6230,7 +6230,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
                                 canon_flush_pass,
                                 stp_fill_uncompressed,
                                 stp_pack_uncompressed,
-                                stp_compute_uncompressed_linewidth);
+                                stp_compute_tiff_linewidth);
        privdata.last_pass_offset = 0;
 
        if (stp_get_debug_level() & STP_DBG_CANON) {
