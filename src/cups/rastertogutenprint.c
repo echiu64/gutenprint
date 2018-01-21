@@ -1630,7 +1630,7 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
   new_percent = (int) (100.0 * cups->row / cups->header.cupsHeight);
   if (new_percent > cups->last_percent)
     {
-      if (! suppress_messages)
+      if (! suppress_verbose_messages)
 	{
 	  stp_i18n_printf(po, _("INFO: Printing page %d, %d%%\n"),
 			  cups->page + 1, new_percent);
