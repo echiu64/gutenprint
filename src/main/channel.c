@@ -1114,6 +1114,7 @@ do_gcr(stpi_channel_group_t *cg, unsigned *zero_mask)
     unsigned long long nzl;
   } nzx;
 
+  nzx.nzl = 0ull;
   if (!cg)
     return;
   cg->valid_8bit = 0;
