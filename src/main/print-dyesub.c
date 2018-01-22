@@ -2967,14 +2967,14 @@ static int mitsu_p95d_parse_parameters(stp_vars_t *v)
   } else if (!strcmp(comment, "Date")) {
     struct tm tmp;
     time_t t;
-    t = time(NULL);
+    t = stpi_time(NULL);
     localtime_r(&t, &tmp);
     strftime(pd->privdata.m95d.commentbuf, sizeof(pd->privdata.m95d.commentbuf), "        %F", &tmp);
     pd->privdata.m95d.comment = 2;
   } else if (!strcmp(comment, "DateTime")) {
     struct tm tmp;
     time_t t;
-    t = time(NULL);
+    t = stpi_time(NULL);
     localtime_r(&t, &tmp);
     strftime(pd->privdata.m95d.commentbuf, sizeof(pd->privdata.m95d.commentbuf), "  %F %R", &tmp);
     pd->privdata.m95d.comment = 3;
@@ -3355,14 +3355,14 @@ static int mitsu_p93d_parse_parameters(stp_vars_t *v)
   } else if (!strcmp(comment, "Date")) {
     struct tm tmp;
     time_t t;
-    t = time(NULL);
+    t = stpi_time(NULL);
     localtime_r(&t, &tmp);
     strftime(pd->privdata.m95d.commentbuf, sizeof(pd->privdata.m95d.commentbuf), "        %F", &tmp);
     pd->privdata.m95d.comment = 2;
   } else if (!strcmp(comment, "DateTime")) {
     struct tm tmp;
     time_t t;
-    t = time(NULL);
+    t = stpi_time(NULL);
     localtime_r(&t, &tmp);
     strftime(pd->privdata.m95d.commentbuf, sizeof(pd->privdata.m95d.commentbuf), "  %F %R", &tmp);
     pd->privdata.m95d.comment = 3;
@@ -6747,7 +6747,7 @@ static void magicard_printer_init(stp_vars_t *v)
   stp_zprintf(v, ",NOC1");
   stp_zprintf(v, ",VER%d.%d.%d", STP_MAJOR_VERSION, STP_MINOR_VERSION, STP_MICRO_VERSION); // XXX include "pre" or other tag.
   stp_zprintf(v, ",LANENG"); // Dunno about other options.
-  stp_zprintf(v, ",TDT%08X", (unsigned int)time(NULL)); /* Some sort of timestamp. Unknown epoch. */
+  stp_zprintf(v, ",TDT%08X", (unsigned int)stpi_time(NULL)); /* Some sort of timestamp. Unknown epoch. */
 //  stp_zprintf(v, ",LC%d", 1); // Force media type.  LC1/LC3/LC6/LC8 for YMCKO/MONO/KO/YMCKOK
   stp_zprintf(v, ",REJ%s", pd->privdata.magicard.reject ? "ON" : "OFF"); /* Faulty card rejection. */
   stp_zprintf(v, ",ESS%d", pd->copies); /* Number of copies */

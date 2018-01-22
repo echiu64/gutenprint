@@ -664,3 +664,16 @@ stp_abort(void)
     }
   abort();
 }
+
+time_t
+stpi_time(time_t *t)
+{
+  if (stp_get_debug_level() & STP_DBG_STATIC_TIME)
+    {
+      if (t)
+	*t = (time_t) 0;
+      return (time_t) 0;
+    }
+  else
+    return time(t);
+}

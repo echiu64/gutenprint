@@ -1021,7 +1021,7 @@ ps_print_internal(stp_vars_t *v, stp_image_t *image)
   * Output a standard PostScript header with DSC comments...
   */
 
-  curtime = time(NULL);
+  curtime = stpi_time(NULL);
 
   top = paper_height - top;
 
