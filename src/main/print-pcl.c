@@ -37,6 +37,12 @@
 /* #define DEBUG */
 /* #define PCL_DEBUG_DISABLE_BLANKLINE_REMOVAL */
 
+#ifdef __GNUC__
+#define UNUSED __attribute__ ((unused))
+#else
+#define UNUSED
+#endif
+
 /*
  * Local functions...
  */
@@ -1484,10 +1490,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
   },
 };
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-const-variable"
-
-static const char standard_sat_adjustment[] =
+static const char UNUSED standard_sat_adjustment[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
 "<gutenprint>\n"
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
@@ -1501,7 +1504,6 @@ static const char standard_sat_adjustment[] =
 "</sequence>\n"
 "</curve>\n"
 "</gutenprint>\n";
-#pragma GCC diagnostic pop
 
 static const char standard_lum_adjustment[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
