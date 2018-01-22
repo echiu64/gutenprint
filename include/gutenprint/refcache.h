@@ -91,7 +91,7 @@ extern const stp_string_list_t *stp_refcache_list_caches(void);
  * @param name of cache
  * @returns list of items in cache or NULL if cache does not exist
  */
-extern const stp_string_list_t *stp_refcache_list_refcache_items(const char *cache);
+extern const stp_string_list_t *stp_refcache_list_cache_items(const char *cache);
 
 #ifdef __cplusplus
   }
