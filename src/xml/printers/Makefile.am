@@ -33,7 +33,7 @@ pkgxmldata_DATA =				\
 	ps.xml					\
 	raw.xml
 
-TESTS = check_duplicates
+TESTS = check_duplicate_printers
 
 noinst_PROGRAMS = check_duplicate_printers
 check_duplicate_printers_SOURCES = check_duplicate_printers.c
