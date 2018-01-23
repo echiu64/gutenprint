@@ -9359,64 +9359,49 @@ dyesub_read_image(stp_vars_t *v,
 }
 
 static void
-dyesub_render_pixel(unsigned short *src, char *dest,
-		    dyesub_print_vars_t *pv,
-		    const dyesub_cap_t *caps,
-		    int plane)
+dyesub_render_pixel_u8(unsigned short *src, char *dest,
+		       dyesub_print_vars_t *pv,
+		       int plane)
 {
-  unsigned short ink[MAX_INK_CHANNELS]; /* What is sent to printer */
+  /* Scale down to output bit depth */
+#if 0
+  *dest = src[plane] >> 8; // XXX does this make more sense than division?
+#else
+  *dest = src[plane] / 257;
+#endif
+}
 
-  int i;
-  int start, end;
-
-  /* Only compute one color at a time */
-  if (pv->plane_interlacing || pv->row_interlacing)
-    {
-      start = plane;
-      end = plane + 1;
-    }
+static void
+dyesub_render_pixel_u16(unsigned short *src, unsigned short *dest,
+			dyesub_print_vars_t *pv,
+			int plane)
+{
+  /* Scale down to output bit depth */
+  if (pv->bits_per_ink_channel == 16)
+    *dest = src[plane];
   else
-    {
-      start = 0;
-      end = pv->ink_channels;
-    }
+    *dest = src[plane] >> (16 - pv->bits_per_ink_channel);
+
+  /* Byteswap if needed */
+  if (pv->byteswap)
+    *dest = ((*dest >> 8) & 0xff) | ((*dest & 0xff) << 8); // macro?
+}
+
+
+static void
+dyesub_render_pixel_packed(unsigned short *src, char *dest,
+			   dyesub_print_vars_t *pv)
+{
+  int i;
 
   /* copy out_channel (image) to equiv ink_channel (printer) */
-  for (i = start; i < end; i++)
+  for (i = 0; i < pv->ink_channels; i++)
     {
-      ink[i] = src[i];
-
-      /* Downscale 16bpp to output bpp */
       if (pv->bytes_per_ink_channel == 1)
-        {
-	  unsigned char *ink_u8 = (unsigned char *) ink;
-#if 0
-	  ink_u8[i] = ink[i] >> 8; // XXX Do we want to just truncate/round instead?
-#else
-	  ink_u8[i] = ink[i] / 257;
-#endif
-	}
-      else /* ie 2 bytes per channel */
-        {
-	  /* Scale down to output bits */
-	  if (pv->bits_per_ink_channel != 16)
-	    ink[i] = ink[i] >> (16 - pv->bits_per_ink_channel);
-
-	  /* Byteswap if needed */
-	  if (pv->byteswap)
-	    ink[i] = ((ink[i] >> 8) & 0xff) | ((ink[i] & 0xff) << 8);
-	}
+        dyesub_render_pixel_u8(src, dest + i, pv, pv->ink_order[i]-1);
+      else
+        dyesub_render_pixel_u16(src, ((unsigned short*)dest) + i, pv, pv->ink_order[i]-1);
     }
-
-  /* If we use plane or row interlacing, only write the plane's channel */
-  if (pv->plane_interlacing || pv->row_interlacing)
-    memcpy(dest, (char *) ink + (plane * pv->bytes_per_ink_channel),
-	   pv->bytes_per_ink_channel);
-  else /* Otherwise, print the full set of inks, in order (eg RGB or BGR) */
-    for (i = 0; i < pv->ink_channels; i++)
-      memcpy(dest + i*pv->bytes_per_ink_channel,
-	     (char *) ink + (pv->bytes_per_ink_channel * (pv->ink_order[i]-1)),
-	     pv->bytes_per_ink_channel);
 }
 
 static void
@@ -9449,8 +9434,18 @@ dyesub_render_row(stp_vars_t *v,
       //      Lanczos  (awesome!! but slow)
       src = &(pv->image_data[(int)row][(int)col * pv->out_channels]);
 
-      dyesub_render_pixel(src, dest + w*bytes_per_pixel,
-			  pv, caps, plane);
+      if (pv->plane_interlacing || pv->row_interlacing)
+        {
+	  if (pv->bytes_per_ink_channel == 1)
+            dyesub_render_pixel_u8(src, dest + w, pv, plane);
+	  else
+	    dyesub_render_pixel_u16(src, (unsigned short*)(dest + w*bytes_per_pixel),
+				    pv, plane);
+	}
+      else
+        {
+	  dyesub_render_pixel_packed(src, dest + w*bytes_per_pixel, pv);
+	}
     }
 }
 
