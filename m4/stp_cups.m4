@@ -124,11 +124,15 @@ fi
 AC_DEFUN([STP_CUPS_PATH],
 [# CUPS path setup
 # Fix "prefix" variable if it hasn't been specified...
-if test x${cups_prefix} = xNONE ; then
-  cups_prefix="${prefix}/usr"
+if test "x${cups_prefix}" = xNONE ; then
+  if test "${prefix}" = "/" ; then
+    cups_prefix="/usr"
+  else
+    cups_prefix="${prefix}/usr"
+  fi
 fi
 # Fix "exec_prefix" variable if it hasn't been specified...
-if test x${exec_prefix} = xNONE ; then
+if test "x${exec_prefix}" = xNONE ; then
   if test "${cups_prefix}" = "/" ; then
     cups_exec_prefix="/usr"
   else
