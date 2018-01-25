@@ -59,16 +59,9 @@ ChangeLog:
 	  scripts/mkgitlog -i ChangeLog.pre-5.2.11 -r gutenprint-5_2_11 > ChangeLog; \
 	fi
 
-configure.in:
-	$(LN_S) $(srcdir)/configure.ac $(srcdir)/configure.in
-
 dist-time-check:
-	current_date=`date +%Y%m%d`; \
-	configure_date=`ls -l --time-style=+%Y%m%d $(top_srcdir)/configure | awk '{print $$6}'`; \
-	echo "Checking that 'configure' was built today."; \
-	if test "$$current_date" != "$$configure_date" ; then \
-	  echo "configure is out of date -- rerun ./autogen.sh first!"; \
-	  exit 1; \
+	@if [ "$(top_srcdir)/configure" -ot "$(top_srcdir)/configure.ac" ] ; then \
+	  echo "*** configure is out of date (older than configure.ac) -- rerun ./autogen.sh first!"; exit 1; \
 	fi
 
 git-version-stamp:
@@ -85,8 +78,6 @@ dist-hook: dist-time-check git-version-stamp
 	    done \
 	  fi \
 	done
-# Remove configure.in (libtool bug workaround)
-	$(RM) -f $(distdir)/configure.in
 # Remove any backup files found in distdir
 	$(FIND) $(distdir) -name '.*' -print | xargs $(RM) -rf
 	$(FIND) $(distdir) -name '#*' -print | xargs $(RM) -rf
@@ -194,7 +185,6 @@ MAINTAINERCLEANFILES = \
 	aclocal.m4 \
 	config.h.in \
 	configure \
-	configure.in \
 	Makefile.in \
 	stamp-h.in \
 	stamp-h1.in \
