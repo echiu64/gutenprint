@@ -134,7 +134,7 @@ html-stamp: $(MANUAL_SRC_FILES)
 
 install-data-local: $(STANDARD_TARGETS)
 	if test -n '$(STANDARD_TARGETS)' ; then \
-	  $(mkdir_p) $(DESTDIR)$(datadir)/$(PACKAGE)/doc/$(HTMLDIR) ; \
+	  $(MKDIR_P) $(DESTDIR)$(datadir)/$(PACKAGE)/doc/$(HTMLDIR) ; \
 	  if test -f gutenprint.pdf ; then \
 	    $(INSTALL_DATA) gutenprint.pdf $(DESTDIR)$(datadir)/$(PACKAGE)/doc ; \
 	  elif test -f $(srcdir)/gutenprint.pdf ; then \

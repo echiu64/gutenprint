@@ -33,6 +33,7 @@ TESTS = curve run-weavetest testdither
 ## Programs
 
 if BUILD_TEST
+AM_TESTS_ENVIRONMENT=STP_MODULE_PATH=$(top_builddir)/src/main/.libs:$(top_builddir)/src/main STP_DATA_PATH=$(top_srcdir)/src/xml
 noinst_PROGRAMS = testdither escp2-weavetest unprint pcl-unprint bjc-unprint curve xml-curve pixma_parse gen-printer-list
 endif
 

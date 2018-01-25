@@ -83,8 +83,12 @@ pushdef([GUTENPRINTUI2_CURRENT_INTERFACE], [2])
 pushdef([GUTENPRINTUI2_BINARY_AGE],        [0])
 pushdef([GUTENPRINT_VERSION], GUTENPRINT_MAJOR_VERSION.GUTENPRINT_MINOR_VERSION.GUTENPRINT_MICRO_VERSION[]GUTENPRINT_EXTRA_VERSION)
 
-AC_INIT(GUTENPRINT_NAME, GUTENPRINT_VERSION, [gimp-print-devel@lists.sourceforge.net])
-AC_PREREQ(2.53)
+AC_INIT([GUTENPRINT_NAME],
+	[GUTENPRINT_VERSION],
+	[gimp-print-devel@lists.sourceforge.net],
+	[GUTENPRINT_NAME],
+	[https://gimp-print.sourceforge.net])
+AC_PREREQ([2.69])
 AC_REVISION($Revision$)
 AC_CONFIG_SRCDIR(src/main/print-vars.c)
 AC_CONFIG_MACRO_DIR([m4])
@@ -179,12 +183,13 @@ AC_SUBST(ALL_LINGUAS)
 
 dnl Set up libtool scripts.
 dnl Disable static library building to speed up the build
-AC_LIBTOOL_DLOPEN
+LT_INIT[(dlopen)]
+
 # We need static libraries for CUPS genppd program for now, for bug 865265
 # --rlk 20031223
 AC_ENABLE_STATIC(yes)
 #AC_DISABLE_SHARED
-AM_PROG_LIBTOOL
+LT_INIT
 AC_SUBST(LIBTOOL_DEPS)
 dnl define HAVE_GNU_LD if GNU ld is present
 if test "$ac_cv_prog_gnu_ld" = "yes" ; then
@@ -503,7 +508,7 @@ dnl AM_ACLOCAL_INCLUDE(m4 m4local)
 
 dnl Checks for programs used in the build process
 AM_ICONV_LINK
-AC_ISC_POSIX
+AC_SEARCH_LIBS([strerror],[cposix])
 AC_PROG_AWK
 AC_PROG_CC
 AM_PROG_CC_STDC
@@ -655,6 +660,24 @@ else
 fi
 
 AC_DEFINE_UNQUOTED(PACKAGE_LIB_DIR, ["${PACKAGE_LIB_DIR}"])
+
+dnl Set PACKAGE_BIN_DIR in config.h.
+AH_TEMPLATE(PACKAGE_BIN_DIR,, [Package bin directory])
+if test "x${bindir}" = 'x${exec_prefix}/bin'; then
+  if test "x${exec_prefix}" = "xNONE"; then
+    if test "x${prefix}" = "xNONE"; then
+      PACKAGE_BIN_DIR="${ac_default_prefix}/bin"
+    else
+      PACKAGE_BIN_DIR="${prefix}/bin"
+    fi
+  else
+    PACKAGE_BIN_DIR="${exec_prefix}/bin"
+  fi
+else
+  PACKAGE_BIN_DIR="${bindir}"
+fi
+
+AC_DEFINE_UNQUOTED(PACKAGE_BIN_DIR, ["${PACKAGE_BIN_DIR}"])
 
 AH_TEMPLATE(PKGXMLDATADIR,, [Package XML data directory])
 PKGXMLDATADIR="${PACKAGE_DATA_DIR}/${GUTENPRINT_RELEASE_VERSION}/xml"
@@ -808,7 +831,6 @@ AC_C_CONST
 AC_C_INLINE
 AC_TYPE_OFF_T
 AC_TYPE_SIZE_T
-AC_TYPE_SIGNAL
 
 dnl Checks for library functions.
 AC_CHECK_FUNCS([nanosleep poll usleep])
@@ -1159,6 +1181,7 @@ echo "    Installation prefix:                        $prefix"
 echo "    Exec prefix:                                `eval eval echo $exec_prefix` ($exec_prefix)";
 echo "    Data directory:                             $PACKAGE_DATA_DIR"
 echo "    Library directory:                          `eval eval echo $PACKAGE_LIB_DIR` ($PACKAGE_LIB_DIR)"
+echo "    Executable directory:                       `eval eval echo $PACKAGE_BIN_DIR` ($PACKAGE_BIN_DIR)"
 echo "    XML data directory:                         $PKGXMLDATADIR"
 echo "    Module directory:                           `eval eval echo $PKGMODULEDIR` ($PKGMODULEDIR)"
 echo "    Install sample images:                      $INSTALL_SAMPLES"

@@ -322,7 +322,9 @@ xlc )
   am_opt=--include-deps;;
 esac
 
-for coin in `find $srcdir -name configure.ac -print`
+# We don't have subdirectories.  We don't want any untarred directories that
+# contain configure.ac files to mess things up for us.
+for coin in "$srcdir/configure.ac"
 do
   dr=`dirname $coin`
   if test -f $dr/NO-AUTO-GEN; then

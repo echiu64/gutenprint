@@ -53,7 +53,7 @@ LOCAL_CPPFLAGS = $(GUTENPRINT_CFLAGS) $(CUPS_CFLAGS) -DBASE_VERSION=$(BASE_VERSI
 
 STP_NONLS_ENV= STP_MODULE_PATH=$(top_builddir)/src/main/.libs:$(top_builddir)/src/main STP_DATA_PATH=$(top_srcdir)/src/xml
 
-STP_ENV= $(STP_NONLS_ENV) STP_LOCALEDIR=$(top_srcdir)/src/cups/catalog
+STP_ENV= $(STP_NONLS_ENV) STP_LOCALEDIR=$(top_builddir)/src/cups/catalog
 
 ## Programs
 if BUILD_TRANSLATED_CUPS_PPDS
@@ -95,6 +95,7 @@ install-exec-hook:
 	mv $(DESTDIR)$(pkglibdir)/backend/backend_gutenprint "$(DESTDIR)$(pkglibdir)/backend/gutenprint$(GUTENPRINT_MAJOR_VERSION)$(GUTENPRINT_MINOR_VERSION)+usb"
 endif
 
+AM_TESTS_ENVIRONMENT=$(STP_ENV)
 test-rastertogutenprint: min-pagesize
 TESTS= test-ppds test-rastertogutenprint
 noinst_SCRIPTS=test-ppds test-rastertogutenprint min-pagesize
@@ -158,17 +159,17 @@ endif
 if BUILD_LIBUSB_BACKENDS
 INSTALL_BLACKLIST=install-blacklist
 install-blacklist:
-	$(mkdir_p) $(DESTDIR)$(cupsdata_blacklistdir)
+	$(MKDIR_P) $(DESTDIR)$(cupsdata_blacklistdir)
 	$(INSTALL_DATA) $(srcdir)/blacklist $(DESTDIR)$(cupsdata_blacklistdir)/net.sf.gimp-print.usb-quirks
 endif
 
 install-data-local: $(INSTALL_DATA_LOCAL_DEPS) $(INSTALL_BLACKLIST)
 	if test -n "$(CUPS_PKG)" -a -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
-	  $(mkdir_p) $(DESTDIR)$(cups_modeldir); \
+	  $(MKDIR_P) $(DESTDIR)$(cups_modeldir); \
 	  cd ppd ; \
 	  for language in * ; do \
 	    cd ..; \
-	    $(mkdir_p) $(DESTDIR)$(cups_modeldir)/$$language; \
+	    $(MKDIR_P) $(DESTDIR)$(cups_modeldir)/$$language; \
 	    cd ppd/$$language; \
 	    for ppdfile in * ; do \
 	      (cd ../..; $(INSTALL_DATA) ppd/$$language/$$ppdfile $(DESTDIR)$(cups_modeldir)/$$language) ; \
@@ -176,10 +177,10 @@ install-data-local: $(INSTALL_DATA_LOCAL_DEPS) $(INSTALL_BLACKLIST)
 	  cd ..; \
 	  done \
 	fi
-	$(mkdir_p) "$(DESTDIR)$(localedir)"
+	$(MKDIR_P) "$(DESTDIR)$(localedir)"
 	for file in $(srcdir)/../../po/*.po; do \
 	  lang=`basename $$file .po`; \
-	  $(mkdir_p) "$(DESTDIR)$(localedir)/$$lang"; \
+	  $(MKDIR_P) "$(DESTDIR)$(localedir)/$$lang"; \
 	  $(INSTALL_DATA) $$file "$(DESTDIR)$(localedir)/$$lang/gutenprint_$$lang.po"; \
 	done
 
@@ -208,6 +209,7 @@ install-data-hook:
 	-rmdir $(DESTDIR)$(cupsexec_backenddir)
 	-rmdir $(DESTDIR)$(cupsdata_blacklistdir)
 	-rmdir $(DESTDIR)$(bindir)
+	-rmdir $(DESTDIR)$(sbindir)
 	-rmdir $(DESTDIR)$(pkglibdir)
 	-rmdir $(DESTDIR)$(pkgsysconfdir)
 	-rmdir `dirname $(DESTDIR)$(pkgdatadir)`
@@ -236,79 +238,79 @@ ppd-clean:
 ppd-stamp-pre: ppd-catalog-clean ppd-clean
 
 ppd-catalog: ppd-catalog-clean
-	$(mkdir_p) catalog
-	for file in $(srcdir)/../../po/*.po; do \
+	$(MKDIR_P) catalog
+	for file in $(top_srcdir)/po/*.po; do \
 	  lang=`basename $$file .po`; \
-	  $(mkdir_p) "catalog/$$lang"; \
+	  $(MKDIR_P) "catalog/$$lang"; \
 	  $(INSTALL_DATA) $$file "catalog/$$lang/gutenprint_$$lang.po"; \
 	done
 
 ppd-nonls: cups-genppd.@GUTENPRINT_RELEASE_VERSION@
 	@echo "Non-localized PPDs:"
-	$(mkdir_p) ppd/C
+	$(MKDIR_P) ppd/C
 	$(MAKE) ppd-catalog-clean
 	LC_ALL= LANG= LANGUAGE= $(STP_NONLS_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ $(EXTRA_GENPPD_OPTS) -l C -p ppd/C @WHICH_PPDS@
 
 ppd-nonls-a: cups-genppd.@GUTENPRINT_RELEASE_VERSION@
 	@echo "Non-localized PPDs (all):"
-	$(mkdir_p) ppd/C
+	$(MKDIR_P) ppd/C
 	$(MAKE) ppd-catalog-clean
 	LC_ALL= LANG= LANGUAGE= $(STP_NONLS_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ $(EXTRA_GENPPD_OPTS) -l C -p ppd/C -a
 
 ppd-nonls-s: cups-genppd.@GUTENPRINT_RELEASE_VERSION@
 	@echo "Non-localized PPDs (simplified):"
-	$(mkdir_p) ppd/C
+	$(MKDIR_P) ppd/C
 	$(MAKE) ppd-catalog-clean
 	LC_ALL= LANG= LANGUAGE= $(STP_NONLS_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ $(EXTRA_GENPPD_OPTS) -l C -p ppd/C -s
 
 ppd-global: cups-genppd.@GUTENPRINT_RELEASE_VERSION@
 	@echo "Global PPDs:"
-	$(mkdir_p) ppd/Global
+	$(MKDIR_P) ppd/Global
 	$(MAKE) ppd-catalog
 	LC_ALL= LANG= LANGUAGE= $(STP_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ $(EXTRA_GENPPD_OPTS) -p ppd/Global @WHICH_PPDS@
 	$(MAKE) ppd-catalog-clean
 
 ppd-global-a: cups-genppd.@GUTENPRINT_RELEASE_VERSION@
 	@echo "Global PPDs (all):"
-	$(mkdir_p) ppd/Global
+	$(MKDIR_P) ppd/Global
 	$(MAKE) ppd-catalog
 	LC_ALL= LANG= LANGUAGE= $(STP_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ $(EXTRA_GENPPD_OPTS) -p ppd/Global -a
 	$(MAKE) ppd-catalog-clean
 
 ppd-global-s: cups-genppd.@GUTENPRINT_RELEASE_VERSION@
 	@echo "Global PPDs (simplified):"
-	$(mkdir_p) ppd/Global
+	$(MKDIR_P) ppd/Global
 	$(MAKE) ppd-catalog
 	LC_ALL= LANG= LANGUAGE= $(STP_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ $(EXTRA_GENPPD_OPTS) -p ppd/Global -s
 	$(MAKE) ppd-catalog-clean
 
 ppd-global-ln: cups-genppd.@GUTENPRINT_RELEASE_VERSION@
 	@echo "Global PPDs (localized numbers for testing):"
-	$(mkdir_p) ppd/Global
+	$(MKDIR_P) ppd/Global
 	$(MAKE) ppd-catalog
 	LC_ALL= LANG= LANGUAGE= $(STP_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ $(EXTRA_GENPPD_OPTS) -p ppd/Global -N @WHICH_PPDS@
 	$(MAKE) ppd-catalog-clean
 
 ppd-global-ln-a: cups-genppd.@GUTENPRINT_RELEASE_VERSION@
 	@echo "Global PPDs (all, localized numbers for testing):"
-	$(mkdir_p) ppd/Global
+	$(MKDIR_P) ppd/Global
 	$(MAKE) ppd-catalog
 	LC_ALL= LANG= LANGUAGE= $(STP_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ $(EXTRA_GENPPD_OPTS) -p ppd/Global -N -a
 	$(MAKE) ppd-catalog-clean
 
 ppd-global-ln-s: cups-genppd.@GUTENPRINT_RELEASE_VERSION@
 	@echo "Global PPDs (all, localized numbers for testing):"
-	$(mkdir_p) ppd/Global
+	$(MKDIR_P) ppd/Global
 	$(MAKE) ppd-catalog
 	LC_ALL= LANG= LANGUAGE= $(STP_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ $(EXTRA_GENPPD_OPTS) -p ppd/Global -N -s
 	$(MAKE) ppd-catalog-clean
 
 ppd-nls: cups-genppd.@GUTENPRINT_RELEASE_VERSION@ ppd-nonls
 	@echo "Localized PPD files:"
-	$(mkdir_p) ppd
+	$(MKDIR_P) ppd
 	$(MAKE) ppd-catalog
 	for language in `$(STP_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ @WHICH_PPDS@ -L` ; do \
-	  $(mkdir_p) ppd/$$language ; \
+	  $(MKDIR_P) ppd/$$language ; \
 	  echo -n "$$language: " ; \
 	  LC_ALL=$$language LANG=$$language LANGUAGE=$$language $(STP_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ $(EXTRA_GENPPD_OPTS) -l $$language -p ppd/$$language; \
 	done
@@ -316,10 +318,10 @@ ppd-nls: cups-genppd.@GUTENPRINT_RELEASE_VERSION@ ppd-nonls
 
 ppd-nls-a: cups-genppd.@GUTENPRINT_RELEASE_VERSION@ @WHICH_PPDS@ ppd-nonls
 	@echo "Localized PPD files (all):"
-	$(mkdir_p) ppd
+	$(MKDIR_P) ppd
 	$(MAKE) ppd-catalog
 	for language in `$(STP_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ @WHICH_PPDS@ -L` ; do \
-	  $(mkdir_p) ppd/$$language ; \
+	  $(MKDIR_P) ppd/$$language ; \
 	  echo -n "$$language: " ; \
 	  LC_ALL=$$language LANG=$$language LANGUAGE=$$language $(STP_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ $(EXTRA_GENPPD_OPTS) @WHICH_PPDS@ -l $$language -p ppd/$$language -a; \
 	done
@@ -327,10 +329,10 @@ ppd-nls-a: cups-genppd.@GUTENPRINT_RELEASE_VERSION@ @WHICH_PPDS@ ppd-nonls
 
 ppd-nls-s: cups-genppd.@GUTENPRINT_RELEASE_VERSION@ @WHICH_PPDS@ ppd-nonls
 	@echo "Localized PPD files (simplified):"
-	$(mkdir_p) ppd
+	$(MKDIR_P) ppd
 	$(MAKE) ppd-catalog
 	for language in `$(STP_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ @WHICH_PPDS@ -L` ; do \
-	  $(mkdir_p) ppd/$$language ; \
+	  $(MKDIR_P) ppd/$$language ; \
 	  echo -n "$$language: " ; \
 	  LC_ALL=$$language LANG=$$language LANGUAGE=$$language $(STP_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ $(EXTRA_GENPPD_OPTS) @WHICH_PPDS@ -l $$language -p ppd/$$language -s; \
 	done
@@ -363,5 +365,4 @@ EXTRA_DIST = \
 	blacklist \
 	calibrate.ppm \
 	command.txt \
-	command.types \
-	test-ppds
+	command.types

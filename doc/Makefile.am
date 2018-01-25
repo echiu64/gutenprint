@@ -64,7 +64,7 @@ html:
 	cd developer; $(MAKE) html
 
 install-data-local: FAQ.html gutenprint-users-manual.odt gutenprint-users-manual.pdf
-	$(mkdir_p) $(DESTDIR)$(docdir)
+	$(MKDIR_P) $(DESTDIR)$(docdir)
 	$(INSTALL_DATA) $(srcdir)/FAQ.html $(DESTDIR)$(docdir)
 	$(INSTALL_DATA) $(srcdir)/gutenprint-users-manual.odt $(DESTDIR)$(docdir)
 	$(INSTALL_DATA) $(srcdir)/gutenprint-users-manual.pdf $(DESTDIR)$(docdir)
@@ -72,13 +72,19 @@ install-data-local: FAQ.html gutenprint-users-manual.odt gutenprint-users-manual
 
 ## Clean
 
-maintainer-clean-local:
+distclean-local:
 	$(RM) -rf gutenprint
 	$(RM) -rf gutenprintui2
 
+maintainer-clean-local: distclean-local
+
+DISTCLEANFILES= \
+	gutenprint-stamp \
+	gutenprintui2-stamp
+
 MAINTAINERCLEANFILES = \
 	Makefile.in \
-	gutenprint-stamp
+	$(DISTCLEANFILES)
 
 EXTRA_DIST = \
 	FAQ.html \

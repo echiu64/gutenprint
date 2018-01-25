@@ -41,7 +41,7 @@ libtool: $(LIBTOOL_DEPS)
 # access, and because it usually runs as superuser rather than the user
 # who normally builds Gutenprint.
 install-data-local: NEWS AUTHORS COPYING README
-	$(mkdir_p) $(DESTDIR)$(docdir)
+	$(MKDIR_P) $(DESTDIR)$(docdir)
 	$(INSTALL_DATA) $(srcdir)/NEWS $(DESTDIR)$(docdir)
 	$(INSTALL_DATA) $(srcdir)/ChangeLog $(DESTDIR)$(docdir)
 	$(INSTALL_DATA) $(srcdir)/AUTHORS $(DESTDIR)$(docdir)
@@ -63,8 +63,8 @@ configure.in:
 	$(LN_S) $(srcdir)/configure.ac $(srcdir)/configure.in
 
 dist-time-check:
-	@current_date=`date +%Y%m%d`; \
-	configure_date=`ls -l --time-style=+%Y%m%d $(top_builddir)/configure | awk '{print $$6}'`; \
+	current_date=`date +%Y%m%d`; \
+	configure_date=`ls -l --time-style=+%Y%m%d $(top_srcdir)/configure | awk '{print $$6}'`; \
 	echo "Checking that 'configure' was built today."; \
 	if test "$$current_date" != "$$configure_date" ; then \
 	  echo "configure is out of date -- rerun ./autogen.sh first!"; \
@@ -92,30 +92,6 @@ dist-hook: dist-time-check git-version-stamp
 	$(FIND) $(distdir) -name '#*' -print | xargs $(RM) -rf
 	$(FIND) $(distdir) -name '*~' -print | xargs $(RM) -rf
 
-install-cups: all
-	cd src/cups ; \
-	$(MAKE) install
-
-install-gimp: all
-	cd src/gimp ; \
-	$(MAKE) install
-
-docs:
-	cd doc ; \
-	$(MAKE) docs
-
-html:
-	cd doc ; \
-	$(MAKE) html
-
-ps:
-	cd doc ; \
-	$(MAKE) ps
-
-pdf:
-	cd doc ; \
-	$(MAKE) pdf
-
 snapshot: scripts/gversion git-version-stamp
 	$(MAKE) dist distdir=$(PACKAGE)-`scripts/gversion`-`date +"%Y%m%d"`
 
@@ -127,7 +103,7 @@ CPUS=`scripts/count-cpus`
 
 # STP_PROFILE=full
 MAKECHECK=STP_TEST_SUITE=1 /usr/bin/time make -k -s check
-MAKEDISTCHECK=STP_TEST_SUITE=1 /usr/bin/time make -k -s distcheck
+MAKEDISTCHECK=STP_TEST_SUITE=1 STP_TEST_DIST=1 /usr/bin/time make -k -s distcheck
 MAKECHECK_PARALLEL=STP_PARALLEL=$(CPUS) $(MAKECHECK)
 MAKEDISTCHECK_PARALLEL=STP_PARALLEL=$(CPUS) $(MAKEDISTCHECK)
 

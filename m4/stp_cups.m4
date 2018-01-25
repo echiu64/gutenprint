@@ -125,7 +125,7 @@ AC_DEFUN([STP_CUPS_PATH],
 [# CUPS path setup
 # Fix "prefix" variable if it hasn't been specified...
 if test x${cups_prefix} = xNONE ; then
-  cups_prefix="/usr"
+  cups_prefix="${prefix}/usr"
 fi
 # Fix "exec_prefix" variable if it hasn't been specified...
 if test x${exec_prefix} = xNONE ; then
@@ -150,9 +150,9 @@ fi
 
 # Get explicit CUPS directories if possible
 if test "x$CUPS_CONFIG" != x; then
-  cups_conf_datadir="`$CUPS_CONFIG --datadir`"
-  cups_conf_serverbin="`$CUPS_CONFIG --serverbin`"
-  cups_conf_serverroot="`$CUPS_CONFIG --serverroot`"
+  cups_conf_datadir="${prefix}/`$CUPS_CONFIG --datadir`"
+  cups_conf_serverbin="${prefix}/`$CUPS_CONFIG --serverbin`"
+  cups_conf_serverroot="${prefix}/`$CUPS_CONFIG --serverroot`"
 else
 # Some logical guessing
   if test "${datadir}" = "\${prefix}/share" -a "${cups_prefix}" = "/" ; then

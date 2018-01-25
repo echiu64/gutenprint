@@ -38,12 +38,19 @@ PPD_PARALLEL=200
 [[ -z $STP_TEST_SUITE ]] && STP_TEST_PROFILE=full
 case "$STP_TEST_PROFILE" in
     full|'')
-	echo "GENERATING PPD FILES:"
+	echo "GENERATING PPD FILES (all):"
 	$DEBUG make EXTRA_GENPPD_OPTS='-b -Z' ppd-clean ppd-global-a ppd-nls-a ppd-nonls-a
 	;;
     fast)
-	echo "GENERATING PPD FILES:"
-	$DEBUG make EXTRA_GENPPD_OPTS='-b -Z -S' ppd-clean ppd-nonls
+	if [ -n "$STP_TEST_DIST" ] ; then
+	    echo "GENERATING PPD FILES (fast):"
+	    $DEBUG make EXTRA_GENPPD_OPTS='-b -Z' ppd-clean ppd-nonls
+	    echo "GENERATING PPD FILES (global):"
+	    $DEBUG make EXTRA_GENPPD_OPTS='-b -Z -S' ppd-global
+	else
+	    echo "GENERATING PPD FILES (fast):"
+	    $DEBUG make EXTRA_GENPPD_OPTS='-b -Z -S' ppd-clean ppd-nonls
+	fi
 	;;
     *)
 	exit 77

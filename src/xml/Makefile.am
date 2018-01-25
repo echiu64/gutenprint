@@ -68,6 +68,6 @@ dist-hook: xmli18n-tmp.h xml-stamp
 
 CLEANFILES = xmli18n-tmp.h xmli18n-tmp.h.tmp xml-stamp xml-stamp.tmp
 
-EXTRA_DIST = $(pkgxmldata_DATA)
+EXTRA_DIST = $(pkgxmldata_DATA) xmli18n-tmp.h
 
 MAINTAINERCLEANFILES = Makefile.in

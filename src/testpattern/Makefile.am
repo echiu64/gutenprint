@@ -47,6 +47,7 @@ endif
 
 if BUILD_TESTPATTERN
 
+AM_TESTS_ENVIRONMENT=STP_MODULE_PATH=$(top_builddir)/src/main/.libs:$(top_builddir)/src/main STP_DATA_PATH=$(top_srcdir)/src/xml
 run-testpattern-2.fast: run-testpattern-2
 run-testpattern-2.full: run-testpattern-2
 run-testpattern-2.valgrind: run-testpattern-2

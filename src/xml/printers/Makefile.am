@@ -33,6 +33,7 @@ pkgxmldata_DATA =				\
 	ps.xml					\
 	raw.xml
 
+AM_TESTS_ENVIRONMENT=STP_MODULE_PATH=$(top_builddir)/src/main/.libs:$(top_builddir)/src/main STP_DATA_PATH=$(top_srcdir)/src/xml
 TESTS = check_duplicate_printers
 
 noinst_PROGRAMS = check_duplicate_printers
