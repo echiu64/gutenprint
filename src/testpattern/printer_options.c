@@ -154,7 +154,6 @@ main(int argc, char **argv)
 					 driver, min_size_name);
 				  printf("$max_page_size{'%s'} = '%s';\n",
 					 driver, max_size_name);
-				  puts(min_size_name);
 				}
 			    }
 			  printf("$stpdata{'%s'}{'%s'} = [qw(", driver, desc.name);
