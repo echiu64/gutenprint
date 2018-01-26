@@ -51,6 +51,7 @@ case "$STP_TEST_PROFILE" in
 	    echo "GENERATING PPD FILES (fast):"
 	    $DEBUG make EXTRA_GENPPD_OPTS='-b -Z -S' ppd-clean ppd-nonls
 	fi
+	PPD_PARALLEL=20
 	;;
     *)
 	exit 77
