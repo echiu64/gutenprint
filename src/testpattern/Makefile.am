@@ -48,21 +48,16 @@ endif
 if BUILD_TESTPATTERN
 
 AM_TESTS_ENVIRONMENT=STP_MODULE_PATH=$(top_builddir)/src/main/.libs:$(top_builddir)/src/main STP_DATA_PATH=$(top_srcdir)/src/xml
-run-testpattern-2.fast: run-testpattern-2
-run-testpattern-2.full: run-testpattern-2
-run-testpattern-2.valgrind: run-testpattern-2
-run-testpattern-2.checksums: run-testpattern-2
+run-testpattern-2.check: run-testpattern-2
 
-TESTS = run-testpattern-1 run-testpattern-2.fast run-testpattern-2.full \
-	run-testpattern-2.valgrind run-testpattern-2.checksums
+TESTS = run-testpattern-1 run-testpattern-2.check
 
 bin_PROGRAMS = testpattern
 noinst_PROGRAMS = printers printer_options
 noinst_SCRIPTS = run-testpattern-2 compare-checksums compress-checksums \
-	run-testpattern-2.checksums run-testpattern-2.fast \
-	run-testpattern-2.full run-testpattern-1
+	run-testpattern-2.check run-testpattern-1
 CSUM_DEPS=testpattern run-testpattern-2 compress-checksums Checksums \
-	run-testpattern-2.checksums
+	run-testpattern-2.check
 
 # This suffix is *not* static during development!
 CSUM_SUFFIX=`@PKGROOT@/scripts/gversion`
@@ -72,17 +67,19 @@ CSUM_RELEASE_FILE=Checksums/sums.$(CSUM_RELEASE_SUFFIX)
 
 .PHONY: checksums checksums-release
 
+CHECKSUM_ENV=STP_TEST_PROFILE=hecksums STP_DATA_PATH='@PKGROOT@/src/xml' 
+
 Checksums:
 	$(MKDIR_P) Checksums
 
 checksums: $(CSUM_DEPS)
-	STP_DATA_PATH='@PKGROOT@/src/xml' ./run-testpattern-2.checksums | ./compress-checksums | $(COMPRESS) > "$(CSUM_FILE)@CSUF@"
+	$(CHECKSUM_ENV) ./run-testpattern-2.check | ./compress-checksums | $(COMPRESS) > "$(CSUM_FILE)@CSUF@"
 
 checksums-fast: $(CSUM_DEPS)
-	STP_DATA_PATH='@PKGROOT@/src/xml' ./run-testpattern-2.checksums -s | ./compress-checksums | $(COMPRESS) > "$(CSUM_FILE)@CSUF@"
+	$(CHECKSUM_ENV) ./run-testpattern-2.check -s | ./compress-checksums | $(COMPRESS) > "$(CSUM_FILE)@CSUF@"
 
 checksums-release: $(CSUM_DEPS)
-	STP_DATA_PATH='@PKGROOT@/src/xml' ./run-testpattern-2.checksums | ./compress-checksums | $(COMPRESS) > "$(CSUM_RELEASE_FILE)@CSUF@"
+	$(CHECKSUM_ENV) ./run-testpattern-2.check | ./compress-checksums | $(COMPRESS) > "$(CSUM_RELEASE_FILE)@CSUF@"
 endif
 
 ## Clean
@@ -94,9 +91,6 @@ EXTRA_DIST = \
 	$(pkgdata_DATA) \
 	run-testpattern \
 	run-testpattern-1 \
-	run-testpattern-2.checksums \
-	run-testpattern-2.fast \
-	run-testpattern-2.full \
-	run-testpattern-2.valgrind \
+	run-testpattern-2.check \
 	compare-checksums.in \
 	compress-checksums.in

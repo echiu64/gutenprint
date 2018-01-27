@@ -93,8 +93,8 @@ snapshot: scripts/gversion git-version-stamp
 CPUS=`scripts/count-cpus`
 
 # STP_PROFILE=full
-MAKECHECK=STP_TEST_SUITE=1 /usr/bin/time make -k -s check
-MAKEDISTCHECK=STP_TEST_SUITE=1 STP_TEST_DIST=1 /usr/bin/time make -k -s distcheck
+MAKECHECK=STP_TEST_SUITE=1 /usr/bin/time make -k -s -j$(CPUS) check
+MAKEDISTCHECK=STP_TEST_SUITE=1 STP_TEST_DIST=1 /usr/bin/time make -k -s -j$(CPUS) distcheck
 MAKECHECK_PARALLEL=STP_PARALLEL=$(CPUS) $(MAKECHECK)
 MAKEDISTCHECK_PARALLEL=STP_PARALLEL=$(CPUS) $(MAKEDISTCHECK)
 
@@ -123,6 +123,12 @@ check-fast: scripts/count-cpus
 
 distcheck-fast: scripts/count-cpus
 	STP_TEST_PROFILE=fast $(MAKEDISTCHECK_PARALLEL)
+
+check-minimal: scripts/count-cpus
+	STP_TEST_PROFILE=minimal $(MAKECHECK_PARALLEL)
+
+distcheck-minimal: scripts/count-cpus
+	STP_TEST_PROFILE=minimal $(MAKEDISTCHECK_PARALLEL)
 
 check-full: scripts/count-cpus
 	STP_TEST_PROFILE=full $(MAKECHECK_PARALLEL)
