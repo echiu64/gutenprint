@@ -150,7 +150,7 @@ LDFLAGS="${LDFLAGS:=}"
 LIBS="${LIBS:=}"
 
 dnl Initialize automake stuff.
-AM_INIT_AUTOMAKE(1.9 dist-bzip2 no-dist-gzip tar-ustar check-news gnu)
+AM_INIT_AUTOMAKE(1.9 dist-xz dist-bzip2 no-dist-gzip tar-ustar check-news gnu)
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 popdef([GUTENPRINT_NAME])
 popdef([GUTENPRINT_VERSION])
@@ -1136,6 +1136,7 @@ CONFIG_FILE_EXEC([test/parse-escp2])
 CONFIG_FILE_EXEC([test/run-testdither])
 CONFIG_FILE_EXEC([test/run-weavetest])
 AC_CONFIG_FILES([scripts/Makefile])
+CONFIG_FILE_EXEC([scripts/build-release])
 CONFIG_FILE_EXEC([scripts/mkgitlog])
 CONFIG_FILE_EXEC([scripts/gversion])
 CONFIG_FILE_EXEC([scripts/test-gversion])

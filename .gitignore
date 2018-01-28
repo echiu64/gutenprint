@@ -7,6 +7,7 @@
 *.out
 *.tar*
 *.trs
+BuildLogs/**
 
 # Random noise
 *.patch

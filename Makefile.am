@@ -146,6 +146,12 @@ check-valgrind: scripts/count-cpus
 check-valgrind-minimal: scripts/count-cpus
 	STP_TEST_PROFILE=valgrind-minimal $(MAKECHECK_PARALLEL)
 
+checksums: scripts/count-cpus
+	STP_PARALLEL=$(CPUS) make -C src/testpattern checksums-release
+
+build-release: scripts/build-release
+	STP_PARALLEL=$(CPUS) scripts/build-release
+
 ## Clean
 
 CLEANSCRIPTS = \

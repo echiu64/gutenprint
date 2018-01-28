@@ -26,16 +26,23 @@ include $(top_srcdir)/scripts/global.mk
 # The autotools-installed scripts /should/ be automatically distributed.
 EXTRA_DIST = \
 	autogen.sh \
+	count-cpus \
 	global.mk \
-	mkgitlog \
 	gversion \
-	wzpaq \
-	count-cpus
+	mkgitlog \
+	wzpaq
 
-noinst_SCRIPTS=gversion wzpaq mkgitlog
+noinst_SCRIPTS= \
+	build-release \
+	gversion \
+	mkgitlog \
+	wzpaq
 
 ## Clean
 
 MAINTAINERCLEANFILES = \
 	Makefile.in \
-	mkgitlog
+	build-release \
+	count-cpus \
+	mkgitlog \
+	wzpaq
