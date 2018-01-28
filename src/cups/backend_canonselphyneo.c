@@ -46,7 +46,7 @@
 #define USB_PID_CANON_CP910  0x327a
 #define USB_PID_CANON_CP1000 0x32ae
 #define USB_PID_CANON_CP1200 0x32b1
-#define USB_PID_CANON_CP1300 XXXXX
+#define USB_PID_CANON_CP1300 0x32db
 
 /* Header data structure */
 struct selphyneo_hdr {
@@ -142,6 +142,34 @@ static int selphyneo_send_reset(struct selphyneo_ctx *ctx)
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
 			     rstcmd, sizeof(rstcmd))))
 		return CUPS_BACKEND_FAILED;
+
+	return CUPS_BACKEND_OK;
+}
+
+static int selphyneo_get_status(struct selphyneo_ctx *ctx)
+{
+	struct selphyneo_readback rdback;
+	int ret, num;
+
+	/* Read in the printer status to clear last state */
+	ret = read_data(ctx->dev, ctx->endp_up,
+			(uint8_t*) &rdback, sizeof(rdback), &num);
+
+	if (ret < 0)
+		return CUPS_BACKEND_FAILED;
+
+	/* And again, for the markers */
+	ret = read_data(ctx->dev, ctx->endp_up,
+			(uint8_t*) &rdback, sizeof(rdback), &num);
+
+	if (ret < 0)
+		return CUPS_BACKEND_FAILED;
+
+	INFO("Printer state: %s\n", selphyneo_statuses(rdback.data[0]));
+	INFO("Media type: %s\n", selphynew_pgcodes(rdback.data[6]));
+	if (rdback.data[2]) {
+		INFO("Printer error: %s\n", selphyneo_errors(rdback.data[2]));
+	}
 
 	return CUPS_BACKEND_OK;
 }
@@ -375,11 +403,14 @@ static int selphyneo_cmdline_arg(void *vctx, int argc, char **argv)
 	if (!ctx)
 		return -1;
 
-	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "R")) >= 0) {
+	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "Rs")) >= 0) {
 		switch(i) {
 		GETOPT_PROCESS_GLOBAL
 		case 'R':
 			selphyneo_send_reset(ctx);
+			break;
+		case 's':
+			selphyneo_get_status(ctx);
 			break;
 		}
 
@@ -392,11 +423,12 @@ static int selphyneo_cmdline_arg(void *vctx, int argc, char **argv)
 static void selphyneo_cmdline(void)
 {
 	DEBUG("\t\t[ -R ]           # Reset printer\n");
+	DEBUG("\t\t[ -s ]           # Query printer status\n");
 }
 
 struct dyesub_backend canonselphyneo_backend = {
 	.name = "Canon SELPHY CPneo",
-	.version = "0.10",
+	.version = "0.11",
 	.uri_prefix = "canonselphyneo",
 	.cmdline_usage = selphyneo_cmdline,
 	.cmdline_arg = selphyneo_cmdline_arg,
@@ -410,7 +442,7 @@ struct dyesub_backend canonselphyneo_backend = {
 	{ USB_VID_CANON, USB_PID_CANON_CP910, P_CP910, NULL},
 	{ USB_VID_CANON, USB_PID_CANON_CP1000, P_CP910, NULL},
 	{ USB_VID_CANON, USB_PID_CANON_CP1200, P_CP910, NULL},
-//	{ USB_VID_CANON, USB_PID_CANON_CP1300, P_CP910, NULL},
+	{ USB_VID_CANON, USB_PID_CANON_CP1300, P_CP910, NULL},
 	{ 0, 0, 0, NULL}
 	}
 };

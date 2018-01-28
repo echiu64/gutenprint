@@ -471,7 +471,7 @@ A) GENERAL USER-VISIBLE CHANGES
 
    2) Added support for the following printers:
 
-	Canon SELPHY CP-1300 (EXPERIMENTAL)
+	Canon SELPHY CP1300
 	Magicard Tango 2E
 	Magicard Rio 2E
 
@@ -483,6 +483,10 @@ A) GENERAL USER-VISIBLE CHANGES
 	DNP DS620
 	Mitusbishi CP-D70DW, CP-D707DW, and CP-D80DW
 	Shinko/Sinfonia S1245
+	Canon SELPHY CP820, CP910, CP1000, and CP1200
+
+   4) Improved the performance of all dye-sublimation printers
+
 
 B) NEW FUNCTIONALITY
 
