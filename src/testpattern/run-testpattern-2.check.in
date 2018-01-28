@@ -26,8 +26,8 @@ TEST_PRINTERS="escp2-r1800 escp2-3880 pcl-g_4 pcl-g_5c"
 
 case "$STP_TEST_PROFILE" in
     full)
-	$DEBUG ./run-testpattern-2
-	$DEBUG ./run-testpattern-2 -s \
+	$DEBUG ./run-testpattern-2 -s
+	$DEBUG ./run-testpattern-2 \
 	       -oPageSize,Resolution=MIN,DitherAlgorithm=VeryFast
 	$DEBUG ./run-testpattern-2 -s -dDitherAlgorithm=VeryFast \
 	       -dResolution=MIN -dPageSize=MIN \
@@ -42,7 +42,7 @@ case "$STP_TEST_PROFILE" in
 	$DEBUG ./run-testpattern-2 -s -dDitherAlgorithm=VeryFast \
 	       -dResolution=MIN -dPageSize=MIN \
 	       -o TPMode,ColorCorrection,InkType,UseGloss \
-	       $TEST_PRINTERS
+	       @MINIMAL_PRINTERS_TO_TEST@
 	;;
     valgrind)
 	$DEBUG ./run-testpattern-2 -s -v -v -dDitherAlgorithm=VeryFast \
@@ -52,9 +52,7 @@ case "$STP_TEST_PROFILE" in
 	$DEBUG ./run-testpattern-2 -s -v -v -dDitherAlgorithm=VeryFast \
 	       -dResolution=MIN -dPageSize=MIN \
 	       -o TPMode,ColorCorrection,InkType,UseGloss "$@" \
-	       escp2-r1800 escp2-3880 pcl-g_4 pcl-g_5c \
-	       mitsubishi-p95d shinko-chcs2145 kodak-1400 canon-cp910 \
-	       bjc-s200
+	       @MINIMAL_PRINTERS_TO_TEST@
 	;;
     checksums)
 	export STP_DEBUG=$(printf "0x%x" $((0x8000000 | ${STP_DEBUG:-0})))
@@ -71,7 +69,14 @@ case "$STP_TEST_PROFILE" in
 	       -o InkType -o InkSet,RawChannels -o Duplex \
 	       -o MediaType -o InputSlot -o FullBleed -o UseGloss \
 	       -o Orientation -o LabelSeparator -o Resolution -T 720 \
-	       "$@" $TEST_PRINTERS
+	       "$@" @MINIMAL_PRINTERS_TO_TEST@
+	;;
+    valgrind-minimal)
+	$DEBUG ./run-testpattern-2 -s -v -v -dDitherAlgorithm=VeryFast \
+	       -dResolution=MIN -dPageSize=MIN -o InkType \
+	       -o InkSet,RawChannels -o Duplex -o MediaType -o InputSlot \
+	       -o FullBleed -o UseGloss -o Orientation -o LabelSeparator "$@" \
+	       @MINIMAL_PRINTERS_TO_TEST@
 	;;
     *)
 	echo "Unknown test profile '$STP_TEST_PROFILE'"

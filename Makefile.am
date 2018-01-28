@@ -143,6 +143,9 @@ distcheck-full: scripts/count-cpus
 check-valgrind: scripts/count-cpus
 	STP_TEST_PROFILE=valgrind $(MAKECHECK_PARALLEL)
 
+check-valgrind-minimal: scripts/count-cpus
+	STP_TEST_PROFILE=valgrind-minimal $(MAKECHECK_PARALLEL)
+
 ## Clean
 
 CLEANSCRIPTS = \

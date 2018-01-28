@@ -67,7 +67,7 @@ CSUM_RELEASE_FILE=Checksums/sums.$(CSUM_RELEASE_SUFFIX)
 
 .PHONY: checksums checksums-release
 
-CHECKSUM_ENV=STP_TEST_PROFILE=hecksums STP_DATA_PATH='@PKGROOT@/src/xml' 
+CHECKSUM_ENV=STP_TEST_PROFILE=hecksums STP_DATA_PATH='@PKGROOT@/src/xml'
 
 Checksums:
 	$(MKDIR_P) Checksums

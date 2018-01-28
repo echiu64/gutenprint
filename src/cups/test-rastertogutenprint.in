@@ -40,6 +40,7 @@ declare use_explicit_quality=1
 declare extra_genppd_opts=-Z
 declare use_smallest_pagesize=0
 declare cupsargs=''
+declare printers_to_test=''
 
 case "$STP_TEST_PROFILE" in
     fast)
@@ -57,13 +58,30 @@ case "$STP_TEST_PROFILE" in
 	extra_genppd_opts+=" -S"
 	cupsargs='StpDitherAlgorithm=VeryFast'
 	use_explicit_quality=1
-	valopts='--tool=memcheck'
 	valgrind=2
 	use_smallest_pagesize=1
 	pages=2
 	;;
+    valgrind-minimal)
+	single=1
+	skip_simplified=1
+	extra_genppd_opts+=" -S"
+	cupsargs='StpDitherAlgorithm=VeryFast'
+	use_explicit_quality=1
+	valgrind=2
+	use_smallest_pagesize=1
+	pages=1
+	printers_to_test="@MINIMAL_PRINTERS_TO_TEST@"
+	;;
     minimal)
-	exit 77
+	single=1
+	skip_simplified=1
+	extra_genppd_opts+=" -S"
+	cupsargs='StpDitherAlgorithm=VeryFast'
+	use_explicit_quality=1
+	use_smallest_pagesize=1
+	pages=1
+	printers_to_test="@MINIMAL_PRINTERS_TO_TEST@"
 	;;
     *)
 	;;
@@ -122,9 +140,9 @@ exit 0;
 while getopts "hvcgsVnO:m:o:p:St:lLXf:N" opt ; do
     case "$opt" in
 	h*) usage ;;
-	v) valopts='--tool=memcheck' ; valgrind=$((valgrind + 1)) ;;
-	c) valopts='--tool=callgrind --dump-instr=yes --trace-jump=yes'; valgrind=4 ;;
-	g) valopts='--vgdb=yes' ;;
+	v) valgrind=$((valgrind + 1)) ;;
+	c) valgrind=4 ;;
+	g) valopts='--vgdb=yes --error-exitcode=1' ;;
 	s) single=1 ;;
 	V) verbose=$((verbose+1)) ;;
 	n) make_ppds='' ;;
@@ -144,6 +162,17 @@ while getopts "hvcgsVnO:m:o:p:St:lLXf:N" opt ; do
 	*) echo "Unknown argument $opt"; usage ;;
     esac
 done
+
+case "$valgrind" in
+    4)
+	valopts='--tool=callgrind --dump-instr=yes --trace-jump=yes --error-exitcode=1'
+	;;
+    '')
+	;;
+    *)
+	valopts='--tool=memcheck --error-exitcode=1'
+	;;
+esac
 
 shift $((OPTIND - 1))
 
@@ -217,8 +246,8 @@ esac
 #cupsargs='PageSize=A8'
 
 get_ppds() {
-    if [[ -n $@ ]] ; then
-	for f in "$@" ; do
+    if [[ -n $@ || -n $printers_to_test ]] ; then
+	for f in "$@" $printers_to_test ; do
 	    if [[ -r $f ]] ; then
 		echo $f
 	    elif [[ -r ppd/C/$f ]] ; then
@@ -403,9 +432,9 @@ run_rastertogp() {
     rgpc="$rgp 1 1 1 1"
     qarg="$qualarg $sizearg $cupsargs"
     case "$valgrind" in
-	1) $vg -q $rgpc ;;
-	2) $vg --leak-resolution=high $rgpc "$qarg" ;;
-	3) $vg --leak-resolution=high --show-reachable=yes $rgpc "$qarg";;
+	1) $vg1 -q $rgpc ;;
+	2) $vg1 --leak-resolution=high $rgpc "$qarg" ;;
+	3) $vg1 --leak-resolution=high --show-reachable=yes $rgpc "$qarg";;
 	4) $vg $rgpc "$qarg" ;;
 	5) cat ;;
 	6) cat > /dev/null ;;
