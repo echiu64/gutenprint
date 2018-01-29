@@ -219,12 +219,23 @@ AC_DEFINE_UNQUOTED(OSTYPE, ["${OSTYPE}"], [The operating system to build for])
 
 
 dnl Command line options.
-AC_PATH_TOOL(CUPS_CONFIG, cups-config)
-if test -z "${CUPS_CONFIG}" ; then
-  BUILD_CUPS="no"
-else
-  BUILD_CUPS="yes"
-fi
+AC_ARG_WITH([cups-config],
+  [AS_HELP_STRING([--with-cups-config=path], [Specify path to cups-config executable.])],
+  [with_cups_config="$withval"],
+  [with_cups_config=system]
+)
+AS_IF([test "x$with_cups_config" != "xsystem"], [
+    CUPS_CONFIG=$with_cups_config
+  ], [
+    AC_PATH_TOOL(CUPS_CONFIG, [cups-config])
+    AS_IF([test -z "$CUPS_CONFIG"], [
+      BUILD_CUPS=no
+   ],
+   [
+      BUILD_CUPS=yes
+   ])
+])
+
 STP_ARG_WITH_DETAILED(
   [cups],
   [=PREFIX],
@@ -601,9 +612,6 @@ fi
 AC_SUBST(COMPRESS)
 AC_SUBST(CSUF)
 
-dnl CUPS checks
-STP_CUPS_PROGS
-
 GUTENPRINT_RELEASE_VERSION=${GUTENPRINT_MAJOR_VERSION}.${GUTENPRINT_MINOR_VERSION}
 AH_TEMPLATE(GUTENPRINT_RELEASE_VERSION,, [Gutenprint release version])
 AC_DEFINE_UNQUOTED(GUTENPRINT_RELEASE_VERSION, "${GUTENPRINT_RELEASE_VERSION}")
@@ -800,8 +808,11 @@ AC_CHECK_LIB(m,pow,
 	     LIBM=-lm
 )
 
+dnl CUPS stuff
+STP_CUPS_PATH
 STP_CUPS_LIBS
 
+dnl GIMP stuff
 STP_GIMP2_LIBS
 
 dnl Checks for header files.
@@ -883,7 +894,6 @@ AM_CONDITIONAL(INSTALL_USER_GUIDE, test x${INSTALL_USER_GUIDE} = xyes)
 
 AM_CONDITIONAL(BUILD_LIBUSB_BACKENDS, test x${BUILD_LIBUSB_BACKENDS} = xyes)
 
-STP_CUPS_PATH
 
 # loadable modules
 # portable sh has no AND test...
@@ -976,6 +986,9 @@ else
   AC_DEFINE_UNQUOTED(CUPS_MODELDIR, "${cups_conf_datadir}/model/${PACKAGE}/${GUTENPRINT_RELEASE_VERSION}/")
 fi
 
+AC_DEFINE_UNQUOTED(CUPS_SERVERROOT, "${cups_conf_serverroot}", [CUPS serverroot])
+AC_DEFINE_UNQUOTED(CUPS_SERVERBIN, "${cups_conf_serverbin}", [Path to CUPS binaries dir])
+
 AC_ARG_WITH(cups_nickname, [  --with-cups-nickname="nickname suffix"
                           Suffix to add to PPD NickName, default=" - CUPS+Gutenprint v"],
   CUPS_PPD_NICKNAME_STRING="$withval",
@@ -1017,7 +1030,6 @@ AC_SUBST(GENPPD_LIBS)
 AC_SUBST(RM)
 AC_SUBST(GIMP2_CFLAGS)
 AC_SUBST(GIMP2_LIBS)
-AC_SUBST(gimp2_plug_indir)
 AC_SUBST(GUTENPRINT_CFLAGS)
 AC_SUBST(GUTENPRINT_LIBS)
 AC_SUBST(GUTENPRINT_LIBDEPS)

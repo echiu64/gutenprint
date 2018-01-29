@@ -33,32 +33,7 @@
 AC_DEFUN([STP_GIMP2_LIBS],
 [dnl GIMP library checks
 if test x${BUILD_GIMP2} = xyes ; then
-  GIMP2_DATA_DIR="${prefix}/`$PKG_CONFIG gimp-2.0 --variable=gimpdatadir`"
-  GIMP2_PLUGIN_DIR="${prefix}/`$PKG_CONFIG gimp-2.0 --variable=gimplibdir`/plug-ins"
-  gimp2_plug_indir="${GIMP2_PLUGIN_DIR}"
-fi
-])
-
-
-
-## ------------------- ##
-## 2. gimptool support ##
-## ------------------- ##
-
-
-# STP_GIMP2_PLUG_IN_DIR
-# ---------------------
-# Locate the GIMP plugin directory using libtool
-AC_DEFUN([STP_GIMP2_PLUG_IN_DIR],
-[dnl Extract directory using --dry-run and sed
-if test x${BUILD_GIMP2} = xyes ; then
-  AC_MSG_CHECKING([for GIMP 2.0 plug-in directory])
-# create temporary "plug-in" to install
-  touch print
-  chmod 755 print
-  GIMPTOOL2_OUTPUT=`$GIMPTOOL2_CHECK --dry-run --install-${PLUG_IN_PATH} print | tail -n 1`
-  rm print
-  GIMP2_PLUGIN_DIR=`echo "$GIMPTOOL2_OUTPUT" | sed -e 's/.* \(.*\)\/print/\1/'`
-  AC_MSG_RESULT([$GIMP2_PLUGIN_DIR])
+  GIMP2_DATA_DIR="`$PKG_CONFIG gimp-2.0 --variable=gimpdatadir`"
+  GIMP2_PLUGIN_DIR="`$PKG_CONFIG gimp-2.0 --variable=gimplibdir`/plug-ins"
 fi
 ])
