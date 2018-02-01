@@ -425,6 +425,16 @@ AS_IF([test "x$BUILD_CUPS" = "xyes"], [
 	            BUILD_LIBUSB_BACKENDS=no])
 ])
 
+STP_ARG_ENABLE([user-install],
+               [install GIMP plugin in home directory],
+               [USER_INSTALL],
+               [no])
+if test x$USER_INSTALL = xyes ; then
+  PLUG_IN_PATH="bin"
+else
+  PLUG_IN_PATH="admin-bin"
+fi
+
 AC_PATH_TOOL([GIMPTOOL2_CHECK], [gimptool-2.0 gimptool])
 if test -z "${GIMPTOOL2_CHECK}" ; then
   BUILD_GIMP2="no"
@@ -444,6 +454,13 @@ dnl Quote to protect sed regexes
   else
     BUILD_GIMP2="no"
     BUILD_GIMP2_AS_GUTENPRINT="no"
+  fi
+  if test x${BUILD_GIMP2} = xyes ; then
+    AC_MSG_CHECKING([for GIMP 2.0 plug-in directory])
+    GIMPTOOL2_OUTPUT=`$GIMPTOOL2_CHECK --dry-run --install-${PLUG_IN_PATH} print | tail -n 1`
+    GIMP2_PLUGIN_DIR=`echo "$GIMPTOOL2_OUTPUT" | cut -d ' ' -f 3 | tr -d "\'"`
+    AC_MSG_RESULT([$GIMP2_PLUGIN_DIR])
+    gimp2_plug_indir="${GIMP2_PLUGIN_DIR}"
   fi
 fi
 
@@ -503,16 +520,6 @@ STP_ARG_ENABLE([testpattern],
                [build testpattern generator],
                [BUILD_TESTPATTERN],
                [(automatic)])
-
-STP_ARG_ENABLE([user-install],
-               [install GIMP plugin in home directory],
-               [USER_INSTALL],
-               [no])
-if test x$USER_INSTALL = xyes ; then
-  PLUG_IN_PATH="bin"
-else
-  PLUG_IN_PATH="admin-bin"
-fi
 
 dnl aclocal flags.
 dnl AM_ACLOCAL_INCLUDE(m4 m4local)
@@ -812,9 +819,6 @@ dnl CUPS stuff
 STP_CUPS_PATH
 STP_CUPS_LIBS
 
-dnl GIMP stuff
-STP_GIMP2_LIBS
-
 dnl Checks for header files.
 AC_HEADER_STDC
 AC_CHECK_HEADERS(getopt.h)
@@ -1030,6 +1034,7 @@ AC_SUBST(GENPPD_LIBS)
 AC_SUBST(RM)
 AC_SUBST(GIMP2_CFLAGS)
 AC_SUBST(GIMP2_LIBS)
+AC_SUBST(gimp2_plug_indir)
 AC_SUBST(GUTENPRINT_CFLAGS)
 AC_SUBST(GUTENPRINT_LIBS)
 AC_SUBST(GUTENPRINT_LIBDEPS)
@@ -1049,7 +1054,6 @@ AC_SUBST(gutenprintui2_libdeps)
 AC_SUBST(LIBM)
 AC_SUBST(LIBREADLINE_DEPS)
 AC_SUBST(MAINTAINER_CFLAGS)
-AC_SUBST(PLUG_IN_PATH)
 AC_SUBST(WHICH_PPDS)
 AC_SUBST(BUILD_CUPS_PPDS)
 AC_SUBST(GUTENPRINT_BASE_VERSION)

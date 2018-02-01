@@ -19,10 +19,7 @@
 
 include $(top_srcdir)/scripts/global.mk
 
-
 ## Variables
-
-gimp2_plug_indir=$(GIMP2_PLUGIN_DIR)
 
 ## Programs
 
