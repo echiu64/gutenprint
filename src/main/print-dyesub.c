@@ -9129,14 +9129,6 @@ dyesub_swap_ints(int *a, int *b)
 }
 
 static void
-dyesub_swap_doubles(double *a, double *b)
-{
-  double t = *a;
-  *a = *b;
-  *b = t;
-}
-
-static void
 dyesub_adjust_curve(stp_vars_t *v,
 		const char *color_adj,
 		const char *color_curve)
@@ -9178,12 +9170,25 @@ dyesub_exec_check(stp_vars_t *v,
   return 1;
 }
 
-/* FIXME: This function is badly named.  It actually picks the best single
-   "point" on the original image to use for the desired output pixel. */
-static double
-dyesub_interpolate(int oldval, int oldsize, int newsize)
+/* XXX FIXME:  This is "point" interpolation.  Be smarter!
+   eg:  Average  (average all pixels that touch this one)
+        BiLinear (scale based on linear interpolation)
+        BiCubic  (scale based on weighted average, based on proximity)
+        Lanczos  (awesome!! but slow)
+*/
+static int
+dyesub_interpolate(int point, int olddim, int newdim)
 {
-  return ((double)oldval * (double)newsize / (double)oldsize);
+#if 0
+  /* Perform arithematic rounding.  Is there a point? */
+  int result = ((point * 2 * newdim / olddim) + 1) / 2;
+  if (result >= newdim)
+    result--;
+#else
+  int result = (point * newdim / olddim);
+#endif
+
+  return result;
 }
 
 static void
@@ -9289,7 +9294,7 @@ static void
 dyesub_render_row_packed_u8(stp_vars_t *v,
 			    dyesub_print_vars_t *pv,
 			    const dyesub_cap_t *caps,
-			    double in_row,
+			    int in_row,
 			    char *dest,
 			    int bytes_per_pixel,
 			    int plane)
@@ -9299,21 +9304,16 @@ dyesub_render_row_packed_u8(stp_vars_t *v,
 
   for (w = 0; w < pv->outw_px; w++)
     {
-      double row = in_row;
-      double col = dyesub_interpolate(w, pv->outw_px, pv->imgw_px);
+      int row = in_row;
+      int col = dyesub_interpolate(w, pv->outw_px, pv->imgw_px);
       if (pv->plane_lefttoright)
 	col = pv->imgw_px - col - 1;
       if (pv->print_mode == DYESUB_LANDSCAPE)
         { /* "rotate" image */
-          dyesub_swap_doubles(&col, &row);
+          dyesub_swap_ints(&col, &row);
           row = (pv->imgw_px - 1) - row;
         }
-      // XXX FIXME:  This is "point" interpolation.  Be smarter!
-      // eg:  Average  (average all pixels that touch this one)
-      //      BiLinear (scale based on linear interpolation)
-      //      BiCubic  (scale based on weighted average, based on proximity)
-      //      Lanczos  (awesome!! but slow)
-      src = &(pv->image_data[(int)row][(int)col * pv->out_channels]);
+      src = &(pv->image_data[row][col * pv->out_channels]);
 
       dyesub_render_pixel_packed_u8(src, dest + w*bytes_per_pixel, pv);
     }
@@ -9323,7 +9323,7 @@ static void
 dyesub_render_row_interlaced_u8(stp_vars_t *v,
 				dyesub_print_vars_t *pv,
 				const dyesub_cap_t *caps,
-				double in_row,
+				int in_row,
 				char *dest,
 				int bytes_per_pixel,
 				int plane)
@@ -9333,21 +9333,16 @@ dyesub_render_row_interlaced_u8(stp_vars_t *v,
 
   for (w = 0; w < pv->outw_px; w++)
     {
-      double row = in_row;
-      double col = dyesub_interpolate(w, pv->outw_px, pv->imgw_px);
+      int row = in_row;
+      int col = dyesub_interpolate(w, pv->outw_px, pv->imgw_px);
       if (pv->plane_lefttoright)
 	col = pv->imgw_px - col - 1;
       if (pv->print_mode == DYESUB_LANDSCAPE)
         { /* "rotate" image */
-          dyesub_swap_doubles(&col, &row);
+          dyesub_swap_ints(&col, &row);
           row = (pv->imgw_px - 1) - row;
         }
-      // XXX FIXME:  This is "point" interpolation.  Be smarter!
-      // eg:  Average  (average all pixels that touch this one)
-      //      BiLinear (scale based on linear interpolation)
-      //      BiCubic  (scale based on weighted average, based on proximity)
-      //      Lanczos  (awesome!! but slow)
-      src = &(pv->image_data[(int)row][(int)col * pv->out_channels]);
+      src = &(pv->image_data[row][col * pv->out_channels]);
 
       dyesub_render_pixel_u8(src, dest + w, pv, plane);
     }
@@ -9357,7 +9352,7 @@ static void
 dyesub_render_row_interlaced_u16(stp_vars_t *v,
 				 dyesub_print_vars_t *pv,
 				 const dyesub_cap_t *caps,
-				 double in_row,
+				 int in_row,
 				 char *dest,
 				 int bytes_per_pixel,
 				 int plane)
@@ -9367,21 +9362,16 @@ dyesub_render_row_interlaced_u16(stp_vars_t *v,
 
   for (w = 0; w < pv->outw_px; w++)
     {
-      double row = in_row;
-      double col = dyesub_interpolate(w, pv->outw_px, pv->imgw_px);
+      int row = in_row;
+      int col = dyesub_interpolate(w, pv->outw_px, pv->imgw_px);
       if (pv->plane_lefttoright)
 	col = pv->imgw_px - col - 1;
       if (pv->print_mode == DYESUB_LANDSCAPE)
         { /* "rotate" image */
-          dyesub_swap_doubles(&col, &row);
+          dyesub_swap_ints(&col, &row);
           row = (pv->imgw_px - 1) - row;
         }
-      // XXX FIXME:  This is "point" interpolation.  Be smarter!
-      // eg:  Average  (average all pixels that touch this one)
-      //      BiLinear (scale based on linear interpolation)
-      //      BiCubic  (scale based on weighted average, based on proximity)
-      //      Lanczos  (awesome!! but slow)
-      src = &(pv->image_data[(int)row][(int)col * pv->out_channels]);
+      src = &(pv->image_data[row][col * pv->out_channels]);
 
       dyesub_render_pixel_u16(src, (unsigned short*)(dest + w*bytes_per_pixel),
 			      pv, plane);
@@ -9423,7 +9413,7 @@ dyesub_print_plane(stp_vars_t *v,
   for (h = 0; h <= pv->prnb_px - pv->prnt_px; h++)
     {
       int p = pv->row_interlacing ? 0 : plane;
-      double row;
+      int row;
 
       do {
 
@@ -9450,7 +9440,7 @@ dyesub_print_plane(stp_vars_t *v,
 				   pv->outh_px, pv->imgh_px);
 
 	  stp_deprintf(STP_DBG_DYESUB,
-		       "dyesub_print_plane: h = %d, row = %f\n", h, row);
+		       "dyesub_print_plane: h = %d, row = %d\n", h, row);
 
 	  if (pv->plane_interlacing || pv->row_interlacing)
 	    {
