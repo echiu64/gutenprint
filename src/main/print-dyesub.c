@@ -9273,29 +9273,26 @@ dyesub_render_pixel_u16(unsigned short *src, unsigned short *dest,
 
 
 static void
-dyesub_render_pixel_packed(unsigned short *src, char *dest,
-			   dyesub_print_vars_t *pv)
+dyesub_render_pixel_packed_u8(unsigned short *src, char *dest,
+			      dyesub_print_vars_t *pv)
 {
   int i;
 
   /* copy out_channel (image) to equiv ink_channel (printer) */
   for (i = 0; i < pv->ink_channels; i++)
     {
-      if (pv->bytes_per_ink_channel == 1)
-        dyesub_render_pixel_u8(src, dest + i, pv, pv->ink_order[i]-1);
-      else
-        dyesub_render_pixel_u16(src, ((unsigned short*)dest) + i, pv, pv->ink_order[i]-1);
+      dyesub_render_pixel_u8(src, dest + i, pv, pv->ink_order[i]-1);
     }
 }
 
 static void
-dyesub_render_row(stp_vars_t *v,
-		  dyesub_print_vars_t *pv,
-		  const dyesub_cap_t *caps,
-		  double in_row,
-		  char *dest,
-		  int bytes_per_pixel,
-		  int plane)
+dyesub_render_row_packed_u8(stp_vars_t *v,
+			    dyesub_print_vars_t *pv,
+			    const dyesub_cap_t *caps,
+			    double in_row,
+			    char *dest,
+			    int bytes_per_pixel,
+			    int plane)
 {
   int w;
   unsigned short *src;
@@ -9318,18 +9315,76 @@ dyesub_render_row(stp_vars_t *v,
       //      Lanczos  (awesome!! but slow)
       src = &(pv->image_data[(int)row][(int)col * pv->out_channels]);
 
-      if (pv->plane_interlacing || pv->row_interlacing)
-        {
-	  if (pv->bytes_per_ink_channel == 1)
-            dyesub_render_pixel_u8(src, dest + w, pv, plane);
-	  else
-	    dyesub_render_pixel_u16(src, (unsigned short*)(dest + w*bytes_per_pixel),
-				    pv, plane);
-	}
-      else
-        {
-	  dyesub_render_pixel_packed(src, dest + w*bytes_per_pixel, pv);
-	}
+      dyesub_render_pixel_packed_u8(src, dest + w*bytes_per_pixel, pv);
+    }
+}
+
+static void
+dyesub_render_row_interlaced_u8(stp_vars_t *v,
+				dyesub_print_vars_t *pv,
+				const dyesub_cap_t *caps,
+				double in_row,
+				char *dest,
+				int bytes_per_pixel,
+				int plane)
+{
+  int w;
+  unsigned short *src;
+
+  for (w = 0; w < pv->outw_px; w++)
+    {
+      double row = in_row;
+      double col = dyesub_interpolate(w, pv->outw_px, pv->imgw_px);
+      if (pv->plane_lefttoright)
+	col = pv->imgw_px - col - 1;
+      if (pv->print_mode == DYESUB_LANDSCAPE)
+        { /* "rotate" image */
+          dyesub_swap_doubles(&col, &row);
+          row = (pv->imgw_px - 1) - row;
+        }
+      // XXX FIXME:  This is "point" interpolation.  Be smarter!
+      // eg:  Average  (average all pixels that touch this one)
+      //      BiLinear (scale based on linear interpolation)
+      //      BiCubic  (scale based on weighted average, based on proximity)
+      //      Lanczos  (awesome!! but slow)
+      src = &(pv->image_data[(int)row][(int)col * pv->out_channels]);
+
+      dyesub_render_pixel_u8(src, dest + w, pv, plane);
+    }
+}
+
+static void
+dyesub_render_row_interlaced_u16(stp_vars_t *v,
+				 dyesub_print_vars_t *pv,
+				 const dyesub_cap_t *caps,
+				 double in_row,
+				 char *dest,
+				 int bytes_per_pixel,
+				 int plane)
+{
+  int w;
+  unsigned short *src;
+
+  for (w = 0; w < pv->outw_px; w++)
+    {
+      double row = in_row;
+      double col = dyesub_interpolate(w, pv->outw_px, pv->imgw_px);
+      if (pv->plane_lefttoright)
+	col = pv->imgw_px - col - 1;
+      if (pv->print_mode == DYESUB_LANDSCAPE)
+        { /* "rotate" image */
+          dyesub_swap_doubles(&col, &row);
+          row = (pv->imgw_px - 1) - row;
+        }
+      // XXX FIXME:  This is "point" interpolation.  Be smarter!
+      // eg:  Average  (average all pixels that touch this one)
+      //      BiLinear (scale based on linear interpolation)
+      //      BiCubic  (scale based on weighted average, based on proximity)
+      //      Lanczos  (awesome!! but slow)
+      src = &(pv->image_data[(int)row][(int)col * pv->out_channels]);
+
+      dyesub_render_pixel_u16(src, (unsigned short*)(dest + w*bytes_per_pixel),
+			      pv, plane);
     }
 }
 
@@ -9351,7 +9406,6 @@ dyesub_print_plane(stp_vars_t *v,
   /* Pre-Fill in the blank bits of the row. */
   if (dyesub_feature(caps, DYESUB_FEATURE_FULL_WIDTH))
     {
-      /* FIXME: This is broken for bpp != 1 and packed data -- but no such models exist. */
       /* empty part left of image area */
       if (pv->outl_px > 0)
         {
@@ -9388,8 +9442,7 @@ dyesub_print_plane(stp_vars_t *v,
       if (h + pv->prnt_px < pv->outt_px || h + pv->prnt_px >= pv->outb_px)
         { /* empty part above or below image area */
 	  memset(destrow, pv->empty_byte[plane], rowlen);
-	  /* FIXME: This is also broken for bpp != 1 and packed data  */
-	  /* FIXME: Also this is inefficient; it won't change once generated.. */
+	  /* FIXME: This is inefficient; it won't change once generated.. */
 	}
       else
         {
@@ -9399,7 +9452,18 @@ dyesub_print_plane(stp_vars_t *v,
 	  stp_deprintf(STP_DBG_DYESUB,
 		       "dyesub_print_plane: h = %d, row = %f\n", h, row);
 
-	  dyesub_render_row(v, pv, caps, row, destrow + bpp * pv->outl_px, bpp, p);
+	  if (pv->plane_interlacing || pv->row_interlacing)
+	    {
+	      if (pv->bytes_per_ink_channel == 1)
+		dyesub_render_row_interlaced_u8(v, pv, caps, row,
+						destrow + bpp * pv->outl_px, bpp, p);
+	      else
+		dyesub_render_row_interlaced_u16(v, pv, caps, row,
+						 destrow + bpp * pv->outl_px, bpp, p);
+	    }
+	  else
+            dyesub_render_row_packed_u8(v, pv, caps, row,
+					destrow + bpp * pv->outl_px, bpp, p);
 	}
       /* And send it out */
       stp_zfwrite(destrow, rowlen, 1, v);
