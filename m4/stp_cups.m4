@@ -131,7 +131,7 @@ if test "x${cups_exec_prefix}" = xNONE  -o "x${cups_exec_prefix}" = x ; then
 fi
 
 # Get explicit CUPS directories if possible
-if test "x$CUPS_CONFIG" != x; then
+if test "x$CUPS_CONFIG" != x -a "x$NO_PKGCONFIG_PATHS" = x; then
   cups_conf_datadir="`$CUPS_CONFIG --datadir`"
   cups_conf_serverroot="`$CUPS_CONFIG --serverroot`"
   cups_conf_serverbin="`$CUPS_CONFIG --serverbin`"

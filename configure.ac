@@ -460,7 +460,12 @@ dnl Quote to protect sed regexes
     GIMPTOOL2_OUTPUT=`$GIMPTOOL2_CHECK --dry-run --install-${PLUG_IN_PATH} print | tail -n 1`
     GIMP2_PLUGIN_DIR=`echo "$GIMPTOOL2_OUTPUT" | cut -d ' ' -f 3 | tr -d "\'"`
     AC_MSG_RESULT([$GIMP2_PLUGIN_DIR])
-    gimp2_plug_indir="${GIMP2_PLUGIN_DIR}"
+    if test "x$NO_PKGCONFIG_PATHS" = x; then
+      gimp2_plug_indir="${GIMP2_PLUGIN_DIR}"
+    else
+      gimp2_plug_indir="${prefix}/lib/gimp/2.0/plug-ins"
+    fi
+
   fi
 fi
 
