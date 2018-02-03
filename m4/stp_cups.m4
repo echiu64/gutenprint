@@ -120,20 +120,21 @@ if test "x${cups_prefix}" = xNONE -o "x{$cups_prefix}" = x ; then
     cups_prefix="${prefix}"
   fi
 fi
+
 # Fix "cups_exec_prefix" variable if it hasn't been specified...
 if test "x${cups_exec_prefix}" = xNONE  -o "x${cups_exec_prefix}" = x ; then
   if test x"${exec_prefix}" = xNONE -o "x${exec_prefix}" = x ; then
-    cups_exec_prefix="/usr"
-  else
     cups_exec_prefix="${cups_prefix}"
+  else
+    cups_exec_prefix="${exec_prefix}"
   fi
 fi
 
 # Get explicit CUPS directories if possible
 if test "x$CUPS_CONFIG" != x; then
   cups_conf_datadir="`$CUPS_CONFIG --datadir`"
-  cups_conf_serverbin="`$CUPS_CONFIG --serverbin`"
   cups_conf_serverroot="`$CUPS_CONFIG --serverroot`"
+  cups_conf_serverbin="`$CUPS_CONFIG --serverbin`"
 else
   cups_conf_datadir="${cups_prefix}/share/cups"
   cups_conf_serverroot="${cups_prefix}/etc/cups"

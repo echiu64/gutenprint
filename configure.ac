@@ -990,9 +990,6 @@ else
   AC_DEFINE_UNQUOTED(CUPS_MODELDIR, "${cups_conf_datadir}/model/${PACKAGE}/${GUTENPRINT_RELEASE_VERSION}/")
 fi
 
-AC_DEFINE_UNQUOTED(CUPS_SERVERROOT, "${cups_conf_serverroot}", [CUPS serverroot])
-AC_DEFINE_UNQUOTED(CUPS_SERVERBIN, "${cups_conf_serverbin}", [Path to CUPS binaries dir])
-
 AC_ARG_WITH(cups_nickname, [  --with-cups-nickname="nickname suffix"
                           Suffix to add to PPD NickName, default=" - CUPS+Gutenprint v"],
   CUPS_PPD_NICKNAME_STRING="$withval",
