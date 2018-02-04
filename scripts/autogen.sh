@@ -4,6 +4,9 @@
 
 DIE=0
 
+# Make sure all of our auto* bits are up to date.
+autoreconf -ivf
+
 if test -d m4local ; then
   :
 else
