@@ -1007,9 +1007,12 @@ AC_DEFINE_UNQUOTED(CUPS_PPD_NICKNAME_STRING, "$CUPS_PPD_NICKNAME_STRING")
 AC_DEFINE_UNQUOTED(CUPS_PPD_PS_LEVEL, ${CUPS_PPD_PS_LEVEL}, [CUPS PPD PostScript level])
 STP_RELEASE_DATE
 
-MINIMAL_PRINTERS_TO_TEST="escp2-r1800 escp2-3880 pcl-g_4 pcl-g_5c \
+MINIMAL_PRINTERS_TO_TEST="escp2-r1800 escp2-3880 \
+	pcl-g_4 pcl-g_5c pcl-500 \
 	mitsubishi-p95d shinko-chcs2145 kodak-1400 canon-cp910 \
-	bjc-s200"
+	bjc-s200 bjc-PIXMA-Pro9000mk2 \
+	datamax_oneil_I4212e \
+	lexmark-z43"
 
 AC_DEFINE_UNQUOTED(MINIMAL_PRINTERS_TO_TEST, ${MINIMAL_PRINTERS_TO_TEST},
 					     [Printers to test in minimal run])
