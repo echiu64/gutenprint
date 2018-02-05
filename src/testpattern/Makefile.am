@@ -89,8 +89,5 @@ MAINTAINERCLEANFILES = Makefile.in testpatternl.c testpatterny.c testpatterny.h
 EXTRA_DIST = \
 	testpatterny.h \
 	$(pkgdata_DATA) \
-	run-testpattern \
-	run-testpattern-1 \
-	run-testpattern-2.check \
 	compare-checksums.in \
 	compress-checksums.in

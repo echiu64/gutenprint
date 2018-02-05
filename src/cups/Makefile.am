@@ -99,8 +99,12 @@ endif
 
 AM_TESTS_ENVIRONMENT=$(STP_ENV)
 test-rastertogutenprint: min-pagesize
-TESTS= test-ppds test-rastertogutenprint
-noinst_SCRIPTS=test-ppds test-rastertogutenprint min-pagesize
+test-rastertogutenprint.check: test-rastertogutenprint
+TESTS= test-ppds test-rastertogutenprint.check
+noinst_SCRIPTS=test-ppds \
+	test-rastertogutenprint \
+	test-rastertogutenprint.check \
+	min-pagesize
 endif
 
 if BUILD_GENPPD_STATIC

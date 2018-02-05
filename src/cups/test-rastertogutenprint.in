@@ -36,54 +36,11 @@ declare valgrind=0
 declare make_ppds=1
 declare skip_simplified=0
 declare postscript=0
-declare use_explicit_quality=1
+declare use_explicit_quality=0
 declare extra_genppd_opts=-Z
 declare use_smallest_pagesize=0
 declare cupsargs=''
 declare printers_to_test=''
-
-case "$STP_TEST_PROFILE" in
-    fast)
-	single=1
-	skip_simplified=1
-	extra_genppd_opts+=" -S"
-	cupsargs='StpDitherAlgorithm=VeryFast'
-	use_explicit_quality=1
-	use_smallest_pagesize=1
-	pages=2
-	;;
-    valgrind)
-	single=1
-	skip_simplified=1
-	extra_genppd_opts+=" -S"
-	cupsargs='StpDitherAlgorithm=VeryFast'
-	use_explicit_quality=1
-	valgrind=2
-	use_smallest_pagesize=1
-	pages=2
-	;;
-    valgrind-minimal)
-	single=1
-	skip_simplified=1
-	cupsargs='StpDitherAlgorithm=VeryFast'
-	use_explicit_quality=1
-	valgrind=2
-	use_smallest_pagesize=1
-	pages=1
-	printers_to_test="@MINIMAL_PRINTERS_TO_TEST@"
-	;;
-    minimal)
-	single=1
-	skip_simplified=1
-	cupsargs='StpDitherAlgorithm=VeryFast'
-	use_explicit_quality=1
-	use_smallest_pagesize=1
-	pages=1
-	printers_to_test="@MINIMAL_PRINTERS_TO_TEST@"
-	;;
-    *)
-	;;
-esac
 
 if [ -n "$STP_TEST_DEBUG" ] ; then
     echo "Would run with single=$single skip_simplified=$skip_simplified extra_genppd_opts=$extra_genppd_opts cupsargs=$cupsargs use_explicit_quality=$use_explicit_quality valopts=$valopts valgrind=$valgrind"
