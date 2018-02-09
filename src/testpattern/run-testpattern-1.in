@@ -16,10 +16,19 @@
 # for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 retval=0
+
+if [ "$STP_TEST_PROFILE" != full -a -n "$STP_TEST_SUITE" ] ; then
+    echo "Skipping in $STP_TEST_PROFILE suite"
+    exit 77
+fi
+
+if [ -n "$STP_TEST_DEBUG" ] ; then
+    echo "Would run $0 $@"
+    exit 0
+fi
 
 if [ -z "$srcdir" -o "$srcdir" = "." ] ; then
     sdir=`pwd`

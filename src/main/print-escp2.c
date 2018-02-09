@@ -16,8 +16,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 /*
@@ -4504,7 +4503,22 @@ escp2_do_print(stp_vars_t *v, stp_image_t *image, int print_op)
   int i;
 
   escp2_privdata_t *pd;
-  int page_number = stp_get_int_parameter(v, "PageNumber");
+
+  if (strcmp(stp_get_string_parameter(v, "PrintingMode"), "BW") == 0 &&
+      (stp_get_string_parameter(v, "InkType") &&
+       (strcmp(stp_get_string_parameter(v, "InkType"), "RGB") == 0 ||
+	strcmp(stp_get_string_parameter(v, "InkType"), "CMY") == 0 ||
+	strcmp(stp_get_string_parameter(v, "InkType"), "CMYRB") == 0 ||
+	strcmp(stp_get_string_parameter(v, "InkType"), "CMYRBG") == 0 ||
+	strcmp(stp_get_string_parameter(v, "InkType"), "CMYRO") == 0 ||
+	strcmp(stp_get_string_parameter(v, "InkType"), "CMYROG") == 0 ||
+	strcmp(stp_get_string_parameter(v, "InkType"), "PhotoCMY") == 0 ||
+	strcmp(stp_get_string_parameter(v, "InkType"), "RGBG") == 0)))
+    {
+      stp_eprintf(v, "Warning: Inkset %s not available in BW\n",
+		  stp_get_string_parameter(v, "InkType"));
+      stp_set_string_parameter(v, "InkType", "CMYK");
+    }
 
   if (!stp_verify(v))
     {
@@ -4515,6 +4529,7 @@ escp2_do_print(stp_vars_t *v, stp_image_t *image, int print_op)
   if (strcmp(stp_get_string_parameter(v, "InputImageType"), "Raw") == 0 &&
       !set_raw_ink_type(v))
     return 0;
+  int page_number = stp_get_int_parameter(v, "PageNumber");
 
   pd = (escp2_privdata_t *) stp_zalloc(sizeof(escp2_privdata_t));
 
@@ -4605,7 +4620,6 @@ escp2_print(const stp_vars_t *v, stp_image_t *image)
   if (!stp_get_string_parameter(v, "JobMode") ||
       strcmp(stp_get_string_parameter(v, "JobMode"), "Page") == 0)
     op = OP_JOB_START | OP_JOB_PRINT | OP_JOB_END;
-  stp_prune_inactive_options(nv);
   status = escp2_do_print(nv, image, op);
   stp_vars_destroy(nv);
   return status;
@@ -4616,7 +4630,6 @@ escp2_job_start(const stp_vars_t *v, stp_image_t *image)
 {
   stp_vars_t *nv = stp_vars_create_copy(v);
   int status;
-  stp_prune_inactive_options(nv);
   status = escp2_do_print(nv, image, OP_JOB_START);
   stp_vars_destroy(nv);
   return status;
@@ -4627,7 +4640,6 @@ escp2_job_end(const stp_vars_t *v, stp_image_t *image)
 {
   stp_vars_t *nv = stp_vars_create_copy(v);
   int status;
-  stp_prune_inactive_options(nv);
   status = escp2_do_print(nv, image, OP_JOB_END);
   stp_vars_destroy(nv);
   return status;

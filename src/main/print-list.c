@@ -17,8 +17,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 /*
@@ -48,20 +47,20 @@ struct stp_list_item
 /** The internal representation of an stp_list_t list. */
 struct stp_list
 {
-  int index_cache;				/*!< Cached node index			*/
   struct stp_list_item *start;			/*!< Start node				*/
   struct stp_list_item *end;			/*!< End node				*/
   struct stp_list_item *index_cache_node;	/*!< Cached node (for index)		*/
-  int length;					/*!< Number of nodes			*/
+  char *name_cache;				/*!< Cached name			*/
+  struct stp_list_item *name_cache_node;	/*!< Cached node (for name)		*/
+  char *long_name_cache;			/*!< Cached long name			*/
+  struct stp_list_item *long_name_cache_node;	/*!< Cached node (for long name)	*/
   stp_node_freefunc freefunc;			/*!< Callback to free node data		*/
   stp_node_copyfunc copyfunc;			/*!< Callback to copy node		*/
   stp_node_namefunc namefunc;			/*!< Callback to get node name		*/
   stp_node_namefunc long_namefunc;		/*!< Callback to get node long name	*/
   stp_node_sortfunc sortfunc;			/*!< Callback to compare (sort) nodes	*/
-  char *name_cache;				/*!< Cached name			*/
-  struct stp_list_item *name_cache_node;	/*!< Cached node (for name)		*/
-  char *long_name_cache;			/*!< Cached long name			*/
-  struct stp_list_item *long_name_cache_node;	/*!< Cached node (for long name)	*/
+  int index_cache;				/*!< Cached node index			*/
+  int length;					/*!< Number of nodes			*/
 };
 
 /**
@@ -252,7 +251,34 @@ stp_list_get_item_by_index(const stp_list_t *list, int idx)
   if (idx >= list->length)
     return NULL;
 
-  /* see if using the cache is worthwhile */
+  /*
+   * Optimize the most likely cases of looking for the same, next,
+   * or previou item
+   * */
+  if (ulist->index_cache_node)
+    {
+      if (idx == ulist->index_cache)
+	return ulist->index_cache_node;
+      else if (idx == ulist->index_cache + 1)
+	{
+	  ulist->index_cache = idx;
+	  ulist->index_cache_node = ulist->index_cache_node->next;
+	  return ulist->index_cache_node;
+	}
+      else if (idx == ulist->index_cache - 1)
+	{
+	  ulist->index_cache = idx;
+	  ulist->index_cache_node = ulist->index_cache_node->prev;
+	  return ulist->index_cache_node;
+	}
+    }
+  /*
+   * See if using the cache is worthwhile.  If the desired index is closer
+   * to the cached index than it is to the start or end, it will be faster
+   * to start from the cached element.
+   *
+   * Otherwise, decide which direction is best to start from.
+   */
   if (list->index_cache)
     {
       if (idx < (list->length/2))
@@ -272,8 +298,8 @@ stp_list_get_item_by_index(const stp_list_t *list, int idx)
 	}
     }
 
-
-  if (c) /* use the cached index and node */
+  /* use the cached index and node */
+  if (c)
     {
       if (idx > list->index_cache) /* forward */
 	d = 0;
@@ -585,28 +611,6 @@ stp_list_item_create(stp_list_t *list,
 	  lnn = lnn->prev;
 	}
     }
-#if 0
-  /*
-   * This code #ifdef'ed out by Robert Krawitz on April 3, 2004.
-   * Setting a debug variable should not result in taking a materially
-   * different code path.
-   */
-  else if (stpi_get_debug_level() & STPI_DBG_LIST)
-    {
-      if (next)
-	{
-	  lnn = list->start;
-	  while (lnn)
-	    {
-	      if (lnn == next)
-		break;
-	      lnn = lnn->prev;
-	    }
-	}
-      else
-	lnn = NULL;
-    }
-#endif
   else
     lnn = next;
 
@@ -675,14 +679,14 @@ stp_list_item_destroy(stp_list_t *list, stp_list_item_t *item)
   return 0;
 }
 
-/* get previous node */
+/* get previous node, but don't update the cache */
 stp_list_item_t *
 stp_list_item_prev(const stp_list_item_t *item)
 {
   return item->prev;
 }
 
-/* get next node */
+/* get next node, but don't update the cache */
 stp_list_item_t *
 stp_list_item_next(const stp_list_item_t *item)
 {

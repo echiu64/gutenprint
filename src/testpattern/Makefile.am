@@ -11,8 +11,7 @@
 ## GNU General Public License for more details.
 ##
 ## You should have received a copy of the GNU General Public License
-## along with this program; if not, write to the Free Software
-## Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+## along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ## Process this file with automake to produce Makefile.in.
 
@@ -26,15 +25,6 @@ include $(top_srcdir)/scripts/global.mk
 pkgdatadir = $(datadir)/$(PACKAGE)/samples
 
 ## Programs
-
-if BUILD_TESTPATTERN
-
-TESTS = run-testpattern-1 run-testpattern-2
-
-bin_PROGRAMS = testpattern
-noinst_PROGRAMS = printers printer_options
-noinst_SCRIPTS = run-testpattern-2 compare-checksums compress-checksums
-endif
 
 AM_LFLAGS = -i
 AM_YFLAGS = -d
@@ -55,9 +45,19 @@ if INSTALL_SAMPLES
 pkgdata_DATA = testpattern.sample extended.sample
 endif
 
-## Generate checksums
-
 if BUILD_TESTPATTERN
+
+AM_TESTS_ENVIRONMENT=STP_MODULE_PATH=$(top_builddir)/src/main/.libs:$(top_builddir)/src/main STP_DATA_PATH=$(top_srcdir)/src/xml
+run-testpattern-2.check: run-testpattern-2
+
+TESTS = run-testpattern-1 run-testpattern-2.check
+
+bin_PROGRAMS = testpattern
+noinst_PROGRAMS = printers printer_options
+noinst_SCRIPTS = run-testpattern-2 compare-checksums compress-checksums \
+	run-testpattern-2.check run-testpattern-1
+CSUM_DEPS=testpattern run-testpattern-2 compress-checksums Checksums \
+	run-testpattern-2.check
 
 # This suffix is *not* static during development!
 CSUM_SUFFIX=`@PKGROOT@/scripts/gversion`
@@ -67,17 +67,19 @@ CSUM_RELEASE_FILE=Checksums/sums.$(CSUM_RELEASE_SUFFIX)
 
 .PHONY: checksums checksums-release
 
+CHECKSUM_ENV=STP_TEST_PROFILE=hecksums STP_DATA_PATH='@PKGROOT@/src/xml'
+
 Checksums:
 	$(MKDIR_P) Checksums
 
-checksums: testpattern run-testpattern-2 ./compress-checksums Checksums
-	STP_DATA_PATH='@PKGROOT@/src/xml' ./run-testpattern-2 -q -M - | ./compress-checksums | $(COMPRESS) > "$(CSUM_FILE)@CSUF@"
+checksums: $(CSUM_DEPS)
+	$(CHECKSUM_ENV) ./run-testpattern-2.check | ./compress-checksums | $(COMPRESS) > "$(CSUM_FILE)@CSUF@"
 
-checksums-fast: testpattern run-testpattern-2 ./compress-checksums Checksums
-	STP_DATA_PATH='@PKGROOT@/src/xml' ./run-testpattern-2 -s -q -M - | ./compress-checksums | $(COMPRESS) > "$(CSUM_FILE)@CSUF@"
+checksums-fast: $(CSUM_DEPS)
+	$(CHECKSUM_ENV) ./run-testpattern-2.check -s | ./compress-checksums | $(COMPRESS) > "$(CSUM_FILE)@CSUF@"
 
-checksums-release: testpattern run-testpattern-2 ./compress-checksums Checksums
-	STP_DATA_PATH='@PKGROOT@/src/xml' ./run-testpattern-2 -q -M - | ./compress-checksums | $(COMPRESS) > "$(CSUM_RELEASE_FILE)@CSUF@"
+checksums-release: $(CSUM_DEPS)
+	$(CHECKSUM_ENV) ./run-testpattern-2.check | ./compress-checksums | $(COMPRESS) > "$(CSUM_RELEASE_FILE)@CSUF@"
 endif
 
 ## Clean
@@ -87,7 +89,5 @@ MAINTAINERCLEANFILES = Makefile.in testpatternl.c testpatterny.c testpatterny.h
 EXTRA_DIST = \
 	testpatterny.h \
 	$(pkgdata_DATA) \
-	run-testpattern \
-	run-testpattern-1 \
 	compare-checksums.in \
 	compress-checksums.in

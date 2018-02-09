@@ -11,8 +11,7 @@
 ## GNU General Public License for more details.
 ##
 ## You should have received a copy of the GNU General Public License
-## along with this program; if not, write to the Free Software
-## Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+## along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ## Process this file with automake to produce Makefile.in.
 
@@ -397,8 +396,8 @@ html-stamp: $(MANUAL_SRC_FILES) $(PNG_IMAGES)
 
 install-data-local: $(STANDARD_TARGETS)
 	if test -n '$(STANDARD_TARGETS)' ; then \
-	  $(mkdir_p) $(DESTDIR)$(datadir)/$(PACKAGE)/doc/html/figures ; \
-	  $(mkdir_p) $(DESTDIR)$(datadir)/$(PACKAGE)/doc/html/stylesheet-images ; \
+	  $(MKDIR_P) $(DESTDIR)$(datadir)/$(PACKAGE)/doc/html/figures ; \
+	  $(MKDIR_P) $(DESTDIR)$(datadir)/$(PACKAGE)/doc/html/stylesheet-images ; \
 	  if test -f $(MANUAL).pdf ; then \
 	    $(INSTALL_DATA) $(MANUAL).pdf $(DESTDIR)$(datadir)/$(PACKAGE)/doc ; \
 	  elif test -f $(srcdir)/$(MANUAL).pdf ; then \

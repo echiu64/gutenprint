@@ -16,8 +16,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 /*
@@ -664,4 +663,17 @@ stp_abort(void)
       stp_erprintf("Crashing here...%d\n", i);
     }
   abort();
+}
+
+time_t
+stpi_time(time_t *t)
+{
+  if (stp_get_debug_level() & STP_DBG_STATIC_TIME)
+    {
+      if (t)
+	*t = (time_t) 0;
+      return (time_t) 0;
+    }
+  else
+    return time(t);
 }

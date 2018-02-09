@@ -15,8 +15,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 /*
@@ -33,6 +32,13 @@
 #include <gutenprint/gutenprint-intl-internal.h>
 #ifdef HAVE_LIMITS_H
 #include <limits.h>
+#endif
+
+#ifdef __GNUC__
+#define inline __inline__
+#define NOINLINE __attribute__ ((noinline))
+#else
+$define NOINLINE
 #endif
 
 void
@@ -477,7 +483,7 @@ stp_split_4(int length,
 }
 
 
-static void
+static void NOINLINE
 stpi_unpack_2_1(int length,
 		const unsigned char *in,
 		unsigned char **outs)
@@ -532,7 +538,7 @@ stpi_unpack_2_1(int length,
     }
 }
 
-static void
+static void NOINLINE
 stpi_unpack_2_2(int length,
 		const unsigned char *in,
 		unsigned char **outs)
@@ -558,7 +564,7 @@ stpi_unpack_2_2(int length,
     }
 }
 
-static void
+static void NOINLINE
 stpi_unpack_4_1(int length,
 		 const unsigned char *in,
 		 unsigned char **outs)
@@ -617,7 +623,7 @@ stpi_unpack_4_1(int length,
     }
 }
 
-static void
+static void NOINLINE
 stpi_unpack_4_2(int length,
 		 const unsigned char *in,
 		 unsigned char **outs)
@@ -677,7 +683,7 @@ stpi_unpack_4_2(int length,
     }
 }
 
-static void
+static void NOINLINE
 stpi_unpack_8_1(int length,
 		const unsigned char *in,
 		unsigned char **outs)
@@ -750,7 +756,7 @@ stpi_unpack_8_1(int length,
     }
 }
 
-static void
+static void NOINLINE
 stpi_unpack_8_2(int length,
 		const unsigned char *in,
 		unsigned char **outs)
@@ -837,7 +843,7 @@ stpi_unpack_8_2(int length,
     }
 }
 
-static void
+static void NOINLINE
 stpi_unpack_16_1(int length,
 		 const unsigned char *in,
 		 unsigned char **outs)
@@ -908,7 +914,7 @@ stpi_unpack_16_1(int length,
       *outs[j]++ = temp[j];
 }
 
-static void
+static void NOINLINE
 stpi_unpack_16_2(int length,
 		 const unsigned char *in,
 		 unsigned char **outs)
@@ -1138,29 +1144,32 @@ stp_unpack_16(int length,
   stp_unpack(length, bits, 16, in, outs);
 }
 
-static void
+static void NOINLINE
 find_first_and_last(const unsigned char *line, int length,
 		    int *first, int *last)
 {
-  int i;
   int found_first = 0;
-  if (!first || !last)
-    return;
-  *first = 0;
-  *last = 0;
-  for (i = 0; i < length; i++)
+  int f = 0;
+  int l = 0;
+  for (f = 0; f < length; f++)
     {
-      if (line[i] == 0)
+      if (line[f])
 	{
-	  if (!found_first)
-	    (*first)++;
-	}
-      else
-	{
-	  *last = i;
 	  found_first = 1;
+	  break;
 	}
     }
+  *first = f;
+  if (!found_first)
+    {
+      *last = 0;
+      return;
+    }
+  for (l = length - 1; l >= f; l--)
+    if (line[l])
+      break;
+  ;
+  *last = l;
 }
 
 int
@@ -1190,96 +1199,89 @@ stp_pack_tiff(stp_vars_t *v,
 	      int *first,
 	      int *last)
 {
-  const unsigned char *start;		/* Start of compressed data */
-  unsigned char repeat;			/* Repeating char */
-  int count;			/* Count of compressed bytes */
-  int tcount;			/* Temporary count < 128 */
-  register const unsigned char *xline = line;
-  register int xlength = length;
-  find_first_and_last(line, length, first, last);
+  unsigned char *comp_pti = comp_buf;
+  if (first && last)
+    find_first_and_last(line, length, first, last);
 
   /*
    * Compress using TIFF "packbits" run-length encoding...
    */
 
-  (*comp_ptr) = comp_buf;
-
-  while (xlength > 0)
+  while (length > 0)
     {
+      const unsigned char *start = line;	/* Start of compressed data */
+      unsigned char repeat;		/* Repeating char */
+      int count;			/* Count of compressed bytes */
       /*
-       * Get a run of non-repeated chars...
+       * Get a run of at least 3 non-repeated chars...
        */
 
-      start  = xline;
-      xline   += 2;
-      xlength -= 2;
+      line   += 2;
+      length -= 2;
 
-      while (xlength > 0 && (xline[-2] != xline[-1] || xline[-1] != xline[0]))
+      while (length > 0 && (line[-2] != line[-1] || line[-1] != line[0]))
 	{
-	  xline ++;
-	  xlength --;
+	  line ++;
+	  length --;
 	}
 
-      xline   -= 2;
-      xlength += 2;
+      line   -= 2;
+      length += 2;
 
       /*
        * Output the non-repeated sequences (max 128 at a time).
        */
 
-      count = xline - start;
+      count = line - start;
       while (count > 0)
 	{
-	  tcount = count > 128 ? 128 : count;
+	  int tcount = count > 128 ? 128 : count;
 
-	  (*comp_ptr)[0] = tcount - 1;
-	  memcpy((*comp_ptr) + 1, start, tcount);
+	  comp_pti[0] = tcount - 1;
+	  memcpy(comp_pti + 1, start, tcount);
 
-	  (*comp_ptr) += tcount + 1;
+	  comp_pti += tcount + 1;
 	  start    += tcount;
 	  count    -= tcount;
 	}
 
-      if (xlength <= 0)
+      if (length <= 0)
 	break;
 
       /*
        * Find the repeated sequences...
        */
 
-      start  = xline;
-      repeat = xline[0];
+      start  = line;
+      repeat = line[0];
 
-      xline ++;
-      xlength --;
+      line ++;
+      length --;
 
-      if (xlength > 0)
+      while (length > 0 && *line == repeat)
 	{
-	  int ylength = xlength;
-	  while (ylength && *xline == repeat)
-	    {
-	      xline ++;
-	      ylength --;
-	    }
-	  xlength = ylength;
+	  line++;
+	  length--;
 	}
 
       /*
        * Output the repeated sequences (max 128 at a time).
        */
 
-      count = xline - start;
+      count = line - start;
       while (count > 0)
 	{
-	  tcount = count > 128 ? 128 : count;
+	  int tcount = count > 128 ? 128 : count;
 
-	  (*comp_ptr)[0] = 1 - tcount;
-	  (*comp_ptr)[1] = repeat;
+	  comp_pti[0] = 1 - tcount;
+	  comp_pti[1] = repeat;
 
-	  (*comp_ptr) += 2;
+	  comp_pti += 2;
 	  count    -= tcount;
 	}
     }
+  (*comp_ptr) = comp_pti;
+
   if (first && last && *first > *last)
     return 0;
   else

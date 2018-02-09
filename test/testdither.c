@@ -14,8 +14,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -34,20 +33,20 @@
  * Definitions for dither test...
  */
 
-#define IMAGE_WIDTH	5760	/* 8in * 720dpi */
-#define IMAGE_HEIGHT	2880	/* 4in * 720dpi */
-#define BUFFER_SIZE	IMAGE_WIDTH
+#define MAX_IMAGE_WIDTH		5760	/* 8in * 720dpi */
+#define MAX_IMAGE_HEIGHT	2880	/* 4in * 720dpi */
+#define BUFFER_SIZE		MAX_IMAGE_WIDTH
 
-#define IMAGE_MIXED	0	/* Mix of line types */
-#define IMAGE_WHITE	1	/* All white image */
-#define IMAGE_BLACK	2	/* All black image */
-#define IMAGE_COLOR	3	/* All color image */
-#define IMAGE_RANDOM	4	/* All random image */
+#define IMAGE_MIXED		0	/* Mix of line types */
+#define IMAGE_WHITE		1	/* All white image */
+#define IMAGE_BLACK		2	/* All black image */
+#define IMAGE_COLOR		3	/* All color image */
+#define IMAGE_RANDOM		4	/* All random image */
 
-#define DITHER_GRAY	0	/* Dither grayscale pixels */
-#define DITHER_COLOR	1	/* Dither color pixels */
-#define DITHER_PHOTO	2	/* Dither photo pixels */
-#define DITHER_CMYK	3	/* Dither photo pixels */
+#define DITHER_GRAY		0	/* Dither grayscale pixels */
+#define DITHER_COLOR		1	/* Dither color pixels */
+#define DITHER_PHOTO		2	/* Dither photo pixels */
+#define DITHER_CMYK		3	/* Dither photo pixels */
 #define DITHER_PHOTO_CMYK	4	/* Dither photo pixels */
 
 
@@ -56,17 +55,20 @@
  */
 
 int		image_type = IMAGE_MIXED;
-int		stpi_dither_type = DITHER_COLOR;
+int		dither_type = DITHER_COLOR;
 const char     *dither_name = NULL;
 int		dither_bits = 1;
 int		write_image = 1;
-int		quiet;
-unsigned short	white_line[IMAGE_WIDTH * 6],
-		black_line[IMAGE_WIDTH * 6],
-		color_line[IMAGE_WIDTH * 6],
-		random_line[IMAGE_WIDTH * 6];
+int		quiet = 0;
+int		dont_regenerate_input = 0;
+int		dimage_width = MAX_IMAGE_WIDTH;
+int		dimage_height = MAX_IMAGE_HEIGHT;
+unsigned short	white_line[MAX_IMAGE_WIDTH * 6],
+		black_line[MAX_IMAGE_WIDTH * 6],
+		color_line[MAX_IMAGE_WIDTH * 6],
+		random_line[MAX_IMAGE_WIDTH * 6];
 
-static const char	*stpi_dither_types[] =	/* Different dithering modes */
+static const char	*dither_types[] =	/* Different dithering modes */
 	      {
 		"gray",
 		"color",
@@ -150,7 +152,7 @@ writefunc(void *file, const char *buf, size_t bytes)
 static int
 image_width(stp_image_t *image)
 {
-  return IMAGE_WIDTH;
+  return dimage_width;
 }
 
 static stp_image_t theImage =
@@ -178,8 +180,8 @@ run_one_testdither(void)
 		lcyan[BUFFER_SIZE],	/* Light cyan bitmap data */
 		lmagenta[BUFFER_SIZE],	/* Light magenta bitmap data */
 		yellow[BUFFER_SIZE];	/* Yellow bitmap data */
-  unsigned short rgb[IMAGE_WIDTH * 6],	/* RGB buffer */
-		gray[IMAGE_WIDTH];	/* Grayscale buffer */
+  unsigned short rgb[MAX_IMAGE_WIDTH * 6],	/* RGB buffer */
+		gray[MAX_IMAGE_WIDTH];	/* Grayscale buffer */
   FILE		*fp = NULL;		/* PPM/PGM output file */
   char		filename[1024];		/* Name of file */
   stp_vars_t	*v; 		        /* Dither variables */
@@ -213,7 +215,7 @@ run_one_testdither(void)
     stp_set_string_parameter(v, "DitherAlgorithm", dither_name);
 
   stp_set_string_parameter(v, "ChannelBitDepth", "8");
-  switch (stpi_dither_type)
+  switch (dither_type)
     {
     case DITHER_GRAY:
       stp_set_string_parameter(v, "PrintingMode", "BW");
@@ -231,13 +233,13 @@ run_one_testdither(void)
       break;
     }
 
-  stp_dither_init(v, &theImage, IMAGE_WIDTH, 1, 1);
+  stp_dither_init(v, &theImage, dimage_width, 1, 1);
 
  /*
   * Now dither the "page"...
   */
 
-  switch (stpi_dither_type)
+  switch (dither_type)
     {
     case DITHER_PHOTO:
       stp_dither_add_channel(v, lcyan, STP_ECOLOR_C, 1);
@@ -261,14 +263,14 @@ run_one_testdither(void)
       stp_dither_add_channel(v, black, STP_ECOLOR_K, 0);
     }
 
-  if (stpi_dither_type == DITHER_PHOTO)
+  if (dither_type == DITHER_PHOTO)
     stp_set_float_parameter(v, "GCRLower", 0.4 / dither_bits + 0.1);
   else
     stp_set_float_parameter(v, "GCRLower", 0.25 / dither_bits);
 
   stp_set_float_parameter(v, "GCRUpper", .5);
 
-  switch (stpi_dither_type)
+  switch (dither_type)
   {
     case DITHER_GRAY :
         switch (dither_bits)
@@ -360,9 +362,9 @@ run_one_testdither(void)
 
 
   sprintf(filename, "%s-%s-%s-%dbit.%s", image_types[image_type],
-	  stpi_dither_types[stpi_dither_type],
+	  dither_types[dither_type],
 	  dither_name ? dither_name : desc.deflt.str, dither_bits,
-	  (stpi_dither_type == DITHER_GRAY) ? "pgm" : "ppm");
+	  (dither_type == DITHER_GRAY) ? "pgm" : "ppm");
 
   stp_parameter_description_destroy(&desc);
 
@@ -376,12 +378,12 @@ run_one_testdither(void)
     {
       if ((fp = fopen(filename, "wb")) != NULL)
 	{
-	  if (stpi_dither_type == DITHER_GRAY)
+	  if (dither_type == DITHER_GRAY)
 	    fputs("P5\n", fp);
 	  else
 	    fputs("P6\n", fp);
 
-	  fprintf(fp, "%d\n%d\n255\n", IMAGE_WIDTH, IMAGE_HEIGHT);
+	  fprintf(fp, "%d\n%d\n255\n", dimage_width, dimage_height);
 	}
       else
 	perror("Create");
@@ -389,7 +391,7 @@ run_one_testdither(void)
 
   (void) gettimeofday(&tv1, NULL);
 
-  for (i = 0; i < IMAGE_HEIGHT; i ++)
+  for (i = 0; i < dimage_height; i ++)
   {
     if (print_progress && !quiet && (i & 63) == 0)
     {
@@ -397,7 +399,7 @@ run_one_testdither(void)
       fflush(stdout);
     }
 
-    switch (stpi_dither_type)
+    switch (dither_type)
       {
       case DITHER_GRAY :
           image_get_row(gray, i);
@@ -434,8 +436,8 @@ run_one_testdither(void)
       if (print_progress)
 	fputc('\r', stdout);
       printf("%-30s %d pix %.3f sec %.2f pix/sec\n",
-	     filename, IMAGE_WIDTH * IMAGE_HEIGHT, compute_interval(&tv1, &tv2),
-	     (float)(IMAGE_WIDTH * IMAGE_HEIGHT) / compute_interval(&tv1, &tv2));
+	     filename, dimage_width * dimage_height, compute_interval(&tv1, &tv2),
+	     (float)(dimage_width * dimage_height) / compute_interval(&tv1, &tv2));
       fflush(stdout);
     }
   return 0;
@@ -472,13 +474,19 @@ run_testdither_from_cmdline(int argc, char **argv)
 	  continue;
 	}
 
+      if (strcmp(argv[i], "dont_regenerate_input") == 0)
+	{
+	  dont_regenerate_input = 1;
+	  continue;
+	}
+
       for (j = 0; j < 5; j ++)
-	if (strcmp(argv[i], stpi_dither_types[j]) == 0)
+	if (strcmp(argv[i], dither_types[j]) == 0)
 	  break;
 
       if (j < 5)
 	{
-	  stpi_dither_type = j;
+	  dither_type = j;
 	  continue;
 	}
 
@@ -510,11 +518,21 @@ run_standard_testdithers(void)
   int failures = 0;
   int status;
 
+  if (getenv("STP_TEST_SUITE"))
+    {
+      puts("Skipping in automated test suite");
+      exit(77);
+    }
+
   stp_set_driver(v, "escp2-ex");
   stp_describe_parameter(v, "DitherAlgorithm", &desc);
 
   write_image = 0;
   quiet = 1;
+  dont_regenerate_input = 1;
+  /* For automatic test purposes, this should suffice -- rlk 20171230 */
+  dimage_width = dimage_width / 8;
+  dimage_height = dimage_height / 8;
   for (j = 0; j < stp_string_list_count(desc.bounds.str); j ++)
     {
       dither_name = stp_string_list_param(desc.bounds.str, j)->name;
@@ -523,9 +541,9 @@ run_standard_testdithers(void)
       printf("%s", dither_name);
       fflush(stdout);
       for (dither_bits = 1; dither_bits <= 2; dither_bits++)
-	for (stpi_dither_type = 0;
-	     stpi_dither_type < sizeof(stpi_dither_types) / sizeof(const char *);
-	     stpi_dither_type++)
+	for (dither_type = 0;
+	     dither_type < sizeof(dither_types) / sizeof(const char *);
+	     dither_type++)
 	  for (image_type = 0;
 	       image_type < sizeof(image_types) / sizeof(const char *);
 	       image_type++)
@@ -534,7 +552,7 @@ run_standard_testdithers(void)
 	      if (status)
 		{
 		  printf("%s %d %s %s\n", dither_name, dither_bits,
-			 stpi_dither_types[stpi_dither_type],
+			 dither_types[dither_type],
 			 image_types[image_type]);
 		  failures++;
 		}
@@ -567,7 +585,6 @@ image_get_row(unsigned short *data,
               int            row)
 {
   unsigned short *src;
-
 
   switch (image_type)
     {
@@ -604,26 +621,40 @@ image_get_row(unsigned short *data,
       break;
     }
 
-  switch (stpi_dither_type)
+  switch (dither_type)
     {
     case DITHER_GRAY:
-      memcpy(data, src, IMAGE_WIDTH * 2);
+      memcpy(data, src, dimage_width * 2);
       break;
     case DITHER_COLOR:
-      memcpy(data, src, IMAGE_WIDTH * 6);
+      memcpy(data, src, dimage_width * 6);
       break;
     case DITHER_CMYK:
-      memcpy(data, src, IMAGE_WIDTH * 8);
+      memcpy(data, src, dimage_width * 8);
       break;
     case DITHER_PHOTO:
-      memcpy(data, src, IMAGE_WIDTH * 10);
+      memcpy(data, src, dimage_width * 10);
       break;
     case DITHER_PHOTO_CMYK:
-      memcpy(data, src, IMAGE_WIDTH * 12);
+      memcpy(data, src, dimage_width * 12);
       break;
     }
 }
 
+
+/*
+ * Much faster than built-in rand(), and quite good enough.
+ * From rand(3), attributed to POSIX.1-2001.
+ */
+static unsigned long next = 1;
+static unsigned
+myrand(void)
+{
+  next = next * 1103515245 + 12345;
+  return((unsigned)(next/65536) % 256);
+}
+
+static int image_is_initialized = 0;
 
 void
 image_init(void)
@@ -632,6 +663,9 @@ image_init(void)
   unsigned short	*cptr,
 			*rptr;
 
+  if (image_is_initialized && dont_regenerate_input)
+    return;
+  image_is_initialized = 1;
 
  /*
   * Set the white and black line data...
@@ -644,37 +678,37 @@ image_init(void)
   * Fill in the color and random data...
   */
 
-  for (i = IMAGE_WIDTH, cptr = color_line, rptr = random_line; i > 0; i --)
+  for (i = dimage_width, cptr = color_line, rptr = random_line; i > 0; i --)
   {
    /*
     * Do 64 color or grayscale blocks over the line...
     */
 
-    j = i / (IMAGE_WIDTH / 64);
+    j = i / (dimage_width / 64);
 
-    switch (stpi_dither_type)
+    switch (dither_type)
       {
       case DITHER_GRAY:
 	*cptr++ = 65535 * j / 63;
-	*rptr++ = 65535 * (rand() & 255) / 255;
+	*rptr++ = 65535 * myrand() / 255;
 	break;
       case DITHER_COLOR:
 	*cptr++ = 65535 * (j >> 4) / 3;
 	*cptr++ = 65535 * ((j >> 2) & 3) / 3;
 	*cptr++ = 65535 * (j & 3) / 3;
-	*rptr++ = 65535 * (rand() & 255) / 255;
-	*rptr++ = 65535 * (rand() & 255) / 255;
-	*rptr++ = 65535 * (rand() & 255) / 255;
+	*rptr++ = 65535 * myrand() / 255;
+	*rptr++ = 65535 * myrand() / 255;
+	*rptr++ = 65535 * myrand() / 255;
 	break;
       case DITHER_CMYK:
 	*cptr++ = 65535 * (j >> 4) / 3;
 	*cptr++ = 65535 * ((j >> 2) & 3) / 3;
 	*cptr++ = 65535 * (j & 3) / 3;
 	*cptr++ = 65535 * j / 63;
-	*rptr++ = 65535 * (rand() & 255) / 255;
-	*rptr++ = 65535 * (rand() & 255) / 255;
-	*rptr++ = 65535 * (rand() & 255) / 255;
-	*rptr++ = 65535 * (rand() & 255) / 255;
+	*rptr++ = 65535 * myrand() / 255;
+	*rptr++ = 65535 * myrand() / 255;
+	*rptr++ = 65535 * myrand() / 255;
+	*rptr++ = 65535 * myrand() / 255;
 	break;
       case DITHER_PHOTO:
 	*cptr++ = 65535 * (j >> 4) / 3;
@@ -682,11 +716,11 @@ image_init(void)
 	*cptr++ = 65535 * (j & 3) / 3;
 	*cptr++ = 65535 * j / 63;
 	*cptr++ = 65535 * (j >> 4) / 3;
-	*rptr++ = 65535 * (rand() & 255) / 255;
-	*rptr++ = 65535 * (rand() & 255) / 255;
-	*rptr++ = 65535 * (rand() & 255) / 255;
-	*rptr++ = 65535 * (rand() & 255) / 255;
-	*rptr++ = 65535 * (rand() & 255) / 255;
+	*rptr++ = 65535 * myrand() / 255;
+	*rptr++ = 65535 * myrand() / 255;
+	*rptr++ = 65535 * myrand() / 255;
+	*rptr++ = 65535 * myrand() / 255;
+	*rptr++ = 65535 * myrand() / 255;
 	break;
       case DITHER_PHOTO_CMYK:
 	*cptr++ = 65535 * (j >> 4) / 3;
@@ -695,12 +729,12 @@ image_init(void)
 	*cptr++ = 65535 * j / 63;
 	*cptr++ = 65535 * (j >> 4) / 3;
 	*cptr++ = 65535 * ((j >> 2) & 3) / 3;
-	*rptr++ = 65535 * (rand() & 255) / 255;
-	*rptr++ = 65535 * (rand() & 255) / 255;
-	*rptr++ = 65535 * (rand() & 255) / 255;
-	*rptr++ = 65535 * (rand() & 255) / 255;
-	*rptr++ = 65535 * (rand() & 255) / 255;
-	*rptr++ = 65535 * (rand() & 255) / 255;
+	*rptr++ = 65535 * myrand() / 255;
+	*rptr++ = 65535 * myrand() / 255;
+	*rptr++ = 65535 * myrand() / 255;
+	*rptr++ = 65535 * myrand() / 255;
+	*rptr++ = 65535 * myrand() / 255;
+	*rptr++ = 65535 * myrand() / 255;
 	break;
       }
   }
@@ -719,7 +753,7 @@ write_gray(FILE          *fp,
 
   if (dither_bits == 1)
   {
-    for (count = IMAGE_WIDTH, byte = *black++, bit = 128; count > 0; count --)
+    for (count = dimage_width, byte = *black++, bit = 128; count > 0; count --)
     {
       if (byte & bit)
         putc(0, fp);
@@ -739,8 +773,8 @@ write_gray(FILE          *fp,
   {
     unsigned char kb[BUFFER_SIZE];
     unsigned char *kbuf = kb;
-    stp_fold(black, IMAGE_WIDTH / 8, kbuf);
-    for (count = IMAGE_WIDTH, byte = *kbuf++, shift = 6; count > 0; count --)
+    stp_fold(black, dimage_width / 8, kbuf);
+    for (count = dimage_width, byte = *kbuf++, shift = 6; count > 0; count --)
     {
       putc(255 - 255 * ((byte >> shift) & 3) / 3, fp);
 
@@ -775,7 +809,7 @@ write_color(FILE          *fp,
 
   if (dither_bits == 1)
   {
-    for (count = IMAGE_WIDTH, cbyte = *cyan++, mbyte = *magenta++,
+    for (count = dimage_width, cbyte = *cyan++, mbyte = *magenta++,
              ybyte = *yellow++, kbyte = *black++, bit = 128;
 	 count > 0;
 	 count --)
@@ -826,11 +860,11 @@ write_color(FILE          *fp,
     unsigned char *cbuf = cb;
     unsigned char *mbuf = mb;
     unsigned char *ybuf = yb;
-    stp_fold(black, IMAGE_WIDTH / 8, kbuf);
-    stp_fold(cyan, IMAGE_WIDTH / 8, cbuf);
-    stp_fold(magenta, IMAGE_WIDTH / 8, mbuf);
-    stp_fold(yellow, IMAGE_WIDTH / 8, ybuf);
-    for (count = IMAGE_WIDTH, cbyte = *cbuf++, mbyte = *mbuf++,
+    stp_fold(black, dimage_width / 8, kbuf);
+    stp_fold(cyan, dimage_width / 8, cbuf);
+    stp_fold(magenta, dimage_width / 8, mbuf);
+    stp_fold(yellow, dimage_width / 8, ybuf);
+    for (count = dimage_width, cbyte = *cbuf++, mbyte = *mbuf++,
              ybyte = *ybuf++, kbyte = *kbuf++, shift = 6;
 	 count > 0;
 	 count --)
@@ -893,7 +927,7 @@ write_photo(FILE          *fp,
 
   if (dither_bits == 1)
   {
-    for (count = IMAGE_WIDTH, cbyte = *cyan++, lcbyte = *lcyan++,
+    for (count = dimage_width, cbyte = *cyan++, lcbyte = *lcyan++,
              mbyte = *magenta++, lmbyte = *lmagenta++,
              ybyte = *yellow++, kbyte = *black++, bit = 128;
 	 count > 0;
@@ -955,13 +989,13 @@ write_photo(FILE          *fp,
     unsigned char *lcbuf = lcb;
     unsigned char *lmbuf = lmb;
     unsigned char *ybuf = yb;
-    stp_fold(black, IMAGE_WIDTH / 8, kbuf);
-    stp_fold(cyan, IMAGE_WIDTH / 8, cbuf);
-    stp_fold(magenta, IMAGE_WIDTH / 8, mbuf);
-    stp_fold(yellow, IMAGE_WIDTH / 8, ybuf);
-    stp_fold(lcyan, IMAGE_WIDTH / 8, lcbuf);
-    stp_fold(lmagenta, IMAGE_WIDTH / 8, lmbuf);
-    for (count = IMAGE_WIDTH,  cbyte = *cbuf++, mbyte = *mbuf++,
+    stp_fold(black, dimage_width / 8, kbuf);
+    stp_fold(cyan, dimage_width / 8, cbuf);
+    stp_fold(magenta, dimage_width / 8, mbuf);
+    stp_fold(yellow, dimage_width / 8, ybuf);
+    stp_fold(lcyan, dimage_width / 8, lcbuf);
+    stp_fold(lmagenta, dimage_width / 8, lmbuf);
+    for (count = dimage_width,  cbyte = *cbuf++, mbyte = *mbuf++,
 	   ybyte = *ybuf++, kbyte = *kbuf++, lmbyte = *lmbuf++,
 	   lcbyte = *lcyan++, shift = 6;
 	 count > 0;

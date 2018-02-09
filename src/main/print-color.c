@@ -16,8 +16,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 /*
@@ -887,6 +886,8 @@ compute_gcr_curve(const stp_vars_t *vars)
     k_lower = stp_get_float_parameter(vars, "GCRLower");
   if (stp_check_float_parameter(vars, "BlackTrans", STP_PARAMETER_DEFAULTED))
     k_trans = stp_get_float_parameter(vars, "BlackTrans");
+  if (k_lower >= 1)
+    return NULL;
   k_upper *= lut->steps;
   k_lower *= lut->steps;
   stp_dprintf(STP_DBG_LUT, vars, " k_lower %.3f\n", k_lower);

@@ -14,8 +14,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * Contents:
  *
@@ -78,6 +77,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
 #else
   int		use_compression = 0;
 #endif
+  int		skip_duplicate_ppds = 0;
 
 
  /*
@@ -88,7 +88,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
 
   for (;;)
   {
-    if ((i = getopt(argc, argv, "23hvqc:p:l:LMVd:saNCbZz")) == -1)
+    if ((i = getopt(argc, argv, "23hvqc:p:l:LMVd:saNCbZzS")) == -1)
       break;
 
     switch (i)
@@ -171,6 +171,9 @@ main(int  argc,			    /* I - Number of command-line arguments */
 #ifdef HAVE_LIBZ
       use_compression = 0;
 #endif
+      break;
+    case 'S':
+      skip_duplicate_ppds = 1;
       break;
     default:
       usage();
@@ -277,19 +280,37 @@ main(int  argc,			    /* I - Number of command-line arguments */
     }
   else
     {
+      stp_string_list_t *seen_models = NULL;
+      if (skip_duplicate_ppds)
+	seen_models = stp_string_list_create();
+
       for (i = 0; i < stp_printer_model_count(); i++)
 	{
 	  printer = stp_get_printer_by_index(i);
+	  if (skip_duplicate_ppds)
+	    {
+	      char model_family[128];
+	      (void) snprintf(model_family, 127, "%d_%s",
+			      stp_printer_get_model(printer),
+			      stp_printer_get_family(printer));
+	      if (stp_string_list_is_present(seen_models, model_family))
+		continue;
+	      else
+		stp_string_list_add_string_unsafe(seen_models, model_family,
+						  model_family);
+	    }
 
 	  if (i % parallel == rotor && printer)
 	    {
-	      if (! verbose && (i % 50) == 0)
+	      if (! verbose && (i % 100) == 0)
 		fputc('.',stderr);
 	      if (generate_model_ppds(prefix, verbose, printer, language,
 				      which_ppds, use_compression))
 		return 1;
 	    }
 	}
+      if (seen_models)
+	stp_string_list_destroy(seen_models);
     }
   if (subprocesses)
     {
@@ -433,6 +454,7 @@ generate_ppd(
   return (status);
 }
 
+
 /*
  * 'help()' - Show detailed help.
  */
@@ -465,6 +487,7 @@ help(void)
        "  -z            Compress PPD files.\n"
        "  -Z            Don't compress PPD files.\n"
 #endif
+       "  -S            Skip PPD files with duplicate model identifiers.\n"
        "models:\n"
        "  A list of printer models, either the driver or quoted full name.\n");
 }

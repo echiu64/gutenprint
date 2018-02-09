@@ -15,8 +15,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 /**
@@ -134,6 +133,7 @@ extern void stp_catprintf(char **strp, const char *format, ...)
 #define STP_DBG_DPL		0x1000000
 #define STP_DBG_ESCP2_XML	0x2000000
 #define STP_DBG_ARRAY_ERRORS	0x4000000
+#define STP_DBG_STATIC_TIME	0x8000000
 
 extern unsigned long stp_get_debug_level(void);
 extern void stp_dprintf(unsigned long level, const stp_vars_t *v,

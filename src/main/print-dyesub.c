@@ -20,8 +20,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 /*
@@ -42,7 +41,6 @@
 #define inline __inline__
 #endif
 
-#define MITSU70X_8BPP
 //#define S6145_YMC
 
 #define DYESUB_FEATURE_NONE		 0x00000000
@@ -54,9 +52,9 @@
 #define DYESUB_FEATURE_PLANE_INTERLACE	 0x00000020
 #define DYESUB_FEATURE_PLANE_LEFTTORIGHT 0x00000040
 #define DYESUB_FEATURE_ROW_INTERLACE	 0x00000080
-#define DYESUB_FEATURE_12BPP             0x00000100
-#define DYESUB_FEATURE_16BPP             0x00000200
-#define DYESUB_FEATURE_BIGENDIAN         0x00000400
+#define DYESUB_FEATURE_12BPP             0x00000100  // TODO: cp98xx only
+#define DYESUB_FEATURE_16BPP             0x00000200  // TODO:  Remove!
+#define DYESUB_FEATURE_BIGENDIAN         0x00000400  // TODO: cp98xx only
 #define DYESUB_FEATURE_DUPLEX            0x00000800
 #define DYESUB_FEATURE_MONOCHROME        0x00001000
 
@@ -259,6 +257,11 @@ typedef struct
   int power_resin;
   int power_overcoat;
   int gamma;
+  int duplex;
+  char mag1[79];  /* Mag stripe row 1, 78 alphanumeric */
+  char mag2[40];  /* Mag stripe row 2, 39 numeric */
+  char mag3[107]; /* Mag stripe row 3, 106 numeric */
+  int mag_coer;   /* 1 = high, 0 = low */
 } magicard_privdata_t;
 
 /* Private data for dyesub driver as a whole */
@@ -278,6 +281,7 @@ typedef struct
   const char* duplex_mode;
   int page_number;
   int copies;
+  int horiz_offset;
   union {
    dnp_privdata_t dnp;
    mitsu9550_privdata_t m9550;
@@ -2962,14 +2966,14 @@ static int mitsu_p95d_parse_parameters(stp_vars_t *v)
   } else if (!strcmp(comment, "Date")) {
     struct tm tmp;
     time_t t;
-    t = time(NULL);
+    t = stpi_time(NULL);
     localtime_r(&t, &tmp);
     strftime(pd->privdata.m95d.commentbuf, sizeof(pd->privdata.m95d.commentbuf), "        %F", &tmp);
     pd->privdata.m95d.comment = 2;
   } else if (!strcmp(comment, "DateTime")) {
     struct tm tmp;
     time_t t;
-    t = time(NULL);
+    t = stpi_time(NULL);
     localtime_r(&t, &tmp);
     strftime(pd->privdata.m95d.commentbuf, sizeof(pd->privdata.m95d.commentbuf), "  %F %R", &tmp);
     pd->privdata.m95d.comment = 3;
@@ -3350,14 +3354,14 @@ static int mitsu_p93d_parse_parameters(stp_vars_t *v)
   } else if (!strcmp(comment, "Date")) {
     struct tm tmp;
     time_t t;
-    t = time(NULL);
+    t = stpi_time(NULL);
     localtime_r(&t, &tmp);
     strftime(pd->privdata.m95d.commentbuf, sizeof(pd->privdata.m95d.commentbuf), "        %F", &tmp);
     pd->privdata.m95d.comment = 2;
   } else if (!strcmp(comment, "DateTime")) {
     struct tm tmp;
     time_t t;
-    t = time(NULL);
+    t = stpi_time(NULL);
     localtime_r(&t, &tmp);
     strftime(pd->privdata.m95d.commentbuf, sizeof(pd->privdata.m95d.commentbuf), "  %F %R", &tmp);
     pd->privdata.m95d.comment = 3;
@@ -4366,7 +4370,12 @@ static const dyesub_pagesize_t mitsu_cpd70x_page[] =
   DEFINE_PAPER_SIMPLE( "w432h576", "6x8", PT1(1864,300), PT1(2422,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w432h612", "6x8.5", PT1(1864,300), PT1(2564,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w432h648", "6x9", PT1(1864,300), PT1(2730,300), DYESUB_PORTRAIT),
-  DEFINE_PAPER_SIMPLE( "w432h576-div2", "4x6*2", PT1(1864,300), PT1(2730,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER( "w432h576-div2", "4x6*2", PT1(1864,300), PT1(2730,300), 0, 0, PT1(236,300), 0, DYESUB_PORTRAIT),
+#if 0 /* Theoretically supported, no way to test */
+  DEFINE_PAPER_SIMPLE( "w432h576-div3", "3x6*3", PT1(1864,300), PT1(2730,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w432h576-div4", "2x6*4", PT1(1864,300), PT1(2730,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w432h648-div2", "4.4x6*2", PT1(1864,300), PT1(2730,300), DYESUB_PORTRAIT),
+#endif
 };
 
 LIST(dyesub_pagesize_list_t, mitsu_cpd70x_page_list, dyesub_pagesize_t, mitsu_cpd70x_page);
@@ -4383,6 +4392,11 @@ static const dyesub_printsize_t mitsu_cpd70x_printsize[] =
   { "300x300", "w432h612", 1864, 2564},
   { "300x300", "w432h648", 1864, 2730},
   { "300x300", "w432h576-div2", 1864, 2730},
+#if 0
+  { "300x300", "w432h576-div3", 1864, 2730},
+  { "300x300", "w432h576-div4", 1864, 2730},
+  { "300x300", "w432h648-div2", 1864, 2730},
+#endif
 };
 
 LIST(dyesub_printsize_list_t, mitsu_cpd70x_printsize_list, dyesub_printsize_t, mitsu_cpd70x_printsize);
@@ -4411,7 +4425,6 @@ static const stp_parameter_t mitsu70x_parameters[] =
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
-#ifdef MITSU70X_8BPP
   {
     "UseLUT", N_("Internal Color Correction"), "Color=Yes,Category=Advanced Printer Setup",
     N_("Use Internal Color Correction"),
@@ -4424,7 +4437,6 @@ static const stp_parameter_t mitsu70x_parameters[] =
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
-#endif
 };
 #define mitsu70x_parameter_count (sizeof(mitsu70x_parameters) / sizeof(const stp_parameter_t))
 
@@ -4460,7 +4472,6 @@ mitsu70x_load_parameters(const stp_vars_t *v, const char *name,
       description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
       description->is_active = 1;
     }
-#ifdef MITSU70X_8BPP
   else if (strcmp(name, "UseLUT") == 0)
     {
       description->deflt.boolean = 0;
@@ -4473,7 +4484,6 @@ mitsu70x_load_parameters(const stp_vars_t *v, const char *name,
       description->bounds.integer.upper = 9;
       description->is_active = 1;
     }
-#endif
   else
   {
      return 0;
@@ -4501,10 +4511,8 @@ static int mitsu70x_parse_parameters(stp_vars_t *v)
      pd->privdata.m70x.quality = 0;
   }
 
-#ifdef MITSU70X_8BPP
   pd->privdata.m70x.use_lut = stp_get_boolean_parameter(v, "UseLUT");
   pd->privdata.m70x.sharpen = stp_get_int_parameter(v, "Sharpen");
-#endif
 
   return 1;
 }
@@ -4526,7 +4534,7 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
   stp_putc(0x1b, v);
   stp_putc(0x5a, v);
   stp_putc(0x54, v);
-  stp_putc(model, v); /* k60 == x02, 305 == x90, d70x/d80 == x01 */
+  stp_putc(model, v); /* k60 == x00, EK305 == x90, d70x/d80 == x01, ask300 = 0x80 */
   dyesub_nputc(v, 0x00, 12);
 
   stp_put16_be(pd->w_size, v);
@@ -4572,6 +4580,14 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
   /* Multi-cut control */
   if (strcmp(pd->pagesize,"w432h576-div2") == 0) {
     stp_putc(0x01, v);
+#if 0
+  } else if (strcmp(pd->pagesize,"w432h648-div2") == 0) {
+    stp_putc(0x02, v);
+  } else if (strcmp(pd->pagesize,"w432h576-div3") == 0) {
+    stp_putc(0x03, v);
+  } else if (strcmp(pd->pagesize,"w432h576-div4") == 0) {
+    stp_putc(0x04, v);
+#endif
   } else if (strcmp(pd->pagesize,"w360h504-div2") == 0) {
     stp_putc(0x01, v);
   } else if (strcmp(pd->pagesize,"w288h432-div2") == 0) {
@@ -4579,67 +4595,19 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
   } else {
     stp_putc(0x00, v);
   }
-#ifdef MITSU70X_8BPP
   dyesub_nputc(v, 0x00, 12);
+  /* The next four bytes are EXTENSIONS, backend consumes! */
   stp_putc(pd->privdata.m70x.sharpen, v);
   stp_putc(0x01, v);  /* Mark as 8bpp BGR rather than 16bpp YMC cooked */
   stp_putc(pd->privdata.m70x.use_lut, v);  /* Use LUT? */
   stp_putc(0x01, v);  /* Tell the backend the data's in the proper order */
-#else
-  dyesub_nputc(v, 0x00, 16);
-#endif
+  /* end extension */
   dyesub_nputc(v, 0x00, 447); /* Pad to 512-byte block */
 }
 
 static void mitsu_cpd70x_printer_init(stp_vars_t *v)
 {
   mitsu_cpd70k60_printer_init(v, 0x01);
-}
-
-#ifndef MITSU70X_8BPP
-static void mitsu_cpd70x_printer_end(stp_vars_t *v)
-{
-  dyesub_privdata_t *pd = get_privdata(v);
-
-  /* If Matte lamination is enabled, generate a lamination plane */
-  if (*((const char*)((pd->laminate->seq).data)) != 0x00) {
-
-    int r, c;
-    unsigned long seed = 1;
-
-    /* Now generate lamination pattern */
-    for (c = 0 ; c < pd->w_size ; c++) {
-      for (r = 0 ; r < pd->h_size + pd->privdata.m70x.laminate_offset ; r++) {
-	int i = xrand(&seed) & 0x3f;
-	if (pd->privdata.m70x.laminate_offset) { /* D70x uses 0x384b, 0x286a, 0x6c22 */
-	  if (i < 42)
-	    stp_put16_be(0xe84b, v);
-	  else if (i < 62)
-	    stp_put16_be(0x286a, v);
-	  else
-	    stp_put16_be(0x6c22, v);
-        } else { /* K60 and EK305 use 0x9d00, 0x6500, 0x2900 */
-	  if (i < 42)
-	    stp_put16_be(0x9d00, v);
-	  else if (i < 62)
-	    stp_put16_be(0x2900, v);
-	  else
-	    stp_put16_be(0x6500, v);
-	}
-      }
-    }
-    /* Pad up to a 512-byte block */
-    dyesub_nputc(v, 0x00, 512 - ((pd->w_size * (pd->h_size + pd->privdata.m70x.laminate_offset) * 2) % 512));
-  }
-}
-#endif
-
-static void mitsu_cpd70x_plane_end(stp_vars_t *v)
-{
-#ifndef MITSU70X_8BPP
-  /* Pad up to a 512-byte block */
-  dyesub_nputc(v, 0x00, 512 - ((pd->h_size * pd->w_size * 2) % 512));
-#endif
 }
 
 /* Mitsubishi CP-K60D */
@@ -4716,7 +4684,6 @@ mitsu_k60_load_parameters(const stp_vars_t *v, const char *name,
       description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
       description->is_active = 1;
     }
-#ifdef MITSU70X_8BPP
   else if (strcmp(name, "UseLUT") == 0)
     {
       description->deflt.boolean = 0;
@@ -4729,7 +4696,6 @@ mitsu_k60_load_parameters(const stp_vars_t *v, const char *name,
       description->bounds.integer.upper = 9;
       description->is_active = 1;
     }
-#endif
   else
   {
      return 0;
@@ -4744,8 +4710,7 @@ static const dyesub_pagesize_t mitsu_cpd80_page[] =
   DEFINE_PAPER_SIMPLE( "w360h360", "5x5", PT1(1524,300), PT1(1568,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER_SIMPLE( "w360h504", "5x7", PT1(1568,300), PT1(2128,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w432h432", "6x6", PT1(1864,300), PT1(1820,300), DYESUB_PORTRAIT),
-  DEFINE_PAPER_SIMPLE( "w432h576", "6x8", PT1(1864,300), PT1(2422,300), DYESUB_PORTRAIT),
-  DEFINE_PAPER_SIMPLE( "w432h576-div2", "4x6*2", PT1(1864,300), PT1(2730,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER( "w432h576-div2", "4x6*2", PT1(1864,300), PT1(2730,300), 0, 0, PT1(236,300), 0, DYESUB_PORTRAIT),
 };
 
 LIST(dyesub_pagesize_list_t, mitsu_cpd80_page_list, dyesub_pagesize_t, mitsu_cpd80_page);
@@ -4990,11 +4955,7 @@ static void mitsu_cpd90_printer_init(stp_vars_t *v)
   stp_zfwrite((pd->laminate->seq).data, 1,
 	      (pd->laminate->seq).bytes, v); /* Lamination mode */
   stp_putc(pd->privdata.m70x.quality, v);
-#ifdef MITSU70X_8BPP
   stp_putc(pd->privdata.m70x.use_lut, v);
-#else
-  stp_putc(0x00, v);  /* ie use printer's built in LUT */
-#endif
   stp_putc(pd->privdata.m70x.sharpen, v); /* Horizontal */
   stp_putc(pd->privdata.m70x.sharpen, v); /* Vertical */
   dyesub_nputc(v, 0x00, 11);
@@ -5033,11 +4994,13 @@ static void mitsu_cpd90_printer_end(stp_vars_t *v)
 static const dyesub_pagesize_t fuji_ask300_page[] =
 {
   DEFINE_PAPER_SIMPLE( "B7", "3.5x5", PT1(1076,300), PT1(1568,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w288h432-div2", "2x6*2", PT1(1228,300), PT1(1864,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER_SIMPLE( "w288h432", "4x6", PT1(1228,300), PT1(1864,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER_SIMPLE( "w360h504", "5x7", PT1(1568,300), PT1(2128,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w360h504-div2", "3.5x5*2", PT1(1568,300), PT1(2128,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w432h576", "6x8", PT1(1864,300), PT1(2422,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w432h648", "6x9", PT1(1864,300), PT1(2730,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER( "w432h576-div2", "4x6*2", PT1(1864,300), PT1(2730,300), 0, 0, PT1(236,300), 0, DYESUB_PORTRAIT),
 };
 
 LIST(dyesub_pagesize_list_t, fuji_ask300_page_list, dyesub_pagesize_t, fuji_ask300_page);
@@ -5046,10 +5009,12 @@ static const dyesub_printsize_t fuji_ask300_printsize[] =
 {
   { "300x300", "B7", 1076, 1568},
   { "300x300", "w288h432", 1228, 1864},
+  { "300x300", "w288h432-div2", 1228, 1864},
   { "300x300", "w360h504", 1568, 2128},
   { "300x300", "w360h504-div2", 1568, 2128},
   { "300x300", "w432h576", 1864, 2422},
   { "300x300", "w432h648", 1864, 2730},
+  { "300x300", "w432h576-div2", 1864, 2730},
 };
 
 LIST(dyesub_printsize_list_t, fuji_ask300_printsize_list, dyesub_printsize_t, fuji_ask300_printsize);
@@ -5264,11 +5229,11 @@ LIST(dyesub_printsize_list_t, shinko_chcs1245_printsize_list, dyesub_printsize_t
 
 static const laminate_t shinko_chcs1245_laminate[] =
 {
-  {"PrinterDefault",  N_("Printer Default"),  {1, "\x01"}},
-  {"Glossy",  N_("Glossy"),  {1, "\x02"}},
-  {"GlossyFine",  N_("Glossy Fine"),  {1, "\x03"}},
-  {"Matte",  N_("Matte"),  {1, "\x04"}},
-  {"MatteFine",  N_("Matte Fine"),  {1, "\x05"}},
+  {"PrinterDefault",  N_("Printer Default"),  {4, "\x01\x00\x00\x00"}},
+  {"Glossy",  N_("Glossy"),  {4, "\x02\x00\x00\x00"}},
+  {"GlossyFine",  N_("Glossy Fine"),  {4, "\x03\x00\x00\x00"}},
+  {"Matte",  N_("Matte"),  {4, "\x04\x00\x00\x00"}},
+  {"MatteFine",  N_("Matte Fine"),  {4, "\x05\x00\x00\x00"}},
 };
 
 LIST(laminate_list_t, shinko_chcs1245_laminate_list, laminate_t, shinko_chcs1245_laminate);
@@ -5450,12 +5415,12 @@ static const dyesub_pagesize_t shinko_chcs6245_page[] =
   DEFINE_PAPER_SIMPLE( "w360h576", "8x5", PT1(1536,300), PT1(2464,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER_SIMPLE( "w432h576", "8x6", PT1(1836,300), PT1(2464,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER_SIMPLE( "w576h576", "8x8", PT1(2436,300), PT1(2464,300), DYESUB_LANDSCAPE),
-  DEFINE_PAPER( "w576h576-div2", "8x4*2", PT1(2464,300), PT1(2494,300), 0, 0, PT(0,300), PT(0,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w576h576-div2", "8x4*2", PT1(2464,300), PT1(2494,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "c8x10", "8x10", PT1(2464,300), PT1(3036,300), DYESUB_PORTRAIT),
-  DEFINE_PAPER( "c8x10-div2", "8x5*2", PT1(2464,300), PT1(3094,300), 0, 0, PT(0,300), PT(0,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "c8x10-div2", "8x5*2", PT1(2464,300), PT1(3094,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w576h864", "8x12", PT1(2464,300), PT1(3636,300), DYESUB_PORTRAIT),
-  DEFINE_PAPER( "w576h864-div2", "8x6*2", PT1(2464,300), PT1(3694,300), 0, 0, PT(0,300), PT(0,300), DYESUB_PORTRAIT),
-  DEFINE_PAPER( "w576h864-div3", "8x4*3", PT1(2464,300), PT1(3742,300), 0, 0, PT(0,300), PT(0,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w576h864-div2", "8x6*2", PT1(2464,300), PT1(3694,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w576h864-div3", "8x4*3", PT1(2464,300), PT1(3742,300), DYESUB_PORTRAIT),
 };
 
 LIST(dyesub_pagesize_list_t, shinko_chcs6245_page_list, dyesub_pagesize_t, shinko_chcs6245_page);
@@ -6721,15 +6686,32 @@ static void magicard_printer_init(stp_vars_t *v)
   stp_zprintf(v, ",NOC1");
   stp_zprintf(v, ",VER%d.%d.%d", STP_MAJOR_VERSION, STP_MINOR_VERSION, STP_MICRO_VERSION); // XXX include "pre" or other tag.
   stp_zprintf(v, ",LANENG"); // Dunno about other options.
-  stp_zprintf(v, ",TDT%08X", (unsigned int)time(NULL)); /* Some sort of timestamp. Unknown epoch. */
+  stp_zprintf(v, ",TDT%08X", (unsigned int)stpi_time(NULL)); /* Some sort of timestamp. Unknown epoch. */
 //  stp_zprintf(v, ",LC%d", 1); // Force media type.  LC1/LC3/LC6/LC8 for YMCKO/MONO/KO/YMCKOK
   stp_zprintf(v, ",REJ%s", pd->privdata.magicard.reject ? "ON" : "OFF"); /* Faulty card rejection. */
   stp_zprintf(v, ",ESS%d", pd->copies); /* Number of copies */
-  stp_zprintf(v, ",KEE,RT2,DPXOFF,PAG1"); // ?? DPX+PAG are for duplexing?
+  stp_zprintf(v, ",KEE,RT2");
+  if (pd->duplex_mode &&
+      strcmp(pd->duplex_mode, "None") &&
+      strcmp(pd->duplex_mode, "Standard")) /* Duplex enabled? */
+    {
+      stp_zprintf(v, ",DPXON,PAG%d", 1 + (pd->page_number & 1));
+      if (!(pd->page_number & 1))
+        {
+          /* Color format of BACk side -- eg CKO or KO or C or CO or K.  We don't support K/KO-only! */
+          stp_zprintf(v, ",BAC%s%s",
+		      pd->privdata.magicard.resin_k ? "CK" : "C",
+		      pd->privdata.magicard.overcoat ? "O" : "");
+	}
+    }
+  else
+    {
+      stp_zprintf(v, ",DPXOFF,PAG1");
+    }
   stp_zprintf(v, ",SLW%s", pd->privdata.magicard.colorsure ? "ON" : "OFF"); /* "Colorsure printing" */
   stp_zprintf(v, ",IMF%s", "BGR"); /* Image format -- as opposed to K, BGRK and others. */
   stp_zprintf(v, ",XCO0,YCO0"); // ??
-  stp_zprintf(v, ",WID%u,HGT%u", (unsigned int)pd->h_size - 40, (unsigned int)pd->w_size); /* Width & Height */
+  stp_zprintf(v, ",WID%u,HGT%u", (unsigned int)pd->h_size, (unsigned int)pd->w_size - 30); /* Width & Height */
   stp_zprintf(v, ",OVR%s", pd->privdata.magicard.overcoat ? "ON" : "OFF" ); /* Overcoat. */
   if (pd->privdata.magicard.overcoat && pd->privdata.magicard.overcoat_hole)
   {
@@ -6747,13 +6729,30 @@ static void magicard_printer_init(stp_vars_t *v)
   stp_zprintf(v, ",USF%s", pd->privdata.magicard.holokote ? "ON" : "OFF");  /* Disable Holokote. */
   if (pd->privdata.magicard.holokote)
   {
-    stp_zprintf(v, ",HKT%d,", pd->privdata.magicard.holokote);
+    stp_zprintf(v, ",HKT%d", pd->privdata.magicard.holokote);
     stp_zprintf(v, ",CKI%s", pd->privdata.magicard.holokote_custom? "ON" : "OFF");
     stp_zprintf(v, ",HKMFFFFFF,TRO0"); // HKM == area. each bit is a separate area, 1-24.  Not sure about TRO
   }
   if (pd->privdata.magicard.holopatch)
   {
     stp_zprintf(v, ",HPHON,PAT%d", pd->privdata.magicard.holopatch);
+  }
+
+  /* Magnetic stripe */
+  if (pd->privdata.magicard.mag1[0]) {
+	  stp_zprintf(v, ",MAG1,BPI210,MPC7,COE%c,%s",
+		      pd->privdata.magicard.mag_coer ? 'H': 'L',
+		  pd->privdata.magicard.mag1);
+  }
+  if (pd->privdata.magicard.mag2[0]) {
+	  stp_zprintf(v, ",MAG2,BPI75,MPC5,COE%c,%s",
+		      pd->privdata.magicard.mag_coer ? 'H': 'L',
+		  pd->privdata.magicard.mag2);
+  }
+  if (pd->privdata.magicard.mag3[0]) {
+	  stp_zprintf(v, ",MAG3,BPI210,MPC7,COE%c,%s",
+		      pd->privdata.magicard.mag_coer ? 'H': 'L',
+		  pd->privdata.magicard.mag3);
   }
 
   stp_zprintf(v, ",PCT%d,%d,%d,%d", 0, 0, 1025, 641); // print area? (seen 1025/1015/999,641)
@@ -6814,6 +6813,13 @@ static const dyesub_stringitem_t magicard_black_types[] =
 };
 LIST(dyesub_stringlist_t, magicard_black_types_list, dyesub_stringitem_t, magicard_black_types);
 
+static const dyesub_stringitem_t magicard_mag_coer[] =
+{
+  { "Low", N_ ("Low") },
+  { "High", N_ ("High") },
+};
+LIST(dyesub_stringlist_t, magicard_mag_coer_list, dyesub_stringitem_t, magicard_mag_coer);
+
 static const stp_parameter_t magicard_parameters[] =
 {
   {
@@ -6871,6 +6877,12 @@ static const stp_parameter_t magicard_parameters[] =
     STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
+    "CardOffset", N_("Horizontal Card offset"), "Color=No,Category=Advanced Printer Setup",
+    N_("Fine-tune card horizontal centering"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
     "Holokote", N_("Holokote"), "Color=No,Category=Advanced Printer Setup",
     N_("Holokote option"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
@@ -6893,6 +6905,30 @@ static const stp_parameter_t magicard_parameters[] =
     N_("Area to not cover with an overcoat layer"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "MagCoer", N_("Magnetic Stripe Coercivity"), "Color=No,Category=Advanced Printer Setup",
+    N_("Magnetic Stripe Coercivity Type"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "MagStripe1", N_("Magnetic Stripe Row 1"), "Color=No,Category=Advanced Printer Setup",
+    N_("ISO 7811 alphanumeric data to be encoded in the first magnetic stripe row (0-79 characters)"),
+    STP_PARAMETER_TYPE_RAW, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 0, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "MagStripe2", N_("Magnetic Stripe Row 2"), "Color=No,Category=Advanced Printer Setup",
+    N_("ISO 7811 alphanumeric data to be encoded in the second magnetic stripe row (0-40 digits)"),
+    STP_PARAMETER_TYPE_RAW, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 0, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "MagStripe3", N_("Magnetic Stripe Row 3"), "Color=No,Category=Advanced Printer Setup",
+    N_("ISO 7811 alphanumeric data to be encoded in the third magnetic stripe row (0-107 digits)"),
+    STP_PARAMETER_TYPE_RAW, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 0, 1, STP_CHANNEL_NONE, 1, 0
   },
 };
 #define magicard_parameter_count (sizeof(magicard_parameters) / sizeof(const stp_parameter_t))
@@ -7000,6 +7036,13 @@ magicard_load_parameters(const stp_vars_t *v, const char *name,
       description->bounds.integer.upper = 50;
       description->is_active = 1;
     }
+  else if (strcmp(name, "CardOffset") == 0)
+    {
+      description->deflt.integer = 0;
+      description->bounds.integer.lower = -15;
+      description->bounds.integer.upper = 15;
+      description->is_active = 1;
+    }
   else if (strcmp(name, "Holokote") == 0)
     {
       description->bounds.str = stp_string_list_create();
@@ -7040,6 +7083,32 @@ magicard_load_parameters(const stp_vars_t *v, const char *name,
       description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
       description->is_active = 1;
     }
+  else if (strcmp(name, "MagCoer") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+
+      const dyesub_stringlist_t *mlist = &magicard_mag_coer_list;
+      for (i = 0; i < mlist->n_items; i++)
+        {
+	  const dyesub_stringitem_t *m = &(mlist->item[i]);
+	  stp_string_list_add_string(description->bounds.str,
+				       m->name, m->text); /* Do *not* want this translated, otherwise use gettext(m->text) */
+	}
+      description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "MagStripe1") == 0)
+    {
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "MagStripe2") == 0)
+    {
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "MagStripe3") == 0)
+    {
+      description->is_active = 1;
+    }
   else
     {
        return 0;
@@ -7052,10 +7121,15 @@ static int magicard_parse_parameters(stp_vars_t *v)
   dyesub_privdata_t *pd = get_privdata(v);
 
   const char *lpar = stp_get_string_parameter(v, "Laminate");
+  const char *mag_coer = stp_get_string_parameter(v, "MagCoer");
   const char *holokote = stp_get_string_parameter(v, "Holokote");
   int holopatch = stp_get_int_parameter(v, "Holopatch");
   const char *overcoat_hole = stp_get_string_parameter(v, "OvercoatHole");
   int holokote_custom = stp_get_boolean_parameter(v, "HolokoteCustom");
+  const char *blacktype = stp_get_string_parameter(v, "BlackType");
+  const stp_raw_t *magstripe1 = NULL;
+  const stp_raw_t *magstripe2 = NULL;
+  const stp_raw_t *magstripe3 = NULL;
 
   if (!strcmp("None", overcoat_hole))
     overcoat_hole = NULL;
@@ -7068,34 +7142,121 @@ static int magicard_parse_parameters(stp_vars_t *v)
     }
   }
 
-  if (pd) {
-    const char *blacktype = stp_get_string_parameter(v, "BlackType");
-
-    pd->privdata.magicard.overcoat = !strcmp("On", lpar);
-    pd->privdata.magicard.resin_k = !strcmp("Resin",blacktype);
-    pd->privdata.magicard.reject = stp_get_boolean_parameter(v, "RejectBad");
-    pd->privdata.magicard.colorsure = stp_get_boolean_parameter(v, "ColorSure");
-    pd->privdata.magicard.gamma = stp_get_int_parameter(v, "GammaCurve");
-    pd->privdata.magicard.power_color = stp_get_int_parameter(v, "PowerColor") + 50;
-    pd->privdata.magicard.power_resin = stp_get_int_parameter(v, "PowerBlack") + 50;
-    pd->privdata.magicard.power_overcoat = stp_get_int_parameter(v, "PowerOC") + 50;
-    pd->privdata.magicard.align_start = stp_get_int_parameter(v, "AlignStart") + 50;
-    pd->privdata.magicard.align_end = stp_get_int_parameter(v, "AlignEnd") + 50;
-    pd->privdata.magicard.holopatch = holopatch;
-    pd->privdata.magicard.overcoat_hole = overcoat_hole;
-
-    if (!strcmp(holokote, "UltraSecure")) {
-      pd->privdata.magicard.holokote = 1;
-    } else if (!strcmp(holokote, "InterlockingRings")) {
-      pd->privdata.magicard.holokote = 2;
-    } else if (!strcmp(holokote, "Flex")) {
-      pd->privdata.magicard.holokote = 3;
-    } else {
-      pd->privdata.magicard.holokote = 0;
+  /* Sanity check magstripe */
+  if (stp_check_raw_parameter(v, "MagStripe1", STP_PARAMETER_ACTIVE)) {
+    magstripe1 = stp_get_raw_parameter(v, "MagStripe1");
+    if (magstripe1->bytes >= 79) {
+      stp_eprintf(v, _("StpMagStripe1 must be between 0 and 78 bytes!\n"));
+      return 0;
     }
-    pd->privdata.magicard.holokote_custom = holokote_custom;
+  }
+  if (stp_check_raw_parameter(v, "MagStripe2", STP_PARAMETER_ACTIVE)) {
+    magstripe2 = stp_get_raw_parameter(v, "MagStripe2");
+    if (magstripe2->bytes >= 40) {
+      stp_eprintf(v, _("StpMagStripe2 must be between 0 and 39 bytes!\n"));
+      return 0;
+    }
+  }
+  if (stp_check_raw_parameter(v, "MagStripe3", STP_PARAMETER_ACTIVE)) {
+    magstripe1 = stp_get_raw_parameter(v, "MagStripe3");
+    if (magstripe1->bytes >= 107) {
+      stp_eprintf(v, _("StpMagStripe3 must be between 0 and 106 bytes!\n"));
+      return 0;
+    }
   }
 
+  /* No need to set global params if there's no privdata yet */
+  if (!pd)
+    return 1;
+
+  pd->privdata.magicard.overcoat = !strcmp("On", lpar);
+  pd->privdata.magicard.resin_k = !strcmp("Resin",blacktype);
+  pd->privdata.magicard.reject = stp_get_boolean_parameter(v, "RejectBad");
+  pd->privdata.magicard.colorsure = stp_get_boolean_parameter(v, "ColorSure");
+  pd->privdata.magicard.gamma = stp_get_int_parameter(v, "GammaCurve");
+  pd->privdata.magicard.power_color = stp_get_int_parameter(v, "PowerColor") + 50;
+  pd->privdata.magicard.power_resin = stp_get_int_parameter(v, "PowerBlack") + 50;
+  pd->privdata.magicard.power_overcoat = stp_get_int_parameter(v, "PowerOC") + 50;
+  pd->privdata.magicard.align_start = stp_get_int_parameter(v, "AlignStart") + 50;
+  pd->privdata.magicard.align_end = stp_get_int_parameter(v, "AlignEnd") + 50;
+  pd->privdata.magicard.holopatch = holopatch;
+  pd->privdata.magicard.overcoat_hole = overcoat_hole;
+
+  pd->horiz_offset = stp_get_int_parameter(v, "CardOffset");
+
+  if (!strcmp(holokote, "UltraSecure")) {
+    pd->privdata.magicard.holokote = 1;
+  } else if (!strcmp(holokote, "InterlockingRings")) {
+    pd->privdata.magicard.holokote = 2;
+  } else if (!strcmp(holokote, "Flex")) {
+    pd->privdata.magicard.holokote = 3;
+  } else {
+    pd->privdata.magicard.holokote = 0;
+  }
+  pd->privdata.magicard.holokote_custom = holokote_custom;
+
+  pd->privdata.magicard.mag_coer = !strcmp("High", mag_coer);
+
+  if (magstripe1 && magstripe1->bytes) {
+    int i;
+    memcpy(pd->privdata.magicard.mag1, magstripe1->data, magstripe1->bytes);
+    pd->privdata.magicard.mag1[magstripe1->bytes] = 0;
+    for (i = 0 ; i < magstripe1->bytes ; i++) {
+      if (pd->privdata.magicard.mag1[i] < 0x20 ||
+	  pd->privdata.magicard.mag1[i] > 0x5f) {
+	stp_eprintf(v, _("Illegal Alphanumeric in Magstripe, 0x20->0x5F ASCII only\n"));
+	return 0;
+      }
+    }
+    if (pd->privdata.magicard.mag1[0] != '%') {
+      stp_eprintf(v, _("Magstripe alphanumeric data must start with '%%'\n"));
+      return 0;
+    }
+    if (pd->privdata.magicard.mag1[magstripe1->bytes - 1] != '?') {
+      stp_eprintf(v, _("Magstripe string must end with '?'\n"));
+      return 0;
+    }
+  }
+  if (magstripe2 && magstripe2->bytes) {
+    int i;
+    memcpy(pd->privdata.magicard.mag2, magstripe2->data, magstripe2->bytes);
+    pd->privdata.magicard.mag2[magstripe2->bytes] = 0;
+    for (i = 0 ; i < magstripe2->bytes ; i++) {
+      if (pd->privdata.magicard.mag2[i] < 0x30 ||
+	  pd->privdata.magicard.mag2[i] > 0x3f) {
+	stp_eprintf(v, _("Illegal Numeric in Magstripe, 0x30->0x3F ASCII only\n"));
+	return 0;
+      }
+    }
+    if (pd->privdata.magicard.mag2[0] != ';') {
+      stp_eprintf(v, _("Magstripe numeric data must start with ';'\n"));
+      return 0;
+    }
+    if (pd->privdata.magicard.mag2[magstripe2->bytes - 1] != '?') {
+      stp_eprintf(v, _("Magstripe data must end with '?'\n"));
+      return 0;
+    }
+  }
+  if (magstripe3 && magstripe3->bytes) {
+    int i;
+    memcpy(pd->privdata.magicard.mag3, magstripe3->data, magstripe3->bytes);
+    pd->privdata.magicard.mag3[magstripe3->bytes] = 0;
+    for (i = 0 ; i < magstripe3->bytes ; i++) {
+      if (pd->privdata.magicard.mag3[i] < 0x30 ||
+	  pd->privdata.magicard.mag3[i] > 0x3f) {
+	stp_eprintf(v, _("Illegal Numeric in Magstripe, 0x30->0x3F ASCII only\n"));
+	return 0;
+      }
+    }
+    if (pd->privdata.magicard.mag3[0] != ';') {
+      stp_eprintf(v, _("Magstripe numeric data must start with ';'\n"));
+      return 0;
+    }
+    if (pd->privdata.magicard.mag3[magstripe3->bytes - 1] != '?') {
+      stp_eprintf(v, _("Magstripe data must end with '?'\n"));
+      return 0;
+    }
+  }
   return 1;
 }
 
@@ -7820,25 +7981,14 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Mitsubishi CPD70D/CPD707D */
     4105,
-#ifdef MITSU70X_8BPP
     &bgr_ink_list,
-#else
-    &ymc_ink_list,
-#endif
     &res_300dpi_list,
     &mitsu_cpd70x_page_list,
     &mitsu_cpd70x_printsize_list,
     SHRT_MAX,
-#ifdef MITSU70X_8BPP
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_WHITE_BORDER,
     &mitsu_cpd70x_printer_init, NULL,
-#else
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_16BPP
-      | DYESUB_FEATURE_BIGENDIAN,
-    &mitsu_cpd70x_printer_init, &mitsu_cpd70x_printer_end,
-#endif
-    NULL, &mitsu_cpd70x_plane_end,
+    NULL, NULL,
     NULL, NULL, /* No block funcs */
     NULL,
     &mitsu_cpd70x_laminate_list, NULL,
@@ -7850,25 +8000,14 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Mitsubishi CPK60D */
     4106,
-#ifdef MITSU70X_8BPP
     &bgr_ink_list,
-#else
-    &ymc_ink_list,
-#endif
     &res_300dpi_list,
     &mitsu_cpk60_page_list,
     &mitsu_cpk60_printsize_list,
     SHRT_MAX,
-#ifdef MITSU70X_8BPP
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT,
     &mitsu_cpk60_printer_init, NULL,
-#else
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_16BPP
-      | DYESUB_FEATURE_BIGENDIAN,
-    &mitsu_cpk60_printer_init, &mitsu_cpd70x_printer_end,
-#endif
-    NULL, &mitsu_cpd70x_plane_end,
+    NULL, NULL,
     NULL, NULL, /* No block funcs */
     NULL,
     &mitsu_cpd70x_laminate_list, NULL,
@@ -7880,25 +8019,14 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Mitsubishi CPD80D */
     4107,
-#ifdef MITSU70X_8BPP
     &bgr_ink_list,
-#else
-    &ymc_ink_list,
-#endif
     &res_300dpi_list,
     &mitsu_cpd80_page_list,
     &mitsu_cpd80_printsize_list,
     SHRT_MAX,
-#ifdef MITSU70X_8BPP
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_WHITE_BORDER,
     &mitsu_cpd70x_printer_init, NULL,
-#else
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_16BPP
-      | DYESUB_FEATURE_BIGENDIAN,
-    &mitsu_cpd70x_printer_init, &mitsu_cpd70x_printer_end,
-#endif
-    NULL, &mitsu_cpd70x_plane_end,
+    NULL, NULL,
     NULL, NULL, /* No block funcs */
     NULL,
     &mitsu_cpd70x_laminate_list, NULL,
@@ -7910,25 +8038,14 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Kodak 305 */
     4108,
-#ifdef MITSU70X_8BPP
     &bgr_ink_list,
-#else
-    &ymc_ink_list,
-#endif
     &res_300dpi_list,
     &kodak305_page_list,
     &kodak305_printsize_list,
     SHRT_MAX,
-#ifdef MITSU70X_8BPP
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT,
     &kodak305_printer_init, NULL,
-#else
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_16BPP
-      | DYESUB_FEATURE_BIGENDIAN,
-    &kodak305_printer_init, &mitsu_cpd70x_printer_end,
-#endif
-    NULL, &mitsu_cpd70x_plane_end,
+    NULL, NULL,
     NULL, NULL, /* No block funcs */
     NULL,
     &mitsu_cpd70x_laminate_list, NULL,
@@ -7996,28 +8113,17 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Fujifilm ASK-300 */
     4112,
-#ifdef MITSU70X_8BPP
     &bgr_ink_list,
-#else
-    &ymc_ink_list,
-#endif
     &res_300dpi_list,
     &fuji_ask300_page_list,
     &fuji_ask300_printsize_list,
     SHRT_MAX,
-#ifdef MITSU70X_8BPP
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_WHITE_BORDER,
     &fuji_ask300_printer_init, NULL,
-#else
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_16BPP
-      | DYESUB_FEATURE_BIGENDIAN,
-    &fuji_ask300_printer_init, &mitsu_cpd70x_printer_end,
-#endif
-    NULL, &mitsu_cpd70x_plane_end,
+    NULL, NULL,
     NULL, NULL, /* No block funcs */
     NULL,
-    NULL, NULL,
+    &mitsu_cpd70x_laminate_list, NULL,
     NULL, NULL,
     mitsu70x_parameters,
     mitsu70x_parameter_count,
@@ -8340,8 +8446,28 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     ds820_load_parameters,
     ds820_parse_parameters,
   },
-  { /* Magicard Series */
+  { /* Magicard Series w/ Duplex */
     7000,
+    &ymc_ink_list,
+    &res_300dpi_list,
+    &magicard_page_list,
+    &magicard_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_WHITE_BORDER
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_DUPLEX,
+    &magicard_printer_init, &magicard_printer_end,
+    NULL, magicard_plane_end,
+    NULL, NULL,
+    NULL,
+    &magicard_laminate_list, NULL,
+    NULL, NULL,
+    magicard_parameters,
+    magicard_parameter_count,
+    magicard_load_parameters,
+    magicard_parse_parameters,
+  },
+  { /* Magicard Series w/o Duplex */
+    7001,
     &ymc_ink_list,
     &res_300dpi_list,
     &magicard_page_list,
@@ -9003,14 +9129,6 @@ dyesub_swap_ints(int *a, int *b)
 }
 
 static void
-dyesub_swap_doubles(double *a, double *b)
-{
-  double t = *a;
-  *a = *b;
-  *b = t;
-}
-
-static void
 dyesub_adjust_curve(stp_vars_t *v,
 		const char *color_adj,
 		const char *color_curve)
@@ -9052,12 +9170,25 @@ dyesub_exec_check(stp_vars_t *v,
   return 1;
 }
 
-/* FIXME: This function is badly named.  It actually picks the best single
-   "point" on the original image to use for the desired output pixel. */
-static double
-dyesub_interpolate(int oldval, int oldsize, int newsize)
+/* XXX FIXME:  This is "point" interpolation.  Be smarter!
+   eg:  Average  (average all pixels that touch this one)
+        BiLinear (scale based on linear interpolation)
+        BiCubic  (scale based on weighted average, based on proximity)
+        Lanczos  (awesome!! but slow)
+*/
+static int
+dyesub_interpolate(int point, int olddim, int newdim)
 {
-  return ((double)oldval * (double)newsize / (double)oldsize);
+#if 0
+  /* Perform arithematic rounding.  Is there a point? */
+  int result = ((point * 2 * newdim / olddim) + 1) / 2;
+  if (result >= newdim)
+    result--;
+#else
+  int result = (point * newdim / olddim);
+#endif
+
+  return result;
 }
 
 static void
@@ -9117,98 +9248,133 @@ dyesub_read_image(stp_vars_t *v,
 }
 
 static void
-dyesub_render_pixel(unsigned short *src, char *dest,
-		    dyesub_print_vars_t *pv,
-		    const dyesub_cap_t *caps,
-		    int plane)
+dyesub_render_pixel_u8(unsigned short *src, char *dest,
+		       dyesub_print_vars_t *pv,
+		       int plane)
 {
-  unsigned short ink[MAX_INK_CHANNELS]; /* What is sent to printer */
-
-  int i;
-  int start, end;
-
-  /* Only compute one color at a time */
-  if (pv->plane_interlacing || pv->row_interlacing)
-    {
-      start = plane;
-      end = plane + 1;
-    }
-  else
-    {
-      start = 0;
-      end = pv->ink_channels;
-    }
-
-  /* copy out_channel (image) to equiv ink_channel (printer) */
-  for (i = start; i < end; i++)
-    {
-      ink[i] = src[i];
-
-      /* Downscale 16bpp to output bpp */
-      if (pv->bytes_per_ink_channel == 1)
-        {
-	  unsigned char *ink_u8 = (unsigned char *) ink;
+  /* Scale down to output bit depth */
 #if 0
-	  ink_u8[i] = ink[i] >> 8; // XXX Do we want to just truncate/round instead?
+  *dest = src[plane] >> 8; // XXX does this make more sense than division?
 #else
-	  ink_u8[i] = ink[i] / 257;
+  *dest = src[plane] / 257;
 #endif
-	}
-      else /* ie 2 bytes per channel */
-        {
-	  /* Scale down to output bits */
-	  if (pv->bits_per_ink_channel != 16)
-	    ink[i] = ink[i] >> (16 - pv->bits_per_ink_channel);
-
-	  /* Byteswap if needed */
-	  if (pv->byteswap)
-	    ink[i] = ((ink[i] >> 8) & 0xff) | ((ink[i] & 0xff) << 8);
-	}
-    }
-
-  /* If we use plane or row interlacing, only write the plane's channel */
-  if (pv->plane_interlacing || pv->row_interlacing)
-    memcpy(dest, (char *) ink + (plane * pv->bytes_per_ink_channel),
-	   pv->bytes_per_ink_channel);
-  else /* Otherwise, print the full set of inks, in order (eg RGB or BGR) */
-    for (i = 0; i < pv->ink_channels; i++)
-      memcpy(dest + i*pv->bytes_per_ink_channel,
-	     (char *) ink + (pv->bytes_per_ink_channel * (pv->ink_order[i]-1)),
-	     pv->bytes_per_ink_channel);
 }
 
 static void
-dyesub_render_row(stp_vars_t *v,
-		  dyesub_print_vars_t *pv,
-		  const dyesub_cap_t *caps,
-		  double in_row,
-		  char *dest,
-		  int bytes_per_pixel,
-		  int plane)
+dyesub_render_pixel_u16(unsigned short *src, unsigned short *dest,
+			dyesub_print_vars_t *pv,
+			int plane)
+{
+  /* Scale down to output bit depth */
+  if (pv->bits_per_ink_channel == 16)
+    *dest = src[plane];
+  else
+    *dest = src[plane] >> (16 - pv->bits_per_ink_channel);
+
+  /* Byteswap if needed */
+  if (pv->byteswap)
+    *dest = ((*dest >> 8) & 0xff) | ((*dest & 0xff) << 8); // macro?
+}
+
+
+static void
+dyesub_render_pixel_packed_u8(unsigned short *src, char *dest,
+			      dyesub_print_vars_t *pv)
+{
+  int i;
+
+  /* copy out_channel (image) to equiv ink_channel (printer) */
+  for (i = 0; i < pv->ink_channels; i++)
+    {
+      dyesub_render_pixel_u8(src, dest + i, pv, pv->ink_order[i]-1);
+    }
+}
+
+static void
+dyesub_render_row_packed_u8(stp_vars_t *v,
+			    dyesub_print_vars_t *pv,
+			    const dyesub_cap_t *caps,
+			    int in_row,
+			    char *dest,
+			    int bytes_per_pixel,
+			    int plane)
 {
   int w;
   unsigned short *src;
 
   for (w = 0; w < pv->outw_px; w++)
     {
-      double row = in_row;
-      double col = dyesub_interpolate(w, pv->outw_px, pv->imgw_px);
+      int row = in_row;
+      int col = dyesub_interpolate(w, pv->outw_px, pv->imgw_px);
       if (pv->plane_lefttoright)
 	col = pv->imgw_px - col - 1;
       if (pv->print_mode == DYESUB_LANDSCAPE)
         { /* "rotate" image */
-          dyesub_swap_doubles(&col, &row);
+          dyesub_swap_ints(&col, &row);
           row = (pv->imgw_px - 1) - row;
         }
-      // XXX FIXME:  This is "point" interpolation.  Be smarter!
-      // eg:  Average  (average all pixels that touch this one)
-      //      BiLinear (scale based on linear interpolation)
-      //      BiCubic  (scale based on weighted average, based on proximity)
-      //      Lanczos  (awesome!! but slow)
-      src = &(pv->image_data[(int)row][(int)col * pv->out_channels]);
+      src = &(pv->image_data[row][col * pv->out_channels]);
 
-      dyesub_render_pixel(src, dest + w*bytes_per_pixel,
-			  pv, caps, plane);
+      dyesub_render_pixel_packed_u8(src, dest + w*bytes_per_pixel, pv);
+    }
+}
+
+static void
+dyesub_render_row_interlaced_u8(stp_vars_t *v,
+				dyesub_print_vars_t *pv,
+				const dyesub_cap_t *caps,
+				int in_row,
+				char *dest,
+				int bytes_per_pixel,
+				int plane)
+{
+  int w;
+  unsigned short *src;
+
+  for (w = 0; w < pv->outw_px; w++)
+    {
+      int row = in_row;
+      int col = dyesub_interpolate(w, pv->outw_px, pv->imgw_px);
+      if (pv->plane_lefttoright)
+	col = pv->imgw_px - col - 1;
+      if (pv->print_mode == DYESUB_LANDSCAPE)
+        { /* "rotate" image */
+          dyesub_swap_ints(&col, &row);
+          row = (pv->imgw_px - 1) - row;
+        }
+      src = &(pv->image_data[row][col * pv->out_channels]);
+
+      dyesub_render_pixel_u8(src, dest + w, pv, plane);
+    }
+}
+
+static void
+dyesub_render_row_interlaced_u16(stp_vars_t *v,
+				 dyesub_print_vars_t *pv,
+				 const dyesub_cap_t *caps,
+				 int in_row,
+				 char *dest,
+				 int bytes_per_pixel,
+				 int plane)
+{
+  int w;
+  unsigned short *src;
+
+  for (w = 0; w < pv->outw_px; w++)
+    {
+      int row = in_row;
+      int col = dyesub_interpolate(w, pv->outw_px, pv->imgw_px);
+      if (pv->plane_lefttoright)
+	col = pv->imgw_px - col - 1;
+      if (pv->print_mode == DYESUB_LANDSCAPE)
+        { /* "rotate" image */
+          dyesub_swap_ints(&col, &row);
+          row = (pv->imgw_px - 1) - row;
+        }
+      src = &(pv->image_data[row][col * pv->out_channels]);
+
+      dyesub_render_pixel_u16(src, (unsigned short*)(dest + w*bytes_per_pixel),
+			      pv, plane);
     }
 }
 
@@ -9230,7 +9396,6 @@ dyesub_print_plane(stp_vars_t *v,
   /* Pre-Fill in the blank bits of the row. */
   if (dyesub_feature(caps, DYESUB_FEATURE_FULL_WIDTH))
     {
-      /* FIXME: This is broken for bpp != 1 and packed data -- but no such models exist. */
       /* empty part left of image area */
       if (pv->outl_px > 0)
         {
@@ -9248,7 +9413,7 @@ dyesub_print_plane(stp_vars_t *v,
   for (h = 0; h <= pv->prnb_px - pv->prnt_px; h++)
     {
       int p = pv->row_interlacing ? 0 : plane;
-      double row;
+      int row;
 
       do {
 
@@ -9267,8 +9432,7 @@ dyesub_print_plane(stp_vars_t *v,
       if (h + pv->prnt_px < pv->outt_px || h + pv->prnt_px >= pv->outb_px)
         { /* empty part above or below image area */
 	  memset(destrow, pv->empty_byte[plane], rowlen);
-	  /* FIXME: This is also broken for bpp != 1 and packed data  */
-	  /* FIXME: Also this is inefficient; it won't change once generated.. */
+	  /* FIXME: This is inefficient; it won't change once generated.. */
 	}
       else
         {
@@ -9276,9 +9440,20 @@ dyesub_print_plane(stp_vars_t *v,
 				   pv->outh_px, pv->imgh_px);
 
 	  stp_deprintf(STP_DBG_DYESUB,
-		       "dyesub_print_plane: h = %d, row = %f\n", h, row);
+		       "dyesub_print_plane: h = %d, row = %d\n", h, row);
 
-	  dyesub_render_row(v, pv, caps, row, destrow + bpp * pv->outl_px, bpp, p);
+	  if (pv->plane_interlacing || pv->row_interlacing)
+	    {
+	      if (pv->bytes_per_ink_channel == 1)
+		dyesub_render_row_interlaced_u8(v, pv, caps, row,
+						destrow + bpp * pv->outl_px, bpp, p);
+	      else
+		dyesub_render_row_interlaced_u16(v, pv, caps, row,
+						 destrow + bpp * pv->outl_px, bpp, p);
+	    }
+	  else
+            dyesub_render_row_packed_u8(v, pv, caps, row,
+					destrow + bpp * pv->outl_px, bpp, p);
 	}
       /* And send it out */
       stp_zfwrite(destrow, rowlen, 1, v);
@@ -9407,7 +9582,7 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   pv.outt_px = MIN(PX(out_pt_top  - page_pt_top, h_dpi),
 			pv.prnh_px - pv.outh_px);
   pv.outr_px = pv.outl_px + pv.outw_px;
-  pv.outb_px = pv.outt_px  + pv.outh_px;
+  pv.outb_px = pv.outt_px + pv.outh_px;
 
   /* Swap back so that everything that follows will work. */
   if (page_mode == DYESUB_LANDSCAPE)
@@ -9511,10 +9686,6 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
       return 2;
     }
 
-  /* FIXME:  Provide a way of disabling/altering these curves */
-  /* XXX reuse 'UseLUT' from mitsu70x?  or 'SimpleGamma' ? */
-  dyesub_exec(v, caps->adjust_curves, "caps->adjust_curves");
-
   if (dyesub_feature(caps, DYESUB_FEATURE_FULL_HEIGHT))
     {
       pv.prnt_px = 0;
@@ -9558,6 +9729,18 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
       dyesub_swap_ints(&pv.imgh_px, &pv.imgw_px);
     }
 
+  /* Adjust margins if the driver asks, to fine-tune horizontal position. */
+  pv.outl_px += pd->horiz_offset;
+  pv.outr_px += pd->horiz_offset;
+  /* Make sure we're still legal */
+  if (pv.outl_px < 0)
+    pv.outl_px = 0;
+  if (pv.outr_px > pv.prnw_px)
+    pv.outr_px = pv.prnw_px;
+
+  /* By this point, we're finally DONE mangling the pv structure,
+     and can start calling into the bulk of the driver code. */
+
   /* assign private data *after* swaping image dimensions */
   pd->w_dpi = w_dpi;
   pd->h_dpi = h_dpi;
@@ -9565,6 +9748,10 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   pd->h_size = pv.prnh_px;
   pd->print_mode = pv.print_mode;
   pd->bpp = pv.bits_per_ink_channel;
+
+  /* FIXME:  Provide a way of disabling/altering these curves */
+  /* XXX reuse 'UseLUT' from mitsu70x?  or 'SimpleGamma' ? */
+  dyesub_exec(v, caps->adjust_curves, "caps->adjust_curves");
 
   /* printer init */
   dyesub_exec(v, caps->printer_init_func, "caps->printer_init");
@@ -9601,7 +9788,6 @@ dyesub_print(const stp_vars_t *v, stp_image_t *image)
 {
   int status;
   stp_vars_t *nv = stp_vars_create_copy(v);
-  stp_prune_inactive_options(nv);
   status = dyesub_do_print(nv, image);
   stp_vars_destroy(nv);
   return status;
@@ -9613,7 +9799,6 @@ dyesub_job_start(const stp_vars_t *v, stp_image_t *image)
   const dyesub_cap_t *caps;
   stp_vars_t *nv = stp_vars_create_copy(v);
 
-  stp_prune_inactive_options(nv);
   caps = dyesub_get_model_capabilities(stp_get_model_id(nv));
 
   if (caps->job_start_func)
@@ -9629,7 +9814,6 @@ dyesub_job_end(const stp_vars_t *v, stp_image_t *image)
   const dyesub_cap_t *caps;
   stp_vars_t *nv = stp_vars_create_copy(v);
 
-  stp_prune_inactive_options(nv);
   caps = dyesub_get_model_capabilities(stp_get_model_id(nv));
 
   if (caps->job_end_func)

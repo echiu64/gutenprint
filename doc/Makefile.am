@@ -11,8 +11,7 @@
 ## GNU General Public License for more details.
 ##
 ## You should have received a copy of the GNU General Public License
-## along with this program; if not, write to the Free Software
-## Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+## along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ## Process this file with automake to produce Makefile.in.
 
@@ -65,7 +64,7 @@ html:
 	cd developer; $(MAKE) html
 
 install-data-local: FAQ.html gutenprint-users-manual.odt gutenprint-users-manual.pdf
-	$(mkdir_p) $(DESTDIR)$(docdir)
+	$(MKDIR_P) $(DESTDIR)$(docdir)
 	$(INSTALL_DATA) $(srcdir)/FAQ.html $(DESTDIR)$(docdir)
 	$(INSTALL_DATA) $(srcdir)/gutenprint-users-manual.odt $(DESTDIR)$(docdir)
 	$(INSTALL_DATA) $(srcdir)/gutenprint-users-manual.pdf $(DESTDIR)$(docdir)
@@ -73,13 +72,19 @@ install-data-local: FAQ.html gutenprint-users-manual.odt gutenprint-users-manual
 
 ## Clean
 
-maintainer-clean-local:
+distclean-local:
 	$(RM) -rf gutenprint
 	$(RM) -rf gutenprintui2
 
+maintainer-clean-local: distclean-local
+
+DISTCLEANFILES= \
+	gutenprint-stamp \
+	gutenprintui2-stamp
+
 MAINTAINERCLEANFILES = \
 	Makefile.in \
-	gutenprint-stamp
+	$(DISTCLEANFILES)
 
 EXTRA_DIST = \
 	FAQ.html \

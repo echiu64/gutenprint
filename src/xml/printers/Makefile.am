@@ -11,8 +11,7 @@
 ## GNU General Public License for more details.
 ##
 ## You should have received a copy of the GNU General Public License
-## along with this program; if not, write to the Free Software
-## Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+## along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ## Process this file with automake to produce Makefile.in.
 
@@ -34,8 +33,15 @@ pkgxmldata_DATA =				\
 	ps.xml					\
 	raw.xml
 
+AM_TESTS_ENVIRONMENT=STP_MODULE_PATH=$(top_builddir)/src/main/.libs:$(top_builddir)/src/main STP_DATA_PATH=$(top_srcdir)/src/xml
+TESTS = check_duplicate_printers
 
-xml-stamp: $(pkgxmldata_DATA) Makefile.am
+noinst_PROGRAMS = check_duplicate_printers
+check_duplicate_printers_SOURCES = check_duplicate_printers.c
+check_duplicate_printers_LDADD = $(GUTENPRINT_LIBS)
+
+xml-stamp: $(pkgxmldata_DATA) Makefile.am check_duplicate_printers
+	STP_DATA_PATH=$(top_srcdir)/src/xml ./check_duplicate_printers
 	-rm -f $@ $@.tmp
 	touch $@.tmp
 	for f in $(pkgxmldata_DATA) ; do echo $$f >> $@.tmp; done

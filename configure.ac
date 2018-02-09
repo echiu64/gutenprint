@@ -11,8 +11,7 @@ dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 dnl GNU General Public License for more details.
 dnl
 dnl You should have received a copy of the GNU General Public License
-dnl along with this program; if not, write to the Free Software
-dnl Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+dnl along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 dnl Process this file with autoconf to produce a configure script.
 
@@ -84,8 +83,12 @@ pushdef([GUTENPRINTUI2_CURRENT_INTERFACE], [2])
 pushdef([GUTENPRINTUI2_BINARY_AGE],        [0])
 pushdef([GUTENPRINT_VERSION], GUTENPRINT_MAJOR_VERSION.GUTENPRINT_MINOR_VERSION.GUTENPRINT_MICRO_VERSION[]GUTENPRINT_EXTRA_VERSION)
 
-AC_INIT(GUTENPRINT_NAME, GUTENPRINT_VERSION, [gimp-print-devel@lists.sourceforge.net])
-AC_PREREQ(2.53)
+AC_INIT([GUTENPRINT_NAME],
+	[GUTENPRINT_VERSION],
+	[gimp-print-devel@lists.sourceforge.net],
+	[GUTENPRINT_NAME],
+	[https://gimp-print.sourceforge.net])
+AC_PREREQ([2.69])
 AC_REVISION($Revision$)
 AC_CONFIG_SRCDIR(src/main/print-vars.c)
 AC_CONFIG_MACRO_DIR([m4])
@@ -105,8 +108,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ])
 
 [GUTENPRINT_MAJOR_VERSION]=GUTENPRINT_MAJOR_VERSION
@@ -148,7 +150,7 @@ LDFLAGS="${LDFLAGS:=}"
 LIBS="${LIBS:=}"
 
 dnl Initialize automake stuff.
-AM_INIT_AUTOMAKE(1.9 dist-bzip2 no-dist-gzip tar-ustar check-news gnu)
+AM_INIT_AUTOMAKE(1.9 dist-xz dist-bzip2 no-dist-gzip tar-ustar check-news gnu)
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 popdef([GUTENPRINT_NAME])
 popdef([GUTENPRINT_VERSION])
@@ -181,12 +183,13 @@ AC_SUBST(ALL_LINGUAS)
 
 dnl Set up libtool scripts.
 dnl Disable static library building to speed up the build
-AC_LIBTOOL_DLOPEN
+LT_INIT[(dlopen)]
+
 # We need static libraries for CUPS genppd program for now, for bug 865265
 # --rlk 20031223
 AC_ENABLE_STATIC(yes)
 #AC_DISABLE_SHARED
-AM_PROG_LIBTOOL
+LT_INIT
 AC_SUBST(LIBTOOL_DEPS)
 dnl define HAVE_GNU_LD if GNU ld is present
 if test "$ac_cv_prog_gnu_ld" = "yes" ; then
@@ -216,12 +219,23 @@ AC_DEFINE_UNQUOTED(OSTYPE, ["${OSTYPE}"], [The operating system to build for])
 
 
 dnl Command line options.
-AC_PATH_TOOL(CUPS_CONFIG, cups-config)
-if test -z "${CUPS_CONFIG}" ; then
-  BUILD_CUPS="no"
-else
-  BUILD_CUPS="yes"
-fi
+AC_ARG_WITH([cups-config],
+  [AS_HELP_STRING([--with-cups-config=path], [Specify path to cups-config executable.])],
+  [with_cups_config="$withval"],
+  [with_cups_config=system]
+)
+AS_IF([test "x$with_cups_config" != "xsystem"], [
+    CUPS_CONFIG=$with_cups_config
+  ], [
+    AC_PATH_TOOL(CUPS_CONFIG, [cups-config])
+    AS_IF([test -z "$CUPS_CONFIG"], [
+      BUILD_CUPS=no
+   ],
+   [
+      BUILD_CUPS=yes
+   ])
+])
+
 STP_ARG_WITH_DETAILED(
   [cups],
   [=PREFIX],
@@ -411,6 +425,16 @@ AS_IF([test "x$BUILD_CUPS" = "xyes"], [
 	            BUILD_LIBUSB_BACKENDS=no])
 ])
 
+STP_ARG_ENABLE([user-install],
+               [install GIMP plugin in home directory],
+               [USER_INSTALL],
+               [no])
+if test x$USER_INSTALL = xyes ; then
+  PLUG_IN_PATH="bin"
+else
+  PLUG_IN_PATH="admin-bin"
+fi
+
 AC_PATH_TOOL([GIMPTOOL2_CHECK], [gimptool-2.0 gimptool])
 if test -z "${GIMPTOOL2_CHECK}" ; then
   BUILD_GIMP2="no"
@@ -430,6 +454,18 @@ dnl Quote to protect sed regexes
   else
     BUILD_GIMP2="no"
     BUILD_GIMP2_AS_GUTENPRINT="no"
+  fi
+  if test x${BUILD_GIMP2} = xyes ; then
+    AC_MSG_CHECKING([for GIMP 2.0 plug-in directory])
+    GIMPTOOL2_OUTPUT=`$GIMPTOOL2_CHECK --dry-run --install-${PLUG_IN_PATH} print | tail -n 1`
+    GIMP2_PLUGIN_DIR=`echo "$GIMPTOOL2_OUTPUT" | cut -d ' ' -f 3 | tr -d "\'"`
+    AC_MSG_RESULT([$GIMP2_PLUGIN_DIR])
+    if test "x$NO_PKGCONFIG_PATHS" = x; then
+      gimp2_plug_indir="${GIMP2_PLUGIN_DIR}"
+    else
+      gimp2_plug_indir="${prefix}/lib/gimp/2.0/plug-ins"
+    fi
+
   fi
 fi
 
@@ -490,22 +526,12 @@ STP_ARG_ENABLE([testpattern],
                [BUILD_TESTPATTERN],
                [(automatic)])
 
-STP_ARG_ENABLE([user-install],
-               [install GIMP plugin in home directory],
-               [USER_INSTALL],
-               [no])
-if test x$USER_INSTALL = xyes ; then
-  PLUG_IN_PATH="bin"
-else
-  PLUG_IN_PATH="admin-bin"
-fi
-
 dnl aclocal flags.
 dnl AM_ACLOCAL_INCLUDE(m4 m4local)
 
 dnl Checks for programs used in the build process
 AM_ICONV_LINK
-AC_ISC_POSIX
+AC_SEARCH_LIBS([strerror],[cposix])
 AC_PROG_AWK
 AC_PROG_CC
 AM_PROG_CC_STDC
@@ -598,9 +624,6 @@ fi
 AC_SUBST(COMPRESS)
 AC_SUBST(CSUF)
 
-dnl CUPS checks
-STP_CUPS_PROGS
-
 GUTENPRINT_RELEASE_VERSION=${GUTENPRINT_MAJOR_VERSION}.${GUTENPRINT_MINOR_VERSION}
 AH_TEMPLATE(GUTENPRINT_RELEASE_VERSION,, [Gutenprint release version])
 AC_DEFINE_UNQUOTED(GUTENPRINT_RELEASE_VERSION, "${GUTENPRINT_RELEASE_VERSION}")
@@ -657,6 +680,24 @@ else
 fi
 
 AC_DEFINE_UNQUOTED(PACKAGE_LIB_DIR, ["${PACKAGE_LIB_DIR}"])
+
+dnl Set PACKAGE_BIN_DIR in config.h.
+AH_TEMPLATE(PACKAGE_BIN_DIR,, [Package bin directory])
+if test "x${bindir}" = 'x${exec_prefix}/bin'; then
+  if test "x${exec_prefix}" = "xNONE"; then
+    if test "x${prefix}" = "xNONE"; then
+      PACKAGE_BIN_DIR="${ac_default_prefix}/bin"
+    else
+      PACKAGE_BIN_DIR="${prefix}/bin"
+    fi
+  else
+    PACKAGE_BIN_DIR="${exec_prefix}/bin"
+  fi
+else
+  PACKAGE_BIN_DIR="${bindir}"
+fi
+
+AC_DEFINE_UNQUOTED(PACKAGE_BIN_DIR, ["${PACKAGE_BIN_DIR}"])
 
 AH_TEMPLATE(PKGXMLDATADIR,, [Package XML data directory])
 PKGXMLDATADIR="${PACKAGE_DATA_DIR}/${GUTENPRINT_RELEASE_VERSION}/xml"
@@ -779,9 +820,9 @@ AC_CHECK_LIB(m,pow,
 	     LIBM=-lm
 )
 
+dnl CUPS stuff
+STP_CUPS_PATH
 STP_CUPS_LIBS
-
-STP_GIMP2_LIBS
 
 dnl Checks for header files.
 AC_HEADER_STDC
@@ -810,7 +851,6 @@ AC_C_CONST
 AC_C_INLINE
 AC_TYPE_OFF_T
 AC_TYPE_SIZE_T
-AC_TYPE_SIGNAL
 
 dnl Checks for library functions.
 AC_CHECK_FUNCS([nanosleep poll usleep])
@@ -863,7 +903,6 @@ AM_CONDITIONAL(INSTALL_USER_GUIDE, test x${INSTALL_USER_GUIDE} = xyes)
 
 AM_CONDITIONAL(BUILD_LIBUSB_BACKENDS, test x${BUILD_LIBUSB_BACKENDS} = xyes)
 
-STP_CUPS_PATH
 
 # loadable modules
 # portable sh has no AND test...
@@ -968,6 +1007,16 @@ AC_DEFINE_UNQUOTED(CUPS_PPD_NICKNAME_STRING, "$CUPS_PPD_NICKNAME_STRING")
 AC_DEFINE_UNQUOTED(CUPS_PPD_PS_LEVEL, ${CUPS_PPD_PS_LEVEL}, [CUPS PPD PostScript level])
 STP_RELEASE_DATE
 
+MINIMAL_PRINTERS_TO_TEST="escp2-r1800 escp2-3880 \
+	pcl-g_4 pcl-g_5c pcl-500 \
+	mitsubishi-p95d shinko-chcs2145 kodak-1400 canon-cp910 \
+	bjc-s200 bjc-PIXMA-Pro9000mk2 \
+	datamax_oneil_I4212e \
+	lexmark-z43"
+
+AC_DEFINE_UNQUOTED(MINIMAL_PRINTERS_TO_TEST, ${MINIMAL_PRINTERS_TO_TEST},
+					     [Printers to test in minimal run])
+
 dnl Some versions of make get very grouchy about $(RM)
 RM='rm'
 
@@ -1010,13 +1059,13 @@ AC_SUBST(gutenprintui2_libdeps)
 AC_SUBST(LIBM)
 AC_SUBST(LIBREADLINE_DEPS)
 AC_SUBST(MAINTAINER_CFLAGS)
-AC_SUBST(PLUG_IN_PATH)
 AC_SUBST(WHICH_PPDS)
 AC_SUBST(BUILD_CUPS_PPDS)
 AC_SUBST(GUTENPRINT_BASE_VERSION)
 AC_SUBST(GUTENPRINT_RELEASE_VERSION)
 AC_SUBST(LIBUSB_BACKEND_LIBDEPS)
 AC_SUBST(PKGROOT)
+AC_SUBST(MINIMAL_PRINTERS_TO_TEST)
 
 dnl Optional architecture options to be applied after all autoconf tests
 dnl are done...
@@ -1047,14 +1096,17 @@ AC_CONFIG_FILES([src/cups/Makefile])
 AC_CONFIG_FILES([src/cups/Info.plist])
 CONFIG_FILE_EXEC([src/cups/cups-genppdupdate])
 CONFIG_FILE_EXEC([src/cups/test-ppds])
+CONFIG_FILE_EXEC([src/cups/min-pagesize])
 AC_CONFIG_FILES([src/escputil/Makefile])
 CONFIG_FILE_EXEC([src/testpattern/compare-image-files])
 CONFIG_FILE_EXEC([src/testpattern/run-testpattern])
 CONFIG_FILE_EXEC([src/testpattern/run-testpattern-1])
 CONFIG_FILE_EXEC([src/testpattern/run-testpattern-2])
+CONFIG_FILE_EXEC([src/testpattern/run-testpattern-2.check])
 CONFIG_FILE_EXEC([src/testpattern/compare-checksums])
 CONFIG_FILE_EXEC([src/testpattern/compress-checksums])
 CONFIG_FILE_EXEC([src/cups/test-rastertogutenprint])
+CONFIG_FILE_EXEC([src/cups/test-rastertogutenprint.check])
 AC_CONFIG_FILES([src/testpattern/Makefile])
 AC_CONFIG_FILES([src/gimp2/Makefile])
 AC_CONFIG_FILES([src/main/Makefile])
@@ -1085,10 +1137,12 @@ CONFIG_FILE_EXEC([test/parse-escp2])
 CONFIG_FILE_EXEC([test/run-testdither])
 CONFIG_FILE_EXEC([test/run-weavetest])
 AC_CONFIG_FILES([scripts/Makefile])
+CONFIG_FILE_EXEC([scripts/build-release])
 CONFIG_FILE_EXEC([scripts/mkgitlog])
 CONFIG_FILE_EXEC([scripts/gversion])
 CONFIG_FILE_EXEC([scripts/test-gversion])
 CONFIG_FILE_EXEC([scripts/wzpaq])
+CONFIG_FILE_EXEC([scripts/count-cpus])
 AC_CONFIG_COMMANDS([default], [
 echo
 ],
@@ -1159,6 +1213,7 @@ echo "    Installation prefix:                        $prefix"
 echo "    Exec prefix:                                `eval eval echo $exec_prefix` ($exec_prefix)";
 echo "    Data directory:                             $PACKAGE_DATA_DIR"
 echo "    Library directory:                          `eval eval echo $PACKAGE_LIB_DIR` ($PACKAGE_LIB_DIR)"
+echo "    Executable directory:                       `eval eval echo $PACKAGE_BIN_DIR` ($PACKAGE_BIN_DIR)"
 echo "    XML data directory:                         $PKGXMLDATADIR"
 echo "    Module directory:                           `eval eval echo $PKGMODULEDIR` ($PKGMODULEDIR)"
 echo "    Install sample images:                      $INSTALL_SAMPLES"

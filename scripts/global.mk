@@ -13,17 +13,12 @@ LIBS = $(INTLLIBS) @LIBS@
 # Libraries
 
 GUTENPRINT_LIBS = $(top_builddir)/src/main/libgutenprint.la
-GUTENPRINTUI_LIBS = $(top_builddir)/src/gutenprintui/libgutenprintui.la
 GUTENPRINTUI2_LIBS = $(top_builddir)/src/gutenprintui2/libgutenprintui2.la
 
 # Rules
 
 $(top_builddir)/src/main/libgutenprint.la:
 	cd $(top_builddir)/src/main; \
-	$(MAKE)
-
-$(top_builddir)/src/gutenprintui/libgutenprintui.la:
-	cd $(top_builddir)/src/gutenprintui; \
 	$(MAKE)
 
 $(top_builddir)/src/gutenprintui2/libgutenprintui2.la:

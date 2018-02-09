@@ -11,15 +11,13 @@
 ## GNU General Public License for more details.
 ##
 ## You should have received a copy of the GNU General Public License
-## along with this program; if not, write to the Free Software
-## Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+## along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ## Process this file with automake to produce Makefile.in.
 
 @SET_MAKE@
 
 include $(top_srcdir)/scripts/global.mk
-
 
 ## Variables
 
@@ -28,11 +26,14 @@ LOCAL_CPPFLAGS = -I$(top_srcdir)/src/main $(GUTENPRINT_CFLAGS)
 ## run-weavetest is extremely time consuming and provides little value for
 ## release testing since the last material change was made in 2008.
 ## It is essentially a giant unit test for the weave code.
-TESTS = curve run-testdither
+## testdither doesn't actually test anything; there appears to be no way
+## for it to actually return anything.
+TESTS = curve run-weavetest testdither
 
 ## Programs
 
 if BUILD_TEST
+AM_TESTS_ENVIRONMENT=STP_MODULE_PATH=$(top_builddir)/src/main/.libs:$(top_builddir)/src/main STP_DATA_PATH=$(top_srcdir)/src/xml
 noinst_PROGRAMS = testdither escp2-weavetest unprint pcl-unprint bjc-unprint curve xml-curve pixma_parse gen-printer-list
 endif
 

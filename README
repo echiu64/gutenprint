@@ -10,7 +10,7 @@ I) INTRODUCTION
 
     Gutenprint is a suite of printer drivers for UNIX, Linux, and
     Macintosh OS X systems (10.6 and above) that use CUPS as their
-    printing system.  Gutenprint currently supports over 2800
+    printing system.  Gutenprint currently supports over 3000
     printers.  It also includes an enhanced Print plug-in for GIMP
     that replaces the print plug-in packaged with the GIMP
     distribution.

@@ -90,6 +90,9 @@
 # Canon SELPHY CP1200
 0x04a9 0x32b1 blacklist
 
+# Canon SELPHY CP1300
+0x04a9 0x32db blacklist
+
 # Canon SELPHY ES1
 0x04a9 0x3141 blacklist
 
@@ -218,3 +221,5 @@
 # Fujifilm ASK-300
 0x04cb 0x5006 blacklist
 
+# Magicard Tango 2E
+0x0c1f 0x1800 blacklist

@@ -24,8 +24,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  *          [http://www.gnu.org/licenses/gpl-2.0.html]
  *
@@ -1570,7 +1569,7 @@ top:
 	}
 	sleep(1);  /* Give things a moment */
 
-	if (fast_return) {
+	if (fast_return && !ctx->manual_copies) {
 		INFO("Fast return mode enabled.\n");
 	} else {
 		INFO("Waiting for job to complete...\n");
@@ -2488,7 +2487,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS40/DS80/DSRX1/DS620",
-	.version = "0.92",
+	.version = "0.93",
 	.uri_prefix = "dnpds40",
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,

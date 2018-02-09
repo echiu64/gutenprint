@@ -14,8 +14,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * Contents:
  *
@@ -144,8 +143,6 @@ static const char *save_file_name = NULL;
 static const char *load_file_name = NULL;
 #endif /* ENABLE_CUPS_LOAD_SAVE_OPTIONS */
 
-extern void stpi_vars_print_error(const stp_vars_t *v, const char *prefix);
-
 #pragma GCC diagnostic ignored "-Wformat-nonliteral"
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcast-qual"
@@ -268,7 +265,7 @@ print_debug_block(const stp_vars_t *v, const cups_image_t *cups)
   fprintf(stderr, "DEBUG: Gutenprint:   cupsRowFeed = %d\n", cups->header.cupsRowFeed);
   fprintf(stderr, "DEBUG: Gutenprint:   cupsRowStep = %d\n", cups->header.cupsRowStep);
   fprintf(stderr, "DEBUG: Gutenprint:   shrink page to fit %d\n", cups->shrink_to_fit);
-  stpi_vars_print_error(v, "DEBUG");
+  stp_vars_print_error(v, "DEBUG");
   fprintf(stderr, "DEBUG: Gutenprint: End page data\n");
 }
 
@@ -1067,7 +1064,7 @@ load_options(const char *load_name)
 		fprintf(stderr, "DEBUG: Gutenprint: loading options from %s\n",
 			load_file_name);
 	      if (! suppress_messages)
-		stpi_vars_print_error(settings, "DEBUG");
+		stp_vars_print_error(settings, "DEBUG");
 	    }
 	}
       else
@@ -1361,7 +1358,7 @@ main(int  argc,				/* I - Number of command-line arguments */
       if (! suppress_messages)
 	{
 	  fprintf(stderr, "DEBUG: Gutenprint: Interim page settings:\n");
-	  stpi_vars_print_error(v, "DEBUG");
+	  stp_vars_print_error(v, "DEBUG");
 	}
 
       stp_merge_printvars(v, stp_printer_get_defaults(printer));
@@ -1378,15 +1375,6 @@ main(int  argc,				/* I - Number of command-line arguments */
       if (! suppress_messages)
 	print_debug_block(v, &cups);
       print_messages_as_errors = 1;
-      if (!stp_verify(v))
-	{
-	  fprintf(stderr, "DEBUG: Gutenprint: Options failed to verify.\n");
-	  fprintf(stderr, "DEBUG: Gutenprint: Make sure that you are using ESP Ghostscript rather\n");
-	  fprintf(stderr, "DEBUG: Gutenprint: than GNU or AFPL Ghostscript with CUPS.\n");
-	  fprintf(stderr, "DEBUG: Gutenprint: If this is not the cause, set LogLevel to debug to identify the problem.\n");
-	  aborted = 1;
-	  break;
-	}
 
       if (!initialized_job)
 	{
@@ -1396,7 +1384,14 @@ main(int  argc,				/* I - Number of command-line arguments */
 
       if (!stp_print(v, &theImage))
 	{
-	  aborted = 1;
+	  if (Image_status != STP_IMAGE_STATUS_ABORT)
+	    {
+	      fprintf(stderr, "DEBUG: Gutenprint: Options failed to verify.\n");
+	      fprintf(stderr, "DEBUG: Gutenprint: Make sure that you are using ESP Ghostscript rather\n");
+	      fprintf(stderr, "DEBUG: Gutenprint: than GNU or AFPL Ghostscript with CUPS.\n");
+	      fprintf(stderr, "DEBUG: Gutenprint: If this is not the cause, set LogLevel to debug to identify the problem.\n");
+	    }
+	    aborted = 1;
 	  break;
 	}
       print_messages_as_errors = 0;
@@ -1635,7 +1630,7 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
   new_percent = (int) (100.0 * cups->row / cups->header.cupsHeight);
   if (new_percent > cups->last_percent)
     {
-      if (! suppress_messages)
+      if (! suppress_verbose_messages)
 	{
 	  stp_i18n_printf(po, _("INFO: Printing page %d, %d%%\n"),
 			  cups->page + 1, new_percent);

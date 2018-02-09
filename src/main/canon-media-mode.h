@@ -17,8 +17,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 /* This file contains the usage matrix matching media with modes
@@ -106,9 +105,17 @@ DECLARE_MODEUSES(canon_BJC_30);
 /* ----------------------------------- Canon BJC 85 ----------------------------------- */
 /* TODO: mode-media correlation */
 static const char* canon_BJC_85_modeuses_plain[] = {
-  "720x360dpi",
-  "360x360dmt",
-  "360x360dpi",
+  "360x360dmt_high",
+  "360x360dmt", /* original */
+  "360x360dpi_high"
+  "360x360dpi", /* original */
+  "720x360dpi_high",
+  "720x360dpi", /* original */
+  "720x360dpi_draft",
+  "360x360dpi_draft",
+  "180x180dpi_high",
+  "180x180dpi",
+  "180x180dpi_draft",
   NULL
 };
 

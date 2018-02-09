@@ -17,8 +17,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 /* This file contains the capabilities of the various canon printers
@@ -617,13 +616,13 @@ static const canon_cap_t canon_model_capabilities[] =
     "85", 1,
     INCH(19/2), INCH(23),      /* from MacOSX driver */
     10, 10, 9, 20, /* confirmed */
-    &canon_default_slotlist,
+    &canon_BJC_85_slotlist,
     CANON_CAP_STD0 | CANON_CAP_a,0,
     2,0,
     0, /* Upper/Lower Cassette option */
     NULL,
     &canon_BJC_85_modelist,
-    &canon_default_paperlist,
+    &canon_BJC_1000_paperlist,
     &canon_BJC_85_modeuselist,
     NULL,
     NULL,
@@ -842,7 +841,7 @@ static const canon_cap_t canon_model_capabilities[] =
     0, /* Upper/Lower Cassette option */
     NULL,
     &canon_BJC_240_modelist,
-    &canon_default_paperlist,
+    &canon_BJC_1000_paperlist,
     &canon_BJC_240_modeuselist,
     NULL,
     NULL,

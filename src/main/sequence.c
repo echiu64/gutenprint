@@ -17,8 +17,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -254,7 +253,7 @@ stp_sequence_set_data(stp_sequence_t *sequence,
   sequence->size = size;
   if (sequence->data)
     stp_free(sequence->data);
-  sequence->data = stp_zalloc(sizeof(double) * size);
+  sequence->data = stp_malloc(sizeof(double) * size);
   memcpy(sequence->data, data, (sizeof(double) * size));
   invalidate_auxilliary_data(sequence);
   sequence->recompute_range = 1;
@@ -384,6 +383,12 @@ stp_sequence_create_from_xmltree(stp_mxml_node_t *da)
 	  if (child->type == STP_MXML_TEXT)
 	    {
 	      char *endptr;
+	      /*
+	       * Explicitly documented that callers to strtod should clear
+	       * errno before calling it if they want to check the return
+	       * status.
+	       */
+	      errno = 0;
 	      double tmpval = strtod(child->value.text.string, &endptr);
 	      if (endptr == child->value.text.string)
 		{
@@ -399,8 +404,9 @@ stp_sequence_create_from_xmltree(stp_mxml_node_t *da)
 		{
 		  stp_erprintf("stp_sequence_create_from_xmltree: "
 			       "read aborted: datum out of bounds: "
-			       "%g (require %g <= x <= %g), n = %d\n",
-			       tmpval, low, high, i);
+			       "%g %d %s (require %g <= x <= %g), n = %d\n",
+			       tmpval, errno, child->value.text.string,
+			       low, high, i);
 		  goto error;
 		}
 	      /* Datum was valid, so now add to the sequence */

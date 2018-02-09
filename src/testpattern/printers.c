@@ -15,8 +15,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -37,7 +36,8 @@ main(int argc, char **argv)
       const stp_printer_t *p = stp_get_printer_by_index(i);
       if (strcmp(stp_printer_get_family(p), "ps") &&
 	  strcmp(stp_printer_get_family(p), "raw"))
-	printf("%s\n", stp_printer_get_driver(p));
+	printf("%d %s %s\n", stp_printer_get_model(p),
+	       stp_printer_get_family(p), stp_printer_get_driver(p));
     }
   return 0;
 }

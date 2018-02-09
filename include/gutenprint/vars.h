@@ -15,8 +15,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 /**
@@ -206,6 +205,13 @@ typedef const void *stp_const_parameter_list_t;
  */
 typedef void (*stp_outfunc_t) (void *data, const char *buffer, size_t bytes);
 
+/**
+ * Print an stp_vars_t in debugging format.
+ * @param v stp_vars_t to dump
+ * @param prefix Prefix to prepend to each line (null pointer gives
+ *        empty prefix)
+ */
+extern void stp_vars_print_error(const stp_vars_t *v, const char *prefix);
 
 /****************************************************************
 *                                                               *

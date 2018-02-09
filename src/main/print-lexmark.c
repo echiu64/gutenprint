@@ -21,8 +21,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 /*
@@ -1666,8 +1665,6 @@ lexmark_do_print(stp_vars_t *v, stp_image_t *image)
     lexmark_get_resolution_para(model, resolution);
   const paper_t *media = get_media_type(media_type,caps);
   const lexmark_inkparam_t *ink_parameter;
-
-  stp_prune_inactive_options(v);
 
 #ifdef DEBUG
   dbgfileprn = lex_open_tmp_file(); /* open file with xx */

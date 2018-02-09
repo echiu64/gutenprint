@@ -1,8 +1,8 @@
 /*
  *
- *   Dump the per-printer options for the OpenPrinting database
+ *   Dump the per-printer options for Gutenprint
  *
- *   Copyright 2000 Robert Krawitz (rlk@alum.mit.edu)
+ *   Copyright 2000-2018 Robert Krawitz (rlk@alum.mit.edu)
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -15,8 +15,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -101,137 +100,113 @@ main(int argc, char **argv)
 	  stp_describe_parameter(pv, p->name, &desc);
 	  if (desc.is_active)
 	    {
-	      printf("$longnames{'%s'}{'%s'} = '%s';\n",
-		     driver, desc.name, desc.text);
-	      printf("$param_classes{'%s'}{'%s'} = %d;\n",
-		     driver, desc.name, desc.p_class);
-	      printf("$param_types{'%s'}{'%s'} = %d;\n",
-		     driver, desc.name, desc.p_type);
-	      printf("$param_levels{'%s'}{'%s'} = %d;\n",
-		     driver, desc.name, desc.p_level);
 	      if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
 		{
 		  count = stp_string_list_count(desc.bounds.str);
 		  if (count > 0)
 		    {
-		      if (desc.is_mandatory)
+		      if (strcmp(desc.name, "Resolution") == 0)
 			{
-			  printf("$defaults{'%s'}{'%s'} = '%s';\n",
-				 driver, desc.name, desc.deflt.str);
-			}
-		      else
-			{
-			  printf("$defaults{'%s'}{'%s'} = '%s';\n",
-				 driver, desc.name, "None");
-			  printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
-				 driver, desc.name, "None", "None");
-			}
-		      for (j = 0; j < count; j++)
-			{
-			  const stp_param_string_t *param =
-			    stp_string_list_param(desc.bounds.str, j);
-			  printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
-				 driver, desc.name, param->name, param->text);
-			  if (strcmp(desc.name, "Resolution") == 0)
+			  for (j = 0; j < count; j++)
 			    {
+			      const stp_param_string_t *param =
+				stp_string_list_param(desc.bounds.str, j);
 			      stp_resolution_t x, y;
 			      stp_set_string_parameter(pv, "Resolution",
 						       param->name);
 			      stp_describe_resolution(pv, &x, &y);
 			      if (x > 0 && y > 0)
-				{
-				  printf("$stpdata{'%s'}{'%s'}{'%s'} = '%d';\n",
-					 driver, "x_resolution", param->name, (int) x);
-				  printf("$stpdata{'%s'}{'%s'}{'%s'} = '%d';\n",
-					 driver, "y_resolution", param->name, (int) y);
-				}
+				printf("$resolutions{'%s'}{'%s'} = [%d, %d];\n",
+				       driver, param->name, (int) x, (int) y);
 			    }
 			  stp_clear_string_parameter(pv, "Resolution");
+			}
+		      else
+			{
+			  if (strcmp(desc.name, "PageSize") == 0)
+			    {
+			      stp_dimension_t min_area = 7200 * 7200;
+			      stp_dimension_t max_area = 0;
+			      const char *min_size_name = NULL;
+			      const char *max_size_name = NULL;
+			      for (j = 0; j < count; j++)
+				{
+				  const stp_param_string_t *param =
+				    stp_string_list_param(desc.bounds.str, j);
+				  const stp_papersize_t *ps =
+				    stp_describe_papersize(pv, param->name);
+				  if (ps->width > 0 && ps->height > 0 &&
+				      (ps->width * ps->height) < min_area)
+				    {
+				      min_area = ps->width * ps->height;
+				      min_size_name = param->name;
+				    }
+				  if (ps->width > 0 && ps->height > 0 &&
+				      (ps->width * ps->height) > max_area)
+				    {
+				      max_area = ps->width * ps->height;
+				      max_size_name = param->name;
+				    }
+				}
+			      if (min_size_name)
+				{
+				  printf("$min_page_size{'%s'} = '%s';\n",
+					 driver, min_size_name);
+				  printf("$max_page_size{'%s'} = '%s';\n",
+					 driver, max_size_name);
+				}
+			    }
+			  printf("$stpdata{'%s'}{'%s'} = [qw(", driver, desc.name);
+			  if (!desc.is_mandatory && !
+			      stp_string_list_is_present(desc.bounds.str, "None"))
+			    fputs("+None ", stdout);
+			  for (j = 0; j < count; j++)
+			    {
+			      const stp_param_string_t *param =
+				stp_string_list_param(desc.bounds.str, j);
+			      printf("%s%s ",
+				     (strcmp(desc.deflt.str, param->name)) ? "" : "+",
+				     param->name);
+			    }
+			  fputs(")];\n", stdout);
 			}
 		    }
 		}
 	      else if (desc.p_type == STP_PARAMETER_TYPE_BOOLEAN)
 		{
 		  if (desc.is_mandatory)
-		    {
-		      printf("$defaults{'%s'}{'%s'} = '%d';\n",
-			     driver, desc.name, desc.deflt.boolean);
-		    }
+		    printf("$stp_bools{'%s'}{'%s'} = %d;\n",
+			   driver, desc.name, desc.deflt.boolean);
 		  else
-		    {
-		      printf("$defaults{'%s'}{'%s'} = '%s';\n",
-			     driver, desc.name, "None");
-		      printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
-			     driver, desc.name, "None", "None");
-		    }
-
-		  printf("$stpdata{'%s'}{'%s'}{'False'} = 'False';\n",
-			 driver, desc.name);
-		  printf("$stpdata{'%s'}{'%s'}{'True'} = 'True';\n",
-			 driver, desc.name);
+		    printf("$stp_bools{'%s'}{'%s'} = %d;\n",
+			   driver, desc.name, -1);
 		}
 	      else if (desc.p_type == STP_PARAMETER_TYPE_DOUBLE)
 		{
 		  if (desc.bounds.dbl.lower <= desc.deflt.dbl &&
 		      desc.bounds.dbl.upper >= desc.deflt.dbl)
-		    {
-		      printf("$stp_float_values{'%s'}{'MINVAL'}{'%s'} = %.3f;\n",
-			     driver, desc.name, desc.bounds.dbl.lower);
-		      printf("$stp_float_values{'%s'}{'MAXVAL'}{'%s'} = %.3f;\n",
-			     driver, desc.name, desc.bounds.dbl.upper);
-		      printf("$stp_float_values{'%s'}{'DEFVAL'}{'%s'} = %.3f;\n",
-			     driver, desc.name, desc.deflt.dbl);
-		      /* printf("$stp_float_values{'%s'}{'LONG_NAME'}{'%s'} = '%s';\n",
-			 driver, desc.name, gettext(desc.text)); */
-		      printf("$stp_float_values{'%s'}{'CATEGORY'}{'%s'} = '%s';\n",
-			     driver, desc.name, gettext(desc.category));
-		      printf("$stp_float_values{'%s'}{'HELP'}{'%s'} = q(%s);\n",
-			     driver, desc.name, (desc.help ? gettext(desc.help) : "''"));
-		      printf("$stp_float_values{'%s'}{'MANDATORY'}{'%s'} = q(%d);\n",
-			     driver, desc.name, desc.is_mandatory);
-		    }
+		    printf("$stp_float_values{'%s'}{'%s'} = [%d, %.3f, %.3f, %.3f];\n",
+			   driver, desc.name, desc.is_mandatory,
+			   desc.deflt.dbl, desc.bounds.dbl.lower,
+			   desc.bounds.dbl.upper);
 		}
 	      else if (desc.p_type == STP_PARAMETER_TYPE_INT)
 		{
 		  if (desc.bounds.integer.lower <= desc.deflt.integer &&
 		      desc.bounds.integer.upper >= desc.deflt.integer)
-		    {
-		      printf("$stp_int_values{'%s'}{'MINVAL'}{'%s'} = %d;\n",
-			     driver, desc.name, desc.bounds.integer.lower);
-		      printf("$stp_int_values{'%s'}{'MAXVAL'}{'%s'} = %d;\n",
-			     driver, desc.name, desc.bounds.integer.upper);
-		      printf("$stp_int_values{'%s'}{'DEFVAL'}{'%s'} = %d;\n",
-			     driver, desc.name, desc.deflt.integer);
-		      /* printf("$stp_int_values{'%s'}{'LONG_NAME'}{'%s'} = '%s';\n",
-			 driver, desc.name, gettext(desc.text)); */
-		      printf("$stp_int_values{'%s'}{'CATEGORY'}{'%s'} = '%s';\n",
-			     driver, desc.name, gettext(desc.category));
-		      printf("$stp_int_values{'%s'}{'HELP'}{'%s'} = q(%s);\n",
-			     driver, desc.name, (desc.help ? gettext(desc.help) : "''"));
-		      printf("$stp_int_values{'%s'}{'MANDATORY'}{'%s'} = q(%d);\n",
-			     driver, desc.name, desc.is_mandatory);
-		    }
+		    printf("$stp_int_values{'%s'}{'%s'} = [%d, %d, %d, %d];\n",
+			   driver, desc.name, desc.is_mandatory,
+			   desc.deflt.integer, desc.bounds.integer.lower,
+			   desc.bounds.integer.upper);
 		}
 	      else if (desc.p_type == STP_PARAMETER_TYPE_DIMENSION)
 		{
 		  if (desc.bounds.dimension.lower <= desc.deflt.dimension &&
 		      desc.bounds.dimension.upper >= desc.deflt.dimension)
-		    {
-		      printf("$stp_dimension_values{'%s'}{'MINVAL'}{'%s'} = %f;\n",
-			     driver, desc.name, desc.bounds.dimension.lower);
-		      printf("$stp_dimension_values{'%s'}{'MAXVAL'}{'%s'} = %f;\n",
-			     driver, desc.name, desc.bounds.dimension.upper);
-		      printf("$stp_dimension_values{'%s'}{'DEFVAL'}{'%s'} = %f;\n",
-			     driver, desc.name, desc.deflt.dimension);
-		      /* printf("$stp_dimension_values{'%s'}{'LONG_NAME'}{'%s'} = '%s';\n",
-			 driver, desc.name, gettext(desc.text)); */
-		      printf("$stp_dimension_values{'%s'}{'CATEGORY'}{'%s'} = '%s';\n",
-			     driver, desc.name, gettext(desc.category));
-		      printf("$stp_dimension_values{'%s'}{'HELP'}{'%s'} = q(%s);\n",
-			     driver, desc.name, (desc.help ? gettext(desc.help) : "''"));
-		      printf("$stp_dimension_values{'%s'}{'MANDATORY'}{'%s'} = q(%d);\n",
-			     driver, desc.name, desc.is_mandatory);
-		    }
+		    printf("$stp_dimension_values{'%s'}{'%s'} = [%d, %.3f, %.3f, %.3f];\n",
+			   driver, desc.name, desc.is_mandatory,
+			   desc.deflt.dimension, desc.bounds.dimension.lower,
+			   desc.bounds.dimension.upper);
 		}
 	      tcount += count;
 	    }
@@ -240,22 +215,10 @@ main(int argc, char **argv)
       stp_parameter_list_destroy(params);
       if (tcount > 0)
 	{
+	  printf("$stpdata{'%s'}{'Color'} = [qw(", driver);
 	  if (printer_is_color)
-	    {
-	      printf("$defaults{'%s'}{'%s'} = '%s';\n",
-		     driver, "Color", "Color");
-	      printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
-		     driver, "Color", "Color", "Color");
-	      printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
-		     driver, "Color", "RawCMYK", "Raw CMYK");
-	    }
-	  else
-	    printf("$defaults{'%s'}{'%s'} = '%s';\n",
-		   driver, "Color", "Grayscale");
-	  printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
-		 driver, "Color", "Grayscale", "Gray Scale");
-	  printf("$stpdata{'%s'}{'%s'}{'%s'} = '%s';\n",
-		 driver, "Color", "BlackAndWhite", "Black and White");
+	    fputs("Color RawCMYK ", stdout);
+	  fputs("Grayscale BlackAndWhite)];\n", stdout);
 	}
       stp_vars_destroy(pv);
     }

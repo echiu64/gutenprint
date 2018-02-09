@@ -13,8 +13,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 # 02111-1307, USA.
 
 
@@ -107,71 +106,43 @@ if test x${BUILD_CUPS} = xyes ; then
 fi
 ])
 
-
-# STP_CUPS_PROGS
-# --------------
-# Check for programs needed by CUPS
-AC_DEFUN([STP_CUPS_PROGS],
-[dnl
-if test x${BUILD_CUPS} = xyes; then
-  AC_PATH_PROG(DIALOG, dialog)
-fi
-])
-
-
 # STP_CUPS_PATH
 # -------------
 # Set CUPS install paths
 AC_DEFUN([STP_CUPS_PATH],
 [# CUPS path setup
-# Fix "prefix" variable if it hasn't been specified...
-if test x${cups_prefix} = xNONE ; then
-  cups_prefix="/usr"
-fi
-# Fix "exec_prefix" variable if it hasn't been specified...
-if test x${exec_prefix} = xNONE ; then
-  if test "${cups_prefix}" = "/" ; then
-    cups_exec_prefix="/usr"
+
+# Fix "cups_prefix" variable if it hasn't been specified...
+if test "x${cups_prefix}" = xNONE -o "x{$cups_prefix}" = x ; then
+  if test "x${prefix}" = xNONE -o "x${prefix}" = x ; then
+    cups_prefix="/usr"
   else
-    cups_exec_prefix="${cups_prefix}"
+    cups_prefix="${prefix}"
   fi
 fi
-# Fix "bindir" variable if it hasn't been specified...
-if test "${bindir}" = "\${prefix}/bin" -a "${cups_prefix}" = "/" ; then
-  cups_bindir="/usr/bin"
-else
-  cups_bindir="${cups_prefix}/bin"
-fi
-# Fix "sbindir" variable if it hasn't been specified...
-if test "${sbindir}" = "\${prefix}/sbin" -a "${cups_prefix}" = "/" ; then
-  cups_sbindir="/usr/sbin"
-else
-  cups_sbindir="${cups_prefix}/sbin"
+
+# Fix "cups_exec_prefix" variable if it hasn't been specified...
+if test "x${cups_exec_prefix}" = xNONE  -o "x${cups_exec_prefix}" = x ; then
+  if test x"${exec_prefix}" = xNONE -o "x${exec_prefix}" = x ; then
+    cups_exec_prefix="${cups_prefix}"
+  else
+    cups_exec_prefix="${exec_prefix}"
+  fi
 fi
 
 # Get explicit CUPS directories if possible
-if test "x$CUPS_CONFIG" != x; then
+if test "x$CUPS_CONFIG" != x -a "x$NO_PKGCONFIG_PATHS" = x; then
   cups_conf_datadir="`$CUPS_CONFIG --datadir`"
-  cups_conf_serverbin="`$CUPS_CONFIG --serverbin`"
   cups_conf_serverroot="`$CUPS_CONFIG --serverroot`"
+  cups_conf_serverbin="`$CUPS_CONFIG --serverbin`"
 else
-# Some logical guessing
-  if test "${datadir}" = "\${prefix}/share" -a "${cups_prefix}" = "/" ; then
-    cups_conf_datadir="/usr/share/cups"
-  else
-    cups_conf_datadir="${cups_prefix}/share/cups"
-  fi
-  if test "${libdir}" = "\${prefix}/lib" -a "${cups_prefix}" = "/" ; then
-    cups_conf_serverbin="/usr/lib/cups"
-  else
-    cups_conf_serverbin="${cups_prefix}/lib/cups"
-  fi
-  if test "${sysconfdir}" = "\${prefix}/etc"; then
-    if test "${cups_prefix}" = "/usr" ; then
-      cups_conf_serverroot="/etc/cups"
-    else
-      cups_conf_serverroot="${cups_prefix}/etc/cups"
-    fi
-  fi
+  cups_conf_datadir="${cups_prefix}/share/cups"
+  cups_conf_serverroot="${cups_prefix}/etc/cups"
+  cups_conf_serverbin="${cups_exec_prefix}/lib/cups"
 fi
+
+# And the rest!
+cups_bindir="${cups_exec_prefix}/bin"
+cups_sbindir="${cups_exec_prefix}/sbin"
+
 ])

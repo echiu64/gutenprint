@@ -12,8 +12,7 @@
 ## GNU General Public License for more details.
 ##
 ## You should have received a copy of the GNU General Public License
-## along with this program; if not, write to the Free Software
-## Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+## along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # Reference compression methods and other documentation from
 # compress-checksums.
@@ -22,6 +21,8 @@
 # Gutenprint test case compression utility.
 
 use strict;
+
+my ($progname) = $0;
 
 my (%old_modes, %old_printers, %new_modes, %new_printers);
 my ($detail1) = 0;
@@ -121,7 +122,12 @@ sub open_file($) {
     } elsif ($file =~ /.lrz$/) {
 	open($in, '-|', "cat $file | @LRZIP@ -d -q") || die("Can't open checksum file $file: $!\n");
     } elsif ($file =~ /.zpaq$/) {
-	open($in, '-|', "@top_builddir@/scripts/wzpaq -d -c $file") || die("Can't open checksum file $file: $!\n");
+	my ($zpaq_base) = "@top_builddir@/scripts/wzpaq";
+	if (substr($zpaq_base, 0, 1) ne '/') { # Relative path
+	    $progname =~ s,[^/]*$,,;
+	    $zpaq_base = "$progname$zpaq_base";
+	}
+	open($in, '-|', "$zpaq_base -d -c $file") || die("Can't open checksum file $file: $!\n");
     } elsif ($file =~ /.rz$/) {
 	open($in, '-|', "@RZIP@ -d -c $file") || die("Can't open checksum file $file: $!\n");
     } else {
@@ -287,7 +293,7 @@ sub load_file($\%\%) {
 	my ($sum) = $$answer[0];
 	my ($val) = $$answer[1];
 	my ($prn) = $$answer[2];
-	$$modes{$val} = $sum;
+	$$modes{"*${prn}_$val"} = $sum;
 	$$printers{$prn} = 1;
     }
 }

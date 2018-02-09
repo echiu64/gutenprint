@@ -1,0 +1,42 @@
+#!@PERL@
+
+# Find smallest page size in PPD file.
+#
+# Copyright 2018 Robert Krawitz (rlk@alum.mit.edu)
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the Free
+# Software Foundation; either version 2 of the License, or (at your option)
+# any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+# for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+# This is faster than using Gutenprint to do this; stp_init() is still
+# quite expensive for such small operations.
+
+use strict;
+
+open(PPD, $ENV{'PPD'}) || die "Can't open PPD file $ENV{'PPD'}: $!\n";
+my ($min_size_name) = "";
+my ($min_size_dim) = 0;
+while (<PPD>) {
+    if ($min_size_name ne '' && ! /^\*PaperDimension/) {
+	print "$min_size_name\n";
+	exit;
+    }
+    next if (! /^\*PaperDimension/);
+    $_ =~ /^\*PaperDimension *([^\/]+)\/[^\"]*"([0-9.]+) *([0-9.]+)/;
+    my ($pname) = $1;
+    my ($x) = $2;
+    my ($y) = $3;
+    if ($min_size_name eq "" || ($x * $y < $min_size_dim)) {
+	$min_size_name = $pname;
+	$min_size_dim = $x * $y;
+    }
+}

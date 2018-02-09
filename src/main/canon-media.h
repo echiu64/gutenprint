@@ -17,8 +17,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 /* This file contains the definitions for the possible Media Types
@@ -138,6 +137,12 @@ static const canon_slot_t canon_BJC_S800_slots[] = {
   { "HandFeed",   N_ ("Hand Feeding"), 0x1 },
 };
 DECLARE_SLOTS(canon_BJC_S800);
+
+static const canon_slot_t canon_BJC_85_slots[] = {
+  { "Auto",       N_ ("Auto Sheet Feeder"), 0x4 },
+  { "Manual",     N_ ("Manual Feed"), 0x1 },
+};
+DECLARE_SLOTS(canon_BJC_85);
 
 static const canon_slot_t canon_MULTIPASS_MX7600_slots[] = {
   { "Cassette",   N_ ("Cassette"), 0x8 },
@@ -319,6 +324,23 @@ static const canon_paper_t canon_default_papers[] = { /*                        
   { "Other",		N_ ("Other"),                   0x00,0x00,0x00,0x00,0.50, 0.25, 0.500, 0, 0, 0 },
 };
 DECLARE_PAPERS(canon_default);
+
+static const canon_paper_t canon_BJC_1000_papers[] = {
+  /* Name                    Text                        (c   (l   (P   (w Density     k_upper lum_adj     */
+  { "Plain",		N_ ("Plain Paper"),		0x00,0x00,0x00,0x00,0.50, 0.25, 0.500, 0, 0, 0 },
+  { "Transparency",	N_ ("Transparencies"),		0x02,0x02,0x00,0x00,1.00, 1.00, 0.900, 0, 0, 0 },
+  { "BackPrint",	N_ ("Back Print Film"),		0x03,0x03,0x00,0x00,1.00, 1.00, 0.900, 0, 0, 0 },
+  { "Fabric",		N_ ("Fabric Sheets"),		0x04,0x05,0x00,0x00,0.50, 0.25, 0.500, 0, 0, 0 },
+  { "Envelope",		N_ ("Envelope"),		0x00,0x08,0x00,0x00,0.50, 0.25, 0.500, 0, 0, 0 },
+  { "Coated",		N_ ("High Resolution Paper"),	0x07,0x0b,0x00,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "TShirt",		N_ ("T-Shirt Transfers"),	0x03,0x03,0x00,0x00,0.50, 0.25, 0.500, 0, 0, 0 },
+  { "GlossyFilm",	N_ ("High Gloss Film"),		0x06,0x07,0x00,0x00,1.00, 1.00, 0.999, 0, 0, 0 },
+  { "GlossyPaper",	N_ ("Glossy Photo Paper"),	0x05,0x06,0x00,0x00,1.00, 1.00, 0.999, 0, 0, 0 },
+  { "GlossyCard",	N_ ("Glossy Photo Cards"),	0x05,0x0c,0x00,0x00,1.00, 1.00, 0.999, 0, 0, 0 },
+  { "GlossyPro",	N_ ("Photo Paper Pro"),		0x09,0x09,0x00,0x00,1.00, 1.00, 0.999, 0, 0, 0 },
+  { "Other",		N_ ("Other"),                   0x01,0x09,0x00,0x00,0.50, 0.25, 0.500, 0, 0, 0 },
+};
+DECLARE_PAPERS(canon_BJC_1000);
 
 static const canon_paper_t canon_BJC_2100_papers[] = {
   /* Name                    Text                        (c   (l   (P   (w Density     k_upper lum_adj     */

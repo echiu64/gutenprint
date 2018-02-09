@@ -12,8 +12,7 @@
 ## GNU General Public License for more details.
 ##
 ## You should have received a copy of the GNU General Public License
-## along with this program; if not, write to the Free Software
-## Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+## along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ## Process this file with automake to produce Makefile.in.
 
@@ -42,7 +41,7 @@ libtool: $(LIBTOOL_DEPS)
 # access, and because it usually runs as superuser rather than the user
 # who normally builds Gutenprint.
 install-data-local: NEWS AUTHORS COPYING README
-	$(mkdir_p) $(DESTDIR)$(docdir)
+	$(MKDIR_P) $(DESTDIR)$(docdir)
 	$(INSTALL_DATA) $(srcdir)/NEWS $(DESTDIR)$(docdir)
 	$(INSTALL_DATA) $(srcdir)/ChangeLog $(DESTDIR)$(docdir)
 	$(INSTALL_DATA) $(srcdir)/AUTHORS $(DESTDIR)$(docdir)
@@ -55,21 +54,14 @@ install-data-local: NEWS AUTHORS COPYING README
 # live branches from that time) to save a lot of diffs.
 
 ChangeLog:
-	if [ -d .git -a -f ChangeLog.pre-5.3 ] ; then \
+	if [ -d .git -a -f ChangeLog.pre-5.2.11 ] ; then \
 	  $(MAKE) -C scripts mkgitlog; \
-	  scripts/mkgitlog -i ChangeLog.pre-5.3 -r gutenprint-5_3-OPEN > ChangeLog; \
+	  scripts/mkgitlog -i ChangeLog.pre-5.2.11 -r gutenprint-5_2_11 > ChangeLog; \
 	fi
 
-configure.in:
-	$(LN_S) $(srcdir)/configure.ac $(srcdir)/configure.in
-
 dist-time-check:
-	@current_date=`date +%Y%m%d`; \
-	configure_date=`ls -l --time-style=+%Y%m%d $(top_builddir)/configure | awk '{print $$6}'`; \
-	echo "Checking that 'configure' was built today."; \
-	if test "$$current_date" != "$$configure_date" ; then \
-	  echo "configure is out of date -- rerun ./autogen.sh first!"; \
-	  exit 1; \
+	@if [ "$(top_srcdir)/configure" -ot "$(top_srcdir)/configure.ac" ] ; then \
+	  echo "*** configure is out of date (older than configure.ac) -- rerun ./autogen.sh first!"; exit 1; \
 	fi
 
 git-version-stamp:
@@ -86,39 +78,79 @@ dist-hook: dist-time-check git-version-stamp
 	    done \
 	  fi \
 	done
-# Remove configure.in (libtool bug workaround)
-	$(RM) -f $(distdir)/configure.in
 # Remove any backup files found in distdir
 	$(FIND) $(distdir) -name '.*' -print | xargs $(RM) -rf
 	$(FIND) $(distdir) -name '#*' -print | xargs $(RM) -rf
 	$(FIND) $(distdir) -name '*~' -print | xargs $(RM) -rf
 
-install-cups: all
-	cd src/cups ; \
-	$(MAKE) install
-
-install-gimp: all
-	cd src/gimp ; \
-	$(MAKE) install
-
-docs:
-	cd doc ; \
-	$(MAKE) docs
-
-html:
-	cd doc ; \
-	$(MAKE) html
-
-ps:
-	cd doc ; \
-	$(MAKE) ps
-
-pdf:
-	cd doc ; \
-	$(MAKE) pdf
-
 snapshot: scripts/gversion git-version-stamp
 	$(MAKE) dist distdir=$(PACKAGE)-`scripts/gversion`-`date +"%Y%m%d"`
+
+#################################################################
+#			       TESTING				#
+#################################################################
+
+CPUS=`scripts/count-cpus`
+
+# STP_PROFILE=full
+MAKECHECK=STP_TEST_SUITE=1 /usr/bin/time make -k -s -j$(CPUS) DISTCHECK_CONFIGURE_FLAGS=NO_PKGCONFIG_PATHS=1 check
+MAKEDISTCHECK=STP_TEST_SUITE=1 STP_TEST_DIST=1 /usr/bin/time make -k -s -j$(CPUS) DISTCHECK_CONFIGURE_FLAGS=NO_PKGCONFIG_PATHS=1 distcheck
+MAKECHECK_PARALLEL=STP_PARALLEL=$(CPUS) $(MAKECHECK)
+MAKEDISTCHECK_PARALLEL=STP_PARALLEL=$(CPUS) $(MAKEDISTCHECK)
+
+# ...but we can't do
+# AM_TESTS_ENVIRONMENT=STP_PARALLEL=$(shell scripts/count-cpus)
+# because $(shell...) is (still only) a GNU extension, which we
+# want to avoid.  And we can't do
+# AM_TESTS_ENVIRONMENT=STP_PARALLEL=`scripts/count-cpus`
+# because all expansions are lazy, so anything not in the root directory
+# won't find the script.  And we can't even do
+# AM_TESTS_ENVIRONMENT=STP_PARALLEL=`(at)TOP_BUILDDIR(at)scripts/count-cpus`
+# because TOP_BUILDDIR itself is a relative path.  And, just to make it
+# even more fun, we won't be able to do
+# AM_TESTS_ENVIRONMENT!=
+# syntax even if POSIX approves it because it's only present in GNU make 4,
+# but Apple doesn't use that.
+
+check-parallel: scripts/count-cpus
+	$(MAKECHECK_PARALLEL)
+
+distcheck-parallel: scripts/count-cpus
+	$(MAKEDISTCHECK_PARALLEL)
+
+check-fast: scripts/count-cpus
+	STP_TEST_PROFILE=fast $(MAKECHECK_PARALLEL)
+
+distcheck-fast: scripts/count-cpus
+	STP_TEST_PROFILE=fast $(MAKEDISTCHECK_PARALLEL)
+
+check-minimal: scripts/count-cpus
+	STP_TEST_PROFILE=minimal $(MAKECHECK_PARALLEL)
+
+distcheck-minimal: scripts/count-cpus
+	STP_TEST_PROFILE=minimal $(MAKEDISTCHECK_PARALLEL)
+
+check-full: scripts/count-cpus
+	STP_TEST_PROFILE=full $(MAKECHECK_PARALLEL)
+
+distcheck-full: scripts/count-cpus
+	STP_TEST_PROFILE=full $(MAKEDISTCHECK_PARALLEL)
+
+# distcheck-valgrind won't work because distcheck does not use
+# --disable-shared.  valgrind doesn't work with that type of build because
+# the in-tree executables aren't actually binaries; they're libtool-based
+# shell scripts that invoke the real binaries.
+check-valgrind: scripts/count-cpus
+	STP_TEST_PROFILE=valgrind $(MAKECHECK_PARALLEL)
+
+check-valgrind-minimal: scripts/count-cpus
+	STP_TEST_PROFILE=valgrind-minimal $(MAKECHECK_PARALLEL)
+
+checksums: scripts/count-cpus
+	STP_PARALLEL=$(CPUS) make -C src/testpattern checksums-release
+
+build-release: scripts/build-release
+	STP_PARALLEL=$(CPUS) scripts/build-release
 
 ## Clean
 
@@ -168,7 +200,6 @@ MAINTAINERCLEANFILES = \
 	aclocal.m4 \
 	config.h.in \
 	configure \
-	configure.in \
 	Makefile.in \
 	stamp-h.in \
 	stamp-h1.in \

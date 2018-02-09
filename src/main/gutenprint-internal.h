@@ -15,8 +15,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * Revision History:
  *
@@ -40,6 +39,7 @@ extern "C" {
 #endif
 
 #include <gutenprint/gutenprint-module.h>
+#include <time.h>
 
 /**
  * Utility functions (internal).
@@ -51,7 +51,6 @@ extern "C" {
 extern void stpi_init_paper(void);
 extern void stpi_init_dither(void);
 extern void stpi_init_printer(void);
-extern void stpi_vars_print_error(const stp_vars_t *v, const char *prefix);
 #define BUFFER_FLAG_FLIP_X	0x1
 #define BUFFER_FLAG_FLIP_Y	0x2
 extern stp_image_t* stpi_buffer_image(stp_image_t* image, unsigned int flags);
@@ -67,7 +66,7 @@ do									\
       stp_erprintf("\nERROR: ***Gutenprint %s assertion %s failed!"	\
 		   " file %s, line %d.  %s\n", PACKAGE_VERSION,		\
 		   #x, __FILE__, __LINE__, "Please report this bug!");	\
-      if ((v)) stpi_vars_print_error((v), "ERROR");			\
+      if ((v)) stp_vars_print_error((v), "ERROR");			\
       stp_abort();							\
     }									\
 } while (0)
@@ -242,6 +241,12 @@ extern const stp_papersize_t *stpi_get_papersize_by_size_exact(const stp_papersi
 							       stp_dimension_t length,
 							       stp_dimension_t width);
 
+/**
+ * Check for duplicate printers.  Abort if any duplicates are found.
+ */
+extern void stpi_find_duplicate_printers(void);
+
+extern time_t stpi_time(time_t *t);
 
 #define CAST_IS_SAFE GCC_DIAG_OFF(cast-qual)
 #define CAST_IS_UNSAFE GCC_DIAG_ON(cast-qual)

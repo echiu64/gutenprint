@@ -19,8 +19,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 /*
@@ -259,18 +258,18 @@ typedef struct
   double cd_outer_radius;
 } canon_privdata_t;
 
-const canon_modeuse_t* select_media_modes(stp_vars_t *v, const canon_paper_t* media_type,const canon_modeuselist_t* mlist);
-int compare_mode_valid(stp_vars_t *v,const canon_mode_t* mode,const canon_modeuse_t* muse, const canon_modeuselist_t* mlist);
-const canon_mode_t* suitable_mode_monochrome(stp_vars_t *v,const canon_modeuse_t* muse,const canon_cap_t *caps,int quality,const char *duplex_mode);
-const canon_mode_t* find_first_matching_mode_monochrome(stp_vars_t *v,const canon_modeuse_t* muse,const canon_cap_t *caps,const char *duplex_mode);
-const canon_mode_t* find_first_matching_mode(stp_vars_t *v,const canon_modeuse_t* muse,const canon_cap_t *caps,const char *duplex_mode);
-const canon_mode_t* suitable_mode_color(stp_vars_t *v,const canon_modeuse_t* muse,const canon_cap_t *caps,int quality,const char *duplex_mode);
-const canon_mode_t* find_first_matching_mode_color(stp_vars_t *v,const canon_modeuse_t* muse,const canon_cap_t *caps,const char *duplex_mode);
-const canon_mode_t* suitable_mode_photo(stp_vars_t *v,const canon_modeuse_t* muse,const canon_cap_t *caps,int quality,const char *duplex_mode);
-const canon_mode_t* find_first_matching_mode_photo(stp_vars_t *v,const canon_modeuse_t* muse,const canon_cap_t *caps,const char *duplex_mode);
-const canon_mode_t* suitable_mode_general(stp_vars_t *v,const canon_modeuse_t* muse,const canon_cap_t *caps,int quality,const char *duplex_mode);
-const char* find_ink_type(stp_vars_t *v,const canon_mode_t* mode,const char *printing_mode);
-const canon_mode_t* canon_check_current_mode(stp_vars_t *v);
+static const canon_modeuse_t* select_media_modes(stp_vars_t *v, const canon_paper_t* media_type,const canon_modeuselist_t* mlist);
+static int compare_mode_valid(stp_vars_t *v,const canon_mode_t* mode,const canon_modeuse_t* muse, const canon_modeuselist_t* mlist);
+static const canon_mode_t* suitable_mode_monochrome(stp_vars_t *v,const canon_modeuse_t* muse,const canon_cap_t *caps,int quality,const char *duplex_mode);
+static const canon_mode_t* find_first_matching_mode_monochrome(stp_vars_t *v,const canon_modeuse_t* muse,const canon_cap_t *caps,const char *duplex_mode);
+static const canon_mode_t* find_first_matching_mode(stp_vars_t *v,const canon_modeuse_t* muse,const canon_cap_t *caps,const char *duplex_mode);
+static const canon_mode_t* suitable_mode_color(stp_vars_t *v,const canon_modeuse_t* muse,const canon_cap_t *caps,int quality,const char *duplex_mode);
+static const canon_mode_t* find_first_matching_mode_color(stp_vars_t *v,const canon_modeuse_t* muse,const canon_cap_t *caps,const char *duplex_mode);
+static const canon_mode_t* suitable_mode_photo(stp_vars_t *v,const canon_modeuse_t* muse,const canon_cap_t *caps,int quality,const char *duplex_mode);
+static const canon_mode_t* find_first_matching_mode_photo(stp_vars_t *v,const canon_modeuse_t* muse,const canon_cap_t *caps,const char *duplex_mode);
+static const canon_mode_t* suitable_mode_general(stp_vars_t *v,const canon_modeuse_t* muse,const canon_cap_t *caps,int quality,const char *duplex_mode);
+static const char* find_ink_type(stp_vars_t *v,const canon_mode_t* mode,const char *printing_mode);
+static const canon_mode_t* canon_check_current_mode(stp_vars_t *v);
 
 static void canon_write_line(stp_vars_t *v);
 
@@ -547,6 +546,8 @@ static const char* canon_families[] = {
  "PIXMA MPC", /* 16 */
  "PIXMA G",   /* 17 */
  "PIXMA TS",  /* 18 */
+ "PIXMA TR",  /* 19 */
+ "PIXMA XK",  /* 20 */
 };
 
 /* canon model ids look like the following
@@ -3580,8 +3581,12 @@ canon_init_setColor(const stp_vars_t *v, const canon_privdata_t *init)
 		if (init->used_inks == CANON_INK_K)
                             arg_63[0]|= 0x01;                                        /* PRINT_COLOUR */
 
-                  arg_63[1] = ((init->pt ? init->pt->media_code_c : 0) << 4)                /* PRINT_MEDIA */
-			+ 1;	/* hardcode to High quality for now */		/* PRINT_QUALITY */
+
+//		  if ( (!strcmp(init->caps->name,"85")) ||  (!strcmp(init->caps->name,"1000")) ) /* BJC-85, BJC-1000 */
+//		    arg_63[1] = (init->pt) ? init->pt->media_code_c : 0;                /* print media type */
+//		  else /* original, not sure which models follow this at all */
+		    arg_63[1] = ((init->pt ? init->pt->media_code_c : 0) << 4)                /* PRINT_MEDIA */
+		      + 1;	/* hardcode to High quality for now */		/* PRINT_QUALITY */
 
                   canon_cmd(v,ESC28,0x63, 2, arg_63[0], arg_63[1]);
 		break;
@@ -3701,7 +3706,19 @@ canon_init_setTray(const stp_vars_t *v, const canon_privdata_t *init)
     if ( (!strcmp(init->caps->name,"PIXMA MP710")) || (!strcmp(init->caps->name,"PIXMA MP740")) )
       arg_6c_3 = 0x10;
 
-  if (init->pt) arg_6c_2 = init->pt->media_code_l;
+  switch ( init->caps->model_id ) {
+  case 0:
+    break;
+  case 1:
+    if (init->pt) arg_6c_2 = ((init->pt ? init->pt->media_code_l : 0) << 4);                /* PRINT_MEDIA */
+    break;
+  case 2:
+    break;
+  case 3:
+    if (init->pt) arg_6c_2 = init->pt->media_code_l;                                        /* PRINT_MEDIA */
+    break;
+  }
+
   /* select between length 2 and 3 byte variations of command */
   /*if(init->caps->model_id >= 3)*/
   if(init->caps->ESC_l_len == 3)
@@ -6213,7 +6230,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
                                 canon_flush_pass,
                                 stp_fill_uncompressed,
                                 stp_pack_uncompressed,
-                                stp_compute_uncompressed_linewidth);
+                                stp_compute_tiff_linewidth);
        privdata.last_pass_offset = 0;
 
        if (stp_get_debug_level() & STP_DBG_CANON) {
@@ -6385,7 +6402,6 @@ canon_print(const stp_vars_t *v, stp_image_t *image)
 {
   int status;
   stp_vars_t *nv = stp_vars_create_copy(v);
-  stp_prune_inactive_options(nv);
   status = canon_do_print(nv, image);
   stp_vars_destroy(nv);
   return status;

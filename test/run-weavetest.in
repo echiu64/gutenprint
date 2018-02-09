@@ -1,5 +1,10 @@
 #!@SHELL@
 
+# Don't want to run this at all as part of automated test
+if [ -n "$STP_TEST_SUITE" ] ; then
+    exit 77
+fi
+
 if [ -z "$srcdir" -o "$srcdir" = "." ] ; then
     sdir=`pwd`
 elif [ -n "`echo $srcdir |grep '^/'`" ] ; then

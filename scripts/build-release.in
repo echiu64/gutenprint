@@ -1,0 +1,523 @@
+#!@BASH@
+
+## Copyright (C) 2018 Robert Krawitz
+##
+## This program is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation; either version 2, or (at your option)
+## any later version.
+##
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+##
+## You should have received a copy of the GNU General Public License
+## along with this program.  If not, see <https://www.gnu.org/licenses/>.
+##
+## Build release tarball
+
+# 0) Ensure that we're in the root directory and have a sane environment
+
+declare ROOT=@PKGROOT@
+cd $ROOT
+declare VERSION="@GUTENPRINT_VERSION@"
+declare TAG=gutenprint-${VERSION//./_}
+declare GIT=$(type -p git)
+
+if [[ -z $GIT ]] ; then
+    echo "Can't find git.  Cannot continue."
+    exit 1
+fi
+
+declare MAKE=$(type -p make)
+
+if [[ -z $MAKE ]] ; then
+    echo "Can't find make.  Cannot continue."
+    exit 1
+fi
+
+# 1) Clean up any trailing whitespace.
+
+function preflight {
+    declare -l trailing_ws="$("$GIT" grep -Il '[	 ]$')"
+    if [[ -n $trailing_ws ]] ; then
+	console_log "The following files have trailing whitespace:"
+	console_log "$trailing_ws"
+	return 1
+    fi
+    return 0
+}
+
+# 2) Git pre-checks
+
+function check_git {
+    "$GIT" fetch
+
+    # Check for uncommitted files.
+    if [[ -n $("$GIT" status -uno --porcelain) ]] ; then
+	console_log "*** ERROR: Uncommitted changes in repository:"
+	"$GIT" status -uno | console_log
+	return 1
+    fi
+
+    # Ensure that the workspace is up to date (git status -uno
+    # --porcelain -b |grep -v ahead is empty -- it's OK to be ahead,
+    # but not behind) and that we don't need to rebase (no merges.
+    # Also check that we haven't diverged.
+
+    ahead=$("$GIT" rev-list $("$GIT" rev-parse @{u})..@)
+    behind=$("$GIT" rev-list $("$GIT" rev-parse @)..@{u})
+    if [[ -z $ahead && -z $behind ]] ; then
+	# Neither ahead nor behind.  Perfect.
+	echo "Repository and workspace are up to date, good!"
+	return 0
+    elif [[ -z $ahead ]] ; then
+	# We're behind.  Not good.
+	console_log "*** ERROR: Behind remote by $(wc -w <<< $behind) commits."
+	return 1
+    elif [[ -z $behind ]] ; then
+	# We're ahead.  That's OK as long as there are no merge commits...
+	merges=0
+	for h in $ahead ; do
+	    parents=$("$GIT" rev-parse $h^@ |wc -w)
+	    (( $parents > 1 )) && merges=$((merges + 1))
+	done
+	console_log "*** Warning: Ahead of remote."
+	if (( $merges > 0 )) ; then
+	    if (( $merges == 1 )) ; then
+		console_log "*** ERROR: 1 merge between HEAD and remote"
+	    else
+		console_log "*** ERROR: $merges merges between HEAD and remote"
+	    fi
+	    return 1
+	fi
+	return 0
+    else
+	# Oops!  Both ahead *and* behind remote.  Really bad news!
+	console_log "*** ERROR: HEAD and remote have diverged!"
+	console_log "***        Please merge and rebase all changes!"
+	return 1
+    fi
+
+    # Make sure that the tag that we're going to want to apply isn't
+    # already present.
+    if [[ -n $("$GIT" show-ref "refs/tags/$TAG") ]] ; then
+	console_log " ERROR: Tag named $TAG is already present"
+	return 1
+    fi
+    return 0
+}
+
+# 3) Run autogen.sh --disable-shared.  Why --disable-shared?  So we
+#    can run valgrind on it.  Without --disable-shared, the
+#    executables in the tree aren't the real thing; they're just
+#    libtool-based scripts that set up the environment and run the
+#    executable; these, of course, can't be valground.
+#
+#    Later checks (such as the various make distcheck-* commands)
+#    don't use --disable-shared, so everything gets tested
+#    correctly in the end.
+
+function run_autogen {
+    ./autogen.sh --disable-shared && return 0
+    echo "autogen.sh failed!"
+    return 1
+}
+
+# 4) Run make valgrind-minimal.
+#
+#    This does a *very* limited set of valgrind checks, running
+#    testpattern and rastertogutenprint on 9 (currently) selected
+#    printers.  It takes about 30 seconds on my laptop.  Smoketest and
+#    all.
+
+function run_valgrind_minimal {
+    make check-valgrind-minimal && return 0
+    echo "make check-valgrind_minimal failed"
+    return 1
+}
+
+# 5) Run make distcheck-fast.
+#
+#    This actually builds the tarball, unpacks the tarball, builds it
+#    out of tree, runs a short set of tests against it, does a local
+#    make install, followed by make uninstall, and makes sure no
+#    debris is left around.  This runs configure with all default
+#    arguments, so it is testing dynamically linked executables.
+#
+#    The particular tests it runs are:
+#
+#    - Conformance tests all non-translated non-simplified PPD files
+#      and distinct global ones.
+#
+#    - Runs test-rastertogutenprint on distinct printers, with fast
+#      options (minimum paper size, lowest resolution, very fast
+#      dithering).
+#
+#    - Runs run-testpattern-2:
+#
+#      + Distinct printers, fast options
+#
+#      + Selected printers, with cross product of input mode (and bit
+#        depth), color correction, ink type, and use gloss.
+#
+#    It also has the property of maybe updating the .po files.  These
+#    will later need to be committed and included in the tag.  So we
+#    have to do our check for uncommitted bits prior to this.
+#
+#    It has not escaped me that this could be part of a CI testing
+#    process.  I don't know if Sourceforge has the necessary gittage
+#    (as GitHub does) to allow a merge bot to run something like this
+#    and only merge to the main repository if this suite passes.
+#
+#    The reason for the distcheck-fast is so that if something stupid
+#    goes wrong it gets caught quickly.  It takes about 270 seconmds
+#    on my laptop.  It would be Kind Of Annoying to spend hours
+#    testing only to find out that something's not handling destdir
+#    correctly or make clean isn't removing something.
+#
+#    Note that this can't be combined with valgrind, since this builds
+#    dynamic executables which can't conveniently be valground since
+#    they're actually shell scripts.
+#
+#    There's now an even faster check, distcheck-minimal, that only
+#    tests a handful of printers.  It takes about 50 seconds to run.
+#    But that's really most useful for testing the distcheck
+#    apparatus.
+#
+# So far we're at just over 5 minutes on a Skylake Xeon E3-1505Mv5,
+# which isn't too bad for a prerelease smoke test.  The rest of this
+# takes a lot longer.
+
+function run_distcheck_fast {
+    make distcheck-fast && return 0
+    echo "make distcheck-fast failed"
+    return 1
+}
+
+# 6) Run make check-valgrind
+#
+#    This is slow.  It tests only unique printers, and a lot of extra
+#    combinations with a few printers, all using fast options.  It
+#    uses both CUPS and run-testpattern-2 testing.  However, it's
+#    essentially embarrassingly parallel.
+#
+#    I'd like not to go too long without running it, as it's easy for
+#    things to make their way in.  For CI purposes, if we ever go
+#    there, like to find a happy medium.
+
+function run_valgrind {
+    make check-valgrind && return 0
+    echo "make check-valgrind failed"
+    return 1
+}
+
+# 7) Run make check-full
+#
+#    This one I'm not sure of; do we need this or is this well enough
+#    covered by the combination of distcheck-fast and check-valgrind?
+#    It does take a while, but I haven't benchmarked it lately.
+#
+#    - Conformance test all PPD files
+#
+#    - Run test-rastertogutenprint on all printers, with default options
+#
+#    - Runs run-testpattern-2:
+#
+#      + Distinct printers, default options
+#
+#      + All printers, fast options
+#
+#      + Distinct printers, fast options, with cross product of input
+#        mode (and bit depth), color correction, ink type, and use
+#        gloss.
+#
+#    IIRC this takes 60-90 minutes on my laptop, but again, it
+#    parallelizes very well.
+
+function run_full {
+    make check-full && return 0
+    echo "make check-full failed"
+    return 1
+}
+
+# 8) Run make checksums-release to generate a new regression file.
+#
+#    The problem here is what do we require for the release build.  Do
+#    we require a clean regression run (other than added
+#    printers/modes)?  There are legitimate reasons for changing, and
+#    having to rerun the procedure because the release engineer forgot a
+#    command line option is a bit harsh.  Something better might be to
+#    simply record changes unless there's an outright failure here, and
+#    let those be reviewed.
+#
+#    For CI purposes, the default might be to require no changes, with
+#    human intervention if there are.
+#
+#    This takes about 30 minutes on my laptop.  This is extremely
+#    scalable.  Give us a really big machine instance to run it on, this
+#    will run really fast.
+
+function run_checksums() {
+    if make checksums ; then
+	if [[ ! -f src/testpattern/Checksums/sums.$VERSION.zpaq ]] ; then
+	    echo "Can't find new checksums file"
+	    return 1
+	fi
+	return 0
+    fi
+    echo "make checksums failed"
+    return 1
+}
+
+# 9) Prep the release:
+
+function git_prep_release() {
+    # .po files might have changed; nothing else should have!
+    if [[ -n $("${GIT}" status -uno --porcelain |egrep -v 'po/.*\.po') ]] ; then
+	console_log "ERROR: Unexpected untracked files:"
+	"${GIT}" status -uno --porcelain |egrep -v 'po/.*\.po' | console_log
+	return 1
+    fi
+    # Add any of those changed files.
+    ${GIT} add -u || return 1
+    # Add the checksums file.
+    ${GIT} add src/testpattern/Checksums/sums.$VERSION.zpaq || return 1
+    # Commit this change
+    ${GIT} commit -m"Gutenprint $VERSION release" || return 1
+    # Apply the tag.  Ideally we should sign the tag too.
+    ${GIT} tag -a "$TAG" -m "Gutenprint $VERSION release" || return 1
+}
+
+# 10) make distcheck-minimal
+#
+#     We have to rebuild the tarball in any event here, so that we pick up
+#     the tag (to get a correct change log) and updated .po files.
+#     A minimal distcheck only takes about a minute; we might as well
+#     do a final sanity check.
+
+function run_distcheck_minimal {
+    make distcheck-minimal && return 0
+    echo "Final make distcheck-minimal failed"
+    return 1
+}
+
+# 11) Final release prep
+
+function finis {
+    STP_DATA_PATH=src/xml test/gen-printer-list > printer-list.$VERSION || return 1
+    console_log "Remainder to be done manually:"
+    console_log
+    console_log "  * git push"
+    console_log
+    console_log "  * Upload the tarball (.xz)"
+    console_log
+    console_log "  * Update the web site"
+    console_log
+    console_log "  * Merge the updated printer list into p_Supported_Printers.php"
+    console_log "    and upload that"
+    return 0
+}
+
+################################################################
+#
+# Running and logging stuff.
+#
+################################################################
+
+# Note that if we change the format of this timestamp we have to
+# change console_log if the width changes.
+#
+# Unfortunately the shell built-in printf can't specify UTC.
+function stamp {
+    printf '%(%Y-%m-%d.%H:%M:%S%z)T'
+}
+
+function date_sec {
+    printf '%(%s)T'
+}
+
+function report_progress {
+    case "$quiet" in
+	1)
+	    declare outst=.
+	    [[ -n "$DONTRUN_OP" ]] && outst=-
+	    echo -n $outst
+	    ;;
+	2)
+	    ;;
+	*)
+	    declare outst='RUNNING: '
+	    [[ -n "$DONTRUN_OP" ]] && outst='Skipping:'
+	    echo " >>> $(stamp) $outst $@"
+	    ;;
+    esac
+}
+
+# This allows us to log to multiple outputs, including stdout and
+# (where available) file descriptors.  Ideally we'd be able to build a
+# pipeline and eval it, but it's not clear that that's possible.
+function log {
+    if [[ $# == 0 || ($# == 1 && $1 == -) ]] ; then
+	cat
+    else
+	dest="$1"
+	shift
+	# stdout needs to come last, because we just want to send data
+	# to stdout rather than teeing off or explicitly going to a file.
+	if [[ $dest == - && $# > 0 ]] ; then
+	    # Protect against someone inadvertently specifying - twice!
+	    if [[ $1 == - ]] ; then
+		log "$@"
+	    else
+		log "$@" -
+	    fi
+	elif [[ $dest == -* ]] ; then
+	    dest=${dest:1}
+	    if [[ $# == 0 ]] ; then
+		cat > "$dest"
+	    else
+		tee "$dest" | log "$@"
+	    fi
+	else
+	    if [[ $# == 0 ]] ; then
+		cat >> "$dest"
+	    else
+		tee -a "$dest" | log "$@"
+	    fi
+	fi
+    fi
+}
+
+function time_delta {
+    start=$1
+    end=$2
+    interval=$((end - start))
+    h=$((interval / 3600))
+    m=$(((interval % 3600) / 60))
+    s=$((interval % 60))
+    printf "%d:%02d:%02d" $h $m $s
+}
+
+function finish {
+    status=$1
+    etime=$(date_sec)
+    msg=completed
+    [[ $status != 0 ]] && msg=FAILED
+    estamp=$(stamp)
+    [[ $quiet = 1 ]] && echo
+    echo "Gutenprint release build $msg at $estamp ($(time_delta $STIME $etime))" | log "$top_log" -
+    echo "================================================================" | log "$top_log"
+    exit $build_status
+}
+
+# Log the output to the console as well as the master log file and the
+# per-operation log file.
+#
+# fd#3 (/dev/fd/3 -- let's hope we're building the package on
+#      a system that supports /dev/fd, but linux does)
+#      in the operation gets tied to stderr
+#
+# Then we timestamp the data and send it to the top-level log (which
+# is not normally timestamped).
+#
+# Finally, we remove the existing timestamp (which relies upon the timestamp
+# format, ugh) and send it to stdout where it gets picked up and timestamped
+# again.
+function console_log {
+    if [[ -n "$@" ]] ; then
+	echo "$@" | log /dev/fd/3 - | timestamp | log - "$top_log" - | cut -c26-
+    else
+	log /dev/fd/3 - | timestamp | log - "$top_log" - | cut -c26-
+    fi
+}
+
+function timestamp {
+    while read -r ; do
+	echo "$(stamp) $REPLY"
+    done
+}
+
+# Run one operation.
+function runit {
+    cmdname=$1
+    cmd="$@"
+    fcounter=$(printf "%02d" $counter)
+    logfile="$LOGDIR/$fcounter.${cmd// /_/}"
+    [[ -n $DONTRUN_OP ]] && logfile=/dev/null
+    sstime=$(date_sec)
+    ssstamp=$(stamp)
+    status=0
+    msg=completed
+    echo "----------------------------------------------------------------" | log "-$logfile" "$top_log"
+    if [[ -z $DONTRUN_OP ]] ; then
+	echo "$cmdname started at $ssstamp" | log "$logfile" "$top_log"
+	echo "Command: $cmd" | log "$logfile" "$top_log"
+	echo "Log file: ${logfile#${LOGDIR}/}" | log "$top_log"
+    else
+	echo "$cmdname SKIPPED" | log "$top_log"
+    fi
+    report_progress $cmdname
+
+    if [[ -z $DONTRUN_OP ]] ; then
+	$cmd </dev/null 3>&2 2>&1 | timestamp | log "$logfile"
+	status=${PIPESTATUS[0]}
+	(( $status > 0 )) && msg=FAILED
+    else
+	msg='(SKIPPED)'
+    fi
+    setime=$(date_sec)
+    sestamp=$(stamp)
+    if [[ -z $DONTRUN_OP ]] ; then
+	echo "$cmd $msg at $sestamp ($(time_delta $sstime $setime))" | log "$logfile" "$top_log"
+	echo "----------------------------------------------------------------" | log "$logfile" "$top_log"
+    fi
+    counter=$((counter+1))
+
+    [[ $status != 0 ]] && finish $status
+}
+
+declare -a OPERATIONS=(preflight
+		       check_git
+		       run_autogen
+		       run_valgrind_minimal
+		       run_distcheck_fast
+		       run_valgrind
+		       run_full
+		       run_checksums
+		       git_prep_release
+		       run_distcheck_minimal
+		       finis)
+
+declare HOST=$(uname -n)
+declare SSTAMP=$(stamp)
+declare STIME=$(date_sec)
+declare TOPLOGDIR="$ROOT/BuildLogs"
+declare LOGDIR="$TOPLOGDIR/Log.${SSTAMP// /_}"
+mkdir -p $LOGDIR
+[[ -L $TOPLOGDIR/Current ]] && mv $TOPLOGDIR/Current $TOPLOGDIR/Previous
+rm -f "$TOPLOGDIR/Current"
+ln -s $(basename "$LOGDIR") "$TOPLOGDIR/Current"
+
+skip_ops=${STP_BUILD_SKIP//,/ }
+
+declare -A SKIP_OPS
+
+for o in $skip_ops ; do
+    SKIP_OPS[$o]=1
+done
+
+declare counter=1
+declare top_log="$LOGDIR/00.Master"
+
+echo "================================================================" | log "-$top_log"
+echo "*** Gutenprint release build started at $SSTAMP on $HOST" | log "$top_log" -
+echo "Directory: $ROOT" | log "$top_log"
+echo "Log Directory: ${LOGDIR#${ROOT}/}" | log "$top_log"
+
+for f in ${OPERATIONS[@]} ; do
+    DONTRUN_OP=${DONTRUN}${SKIP_OPS[$f]} runit $f
+done
+
+finish 0

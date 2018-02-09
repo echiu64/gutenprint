@@ -17,8 +17,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -2029,8 +2028,7 @@ create_about_dialog (void)
        "GNU General Public License for more details.\n"
        "\n"
        "You should have received a copy of the GNU General Public License\n"
-       "along with this program; if not, write to the Free Software\n"
-       "Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  "
+       "along with this program.  If not, see <https://www.gnu.org/licenses/>.\n"
        "USA\n"));
 
   gtk_misc_set_padding (GTK_MISC (label), 12, 4);
@@ -4585,7 +4583,7 @@ compute_thumbnail(const stp_vars_t *v)
   priv.offset = 0;
   priv.limit = thumbnail_bpp * thumbnail_h * thumbnail_w;
 
-  if (stp_verify(nv) != 1 || stp_print(nv, im) != 1)
+  if (stp_print(nv, im) != 1)
     {
       answer = 0;
       fprintf(stderr, "Could not print thumbnail!\n");

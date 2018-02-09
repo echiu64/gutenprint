@@ -7,6 +7,7 @@
 *.out
 *.tar*
 *.trs
+BuildLogs/**
 
 # Random noise
 *.patch
@@ -25,6 +26,11 @@ tags
 *.ps
 *.tex
 ChangeLog
+
+# Testing output
+callgrind.out*
+cachegrind.out*
+sums.*-[0-9]*
 
 # Autotools
 ABOUT-NLS

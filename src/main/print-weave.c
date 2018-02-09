@@ -15,8 +15,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 /*
@@ -1572,9 +1571,9 @@ stp_flush_all(stp_vars_t *v)
 }
 
 static void
-finalize_row(stp_vars_t *v, int row)
+finalize_row(stp_vars_t *v, stpi_softweave_t *sw)
 {
-  stpi_softweave_t *sw = get_sw(v);
+  int row = sw->lineno;
   int i,j;
   stp_dprintf(STP_DBG_ROWS, v, "Finalizing row %d...\n", row);
   for (i = 0; i < sw->oversample; i++)
@@ -1686,7 +1685,7 @@ stp_write_weave(stp_vars_t *v, unsigned char *const cols[])
   sw->current_vertical_subpass++;
   if (sw->current_vertical_subpass >= sw->vertical_oversample)
     {
-      finalize_row(v, sw->lineno);
+      finalize_row(v, sw);
       sw->lineno++;
       sw->current_vertical_subpass = 0;
     }

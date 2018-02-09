@@ -17,8 +17,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 /* This file contains definitions for the various printmodes
@@ -151,14 +150,40 @@ DECLARE_MODES(canon_BJC_30,0);
 
 
 static const canon_mode_t canon_BJC_85_modes[] = {
-  {  720, 360,CANON_INK_K | CANON_INK_CMYK | CANON_INK_CcMmYK,
-     "720x360dpi",N_("720x360 DPI"),INKSET(6_C2M2Y2K2c2m2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},
-  {  360, 360,CANON_INK_K | CANON_INK_CMYK | CANON_INK_CcMmYK,
-     "360x360dmt",N_("360x360 DPI DMT"),INKSET(6_C4M4Y4K4c4m4),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},
-  {  360, 360,CANON_INK_K | CANON_INK_CMYK | CANON_INK_CcMmYK,
-     "360x360dpi",N_("360x360 DPI"),INKSET(6_C2M2Y2K2c2m2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  // DMT is the highest quality mode in Windows driver - but only has quality 1 not 2
+  {  360, 360,CANON_INK_K | CANON_INK_CMYK,
+     "360x360dmt_high",N_("360x360 DPI DMT HIGH"),INKSET(4_C4M4Y4K4),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},/* original*/
+  // Quality level 1 in Windows driver (High)
+  {  360, 360,CANON_INK_K | CANON_INK_CMYK,
+     "360x360dmt",N_("360x360 DPI DMT"),INKSET(4_C4M4Y4K4),8,0,NULL,1.0,1.0,NULL,NULL,NULL,1},
+  // Windows driver does not use quality level 2
+  {  360, 360,CANON_INK_K | CANON_INK_CMYK,
+     "360x360dpi_high",N_("360x360 DPI HIGH"),INKSET(4_C2M2Y2K2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},/* original */
+  // Quality level 2 in Windows driver
+  {  360, 360,CANON_INK_K | CANON_INK_CMYK,
+     "360x360dpi",N_("360x360 DPI"),INKSET(4_C2M2Y2K2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,1},
+  // Windows driver does not use quality level 2
+  {  720, 360,CANON_INK_K | CANON_INK_CMYK,
+     "720x360dpi_high",N_("720x360 DPI HIGH"),INKSET(4_C2M2Y2K2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2}, /* original */
+  // Windows driver does not use quality level 1
+  {  720, 360,CANON_INK_K | CANON_INK_CMYK,
+     "720x360dpi",N_("720x360 DPI"),INKSET(4_C2M2Y2K2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,1},
+  // Quality level 3 in Windows driver
+  {  720, 360,CANON_INK_K | CANON_INK_CMYK,
+     "720x360dpi_draft",N_("720x360 DPI DRAFT"),INKSET(4_C2M2Y2K2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,0},
+  // Quality level 4 in Windows driver
+  {  360, 360,CANON_INK_K | CANON_INK_CMYK,
+     "360x360dpi_draft",N_("360x360 DPI DRAFT"),INKSET(4_C2M2Y2K2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,0},
+  // Quality level 5 in Windows driver
+  {  180, 180,CANON_INK_K | CANON_INK_CMYK,
+     "180x180dpi_high",N_("180x180 DPI HIGH"),INKSET(4_C2M2Y2K2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  // Test low res modes with qualities 1 and 0
+  {  180, 180,CANON_INK_K | CANON_INK_CMYK,
+     "180x180dpi",N_("180x180 DPI"),INKSET(4_C2M2Y2K2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,1},
+  {  180, 180,CANON_INK_K | CANON_INK_CMYK,
+     "180x180dpi_draft",N_("180x180 DPI DRAFT"),INKSET(4_C2M2Y2K2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,0},
 };
-DECLARE_MODES(canon_BJC_85,0);
+DECLARE_MODES(canon_BJC_85,4); // <= final selection after testing: 720x360 Qlty 2 mode
 
 
 /* we treat the printers that can either print in K or CMY as CMYK printers here by assigning a CMYK inkset */

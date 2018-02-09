@@ -16,8 +16,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * Revision History:
  *
@@ -85,6 +84,7 @@ extern void stp_channel_convert(const stp_vars_t *v, unsigned *zero_mask);
 extern unsigned short * stp_channel_get_input(const stp_vars_t *v);
 
 extern unsigned short * stp_channel_get_output(const stp_vars_t *v);
+extern unsigned char * stp_channel_get_output_8bit(const stp_vars_t *v);
 
 #ifdef __cplusplus
   }

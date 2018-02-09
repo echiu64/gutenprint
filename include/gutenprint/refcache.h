@@ -14,8 +14,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 /**
@@ -69,10 +68,11 @@ extern void stp_refcache_remove_item(const char *cache, const char *item);
  * Replace an item's data, or add if it doesn't exist.
  * The old data (if any) is not freed.  Fails if cache does not already exist.
  * @param cache the cache to use.
- * @param item the name of the item to remove from cache
+ * @param item the name of the item to add/update.
+ * @param data the data to be added/updated for the cached item.
  */
 extern void stp_refcache_replace_item(const char *cache, const char *item,
-				   void *data);
+				      void *data);
 
 /**
  * Destroy a cache.  The individual items are not freed.  If cache does not
@@ -89,10 +89,10 @@ extern const stp_string_list_t *stp_refcache_list_caches(void);
 
 /**
  * Return a static list of items in a specified cache
- * @param name of cache
+ * @param cache name of cache
  * @returns list of items in cache or NULL if cache does not exist
  */
-extern const stp_string_list_t *stp_refcache_list_refcache_items(const char *cache);
+extern const stp_string_list_t *stp_refcache_list_cache_items(const char *cache);
 
 #ifdef __cplusplus
   }
