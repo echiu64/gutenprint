@@ -565,7 +565,7 @@ stp_dump_channels(const stp_vars_t *v)
 	      char *curve = stp_curve_write_string(sch->curve);
 	      stp_erprintf("         curve   %s\n", curve);
 	      stp_free(curve);
-	    }	  
+	    }
 	  stp_erprintf("         density %d:\n", sch->s_density);
 	}
     }
