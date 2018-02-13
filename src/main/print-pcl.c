@@ -3422,33 +3422,36 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
 			density));
 
 
-  if (!stp_check_curve_parameter(v, "HueMap", STP_PARAMETER_ACTIVE))
+  if (!(caps->color_type & PCL_COLOR_RGB))
     {
-      stp_curve_t *hue_adjustment =
-	stp_curve_create_from_string(standard_hue_adjustment);
-      stp_set_curve_parameter(v, "HueMap", hue_adjustment);
-      stp_curve_destroy(hue_adjustment);
-    }
-  if (!stp_check_curve_parameter(v, "LumMap", STP_PARAMETER_ACTIVE))
-    {
-      stp_curve_t *lum_adjustment =
-	stp_curve_create_from_string(standard_lum_adjustment);
+      if (!stp_check_curve_parameter(v, "HueMap", STP_PARAMETER_ACTIVE))
+	{
+	  stp_curve_t *hue_adjustment =
+	    stp_curve_create_from_string(standard_hue_adjustment);
+	  stp_set_curve_parameter(v, "HueMap", hue_adjustment);
+	  stp_curve_destroy(hue_adjustment);
+	}
+      if (!stp_check_curve_parameter(v, "LumMap", STP_PARAMETER_ACTIVE))
+	{
+	  stp_curve_t *lum_adjustment =
+	    stp_curve_create_from_string(standard_lum_adjustment);
 #if 0
-      /*
-       * This would represent a change to the PCL driver in 5.2.12
-       *
-       * This call was missing and has represented a bug (if a clearly
-       * non-fatal one) in the PCL driver since time immemorial.  The
-       * non-use of the variable was finally called out by gcc6.  In my
-       * judgment, fixing the bug and changing the output of many PCL
-       * printers (even if it were for the better) would be more problematic
-       * than leaving the output as-is.
-       *
-       * - Robert Krawitz 2016-12-29
-       */
-      stp_set_curve_parameter(v, "LumMap", lum_adjustment);
+	  /*
+	   * This would represent a change to the PCL driver in 5.2.12
+	   *
+	   * This call was missing and has represented a bug (if a clearly
+	   * non-fatal one) in the PCL driver since time immemorial.  The
+	   * non-use of the variable was finally called out by gcc6.  In my
+	   * judgment, fixing the bug and changing the output of many PCL
+	   * printers (even if it were for the better) would be more problematic
+	   * than leaving the output as-is.
+	   *
+	   * - Robert Krawitz 2016-12-29
+	   */
+	  stp_set_curve_parameter(v, "LumMap", lum_adjustment);
 #endif
-      stp_curve_destroy(lum_adjustment);
+	  stp_curve_destroy(lum_adjustment);
+	}
     }
 
   if (printing_color && (caps->stp_printer_type & PCL_PRINTER_LJ_COLOR))
