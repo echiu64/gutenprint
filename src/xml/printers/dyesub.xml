@@ -94,13 +94,15 @@
       <printer translate="name" name="Canon SELPHY ES30" deviceid="MFG:Canon;CMD:Raster3;MDL:ES30;CLS:PRINTER;DES:Canon SELPHY ES30;VER:1.00;" driver="canon-es30" manufacturer="Canon" model="1006" parameters="nativecopies" />
       <printer translate="name" name="Canon SELPHY ES40" deviceid="MFG:Canon;CMD:Raster3;MDL:ES40;CLS:PRINTER;DES:Canon SELPHY ES40;VER:1.00;" driver="canon-es40" manufacturer="Canon" model="1007" parameters="nativecopies" />
       <printer translate="name" name="CIAAT Brava 21" deviceid="MFG:CIAAT;CMD:SUPCC;MDL:BRAVA21;CLS:PRINTER;DES:Thermal Dye Photo Printer;" driver="ciaat-brava-21" manufacturer="CIAAT" model="5005" parameters="nativecopies" />
+      <printer translate="name" name="Citizen CW-01" driver="citizen-cw-01" manufacturer="Citizen" model="6005" parameters="nativecopies" />
+      <printer translate="name" name="Citizen CW-02" driver="citizen-cw-02" manufacturer="Citizen" model="6000" parameters="nativecopies" />
       <printer translate="name" name="Citizen CX" driver="citizen-cx" deviceid="MANUFACTURER:CITIZEN SYSTEMS ;MODEL:CX;" manufacturer="Citizen" model="6000" parameters="nativecopies" />
+      <printer translate="name" name="Citizen CX-02" driver="citizen-cx-02" manufacturer="Citizen" model="6003" parameters="nativecopies" />
       <printer translate="name" name="Citizen CX-W" driver="citizen-cx-w" manufacturer="Citizen" model="6001" parameters="nativecopies" />
       <printer translate="name" name="Citizen CY" driver="citizen-cy" manufacturer="Citizen" model="6002" parameters="nativecopies" />
-      <printer translate="name" name="Citizen CW-01" driver="citizen-cw-01" manufacturer="Citizen" model="6005" parameters="nativecopies" />
+      <printer translate="name" name="Citizen CY-02" driver="citizen-cy-02" manufacturer="Citizen" model="6002" parameters="nativecopies" />
       <printer translate="name" name="Citizen OP900" driver="citizen-op900" manufacturer="Citizen" model="6005" parameters="nativecopies" />
-      <printer translate="name" name="Citizen CW-02" driver="citizen-cw-02" manufacturer="Citizen" model="6000" parameters="nativecopies">EXPERIMENTAL</printer>
-      <printer translate="name" name="Citizen OP900II" driver="citizen-op900ii" manufacturer="Citizen" model="6000" parameters="nativecopies">EXPERIMENTAL</printer>
+      <printer translate="name" name="Citizen OP900II" driver="citizen-op900ii" manufacturer="Citizen" model="6000" parameters="nativecopies" />
       <printer translate="name" name="Dai Nippon Printing DS40" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DS40;" driver="dnp-ds40" manufacturer="Dai Nippon Printing" model="6000" parameters="nativecopies" />
       <printer translate="name" name="Dai Nippon Printing DS80" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DS80;" driver="dnp-ds80" manufacturer="Dai Nippon Printing" model="6001" parameters="nativecopies" />
       <printer translate="name" name="Dai Nippon Printing DS80DX" driver="dnp-ds80dx" manufacturer="Dai Nippon Printing" model="6006" parameters="nativecopies">EXPERIMENTAL</printer>
