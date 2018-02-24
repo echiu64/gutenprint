@@ -64,6 +64,8 @@ $define NOINLINE
 #define FMAX(a, b) ((a) > (b) ? (a) : (b))
 #define FMIN(a, b) ((a) < (b) ? (a) : (b))
 
+#define MAXB(bits) ((1 << (bits)) - 1)
+
 static inline void
 calc_rgb_to_hsl(unsigned short *rgb, double *hue, double *sat,
 		double *lightness)
@@ -346,7 +348,7 @@ fromname##_to_##toname(const stp_vars_t *vars, const unsigned char *in,	\
     return fromname##_16_to_##toname(vars, in, out);			\
 }
 
-#define BD(bits) (65535u / (unsigned) ((1 << (bits)) - 1))
+#define BD(bits) (65535u / (unsigned) MAXB(bits))
 
 #define COLOR_TO_COLOR_FUNC(T, bits)					\
 CFUNC									\
@@ -1257,50 +1259,47 @@ COLOR_TO_GRAY_THRESHOLD_FUNC(unsigned char, gray_8, 1, 1) // gray_8_to_gray_thre
 COLOR_TO_GRAY_THRESHOLD_FUNC(unsigned short, gray_16, 1, 1) // gray_16_to_gray_threshold
 GENERIC_COLOR_FUNC(gray, gray_threshold)
 
-#define CMYK_TO_COLOR_FUNC(namein, name2, T, bits, offset)		      \
-CFUNC									      \
+#define CMYK_TO_COLOR_FUNC(namein, name2, T, bits, offset)		\
+static unsigned								\
 namein##_##bits##_to_##name2(const stp_vars_t *vars, const unsigned char *in, \
-			   unsigned short *out)				      \
-{									      \
-  int i;								      \
-  lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));	      \
-  unsigned status;							      \
-  size_t real_steps = lut->steps;					      \
-  const T *s_in = (const T *) in;					      \
-  unsigned short *tmp;							      \
-  int width = lut->image_width;						      \
-  unsigned mask = 0;							      \
-									      \
-  if (!lut->cmy_tmp)							      \
-    lut->cmy_tmp = stp_malloc(3 * 2 * lut->image_width);		      \
-  tmp = lut->cmy_tmp;							      \
-  memset(lut->cmy_tmp, 0, width * 3 * sizeof(unsigned short));		      \
-  if (lut->invert_output)						      \
-    mask = 0xffff;							      \
-									      \
-  for (i = 0; i < width; i++, tmp += 3, s_in += 4)			      \
-    {									      \
-      unsigned c = (s_in[0 + offset] + s_in[(3 + offset) % 4]) *	      \
-	(65535 / ((1 << bits) - 1));					      \
-      unsigned m = (s_in[1 + offset] + s_in[(3 + offset) % 4]) *	      \
-	(65535 / ((1 << bits) - 1));					      \
-      unsigned y = (s_in[2 + offset] + s_in[(3 + offset) % 4]) *	      \
-	(65535 / ((1 << bits) - 1));					      \
-      if (c > 65535)							      \
-	c = 65535;							      \
-      if (m > 65535)							      \
-	m = 65535;							      \
-      if (y > 65535)							      \
-	y = 65535;							      \
-      tmp[0] = c ^ mask;						      \
-      tmp[1] = m ^ mask;						      \
-      tmp[2] = y ^ mask;						      \
-    }									      \
-  lut->steps = 65536;							      \
-  status =								      \
-    color_16_to_##name2(vars, (const unsigned char *) lut->cmy_tmp, out);     \
-  lut->steps = real_steps;						      \
-  return status;							      \
+			   unsigned short *out)				\
+{									\
+  int i;								\
+  lut_t *lut = (lut_t *)(stp_get_component_data(vars, "Color"));	\
+  unsigned status;							\
+  size_t real_steps = lut->steps;					\
+  const T *s_in = (const T *) in;					\
+  unsigned short *tmp;							\
+  int width = lut->image_width;						\
+									\
+  if (!lut->cmy_tmp)							\
+    lut->cmy_tmp = stp_malloc(3 * 2 * lut->image_width);		\
+  tmp = lut->cmy_tmp;							\
+  memset(lut->cmy_tmp, 0, width * 3 * sizeof(unsigned short));		\
+									\
+  for (i = 0; i < width; i++, tmp += 3, s_in += 4)			\
+    {									\
+      unsigned c = (s_in[0 + offset] + s_in[(3 + offset) % 4]) *	\
+	(65535 / MAXB(bits));						\
+      unsigned m = (s_in[1 + offset] + s_in[(3 + offset) % 4]) *	\
+	(65535 / MAXB(bits));						\
+      unsigned y = (s_in[2 + offset] + s_in[(3 + offset) % 4]) *	\
+	(65535 / MAXB(bits));						\
+      if (c > MAXB(16))							\
+	c = MAXB(16);							\
+      if (m > MAXB(16))							\
+	m = MAXB(16);							\
+      if (y > MAXB(16))							\
+	y = MAXB(16);							\
+      tmp[0] = c;							\
+      tmp[1] = m;							\
+      tmp[2] = y;							\
+    }									\
+  lut->steps = 65536;							\
+  status =								\
+    color_16_to_##name2(vars, (const unsigned char *) lut->cmy_tmp, out); \
+  lut->steps = real_steps;						\
+  return status;							\
 }
 
 CMYK_TO_COLOR_FUNC(cmyk, color, unsigned char, 8, 0) // cmyk_8_to_color
