@@ -101,6 +101,7 @@ struct dnpds40_ctx {
 	int mediaoffset;
 	int manual_copies;
 	int correct_count;
+	int needs_mlot;
 
 	uint32_t native_width;
 	int supports_6x9;
@@ -673,6 +674,7 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
                 if (FW_VER_CHECK(1,20))
 			ctx->supports_3x5x2 = 1;
 		if (FW_VER_CHECK(2,00)) { /* AKA RX1HS */
+			ctx->needs_mlot = 1;
 			ctx->supports_mediaoffset = 1;
 			ctx->supports_iserial = 1;
 		}
@@ -1379,6 +1381,26 @@ static int dnpds40_main_loop(void *vctx, int copies) {
 		ATTR("marker-low-levels=10\n");
 		ATTR("marker-names='%s'\n", dnpds40_media_types(ctx->media));
 		ATTR("marker-types=ribbonWax\n");
+	}
+
+	/* RX1HS requires HS media, but the only way to tell is that the
+	   HS media reports a lot code, while the non-HS media does not. */
+	if (ctx->needs_mlot) {
+		/* Get Media Lot */
+		dnpds40_build_cmd(&cmd, "INFO", "MLOT", 0);
+
+		resp = dnpds40_resp_cmd(ctx, &cmd, &len);
+		if (!resp)
+			return CUPS_BACKEND_FAILED;
+
+		dnpds40_cleanup_string((char*)resp, len);
+
+		len = strlen((char*)resp);
+		free(resp);
+		if (!len) {
+			ERROR("Media does not report a valid lot number (non-HS media in RX1HS?)\n");
+			return CUPS_BACKEND_STOP;
+		}
 	}
 
 top:
@@ -2492,7 +2514,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS40/DS80/DSRX1/DS620/DS820",
-	.version = "0.95",
+	.version = "0.96",
 	.uri_prefix = "dnpds40",
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
