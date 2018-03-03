@@ -656,6 +656,10 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
 			ctx->supports_matte = 1;
 		if (FW_VER_CHECK(1,40))
 			ctx->supports_2x6 = 1;
+		if (FW_VER_CHECK(1,50))
+			ctx->supports_3x5x2 = 1;
+		if (FW_VER_CHECK(1,60))
+			ctx->supports_fullcut = ctx->supports_6x6 = 1; // No 5x5!
 		break;
 	case P_DNP_DS80:
 	case P_DNP_DS80D:
