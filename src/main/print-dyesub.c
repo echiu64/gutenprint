@@ -6169,10 +6169,14 @@ static void dnpdsrx1_printer_start(stp_vars_t *v)
     stp_zprintf(v, "01");
   } else if (!strcmp(pd->pagesize, "w288h432")) {
     stp_zprintf(v, "02");
+  } else if (!strcmp(pd->pagesize, "w360h360")) {
+    stp_zprintf(v, "29");
   } else if (!strcmp(pd->pagesize, "w360h504")) {
     stp_zprintf(v, "03");
   } else if (!strcmp(pd->pagesize, "w360h504-div2")) {
     stp_zprintf(v, "22");
+  } else if (!strcmp(pd->pagesize, "w432h432")) {
+    stp_zprintf(v, "27");
   } else if (!strcmp(pd->pagesize, "w432h576")) {
     stp_zprintf(v, "04");
   } else if (!strcmp(pd->pagesize, "w432h576-div2")) {
