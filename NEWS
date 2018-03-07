@@ -276,7 +276,11 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      Xerox Phaser 8860
      Xerox WorkCentre C2424
 
-2) The Canon driver offers improved support for the following printer
+3) The following BW laser printer has been added:
+
+     HP LaserJet 5N
+
+4) The Canon driver offers improved support for the following printer
    models:
 
      BJC-85
