@@ -2593,6 +2593,7 @@
       <printer translate="name" name="HP LaserJet 5L" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 5L;DES:Hewlett-Packard LaserJet 5L Printer;CMD:HP ENHANCED PCL5,PJL;" driver="hp-lj_5l" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="HP LaserJet 5M" driver="hp-lj_5m" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="HP LaserJet 5MP" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 5MP;DES:Hewlett-Packard LaserJet 5MP Printer;CMD:HP ENHANCED PCL5,PJL,POSTSCRIPT;" driver="hp-lj_5mp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 5N" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 5N;DES:Hewlett-Packard LaserJet 5N Printer;CMD:HP ENHANCED PCL5,PJL;" driver="hp-lj_5n" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="HP LaserJet 5P" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 5P;DES:Hewlett-Packard LaserJet 5P Printer;CMD:HP ENHANCED PCL5,PJL;" driver="hp-lj_5p" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="HP LaserJet 5Si" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 5Si;DES:None;CMD:PJL,MLC,PCL,POSTSCRIPT;" driver="pcl-5si" manufacturer="HP" model="7" parameters="pcl_laser_params" />
       <printer translate="name" name="HP LaserJet 6" driver="pcl-6" manufacturer="HP" model="6" parameters="pcl_laser_params" />
