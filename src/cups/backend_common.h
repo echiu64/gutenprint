@@ -1,7 +1,7 @@
 /*
  *   CUPS Backend common code
  *
- *   (c) 2013-2017 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2018 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -124,6 +124,7 @@ enum {
 	P_DNP_DS80,
 	P_DNP_DS80D,
 	P_CITIZEN_CW01,
+	P_CITIZEN_OP900II,
 	P_DNP_DSRX1,
 	P_DNP_DS620,
 	P_DNP_DS820,

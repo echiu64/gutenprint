@@ -242,6 +242,7 @@ static char *dnpds40_printer_type(int type)
 	case P_DNP_DSRX1: return "DSRX1";
 	case P_DNP_DS620: return "DS620";
 	case P_DNP_DS820: return "DS820";
+	case P_CITIZEN_OP900II: return "OP900ii";
 	default: break;
 	}
 	return "Unknown";
@@ -686,6 +687,15 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
 			ctx->supports_5x5 = ctx->supports_6x6 = 1;
 		}
 		break;
+	case P_CITIZEN_OP900II:
+		ctx->native_width = 1920;
+		ctx->supports_counterp = 1;
+		ctx->supports_matte = 1;
+		ctx->supports_mqty_default = 1;
+		ctx->supports_6x9 = 1;
+		if (FW_VER_CHECK(1,11))
+			ctx->supports_2x6 = 1;
+		break;
 	case P_DNP_DS620:
 		ctx->native_width = 1920;
 		ctx->correct_count = 1;
@@ -817,11 +827,33 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
 			break;
 		case P_DNP_DSRX1:
 			switch (ctx->media) {
+			case 210: // 2L
+				ctx->media_count_new = 350;
+				break;
 			case 300: // PC
 				ctx->media_count_new = 700;
 				break;
 			case 310: // A5
 				ctx->media_count_new = 350;
+				break;
+			default:
+				ctx->media_count_new = 999; // non-zero
+				break;
+			}
+			break;
+		case P_CITIZEN_OP900II:
+			switch (ctx->media) {
+			case 210: // 2L
+				ctx->media_count_new = 350;
+				break;
+			case 300: // PC
+				ctx->media_count_new = 600;
+				break;
+			case 310: // A5
+				ctx->media_count_new = 300;
+				break;
+			case 400: // A5W
+				ctx->media_count_new = 280;
 				break;
 			default:
 				ctx->media_count_new = 999; // non-zero
@@ -2518,7 +2550,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS40/DS80/DSRX1/DS620/DS820",
-	.version = "0.96",
+	.version = "0.97",
 	.uri_prefix = "dnpds40",
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
@@ -2535,7 +2567,7 @@ struct dyesub_backend dnpds40_backend = {
 	{ USB_VID_CITIZEN, USB_PID_DNP_DS620_OLD, P_DNP_DS620, NULL},
 	{ USB_VID_DNP, USB_PID_DNP_DS620, P_DNP_DS620, NULL},
 	{ USB_VID_DNP, USB_PID_DNP_DS80D, P_DNP_DS80D, NULL},
-	{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW02, P_DNP_DS40, NULL},
+	{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW02, P_CITIZEN_OP900II, NULL},
 	{ USB_VID_CITIZEN, USB_PID_CITIZEN_CX02, P_DNP_DS620, NULL},
 	{ USB_VID_DNP, USB_PID_DNP_DS820, P_DNP_DS820, NULL},
 	{ 0, 0, 0, NULL}
