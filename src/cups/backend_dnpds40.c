@@ -101,6 +101,7 @@ struct dnpds40_ctx {
 	int mediaoffset;
 	int manual_copies;
 	int correct_count;
+	int needs_mlot;
 
 	uint32_t native_width;
 	int supports_6x9;
@@ -241,6 +242,7 @@ static char *dnpds40_printer_type(int type)
 	case P_DNP_DSRX1: return "DSRX1";
 	case P_DNP_DS620: return "DS620";
 	case P_DNP_DS820: return "DS820";
+	case P_CITIZEN_OP900II: return "OP900ii";
 	default: break;
 	}
 	return "Unknown";
@@ -655,6 +657,10 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
 			ctx->supports_matte = 1;
 		if (FW_VER_CHECK(1,40))
 			ctx->supports_2x6 = 1;
+		if (FW_VER_CHECK(1,50))
+			ctx->supports_3x5x2 = 1;
+		if (FW_VER_CHECK(1,60))
+			ctx->supports_fullcut = ctx->supports_6x6 = 1; // No 5x5!
 		break;
 	case P_DNP_DS80:
 	case P_DNP_DS80D:
@@ -673,12 +679,22 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
                 if (FW_VER_CHECK(1,20))
 			ctx->supports_3x5x2 = 1;
 		if (FW_VER_CHECK(2,00)) { /* AKA RX1HS */
+			ctx->needs_mlot = 1;
 			ctx->supports_mediaoffset = 1;
 			ctx->supports_iserial = 1;
 		}
 		if (FW_VER_CHECK(2,06)) {
 			ctx->supports_5x5 = ctx->supports_6x6 = 1;
 		}
+		break;
+	case P_CITIZEN_OP900II:
+		ctx->native_width = 1920;
+		ctx->supports_counterp = 1;
+		ctx->supports_matte = 1;
+		ctx->supports_mqty_default = 1;
+		ctx->supports_6x9 = 1;
+		if (FW_VER_CHECK(1,11))
+			ctx->supports_2x6 = 1;
 		break;
 	case P_DNP_DS620:
 		ctx->native_width = 1920;
@@ -811,11 +827,33 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
 			break;
 		case P_DNP_DSRX1:
 			switch (ctx->media) {
+			case 210: // 2L
+				ctx->media_count_new = 350;
+				break;
 			case 300: // PC
 				ctx->media_count_new = 700;
 				break;
 			case 310: // A5
 				ctx->media_count_new = 350;
+				break;
+			default:
+				ctx->media_count_new = 999; // non-zero
+				break;
+			}
+			break;
+		case P_CITIZEN_OP900II:
+			switch (ctx->media) {
+			case 210: // 2L
+				ctx->media_count_new = 350;
+				break;
+			case 300: // PC
+				ctx->media_count_new = 600;
+				break;
+			case 310: // A5
+				ctx->media_count_new = 300;
+				break;
+			case 400: // A5W
+				ctx->media_count_new = 280;
 				break;
 			default:
 				ctx->media_count_new = 999; // non-zero
@@ -1379,6 +1417,26 @@ static int dnpds40_main_loop(void *vctx, int copies) {
 		ATTR("marker-low-levels=10\n");
 		ATTR("marker-names='%s'\n", dnpds40_media_types(ctx->media));
 		ATTR("marker-types=ribbonWax\n");
+	}
+
+	/* RX1HS requires HS media, but the only way to tell is that the
+	   HS media reports a lot code, while the non-HS media does not. */
+	if (ctx->needs_mlot) {
+		/* Get Media Lot */
+		dnpds40_build_cmd(&cmd, "INFO", "MLOT", 0);
+
+		resp = dnpds40_resp_cmd(ctx, &cmd, &len);
+		if (!resp)
+			return CUPS_BACKEND_FAILED;
+
+		dnpds40_cleanup_string((char*)resp, len);
+
+		len = strlen((char*)resp);
+		free(resp);
+		if (!len) {
+			ERROR("Media does not report a valid lot number (non-HS media in RX1HS?)\n");
+			return CUPS_BACKEND_STOP;
+		}
 	}
 
 top:
@@ -2492,7 +2550,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS40/DS80/DSRX1/DS620/DS820",
-	.version = "0.95",
+	.version = "0.97",
 	.uri_prefix = "dnpds40",
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
@@ -2509,7 +2567,7 @@ struct dyesub_backend dnpds40_backend = {
 	{ USB_VID_CITIZEN, USB_PID_DNP_DS620_OLD, P_DNP_DS620, NULL},
 	{ USB_VID_DNP, USB_PID_DNP_DS620, P_DNP_DS620, NULL},
 	{ USB_VID_DNP, USB_PID_DNP_DS80D, P_DNP_DS80D, NULL},
-	{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW02, P_DNP_DS40, NULL},
+	{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW02, P_CITIZEN_OP900II, NULL},
 	{ USB_VID_CITIZEN, USB_PID_CITIZEN_CX02, P_DNP_DS620, NULL},
 	{ USB_VID_DNP, USB_PID_DNP_DS820, P_DNP_DS820, NULL},
 	{ 0, 0, 0, NULL}
