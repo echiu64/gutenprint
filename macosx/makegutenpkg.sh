@@ -257,4 +257,4 @@ codesign -s "$CODESIGN_IDENTITY" -fv ~/Desktop/gutenprint-$pkgversion/uninstall-
 codesign -s "$CODESIGN_IDENTITY" -fv ~/Desktop/gutenprint-$pkgversion/Gutenprint\ Utility\ for\ EPSON\ Inkjet\ Printers.command
 
 test -f ~/Desktop/gutenprint-$pkgversion.dmg && rm -f ~/Desktop/gutenprint-$pkgversion.dmg
-hdiutil create -srcfolder ~/Desktop/gutenprint-$pkgversion ~/Desktop/gutenprint-$pkgversion.dmg
+hdiutil create -fs HFS+ -srcfolder ~/Desktop/gutenprint-$pkgversion ~/Desktop/gutenprint-$pkgversion.dmg
