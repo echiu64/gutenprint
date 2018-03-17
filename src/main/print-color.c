@@ -1391,6 +1391,7 @@ stpi_compute_lut(stp_vars_t *v)
 {
   int i;
   lut_t *lut = (lut_t *)(stp_get_component_data(v, "Color"));
+  double app_gamma_scale = 4.0;
   stp_curve_t *curve;
   stp_dprintf(STP_DBG_LUT, v, "stpi_compute_lut\n");
 
@@ -1421,9 +1422,11 @@ stpi_compute_lut(stp_vars_t *v)
 
   if (stp_check_float_parameter(v, "AppGamma", STP_PARAMETER_ACTIVE))
     lut->app_gamma = stp_get_float_parameter(v, "AppGamma");
+  if (stp_check_float_parameter(v, "AppGammaScale", STP_PARAMETER_ACTIVE))
+    app_gamma_scale = stp_get_float_parameter(v, "AppGammaScale");
   if (stp_check_boolean_parameter(v, "SimpleGamma", STP_PARAMETER_ACTIVE))
     lut->simple_gamma_correction = stp_get_boolean_parameter(v, "SimpleGamma");
-  lut->screen_gamma = lut->app_gamma / 4.0; /* "Empirical" */
+  lut->screen_gamma = lut->app_gamma / app_gamma_scale; /* "Empirical" */
   curve = stp_curve_create_copy(color_curve_bounds);
   stp_curve_rescale(curve, 65535.0, STP_CURVE_COMPOSE_MULTIPLY,
 		    STP_CURVE_BOUNDS_RESCALE);
