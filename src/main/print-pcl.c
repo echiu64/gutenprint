@@ -3475,7 +3475,10 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
     }
 
   if (printing_color && (caps->stp_printer_type & PCL_PRINTER_LJ_COLOR))
-    (void) stp_color_init(v, image, 256);
+    {
+      stp_set_float_parameter(v, "AppGammaScale", 1.0);
+      (void) stp_color_init(v, image, 256);
+    }
   else
     (void) stp_color_init(v, image, 65536);
 
