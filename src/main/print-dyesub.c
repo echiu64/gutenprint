@@ -250,7 +250,9 @@ typedef struct
   int holokote_custom;
   int holopatch;
   int overcoat;
+  int overcoat_dpx;
   const char *overcoat_hole; /* XXX TODO: add custom option? */
+  const char *overcoat_hole_dpx; /* XXX TODO: add custom option? */
   int align_start;
   int align_end;
   int power_color;
@@ -340,6 +342,7 @@ typedef struct /* printer specific parameters */
 } dyesub_cap_t;
 
 
+static int dyesub_feature(const dyesub_cap_t *caps, int feature);
 static const dyesub_cap_t* dyesub_get_model_capabilities(int model);
 static const laminate_t* dyesub_get_laminate_pattern(stp_vars_t *v);
 static const dyesub_media_t* dyesub_get_mediatype(stp_vars_t *v);
@@ -6748,47 +6751,75 @@ static void magicard_printer_init(stp_vars_t *v)
   stp_zprintf(v, ",IMF%s", "BGR"); /* Image format -- as opposed to K, BGRK and others. */
   stp_zprintf(v, ",XCO0,YCO0"); // ??
   stp_zprintf(v, ",WID%u,HGT%u", (unsigned int)pd->h_size, (unsigned int)pd->w_size - 30); /* Width & Height */
-  stp_zprintf(v, ",OVR%s", pd->privdata.magicard.overcoat ? "ON" : "OFF" ); /* Overcoat. */
-  if (pd->privdata.magicard.overcoat && pd->privdata.magicard.overcoat_hole)
+
+  /* Overcoat options are unique per-side */
+  if (!(pd->page_number & 1))
   {
-    if (!strcmp("SmartCard", pd->privdata.magicard.overcoat_hole))
-      stp_zprintf(v, ",NCT%d,%d,%d,%d", 90, 295, 260, 450);
-    else if (!strcmp("SmartCardLarge", pd->privdata.magicard.overcoat_hole))
-      stp_zprintf(v, ",NCT%d,%d,%d,%d", 75, 275, 280, 470);
-    else if (!strcmp("MagStripe", pd->privdata.magicard.overcoat_hole))
-      stp_zprintf(v, ",NCT%d,%d,%d,%d", 0, 420, 1025, 590);
-    else if (!strcmp("MagStripeLarge", pd->privdata.magicard.overcoat_hole))
-      stp_zprintf(v, ",NCT%d,%d,%d,%d", 0, 400, 1025, 610);
-    /* XXX TODO: Add ability to specify custom hole sizes */
+    stp_zprintf(v, ",OVR%s", pd->privdata.magicard.overcoat ? "ON" : "OFF" );
+    if (pd->privdata.magicard.overcoat && pd->privdata.magicard.overcoat_hole)
+    {
+      if (!strcmp("SmartCard", pd->privdata.magicard.overcoat_hole))
+        stp_zprintf(v, ",NCT%d,%d,%d,%d", 90, 295, 260, 450);
+      else if (!strcmp("SmartCardLarge", pd->privdata.magicard.overcoat_hole))
+        stp_zprintf(v, ",NCT%d,%d,%d,%d", 75, 275, 280, 470);
+      else if (!strcmp("MagStripe", pd->privdata.magicard.overcoat_hole))
+        stp_zprintf(v, ",NCT%d,%d,%d,%d", 0, 420, 1025, 590);
+      else if (!strcmp("MagStripeLarge", pd->privdata.magicard.overcoat_hole))
+        stp_zprintf(v, ",NCT%d,%d,%d,%d", 0, 400, 1025, 610);
+      /* XXX TODO: Add ability to specify custom hole sizes */
+    }
+  } else {
+    stp_zprintf(v, ",OVR%s", pd->privdata.magicard.overcoat_dpx ? "ON" : "OFF" );
+    if (pd->privdata.magicard.overcoat_dpx && pd->privdata.magicard.overcoat_hole_dpx)
+    {
+      if (!strcmp("SmartCard", pd->privdata.magicard.overcoat_hole_dpx))
+        stp_zprintf(v, ",NCT%d,%d,%d,%d", 90, 295, 260, 450);
+      else if (!strcmp("SmartCardLarge", pd->privdata.magicard.overcoat_hole_dpx))
+        stp_zprintf(v, ",NCT%d,%d,%d,%d", 75, 275, 280, 470);
+      else if (!strcmp("MagStripe", pd->privdata.magicard.overcoat_hole_dpx))
+        stp_zprintf(v, ",NCT%d,%d,%d,%d", 0, 420, 1025, 590);
+      else if (!strcmp("MagStripeLarge", pd->privdata.magicard.overcoat_hole_dpx))
+        stp_zprintf(v, ",NCT%d,%d,%d,%d", 0, 400, 1025, 610);
+      /* XXX TODO: Add ability to specify custom hole sizes */
+    }
   }
   stp_zprintf(v, ",NNNOFF"); // ??
-  stp_zprintf(v, ",USF%s", pd->privdata.magicard.holokote ? "ON" : "OFF");  /* Disable Holokote. */
-  if (pd->privdata.magicard.holokote)
+  if (!(pd->page_number & 1))
   {
-    stp_zprintf(v, ",HKT%d", pd->privdata.magicard.holokote);
-    stp_zprintf(v, ",CKI%s", pd->privdata.magicard.holokote_custom? "ON" : "OFF");
-    stp_zprintf(v, ",HKMFFFFFF,TRO0"); // HKM == area. each bit is a separate area, 1-24.  Not sure about TRO
-  }
-  if (pd->privdata.magicard.holopatch)
-  {
-    stp_zprintf(v, ",HPHON,PAT%d", pd->privdata.magicard.holopatch);
+    stp_zprintf(v, ",USF%s", pd->privdata.magicard.holokote ? "ON" : "OFF");  /* Disable Holokote. */
+    if (pd->privdata.magicard.holokote)
+    {
+      stp_zprintf(v, ",HKT%d", pd->privdata.magicard.holokote);
+      stp_zprintf(v, ",CKI%s", pd->privdata.magicard.holokote_custom? "ON" : "OFF");
+      stp_zprintf(v, ",HKMFFFFFF,TRO0"); // HKM == area. each bit is a separate area, 1-24.  Not sure about TRO
+    }
+
+    if (pd->privdata.magicard.holopatch)
+    {
+      stp_zprintf(v, ",HPHON,PAT%d", pd->privdata.magicard.holopatch);
+    }
+  } else {
+    stp_zprintf(v, ",USFOFF");  /* Disable Holokote on duplex side. */
   }
 
-  /* Magnetic stripe */
-  if (pd->privdata.magicard.mag1[0]) {
+  /* Magnetic stripe. Only program on the FRONT side. */
+  if (!(pd->page_number & 1))
+  {
+    if (pd->privdata.magicard.mag1[0]) {
 	  stp_zprintf(v, ",MAG1,BPI210,MPC7,COE%c,%s",
 		      pd->privdata.magicard.mag_coer ? 'H': 'L',
 		  pd->privdata.magicard.mag1);
-  }
-  if (pd->privdata.magicard.mag2[0]) {
+    }
+    if (pd->privdata.magicard.mag2[0]) {
 	  stp_zprintf(v, ",MAG2,BPI75,MPC5,COE%c,%s",
 		      pd->privdata.magicard.mag_coer ? 'H': 'L',
 		  pd->privdata.magicard.mag2);
-  }
-  if (pd->privdata.magicard.mag3[0]) {
+    }
+    if (pd->privdata.magicard.mag3[0]) {
 	  stp_zprintf(v, ",MAG3,BPI210,MPC7,COE%c,%s",
 		      pd->privdata.magicard.mag_coer ? 'H': 'L',
 		  pd->privdata.magicard.mag3);
+    }
   }
 
   stp_zprintf(v, ",PCT%d,%d,%d,%d", 0, 0, 1025, 641); // print area? (seen 1025/1015/999,641)
@@ -6941,6 +6972,18 @@ static const stp_parameter_t magicard_parameters[] =
     N_("Area to not cover with an overcoat layer"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "OvercoatHoleDuplex", N_("Overcoat Hole Duplex"), "Color=No,Category=Advanced Printer Setup",
+    N_("Area to not cover with an overcoat layer"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "LaminateDuplex", N_("Laminate Pattern Duplex"), "Color=No,Category=Advanced Printer Setup",
+    N_("Laminate Pattern Duplex"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 0, STP_CHANNEL_NONE, 1, 0
   },
   {
     "MagCoer", N_("Magnetic Stripe Coercivity"), "Color=No,Category=Advanced Printer Setup",
@@ -7119,6 +7162,44 @@ magicard_load_parameters(const stp_vars_t *v, const char *name,
       description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
       description->is_active = 1;
     }
+  else if (strcmp(name, "OvercoatHoleDuplex") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+
+      const dyesub_stringlist_t *mlist = &magicard_overcoat_holes_list;
+      for (i = 0; i < mlist->n_items; i++)
+        {
+	  const dyesub_stringitem_t *m = &(mlist->item[i]);
+	  stp_string_list_add_string(description->bounds.str,
+				       m->name, m->text); /* Do *not* want this translated, otherwise use gettext(m->text) */
+	}
+      description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
+      /* This feature only applies if the printer is duplexing! */
+      if (dyesub_feature(caps, DYESUB_FEATURE_DUPLEX))
+        description->is_active = 1;
+    }
+  else if (strcmp(name, "LaminateDuplex") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+      if (caps->laminate)
+        {
+          const laminate_list_t *llist = caps->laminate;
+
+          for (i = 0; i < llist->n_items; i++)
+            {
+              const laminate_t *l = &(llist->item[i]);
+	      stp_string_list_add_string(description->bounds.str,
+					 l->name, gettext(l->text));
+	    }
+          description->deflt.str =
+	  stp_string_list_param(description->bounds.str, 0)->name;
+	  /* This feature only applies if the printer is duplexing! */
+	  if (dyesub_feature(caps, DYESUB_FEATURE_DUPLEX))
+		  description->is_active = 1;
+        } else {
+	  description->is_active = 0;
+        }
+    }
   else if (strcmp(name, "MagCoer") == 0)
     {
       description->bounds.str = stp_string_list_create();
@@ -7157,10 +7238,12 @@ static int magicard_parse_parameters(stp_vars_t *v)
   dyesub_privdata_t *pd = get_privdata(v);
 
   const char *lpar = stp_get_string_parameter(v, "Laminate");
+  const char *lpar_dpx = stp_get_string_parameter(v, "LaminateDuplex"); 
   const char *mag_coer = stp_get_string_parameter(v, "MagCoer");
   const char *holokote = stp_get_string_parameter(v, "Holokote");
   int holopatch = stp_get_int_parameter(v, "Holopatch");
   const char *overcoat_hole = stp_get_string_parameter(v, "OvercoatHole");
+  const char *overcoat_hole_dpx = stp_get_string_parameter(v, "OvercoatHoleDuplex");
   int holokote_custom = stp_get_boolean_parameter(v, "HolokoteCustom");
   const char *blacktype = stp_get_string_parameter(v, "BlackType");
   const stp_raw_t *magstripe1 = NULL;
@@ -7206,6 +7289,7 @@ static int magicard_parse_parameters(stp_vars_t *v)
     return 1;
 
   pd->privdata.magicard.overcoat = !strcmp("On", lpar);
+  pd->privdata.magicard.overcoat_dpx = !strcmp("On", lpar_dpx);
   pd->privdata.magicard.resin_k = !strcmp("Resin",blacktype);
   pd->privdata.magicard.reject = stp_get_boolean_parameter(v, "RejectBad");
   pd->privdata.magicard.colorsure = stp_get_boolean_parameter(v, "ColorSure");
@@ -7217,6 +7301,7 @@ static int magicard_parse_parameters(stp_vars_t *v)
   pd->privdata.magicard.align_end = stp_get_int_parameter(v, "AlignEnd") + 50;
   pd->privdata.magicard.holopatch = holopatch;
   pd->privdata.magicard.overcoat_hole = overcoat_hole;
+  pd->privdata.magicard.overcoat_hole_dpx = overcoat_hole_dpx;
 
   pd->horiz_offset = stp_get_int_parameter(v, "CardOffset");
 
