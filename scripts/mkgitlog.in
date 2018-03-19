@@ -109,7 +109,7 @@ while (<GITLOG>) {
 	}
 	$curmsg .= $_;
     } elsif ($state == 3) {
-	if (/^tag: ((guten|gimp-)?print-[0-9]+_.*)/) {
+	if (/tag: ((guten|gimp-)?print-[0-9]+_.*)/) {
 	    $curtag = $1;
 	}
     } elsif ($state == 4) {
