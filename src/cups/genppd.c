@@ -2550,6 +2550,7 @@ write_ppd(
 	      */
 
 	      if (simplified && num_opts >= 10 &&
+		  (!desc.deflt.str || strcmp(opt->name, desc.deflt.str) != 0) &&
 		  (papersize->paper_unit == PAPERSIZE_ENGLISH_EXTENDED ||
 		   papersize->paper_unit == PAPERSIZE_METRIC_EXTENDED))
 		continue;
