@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.2.14-pre2, a pre-release of Gutenprint 5.2.14.
+Welcome to Gutenprint 5.2.14-pre3, a pre-release of Gutenprint 5.2.14.
 Please read these release notes carefully.
 
 Gutenprint is a suite of printer drivers for UNIX, Linux, and
@@ -254,6 +254,8 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
   1) The PCL driver now supports color laser printers that use PCL 5c
      natively (as opposed to emulation).  The support is considered to
      be preliminary at this time.
+
+     Color quality is significantly improved since 5.2.14-pre2.
 
      * The following printers now support color printing:
 
