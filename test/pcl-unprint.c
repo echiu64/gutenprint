@@ -179,6 +179,7 @@ typedef struct {
   const char initial_command[3];		/* First part of command */
   const char final_command;			/* Last part of command */
   int has_data;					/* Data follows */
+  int clean_state;				/* Leaves printer state clean */
   command_t command;				/* Command name */
   const char *description;			/* Text for printing */
 } commands_t;
@@ -186,78 +187,78 @@ typedef struct {
 const commands_t pcl_commands[] =
     {
 /* Two-character sequences ESC <x> */
-	{ "E", '\0', 0, PCL_RESET, "PCL RESET" },
-	{ "9", '\0', 0, PCL_RESET_MARGINS, "Reset Margins" },
-	{ "%", 'A', 0, PCL_ENTER_PCL, "PCL mode" },
-	{ "%", 'B', 0, PCL_ENTER_HPGL2, "HPGL/2 mode" },
-	{ "%", 'X', 0, PCL_ENTER_PJL, "UEL/Enter PJL mode" },
+	{ "E", '\0', 0, 1, PCL_RESET, "PCL RESET" },
+	{ "9", '\0', 0, 0, PCL_RESET_MARGINS, "Reset Margins" },
+	{ "%", 'A', 0, 0, PCL_ENTER_PCL, "PCL mode" },
+	{ "%", 'B', 0, 0, PCL_ENTER_HPGL2, "HPGL/2 mode" },
+	{ "%", 'X', 0, 0, PCL_ENTER_PJL, "UEL/Enter PJL mode" },
 /* Parameterised sequences */
 /* Raster positioning */
-	{ "&a", 'G', 0, PCL_MEDIA_SIDE, "Set Media Side" },
-	{ "&a", 'H', 0, PCL_LEFTRASTER_POS, "Left Raster Position" },
-	{ "&a", 'L', 0, PCL_LEFT_MARGIN, "Left Margin by Column" },
-	{ "&a", 'M', 0, PCL_RIGHT_MARGIN, "Right Margin by Column" },
-	{ "&a", 'N', 0, PCL_NEGATIVE_MOTION, "Negative Motion" },
-	{ "&a", 'P', 0, PCL_PRINT_DIRECTION, "Print Direction" },
-	{ "&a", 'V', 0, PCL_TOPRASTER_POS, "Top Raster Position" },
+	{ "&a", 'G', 0, 0, PCL_MEDIA_SIDE, "Set Media Side" },
+	{ "&a", 'H', 0, 0, PCL_LEFTRASTER_POS, "Left Raster Position" },
+	{ "&a", 'L', 0, 0, PCL_LEFT_MARGIN, "Left Margin by Column" },
+	{ "&a", 'M', 0, 0, PCL_RIGHT_MARGIN, "Right Margin by Column" },
+	{ "&a", 'N', 0, 0, PCL_NEGATIVE_MOTION, "Negative Motion" },
+	{ "&a", 'P', 0, 0, PCL_PRINT_DIRECTION, "Print Direction" },
+	{ "&a", 'V', 0, 0, PCL_TOPRASTER_POS, "Top Raster Position" },
 /* Characters */
-	{ "&k", 'H', 0, PCL_CPI, "Characters per Inch" },
+	{ "&k", 'H', 0, 0, PCL_CPI, "Characters per Inch" },
 /* Media */
-	{ "&l", 'A', 0, PCL_MEDIA_SIZE , "Media Size" },
-	{ "&l", 'C', 0, PCL_SET_VMI, "Set Vertical Line Spacing" },
-	{ "&l", 'D', 0, PCL_LPI , "Lines per Inch" },
-	{ "&l", 'E', 0, PCL_TOP_MARGIN , "Top Margin" },
-	{ "&l", 'F', 0, PCL_TEXT_LENGTH , "Text Length" },
-	{ "&l", 'G', 0, PCL_MEDIA_DEST, "Media Destination" },
-	{ "&l", 'H', 0, PCL_MEDIA_SOURCE, "Media Source" },
-	{ "&l", 'L', 0, PCL_PERF_SKIP , "Perf. Skip" },
-	{ "&l", 'M', 0, PCL_MEDIA_TYPE , "Media Type" },
-	{ "&l", 'O', 0, PCL_PAGE_ORIENTATION, "Page Orientation" },
-	{ "&l", 'P', 0, PCL_PAGE_LENGTH, "Page Length in Lines" },
-	{ "&l", 'S', 0, PCL_DUPLEX, "Duplex mode" },
-	{ "&l", 'T', 0, PCL_JOB_SEPARATION, "Job Separation" },
-	{ "&l", 'U', 0, PCL_LEFT_OFFSET_REGISTRATION, "Left Offset Registration" },
-	{ "&l", 'X', 0, PCL_NUM_COPIES, "Number of copies" },
-	{ "&l", 'Z', 0, PCL_TOP_OFFSET_REGISTRATION, "Top Offset Registration" },
+	{ "&l", 'A', 0, 0, PCL_MEDIA_SIZE , "Media Size" },
+	{ "&l", 'C', 0, 0, PCL_SET_VMI, "Set Vertical Line Spacing" },
+	{ "&l", 'D', 0, 0, PCL_LPI , "Lines per Inch" },
+	{ "&l", 'E', 0, 0, PCL_TOP_MARGIN , "Top Margin" },
+	{ "&l", 'F', 0, 0, PCL_TEXT_LENGTH , "Text Length" },
+	{ "&l", 'G', 0, 0, PCL_MEDIA_DEST, "Media Destination" },
+	{ "&l", 'H', 0, 0, PCL_MEDIA_SOURCE, "Media Source" },
+	{ "&l", 'L', 0, 0, PCL_PERF_SKIP , "Perf. Skip" },
+	{ "&l", 'M', 0, 0, PCL_MEDIA_TYPE , "Media Type" },
+	{ "&l", 'O', 0, 0, PCL_PAGE_ORIENTATION, "Page Orientation" },
+	{ "&l", 'P', 0, 0, PCL_PAGE_LENGTH, "Page Length in Lines" },
+	{ "&l", 'S', 0, 0, PCL_DUPLEX, "Duplex mode" },
+	{ "&l", 'T', 0, 0, PCL_JOB_SEPARATION, "Job Separation" },
+	{ "&l", 'U', 0, 0, PCL_LEFT_OFFSET_REGISTRATION, "Left Offset Registration" },
+	{ "&l", 'X', 0, 0, PCL_NUM_COPIES, "Number of copies" },
+	{ "&l", 'Z', 0, 0, PCL_TOP_OFFSET_REGISTRATION, "Top Offset Registration" },
 /* Units */
-	{ "&u", 'D', 0, PCL_UNIT_OF_MEASURE, "Unit of Measure" },	/* from bpd05446 */
+	{ "&u", 'D', 0, 0, PCL_UNIT_OF_MEASURE, "Unit of Measure" },	/* from bpd05446 */
 /* Raster data */
-	{ "*b", 'B', 0, PCL_GRAY_BALANCE, "Gray Balance" },	/* from PCL Developer's Guide 6.0 */
-	{ "*b", 'M', 0, PCL_COMPRESSIONTYPE, "Compression Type" },
-	{ "*b", 'S', 0, PCL_SEED_ROW_SOURCE, "Seed row # source" },
-	{ "*b", 'V', 1, PCL_DATA, "Data, intermediate" },
-	{ "*b", 'W', 1, PCL_DATA_LAST, "Data, last" },
-	{ "*b", 'Y', 0, PCL_RELATIVE_VERTICAL_PIXEL_MOVEMENT, "Relative Vertical Pixel Movement" },
+	{ "*b", 'B', 0, 0, PCL_GRAY_BALANCE, "Gray Balance" },	/* from PCL Developer's Guide 6.0 */
+	{ "*b", 'M', 0, 0, PCL_COMPRESSIONTYPE, "Compression Type" },
+	{ "*b", 'S', 0, 0, PCL_SEED_ROW_SOURCE, "Seed row # source" },
+	{ "*b", 'V', 1, 0, PCL_DATA, "Data, intermediate" },
+	{ "*b", 'W', 1, 0, PCL_DATA_LAST, "Data, last" },
+	{ "*b", 'Y', 0, 0, PCL_RELATIVE_VERTICAL_PIXEL_MOVEMENT, "Relative Vertical Pixel Movement" },
 /* Palette */
-	{ "*d", 'W', 1, PCL_PALETTE_CONFIGURATION, "Palette Configuration" },
+	{ "*d", 'W', 1, 0, PCL_PALETTE_CONFIGURATION, "Palette Configuration" },
 /* Plane configuration */
-	{ "*g", 'W', 1, PCL_CONFIGURE, "Configure Raster Data" },
+	{ "*g", 'W', 1, 0, PCL_CONFIGURE, "Configure Raster Data" },
 /* Raster Graphics */
-	{ "*o", 'D', 0, PCL_DEPLETION, "Depletion" },
-	{ "*o", 'M', 0, PCL_PRINT_QUALITY, "Print Quality" },
-	{ "*o", 'Q', 0, PCL_SHINGLING, "Raster Graphics Shingling" },
-	{ "*o", 'W', 1, PCL_DRIVER_CONFIG, "Driver Configuration Command" },
+	{ "*o", 'D', 0, 0, PCL_DEPLETION, "Depletion" },
+	{ "*o", 'M', 0, 0, PCL_PRINT_QUALITY, "Print Quality" },
+	{ "*o", 'Q', 0, 0, PCL_SHINGLING, "Raster Graphics Shingling" },
+	{ "*o", 'W', 1, 0, PCL_DRIVER_CONFIG, "Driver Configuration Command" },
 /* Cursor Positioning */
-	{ "*p", 'X', 0, PCL_HORIZONTAL_CURSOR_POSITIONING_BY_DOTS, "Horizontal Cursor Positioning by Dots" },
-	{ "*p", 'Y', 0, PCL_VERTICAL_CURSOR_POSITIONING_BY_DOTS, "Vertical Cursor Positioning by Dots" },
+	{ "*p", 'X', 0, 0, PCL_HORIZONTAL_CURSOR_POSITIONING_BY_DOTS, "Horizontal Cursor Positioning by Dots" },
+	{ "*p", 'Y', 0, 0, PCL_VERTICAL_CURSOR_POSITIONING_BY_DOTS, "Vertical Cursor Positioning by Dots" },
 /* Raster graphics */
-	{ "*r", 'A', 0, PCL_START_RASTER, "Start Raster Graphics" },
-	{ "*r", 'B', 0, PCL_END_RASTER, "End Raster Graphics"},
-	{ "*r", 'C', 0, PCL_END_COLOUR_RASTER, "End Colour Raster Graphics" },
-	{ "*r", 'Q', 0, PCL_RASTERGRAPHICS_QUALITY, "Raster Graphics Quality" },
-	{ "*r", 'S', 0, PCL_RASTER_WIDTH, "Raster Width" },
-	{ "*r", 'T', 0, PCL_RASTER_HEIGHT, "Raster Height" },
-	{ "*r", 'U', 0, PCL_COLOURTYPE, "Colour Type" },
+	{ "*r", 'A', 0, 0, PCL_START_RASTER, "Start Raster Graphics" },
+	{ "*r", 'B', 0, 0, PCL_END_RASTER, "End Raster Graphics"},
+	{ "*r", 'C', 0, 0, PCL_END_COLOUR_RASTER, "End Colour Raster Graphics" },
+	{ "*r", 'Q', 0, 0, PCL_RASTERGRAPHICS_QUALITY, "Raster Graphics Quality" },
+	{ "*r", 'S', 0, 0, PCL_RASTER_WIDTH, "Raster Width" },
+	{ "*r", 'T', 0, 0, PCL_RASTER_HEIGHT, "Raster Height" },
+	{ "*r", 'U', 0, 0, PCL_COLOURTYPE, "Colour Type" },
 /* Resolution */
-	{ "*t", 'R', 0, PCL_RESOLUTION, "Resolution" },
-	{ "*t", 'J', 0, PCL_RASTER_RENDER, "Render Algorithm" },
+	{ "*t", 'R', 0, 0, PCL_RESOLUTION, "Resolution" },
+	{ "*t", 'J', 0, 0, PCL_RASTER_RENDER, "Render Algorithm" },
 /* RTL/PCL5 */
-	{ "*v", 'W', 1, PCL_RTL_CONFIGURE, "RTL Configure Image Data" },
-	{ "*v", 'A', 0, PCL_COLOR_COMPONENT_1, "Color Component 1" },
-	{ "*v", 'B', 0, PCL_COLOR_COMPONENT_2, "Color Component 2" },
-	{ "*v", 'C', 0, PCL_COLOR_COMPONENT_3, "Color Component 3" },
-	{ "*v", 'I', 0, PCL_ASSIGN_COLOR_INDEX, "Assign Color Index" },
-	{ "*v", 'S', 0, PCL_SET_FOREGROUND_COLOR, "Set Foreground Color" },
+	{ "*v", 'W', 1, 0, PCL_RTL_CONFIGURE, "RTL Configure Image Data" },
+	{ "*v", 'A', 0, 0, PCL_COLOR_COMPONENT_1, "Color Component 1" },
+	{ "*v", 'B', 0, 0, PCL_COLOR_COMPONENT_2, "Color Component 2" },
+	{ "*v", 'C', 0, 0, PCL_COLOR_COMPONENT_3, "Color Component 3" },
+	{ "*v", 'I', 0, 0, PCL_ASSIGN_COLOR_INDEX, "Assign Color Index" },
+	{ "*v", 'S', 0, 0, PCL_SET_FOREGROUND_COLOR, "Set Foreground Color" },
    };
 
 int pcl_find_command (void);
@@ -987,6 +988,7 @@ int main(int argc, char *argv[])
     image_t image_data;			/* Data concerning image */
     long filepos = -1;
     int wrote_header = 0;
+    int state_is_clean = 1;
 
 /*
  * Holders for the decoded lines
@@ -1064,9 +1066,8 @@ int main(int argc, char *argv[])
     while (1) {
 	pcl_read_command();
 	if (eof == 1) {
-/* #ifdef DEBUG */
-	    fprintf(stderr, "EOF while reading command.\n");
-/* #endif */
+	    if (! state_is_clean)
+		fprintf(stderr, "EOF while reading command.\n");
 	    (void) fclose(read_fd);
 	    (void) fclose(write_fd);
 	    exit(EXIT_SUCCESS);
@@ -1085,6 +1086,7 @@ int main(int argc, char *argv[])
 	}
 	else {
 	    command = pcl_commands[command_index].command;
+	    state_is_clean = pcl_commands[command_index].clean_state;
 	    if (pcl_commands[command_index].has_data == 1) {
 
 /* Read the data into data_buffer */
