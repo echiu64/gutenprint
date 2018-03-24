@@ -3589,9 +3589,7 @@ canon_init_setColor(const stp_vars_t *v, const canon_privdata_t *init)
 		      + 1;	/* hardcode to High quality for now */		/* PRINT_QUALITY */
 
 		    if (!strcmp(init->caps->name,"2100")) { /* BJC-2100: ESC (c command length is 3 */
-		      if (!strcmp(init->mode->name,"360x360dpi"))
-			arg_63[1] = 0x00;
-		      else if (!strcmp(init->mode->name,"720x360dpi"))
+		      if (!strcmp(init->mode->name,"720x360dpi"))
 			arg_63[1] = 0x00;
 		      else if (!strcmp(init->mode->name,"360x360dpi_draft"))
 			arg_63[1] = 0x00;
