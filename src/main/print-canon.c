@@ -3588,7 +3588,19 @@ canon_init_setColor(const stp_vars_t *v, const canon_privdata_t *init)
 		    arg_63[1] = ((init->pt ? init->pt->media_code_c : 0) << 4)                /* PRINT_MEDIA */
 		      + 1;	/* hardcode to High quality for now */		/* PRINT_QUALITY */
 
-                  canon_cmd(v,ESC28,0x63, 2, arg_63[0], arg_63[1]);
+		    if (!strcmp(init->caps->name,"2100")) { /* BJC-2100: ESC (c command length is 3 */
+		      if (!strcmp(init->mode->name,"360x360dpi"))
+			arg_63[1] = 0x00;
+		      else if (!strcmp(init->mode->name,"720x360dpi"))
+			arg_63[1] = 0x00;
+		      else if (!strcmp(init->mode->name,"360x360dpi_draft"))
+			arg_63[1] = 0x00;
+		      else if (!strcmp(init->mode->name,"180x180dpi"))
+			arg_63[1] = 0x02;
+		      /* else keep at 01 hard-coded as above - logic unknown */
+		      canon_cmd(v,ESC28,0x63, 3, arg_63[0], arg_63[1], 0x00);
+		    } else /* length 2 in legacy code */
+		      canon_cmd(v,ESC28,0x63, 2, arg_63[0], arg_63[1]);
 		break;
 
 	case 2:			/* are any models using this? */

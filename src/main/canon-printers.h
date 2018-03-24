@@ -637,7 +637,7 @@ static const canon_cap_t canon_model_capabilities[] =
     10, 10, 9, 20, /* for A4 from user manual */
     &canon_default_slotlist,
     CANON_CAP_STD0 | CANON_CAP_a | CANON_CAP_cart,0,
-    3,0,
+    2,0,
     0, /* Upper/Lower Cassette option */
     NULL,/* only SetTime */
     &canon_BJC_2100_modelist,
