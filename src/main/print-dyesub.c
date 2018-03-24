@@ -7238,7 +7238,7 @@ static int magicard_parse_parameters(stp_vars_t *v)
   dyesub_privdata_t *pd = get_privdata(v);
 
   const char *lpar = stp_get_string_parameter(v, "Laminate");
-  const char *lpar_dpx = stp_get_string_parameter(v, "LaminateDuplex"); 
+  const char *lpar_dpx = stp_get_string_parameter(v, "LaminateDuplex");
   const char *mag_coer = stp_get_string_parameter(v, "MagCoer");
   const char *holokote = stp_get_string_parameter(v, "Holokote");
   int holopatch = stp_get_int_parameter(v, "Holopatch");
