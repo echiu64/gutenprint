@@ -67,19 +67,23 @@ CSUM_RELEASE_FILE=Checksums/sums.$(CSUM_RELEASE_SUFFIX)
 
 .PHONY: checksums checksums-release
 
-CHECKSUM_ENV=STP_TEST_PROFILE=hecksums STP_DATA_PATH='@PKGROOT@/src/xml'
+CHECKSUM_ENV=STP_TEST_PROFILE=checksums STP_DATA_PATH='@PKGROOT@/src/xml'
 
 Checksums:
 	$(MKDIR_P) Checksums
 
 checksums: $(CSUM_DEPS)
-	$(CHECKSUM_ENV) ./run-testpattern-2.check | ./compress-checksums | $(COMPRESS) > "$(CSUM_FILE)@CSUF@"
+	$(CHECKSUM_ENV) ./run-testpattern-2.check 3>&1 | ./compress-checksums | $(COMPRESS) > "$(CSUM_FILE)@CSUF@"
 
 checksums-fast: $(CSUM_DEPS)
-	$(CHECKSUM_ENV) ./run-testpattern-2.check -s | ./compress-checksums | $(COMPRESS) > "$(CSUM_FILE)@CSUF@"
+	$(CHECKSUM_ENV) ./run-testpattern-2.check -s 3>&1 | ./compress-checksums | $(COMPRESS) > "$(CSUM_FILE)@CSUF@"
 
 checksums-release: $(CSUM_DEPS)
-	$(CHECKSUM_ENV) ./run-testpattern-2.check | ./compress-checksums | $(COMPRESS) > "$(CSUM_RELEASE_FILE)@CSUF@"
+	if [ -n "$$STP_TEST_LOG_PREFIX" ] ; then \
+	  $(CHECKSUM_ENV) ./run-testpattern-2.check 3>&1 | ./compress-checksums | $(COMPRESS) | tee "$${STP_TEST_LOG_PREFIX}checksums_$$$$@CSUF@" > "$(CSUM_RELEASE_FILE)@CSUF@" ; \
+	else \
+	  $(CHECKSUM_ENV) ./run-testpattern-2.check 3>&1 | ./compress-checksums | $(COMPRESS) > "$(CSUM_RELEASE_FILE)@CSUF@" ; \
+	fi
 endif
 
 ## Clean

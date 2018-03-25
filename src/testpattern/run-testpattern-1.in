@@ -18,10 +18,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+if [[ -n "$STP_TEST_LOG_PREFIX" ]] ; then
+    redir="${STP_TEST_LOG_PREFIX}${0##*/}_$$.log"
+    exec 1>>"$redir"
+    exec 2>&1
+fi
+
 retval=0
 
 if [ "$STP_TEST_PROFILE" != full -a -n "$STP_TEST_SUITE" ] ; then
-    echo "Skipping in $STP_TEST_PROFILE suite"
     exit 77
 fi
 

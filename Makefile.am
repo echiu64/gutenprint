@@ -150,7 +150,7 @@ checksums: scripts/count-cpus
 	STP_PARALLEL=$(CPUS) make -C src/testpattern checksums-release
 
 build-release: scripts/build-release
-	STP_PARALLEL=$(CPUS) scripts/build-release
+	STP_PARALLEL=$(CPUS) /usr/bin/time scripts/build-release
 
 ## Clean
 

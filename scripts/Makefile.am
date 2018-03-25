@@ -26,6 +26,7 @@ include $(top_srcdir)/scripts/global.mk
 # The autotools-installed scripts /should/ be automatically distributed.
 EXTRA_DIST = \
 	autogen.sh \
+	build-release \
 	count-cpus \
 	global.mk \
 	gversion \

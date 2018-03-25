@@ -5,6 +5,12 @@ if [ -n "$STP_TEST_SUITE" ] ; then
     exit 77
 fi
 
+if [[ -n "$STP_TEST_LOG_PREFIX" ]] ; then
+    redir="${STP_TEST_LOG_PREFIX}${0##*/}_$$.log"
+    exec 1>>"$redir"
+    exec 2>&1
+fi
+
 if [ -z "$srcdir" -o "$srcdir" = "." ] ; then
     sdir=`pwd`
 elif [ -n "`echo $srcdir |grep '^/'`" ] ; then

@@ -71,7 +71,6 @@ function check_git {
     if [[ -z $ahead && -z $behind ]] ; then
 	# Neither ahead nor behind.  Perfect.
 	echo "Repository and workspace are up to date, good!"
-	return 0
     elif [[ -z $ahead ]] ; then
 	# We're behind.  Not good.
 	console_log "*** ERROR: Behind remote by $(wc -w <<< $behind) commits."
@@ -92,7 +91,6 @@ function check_git {
 	    fi
 	    return 1
 	fi
-	return 0
     else
 	# Oops!  Both ahead *and* behind remote.  Really bad news!
 	console_log "*** ERROR: HEAD and remote have diverged!"
@@ -103,7 +101,7 @@ function check_git {
     # Make sure that the tag that we're going to want to apply isn't
     # already present.
     if [[ -n $("$GIT" show-ref "refs/tags/$TAG") ]] ; then
-	console_log " ERROR: Tag named $TAG is already present"
+	console_log "*** ERROR: Tag named $TAG is already present"
 	return 1
     fi
     return 0
@@ -193,6 +191,14 @@ function run_valgrind_minimal {
 function run_distcheck_fast {
     make distcheck-fast && return 0
     echo "make distcheck-fast failed"
+    return 1
+}
+
+# Not used in the normal execution of the script, but useful for testing.
+
+function run_distcheck_minimal {
+    make distcheck-minimal && return 0
+    echo "make distcheck-minimal failed"
     return 1
 }
 
@@ -339,6 +345,8 @@ function date_sec {
 }
 
 function report_progress {
+    idx=$1
+    shift
     case "$quiet" in
 	1)
 	    declare outst=.
@@ -348,7 +356,7 @@ function report_progress {
 	2)
 	    ;;
 	*)
-	    declare outst='RUNNING: '
+	    declare outst="RUNNING[$idx]: "
 	    [[ -n "$DONTRUN_OP" ]] && outst='Skipping:'
 	    echo " >>> $(stamp) $outst $@"
 	    ;;
@@ -458,12 +466,15 @@ function runit {
     else
 	echo "$cmdname SKIPPED" | log "$top_log"
     fi
-    report_progress $cmdname
+    report_progress $fcounter $cmdname
 
     if [[ -z $DONTRUN_OP ]] ; then
-	$cmd </dev/null 3>&2 2>&1 | timestamp | log "$logfile"
+	STP_TEST_LOG_PREFIX="$logfile." $cmd </dev/null 3>&2 2>&1 | timestamp | log "$logfile"
 	status=${PIPESTATUS[0]}
 	(( $status > 0 )) && msg=FAILED
+	for f in $logfile.* ; do
+	    [[ -f $f && ! -s $f ]] && rm -f $f
+	done
     else
 	msg='(SKIPPED)'
     fi
@@ -490,13 +501,19 @@ declare -a OPERATIONS=(preflight
 		       run_distcheck_minimal
 		       finis)
 
+[[ -n "$@" ]] && OPERATIONS=("$@")
+
 declare HOST=$(uname -n)
 declare SSTAMP=$(stamp)
 declare STIME=$(date_sec)
-declare TOPLOGDIR="$ROOT/BuildLogs"
+declare TOPLOGDIR=${STP_LOG_DIR:-"$ROOT/BuildLogs"}
 declare LOGDIR="$TOPLOGDIR/Log.${SSTAMP// /_}"
 mkdir -p $LOGDIR
-[[ -L $TOPLOGDIR/Current ]] && mv $TOPLOGDIR/Current $TOPLOGDIR/Previous
+if [[ -L $TOPLOGDIR/Current ]] ; then
+    rm -f $TOPLOGDIR/Previous
+    mv $TOPLOGDIR/Current $TOPLOGDIR/Previous
+fi
+
 rm -f "$TOPLOGDIR/Current"
 ln -s $(basename "$LOGDIR") "$TOPLOGDIR/Current"
 

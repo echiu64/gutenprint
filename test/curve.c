@@ -21,8 +21,10 @@
 #endif
 #include <stdlib.h>
 #include <stdio.h>
+#include <fcntl.h>
 #include <unistd.h>
 #include <string.h>
+#include <limits.h>
 #ifdef __GNU_LIBRARY__
 #include <getopt.h>
 #endif
@@ -654,6 +656,13 @@ main(int argc, char **argv)
 	}
     }
 
+  if (getenv("STP_TEST_LOG_PREFIX"))
+    {
+      char path[PATH_MAX+1];
+      (void) snprintf(path, PATH_MAX, "%scurve_%d.log", getenv("STP_TEST_LOG_PREFIX"), getpid());
+      stdout = freopen(path, "w", stdout);
+      dup2(1, 2);
+    }
   stp_init();
 
   TEST("creation of XML string from curve");
@@ -1041,7 +1050,7 @@ main(int argc, char **argv)
 
   TEST("Copy in place piecewise curve");
   stp_curve_copy(curve2, curve1);
-  SIMPLE_TEST_CHECK(curve1);
+  SIMPLE_TEST_CHECK(curve1 != NULL);
   piecewise_curve_checks(curve2, 10, 48);
   stp_curve_copy(curve2, curve1);
   piecewise_curve_checks(curve2, 15, 48);
@@ -1089,6 +1098,7 @@ main(int argc, char **argv)
 
   TEST("Copy in place piecewise curve");
   stp_curve_copy(curve2, curve1);
+  SIMPLE_TEST_CHECK(curve1 != NULL);
   piecewise_curve_checks(curve2, 10, 49);
   stp_curve_copy(curve2, curve1);
   piecewise_curve_checks(curve2, 15, 49);
@@ -1134,6 +1144,7 @@ main(int argc, char **argv)
 
   TEST("Copy in place piecewise curve");
   stp_curve_copy(curve2, curve1);
+  SIMPLE_TEST_CHECK(curve1 != NULL);
   piecewise_curve_checks(curve2, 10, 48);
   stp_curve_copy(curve2, curve1);
   piecewise_curve_checks(curve2, 15, 48);
@@ -1179,6 +1190,7 @@ main(int argc, char **argv)
 
   TEST("Copy in place piecewise curve");
   stp_curve_copy(curve2, curve1);
+  SIMPLE_TEST_CHECK(curve1 != NULL);
   piecewise_curve_checks(curve2, 10, 49);
   stp_curve_copy(curve2, curve1);
   piecewise_curve_checks(curve2, 15, 49);

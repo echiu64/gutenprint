@@ -29,6 +29,12 @@
 # We can't skip the translated PPD files either; sometimes translations
 # blow out token maximum lengths.
 
+if [[ -n "$STP_TEST_LOG_PREFIX" ]] ; then
+    redir="${STP_TEST_LOG_PREFIX}${0##*/}_$$.log"
+    exec 1>>"$redir"
+    exec 2>&1
+fi
+
 [[ -n "$STP_TEST_DEBUG" ]] && DEBUG=echo
 
 [[ -z $STP_TEST_SUITE && -z $STP_TEST_PROFILE ]] && STP_TEST_PROFILE=full
@@ -39,11 +45,13 @@ PPD_PARALLEL=200
 
 case "$STP_TEST_PROFILE" in
     full|'')
+	rm -rf "$PPD_DIR"
 	echo "GENERATING PPD FILES (all):"
 	set -e
 	$DEBUG make "PPD_DIR=$PPD_DIR" EXTRA_GENPPD_OPTS='-b -Z' ppd-clean ppd-global-a ppd-nls-a ppd-nonls-a
 	;;
     fast)
+	rm -rf "$PPD_DIR"
 	if [[ -n $STP_TEST_DIST ]] ; then
 	    echo "GENERATING PPD FILES (fast):"
 	    set -e
@@ -59,6 +67,7 @@ case "$STP_TEST_PROFILE" in
 	PPD_PARALLEL=20
 	;;
     minimal)
+	rm -rf "$PPD_DIR"
 	echo "GENERATING PPD FILES (minimal):"
 	set -e
 	$DEBUG make "PPD_DIR=$PPD_DIR" EXTRA_GENPPD_OPTS='-b -Z -S' ppd-clean ppd-nonls

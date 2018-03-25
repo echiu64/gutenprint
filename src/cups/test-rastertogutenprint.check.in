@@ -17,6 +17,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+if [[ -n "$STP_TEST_LOG_PREFIX" ]] ; then
+    redir="${STP_TEST_LOG_PREFIX}${0##*/}_$$.log"
+    exec 1>>"$redir"
+    exec 2>&1
+fi
+
 [[ -n $STP_TEST_DEBUG ]] && DEBUG=echo
 
 [[ -z $STP_TEST_SUITE || -z $STP_TEST_PROFILE ]] && STP_TEST_PROFILE=full
@@ -26,27 +32,32 @@ set -e
 declare FASTOPT="-o StpDitherAlgorithm=VeryFast -l -N -o ColorCorrection=Raw"
 declare MIN_PRINTERS="@MINIMAL_PRINTERS_TO_TEST@"
 
+function runit() {
+    echo "================================================================"
+    echo "$@"
+    [[ -z $STP_TEST_DEBUG ]] && "$@"
+}
+
 case "$STP_TEST_PROFILE" in
     full)
-	$DEBUG ./test-rastertogutenprint -l -p 2 $FASTOPT
-	$DEBUG ./test-rastertogutenprint -S -s -X
+	runit ./test-rastertogutenprint -l -p 2 $FASTOPT
+	runit ./test-rastertogutenprint -S -s -X
 	;;
     fast)
-	$DEBUG ./test-rastertogutenprint -S -s $FASTOPT -p 2
+	runit ./test-rastertogutenprint -S -s $FASTOPT -p 2
 	;;
     valgrind)
-	$DEBUG ./test-rastertogutenprint -v -v -S -s $FASTOPT -p 2
+	runit ./test-rastertogutenprint -v -v -S -s $FASTOPT -p 2
 	;;
     valgrind-minimal)
-	$DEBUG ./test-rastertogutenprint -v -v -s $FASTOPT -p 1 \
+	runit ./test-rastertogutenprint -v -v -s $FASTOPT -p 1 \
 	       $MIN_PRINTERS
 	;;
     minimal)
-	$DEBUG ./test-rastertogutenprint -s $FASTOPT -p 1 \
+	runit ./test-rastertogutenprint -s $FASTOPT -p 1 \
 	       $MIN_PRINTERS
 	;;
     *)
-	echo "Unknown test profile '$STP_TEST_PROFILE'"
 	exit 77
 	;;
 esac
