@@ -4,9 +4,6 @@
 
 DIE=0
 
-# Make sure all of our auto* bits are up to date.
-autoreconf -ivf
-
 if test -d m4local ; then
   :
 else
@@ -18,6 +15,9 @@ else
   fi
   mkdir m4local
 fi
+
+# Make sure all of our auto* bits are up to date.
+autoreconf -ivf
 
 libtoolv=`libtool --version | head -1 | sed 's,.*[      ]\([0-9][0-9]*\.[0-9][0-9]*\(\.[0-9][0-9]*\)\?\).*[a-z]*\([   ]?.*\|\)$,\1,'`
 libtool_major=`echo $libtoolv | awk -F. '{print $1}'`
