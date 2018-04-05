@@ -65,6 +65,7 @@ typedef struct
   int do_6color;
   int height;
   int duplex;
+  int copies;
   int tumble;
   int use_crd;
   int orientation;
@@ -344,6 +345,7 @@ typedef struct {
 #define PCL_PRINTER_DUPLEX	128	/* Printer can have duplexer */
 #define PCL_PRINTER_LABEL       256     /* Datamax-O'Neil PCL Label Printer */
 #define PCL_PRINTER_LJ_COLOR	512	/* Color laser printers */
+#define PCL_PRINTER_COPIES     1024     /* Supports PCL5/HPGL2/HP-RTL copies */
 
 /*
  * FIXME - the 520 shouldn't be lumped in with the 500 as it supports
@@ -720,7 +722,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {0, 0, 0, 0},                     /* A4 Margins */
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_LABEL |
-      PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE,
+      PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_COPIES,
     custom_papersizes,
     emptylist,
     emptylist,
@@ -734,7 +736,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {0, 0, 0, 0},                     /* A4 Margins */
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_LABEL |
-      PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE,
+      PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_COPIES,
     custom_papersizes,
     emptylist,
     emptylist,
@@ -748,7 +750,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {0, 0, 0, 0},                     /* A4 Margins */
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_LABEL |
-      PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE,
+      PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_COPIES,
     custom_papersizes,
     emptylist,
     emptylist,
@@ -762,7 +764,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {0, 0, 0, 0},                     /* A4 Margins */
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_LABEL |
-      PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE,
+      PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_COPIES,
     custom_papersizes,
     emptylist,
     emptylist,
@@ -776,7 +778,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {0, 0, 0, 0},                     /* A4 Margins */
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_LABEL |
-      PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE,
+      PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_COPIES,
     custom_papersizes,
     emptylist,
     emptylist,
@@ -790,7 +792,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {0, 0, 0, 0},                     /* A4 Margins */
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_LABEL |
-      PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE,
+      PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_COPIES,
     custom_papersizes,
     emptylist,
     emptylist,
@@ -804,7 +806,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {0, 0, 0, 0},                     /* A4 Margins */
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_LABEL |
-      PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE,
+      PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_COPIES,
     custom_papersizes,
     emptylist,
     emptylist,
@@ -817,7 +819,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {49, 49, 15, 15},
     {49, 49, 15, 15},
     PCL_COLOR_NONE,
-    PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG,
+    PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG | PCL_PRINTER_COPIES,
     letter_a4_papersizes,
     basic_papertypes,
     standard_papersources,
@@ -831,7 +833,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {49, 49, 15, 15},
     {49, 49, 15, 15},
     PCL_COLOR_CMYK,
-    PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG,
+    PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG | PCL_PRINTER_COPIES,
     letter_a4_papersizes,
     basic_papertypes,
     standard_papersources,
@@ -844,7 +846,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {30, 30, 15, 15},		/* These margins are for sheet mode FIX */
     {30, 30, 15, 15},
     PCL_COLOR_NONE,
-    PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG,
+    PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG | PCL_PRINTER_COPIES,
     letter_a4_papersizes,
     basic_papertypes,
     standard_papersources,
@@ -857,7 +859,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {30, 30, 15, 15},	/* These margins are for roll mode FIX */
     {30, 30, 15, 15},
     PCL_COLOR_CMYK,
-    PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG,
+    PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG | PCL_PRINTER_COPIES,
     letter_a4_papersizes,
     basic_papertypes,
     standard_papersources,
@@ -870,7 +872,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {49, 49, 15, 15},		/* Check/Fix */
     {49, 49, 15, 15},
     PCL_COLOR_CMYK,
-    PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG,
+    PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG | PCL_PRINTER_COPIES,
     letter_a4_papersizes,
     basic_papertypes,
     standard_papersources,
@@ -883,7 +885,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {49, 49, 15, 15},		/* Check/Fix */
     {49, 49, 15, 15},
     PCL_COLOR_CMYK,
-    PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG,
+    PCL_PRINTER_DJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_NEW_ERG | PCL_PRINTER_COPIES,
     letter_a4_papersizes,
     basic_papertypes,
     standard_papersources,
@@ -1090,7 +1092,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {12, 12, 10, 10},	/* Check/Fix */
     PCL_COLOR_CMY,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
-      PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_BLANKLINE,
+      PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_BLANKLINE | PCL_PRINTER_COPIES,
     dj1200_papersizes,
     basic_papertypes,
     dj_papersources,
@@ -1104,7 +1106,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {12, 12, 10, 10},	/* Check/Fix */
     PCL_COLOR_CMYK,
     PCL_PRINTER_DJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_MEDIATYPE |
-      PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_BLANKLINE,
+      PCL_PRINTER_CUSTOM_SIZE | PCL_PRINTER_BLANKLINE | PCL_PRINTER_COPIES,
     dj1200_papersizes,
     basic_papertypes,
     dj_papersources,
@@ -1210,7 +1212,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {12, 12, 18, 18},
     {12, 12, 10, 10},	/* Check/Fix */
     PCL_COLOR_NONE,
-    PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
+    PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_COPIES,
     ljsmall_papersizes,
     emptylist,
     laserjet_papersources,
@@ -1223,7 +1225,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {12, 12, 18, 18},
     {12, 12, 10, 10},	/* Check/Fix */
     PCL_COLOR_NONE,
-    PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
+    PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_COPIES,
     ljsmall_papersizes,
     emptylist,
     laserjet_papersources,
@@ -1236,7 +1238,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {12, 12, 18, 18},
     {12, 12, 18, 18},	/* Check/Fix */
     PCL_COLOR_NONE,
-    PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
+    PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_COPIES,
     ljsmall_papersizes,
     emptylist,
     laserjet_papersources,
@@ -1249,7 +1251,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {12, 12, 18, 18},
     {12, 12, 10, 10},	/* Check/Fix */
     PCL_COLOR_NONE,
-    PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
+    PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_COPIES,
     ljbig_papersizes,
     emptylist,
     laserjet_papersources,
@@ -1262,7 +1264,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {12, 12, 18, 18},
     {12, 12, 18, 18},	/* Check/Fix */
     PCL_COLOR_NONE,
-    PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
+    PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_COPIES,
     ljbig_papersizes,
     emptylist,
     laserjet_papersources,
@@ -1275,7 +1277,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {12, 12, 18, 18},
     {12, 12, 18, 18},	/* Check/Fix */
     PCL_COLOR_NONE,
-    PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
+    PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_COPIES,
     ljtabloid_papersizes,
     emptylist,
     laserjet_papersources,
@@ -1288,7 +1290,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {12, 12, 18, 18},
     {12, 12, 10, 10},	/* Check/Fix */
     PCL_COLOR_NONE,
-    PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
+    PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_COPIES,
     ljsmall_papersizes,
     emptylist,
     laserjet_papersources,
@@ -1301,7 +1303,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {12, 12, 18, 18},
     {12, 12, 10, 10},	/* Check/Fix */
     PCL_COLOR_NONE,
-    PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
+    PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE | PCL_PRINTER_COPIES,
     ljbig_papersizes,
     emptylist,
     laserjet_papersources,
@@ -1315,7 +1317,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {12, 12, 10, 10},	/* Check/Fix */
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE |
-      PCL_PRINTER_DUPLEX,
+      PCL_PRINTER_DUPLEX | PCL_PRINTER_COPIES,
     ljbig_papersizes,
     emptylist,
     laserjet_papersources,
@@ -1329,7 +1331,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {12, 12, 10, 10},	/* Check/Fix */
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE |
-      PCL_PRINTER_DUPLEX,
+      PCL_PRINTER_DUPLEX | PCL_PRINTER_COPIES,
     ljsmall_papersizes,
     emptylist,
     laserjet_papersources,
@@ -1343,7 +1345,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {12, 12, 10, 10},	/* Check/Fix */
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE |
-      PCL_PRINTER_DUPLEX,
+      PCL_PRINTER_DUPLEX | PCL_PRINTER_COPIES,
     ljbig_papersizes,
     emptylist,
     laserjet_papersources,
@@ -1357,7 +1359,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {12, 12, 18, 18},	/* Check/Fix */
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE |
-      PCL_PRINTER_DUPLEX,
+      PCL_PRINTER_DUPLEX | PCL_PRINTER_COPIES,
     ljsmall_papersizes,
     emptylist,
     laserjet_papersources,
@@ -1371,7 +1373,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {12, 12, 18, 18},	/* Check/Fix */
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE |
-      PCL_PRINTER_DUPLEX,
+      PCL_PRINTER_DUPLEX | PCL_PRINTER_COPIES,
     ljbig_papersizes,
     emptylist,
     laserjet_papersources,
@@ -1385,7 +1387,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {12, 12, 18, 18},	/* Check/Fix */
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE |
-      PCL_PRINTER_DUPLEX,
+      PCL_PRINTER_DUPLEX | PCL_PRINTER_COPIES,
     ljtabloid_papersizes,
     emptylist,
     laserjet_papersources,
@@ -1399,7 +1401,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {12, 12, 10, 10},	/* Check/Fix */
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE |
-      PCL_PRINTER_DUPLEX,
+      PCL_PRINTER_DUPLEX | PCL_PRINTER_COPIES,
     ljbig_papersizes,
     emptylist,
     laserjet_papersources,
@@ -1413,7 +1415,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {12, 12, 10, 10},	/* Check/Fix */
     PCL_COLOR_RGB,
     PCL_PRINTER_LJ_COLOR | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE |
-      PCL_PRINTER_DUPLEX,
+      PCL_PRINTER_DUPLEX | PCL_PRINTER_COPIES,
     ljsmall_papersizes,
     emptylist,
     laserjet_papersources,
@@ -1427,7 +1429,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {12, 12, 10, 10},	/* Check/Fix */
     PCL_COLOR_RGB,
     PCL_PRINTER_LJ_COLOR | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE |
-      PCL_PRINTER_DUPLEX,
+      PCL_PRINTER_DUPLEX | PCL_PRINTER_COPIES,
     ljbig_papersizes,
     emptylist,
     laserjet_papersources,
@@ -1441,7 +1443,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {12, 12, 18, 18},	/* Check/Fix */
     PCL_COLOR_RGB,
     PCL_PRINTER_LJ_COLOR | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE |
-      PCL_PRINTER_DUPLEX,
+      PCL_PRINTER_DUPLEX | PCL_PRINTER_COPIES,
     ljsmall_papersizes,
     emptylist,
     laserjet_papersources,
@@ -1455,7 +1457,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {12, 12, 18, 18},	/* Check/Fix */
     PCL_COLOR_RGB,
     PCL_PRINTER_LJ_COLOR | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE |
-      PCL_PRINTER_DUPLEX,
+      PCL_PRINTER_DUPLEX | PCL_PRINTER_COPIES,
     ljbig_papersizes,
     emptylist,
     laserjet_papersources,
@@ -1469,7 +1471,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {12, 12, 18, 18},	/* Check/Fix */
     PCL_COLOR_RGB,
     PCL_PRINTER_LJ_COLOR | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE |
-      PCL_PRINTER_DUPLEX,
+      PCL_PRINTER_DUPLEX | PCL_PRINTER_COPIES,
     ljtabloid_papersizes,
     emptylist,
     laserjet_papersources,
@@ -1483,7 +1485,7 @@ static const pcl_cap_t pcl_model_capabilities[] =
     {12, 12, 18, 18},	/* Check/Fix */
     PCL_COLOR_RGB,
     PCL_PRINTER_LJ_COLOR | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE |
-      PCL_PRINTER_DUPLEX,
+      PCL_PRINTER_DUPLEX | PCL_PRINTER_COPIES,
     ljsmall_papersizes,
     emptylist,
     laserjet_papersources,
@@ -1609,6 +1611,12 @@ static const stp_parameter_t the_parameters[] =
     N_("Darkness Adjust, from -20 to 20"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 0, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "NativeCopies", N_("Printer Generates Copies Natively"), "Color=No,Category=Job Mode",
+    N_("Printer Generates Copies"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_INTERNAL, 1, 0, STP_CHANNEL_NONE, 0, 1
   },
 };
 
@@ -2395,6 +2403,11 @@ pcl_parameters(const stp_vars_t *v, const char *name,
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
     }
+  else if (strcmp(name, "NativeCopies") == 0)
+    {
+      description->deflt.boolean = caps->stp_printer_type & PCL_PRINTER_COPIES;
+      description->is_active = 1;
+    }
 }
 
 
@@ -2869,6 +2882,7 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
   stp_deprintf(STP_DBG_PCL, "Duplex: %s, Page_Number: %d\n", duplex_mode, page_number);
   privdata.duplex=0;
   privdata.tumble=0;
+  privdata.copies=1;
 
  /*
   * Duplex
@@ -2884,6 +2898,15 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
             privdata.tumble=1;
         }
     }
+
+  /*
+   * Multiple copies!
+   */
+
+  if (stp_check_boolean_parameter(v, "NativeCopies", STP_PARAMETER_ACTIVE) &&
+      stp_get_boolean_parameter(v, "NativeCopies") &&
+      stp_check_int_parameter(v, "NumCopies", STP_PARAMETER_ACTIVE))
+    privdata.copies = stp_get_int_parameter(v, "NumCopies");
 
  /*
   * Label (PJL) settings and Orientation
@@ -3095,10 +3118,13 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
         }
       }
 
+      /* Number of copies */
+      if (privdata.copies > 1)
+        stp_zprintf(v,"\033&l%dX", privdata.copies);
+
 /*
  * Duplex
  */
-
       if (privdata.duplex)
           stp_zprintf(v,"\033&l%dS", privdata.duplex + privdata.tumble);
       }
