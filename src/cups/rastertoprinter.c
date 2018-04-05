@@ -1123,6 +1123,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   (void) gettimeofday(&t1, NULL);
   stp_init();
   version_id = stp_get_version();
+  default_settings = stp_vars_create();
 
  /*
   * Check for valid arguments...
@@ -1288,7 +1289,6 @@ main(int  argc,				/* I - Number of command-line arguments */
   if (! suppress_messages)
     fprintf(stderr, "DEBUG: Gutenprint: Using fd %d\n", fd);
 
-  default_settings = stp_vars_create_copy(stp_printer_get_defaults(printer));
   stp_set_printer_defaults(default_settings, printer);
 #ifdef ENABLE_CUPS_LOAD_SAVE_OPTIONS
   if (load_file_name)
