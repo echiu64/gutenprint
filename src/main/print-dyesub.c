@@ -160,12 +160,12 @@ typedef struct {
   const char *name;
   const char *text;
   const stp_raw_t seq;
-} laminate_t;
+} overcoat_t;
 
 typedef struct {
-  const laminate_t *item;
+  const overcoat_t *item;
   size_t n_items;
-} laminate_list_t;
+} overcoat_list_t;
 
 typedef struct {
   const char* name;
@@ -205,7 +205,7 @@ typedef struct
 typedef struct
 {
   int quality;
-  int laminate_offset;
+  int overcoat_offset;
   int use_lut;
   int sharpen;
   int delay;
@@ -276,7 +276,7 @@ typedef struct
   int block_min_w, block_min_h;
   int block_max_w, block_max_h;
   const char* pagesize;
-  const laminate_t* laminate;
+  const overcoat_t* overcoat;
   const dyesub_media_t* media;
   const char* slot;
   int print_mode;
@@ -332,7 +332,7 @@ typedef struct /* printer specific parameters */
   void (*block_init_func)(stp_vars_t *);
   void (*block_end_func)(stp_vars_t *);
   void (*adjust_curves)(stp_vars_t *);
-  const laminate_list_t *laminate;
+  const overcoat_list_t *overcoat;
   const dyesub_media_list_t *media;
   void (*job_start_func)(stp_vars_t *);
   void (*job_end_func)(stp_vars_t *);
@@ -345,7 +345,7 @@ typedef struct /* printer specific parameters */
 
 static int dyesub_feature(const dyesub_cap_t *caps, int feature);
 static const dyesub_cap_t* dyesub_get_model_capabilities(int model);
-static const laminate_t* dyesub_get_laminate_pattern(stp_vars_t *v);
+static const overcoat_t* dyesub_get_overcoat_pattern(stp_vars_t *v);
 static const dyesub_media_t* dyesub_get_mediatype(stp_vars_t *v);
 static void  dyesub_nputc(stp_vars_t *v, char byte, int count);
 static void  dyesub_adjust_curve(stp_vars_t *v,
@@ -422,7 +422,7 @@ static void p10_printer_init_func(stp_vars_t *v)
   dyesub_privdata_t *pd = get_privdata(v);
 
   stp_zfwrite("\033R\033M\033S\2\033N\1\033D\1\033Y", 1, 15, v);
-  stp_write_raw(&(pd->laminate->seq), v); /* laminate */
+  stp_write_raw(&(pd->overcoat->seq), v); /* overcoat */
   stp_zfwrite("\033Z\0", 1, 3, v);
 }
 
@@ -442,13 +442,13 @@ static void p10_block_init_func(stp_vars_t *v)
   stp_put16_le(pd->block_max_h + 1, v);
 }
 
-static const laminate_t p10_laminate[] =
+static const overcoat_t p10_overcoat[] =
 {
   {"Coated",  N_("Coated"),  {1, "\x00"}},
   {"None",    N_("None"),    {1, "\x02"}},
 };
 
-LIST(laminate_list_t, p10_laminate_list, laminate_t, p10_laminate);
+LIST(overcoat_list_t, p10_overcoat_list, overcoat_t, p10_overcoat);
 
 
 /* Olympus P-200 series */
@@ -777,7 +777,7 @@ static void p440_printer_init_func(stp_vars_t *v)
 
   stp_zprintf(v, "\033FP"); dyesub_nputc(v, '\0', 61);
   stp_zprintf(v, "\033Y");
-  stp_write_raw(&(pd->laminate->seq), v); /* laminate */
+  stp_write_raw(&(pd->overcoat->seq), v); /* overcoat */
   dyesub_nputc(v, '\0', 61);
   stp_zprintf(v, "\033FC"); dyesub_nputc(v, '\0', 61);
   stp_zprintf(v, "\033ZF");
@@ -1277,8 +1277,8 @@ static void dppex5_printer_init(stp_vars_t *v)
   dyesub_nputc(v, '\0', 19);
   stp_zprintf(v, "5EPD");
   dyesub_nputc(v, '\0', 4);
-  stp_zfwrite((pd->laminate->seq).data, 1,
-			(pd->laminate->seq).bytes, v); /*laminate pattern*/
+  stp_zfwrite((pd->overcoat->seq).data, 1,
+			(pd->overcoat->seq).bytes, v); /*overcoat pattern*/
   stp_zfwrite("\0d\0d\0d", 1, 6, v);
   dyesub_nputc(v, '\0', 21);
 }
@@ -1298,13 +1298,13 @@ static void dppex5_printer_end(stp_vars_t *v)
   stp_zfwrite("DPEX\0\0\0\x81", 1, 8, v);
 }
 
-static const laminate_t dppex5_laminate[] =
+static const overcoat_t dppex5_overcoat[] =
 {
   {"Glossy",  N_("Glossy"),  {1, "\x00"}},
   {"Texture", N_("Texture"), {1, "\x01"}},
 };
 
-LIST(laminate_list_t, dppex5_laminate_list, laminate_t, dppex5_laminate);
+LIST(overcoat_list_t, dppex5_overcoat_list, overcoat_t, dppex5_overcoat);
 
 
 /* Sony UP-DP10 */
@@ -1333,8 +1333,8 @@ static void updp10_printer_init_func(stp_vars_t *v)
 	      "\x00\x02\x00\x00\x01\x12\x00\x00"
 	      "\x00\x1b\xe1\x00\x00\x00\x0b\x00"
 	      "\x00\x04", 1, 34, v);
-  stp_zfwrite((pd->laminate->seq).data, 1,
-			(pd->laminate->seq).bytes, v); /*laminate pattern*/
+  stp_zfwrite((pd->overcoat->seq).data, 1,
+			(pd->overcoat->seq).bytes, v); /*overcoat pattern*/
   stp_zfwrite("\x00\x00\x00\x00", 1, 4, v);
   stp_put16_be(pd->w_size, v);
   stp_put16_be(pd->h_size, v);
@@ -1357,14 +1357,14 @@ static void updp10_printer_end_func(stp_vars_t *v)
 	      , 1, 23, v);
 }
 
-static const laminate_t updp10_laminate[] =
+static const overcoat_t updp10_overcoat[] =
 {
   {"Glossy",  N_("Glossy"),  {1, "\x00"}},
   {"Texture", N_("Texture"), {1, "\x08"}},
   {"Matte",   N_("Matte"),   {1, "\x0c"}},
 };
 
-LIST(laminate_list_t, updp10_laminate_list, laminate_t, updp10_laminate);
+LIST(overcoat_list_t, updp10_overcoat_list, overcoat_t, updp10_overcoat);
 
 static const char updp10_adj_cyan[] =
   "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -1444,7 +1444,7 @@ static void updr100_printer_init_func(stp_vars_t *v)
   stp_put32_le(pd->w_size, v);
   stp_put32_le(pd->h_size, v);
   stp_zfwrite("\x1e\x00\x03\x00\x01\x00\x4e\x01\x00\x00", 1, 10, v);
-  stp_write_raw(&(pd->laminate->seq), v); /* laminate pattern */
+  stp_write_raw(&(pd->overcoat->seq), v); /* overcoat pattern */
   dyesub_nputc(v, '\0', 13);
   stp_zfwrite("\x01\x00\x01\x00\x03", 1, 5, v);
   dyesub_nputc(v, '\0', 19);
@@ -1461,14 +1461,14 @@ static void updr100_printer_end_func(stp_vars_t *v)
 	      , 1, 34, v);
 }
 
-static const laminate_t updr100_laminate[] =
+static const overcoat_t updr100_overcoat[] =
 {
   {"Glossy",  N_("Glossy"),  {1, "\x01"}},
   {"Texture", N_("Texture"), {1, "\x03"}},
   {"Matte",   N_("Matte"),   {1, "\x04"}},
 };
 
-LIST(laminate_list_t, updr100_laminate_list, laminate_t, updr100_laminate);
+LIST(overcoat_list_t, updr100_overcoat_list, overcoat_t, updr100_overcoat);
 
 
 /* Sony UP-DR150 */
@@ -1590,8 +1590,8 @@ static void updr150_200_printer_init_func(stp_vars_t *v, int updr200)
   stp_zfwrite("\x07\x00\x00\x00"
 	      "\x1b\xe1\x00\x00\x00\x0b\x00"
 	      "\x0b\x00\x00\x00\x00\x80", 1, 17, v);
-  stp_zfwrite((pd->laminate->seq).data, 1,
-			(pd->laminate->seq).bytes, v); /*laminate pattern*/
+  stp_zfwrite((pd->overcoat->seq).data, 1,
+			(pd->overcoat->seq).bytes, v); /*overcoat pattern*/
 
   stp_zfwrite("\x00\x00\x00\x00", 1, 4, v);
   stp_put16_be(pd->w_size, v);
@@ -1654,7 +1654,7 @@ static const dyesub_printsize_t updr200_printsize[] =
 
 LIST(dyesub_printsize_list_t, updr200_printsize_list, dyesub_printsize_t, updr200_printsize);
 
-static const laminate_t updr200_laminate[] =
+static const overcoat_t updr200_overcoat[] =
 {
   {"Glossy",  N_("Glossy"),  {1, "\x00"}},
   {"Matte",   N_("Matte"),   {1, "\x0c"}},
@@ -1662,7 +1662,7 @@ static const laminate_t updr200_laminate[] =
   {"Matte_NoCorr",  N_("Matte_NoCorr"),  {1, "\x1c"}},
 };
 
-LIST(laminate_list_t, updr200_laminate_list, laminate_t, updr200_laminate);
+LIST(overcoat_list_t, updr200_overcoat_list, overcoat_t, updr200_overcoat);
 
 static void updr200_printer_init_func(stp_vars_t *v)
 {
@@ -1872,13 +1872,13 @@ static const dyesub_printsize_t kodak_6800_printsize[] =
 
 LIST(dyesub_printsize_list_t, kodak_6800_printsize_list, dyesub_printsize_t, kodak_6800_printsize);
 
-static const laminate_t kodak_6800_laminate[] =
+static const overcoat_t kodak_6800_overcoat[] =
 {
   {"Coated", N_("Coated"), {1, "\x01"}},
   {"None",  N_("None"),  {1, "\x00"}},
 };
 
-LIST(laminate_list_t, kodak_6800_laminate_list, laminate_t, kodak_6800_laminate);
+LIST(overcoat_list_t, kodak_6800_overcoat_list, overcoat_t, kodak_6800_overcoat);
 
 /* Kodak 6850 */
 static const dyesub_pagesize_t kodak_6850_page[] =
@@ -1938,8 +1938,8 @@ static void kodak_68xx_printer_init(stp_vars_t *v)
   else
 	  stp_putc(0x00, v); /* Just in case */
 
-  stp_zfwrite((pd->laminate->seq).data, 1,
-			(pd->laminate->seq).bytes, v);
+  stp_zfwrite((pd->overcoat->seq).data, 1,
+			(pd->overcoat->seq).bytes, v);
   stp_putc(0x00, v);
 }
 
@@ -1981,18 +1981,18 @@ static void kodak_605_printer_init(stp_vars_t *v)
   else
 	  stp_putc(0x01, v);
 
-  stp_zfwrite((pd->laminate->seq).data, 1,
-			(pd->laminate->seq).bytes, v);
+  stp_zfwrite((pd->overcoat->seq).data, 1,
+			(pd->overcoat->seq).bytes, v);
   stp_putc(0x00, v);
 }
 
-static const laminate_t kodak_605_laminate[] =
+static const overcoat_t kodak_605_overcoat[] =
 {
   {"Coated", N_("Coated"), {1, "\x02"}},
   {"None",  N_("None"),  {1, "\x01"}},
 };
 
-LIST(laminate_list_t, kodak_605_laminate_list, laminate_t, kodak_605_laminate);
+LIST(overcoat_list_t, kodak_605_overcoat_list, overcoat_t, kodak_605_overcoat);
 
 /* Kodak 1400 */
 static const dyesub_resolution_t res_301dpi[] =
@@ -2059,8 +2059,8 @@ static void kodak_1400_printer_init(stp_vars_t *v)
   stp_put32_le(pd->h_size*pd->w_size, v);
   dyesub_nputc(v, 0x00, 4);
   stp_zfwrite((pd->media->seq).data, 1, 1, v);  /* Matte or Glossy? */
-  stp_zfwrite((pd->laminate->seq).data, 1,
-			(pd->laminate->seq).bytes, v);
+  stp_zfwrite((pd->overcoat->seq).data, 1,
+			(pd->overcoat->seq).bytes, v);
   stp_putc(0x01, v);
   stp_zfwrite((const char*)((pd->media->seq).data) + 1, 1, 1, v); /* Lamination intensity */
   dyesub_nputc(v, 0x00, 12);
@@ -2096,8 +2096,8 @@ static void kodak_805_printer_init(stp_vars_t *v)
   dyesub_nputc(v, 0x00, 2);
   stp_put32_le(pd->h_size*pd->w_size, v);
   dyesub_nputc(v, 0x00, 5);
-  stp_zfwrite((pd->laminate->seq).data, 1,
-			(pd->laminate->seq).bytes, v);
+  stp_zfwrite((pd->overcoat->seq).data, 1,
+			(pd->overcoat->seq).bytes, v);
   stp_putc(0x01, v);
   stp_putc(0x3c, v); /* Lamination intensity; fixed on glossy media */
   dyesub_nputc(v, 0x00, 12);
@@ -2119,13 +2119,13 @@ static const dyesub_printsize_t kodak_9810_printsize[] =
 
 LIST(dyesub_printsize_list_t, kodak_9810_printsize_list, dyesub_printsize_t, kodak_9810_printsize);
 
-static const laminate_t kodak_9810_laminate[] =
+static const overcoat_t kodak_9810_overcoat[] =
 {
   {"Coated", N_("Coated"), {3, "\x4f\x6e\x20"}},
   {"None",  N_("None"),  {3, "\x4f\x66\x66"}},
 };
 
-LIST(laminate_list_t, kodak_9810_laminate_list, laminate_t, kodak_9810_laminate);
+LIST(overcoat_list_t, kodak_9810_overcoat_list, overcoat_t, kodak_9810_overcoat);
 
 static const stp_parameter_t kodak_9810_parameters[] =
 {
@@ -2228,8 +2228,8 @@ static void kodak_9810_printer_init(stp_vars_t *v)
   /* Lamination */
   stp_putc(0x1b, v);
   stp_zfwrite("FlsJbLam   ", 1, 11, v);
-  stp_zfwrite((pd->laminate->seq).data, 1,
-			(pd->laminate->seq).bytes, v);
+  stp_zfwrite((pd->overcoat->seq).data, 1,
+			(pd->overcoat->seq).bytes, v);
   dyesub_nputc(v, 0x20, 5);
   dyesub_nputc(v, 0x00, 4);
   stp_put32_be(0, v);
@@ -2379,14 +2379,14 @@ static const dyesub_printsize_t kodak_8810_printsize[] =
 
 LIST(dyesub_printsize_list_t, kodak_8810_printsize_list, dyesub_printsize_t, kodak_8810_printsize);
 
-static const laminate_t kodak_8810_laminate[] =
+static const overcoat_t kodak_8810_overcoat[] =
 {
   {"Glossy", N_("Glossy"), {1, "\x03"}},
   {"Satin",  N_("Satin"),  {1, "\x02"}},
   {"None",  N_("None"),  {1, "\x01"}},
 };
 
-LIST(laminate_list_t, kodak_8810_laminate_list, laminate_t, kodak_8810_laminate);
+LIST(overcoat_list_t, kodak_8810_overcoat_list, overcoat_t, kodak_8810_overcoat);
 
 static void kodak_8810_printer_init(stp_vars_t *v)
 {
@@ -2403,8 +2403,8 @@ static void kodak_8810_printer_init(stp_vars_t *v)
   stp_put16_le(pd->w_size, v);
   stp_put16_le(pd->h_size, v);
   dyesub_nputc(v, 0, 4);
-  stp_zfwrite((pd->laminate->seq).data, 1,
-	      (pd->laminate->seq).bytes, v);
+  stp_zfwrite((pd->overcoat->seq).data, 1,
+	      (pd->overcoat->seq).bytes, v);
   stp_putc(0x00, v); /* Method -- 00 is normal, 02 is x2, 03 is x3 */
   stp_putc(0x00, v); /* Reserved */
 }
@@ -2425,13 +2425,13 @@ static const dyesub_printsize_t kodak_7000_printsize[] =
 };
 
 LIST(dyesub_printsize_list_t, kodak_7000_printsize_list, dyesub_printsize_t, kodak_7000_printsize);
-static const laminate_t kodak_7000_laminate[] =
+static const overcoat_t kodak_7000_overcoat[] =
 {
   {"Glossy", N_("Glossy"), {1, "\x02"}},
   {"Satin",  N_("Satin"),  {1, "\x03"}},
 };
 
-LIST(laminate_list_t, kodak_7000_laminate_list, laminate_t, kodak_7000_laminate);
+LIST(overcoat_list_t, kodak_7000_overcoat_list, overcoat_t, kodak_7000_overcoat);
 
 static void kodak_70xx_printer_init(stp_vars_t *v)
 {
@@ -2451,8 +2451,8 @@ static void kodak_70xx_printer_init(stp_vars_t *v)
   else
 	  stp_putc(0x01, v);
 
-  stp_zfwrite((pd->laminate->seq).data, 1,
-			(pd->laminate->seq).bytes, v);
+  stp_zfwrite((pd->overcoat->seq).data, 1,
+			(pd->overcoat->seq).bytes, v);
   stp_putc(0x00, v);
 }
 
@@ -2495,13 +2495,13 @@ static const dyesub_media_t kodak_8500_media[] =
 };
 LIST(dyesub_media_list_t, kodak_8500_media_list, dyesub_media_t, kodak_8500_media);
 
-static const laminate_t kodak_8500_laminate[] =
+static const overcoat_t kodak_8500_overcoat[] =
 {
   {"Coated", N_("Coated"), {1, "\x00"}},
   {"None",  N_("None"),  {1, "\x02"}},
 };
 
-LIST(laminate_list_t, kodak_8500_laminate_list, laminate_t, kodak_8500_laminate);
+LIST(overcoat_list_t, kodak_8500_overcoat_list, overcoat_t, kodak_8500_overcoat);
 
 static const stp_parameter_t kodak_8500_parameters[] =
 {
@@ -2607,7 +2607,7 @@ static void kodak_8500_printer_init(stp_vars_t *v)
   /* Lamination */
   stp_putc(0x1b, v);
   stp_putc(0x59, v);
-  if (*((const char*)((pd->laminate->seq).data)) == 0x02) { /* No lamination */
+  if (*((const char*)((pd->overcoat->seq).data)) == 0x02) { /* No lamination */
     stp_putc(0x02, v);
     stp_putc(0x00, v);
   } else {
@@ -4163,13 +4163,13 @@ static const dyesub_printsize_t mitsu_cp9810_printsize[] =
 
 LIST(dyesub_printsize_list_t, mitsu_cp9810_printsize_list, dyesub_printsize_t, mitsu_cp9810_printsize);
 
-static const laminate_t mitsu_cp9810_laminate[] =
+static const overcoat_t mitsu_cp9810_overcoat[] =
 {
   {"Matte", N_("Matte"), {1, "\x01"}},
   {"Glossy",  N_("Glossy"),  {1, "\x00"}},
 };
 
-LIST(laminate_list_t, mitsu_cp9810_laminate_list, laminate_t, mitsu_cp9810_laminate);
+LIST(overcoat_list_t, mitsu_cp9810_overcoat_list, overcoat_t, mitsu_cp9810_overcoat);
 
 static const dyesub_stringitem_t mitsu9810_qualities[] =
 {
@@ -4221,7 +4221,7 @@ static int mitsu9810_parse_parameters(stp_vars_t *v)
 {
   const char *quality = stp_get_string_parameter(v, "PrintSpeed");
   dyesub_privdata_t *pd = get_privdata(v);
-  const laminate_t *laminate = NULL;
+  const overcoat_t *overcoat = NULL;
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(
 		  				stp_get_model_id(v));
 
@@ -4239,9 +4239,9 @@ static int mitsu9810_parse_parameters(stp_vars_t *v)
   }
 
   /* Matte lamination forces SuperFine mode */
-  if (caps->laminate) {
-    laminate = dyesub_get_laminate_pattern(v);
-    if (*((const char*)((laminate->seq).data)) != 0x00) {
+  if (caps->overcoat) {
+    overcoat = dyesub_get_overcoat_pattern(v);
+    if (*((const char*)((overcoat->seq).data)) != 0x00) {
       pd->privdata.m9550.quality = 0x80;
     }
   }
@@ -4266,8 +4266,8 @@ static void mitsu_cp98xx_printer_init(stp_vars_t *v, int model)
   stp_put16_be(pd->w_size, v);
   stp_put16_be(pd->h_size, v);
   if (model == 0x90) {
-	  stp_zfwrite((pd->laminate->seq).data, 1,
-		      (pd->laminate->seq).bytes, v); /* Lamination */
+	  stp_zfwrite((pd->overcoat->seq).data, 1,
+		      (pd->overcoat->seq).bytes, v); /* Lamination */
   } else {
 	  stp_putc(0x00, v);
   }
@@ -4322,8 +4322,8 @@ static void mitsu_cp9810_printer_end(stp_vars_t *v)
   stp_putc(0x4c, v); /* XXX 9800DW-S uses 0x4e, backend corrects */
   stp_putc(0x00, v);
 
-  if (pd->laminate &&
-      *((const char*)((pd->laminate->seq).data)) == 0x01) {
+  if (pd->overcoat &&
+      *((const char*)((pd->overcoat->seq).data)) == 0x01) {
 
     /* Generate a full plane of lamination data */
 
@@ -4405,13 +4405,13 @@ static const dyesub_printsize_t mitsu_cpd70x_printsize[] =
 
 LIST(dyesub_printsize_list_t, mitsu_cpd70x_printsize_list, dyesub_printsize_t, mitsu_cpd70x_printsize);
 
-static const laminate_t mitsu_cpd70x_laminate[] =
+static const overcoat_t mitsu_cpd70x_overcoat[] =
 {
   {"Glossy", N_("Glossy"), {1, "\x00"}},
   {"Matte", N_("Matte"), {1, "\x02"}},
 };
 
-LIST(laminate_list_t, mitsu_cpd70x_laminate_list, laminate_t, mitsu_cpd70x_laminate);
+LIST(overcoat_list_t, mitsu_cpd70x_overcoat_list, overcoat_t, mitsu_cpd70x_overcoat);
 
 static const dyesub_stringitem_t mitsu70x_qualities[] =
 {
@@ -4543,19 +4543,19 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
 
   stp_put16_be(pd->w_size, v);
   stp_put16_be(pd->h_size, v);
-  if (caps->laminate && *((const char*)((pd->laminate->seq).data)) != 0x00) {
+  if (caps->overcoat && *((const char*)((pd->overcoat->seq).data)) != 0x00) {
     stp_put16_be(pd->w_size, v);
     if (model == 0x00 || model == 0x90) {
-      pd->privdata.m70x.laminate_offset = 0;
+      pd->privdata.m70x.overcoat_offset = 0;
       if (!pd->privdata.m70x.quality)
 	pd->privdata.m70x.quality = 4;  /* Matte Lamination forces UltraFine on K60 or K305 */
     } else {
-      /* Laminate a slightly larger boundary in Matte mode */
-      pd->privdata.m70x.laminate_offset = 12;
+      /* Overcoat a slightly larger boundary in Matte mode */
+      pd->privdata.m70x.overcoat_offset = 12;
       if (!pd->privdata.m70x.quality)
         pd->privdata.m70x.quality = 3; /* Matte Lamination forces Superfine (or UltraFine) */
     }
-    stp_put16_be(pd->h_size + pd->privdata.m70x.laminate_offset, v);
+    stp_put16_be(pd->h_size + pd->privdata.m70x.overcoat_offset, v);
   } else {
     /* Glossy lamination here */
     stp_put16_be(0, v);
@@ -4573,9 +4573,9 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
 
   stp_putc(0x00, v); /* Lamination always enabled */
 
-  if (caps->laminate) {
-    stp_zfwrite((pd->laminate->seq).data, 1,
-		(pd->laminate->seq).bytes, v); /* Lamination mode */
+  if (caps->overcoat) {
+    stp_zfwrite((pd->overcoat->seq).data, 1,
+		(pd->overcoat->seq).bytes, v); /* Lamination mode */
   } else {
     stp_putc(0x00, v);
   }
@@ -4956,8 +4956,8 @@ static void mitsu_cpd90_printer_init(stp_vars_t *v)
 
   dyesub_nputc(v, 0x00, 16);
 
-  stp_zfwrite((pd->laminate->seq).data, 1,
-	      (pd->laminate->seq).bytes, v); /* Lamination mode */
+  stp_zfwrite((pd->overcoat->seq).data, 1,
+	      (pd->overcoat->seq).bytes, v); /* Lamination mode */
   stp_putc(pd->privdata.m70x.quality, v);
   stp_putc(pd->privdata.m70x.use_lut, v);
   stp_putc(pd->privdata.m70x.sharpen, v); /* Horizontal */
@@ -5106,7 +5106,7 @@ static const dyesub_printsize_t shinko_chcs2145_printsize[] =
 
 LIST(dyesub_printsize_list_t, shinko_chcs2145_printsize_list, dyesub_printsize_t, shinko_chcs2145_printsize);
 
-static const laminate_t shinko_chcs2145_laminate[] =
+static const overcoat_t shinko_chcs2145_overcoat[] =
 {
   {"PrinterDefault",  N_("Printer Default"),  {4, "\x01\0\0\0"}},
   {"Glossy",  N_("Glossy"),  {4, "\x02\0\0\0"}},
@@ -5117,7 +5117,7 @@ static const laminate_t shinko_chcs2145_laminate[] =
   {"ExtraGlossyFine",  N_("Extra Glossy Fine"),  {4, "\x07\0\0\0"}},
 };
 
-LIST(laminate_list_t, shinko_chcs2145_laminate_list, laminate_t, shinko_chcs2145_laminate);
+LIST(overcoat_list_t, shinko_chcs2145_overcoat_list, overcoat_t, shinko_chcs2145_overcoat);
 
 static void shinko_chcs2145_printer_init(stp_vars_t *v)
 {
@@ -5160,8 +5160,8 @@ static void shinko_chcs2145_printer_init(stp_vars_t *v)
     stp_put32_le(0x00, v);  /* Print Method */
   }
 
-  stp_zfwrite((pd->laminate->seq).data, 1,
-	      (pd->laminate->seq).bytes, v); /* Print Mode */
+  stp_zfwrite((pd->overcoat->seq).data, 1,
+	      (pd->overcoat->seq).bytes, v); /* Print Mode */
   stp_put32_le(0x00, v);
   stp_put32_le(0x00, v);
 
@@ -5231,7 +5231,7 @@ static const dyesub_printsize_t shinko_chcs1245_printsize[] =
 
 LIST(dyesub_printsize_list_t, shinko_chcs1245_printsize_list, dyesub_printsize_t, shinko_chcs1245_printsize);
 
-static const laminate_t shinko_chcs1245_laminate[] =
+static const overcoat_t shinko_chcs1245_overcoat[] =
 {
   {"PrinterDefault",  N_("Printer Default"),  {4, "\x01\x00\x00\x00"}},
   {"Glossy",  N_("Glossy"),  {4, "\x02\x00\x00\x00"}},
@@ -5240,7 +5240,7 @@ static const laminate_t shinko_chcs1245_laminate[] =
   {"MatteFine",  N_("Matte Fine"),  {4, "\x05\x00\x00\x00"}},
 };
 
-LIST(laminate_list_t, shinko_chcs1245_laminate_list, laminate_t, shinko_chcs1245_laminate);
+LIST(overcoat_list_t, shinko_chcs1245_overcoat_list, overcoat_t, shinko_chcs1245_overcoat);
 
 static const dyesub_stringitem_t shinko_chcs1245_dusts[] =
 {
@@ -5379,11 +5379,11 @@ static void shinko_chcs1245_printer_init(stp_vars_t *v)
   stp_put32_le(0x00, v);
 
   stp_put32_le(media, v);
-  stp_zfwrite((pd->laminate->seq).data, 1,
-	      (pd->laminate->seq).bytes, v); /* Print Mode */
+  stp_zfwrite((pd->overcoat->seq).data, 1,
+	      (pd->overcoat->seq).bytes, v); /* Print Mode */
   stp_put32_le(0x00, v);
-  if (((const unsigned char*)(pd->laminate->seq).data)[0] == 0x02 ||
-      ((const unsigned char*)(pd->laminate->seq).data)[0] == 0x03) {
+  if (((const unsigned char*)(pd->overcoat->seq).data)[0] == 0x02 ||
+      ((const unsigned char*)(pd->overcoat->seq).data)[0] == 0x03) {
     stp_put32_le(0x07fffffff, v);  /* Glossy */
   } else {
     stp_put32_le(pd->privdata.s1245.matte_intensity, v);  /* matte intensity */
@@ -5445,14 +5445,14 @@ static const dyesub_printsize_t shinko_chcs6245_printsize[] =
 
 LIST(dyesub_printsize_list_t, shinko_chcs6245_printsize_list, dyesub_printsize_t, shinko_chcs6245_printsize);
 
-static const laminate_t shinko_chcs6245_laminate[] =
+static const overcoat_t shinko_chcs6245_overcoat[] =
 {
   {"Glossy", N_("Glossy"), {4, "\x03\x00\x00\x00"}},
   {"Matte", N_("Matte"), {4, "\x02\x00\x00\x00"}},
   {"None", N_("None"), {4, "\x01\x00\x00\x00"}},
 };
 
-LIST(laminate_list_t, shinko_chcs6245_laminate_list, laminate_t, shinko_chcs6245_laminate);
+LIST(overcoat_list_t, shinko_chcs6245_overcoat_list, overcoat_t, shinko_chcs6245_overcoat);
 
 static void shinko_chcs6245_printer_init(stp_vars_t *v)
 {
@@ -5492,8 +5492,8 @@ static void shinko_chcs6245_printer_init(stp_vars_t *v)
 
   stp_put32_le(0x00, v);
   stp_put32_le(0x00, v);
-  stp_zfwrite((pd->laminate->seq).data, 1,
-	      (pd->laminate->seq).bytes, v); /* Lamination */
+  stp_zfwrite((pd->overcoat->seq).data, 1,
+	      (pd->overcoat->seq).bytes, v); /* Lamination */
   stp_put32_le(0x00, v);
 
   stp_put32_le(0x00, v);
@@ -5552,7 +5552,7 @@ static const dyesub_printsize_t shinko_chcs6145_printsize[] =
 
 LIST(dyesub_printsize_list_t, shinko_chcs6145_printsize_list, dyesub_printsize_t, shinko_chcs6145_printsize);
 
-static const laminate_t shinko_chcs6145_laminate[] =
+static const overcoat_t shinko_chcs6145_overcoat[] =
 {
   {"PrinterDefault",  N_("Printer Default"),  {4, "\0\0\0\0"}},
   {"None",  N_("None"),  {4, "\x01\0\0\0"}},
@@ -5560,7 +5560,7 @@ static const laminate_t shinko_chcs6145_laminate[] =
   {"Matte",  N_("Matte"),  {4, "\x03\0\0\0"}},
 };
 
-LIST(laminate_list_t, shinko_chcs6145_laminate_list, laminate_t, shinko_chcs6145_laminate);
+LIST(overcoat_list_t, shinko_chcs6145_overcoat_list, overcoat_t, shinko_chcs6145_overcoat);
 
 static void shinko_chcs6145_printer_init(stp_vars_t *v)
 {
@@ -5613,8 +5613,8 @@ static void shinko_chcs6145_printer_init(stp_vars_t *v)
     stp_put32_le(0x00, v);
   }
   stp_put32_le(0x00, v);  /* XXX quality; 00 == default, 0x01 == std */
-  stp_zfwrite((pd->laminate->seq).data, 1,
-	      (pd->laminate->seq).bytes, v); /* Lamination */
+  stp_zfwrite((pd->overcoat->seq).data, 1,
+	      (pd->overcoat->seq).bytes, v); /* Lamination */
   stp_put32_le(0x00, v);
 
   stp_put32_le(0x00, v);
@@ -5724,13 +5724,13 @@ static const dyesub_printsize_t dnpds40_printsize[] =
 
 LIST(dyesub_printsize_list_t, dnpds40_printsize_list, dyesub_printsize_t, dnpds40_printsize);
 
-static const laminate_t dnpds40_laminate[] =
+static const overcoat_t dnpds40_overcoat[] =
 {
   {"Glossy",  N_("Glossy"),  {3, "000"}},
   {"Matte", N_("Matte"), {3, "001"}},
 };
 
-LIST(laminate_list_t, dnpds40_laminate_list, laminate_t, dnpds40_laminate);
+LIST(overcoat_list_t, dnpds40_overcoat_list, overcoat_t, dnpds40_overcoat);
 
 
 static void dnp_printer_start_common(stp_vars_t *v)
@@ -5739,8 +5739,8 @@ static void dnp_printer_start_common(stp_vars_t *v)
 
   /* Configure Lamination */
   stp_zprintf(v, "\033PCNTRL OVERCOAT        0000000800000");
-  stp_zfwrite((pd->laminate->seq).data, 1,
-	      (pd->laminate->seq).bytes, v); /* Lamination mode */
+  stp_zfwrite((pd->overcoat->seq).data, 1,
+	      (pd->overcoat->seq).bytes, v); /* Lamination mode */
 
   /* Set quantity.. Backend overrides as needed. */
   stp_zprintf(v, "\033PCNTRL QTY             00000008%07d\r", pd->copies);
@@ -6210,7 +6210,7 @@ static void dnpdsrx1_printer_start(stp_vars_t *v)
 }
 
 /* Dai Nippon Printing DS620 */
-static const laminate_t dnpds620_laminate[] =
+static const overcoat_t dnpds620_overcoat[] =
 {
   {"Glossy",  N_("Glossy"),  {3, "000"}},
   {"Matte", N_("Matte"), {3, "001"}},
@@ -6218,7 +6218,7 @@ static const laminate_t dnpds620_laminate[] =
   {"MatteLuster", N_("Matte Luster"), {3, "022"}},
 };
 
-LIST(laminate_list_t, dnpds620_laminate_list, laminate_t, dnpds620_laminate);
+LIST(overcoat_list_t, dnpds620_overcoat_list, overcoat_t, dnpds620_overcoat);
 
 /* Imaging area is wider than print size, we always must supply the
    printer with the full imaging width. */
@@ -6709,13 +6709,13 @@ static const dyesub_printsize_t magicard_printsize[] =
 
 LIST(dyesub_printsize_list_t, magicard_printsize_list, dyesub_printsize_t, magicard_printsize);
 
-static const laminate_t magicard_laminate[] =
+static const overcoat_t magicard_overcoat[] =
 {
   {"Off",  N_("Off"),  {3, "OFF"}},
   {"On",  N_("On"),  {2, "ON"}},
 };
 
-LIST(laminate_list_t, magicard_laminate_list, laminate_t, magicard_laminate);
+LIST(overcoat_list_t, magicard_overcoat_list, overcoat_t, magicard_overcoat);
 
 static void magicard_printer_init(stp_vars_t *v)
 {
@@ -6980,9 +6980,11 @@ static const stp_parameter_t magicard_parameters[] =
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
-  {
-    "LaminateDuplex", N_("Laminate Pattern Duplex"), "Color=No,Category=Advanced Printer Setup",
-    N_("Laminate Pattern Duplex"),
+  {  /* Note this is called "LaminateDuplex" rather than "OvercoatDuplex"
+        to align with the mis-named "Laminate" option.
+     */
+    "LaminateDuplex", N_("Overcoat Pattern Duplex"), "Color=No,Category=Advanced Printer Setup",
+    N_("Overcoat Pattern Duplex"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_ADVANCED, 1, 0, STP_CHANNEL_NONE, 1, 0
   },
@@ -7179,16 +7181,16 @@ magicard_load_parameters(const stp_vars_t *v, const char *name,
       if (dyesub_feature(caps, DYESUB_FEATURE_DUPLEX))
         description->is_active = 1;
     }
-  else if (strcmp(name, "LaminateDuplex") == 0)
+  else if (strcmp(name, "OvercoatDuplex") == 0)
     {
       description->bounds.str = stp_string_list_create();
-      if (caps->laminate)
+      if (caps->overcoat)
         {
-          const laminate_list_t *llist = caps->laminate;
+          const overcoat_list_t *llist = caps->overcoat;
 
           for (i = 0; i < llist->n_items; i++)
             {
-              const laminate_t *l = &(llist->item[i]);
+              const overcoat_t *l = &(llist->item[i]);
 	      stp_string_list_add_string(description->bounds.str,
 					 l->name, gettext(l->text));
 	    }
@@ -7399,7 +7401,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     &p10_block_init_func, NULL,
     NULL,
-    &p10_laminate_list, NULL,
+    &p10_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -7466,7 +7468,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     &p440_block_init_func, &p440_block_end_func,
     NULL,
-    &p10_laminate_list, NULL,
+    &p10_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -7700,7 +7702,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL,
     updp10_adjust_curves,
-    &updp10_laminate_list, NULL,
+    &updp10_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -7716,7 +7718,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL,
     NULL,
-    &updp10_laminate_list, NULL,
+    &updp10_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -7733,7 +7735,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     &dppex5_block_init, NULL,
     NULL,
-    &dppex5_laminate_list, NULL,
+    &dppex5_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -7749,7 +7751,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL,
     NULL,
-    &updr100_laminate_list, NULL,
+    &updr100_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -7765,7 +7767,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL,
     NULL,
-    &updr200_laminate_list, NULL,
+    &updr200_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -7864,7 +7866,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No plane funcs */
     NULL, NULL, /* No block funcs */
     NULL,
-    &kodak_6800_laminate_list, NULL,
+    &kodak_6800_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -7880,7 +7882,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No plane funcs */
     NULL, NULL, /* No block funcs */
     NULL,
-    &kodak_6800_laminate_list, NULL,
+    &kodak_6800_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -7896,7 +7898,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No plane funcs */
     NULL, NULL, /* No block funcs */
     NULL,
-    &kodak_605_laminate_list, NULL,
+    &kodak_605_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -7914,7 +7916,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL,
     NULL,
-    &kodak_6800_laminate_list, &kodak_1400_media_list,
+    &kodak_6800_overcoat_list, &kodak_1400_media_list,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -7932,7 +7934,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No plane funcs */
     NULL, NULL, /* No block funcs */
     NULL,
-    &kodak_6800_laminate_list, NULL,
+    &kodak_6800_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -7949,7 +7951,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak_9810_plane_init, NULL,
     NULL, NULL, /* No block funcs */
     NULL,
-    &kodak_9810_laminate_list, NULL,
+    &kodak_9810_overcoat_list, NULL,
     NULL, NULL,
     kodak_9810_parameters,
     kodak_9810_parameter_count,
@@ -7969,7 +7971,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL, /* No block funcs */
     NULL,
-    &kodak_8810_laminate_list, NULL,
+    &kodak_8810_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -7986,7 +7988,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL, /* No block funcs */
     NULL,
-    &kodak_7000_laminate_list, NULL,
+    &kodak_7000_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -8003,7 +8005,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL, /* No block funcs */
     NULL,
-    &kodak_7000_laminate_list, NULL,
+    &kodak_7000_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -8019,7 +8021,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No plane funcs */
     NULL, NULL, /* No block funcs */
     NULL,
-    &kodak_8500_laminate_list, &kodak_8500_media_list,
+    &kodak_8500_overcoat_list, &kodak_8500_media_list,
     NULL, NULL,
     kodak_8500_parameters,
     kodak_8500_parameter_count,
@@ -8094,7 +8096,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cp3020da_plane_init, NULL,
     NULL, NULL, /* No block funcs */
     NULL,
-    &mitsu_cp9810_laminate_list, NULL,
+    &mitsu_cp9810_overcoat_list, NULL,
     NULL, NULL,
     mitsu9550_parameters,
     mitsu9550_parameter_count,
@@ -8113,7 +8115,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL, /* No block funcs */
     NULL,
-    &mitsu_cpd70x_laminate_list, NULL,
+    &mitsu_cpd70x_overcoat_list, NULL,
     NULL, NULL,
     mitsu70x_parameters,
     mitsu70x_parameter_count,
@@ -8132,7 +8134,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL, /* No block funcs */
     NULL,
-    &mitsu_cpd70x_laminate_list, NULL,
+    &mitsu_cpd70x_overcoat_list, NULL,
     NULL, NULL,
     mitsu70x_parameters,
     mitsu70x_parameter_count,
@@ -8151,7 +8153,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL, /* No block funcs */
     NULL,
-    &mitsu_cpd70x_laminate_list, NULL,
+    &mitsu_cpd70x_overcoat_list, NULL,
     NULL, NULL,
     mitsu70x_parameters,
     mitsu70x_parameter_count,
@@ -8170,7 +8172,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL, /* No block funcs */
     NULL,
-    &mitsu_cpd70x_laminate_list, NULL,
+    &mitsu_cpd70x_overcoat_list, NULL,
     NULL, NULL,
     mitsu70x_parameters,
     mitsu70x_parameter_count,
@@ -8189,7 +8191,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL, /* No block funcs */
     NULL,
-    &mitsu_cpd70x_laminate_list, NULL,
+    &mitsu_cpd70x_overcoat_list, NULL,
     NULL, NULL,
     mitsu_d90_parameters,
     mitsu_d90_parameter_count,
@@ -8245,7 +8247,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL, /* No block funcs */
     NULL,
-    &mitsu_cpd70x_laminate_list, NULL,
+    &mitsu_cpd70x_overcoat_list, NULL,
     NULL, NULL,
     mitsu70x_parameters,
     mitsu70x_parameter_count,
@@ -8361,7 +8363,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,  /* No planes */
     NULL, NULL,  /* No blocks */
     NULL,
-    &shinko_chcs2145_laminate_list, NULL,
+    &shinko_chcs2145_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -8377,7 +8379,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,  /* No planes */
     NULL, NULL,  /* No blocks */
     NULL,
-    &shinko_chcs1245_laminate_list, NULL,
+    &shinko_chcs1245_overcoat_list, NULL,
     NULL, NULL,
     shinko_chcs1245_parameters,
     shinko_chcs1245_parameter_count,
@@ -8396,7 +8398,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,  /* No planes */
     NULL, NULL,  /* No blocks */
     NULL,
-    &shinko_chcs6245_laminate_list, NULL,
+    &shinko_chcs6245_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -8419,7 +8421,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,  /* No planes */
     NULL, NULL,  /* No blocks */
     NULL,
-    &shinko_chcs6145_laminate_list, NULL,
+    &shinko_chcs6145_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -8442,7 +8444,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,  /* No planes */
     NULL, NULL,  /* No blocks */
     NULL,
-    &shinko_chcs6145_laminate_list, NULL,
+    &shinko_chcs6145_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -8459,7 +8461,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &dnpds40_plane_init, NULL,
     NULL, NULL,
     NULL,
-    &dnpds40_laminate_list, NULL,
+    &dnpds40_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -8476,7 +8478,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &dnpds40_plane_init, NULL,
     NULL, NULL,
     NULL,
-    &dnpds40_laminate_list, NULL,
+    &dnpds40_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, dnpds80_parse_parameters,
   },
@@ -8493,7 +8495,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &dnpds40_plane_init, NULL,
     NULL, NULL,
     NULL,
-    &dnpds40_laminate_list, NULL,
+    &dnpds40_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -8510,7 +8512,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &dnpds40_plane_init, NULL,
     NULL, NULL,
     NULL,
-    &dnpds620_laminate_list, NULL,
+    &dnpds620_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -8544,7 +8546,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &dnpds40_plane_init, NULL,
     NULL, NULL,
     NULL,
-    &dnpds40_laminate_list, &dnpds80dx_media_list,
+    &dnpds40_overcoat_list, &dnpds80dx_media_list,
     NULL, NULL,
     NULL, 0, NULL, dnpds80dx_parse_parameters,
   },
@@ -8561,7 +8563,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &dnpds40_plane_init, NULL,
     NULL, NULL,
     NULL,
-    &dnpds620_laminate_list, NULL,
+    &dnpds620_overcoat_list, NULL,
     NULL, NULL,
     ds820_parameters,
     ds820_parameter_count,
@@ -8581,7 +8583,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, magicard_plane_end,
     NULL, NULL,
     NULL,
-    &magicard_laminate_list, NULL,
+    &magicard_overcoat_list, NULL,
     NULL, NULL,
     magicard_parameters,
     magicard_parameter_count,
@@ -8601,7 +8603,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, magicard_plane_end,
     NULL, NULL,
     NULL,
-    &magicard_laminate_list, NULL,
+    &magicard_overcoat_list, NULL,
     NULL, NULL,
     magicard_parameters,
     magicard_parameter_count,
@@ -8642,13 +8644,16 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
-  {
-    /* TRANSLATORS: Some dye sublimation printers are able to achieve */
-    /* better durability of output by covering it with transparent */
-    /* laminate surface. This surface can be of different patterns: */
-    /* common are matte, glossy or texture. */
-    "Laminate", N_("Laminate Pattern"), "Color=No,Category=Advanced Printer Setup",
-    N_("Laminate Pattern"),
+  { /* TRANSLATORS: Some dye sublimation printers are able to achieve
+       better durability of output by covering it with transparent
+       overcoat surface. This surface can be of different patterns:
+       common are matte, glossy or texture.
+
+       This is called "Laminate" instead of "Overcoat" for backwards
+       compatibility reasons.
+    */
+    "Laminate", N_("Overcoat Pattern"), "Color=No,Category=Advanced Printer Setup",
+    N_("Overcoat Pattern"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 0, STP_CHANNEL_NONE, 1, 0
   },
@@ -8758,13 +8763,13 @@ static const dyesub_cap_t* dyesub_get_model_capabilities(int model)
   return &(dyesub_model_capabilities[0]);
 }
 
-static const laminate_t* dyesub_get_laminate_pattern(stp_vars_t *v)
+static const overcoat_t* dyesub_get_overcoat_pattern(stp_vars_t *v)
 {
   const char *lpar = stp_get_string_parameter(v, "Laminate");
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(
 		  				stp_get_model_id(v));
-  const laminate_list_t *llist = caps->laminate;
-  const laminate_t *l = NULL;
+  const overcoat_list_t *llist = caps->overcoat;
+  const overcoat_t *l = NULL;
   int i;
 
   for (i = 0; i < llist->n_items; i++)
@@ -8954,13 +8959,13 @@ dyesub_parameters(const stp_vars_t *v, const char *name,
   else if (strcmp(name, "Laminate") == 0)
     {
       description->bounds.str = stp_string_list_create();
-      if (caps->laminate)
+      if (caps->overcoat)
         {
-          const laminate_list_t *llist = caps->laminate;
+          const overcoat_list_t *llist = caps->overcoat;
 
           for (i = 0; i < llist->n_items; i++)
             {
-              const laminate_t *l = &(llist->item[i]);
+              const overcoat_t *l = &(llist->item[i]);
 	      stp_string_list_add_string(description->bounds.str,
 			  	l->name, gettext(l->text));
 	    }
@@ -9675,8 +9680,8 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   /* FIXME: What about Collation? Any special handling here? */
 
   pd->pagesize = stp_get_string_parameter(v, "PageSize");
-  if (caps->laminate)
-	  pd->laminate = dyesub_get_laminate_pattern(v);
+  if (caps->overcoat)
+	  pd->overcoat = dyesub_get_overcoat_pattern(v);
   if (caps->media)
 	  pd->media = dyesub_get_mediatype(v);
 
