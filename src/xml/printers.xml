@@ -3423,6 +3423,9 @@
       <printer translate="name" name="Ricoh Pro C7110" driver="ricoh-pro_c7110" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
       <printer translate="name" name="Ricoh Pro C7110S" driver="ricoh-pro_c7110s" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
       <printer translate="name" name="Ricoh SG3120BSFNw" driver="ricoh-sg3120bsfnw" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
+      <printer translate="name" name="Ricoh SP C440DN" driver="ricoh-sp_c440dn" manufacturer="Ricoh" model="50000" parameters="pcl_laser_params"></printer>
+      <printer translate="name" name="Ricoh SP C840DN" driver="ricoh-sp_c840dn" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params"></printer>
+      <printer translate="name" name="Ricoh SP C842DN" driver="ricoh-sp_c842dn" manufacturer="Ricoh" model="50001" parameters="pcl_laser_params"></printer>
       <printer translate="name" name="Samsung CLP-620" driver="samsung-clp-620" manufacturer="Samsung" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
       <printer translate="name" name="Samsung CLP-660N" driver="samsung-clp-660n" manufacturer="Samsung" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
       <printer translate="name" name="Samsung CLP-660ND" driver="samsung-clp-660nd" manufacturer="Samsung" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
