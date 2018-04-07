@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.2.14-pre3, a pre-release of Gutenprint 5.2.14.
+Welcome to Gutenprint 5.2.14, a stable release of Gutenprint 5.2.
 Please read these release notes carefully.
 
 Gutenprint is a suite of printer drivers for UNIX, Linux, and
@@ -7,9 +7,8 @@ printing system.  Gutenprint currently supports over 3000 printers.
 It also includes an enhanced Print plug-in for GIMP that replaces the
 print plug-in packaged with the GIMP distribution.
 
-As of 5.2.10, Gutenprint no longer supports Macintosh OS X 10.4 or
-earlier; as of 5.2.11, Gutenprint no longer supports Macintosh OS X
-10.5.
+Users of Macintosh OS X 10.4 should use Gutenprint 5.2.9; users of OS
+X 10.5 should use Gutenprint 5.2.10.
 
 *** NOTE TO PACKAGERS: Please read the file README.package for issues
     that are of interest to distributors and packagers of Gutenprint.
@@ -252,8 +251,12 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 * Changes from 5.2.13
 
   1) The PCL driver now supports color laser printers that use PCL 5c
-     natively (as opposed to emulation).  The support is considered to
-     be preliminary at this time.
+     natively (as opposed to emulation).
+
+     Due to a known bug, printing using CMYK input will result in
+     incorrect output.  Pleaes use RGB, CMY, or grayscale input only
+     to these printers.  This bug will be fixed in a future, post-5.2
+     release of Gutenprint.
 
      Color quality is significantly improved since 5.2.14-pre2.
 
@@ -425,6 +428,9 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Oki C7300
        Oki C9200
        Oki C9400
+       Ricoh SP C440DN
+       Ricoh SP C840DN
+       Ricoh SP C842DN
        Sharp AR-BC260
        Sharp AR-BC320
        Sharp AR-C170M
@@ -455,7 +461,15 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      have determined that these printers do not use standard PCL; they
      use a proprietary printing method that we cannot support.
 
-  3) A crash that affected certain dyesub printers when used with
+  3) A change to color output that affected some printers as of 5.2.12
+     has been reverted.  The symptom in most cases is that output is
+     much darker than in previous releases.  If you have generated
+     profiles based on 5.2.12, you will need to revert to older ones
+     or generate new ones.
+
+     We apologize for the inconvenience this may cause some.
+
+  4) A crash that affected certain dyesub printers when used with
      simplified PPD files has been fixed.  The printers involved are:
 
      Citizen CX-W
@@ -471,7 +485,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      Shinko/Sinfonia CHC-S6145
      Shinko/Sinfonia CHC-S6245
 
-  4) Enhanced support and bugfixes for the following dye-sublimation printers:
+  5) Enhanced support and bugfixes for the following dye-sublimation printers:
 
      Fujifilm ASK-300
      Sony UP-DR150
@@ -488,13 +502,13 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      Citizen CY-02
      Citizen CX-02
 
-  5) Initial support for EPSON Stylus Pro 7900 (Partial -- no
+  6) Initial support for EPSON Stylus Pro 7900 (Partial -- no
      orange/green inks)
 
-  6) The SureColor P800, previously marked Experimental, has been
+  7) The SureColor P800, previously marked Experimental, has been
      retuned and is now no longer considered experimental.
 
-  7) The following BW laser printer has been added:
+  8) The following BW laser printer has been added:
 
      HP LaserJet 5N
 
@@ -3510,11 +3524,12 @@ B) PRINTER-SPECIFIC ISSUES
      any such printers to gimp-print-devel@lists.sourceforge.net; they
      will be fixed in the next available release.
 
-  4) Color laser printers are currently supported only in black and
-     white mode.  At present, we do not have resources to add a color
-     laser driver.  If you have interest in this area and the
-     requisite skills, please contact
-     gimp-print-devel@lists.sourceforge.net.
+  4) Printing in CMYK mode to RGB printers (notably, color laser
+     printers) will produce grossly incorrect colors.  Please use RGB
+     (or, if necessary, CMY) mode when printing to such printers.
+     This is a known bug that will not be fixed in 5.2 due to the risk
+     of introducing new bugs combined with the limited utility of
+     printing in this way.
 
 
 ----------------
