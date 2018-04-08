@@ -353,7 +353,7 @@ clean-local: ppd-catalog-clean ppd-clean
 ## Clean
 
 CLEANFILES = ppd-stamp
-DISTCLEANFILES = cups-genppdupdate test-ppds
+DISTCLEANFILES = cups-genppdupdate
 MAINTAINERCLEANFILES = Makefile.in
 
 EXTRA_DIST = \
