@@ -270,10 +270,10 @@ and reporting the results!</p>
 <tr><td>Canon MP220 series</td><td>bjc-MP220-series</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA MP220</td><td>bjc-MULTIPASS-MP220</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA MP228</td><td>bjc-PIXMA-MP228</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Canon MP230 series</td><td>bjc-MP230-series</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Canon PIXMA MP230</td><td>bjc-MULTIPASS-MP230</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Canon PIXMA MP236</td><td>bjc-PIXMA-MP236</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Canon PIXMA MP237</td><td>bjc-PIXMA-MP237</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MP230 series</td><td>bjc-MP230-series</td><td></td></tr>
+<tr><td>Canon PIXMA MP230</td><td>bjc-MULTIPASS-MP230</td><td></td></tr>
+<tr><td>Canon PIXMA MP236</td><td>bjc-PIXMA-MP236</td><td></td></tr>
+<tr><td>Canon PIXMA MP237</td><td>bjc-PIXMA-MP237</td><td></td></tr>
 <tr><td>Canon MP240 series</td><td>bjc-MP240-series</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA MP240</td><td>bjc-MULTIPASS-MP240</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA MP245</td><td>bjc-PIXMA-MP245</td><td>EXPERIMENTAL</td></tr>
@@ -471,8 +471,14 @@ and reporting the results!</p>
 <tr><td>Canon MG2500 series</td><td>bjc-MG2500-series</td><td>EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</td></tr>
 <tr><td>Canon PIXMA MG2510</td><td>bjc-PIXMA-MG2510</td><td>EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</td></tr>
 <tr><td>Canon PIXMA MG2520</td><td>bjc-PIXMA-MG2520</td><td>EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</td></tr>
+<tr><td>Canon PIXMA MG2522</td><td>bjc-PIXMA-MG2522</td><td>EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</td></tr>
+<tr><td>Canon PIXMA MG2525</td><td>bjc-PIXMA-MG2525</td><td>EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</td></tr>
 <tr><td>Canon PIXMA MG2540</td><td>bjc-PIXMA-MG2540</td><td>EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</td></tr>
+<tr><td>Canon PIXMA MG2540S</td><td>bjc-PIXMA-MG2540S</td><td>EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</td></tr>
+<tr><td>Canon PIXMA MG2545S</td><td>bjc-PIXMA-MG2545S</td><td>EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</td></tr>
 <tr><td>Canon PIXMA MG2550</td><td>bjc-PIXMA-MG2550</td><td>EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</td></tr>
+<tr><td>Canon PIXMA MG2550S</td><td>bjc-PIXMA-MG2550S</td><td>EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</td></tr>
+<tr><td>Canon PIXMA MG2555S</td><td>bjc-PIXMA-MG2555S</td><td>EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</td></tr>
 <tr><td>Canon PIXMA MG2560</td><td>bjc-PIXMA-MG2560</td><td>EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</td></tr>
 <tr><td>Canon PIXMA MG2570</td><td>bjc-PIXMA-MG2570</td><td>EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</td></tr>
 <tr><td>Canon PIXMA MG2570S</td><td>bjc-PIXMA-MG2570S</td><td>EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</td></tr>
@@ -490,6 +496,21 @@ and reporting the results!</p>
 <tr><td>Canon PIXMA MG2970</td><td>bjc-PIXMA-MG2970</td><td>EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</td></tr>
 <tr><td>Canon PIXMA MG2980</td><td>bjc-PIXMA-MG2980</td><td>EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</td></tr>
 <tr><td>Canon PIXMA MG2990</td><td>bjc-PIXMA-MG2990</td><td>EXPERIMENTAL; Only supports plain, photo paper gloss gold, photo paper gloss, and envelope; unconfirmed whether other media will work</td></tr>
+<tr><td>Canon MG3000 series</td><td>bjc-MG3000-series</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA MG3010</td><td>bjc-PIXMA-MG3010</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA MG3020</td><td>bjc-PIXMA-MG3020</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA MG3022</td><td>bjc-PIXMA-MG3022</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA MG3030</td><td>bjc-PIXMA-MG3030</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA MG3040</td><td>bjc-PIXMA-MG3040</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA MG3050</td><td>bjc-PIXMA-MG3050</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA MG3051</td><td>bjc-PIXMA-MG3051</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA MG3052</td><td>bjc-PIXMA-MG3052</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA MG3053</td><td>bjc-PIXMA-MG3053</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA MG3060</td><td>bjc-PIXMA-MG3060</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA MG3070</td><td>bjc-PIXMA-MG3070</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA MG3077</td><td>bjc-PIXMA-MG3077</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA MG3080</td><td>bjc-PIXMA-MG3080</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA MG3090</td><td>bjc-PIXMA-MG3090</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon MG3100 series</td><td>bjc-MG3100-series</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA MG3100</td><td>bjc-PIXMA-MG3100</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA MG3110</td><td>bjc-PIXMA-MG3110</td><td>EXPERIMENTAL</td></tr>
@@ -905,11 +926,22 @@ and reporting the results!</p>
 <tr><td>Canon PIXMA E404</td><td>bjc-PIXMA-E404</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA E408</td><td>bjc-PIXMA-E408</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA E409</td><td>bjc-PIXMA-E409</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon E410 series</td><td>bjc-E410-series</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA E410</td><td>bjc-PIXMA-E410</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA E414</td><td>bjc-PIXMA-E414</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA E417</td><td>bjc-PIXMA-E417</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA E418</td><td>bjc-PIXMA-E418</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon E460 series</td><td>bjc-E460-series</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA E460</td><td>bjc-PIXMA-E460</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA E461</td><td>bjc-PIXMA-E461</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA E464</td><td>bjc-PIXMA-E464</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA E468</td><td>bjc-PIXMA-E468</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon E470 series</td><td>bjc-E470-series</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA E470</td><td>bjc-PIXMA-E470</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA E471</td><td>bjc-PIXMA-E471</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA E474</td><td>bjc-PIXMA-E474</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA E477</td><td>bjc-PIXMA-E477</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA E478</td><td>bjc-PIXMA-E478</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon E480 series</td><td>bjc-E480-series</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA E480</td><td>bjc-PIXMA-E480</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA E481</td><td>bjc-PIXMA-E481</td><td>EXPERIMENTAL</td></tr>
@@ -932,7 +964,93 @@ and reporting the results!</p>
 <tr><td>Canon E610 series</td><td>bjc-E610-series</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA E610</td><td>bjc-PIXMA-E610</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA E618</td><td>bjc-PIXMA-E618</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon E3100 series</td><td>bjc-E3100-series</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA E3170</td><td>bjc-PIXMA-E3170</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon G1000 series</td><td>bjc-G1000-series</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G1000</td><td>bjc-PIXMA-G1000</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G1100</td><td>bjc-PIXMA-G1100</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G1200</td><td>bjc-PIXMA-G1200</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G1400</td><td>bjc-PIXMA-G1400</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G1500</td><td>bjc-PIXMA-G1500</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G1800</td><td>bjc-PIXMA-G1800</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G1900</td><td>bjc-PIXMA-G1900</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon G2000 series</td><td>bjc-G2000-series</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G2000</td><td>bjc-PIXMA-G2000</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G2002</td><td>bjc-PIXMA-G2002</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G2100</td><td>bjc-PIXMA-G2100</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G2200</td><td>bjc-PIXMA-G2200</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G2400</td><td>bjc-PIXMA-G2400</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G2500</td><td>bjc-PIXMA-G2500</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G2600</td><td>bjc-PIXMA-G2600</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G2800</td><td>bjc-PIXMA-G2800</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G2900</td><td>bjc-PIXMA-G2900</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon G3000 series</td><td>bjc-G3000-series</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G3000</td><td>bjc-PIXMA-G3000</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G3100</td><td>bjc-PIXMA-G3100</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G3200</td><td>bjc-PIXMA-G3200</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G3400</td><td>bjc-PIXMA-G3400</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G3500</td><td>bjc-PIXMA-G3500</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G3600</td><td>bjc-PIXMA-G3600</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G3800</td><td>bjc-PIXMA-G3800</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G3900</td><td>bjc-PIXMA-G3900</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon G4000 series</td><td>bjc-G4000-series</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G4000</td><td>bjc-PIXMA-G4000</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G4100</td><td>bjc-PIXMA-G4100</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G4200</td><td>bjc-PIXMA-G4200</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G4400</td><td>bjc-PIXMA-G4400</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G4500</td><td>bjc-PIXMA-G4500</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G4600</td><td>bjc-PIXMA-G4600</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G4800</td><td>bjc-PIXMA-G4800</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G4900</td><td>bjc-PIXMA-G4900</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA P200</td><td>bjc-PIXMA-P200</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon TS3100 series</td><td>bjc-TS3100-series</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS3170</td><td>bjc-PIXMA-TS3170</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon TS5000 series</td><td>bjc-TS5000-series</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS5010</td><td>bjc-PIXMA-TS5010</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS5020</td><td>bjc-PIXMA-TS5020</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS5030</td><td>bjc-PIXMA-TS5030</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS5040</td><td>bjc-PIXMA-TS5040</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS5050</td><td>bjc-PIXMA-TS5050</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS5051</td><td>bjc-PIXMA-TS5051</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS5053</td><td>bjc-PIXMA-TS5053</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS5055</td><td>bjc-PIXMA-TS5055</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS5060</td><td>bjc-PIXMA-TS5060</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS5070</td><td>bjc-PIXMA-TS5070</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS5080</td><td>bjc-PIXMA-TS5080</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS5090</td><td>bjc-PIXMA-TS5090</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon TS6000 series</td><td>bjc-TS6000-series</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS6010</td><td>bjc-PIXMA-TS6010</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS6020</td><td>bjc-PIXMA-TS6020</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS6030</td><td>bjc-PIXMA-TS6030</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS6040</td><td>bjc-PIXMA-TS6040</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS6050</td><td>bjc-PIXMA-TS6050</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS6051</td><td>bjc-PIXMA-TS6051</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS6052</td><td>bjc-PIXMA-TS6052</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS6060</td><td>bjc-PIXMA-TS6060</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS6070</td><td>bjc-PIXMA-TS6070</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS6080</td><td>bjc-PIXMA-TS6080</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon TS8000 series</td><td>bjc-TS8000-series</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS8010</td><td>bjc-PIXMA-TS8010</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS8020</td><td>bjc-PIXMA-TS8020</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS8030</td><td>bjc-PIXMA-TS8030</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS8040</td><td>bjc-PIXMA-TS8040</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS8050</td><td>bjc-PIXMA-TS8050</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS8051</td><td>bjc-PIXMA-TS8051</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS8052</td><td>bjc-PIXMA-TS8052</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS8053</td><td>bjc-PIXMA-TS8053</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS8060</td><td>bjc-PIXMA-TS8060</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS8070</td><td>bjc-PIXMA-TS8070</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS8080</td><td>bjc-PIXMA-TS8080</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS8090</td><td>bjc-PIXMA-TS8090</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon TS9000 series</td><td>bjc-TS9000-series</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS9010</td><td>bjc-PIXMA-TS9010</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS9020</td><td>bjc-PIXMA-TS9020</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS9030</td><td>bjc-PIXMA-TS9030</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS9040</td><td>bjc-PIXMA-TS9040</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS9050</td><td>bjc-PIXMA-TS9050</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS9055</td><td>bjc-PIXMA-TS9055</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS9060</td><td>bjc-PIXMA-TS9060</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS9080</td><td>bjc-PIXMA-TS9080</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon iB4000 series</td><td>bjc-iB4000-series</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon MAXIFY iB4010</td><td>bjc-MAXIFY-iB4010</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon MAXIFY iB4020</td><td>bjc-MAXIFY-iB4020</td><td>EXPERIMENTAL</td></tr>
@@ -942,6 +1060,16 @@ and reporting the results!</p>
 <tr><td>Canon MAXIFY iB4060</td><td>bjc-MAXIFY-iB4060</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon MAXIFY iB4070</td><td>bjc-MAXIFY-iB4070</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon MAXIFY iB4080</td><td>bjc-MAXIFY-iB4080</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY iB4090</td><td>bjc-MAXIFY-iB4090</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon iB4100 series</td><td>bjc-iB4100-series</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY iB4110</td><td>bjc-MAXIFY-iB4110</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY iB4120</td><td>bjc-MAXIFY-iB4120</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY iB4130</td><td>bjc-MAXIFY-iB4130</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY iB4140</td><td>bjc-MAXIFY-iB4140</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY iB4150</td><td>bjc-MAXIFY-iB4150</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY iB4170</td><td>bjc-MAXIFY-iB4170</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY iB4180</td><td>bjc-MAXIFY-iB4180</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY iB4190</td><td>bjc-MAXIFY-iB4190</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon MB2000 series</td><td>bjc-MB2000-series</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon MAXIFY MB2010</td><td>bjc-MAXIFY-MB2010</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon MAXIFY MB2020</td><td>bjc-MAXIFY-MB2020</td><td>EXPERIMENTAL</td></tr>
@@ -949,6 +1077,13 @@ and reporting the results!</p>
 <tr><td>Canon MAXIFY MB2040</td><td>bjc-MAXIFY-MB2040</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon MAXIFY MB2050</td><td>bjc-MAXIFY-MB2050</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon MAXIFY MB2060</td><td>bjc-MAXIFY-MB2060</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MB2100 series</td><td>bjc-MB2100-series</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY MB2110</td><td>bjc-MAXIFY-MB2110</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY MB2120</td><td>bjc-MAXIFY-MB2120</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY MB2130</td><td>bjc-MAXIFY-MB2130</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY MB2140</td><td>bjc-MAXIFY-MB2140</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY MB2150</td><td>bjc-MAXIFY-MB2150</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY MB2160</td><td>bjc-MAXIFY-MB2160</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon MB2300 series</td><td>bjc-MB2300-series</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon MAXIFY MB2320</td><td>bjc-MAXIFY-MB2320</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon MAXIFY MB2330</td><td>bjc-MAXIFY-MB2330</td><td>EXPERIMENTAL</td></tr>
@@ -956,6 +1091,14 @@ and reporting the results!</p>
 <tr><td>Canon MAXIFY MB2350</td><td>bjc-MAXIFY-MB2350</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon MAXIFY MB2360</td><td>bjc-MAXIFY-MB2360</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon MAXIFY MB2390</td><td>bjc-MAXIFY-MB2390</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MB2700 series</td><td>bjc-MB2700-series</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY MB2710</td><td>bjc-MAXIFY-MB2710</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY MB2720</td><td>bjc-MAXIFY-MB2720</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY MB2730</td><td>bjc-MAXIFY-MB2730</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY MB2740</td><td>bjc-MAXIFY-MB2740</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY MB2750</td><td>bjc-MAXIFY-MB2750</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY MB2760</td><td>bjc-MAXIFY-MB2760</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY MB2790</td><td>bjc-MAXIFY-MB2790</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon MB5000 series</td><td>bjc-MB5000-series</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon MAXIFY MB5020</td><td>bjc-MAXIFY-MB5020</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon MAXIFY MB5030</td><td>bjc-MAXIFY-MB5030</td><td>EXPERIMENTAL</td></tr>
@@ -965,6 +1108,16 @@ and reporting the results!</p>
 <tr><td>Canon MAXIFY MB5070</td><td>bjc-MAXIFY-MB5070</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon MAXIFY MB5080</td><td>bjc-MAXIFY-MB5080</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon MAXIFY MB5090</td><td>bjc-MAXIFY-MB5090</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MB5100 series</td><td>bjc-MB5100-series</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY MB5110</td><td>bjc-MAXIFY-MB5110</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY MB5120</td><td>bjc-MAXIFY-MB5120</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY MB5130</td><td>bjc-MAXIFY-MB5130</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY MB5140</td><td>bjc-MAXIFY-MB5140</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY MB5150</td><td>bjc-MAXIFY-MB5150</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY MB5160</td><td>bjc-MAXIFY-MB5160</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY MB5170</td><td>bjc-MAXIFY-MB5170</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY MB5180</td><td>bjc-MAXIFY-MB5180</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY MB5190</td><td>bjc-MAXIFY-MB5190</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon MB5300 series</td><td>bjc-MB5300-series</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon MAXIFY MB5310</td><td>bjc-MAXIFY-MB5310</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon MAXIFY MB5320</td><td>bjc-MAXIFY-MB5320</td><td>EXPERIMENTAL</td></tr>
@@ -974,6 +1127,16 @@ and reporting the results!</p>
 <tr><td>Canon MAXIFY MB5360</td><td>bjc-MAXIFY-MB5360</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon MAXIFY MB5370</td><td>bjc-MAXIFY-MB5370</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon MAXIFY MB5390</td><td>bjc-MAXIFY-MB5390</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MB5400 series</td><td>bjc-MB5400-series</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY MB5410</td><td>bjc-MAXIFY-MB5410</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY MB5420</td><td>bjc-MAXIFY-MB5420</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY MB5430</td><td>bjc-MAXIFY-MB5430</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY MB5440</td><td>bjc-MAXIFY-MB5440</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY MB5450</td><td>bjc-MAXIFY-MB5450</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY MB5460</td><td>bjc-MAXIFY-MB5460</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY MB5470</td><td>bjc-MAXIFY-MB5470</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY MB5480</td><td>bjc-MAXIFY-MB5480</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon MAXIFY MB5490</td><td>bjc-MAXIFY-MB5490</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXUS 50i</td><td>bjc-50i</td><td></td></tr>
 <tr><td>Canon PIXUS 80i</td><td>bjc-80i</td><td></td></tr>
 <tr><td>Canon PIXUS 450i</td><td>bjc-450i</td><td></td></tr>
@@ -1028,7 +1191,7 @@ and reporting the results!</p>
 <tr><td>Epson Artisan 800</td><td>escp2-artisan800</td><td></td></tr>
 <tr><td>Epson Artisan 810</td><td>escp2-artisan810</td><td></td></tr>
 <tr><td>Epson Artisan 835</td><td>escp2-artisan835</td><td></td></tr>
-<tr><td>Epson Artisan 1430</td><td>escp2-artisan1430</td><td>(not in 5.2.12)</td></tr>
+<tr><td>Epson Artisan 1430</td><td>escp2-artisan1430</td><td></td></tr>
 <tr><td>Epson B-300</td><td>escp2-b300</td><td></td></tr>
 <tr><td>Epson B-308</td><td>escp2-b308</td><td></td></tr>
 <tr><td>Epson B-310</td><td>escp2-b310</td><td></td></tr>
@@ -1038,7 +1201,7 @@ and reporting the results!</p>
 <tr><td>Epson B-510DN</td><td>escp2-b510dn</td><td></td></tr>
 <tr><td>Epson L120</td><td>escp2-l120</td><td></td></tr>
 <tr><td>Epson L210</td><td>escp2-l210</td><td></td></tr>
-<tr><td>Epson L310</td><td>escp2-l310</td><td>(not in 5.2.12)</td></tr>
+<tr><td>Epson L310</td><td>escp2-l310</td><td></td></tr>
 <tr><td>Epson L1300</td><td>escp2-l1300</td><td></td></tr>
 <tr><td>Epson L1800</td><td>escp2-l1800</td><td></td></tr>
 <tr><td>Epson Stylus C20</td><td>escp2-c20</td><td></td></tr>
@@ -1231,6 +1394,7 @@ and reporting the results!</p>
 <tr><td>Epson Stylus Pro 4800/4880 Back Compatible</td><td>escp2-4600</td><td></td></tr>
 <tr><td>Epson Stylus Pro 4800</td><td>escp2-4800</td><td></td></tr>
 <tr><td>Epson Stylus Pro 4880</td><td>escp2-4880</td><td></td></tr>
+<tr><td>Epson Stylus Pro 4900</td><td>escp2-4900</td><td></td></tr>
 <tr><td>Epson Stylus Pro 5000</td><td>escp2-5000</td><td></td></tr>
 <tr><td>Epson Stylus Pro 5500</td><td>escp2-5500</td><td></td></tr>
 <tr><td>Epson Stylus Pro 7000</td><td>escp2-7000</td><td></td></tr>
@@ -1410,7 +1574,7 @@ and reporting the results!</p>
 <tr><td>Epson Stylus XP100</td><td>escp2-xp100</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Epson SureColor P400</td><td>escp2-p400</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Epson SureColor P600</td><td>escp2-p600</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Epson SureColor P800</td><td>escp2-p800</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Epson SureColor P800</td><td>escp2-p800</td><td></td></tr>
 <tr><td>Epson SureColor P6000</td><td>escp2-p6000</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Epson SureColor P7000</td><td>escp2-p7000</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Epson SureColor P7000 Commercial Edition</td><td>escp2-p7000c</td><td>EXPERIMENTAL; violet ink not supported</td></tr>
@@ -1616,13 +1780,16 @@ and reporting the results!</p>
 <tr><td>Brother HL-1670N</td><td>brother-hl-1670n</td><td></td></tr>
 <tr><td>Brother HL-1850</td><td>brother-hl-1850</td><td></td></tr>
 <tr><td>Brother HL-1870N</td><td>brother-hl-1870n</td><td></td></tr>
-<tr><td>Brother HL-2030</td><td>brother-hl-2030</td><td></td></tr>
-<tr><td>Brother HL-2035</td><td>brother-hl-2035</td><td></td></tr>
 <tr><td>Brother HL-2060</td><td>brother-hl-2060</td><td></td></tr>
 <tr><td>Brother HL-2250DN</td><td>brother-hl-2250dn</td><td></td></tr>
+<tr><td>Brother HL-2400CeN</td><td>brother-hl-2400cen</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Brother HL-2460</td><td>brother-hl-2460</td><td></td></tr>
 <tr><td>Brother HL-2460N</td><td>brother-hl-2460n</td><td></td></tr>
+<tr><td>Brother HL-2600CN</td><td>brother-hl-2600cn</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Brother HL-3400CN</td><td>brother-hl-3400cn</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Brother HL-3450CN</td><td>brother-hl-3450cn</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Brother HL-4Ve</td><td>brother-hl-4ve</td><td></td></tr>
+<tr><td>Brother HL-4040CN</td><td>brother-hl-4040cn</td><td>UNTESTED Automatically Generated</td></tr>
 <tr><td>Brother HL-5030</td><td>brother-hl-5030</td><td></td></tr>
 <tr><td>Brother HL-5040</td><td>brother-hl-5040</td><td></td></tr>
 <tr><td>Brother HL-5050</td><td>brother-hl-5050</td><td></td></tr>
@@ -1630,6 +1797,7 @@ and reporting the results!</p>
 <tr><td>Brother HL-5140</td><td>brother-hl-5140</td><td></td></tr>
 <tr><td>Brother HL-5150D</td><td>brother-hl-5150d</td><td></td></tr>
 <tr><td>Brother HL-5170DN</td><td>brother-hl-5170dn</td><td></td></tr>
+<tr><td>Brother HL-5340D</td><td>brother-hl-5340d</td><td></td></tr>
 <tr><td>Brother HL-630</td><td>brother-hl-630</td><td></td></tr>
 <tr><td>Brother HL-660</td><td>brother-hl-660</td><td></td></tr>
 <tr><td>Brother HL-7050</td><td>brother-hl-7050</td><td></td></tr>
@@ -1647,7 +1815,28 @@ and reporting the results!</p>
 <tr><td>Canon LBP-1260</td><td>canon-lbp-1260</td><td></td></tr>
 <tr><td>Canon LBP-1760</td><td>canon-lbp-1760</td><td></td></tr>
 <tr><td>Canon LBP-3360</td><td>canon-lbp-3360</td><td></td></tr>
+<tr><td>Canon LBP-5360</td><td>canon-lbp-5360</td><td></td></tr>
+<tr><td>Canon LBP-5390</td><td>canon-lbp-5390</td><td></td></tr>
 <tr><td>Canon imageRunner 330s</td><td>canon-ir_330s</td><td></td></tr>
+<tr><td>Canon imageRunner C2550</td><td>canon-imagerunner_c2550</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Canon imageRunner C2570</td><td>canon-ir_c2570</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon imageRunner C2570i</td><td>canon-ir_c2570i</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon imageRunner C2570N</td><td>canon-ir_c2570N</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon imageRunner C2620N</td><td>canon-ir_c2620N</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon imageRunner C3100</td><td>canon-ir_c3100</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon imageRunner C3170</td><td>canon-ir_c3170</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon imageRunner C3170i</td><td>canon-ir_c3170i</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon imageRunner C3200</td><td>canon-ir_c3200</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon imageRunner C5030</td><td>canon-ir_c5030</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon imageRunner C5058</td><td>canon-imagerunner_c5058</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Canon imageRunner C5068</td><td>canon-imagerunner_c5068</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Canon imageRunner C5180</td><td>canon-ir_c5180</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon imageRunner C5185</td><td>canon-imagerunner_c5185</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Canon imageRunner C5185i</td><td>canon-imagerunner_c5185i</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Canon imageRunner C5800</td><td>canon-ir_c5800</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon imageRunner C5870U</td><td>canon-ir_c5870U</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon imageRunner C6800</td><td>canon-ir_c6800</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon imageRunner C6870U</td><td>canon-ir_c6870u</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Citizen ProJet II</td><td>citizen-projet_ii</td><td></td></tr>
 <tr><td>Datamax-ONeil p1115</td><td>datamax_oneil_p1115</td><td></td></tr>
 <tr><td>Datamax-ONeil p1115s</td><td>datamax_oneil_p1115s</td><td></td></tr>
@@ -1658,14 +1847,16 @@ and reporting the results!</p>
 <tr><td>Datamax-ONeil H8308p</td><td>datamax_oneil_H8308p</td><td></td></tr>
 <tr><td>DEC 1800</td><td>dec-1800</td><td></td></tr>
 <tr><td>DEC LN17</td><td>dec-ln17</td><td></td></tr>
+<tr><td>Dell 3000cn</td><td>dell-3000cn</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Dell 3100cn</td><td>dell-3100cn</td><td>UNTESTED Automatically Generated</td></tr>
 <tr><td>Epson ActionLaser 1100</td><td>epson-actl_1100</td><td></td></tr>
 <tr><td>Epson ActionLaser II</td><td>epson-actl_ii</td><td></td></tr>
 <tr><td>Epson AL-C2000</td><td>epson-acl_c2000</td><td></td></tr>
 <tr><td>Epson AL-C2000 PS3</td><td>epson-acl_c2000ps</td><td></td></tr>
 <tr><td>Epson AL-C8500</td><td>epson-acl_c8500</td><td></td></tr>
 <tr><td>Epson AL-C8500PS</td><td>epson-acl_c8500ps</td><td></td></tr>
-<tr><td>Epson AL-C8600</td><td>epson-acl_c8600</td><td></td></tr>
-<tr><td>Epson AL-C8600 PS3</td><td>epson-acl_c8600ps</td><td></td></tr>
+<tr><td>Epson AL-C8600</td><td>epson-acl_c8600</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Epson AL-C8600 PS3</td><td>epson-acl_c8600ps</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Epson EPL-5200</td><td>epson-epl-5200</td><td></td></tr>
 <tr><td>Epson EPL-5200+</td><td>epson-epl-5200plus</td><td></td></tr>
 <tr><td>Epson EPL-5700</td><td>epson-epl-5700</td><td></td></tr>
@@ -1705,6 +1896,11 @@ and reporting the results!</p>
 <tr><td>Generic PCL 6 Printer wide margin</td><td>pcl-g_6_a4</td><td></td></tr>
 <tr><td>Generic PCL 6 LF Printer wide margin</td><td>pcl-g_6_lf_a4</td><td></td></tr>
 <tr><td>Generic PCL 6 Tabl Printer wide margin</td><td>pcl-g_6_tabloid_a4</td><td></td></tr>
+<tr><td>Generic PCL Color Laser</td><td>pcl-g_c</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Generic PCL Color Laser LF Printer</td><td>pcl-g_c_l</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Generic PCL Color wide margin</td><td>pcl-g_c_a4</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Generic PCL Color LF wide margin</td><td>pcl-g_c_lf_a4</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Generic PCL Color Tabl wide margin</td><td>pcl-g_c_tabloid_a4</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Gestetner 10512</td><td>gestetner-10512</td><td></td></tr>
 <tr><td>Gestetner 2212</td><td>gestetner-2212</td><td></td></tr>
 <tr><td>Gestetner 2712</td><td>gestetner-2712</td><td></td></tr>
@@ -1716,6 +1912,24 @@ and reporting the results!</p>
 <tr><td>Gestetner 6002</td><td>gestetner-6002</td><td></td></tr>
 <tr><td>Gestetner 7502</td><td>gestetner-7502</td><td></td></tr>
 <tr><td>Gestetner 9002</td><td>gestetner-9002</td><td></td></tr>
+<tr><td>Gestetner CS555</td><td>gestetner-cs555</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner DSc1020</td><td>gestetner-dsc1020</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner DSc1025</td><td>gestetner-dsc1025</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner DSc1030</td><td>gestetner-dsc1030</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner DSc1045</td><td>gestetner-dsc1045</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner DSc1060</td><td>gestetner-dsc1060</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner DSc1120</td><td>gestetner-dsc1120</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner DSc1220</td><td>gestetner-dsc1220</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner DSc1225</td><td>gestetner-dsc1225</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner DSc1230</td><td>gestetner-dsc1230</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner DSc1245</td><td>gestetner-dsc1245</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner DSc1260</td><td>gestetner-dsc1260</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner DSc424</td><td>gestetner-dsc424</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner DSc428</td><td>gestetner-dsc428</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner DSc432</td><td>gestetner-dsc432</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner DSc435</td><td>gestetner-dsc435</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner DSc445</td><td>gestetner-dsc445</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner DSc460</td><td>gestetner-dsc460</td><td>UNTESTED Automatically Generated</td></tr>
 <tr><td>Gestetner DSm415</td><td>gestetner-dsm415</td><td></td></tr>
 <tr><td>Gestetner DSm615</td><td>gestetner-dsm615</td><td></td></tr>
 <tr><td>Gestetner DSm616</td><td>gestetner-dsm616</td><td></td></tr>
@@ -1756,6 +1970,59 @@ and reporting the results!</p>
 <tr><td>Gestetner MP 4000B</td><td>gestetner-mp_4000b</td><td></td></tr>
 <tr><td>Gestetner MP 5000</td><td>gestetner-mp_5000</td><td></td></tr>
 <tr><td>Gestetner MP 5000B</td><td>gestetner-mp_5000b</td><td></td></tr>
+<tr><td>Gestetner MPC1500/GS106</td><td>gestetner-mpc1500_gs106</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MPC2500/DSc525</td><td>gestetner-mpc2500_dsc525</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MPC3000/DSc530</td><td>gestetner-mpc3000_dsc530</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MPC3500/DSc535</td><td>gestetner-mpc3500_dsc535</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MPC4500/DSc545</td><td>gestetner-mpc4500_dsc545</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C2003</td><td>gestetner-mp_c2003</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C2004</td><td>gestetner-mp_c2004</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C2011</td><td>gestetner-mp_c2011</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C2050</td><td>gestetner-mp_c2050</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C2051</td><td>gestetner-mp_c2051</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C2503</td><td>gestetner-mp_c2503</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C2504</td><td>gestetner-mp_c2504</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C2550</td><td>gestetner-mp_c2550</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C2551</td><td>gestetner-mp_c2551</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C2800</td><td>gestetner-mp_c2800</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C300</td><td>gestetner-mp_c300</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C3001</td><td>gestetner-mp_c3001</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C3002</td><td>gestetner-mp_c3002</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C3003</td><td>gestetner-mp_c3003</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C3004</td><td>gestetner-mp_c3004</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C300SR</td><td>gestetner-mp_c300sr</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C3300</td><td>gestetner-mp_c3300</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C3501</td><td>gestetner-mp_c3501</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C3502</td><td>gestetner-mp_c3502</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C3503</td><td>gestetner-mp_c3503</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C3504</td><td>gestetner-mp_c3504</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C400</td><td>gestetner-mp_c400</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C4000</td><td>gestetner-mp_c4000</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C400SR</td><td>gestetner-mp_c400sr</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C4501</td><td>gestetner-mp_c4501</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C4501A</td><td>gestetner-mp_c4501a</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C4502</td><td>gestetner-mp_c4502</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C4502A</td><td>gestetner-mp_c4502a</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C4503</td><td>gestetner-mp_c4503</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C4504</td><td>gestetner-mp_c4504</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C5000</td><td>gestetner-mp_c5000</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C5501</td><td>gestetner-mp_c5501</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C5501A</td><td>gestetner-mp_c5501a</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C5502</td><td>gestetner-mp_c5502</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C5502A</td><td>gestetner-mp_c5502a</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C5503</td><td>gestetner-mp_c5503</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C6000</td><td>gestetner-mp_c6000</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C6003</td><td>gestetner-mp_c6003</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C6004</td><td>gestetner-mp_c6004</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C6501</td><td>gestetner-mp_c6501</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C6502</td><td>gestetner-mp_c6502</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C6503</td><td>gestetner-mp_c6503</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C7500</td><td>gestetner-mp_c7500</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C7501</td><td>gestetner-mp_c7501</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C8002</td><td>gestetner-mp_c8002</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner MP C8003</td><td>gestetner-mp_c8003</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner Pro C5200S</td><td>gestetner-pro_c5200s</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Gestetner Pro C5210S</td><td>gestetner-pro_c5210s</td><td>UNTESTED Automatically Generated</td></tr>
 <tr><td>HP Business Inkjet 2200</td><td>hp-bij_2200</td><td></td></tr>
 <tr><td>HP Business Inkjet 2230</td><td>hp-bij_2230</td><td></td></tr>
 <tr><td>HP Business Inkjet 2250</td><td>hp-bij_2250</td><td></td></tr>
@@ -1763,14 +2030,98 @@ and reporting the results!</p>
 <tr><td>HP Business Inkjet 2280</td><td>hp-bij_2280</td><td></td></tr>
 <tr><td>HP Color Inkjet Printer CP1160</td><td>hp-cij_cp1160</td><td></td></tr>
 <tr><td>HP Color Inkjet Printer CP1700</td><td>hp-cij_cp1700</td><td></td></tr>
-<tr><td>HP Color LaserJet 2500</td><td>hp-clj_2500</td><td></td></tr>
-<tr><td>HP Color LaserJet 4500</td><td>hp-clj_4500</td><td></td></tr>
-<tr><td>HP Color LaserJet 4550</td><td>hp-clj_4550</td><td></td></tr>
-<tr><td>HP Color LaserJet 4600</td><td>hp-clj_4600</td><td></td></tr>
-<tr><td>HP Color LaserJet 5</td><td>hp-clj_5</td><td></td></tr>
-<tr><td>HP Color LaserJet 5000</td><td>hp-clj_5000</td><td></td></tr>
-<tr><td>HP Color LaserJet 5500</td><td>hp-clj_5500</td><td></td></tr>
-<tr><td>HP Color LaserJet 8550GN</td><td>hp-clj_8550gn</td><td></td></tr>
+<tr><td>HP Color LaserJet 2500</td><td>hp-clj_2500</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 3000</td><td>hp-clj_3000</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 3000n</td><td>hp-clj_3000n</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 3000dn</td><td>hp-clj_3000dn</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 3000dtn</td><td>hp-clj_3000dtn</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 3700</td><td>hp-clj_3700</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 3700n</td><td>hp-clj_3700n</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 3800</td><td>hp-clj_3800</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 3800n</td><td>hp-clj_3800n</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 3800dn</td><td>hp-clj_3800dn</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 3800dtn</td><td>hp-clj_3800dtn</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 4500</td><td>hp-clj_4500</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 4550</td><td>hp-clj_4550</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 4600</td><td>hp-clj_4600</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 4610</td><td>hp-clj_4610</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 4650</td><td>hp-clj_4650</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 4700</td><td>hp-clj_4700</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 4700n</td><td>hp-clj_4700n</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 4700dn</td><td>hp-clj_4700dn</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 4700dtn</td><td>hp-clj_4700dtn</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 4700ph+</td><td>hp-clj_4700phplus</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 5</td><td>hp-clj_5</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 5m</td><td>hp-clj_5m</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 5000</td><td>hp-clj_5000</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 5500</td><td>hp-clj_5500</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 5500n</td><td>hp-clj_5500n</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 5500dn</td><td>hp-clj_5500dn</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 5500dtn</td><td>hp-clj_5500dtn</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 5500hdn</td><td>hp-clj_5500hdn</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 8500</td><td>hp-clj_8500</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 8500n</td><td>hp-clj_8500n</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 8500dn</td><td>hp-clj_8500dn</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 8550</td><td>hp-clj_8550</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 8550DN</td><td>hp-clj_8550dn</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 8550GN</td><td>hp-clj_8550gn</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 8550MN</td><td>hp-clj_8550mn</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 9500</td><td>hp-clj_9500</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 9500n</td><td>hp-clj_9500n</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 9500hdn</td><td>hp-clj_9500hdn</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet 9500gp</td><td>hp-clj_9500gp</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CM1312</td><td>hp-clj_cm1312</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CM1312nfi</td><td>hp-clj_9500nfi</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CM1411fn</td><td>hp-clj_cm1411fn</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CM1412fn</td><td>hp-clj_cm1412fn</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CM1413fn</td><td>hp-clj_cm1413fn</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CM1415fn</td><td>hp-clj_cm1415fn</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CM1415fnw</td><td>hp-clj_cm1415fn2</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CM1416fnw</td><td>hp-clj_cm1416fn2</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CM1417fnw</td><td>hp-clj_cm1417fn2</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CM1418fnw</td><td>hp-clj_cm1418fn2</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CM2320 MFP</td><td>hp-clj_cm2320</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CM2320FXI MFP</td><td>hp-clj_cm2320fxi</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CM2320N MFP</td><td>hp-clj_cm2320n</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CM2320NF MFP</td><td>hp-clj_cm2320nf</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CM3530 MFP</td><td>hp-clj_cm3530_mfp</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CM4540 MFP</td><td>hp-clj_cm4540_mfp</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CM4730 MFP</td><td>hp-clj_cm4730_mfp</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CM6030 MFP</td><td>hp-clj_cm6030_mfp</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CM6040 MFP</td><td>hp-clj_cm6040_mfp</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CM6040f MFP</td><td>hp-clj_cm6040f_mfp</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CM6049f MFP</td><td>hp-clj_cm6049f_mfp</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CP1514n</td><td>hp-clj_cp1514n</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CP1515n</td><td>hp-clj_cp1515n</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CP1518ni</td><td>hp-clj_cp1518ni</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CP2025</td><td>hp-clj_cp2025</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CP2025dn</td><td>hp-clj_cp2025dn</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CP2025n</td><td>hp-clj_cp2025n</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CP2025x</td><td>hp-clj_cp2025x</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CP3505</td><td>hp-clj_cp3505</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CP3505dn</td><td>hp-clj_cp3505dn</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CP3505n</td><td>hp-clj_cp3505n</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CP3505x</td><td>hp-clj_cp3505x</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CP3525</td><td>hp-clj_cp3525</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CP3525dn</td><td>hp-clj_cp3525dn</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CP3525n</td><td>hp-clj_cp3525n</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CP3525x</td><td>hp-clj_cp3525x</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CP4005</td><td>hp-clj_cp4005</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CP4005dn</td><td>hp-clj_cp4005dn</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CP4005n</td><td>hp-clj_cp4005n</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CP4020</td><td>hp-clj_cp4020</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CP4500</td><td>hp-clj_cp4500</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CP4520</td><td>hp-clj_cp4520</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CP4540 MFP</td><td>hp-clj_cp4540</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CP5225</td><td>hp-clj_cp5225</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CP5225dn</td><td>hp-clj_cp5225dn</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CP5225n</td><td>hp-clj_cp5225n</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CP5520</td><td>hp-clj_cp5520</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CP6015dn</td><td>hp-clj_cp6015dn</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CP6015de</td><td>hp-clj_cp6015de</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CP6015n</td><td>hp-clj_cp6015n</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CP6015x</td><td>hp-clj_cp6015x</td><td>EXPERIMENTAL</td></tr>
+<tr><td>HP Color LaserJet CP6015xh</td><td>hp-clj_cp6015xh</td><td>EXPERIMENTAL</td></tr>
 <tr><td>HP DesignJet 230</td><td>pcl-desnj-230</td><td></td></tr>
 <tr><td>HP DesignJet 250C</td><td>pcl-desnj-250</td><td></td></tr>
 <tr><td>HP DesignJet 430</td><td>pcl-desnj-430</td><td></td></tr>
@@ -1892,6 +2243,7 @@ and reporting the results!</p>
 <tr><td>HP LaserJet 5L</td><td>hp-lj_5l</td><td></td></tr>
 <tr><td>HP LaserJet 5M</td><td>hp-lj_5m</td><td></td></tr>
 <tr><td>HP LaserJet 5MP</td><td>hp-lj_5mp</td><td></td></tr>
+<tr><td>HP LaserJet 5N</td><td>hp-lj_5n</td><td></td></tr>
 <tr><td>HP LaserJet 5P</td><td>hp-lj_5p</td><td></td></tr>
 <tr><td>HP LaserJet 5Si</td><td>pcl-5si</td><td></td></tr>
 <tr><td>HP LaserJet 6</td><td>pcl-6</td><td></td></tr>
@@ -2089,6 +2441,18 @@ and reporting the results!</p>
 <tr><td>Infotec IS 3090</td><td>infotec-is_3090</td><td></td></tr>
 <tr><td>Infotec IS 3110</td><td>infotec-is_3110</td><td></td></tr>
 <tr><td>Infotec IS 3135</td><td>infotec-is_3135</td><td></td></tr>
+<tr><td>Infotec ISC 1024c</td><td>infotec-isc_1024c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec ISC 1032c</td><td>infotec-isc_1032c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec ISC 2428</td><td>infotec-isc_2428</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec ISC 2525</td><td>infotec-isc_2525</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec ISC 2835</td><td>infotec-isc_2835</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec ISC 3030</td><td>infotec-isc_3030</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec ISC 3535</td><td>infotec-isc_3535</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec ISC 3545</td><td>infotec-isc_3545</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec ISC 4045</td><td>infotec-isc_4045</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec ISC 4560</td><td>infotec-isc_4560</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec ISC 5560</td><td>infotec-isc_5560</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec ISC 615G</td><td>infotec-isc_615g</td><td>UNTESTED Automatically Generated</td></tr>
 <tr><td>Infotec MP 2550</td><td>infotec-mp_2550</td><td></td></tr>
 <tr><td>Infotec MP 2550B</td><td>infotec-mp_2550b</td><td></td></tr>
 <tr><td>Infotec MP 3350</td><td>infotec-mp_3350</td><td></td></tr>
@@ -2097,7 +2461,75 @@ and reporting the results!</p>
 <tr><td>Infotec MP 4000B</td><td>infotec-mp_4000b</td><td></td></tr>
 <tr><td>Infotec MP 5000</td><td>infotec-mp_5000</td><td></td></tr>
 <tr><td>Infotec MP 5000B</td><td>infotec-mp_5000b</td><td></td></tr>
+<tr><td>Infotec MP C2003</td><td>infotec-mp_c2003</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C2003Z</td><td>infotec-mp_c2003z</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C2004</td><td>infotec-mp_c2004</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C2011</td><td>infotec-mp_c2011</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C2050</td><td>infotec-mp_c2050</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C2051</td><td>infotec-mp_c2051</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C2503</td><td>infotec-mp_c2503</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C2503Z</td><td>infotec-mp_c2503z</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C2504</td><td>infotec-mp_c2504</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C2550</td><td>infotec-mp_c2550</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C2551</td><td>infotec-mp_c2551</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C2800</td><td>infotec-mp_c2800</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C300</td><td>infotec-mp_c300</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C3001</td><td>infotec-mp_c3001</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C3002</td><td>infotec-mp_c3002</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C3003</td><td>infotec-mp_c3003</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C3004</td><td>infotec-mp_c3004</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C300SR</td><td>infotec-mp_c300sr</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C3300</td><td>infotec-mp_c3300</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C3501</td><td>infotec-mp_c3501</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C3502</td><td>infotec-mp_c3502</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C3503</td><td>infotec-mp_c3503</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C3504</td><td>infotec-mp_c3504</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C400</td><td>infotec-mp_c400</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C4000</td><td>infotec-mp_c4000</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C400SR</td><td>infotec-mp_c400sr</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C4501</td><td>infotec-mp_c4501</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C4501A</td><td>infotec-mp_c4501a</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C4502</td><td>infotec-mp_c4502</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C4502A</td><td>infotec-mp_c4502a</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C4503</td><td>infotec-mp_c4503</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C4504</td><td>infotec-mp_c4504</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C5000</td><td>infotec-mp_c5000</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C5501</td><td>infotec-mp_c5501</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C5501A</td><td>infotec-mp_c5501a</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C5502</td><td>infotec-mp_c5502</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C5502A</td><td>infotec-mp_c5502a</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C5503</td><td>infotec-mp_c5503</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C5504</td><td>infotec-mp_c5504</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C6000</td><td>infotec-mp_c6000</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C6003</td><td>infotec-mp_c6003</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C6004</td><td>infotec-mp_c6004</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C6501</td><td>infotec-mp_c6501</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C6502</td><td>infotec-mp_c6502</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C6503</td><td>infotec-mp_c6503</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C7500</td><td>infotec-mp_c7500</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C7501</td><td>infotec-mp_c7501</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C8002</td><td>infotec-mp_c8002</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec MP C8003</td><td>infotec-mp_c8003</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec Pro C5100S</td><td>infotec-pro_c5100s</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec Pro C5110S</td><td>infotec-pro_c5110s</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec Pro C5200S</td><td>infotec-pro_c5200s</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec Pro C5210S</td><td>infotec-pro_c5210s</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec Pro C7100</td><td>infotec-pro_c7100</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec Pro C7100S</td><td>infotec-pro_c7100s</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec Pro C7110</td><td>infotec-pro_c7110</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Infotec Pro C7110S</td><td>infotec-pro_c7110s</td><td>UNTESTED Automatically Generated</td></tr>
 <tr><td>Kyocera CS-1815</td><td>kyocera-cs-1815</td><td></td></tr>
+<tr><td>Kyocera CS-2525E</td><td>kyocera-cs-2525e</td><td></td></tr>
+<tr><td>Kyocera CS-3225E</td><td>kyocera-cs-3225e</td><td></td></tr>
+<tr><td>Kyocera CS-3232E</td><td>kyocera-cs-3232e</td><td></td></tr>
+<tr><td>Kyocera CS-4035E</td><td>kyocera-cs-4035e</td><td></td></tr>
+<tr><td>Kyocera CS-250ci</td><td>kyocera-cs-250ci</td><td></td></tr>
+<tr><td>Kyocera CS-300ci</td><td>kyocera-cs-300ci</td><td></td></tr>
+<tr><td>Kyocera CS-3050ci</td><td>kyocera-cs-3050ci</td><td></td></tr>
+<tr><td>Kyocera CS-3550ci</td><td>kyocera-cs-3550ci</td><td></td></tr>
+<tr><td>Kyocera CS-400ci</td><td>kyocera-cs-400ci</td><td></td></tr>
+<tr><td>Kyocera CS-500ci</td><td>kyocera-cs-500ci</td><td></td></tr>
+<tr><td>Kyocera Ci-1100</td><td>kyocera-ci-1100</td><td></td></tr>
 <tr><td>Kyocera F-1010</td><td>kyocera-f-1010</td><td></td></tr>
 <tr><td>Kyocera FS-600 - KPDL-2</td><td>kyocera-fs-600_kpdl-2</td><td></td></tr>
 <tr><td>Kyocera FS-600</td><td>kyocera-fs-600</td><td></td></tr>
@@ -2137,8 +2569,8 @@ and reporting the results!</p>
 <tr><td>Kyocera FS-3830N</td><td>kyocera-fs-3830n</td><td></td></tr>
 <tr><td>Kyocera FS-3900DN</td><td>kyocera-fs-3900dn</td><td></td></tr>
 <tr><td>Kyocera FS-4000DN</td><td>kyocera-fs-4000dn</td><td></td></tr>
-<tr><td>Kyocera FS-5800C</td><td>kyocera-fs-5800c</td><td></td></tr>
-<tr><td>Kyocera FS-5900C</td><td>kyocera-fs-5900c</td><td></td></tr>
+<tr><td>Kyocera FS-5800C</td><td>kyocera-fs-5800c</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kyocera FS-5900C</td><td>kyocera-fs-5900c</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Kyocera FS-6020</td><td>kyocera-fs-6020</td><td></td></tr>
 <tr><td>Kyocera FS-6026</td><td>kyocera-fs-6026</td><td></td></tr>
 <tr><td>Kyocera FS-6300</td><td>kyocera-fs-6300</td><td></td></tr>
@@ -2151,12 +2583,25 @@ and reporting the results!</p>
 <tr><td>Kyocera FS-7000</td><td>kyocera-fs-7000</td><td></td></tr>
 <tr><td>Kyocera FS-7000+</td><td>kyocera-fs-7000plus</td><td></td></tr>
 <tr><td>Kyocera FS-7028M</td><td>kyocera-fs-7028m</td><td></td></tr>
-<tr><td>Kyocera FS-8000C</td><td>kyocera-fs-8000c</td><td></td></tr>
+<tr><td>Kyocera FS-8000C</td><td>kyocera-fs-8000c</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Kyocera FS-9000</td><td>kyocera-fs-9000</td><td></td></tr>
 <tr><td>Kyocera FS-9100DN</td><td>kyocera-fs-9100dn</td><td></td></tr>
 <tr><td>Kyocera FS-9130DN</td><td>kyocera-fs-9130dn</td><td></td></tr>
 <tr><td>Kyocera FS-9500DN</td><td>kyocera-fs-9500dn</td><td></td></tr>
 <tr><td>Kyocera FS-9530DN</td><td>kyocera-fs-9530dn</td><td></td></tr>
+<tr><td>Kyocera FS-C5015N</td><td>kyocera-fs-c5015n</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kyocera FS-C5016N</td><td>kyocera-fs-c5016n</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kyocera FS-C5020N</td><td>kyocera-fs-c5020n</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kyocera FS-C5025N</td><td>kyocera-fs-c5025n</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kyocera FS-C5030N</td><td>kyocera-fs-c5030n</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kyocera FS-C5100DN</td><td>kyocera-fs-c5100dn</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kyocera FS-C5200DN</td><td>kyocera-fs-c5200dn</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kyocera FS-C5300DN</td><td>kyocera-fs-c5300dn</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kyocera FS-C5350DN</td><td>kyocera-fs-c5350dn</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kyocera FS-C5400DN</td><td>kyocera-fs-c5400dn</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kyocera FS-C8008N</td><td>kyocera-fs-c8008n</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kyocera FS-C8100DN</td><td>kyocera-fs-c8100dn</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kyocera FS-C8100DN+</td><td>kyocera-fs-c8100dnplus</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Kyocera KM-1510</td><td>kyocera-km-1510</td><td></td></tr>
 <tr><td>Kyocera KM-1530</td><td>kyocera-km-1530</td><td></td></tr>
 <tr><td>Kyocera KM-1810</td><td>kyocera-km-1810</td><td></td></tr>
@@ -2176,11 +2621,26 @@ and reporting the results!</p>
 <tr><td>Kyocera KM-6030</td><td>kyocera-km-6030</td><td></td></tr>
 <tr><td>Kyocera KM-6230</td><td>kyocera-km-6230</td><td></td></tr>
 <tr><td>Kyocera KM-8030</td><td>kyocera-km-8030</td><td></td></tr>
+<tr><td>Kyocera KM-C830</td><td>kyocera-km-c830</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kyocera KM-C850</td><td>kyocera-km-c850</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kyocera KM-C2520</td><td>kyocera-km-c2520</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kyocera KM-C2525E</td><td>kyocera-km-c2525e</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kyocera KM-C2630</td><td>kyocera-km-c2630</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kyocera KM-C3225</td><td>kyocera-km-c3225</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kyocera KM-C3225E</td><td>kyocera-km-c3225e</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kyocera KM-C3232</td><td>kyocera-km-c3232</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kyocera KM-C3232E</td><td>kyocera-km-c3232e</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kyocera KM-C4035E</td><td>kyocera-km-c4035e</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kyocera TASKalfa 250ci</td><td>kyocera-km-taskalfa-250ci</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kyocera TASKalfa 300ci</td><td>kyocera-km-taskalfa-300ci</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kyocera TASKalfa 400ci</td><td>kyocera-km-taskalfa-400ci</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kyocera TASKalfa 500ci</td><td>kyocera-km-taskalfa-500ci</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Lanier 5622</td><td>lanier-5622</td><td></td></tr>
 <tr><td>Lanier 5627</td><td>lanier-5627</td><td></td></tr>
 <tr><td>Lanier 5632</td><td>lanier-5632</td><td></td></tr>
 <tr><td>Lanier 5635</td><td>lanier-5635</td><td></td></tr>
 <tr><td>Lanier 5645</td><td>lanier-5645</td><td></td></tr>
+<tr><td>Lanier LC155</td><td>lanier-lc155</td><td>UNTESTED Automatically Generated</td></tr>
 <tr><td>Lanier LD0105</td><td>lanier-ld0105</td><td></td></tr>
 <tr><td>Lanier LD015</td><td>lanier-ld015</td><td></td></tr>
 <tr><td>Lanier LD035</td><td>lanier-ld035</td><td></td></tr>
@@ -2195,17 +2655,29 @@ and reporting the results!</p>
 <tr><td>Lanier LD120</td><td>lanier-ld120</td><td></td></tr>
 <tr><td>Lanier LD120d</td><td>lanier-ld120d</td><td></td></tr>
 <tr><td>Lanier LD122</td><td>lanier-ld122</td><td></td></tr>
+<tr><td>Lanier LD124c</td><td>lanier-ld124c</td><td>UNTESTED Automatically Generated</td></tr>
 <tr><td>Lanier LD127</td><td>lanier-ld127</td><td></td></tr>
 <tr><td>Lanier LD132</td><td>lanier-ld132</td><td></td></tr>
+<tr><td>Lanier LD132c</td><td>lanier-ld132c</td><td>UNTESTED Automatically Generated</td></tr>
 <tr><td>Lanier LD135</td><td>lanier-ld135</td><td></td></tr>
 <tr><td>Lanier LD145</td><td>lanier-ld145</td><td></td></tr>
 <tr><td>Lanier LD151</td><td>lanier-ld151</td><td></td></tr>
 <tr><td>Lanier LD160</td><td>lanier-ld160</td><td></td></tr>
+<tr><td>Lanier LD160c</td><td>lanier-ld160c</td><td>UNTESTED Automatically Generated</td></tr>
 <tr><td>Lanier LD175</td><td>lanier-ld175</td><td></td></tr>
 <tr><td>Lanier LD225</td><td>lanier-ld225</td><td></td></tr>
 <tr><td>Lanier LD230</td><td>lanier-ld230</td><td></td></tr>
 <tr><td>Lanier LD235</td><td>lanier-ld235</td><td></td></tr>
 <tr><td>Lanier LD245</td><td>lanier-ld245</td><td></td></tr>
+<tr><td>Lanier LD328c</td><td>lanier-ld328c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier LD335c</td><td>lanier-ld335c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier LD345c</td><td>lanier-ld345c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier LD 130C</td><td>lanier-ld_130c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier LD 130CSR</td><td>lanier-ld_130csr</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier LD 140C</td><td>lanier-ld_140c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier LD 140CSR</td><td>lanier-ld_140csr</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier LD 620C</td><td>lanier-ld_620c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier LD 625C</td><td>lanier-ld_625c</td><td>UNTESTED Automatically Generated</td></tr>
 <tr><td>Lanier MP2500/LD125</td><td>lanier-ld125</td><td></td></tr>
 <tr><td>Lanier MP 1100/LD1100</td><td>lanier-ld1100</td><td></td></tr>
 <tr><td>Lanier MP 1350/LD1135</td><td>lanier-ld1135</td><td></td></tr>
@@ -2228,6 +2700,65 @@ and reporting the results!</p>
 <tr><td>Lanier MP 6500/LD265</td><td>lanier-ld265</td><td></td></tr>
 <tr><td>Lanier MP 7500/LD275</td><td>lanier-ld275</td><td></td></tr>
 <tr><td>Lanier MP 9000/LD190</td><td>lanier-ld190</td><td></td></tr>
+<tr><td>Lanier MP C1500/LD215c</td><td>lanier-mp_c1500</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C4501A/LD645CA</td><td>lanier-mp_c4501a</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C5501A/LD655CA</td><td>lanier-mp_c5501a</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C2003</td><td>lanier-mp_c2003</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C2004</td><td>lanier-mp_c2004</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C2050/LD520C</td><td>lanier-mp_c2050_ld520c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C2500/LD425c</td><td>lanier-mp_c2500_ld425c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C2503</td><td>lanier-mp_c2503</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C2504</td><td>lanier-mp_c2504</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C2550/LD525C</td><td>lanier-mp_c2550_ld525c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C2800/LD528C</td><td>lanier-mp_c2800_ld528c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C300</td><td>lanier-mp_c300</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C3000/LD430c</td><td>lanier-mp_c3000_ld430c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C3001/LD630C</td><td>lanier-mp_c3001_ld630c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C3002</td><td>lanier-mp_c3002</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C3003</td><td>lanier-mp_c3003</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C3004</td><td>lanier-mp_c3004</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C300SR</td><td>lanier-mp_c300sr</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C3300/LD533C</td><td>lanier-mp_c3300_ld533c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C3500/LD435c</td><td>lanier-mp_c3500_ld435c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C3501/LD635C</td><td>lanier-mp_c3501_ld635c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C3502</td><td>lanier-mp_c3502</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C3503</td><td>lanier-mp_c3503</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C3504</td><td>lanier-mp_c3504</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C400</td><td>lanier-mp_c400</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C4000/LD540C</td><td>lanier-mp_c4000_ld540c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C400SR</td><td>lanier-mp_c400sr</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C4500/LD445c</td><td>lanier-mp_c4500_ld445c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C4501/LD645C</td><td>lanier-mp_c4501_ld645c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C4502</td><td>lanier-mp_c4502</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C4502A</td><td>lanier-mp_c4502a</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C4503</td><td>lanier-mp_c4503</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C4504</td><td>lanier-mp_c4504</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C5000/LD550C</td><td>lanier-mp_c5000_ld550c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C5501/LD655C</td><td>lanier-mp_c5501_ld655c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C5502</td><td>lanier-mp_c5502</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C5502A</td><td>lanier-mp_c5502a</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C5503</td><td>lanier-mp_c5503</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C6000/LD260c</td><td>lanier-mp_c6000_ld260c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C6003</td><td>lanier-mp_c6003</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C6004</td><td>lanier-mp_c6004</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C6501/LD365C</td><td>lanier-mp_c6501_ld365c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C6502</td><td>lanier-mp_c6502</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C6503</td><td>lanier-mp_c6503</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C7500/LD275c</td><td>lanier-mp_c7500_ld275c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C7501/LD375C</td><td>lanier-mp_c7501_ld375c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C8002</td><td>lanier-mp_c8002</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier MP C8003</td><td>lanier-mp_c8003</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier Pro C5100S</td><td>lanier-pro_c5100s</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier Pro C5110S</td><td>lanier-pro_c5110s</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier Pro C5200S</td><td>lanier-pro_c5200s</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier Pro C5210S</td><td>lanier-pro_c5210s</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier Pro C7100</td><td>lanier-pro_c7100</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier Pro C7100S</td><td>lanier-pro_c7100s</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier Pro C7110</td><td>lanier-pro_c7110</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier Pro C7110S</td><td>lanier-pro_c7110s</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier SG3110DN</td><td>lanier-sg3110dn</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier SG3110DNw</td><td>lanier-sg3110dnw</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Lanier SG3110SFNw</td><td>lanier-sg3110sfnw</td><td>UNTESTED Automatically Generated</td></tr>
 <tr><td>Lexmark 4076</td><td>lexmark-4076</td><td></td></tr>
 <tr><td>Lexmark Optra E</td><td>lexmark-optra_e</td><td></td></tr>
 <tr><td>Lexmark Optra E+</td><td>lexmark-optra_eplus</td><td></td></tr>
@@ -2258,6 +2789,13 @@ and reporting the results!</p>
 <tr><td>NRG 6002/6005/6008</td><td>nrg-6008</td><td></td></tr>
 <tr><td>NRG 7502/7505/7508</td><td>nrg-7508</td><td></td></tr>
 <tr><td>NRG 9005/9008/9002</td><td>nrg-9002</td><td></td></tr>
+<tr><td>NRG CS555</td><td>nrg-cs555</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG DSc424</td><td>nrg-dsc424</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG DSc428</td><td>nrg-dsc428</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG DSc432</td><td>nrg-dsc432</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG DSc435</td><td>nrg-dsc435</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG DSc445</td><td>nrg-dsc445</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG DSc460</td><td>nrg-dsc460</td><td>UNTESTED Automatically Generated</td></tr>
 <tr><td>NRG DSm415</td><td>nrg-dsm415</td><td></td></tr>
 <tr><td>NRG DSm615</td><td>nrg-dsm615</td><td></td></tr>
 <tr><td>NRG DSm616</td><td>nrg-dsm616</td><td></td></tr>
@@ -2299,9 +2837,80 @@ and reporting the results!</p>
 <tr><td>NRG MP 6500</td><td>nrg-mp_6500</td><td></td></tr>
 <tr><td>NRG MP 7500</td><td>nrg-mp_7500</td><td></td></tr>
 <tr><td>NRG MP 9000</td><td>nrg-mp_9000</td><td></td></tr>
+<tr><td>NRG MP C1500sp</td><td>nrg-mp_c1500sp</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C2003</td><td>nrg-mp_c2003</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C2003Z</td><td>nrg-mp_c2003z</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C2004</td><td>nrg-mp_c2004</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C2011</td><td>nrg-mp_c2011</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C2050</td><td>nrg-mp_c2050</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C2051</td><td>nrg-mp_c2051</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C2500</td><td>nrg-mp_c2500</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C2503</td><td>nrg-mp_c2503</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C2503Z</td><td>nrg-mp_c2503z</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C2504</td><td>nrg-mp_c2504</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C2550</td><td>nrg-mp_c2550</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C2551</td><td>nrg-mp_c2551</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C2800</td><td>nrg-mp_c2800</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C300</td><td>nrg-mp_c300</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C3000</td><td>nrg-mp_c3000</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C3001</td><td>nrg-mp_c3001</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C3002</td><td>nrg-mp_c3002</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C3003</td><td>nrg-mp_c3003</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C3004</td><td>nrg-mp_c3004</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C300SR</td><td>nrg-mp_c300sr</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C3300</td><td>nrg-mp_c3300</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C3500</td><td>nrg-mp_c3500</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C3501</td><td>nrg-mp_c3501</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C3502</td><td>nrg-mp_c3502</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C3503</td><td>nrg-mp_c3503</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C3504</td><td>nrg-mp_c3504</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C400</td><td>nrg-mp_c400</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C4000</td><td>nrg-mp_c4000</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C400SR</td><td>nrg-mp_c400sr</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C4500</td><td>nrg-mp_c4500</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C4501</td><td>nrg-mp_c4501</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C4501A</td><td>nrg-mp_c4501a</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C4502</td><td>nrg-mp_c4502</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C4502A</td><td>nrg-mp_c4502a</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C4503</td><td>nrg-mp_c4503</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C4504</td><td>nrg-mp_c4504</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C5000</td><td>nrg-mp_c5000</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C5501</td><td>nrg-mp_c5501</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C5501A</td><td>nrg-mp_c5501a</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C5502</td><td>nrg-mp_c5502</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C5502A</td><td>nrg-mp_c5502a</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C5503</td><td>nrg-mp_c5503</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C5504</td><td>nrg-mp_c5504</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C6000</td><td>nrg-mp_c6000</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C6003</td><td>nrg-mp_c6003</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C6004</td><td>nrg-mp_c6004</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C6501</td><td>nrg-mp_c6501</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C6502</td><td>nrg-mp_c6502</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C6503</td><td>nrg-mp_c6503</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C7500</td><td>nrg-mp_c7500</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C7501</td><td>nrg-mp_c7501</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C8002</td><td>nrg-mp_c8002</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG MP C8003</td><td>nrg-mp_c8003</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG Pro C5100S</td><td>nrg-pro_c5100s</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG Pro C5110S</td><td>nrg-pro_c5110s</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG Pro C5200S</td><td>nrg-pro_c5200s</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG Pro C5210S</td><td>nrg-pro_c5210s</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG Pro C7100</td><td>nrg-pro_c7100</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG Pro C7100S</td><td>nrg-pro_c7100s</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG Pro C7110</td><td>nrg-pro_c7110</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG Pro C7110S</td><td>nrg-pro_c7110s</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG SG3110DN</td><td>nrg-sg3110dn</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG SG3110DNw</td><td>nrg-sg3110dnw</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>NRG SG3110SFNw</td><td>nrg-sg3110sfnw</td><td>UNTESTED Automatically Generated</td></tr>
 <tr><td>Oki B401d</td><td>oki-b401d</td><td></td></tr>
 <tr><td>Oki B430</td><td>oki-b430</td><td></td></tr>
 <tr><td>Oki B4350</td><td>oki-b4350</td><td></td></tr>
+<tr><td>Oki C5300</td><td>oki-c5300</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Oki C5400</td><td>oki-c5400</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Oki C7300</td><td>oki-c7300</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Oki C8800</td><td>oki-c8800</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Oki C9200</td><td>oki-c9200</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Oki C9400</td><td>oki-c9400</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Oki OL400</td><td>okidata-ol400</td><td></td></tr>
 <tr><td>Oki OL400e</td><td>okidata-ol400e</td><td></td></tr>
 <tr><td>Oki OL400ex</td><td>okidata-ol400ex</td><td></td></tr>
@@ -2320,11 +2929,18 @@ and reporting the results!</p>
 <tr><td>Olivetti JP350S</td><td>olivetti-jp350s</td><td></td></tr>
 <tr><td>Olivetti PG 306</td><td>olivetti-pg_306</td><td></td></tr>
 <tr><td>PCPI 1030</td><td>pcpi-1030</td><td></td></tr>
+<tr><td>Panasonic DP-180</td><td>panasonic-dp-180</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Panasonic DP-C265</td><td>panasonic-dp-c265</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Panasonic DP-C305</td><td>panasonic-dp-c305</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Panasonic DP-C322</td><td>panasonic-dp-c322</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Panasonic DP-C405</td><td>panasonic-dp-c405</td><td>UNTESTED Automatically Generated</td></tr>
 <tr><td>Panasonic KX-P4410</td><td>panasonic-kx-p4410</td><td></td></tr>
 <tr><td>Panasonic KX-P4450</td><td>panasonic-kx-p4450</td><td></td></tr>
 <tr><td>Panasonic KX-P6150</td><td>panasonic-kx-p6150</td><td></td></tr>
 <tr><td>Panasonic KX-P6500</td><td>panasonic-kx-p6500</td><td></td></tr>
 <tr><td>Raven LP-410</td><td>raven-lp-410</td><td></td></tr>
+<tr><td>Ricoh Aficio 401</td><td>ricoh-afc_401</td><td></td></tr>
+<tr><td>Ricoh Aficio 700</td><td>ricoh-afc_700</td><td></td></tr>
 <tr><td>Ricoh Aficio 1022</td><td>ricoh-afc_1022</td><td></td></tr>
 <tr><td>Ricoh Aficio 1027</td><td>ricoh-afc_1027</td><td></td></tr>
 <tr><td>Ricoh Aficio 1032</td><td>ricoh-afc_1032</td><td></td></tr>
@@ -2356,8 +2972,13 @@ and reporting the results!</p>
 <tr><td>Ricoh Aficio 3030</td><td>ricoh-afc_3030</td><td></td></tr>
 <tr><td>Ricoh Aficio 3035</td><td>ricoh-afc_3035</td><td></td></tr>
 <tr><td>Ricoh Aficio 3045</td><td>ricoh-afc_3045</td><td></td></tr>
-<tr><td>Ricoh Aficio 401</td><td>ricoh-afc_401</td><td></td></tr>
-<tr><td>Ricoh Aficio 700</td><td>ricoh-afc_700</td><td></td></tr>
+<tr><td>Ricoh Aficio 3224C</td><td>ricoh-afc_3224c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio 3228C</td><td>ricoh-afc_3228c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio 3232C</td><td>ricoh-afc_3232c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio 3235C</td><td>ricoh-afc_3235c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio 3245C</td><td>ricoh-afc_3245c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio 3260C</td><td>ricoh-afc_3260c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio Color 5560</td><td>ricoh-afc_color_5560</td><td>UNTESTED Automatically Generated</td></tr>
 <tr><td>Ricoh Aficio MP 1100</td><td>ricoh-afc_mp_1100</td><td></td></tr>
 <tr><td>Ricoh Aficio MP 1350</td><td>ricoh-afc_mp_1350</td><td></td></tr>
 <tr><td>Ricoh Aficio MP 1600</td><td>ricoh-afc_mp_1600</td><td></td></tr>
@@ -2380,6 +3001,80 @@ and reporting the results!</p>
 <tr><td>Ricoh Aficio MP 6500</td><td>ricoh-afc_mp_6500</td><td></td></tr>
 <tr><td>Ricoh Aficio MP 7500</td><td>ricoh-afc_mp_7500</td><td></td></tr>
 <tr><td>Ricoh Aficio MP 9000</td><td>ricoh-afc_mp_9000</td><td></td></tr>
+<tr><td>Ricoh Aficio MP C2050</td><td>ricoh-afc_mp_c2050</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio MP C2051</td><td>ricoh-afc_mp_c2051</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio MP C2500</td><td>ricoh-afc_mp_c2500</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio MP C2550</td><td>ricoh-afc_mp_c2550</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio MP C2551</td><td>ricoh-afc_mp_c2551</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio MP C2800</td><td>ricoh-afc_mp_c2800</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio MP C300</td><td>ricoh-afc_mp_c300</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio MP C3000</td><td>ricoh-afc_mp_c3000</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio MP C3001</td><td>ricoh-afc_mp_c3001</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio MP C3002</td><td>ricoh-afc_mp_c3002</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio MP C300SR</td><td>ricoh-afc_mp_c300sr</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio MP C3300</td><td>ricoh-afc_mp_c3300</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio MP C3500</td><td>ricoh-afc_mp_c3500</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio MP C3501</td><td>ricoh-afc_mp_c3501</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio MP C3502</td><td>ricoh-afc_mp_c3502</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio MP C400</td><td>ricoh-afc_mp_c400</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio MP C4000</td><td>ricoh-afc_mp_c4000</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio MP C400SR</td><td>ricoh-afc_mp_c400sr</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio MP C4500</td><td>ricoh-afc_mp_c4500</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio MP C4501</td><td>ricoh-afc_mp_c4501</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio MP C4501A</td><td>ricoh-afc_mp_c4501a</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio MP C4502</td><td>ricoh-afc_mp_c4502</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio MP C4502A</td><td>ricoh-afc_mp_c4502a</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio MP C5000</td><td>ricoh-afc_mp_c5000</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio MP C5501</td><td>ricoh-afc_mp_c5501</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio MP C5501A</td><td>ricoh-afc_mp_c5501a</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio MP C5502</td><td>ricoh-afc_mp_c5502</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio MP C5502A</td><td>ricoh-afc_mp_c5502a</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio MP C6000</td><td>ricoh-afc_mp_c6000</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio MP C6501</td><td>ricoh-afc_mp_c6501</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio MP C7500</td><td>ricoh-afc_mp_c7500</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio MP C7501</td><td>ricoh-afc_mp_c7501</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Aficio SG 3110DN</td><td>ricoh-afc_sg_3110dn</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh GX 3050N</td><td>ricoh-gx_3050n</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh GX 3050SFN</td><td>ricoh-gx_3050sfn</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh GX 5050N</td><td>ricoh-gx_5050n</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh GX E3350N</td><td>ricoh-gx_e3350n</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh GX E5550N</td><td>ricoh-gx_e5550n</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh MP C1500/615C</td><td>ricoh-mp_c1500_615c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh MP C2003</td><td>ricoh-mp_c2003</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh MP C2003Z</td><td>ricoh-mp_c2003z</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh MP C2004</td><td>ricoh-mp_c2004</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh MP C2011</td><td>ricoh-mp_c2011</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh MP C2094J</td><td>ricoh-mp_c2094j</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh MP C2503</td><td>ricoh-mp_c2503</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh MP C2503Z</td><td>ricoh-mp_c2503z</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh MP C2504</td><td>ricoh-mp_c2504</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh MP C2594J</td><td>ricoh-mp_c2594j</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh MP C3003</td><td>ricoh-mp_c3003</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh MP C3004</td><td>ricoh-mp_c3004</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh MP C3503</td><td>ricoh-mp_c3503</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh MP C3504</td><td>ricoh-mp_c3504</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh MP C4503</td><td>ricoh-mp_c4503</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh MP C4504</td><td>ricoh-mp_c4504</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh MP C5503</td><td>ricoh-mp_c5503</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh MP C5504</td><td>ricoh-mp_c5504</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh MP C6003</td><td>ricoh-mp_c6003</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh MP C6004</td><td>ricoh-mp_c6004</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh MP C6502</td><td>ricoh-mp_c6502</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh MP C6503</td><td>ricoh-mp_c6503</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh MP C8002</td><td>ricoh-mp_c8002</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh MP C8003</td><td>ricoh-mp_c8003</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Pro C5100S</td><td>ricoh-pro_c5100s</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Pro C5110S</td><td>ricoh-pro_c5110s</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Pro C5200S</td><td>ricoh-pro_c5200s</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Pro C5210S</td><td>ricoh-pro_c5210s</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Pro C7100</td><td>ricoh-pro_c7100</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Pro C7100S</td><td>ricoh-pro_c7100s</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Pro C7110</td><td>ricoh-pro_c7110</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh Pro C7110S</td><td>ricoh-pro_c7110s</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Ricoh SG3120BSFNw</td><td>ricoh-sg3120bsfnw</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Samsung CLP-620</td><td>samsung-clp-620</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Samsung CLP-660N</td><td>samsung-clp-660n</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Samsung CLP-660ND</td><td>samsung-clp-660nd</td><td>UNTESTED Automatically Generated</td></tr>
 <tr><td>Samsung ML-85</td><td>samsung-ml-85</td><td></td></tr>
 <tr><td>Samsung ML-1250</td><td>samsung-ml-1250</td><td></td></tr>
 <tr><td>Samsung ML-1450</td><td>samsung-ml-1450</td><td></td></tr>
@@ -2460,9 +3155,108 @@ and reporting the results!</p>
 <tr><td>Savin 9040b</td><td>savin-9040b</td><td></td></tr>
 <tr><td>Savin 9050</td><td>savin-9050</td><td></td></tr>
 <tr><td>Savin 9050b</td><td>savin-9050b</td><td></td></tr>
+<tr><td>Savin C2410</td><td>savin-c2410</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin C2525</td><td>savin-c2525</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin C2824</td><td>savin-c2824</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin C2828</td><td>savin-c2828</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin C3030</td><td>savin-c3030</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin C3210e</td><td>savin-c3210e</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin C3333</td><td>savin-c3333</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin C3528</td><td>savin-c3528</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin C3535</td><td>savin-c3535</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin C4040</td><td>savin-c4040</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin C4535</td><td>savin-c4535</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin C4540</td><td>savin-c4540</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin C5050</td><td>savin-c5050</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin C6045</td><td>savin-c6045</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin C6055</td><td>savin-c6055</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin C7570</td><td>savin-c7570</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin C9020</td><td>savin-c9020</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin C9025</td><td>savin-c9025</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin C9065</td><td>savin-c9065</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin C9075</td><td>savin-c9075</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin C9120</td><td>savin-c9120</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin C9125</td><td>savin-c9125</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin C9130</td><td>savin-c9130</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin C9135</td><td>savin-c9135</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin C9145</td><td>savin-c9145</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin C9145A</td><td>savin-c9145a</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin C9155</td><td>savin-c9155</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin C9155A</td><td>savin-c9155a</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin C 230</td><td>savin-c_230</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin C 230SR</td><td>savin-c_230sr</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin C 240</td><td>savin-c_240</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin C 240SR</td><td>savin-c_240sr</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin MP C2003</td><td>savin-mp_c2003</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin MP C2004</td><td>savin-mp_c2004</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin MP C2503</td><td>savin-mp_c2503</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin MP C2504</td><td>savin-mp_c2504</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin MP C3002</td><td>savin-mp_c3002</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin MP C3003</td><td>savin-mp_c3003</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin MP C3004</td><td>savin-mp_c3004</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin MP C3502</td><td>savin-mp_c3502</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin MP C3503</td><td>savin-mp_c3503</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin MP C3504</td><td>savin-mp_c3504</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin MP C4502</td><td>savin-mp_c4502</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin MP C4502A</td><td>savin-mp_c4502a</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin MP C4503</td><td>savin-mp_c4503</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin MP C4504</td><td>savin-mp_c4504</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin MP C5502</td><td>savin-mp_c5502</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin MP C5502A</td><td>savin-mp_c5502a</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin MP C5503</td><td>savin-mp_c5503</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin MP C6003</td><td>savin-mp_c6003</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin MP C6004</td><td>savin-mp_c6004</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin MP C6502</td><td>savin-mp_c6502</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin MP C6503</td><td>savin-mp_c6503</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin MP C8002</td><td>savin-mp_c8002</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin MP C8003</td><td>savin-mp_c8003</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin Pro C5100S</td><td>savin-pro_c5100s</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin Pro C5110S</td><td>savin-pro_c5110s</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin Pro C5200S</td><td>savin-pro_c5200s</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin Pro C5210S</td><td>savin-pro_c5210s</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin Pro C7100</td><td>savin-pro_c7100</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin Pro C7100S</td><td>savin-pro_c7100s</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin Pro C7110</td><td>savin-pro_c7110</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin Pro C7110S</td><td>savin-pro_c7110s</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin SDC555</td><td>savin-sdc555</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin SG3110DN</td><td>savin-sg3110dn</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Savin SGC 1506</td><td>savin-sgc_1506</td><td>UNTESTED Automatically Generated</td></tr>
 <tr><td>Seiko SpeedJET 200</td><td>seiko-sj_200</td><td></td></tr>
 <tr><td>Sharp AR-161</td><td>sharp-ar-161</td><td></td></tr>
+<tr><td>Sharp AR-BC260</td><td>sharp-ar-bc260</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Sharp AR-BC320</td><td>sharp-ar-bc320</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Sharp AR-C170FP</td><td>sharp-ar-c170fp</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Sharp AR-C170M</td><td>sharp-ar-c170m</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Sharp AR-C172FP</td><td>sharp-ar-c172fp</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Sharp AR-C172M</td><td>sharp-ar-c172m</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Sharp AR-C260</td><td>sharp-ar-c260</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Sharp AR-C260F</td><td>sharp-ar-c260F</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Sharp AR-C260FP</td><td>sharp-ar-c260fp</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Sharp AR-C260M</td><td>sharp-ar-c260m</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Sharp AR-C260P</td><td>sharp-ar-c260p</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Sharp AR-C260S</td><td>sharp-ar-c260S</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Sharp AR-C261F</td><td>sharp-ar-c261f</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Sharp AR-C261FP</td><td>sharp-ar-c261fp</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Sharp AR-C261M</td><td>sharp-ar-c261m</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Sharp AR-C261S</td><td>sharp-ar-c261s</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Sharp AR-C262FP</td><td>sharp-ar-c262fp</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Sharp AR-C262M</td><td>sharp-ar-c262m</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Sharp AR-C262S</td><td>sharp-ar-c262s</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Sharp AR-M257</td><td>sharp-ar-m257</td><td></td></tr>
+<tr><td>Sharp MX-2300FG</td><td>sharp-mx-2300fg</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Sharp MX-2300G</td><td>sharp-mx-2300g</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Sharp MX-2300N</td><td>sharp-mx-2300n</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Sharp MX-2700FG</td><td>sharp-mx-2700fg</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Sharp MX-2700G</td><td>sharp-mx-2700g</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Sharp MX-2700N</td><td>sharp-mx-2700n</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Sharp MX-3500FN</td><td>sharp-mx-3500fn</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Sharp MX-3500N</td><td>sharp-mx-3500n</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Sharp MX-3501FN</td><td>sharp-mx-3501fn</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Sharp MX-3501N</td><td>sharp-mx-3501n</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Sharp MX-4500FN</td><td>sharp-mx-4500fn</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Sharp MX-4500N</td><td>sharp-mx-4500n</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Sharp MX-4501FN</td><td>sharp-mx-4501fn</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Sharp MX-4501N</td><td>sharp-mx-4501n</td><td>UNTESTED Automatically Generated</td></tr>
 <tr><td>Sony IJP-V100</td><td>sony-ijp-v100</td><td></td></tr>
 <tr><td>Star LS-04</td><td>star-ls-04</td><td></td></tr>
 <tr><td>Star LaserPrinter 8</td><td>star-lp_8</td><td></td></tr>
@@ -2471,9 +3265,15 @@ and reporting the results!</p>
 <tr><td>Tektronix Phaser 750DX</td><td>tektronix-phaser_750dx</td><td></td></tr>
 <tr><td>Tektronix Phaser 750N</td><td>tektronix-phaser_750n</td><td></td></tr>
 <tr><td>Tektronix Phaser 750P</td><td>tektronix-phaser_750p</td><td></td></tr>
+<tr><td>Toshiba e-Studio 220cp</td><td>toshiba-e-studio_220cp</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Toshiba e-Studio 2830c</td><td>toshiba-e-studio_2830c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Toshiba e-Studio 3530c</td><td>toshiba-e-studio_3530c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Toshiba e-Studio 4500c</td><td>toshiba-e-studio_4500c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Toshiba e-Studio 4520c</td><td>toshiba-e-studio_4520c</td><td>UNTESTED Automatically Generated</td></tr>
+<tr><td>Toshiba e-Studio 5500c</td><td>toshiba-e-studio_5500c</td><td>UNTESTED Automatically Generated</td></tr>
 <tr><td>Xerox Able 1406</td><td>xerox-able_1406</td><td></td></tr>
 <tr><td>Xerox DocuPrint 4508</td><td>xerox-dp_4508</td><td></td></tr>
-<tr><td>Xerox DocuPrint C20</td><td>xerox-dp_c20</td><td></td></tr>
+<tr><td>Xerox DocuPrint C20</td><td>xerox-dp_c20</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Xerox DocuPrint N4512</td><td>xerox-dp_n4512</td><td></td></tr>
 <tr><td>Xerox DocuPrint N4512PS</td><td>xerox-dp_n4512ps</td><td></td></tr>
 <tr><td>Xerox DocuPrint P12</td><td>xerox-dp_p12</td><td></td></tr>
@@ -2481,6 +3281,7 @@ and reporting the results!</p>
 <tr><td>Xerox DocuPrint P8e</td><td>xerox-dp_p8e</td><td></td></tr>
 <tr><td>Xerox Document Centre 400</td><td>xerox-dc_400</td><td></td></tr>
 <tr><td>Xerox Phaser 2135</td><td>xerox-phaser_2135</td><td></td></tr>
+<tr><td>Xerox Phaser 3160N</td><td>xerox-phaser_3160n</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Xerox Phaser 4400B</td><td>xerox-phaser_4400b</td><td></td></tr>
 <tr><td>Xerox Phaser 4400DT</td><td>xerox-phaser_4400dt</td><td></td></tr>
 <tr><td>Xerox Phaser 4400DX</td><td>xerox-phaser_4400dx</td><td></td></tr>
@@ -2548,7 +3349,9 @@ and reporting the results!</p>
 <tr><td>Xerox Phaser 8550DT</td><td>xerox-phaser_8550dt</td><td></td></tr>
 <tr><td>Xerox Phaser 8550DX</td><td>xerox-phaser_8550dx</td><td></td></tr>
 <tr><td>Xerox Phaser 8560DN</td><td>xerox-phaser_8560dn</td><td></td></tr>
-<tr><td>Xerox WorkCentre 7345</td><td>xerox-workcentre_7345</td><td></td></tr>
+<tr><td>Xerox Phaser 8860</td><td>xerox-phaser_8860</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Xerox WorkCentre 7345</td><td>xerox-workcentre_7345</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Xerox WorkCentre C2424</td><td>xerox-workcentre_c2424</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Xerox WorkCentre M118</td><td>xerox-wc_m118</td><td></td></tr>
 <tr><td>Datamax-ONeil I4212e Mark II</td><td>datamax_oneil_I4212e</td><td></td></tr>
 <tr><td>Datamax-ONeil I4310e Mark II</td><td>datamax_oneil_I4310e</td><td></td></tr>
@@ -2563,21 +3366,23 @@ and reporting the results!</p>
 <tr><td>Datamax-ONeil E4305L Mark III</td><td>datamax_oneil_E4305L</td><td></td></tr>
 <tr><td>Datamax-ONeil RL3e</td><td>datamax_oneil_RL3e</td><td></td></tr>
 <tr><td>Datamax-ONeil RL4e</td><td>datamax_oneil_RL4e</td><td></td></tr>
-<tr><td>Datamax-ONeil H4212</td><td>datamax_oneil_H4212</td><td>(not in 5.2.12)</td></tr>
-<tr><td>Datamax-ONeil H4212X</td><td>datamax_oneil_H4212X</td><td>(not in 5.2.12)</td></tr>
-<tr><td>Datamax-ONeil H4310</td><td>datamax_oneil_H4310</td><td>(not in 5.2.12)</td></tr>
-<tr><td>Datamax-ONeil H4310X</td><td>datamax_oneil_H4310X</td><td>(not in 5.2.12)</td></tr>
-<tr><td>Datamax-ONeil H4408</td><td>datamax_oneil_H4408</td><td>(not in 5.2.12)</td></tr>
-<tr><td>Datamax-ONeil H4606</td><td>datamax_oneil_H4606</td><td>(not in 5.2.12)</td></tr>
-<tr><td>Datamax-ONeil H4606X</td><td>datamax_oneil_H4606X</td><td>(not in 5.2.12)</td></tr>
-<tr><td>Datamax-ONeil H6210</td><td>datamax_oneil_H6210</td><td>(not in 5.2.12)</td></tr>
-<tr><td>Datamax-ONeil H6210X</td><td>datamax_oneil_H6210X</td><td>(not in 5.2.12)</td></tr>
-<tr><td>Datamax-ONeil H6212</td><td>datamax_oneil_H6212</td><td>(not in 5.2.12)</td></tr>
-<tr><td>Datamax-ONeil H6212X</td><td>datamax_oneil_H6212X</td><td>(not in 5.2.12)</td></tr>
-<tr><td>Datamax-ONeil H6308</td><td>datamax_oneil_H6308</td><td>(not in 5.2.12)</td></tr>
-<tr><td>Datamax-ONeil H6310X</td><td>datamax_oneil_H6310X</td><td>(not in 5.2.12)</td></tr>
-<tr><td>Datamax-ONeil H8308</td><td>datamax_oneil_H8308</td><td>(not in 5.2.12)</td></tr>
-<tr><td>Datamax-ONeil H8308X</td><td>datamax_oneil_H8308X</td><td>(not in 5.2.12)</td></tr>
+<tr><td>Datamax-ONeil H4212</td><td>datamax_oneil_H4212</td><td></td></tr>
+<tr><td>Datamax-ONeil H4212X</td><td>datamax_oneil_H4212X</td><td></td></tr>
+<tr><td>Datamax-ONeil H4310</td><td>datamax_oneil_H4310</td><td></td></tr>
+<tr><td>Datamax-ONeil H4310X</td><td>datamax_oneil_H4310X</td><td></td></tr>
+<tr><td>Datamax-ONeil H4408</td><td>datamax_oneil_H4408</td><td></td></tr>
+<tr><td>Datamax-ONeil H4606</td><td>datamax_oneil_H4606</td><td></td></tr>
+<tr><td>Datamax-ONeil H4606X</td><td>datamax_oneil_H4606X</td><td></td></tr>
+<tr><td>Datamax-ONeil H6210</td><td>datamax_oneil_H6210</td><td></td></tr>
+<tr><td>Datamax-ONeil H6210X</td><td>datamax_oneil_H6210X</td><td></td></tr>
+<tr><td>Datamax-ONeil H6212</td><td>datamax_oneil_H6212</td><td></td></tr>
+<tr><td>Datamax-ONeil H6212X</td><td>datamax_oneil_H6212X</td><td></td></tr>
+<tr><td>Datamax-ONeil H6308</td><td>datamax_oneil_H6308</td><td></td></tr>
+<tr><td>Datamax-ONeil H6310X</td><td>datamax_oneil_H6310X</td><td></td></tr>
+<tr><td>Datamax-ONeil H8308</td><td>datamax_oneil_H8308</td><td></td></tr>
+<tr><td>Datamax-ONeil H8308X</td><td>datamax_oneil_H8308X</td><td></td></tr>
+<tr><td>Honeywell RP2</td><td>honeywell_rp2</td><td></td></tr>
+<tr><td>Honeywell RP4</td><td>honeywell_rp4</td><td></td></tr>
 <tr><td>Compaq IJ1200</td><td>compaq-ij1200</td><td></td></tr>
 <tr><td>Lexmark X73</td><td>lexmark-x73</td><td></td></tr>
 <tr><td>Lexmark Z42</td><td>lexmark-z42</td><td></td></tr>
@@ -2629,77 +3434,7 @@ and reporting the results!</p>
 <tr><td>Canon SELPHY ES20</td><td>canon-es20</td><td></td></tr>
 <tr><td>Canon SELPHY ES30</td><td>canon-es30</td><td></td></tr>
 <tr><td>Canon SELPHY ES40</td><td>canon-es40</td><td></td></tr>
-<tr><td>Sony UP-DP10</td><td>sony-updp10</td><td></td></tr>
-<tr><td>Sony UP-DR150</td><td>sony-updr150</td><td></td></tr>
-<tr><td>Sony DPP-EX5</td><td>sony-dppex5</td><td></td></tr>
-<tr><td>Sony DPP-EX7</td><td>sony-dppex7</td><td></td></tr>
-<tr><td>Sony UP-DR100</td><td>sony-updr100</td><td></td></tr>
-<tr><td>Sony UP-DR200</td><td>sony-updr200</td><td></td></tr>
-<tr><td>Sony UP-CR10L</td><td>sony-upcr10l</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Dai Nippon Printing SL10</td><td>dnp-sl10</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Fujifilm Printpix-CX-400</td><td>fujifilm-cx400</td><td></td></tr>
-<tr><td>Fujifilm Printpix-CX-550</td><td>fujifilm-cx550</td><td></td></tr>
-<tr><td>Fujifilm FinePix-NX-500</td><td>fujifilm-nx500</td><td></td></tr>
-<tr><td>Kodak Easyshare-Printer-Dock</td><td>kodak-dock</td><td></td></tr>
-<tr><td>Kodak EasyShare-G600-Printer-Dock</td><td>kodak-g600-dock</td><td></td></tr>
-<tr><td>Kodak PD-4000</td><td>kodak-pd-4000</td><td></td></tr>
-<tr><td>Kodak PD-6000</td><td>kodak-pd-6000</td><td></td></tr>
-<tr><td>Kodak Photo-Printer</td><td>kodak-photo-printer</td><td></td></tr>
-<tr><td>Kodak Photo-Printer-500</td><td>kodak-photo-printer-500</td><td></td></tr>
-<tr><td>Kodak Printer-Dock-Plus</td><td>kodak-dock-plus</td><td></td></tr>
-<tr><td>Kodak Printer-Dock-Plus-S3</td><td>kodak-dock-plus-s3</td><td></td></tr>
-<tr><td>Kodak 6800</td><td>kodak-6800</td><td></td></tr>
-<tr><td>Kodak 6850</td><td>kodak-6850</td><td></td></tr>
-<tr><td>Kodak 605</td><td>kodak-605</td><td></td></tr>
-<tr><td>Kodak 1400</td><td>kodak-1400</td><td></td></tr>
-<tr><td>Kodak 805</td><td>kodak-805</td><td></td></tr>
-<tr><td>Kodak 8500</td><td>kodak-8500</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Kodak 9810</td><td>kodak-9810</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Kodak 8800</td><td>kodak-8800</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Kodak 8810</td><td>kodak-8810</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Kodak 7000</td><td>kodak-7000</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Kodak 7010</td><td>kodak-7010</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Kodak 7015</td><td>kodak-7015</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Mitsubishi CP-3020D</td><td>mitsubishi-3020d</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Mitsubishi CP-3020DU</td><td>mitsubishi-3020du</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Mitsubishi CP-3020DE</td><td>mitsubishi-3020de</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Mitsubishi CP-3020DA</td><td>mitsubishi-3020da</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Mitsubishi CP-3020DAE</td><td>mitsubishi-3020dae</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Mitsubishi CP-9550D</td><td>mitsubishi-9550d</td><td></td></tr>
-<tr><td>Mitsubishi CP-9550DW</td><td>mitsubishi-9550dw</td><td></td></tr>
-<tr><td>Mitsubishi CP-9810D</td><td>mitsubishi-9810d</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Mitsubishi CP-9810DW</td><td>mitsubishi-9810dw</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Mitsubishi CP-D70DW</td><td>mitsubishi-d70dw</td><td></td></tr>
-<tr><td>Mitsubishi CP-D707DW</td><td>mitsubishi-d707dw</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Mitsubishi CP-K60DW-S</td><td>mitsubishi-k60dw</td><td></td></tr>
-<tr><td>Mitsubishi CP-D80DW</td><td>mitsubishi-d80dw</td><td></td></tr>
-<tr><td>Kodak 305</td><td>kodak-305</td><td></td></tr>
-<tr><td>Mitsubishi CP-D90DW</td><td>mitsubishi-d90dw</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Mitsubishi CP-9600DW</td><td>mitsubishi-9600dw</td><td></td></tr>
-<tr><td>Mitsubishi CP-9550DZ</td><td>mitsubishi-9550dz</td><td></td></tr>
-<tr><td>Mitsubishi CP-9550DW-S</td><td>mitsubishi-9550dw-s</td><td></td></tr>
-<tr><td>Fujifilm ASK-300</td><td>fujifilm-ask-300</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Mitsubishi CP-9800D</td><td>mitsubishi-9800d</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Mitsubishi CP-9800DW</td><td>mitsubishi-9800dw</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Mitsubishi CP-9800DZ</td><td>mitsubishi-9800dz</td><td></td></tr>
-<tr><td>Mitsubishi CP-9800DW-S</td><td>mitsubishi-9800dw-s</td><td></td></tr>
-<tr><td>Mitsubishi P95D</td><td>mitsubishi-p95d</td><td></td></tr>
-<tr><td>Mitsubishi CP-9500DW</td><td>mitsubishi-9500dw</td><td></td></tr>
-<tr><td>Mitsubishi P93D</td><td>mitsubishi-p93d</td><td>(not in 5.2.12)</td></tr>
-<tr><td>Shinko CHC-S9045</td><td>shinko-chcs9045</td><td></td></tr>
-<tr><td>Shinko CHC-S2145</td><td>shinko-chcs2145</td><td></td></tr>
-<tr><td>Sinfonia S2145/S2</td><td>sinfonia-chcs2145</td><td></td></tr>
-<tr><td>Shinko CHC-S1245</td><td>shinko-chcs1245</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Sinfonia CHC-S1245/E1</td><td>sinfonia-chcs1245</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Shinko CHC-S6245</td><td>shinko-chcs6245</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Sinfonia CHC-S6245/CE1</td><td>sinfonia-chcs6245</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Shinko CHC-S6145</td><td>shinko-chcs6145</td><td></td></tr>
-<tr><td>Sinfonia CHC-S6145/CS2</td><td>sinfonia-chcs6145</td><td></td></tr>
 <tr><td>CIAAT Brava 21</td><td>ciaat-brava-21</td><td></td></tr>
-<tr><td>Dai Nippon Printing DS40</td><td>dnp-ds40</td><td></td></tr>
-<tr><td>Dai Nippon Printing DS80</td><td>dnp-ds80</td><td></td></tr>
-<tr><td>Dai Nippon Printing DSRX1</td><td>dnp-dsrx1</td><td></td></tr>
-<tr><td>Dai Nippon Printing DS620</td><td>dnp-ds620</td><td></td></tr>
 <tr><td>Citizen CX</td><td>citizen-cx</td><td></td></tr>
 <tr><td>Citizen CX-W</td><td>citizen-cx-w</td><td></td></tr>
 <tr><td>Citizen CY</td><td>citizen-cy</td><td></td></tr>
@@ -2707,9 +3442,79 @@ and reporting the results!</p>
 <tr><td>Citizen OP900</td><td>citizen-op900</td><td></td></tr>
 <tr><td>Citizen CW-02</td><td>citizen-cw-02</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Citizen OP900II</td><td>citizen-op900ii</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Mitsubishi CP-3800DW</td><td>mitsubishi-cp-3800dw</td><td></td></tr>
+<tr><td>Dai Nippon Printing DS40</td><td>dnp-ds40</td><td></td></tr>
+<tr><td>Dai Nippon Printing DS80</td><td>dnp-ds80</td><td></td></tr>
 <tr><td>Dai Nippon Printing DS80DX</td><td>dnp-ds80dx</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Dai Nippon Printing DS620</td><td>dnp-ds620</td><td></td></tr>
 <tr><td>Dai Nippon Printing DS820</td><td>dnp-ds820</td><td></td></tr>
+<tr><td>Dai Nippon Printing DSRX1</td><td>dnp-dsrx1</td><td></td></tr>
+<tr><td>Dai Nippon Printing SL10</td><td>dnp-sl10</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Fujifilm ASK-300</td><td>fujifilm-ask-300</td><td></td></tr>
+<tr><td>Fujifilm FinePix-NX-500</td><td>fujifilm-nx500</td><td></td></tr>
+<tr><td>Fujifilm Printpix-CX-400</td><td>fujifilm-cx400</td><td></td></tr>
+<tr><td>Fujifilm Printpix-CX-550</td><td>fujifilm-cx550</td><td></td></tr>
+<tr><td>Kodak 305</td><td>kodak-305</td><td></td></tr>
+<tr><td>Kodak 605</td><td>kodak-605</td><td></td></tr>
+<tr><td>Kodak 1400</td><td>kodak-1400</td><td></td></tr>
+<tr><td>Kodak 6800</td><td>kodak-6800</td><td></td></tr>
+<tr><td>Kodak 6850</td><td>kodak-6850</td><td></td></tr>
+<tr><td>Kodak 7000</td><td>kodak-7000</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kodak 7010</td><td>kodak-7010</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kodak 7015</td><td>kodak-7015</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kodak 805</td><td>kodak-805</td><td></td></tr>
+<tr><td>Kodak 8500</td><td>kodak-8500</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kodak 8800</td><td>kodak-8800</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kodak 8810</td><td>kodak-8810</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kodak 9810</td><td>kodak-9810</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kodak EasyShare-G600-Printer-Dock</td><td>kodak-g600-dock</td><td></td></tr>
+<tr><td>Kodak Easyshare-Printer-Dock</td><td>kodak-dock</td><td></td></tr>
+<tr><td>Kodak PD-4000</td><td>kodak-pd-4000</td><td></td></tr>
+<tr><td>Kodak PD-6000</td><td>kodak-pd-6000</td><td></td></tr>
+<tr><td>Kodak Photo-Printer</td><td>kodak-photo-printer</td><td></td></tr>
+<tr><td>Kodak Photo-Printer-500</td><td>kodak-photo-printer-500</td><td></td></tr>
+<tr><td>Kodak Printer-Dock-Plus</td><td>kodak-dock-plus</td><td></td></tr>
+<tr><td>Kodak Printer-Dock-Plus-S3</td><td>kodak-dock-plus-s3</td><td></td></tr>
+<tr><td>Mitsubishi CP-3020D</td><td>mitsubishi-3020d</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Mitsubishi CP-3020DA</td><td>mitsubishi-3020da</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Mitsubishi CP-3020DAE</td><td>mitsubishi-3020dae</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Mitsubishi CP-3020DE</td><td>mitsubishi-3020de</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Mitsubishi CP-3020DU</td><td>mitsubishi-3020du</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Mitsubishi CP-3800DW</td><td>mitsubishi-cp-3800dw</td><td></td></tr>
+<tr><td>Mitsubishi CP-9500DW</td><td>mitsubishi-9500dw</td><td></td></tr>
+<tr><td>Mitsubishi CP-9550D</td><td>mitsubishi-9550d</td><td></td></tr>
+<tr><td>Mitsubishi CP-9550DW</td><td>mitsubishi-9550dw</td><td></td></tr>
+<tr><td>Mitsubishi CP-9550DW-S</td><td>mitsubishi-9550dw-s</td><td></td></tr>
+<tr><td>Mitsubishi CP-9550DZ</td><td>mitsubishi-9550dz</td><td></td></tr>
+<tr><td>Mitsubishi CP-9600DW</td><td>mitsubishi-9600dw</td><td></td></tr>
+<tr><td>Mitsubishi CP-9800D</td><td>mitsubishi-9800d</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Mitsubishi CP-9800DW</td><td>mitsubishi-9800dw</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Mitsubishi CP-9800DW-S</td><td>mitsubishi-9800dw-s</td><td></td></tr>
+<tr><td>Mitsubishi CP-9800DZ</td><td>mitsubishi-9800dz</td><td></td></tr>
+<tr><td>Mitsubishi CP-9810D</td><td>mitsubishi-9810d</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Mitsubishi CP-9810DW</td><td>mitsubishi-9810dw</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Mitsubishi CP-D80DW</td><td>mitsubishi-d80dw</td><td></td></tr>
+<tr><td>Mitsubishi CP-D90DW</td><td>mitsubishi-d90dw</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Mitsubishi CP-D70DW</td><td>mitsubishi-d70dw</td><td></td></tr>
+<tr><td>Mitsubishi CP-D707DW</td><td>mitsubishi-d707dw</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Mitsubishi CP-K60DW-S</td><td>mitsubishi-k60dw</td><td></td></tr>
+<tr><td>Mitsubishi P93D</td><td>mitsubishi-p93d</td><td></td></tr>
+<tr><td>Mitsubishi P95D</td><td>mitsubishi-p95d</td><td></td></tr>
+<tr><td>Shinko CHC-S1245</td><td>shinko-chcs1245</td><td></td></tr>
+<tr><td>Shinko CHC-S2145</td><td>shinko-chcs2145</td><td></td></tr>
+<tr><td>Shinko CHC-S6145</td><td>shinko-chcs6145</td><td></td></tr>
+<tr><td>Shinko CHC-S6245</td><td>shinko-chcs6245</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Shinko CHC-S9045</td><td>shinko-chcs9045</td><td></td></tr>
+<tr><td>Sinfonia CHC-S1245/E1</td><td>sinfonia-chcs1245</td><td></td></tr>
+<tr><td>Sinfonia CHC-S6145/CS2</td><td>sinfonia-chcs6145</td><td></td></tr>
+<tr><td>Sinfonia CHC-S6245/CE1</td><td>sinfonia-chcs6245</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Sinfonia S2145/S2</td><td>sinfonia-chcs2145</td><td></td></tr>
+<tr><td>Sony UP-DP10</td><td>sony-updp10</td><td></td></tr>
+<tr><td>Sony UP-DR150</td><td>sony-updr150</td><td></td></tr>
+<tr><td>Sony DPP-EX5</td><td>sony-dppex5</td><td></td></tr>
+<tr><td>Sony DPP-EX7</td><td>sony-dppex7</td><td></td></tr>
+<tr><td>Sony UP-DR100</td><td>sony-updr100</td><td></td></tr>
+<tr><td>Sony UP-DR200</td><td>sony-updr200</td><td></td></tr>
+<tr><td>Sony UP-CR10L</td><td>sony-upcr10l</td><td>EXPERIMENTAL</td></tr>
 </table>
 
 
