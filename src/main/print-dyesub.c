@@ -9485,7 +9485,7 @@ dyesub_render_row_interlaced_u16(stp_vars_t *v,
 				 dyesub_print_vars_t *pv,
 				 const dyesub_cap_t *caps,
 				 int in_row,
-				 char *dest,
+				 unsigned short *dest,
 				 int bytes_per_pixel,
 				 int plane)
 {
@@ -9505,7 +9505,7 @@ dyesub_render_row_interlaced_u16(stp_vars_t *v,
         }
       src = &(pv->image_data[row][col * pv->out_channels]);
 
-      dyesub_render_pixel_u16(src, (unsigned short*)(dest + w*bytes_per_pixel),
+      dyesub_render_pixel_u16(src, dest + w*bytes_per_pixel,
 			      pv, plane);
     }
 }
@@ -9581,7 +9581,8 @@ dyesub_print_plane(stp_vars_t *v,
 						destrow + bpp * pv->outl_px, bpp, p);
 	      else
 		dyesub_render_row_interlaced_u16(v, pv, caps, row,
-						 destrow + bpp * pv->outl_px, bpp, p);
+						 (unsigned short *)(destrow + bpp * pv->outl_px),
+						 bpp, p);
 	    }
 	  else
             dyesub_render_row_packed_u8(v, pv, caps, row,
