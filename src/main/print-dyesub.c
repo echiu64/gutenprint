@@ -9750,7 +9750,16 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   stp_channel_reset(v);
   for (i = 0; i < pv.ink_channels; i++)
     stp_channel_add(v, i, 0, 1.0);
-  pv.out_channels = stp_color_init(v, image, 65536);
+
+  /* Scale to native output */
+  if (dyesub_feature(caps, DYESUB_FEATURE_12BPP)) {
+    pv.out_channels = stp_color_init(v, image, 4096);
+  } else if (dyesub_feature(caps, DYESUB_FEATURE_16BPP)) {
+    pv.out_channels = stp_color_init(v, image, 65536);
+  } else {
+    pv.out_channels = stp_color_init(v, image, 256);
+    stp_set_float_parameter(v, "AppGammaScale", 1.0);
+  }
 
   /* If there's a mismatch in channels, that is ALWAYS a problem */
   if (pv.out_channels != pv.ink_channels)
