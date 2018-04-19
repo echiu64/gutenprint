@@ -42,7 +42,6 @@
 #endif
 
 //#define S6145_YMC
-//#define M98XX_ADVMATTE
 //#define M98XX_8BPP
 
 #define DYESUB_FEATURE_NONE		 0x00000000
@@ -87,7 +86,7 @@
 /*
  * Random implementation from POSIX.1-2001 to yield reproducible results.
  */
-#ifndef M98XX_ADVMATTE
+#ifndef M98XX_8BPP
 static int xrand(unsigned long *seed)
 {
   *seed = *seed * 1103515245ul + 12345ul;
@@ -3654,12 +3653,8 @@ static void mitsu_cp3020da_plane_init(stp_vars_t *v)
   stp_putc(0x1b, v);
   stp_putc(0x5a, v);
   stp_putc(0x54, v);
-#ifdef M98XX_8BPP
   stp_putc(0x00, v);
-#else
-  stp_putc((pd->bpp > 8) ? 0x10: 0x00, v);
-#endif
-  dyesub_nputc(v, 0x00, 2);
+  stp_put16_be(0, v); /* Starting column for this block */
   stp_put16_be(0, v); /* Starting row for this block */
   stp_put16_be(pd->w_size, v);
   stp_put16_be(pd->h_size, v); /* Number of rows in this block */
@@ -4179,11 +4174,7 @@ LIST(dyesub_printsize_list_t, mitsu_cp9810_printsize_list, dyesub_printsize_t, m
 static const overcoat_t mitsu_cp9810_overcoat[] =
 {
   {"Glossy",  N_("Glossy"),  {1, "\x00"}},
-#ifdef M98XX_ADVMATTE
-  {"Matte", N_("Matte"), {1, "\x80"}},
-#else
   {"Matte", N_("Matte"), {1, "\x01"}},
-#endif
 };
 
 LIST(overcoat_list_t, mitsu_cp9810_overcoat_list, overcoat_t, mitsu_cp9810_overcoat);
@@ -4198,8 +4189,27 @@ static const dyesub_stringitem_t mitsu9810_qualities[] =
 };
 LIST(dyesub_stringlist_t, mitsu9810_quality_list, dyesub_stringitem_t, mitsu9810_qualities);
 
+static const stp_parameter_t mitsu98xx_parameters[] =
+{
+  {
+    "PrintSpeed", N_("Print Speed"), "Color=No,Category=Advanced Printer Setup",
+    N_("Print Speed"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+#ifdef M98XX_8BPP
+  {
+    "UseLUT", N_("Internal Color Correction"), "Color=Yes,Category=Advanced Printer Setup",
+    N_("Use Internal Color Correction"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+#endif
+};
+#define mitsu98xx_parameter_count (sizeof(mitsu98xx_parameters) / sizeof(const stp_parameter_t))
+
 static int
-mitsu9810_load_parameters(const stp_vars_t *v, const char *name,
+mitsu98xx_load_parameters(const stp_vars_t *v, const char *name,
 			  stp_parameter_t *description)
 {
   int	i;
@@ -4230,6 +4240,13 @@ mitsu9810_load_parameters(const stp_vars_t *v, const char *name,
       description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
       description->is_active = 1;
     }
+#ifdef M98XX_8BPP
+  else if (strcmp(name, "UseLUT") == 0)
+    {
+      description->deflt.boolean = 0;
+      description->is_active = 1;
+    }
+#endif
   else
   {
      return 0;
@@ -4237,7 +4254,7 @@ mitsu9810_load_parameters(const stp_vars_t *v, const char *name,
   return 1;
 }
 
-static int mitsu9810_parse_parameters(stp_vars_t *v)
+static int mitsu98xx_parse_parameters(stp_vars_t *v)
 {
   const char *quality = stp_get_string_parameter(v, "PrintSpeed");
   dyesub_privdata_t *pd = get_privdata(v);
@@ -4260,6 +4277,10 @@ static int mitsu9810_parse_parameters(stp_vars_t *v)
     pd->privdata.m9550.quality = 0x10;
   }
 
+#ifdef M98XX_8BPP
+  pd->privdata.m70x.use_lut = stp_get_boolean_parameter(v, "UseLUT");
+#endif
+
   /* Matte lamination forces SuperFine mode */
   if (caps->overcoat) {
     overcoat = dyesub_get_overcoat_pattern(v);
@@ -4271,6 +4292,22 @@ static int mitsu9810_parse_parameters(stp_vars_t *v)
   return 1;
 }
 
+static void mitsu_cp98xx_plane_init(stp_vars_t *v)
+{
+#ifndef M98XX_8BPP
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  /* Plane data header */
+  stp_putc(0x1b, v);
+  stp_putc(0x5a, v);
+  stp_putc(0x54, v);
+  stp_putc(0x10, v);
+  stp_put16_be(0, v); /* Starting column for this block */
+  stp_put16_be(0, v); /* Starting row for this block */
+  stp_put16_be(pd->w_size, v);
+  stp_put16_be(pd->h_size, v); /* Number of rows in this block */
+#endif
+}
 
 static void mitsu_cp98xx_printer_init(stp_vars_t *v, int model)
 {
@@ -4294,6 +4331,7 @@ static void mitsu_cp98xx_printer_init(stp_vars_t *v, int model)
 	  stp_putc(0x00, v);
   }
   dyesub_nputc(v, 0x00, 31);
+
   /* Parameters 1 */
   stp_putc(0x1b, v);
   stp_putc(0x57, v);
@@ -4309,8 +4347,14 @@ static void mitsu_cp98xx_printer_init(stp_vars_t *v, int model)
   stp_put16_be(pd->copies, v);
   dyesub_nputc(v, 0x00, 8);
   stp_putc(pd->privdata.m9550.quality, v);
-  dyesub_nputc(v, 0x00, 10);
+  dyesub_nputc(v, 0x00, 9);
+#ifdef M98XX_8BPP
+  stp_putc(pd->privdata.m70x.use_lut, v);  /* Use LUT? EXTENSION! */
+#else
+  stp_putc(0x00, v);
+#endif
   stp_putc(0x01, v);
+
   /* Unknown */
   stp_putc(0x1b, v);
   stp_putc(0x57, v);
@@ -4322,6 +4366,19 @@ static void mitsu_cp98xx_printer_init(stp_vars_t *v, int model)
   stp_putc(0x01, v);
   stp_putc(0x01, v);
   dyesub_nputc(v, 0x00, 36);
+
+#ifdef M98XX_8BPP
+  /* Put out a single plane header */
+  stp_putc(0x1b, v);
+  stp_putc(0x5a, v);
+  stp_putc(0x54, v);
+  stp_putc(0x80, v);  /* special flag to say this is 8bpp packed BGR */
+  stp_putc(0x10, v);
+  stp_put16_be(0, v); /* Starting column for this block */
+  stp_put16_be(0, v); /* Starting row for this block */
+  stp_put16_be(pd->w_size, v);
+  stp_put16_be(pd->h_size, v); /* Number of rows in this block */
+#endif
 }
 
 static void mitsu_cp9810_printer_init(stp_vars_t *v)
@@ -4336,7 +4393,9 @@ static void mitsu_cp9800_printer_init(stp_vars_t *v)
 
 static void mitsu_cp9810_printer_end(stp_vars_t *v)
 {
+#ifndef M98XX_8BPP
   dyesub_privdata_t *pd = get_privdata(v);
+#endif
 
   /* Job Footer */
   stp_putc(0x1b, v);
@@ -4344,7 +4403,7 @@ static void mitsu_cp9810_printer_end(stp_vars_t *v)
   stp_putc(0x4c, v); /* XXX 9800DW-S uses 0x4e, backend corrects */
   stp_putc(0x00, v);
 
-#ifndef M98XX_ADVMATTE
+#ifndef M98XX_8BPP
   if (pd->overcoat &&
       *((const char*)((pd->overcoat->seq).data)) == 0x01) {
 
@@ -4360,7 +4419,7 @@ static void mitsu_cp9810_printer_end(stp_vars_t *v)
     int r, c;
     unsigned long seed = 1;
 
-    mitsu_cp3020da_plane_init(v); /* First generate plane header */
+    mitsu_cp98xx_plane_init(v); /* First generate plane header */
 
     /* Now generate lamination pattern */
     for (c = 0 ; c < pd->w_size ; c++) {
@@ -8120,22 +8179,22 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     SHRT_MAX,
 #ifdef M98XX_8BPP
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_NATIVECOPIES,
 #else
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_12BPP
       | DYESUB_FEATURE_BIGENDIAN | DYESUB_FEATURE_NATIVECOPIES,
 #endif
     &mitsu_cp9810_printer_init, &mitsu_cp9810_printer_end,
-    &mitsu_cp3020da_plane_init, NULL,
+    &mitsu_cp98xx_plane_init, NULL,
     NULL, NULL, /* No block funcs */
     NULL,
     &mitsu_cp9810_overcoat_list, NULL,
     NULL, NULL,
-    mitsu9550_parameters,
-    mitsu9550_parameter_count,
-    mitsu9810_load_parameters,
-    mitsu9810_parse_parameters,
+    mitsu98xx_parameters,
+    mitsu98xx_parameter_count,
+    mitsu98xx_load_parameters,
+    mitsu98xx_parse_parameters,
   },
   { /* Mitsubishi CPD70D/CPD707D */
     4105,
@@ -8301,22 +8360,22 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     SHRT_MAX,
 #ifdef M98XX_8BPP
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_NATIVECOPIES,
 #else
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_12BPP
       | DYESUB_FEATURE_BIGENDIAN | DYESUB_FEATURE_NATIVECOPIES,
 #endif
     &mitsu_cp9800_printer_init, &mitsu_cp9810_printer_end,
-    &mitsu_cp3020da_plane_init, NULL,
+    &mitsu_cp98xx_plane_init, NULL,
     NULL, NULL, /* No block funcs */
     NULL,
     NULL, NULL,
     NULL, NULL,
-    mitsu9550_parameters,
-    mitsu9550_parameter_count,
-    mitsu9810_load_parameters,
-    mitsu9810_parse_parameters,
+    mitsu98xx_parameters,
+    mitsu98xx_parameter_count,
+    mitsu98xx_load_parameters,
+    mitsu98xx_parse_parameters,
   },
   { /* Mitsubishi P95D/DW */
     4114,
