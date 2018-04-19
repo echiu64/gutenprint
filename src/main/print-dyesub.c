@@ -4235,7 +4235,7 @@ static int mitsu9810_parse_parameters(stp_vars_t *v)
   if (strcmp(quality, "SuperFine") == 0) {
      pd->privdata.m9550.quality = 0x80;
   } else if (strcmp(quality, "Fine") == 0) {
-     pd->privdata.m9550.finedeep = 0x10;
+     pd->privdata.m9550.quality = 0x10;
   }
 
   /* Matte lamination forces SuperFine mode */
