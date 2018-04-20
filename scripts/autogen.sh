@@ -16,6 +16,20 @@ else
   mkdir m4local
 fi
 
+if test -d m4 ; then
+  :
+else
+  echo "Directory \`m4' does not exist.  Creating it."
+  if test -e m4 ; then
+    echo "**Error**: A file \`m4' exists and is not a directory."
+    echo "Please remove it."
+    DIE=1
+  fi
+  mkdir m4
+fi
+
+test -f $srcdir/configure.ac && sed "s/XXXRELEASE_DATE=XXX/RELEASE_DATE=\"`date '+%d %b %Y'`\"/" $srcdir/m4extra/stp_release.m4.in > $srcdir/m4/stp_release.m4
+
 # Make sure all of our auto* bits are up to date.
 autoreconf -ivf
 
@@ -44,8 +58,6 @@ test "$libtool_major" -le 1 && {
   echo "or get the source tarball at ftp://ftp.gnu.org/pub/gnu/"
   DIE=1
 }
-
-test -f $srcdir/configure.ac && sed "s/XXXRELEASE_DATE=XXX/RELEASE_DATE=\"`date '+%d %b %Y'`\"/" $srcdir/m4extra/stp_release.m4.in > $srcdir/m4/stp_release.m4
 
 test -f $srcdir/ChangeLog || echo > $srcdir/ChangeLog
 
