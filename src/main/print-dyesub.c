@@ -9806,9 +9806,7 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
 
 #ifndef M98XX_8BPP
   /* Scale to native output */
-  if (dyesub_feature(caps, DYESUB_FEATURE_12BPP)) {
-    pv.out_channels = stp_color_init(v, image, 4096);
-  } else if (dyesub_feature(caps, DYESUB_FEATURE_16BPP)) {
+  if (dyesub_feature(caps, DYESUB_FEATURE_12BPP) || dyesub_feature(caps, DYESUB_FEATURE_16BPP)) {
     pv.out_channels = stp_color_init(v, image, 65536);
   } else
 #endif
