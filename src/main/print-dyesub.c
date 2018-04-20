@@ -285,7 +285,7 @@ typedef struct
   const dyesub_media_t* media;
   const char* slot;
   int print_mode;
-#ifndef M98XX_8BPP	
+#ifndef M98XX_8BPP
   int bpp;
 #endif
   const char* duplex_mode;
@@ -311,7 +311,7 @@ typedef struct {
 #ifndef M98XX_8BPP
   int bytes_per_ink_channel;
   int bits_per_ink_channel;
-#endif	
+#endif
   int byteswap;
   int plane_interlacing;
   int row_interlacing;
