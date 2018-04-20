@@ -7277,12 +7277,12 @@ static int magicard_parse_parameters(stp_vars_t *v)
   const stp_raw_t *magstripe2 = NULL;
   const stp_raw_t *magstripe3 = NULL;
 
-  if (!strcmp("None", overcoat_hole))
+  if (overcoat_hole && !strcmp("None", overcoat_hole))
     overcoat_hole = NULL;
 
   /* If overcoat is off, we can't use holokote or holopatch */
-  if (strcmp("On", lpar)) {
-    if (strcmp(holokote, "Off") || holopatch || overcoat_hole || holokote_custom) {
+  if (lpar && strcmp("On", lpar)) {
+    if ((holokote && strcmp(holokote, "Off")) || holopatch || overcoat_hole || holokote_custom) {
       stp_eprintf(v, _("Holokote, Holopatch, and Overcoat hole features require Overcoat to be enabled!\n"));
       return 0;
     }
@@ -7315,9 +7315,9 @@ static int magicard_parse_parameters(stp_vars_t *v)
   if (!pd)
     return 1;
 
-  pd->privdata.magicard.overcoat = !strcmp("On", lpar);
-  pd->privdata.magicard.overcoat_dpx = !strcmp("On", lpar_dpx);
-  pd->privdata.magicard.resin_k = !strcmp("Resin",blacktype);
+  pd->privdata.magicard.overcoat = lpar && !strcmp("On", lpar);
+  pd->privdata.magicard.overcoat_dpx = lpar_dpx && !strcmp("On", lpar_dpx);
+  pd->privdata.magicard.resin_k = blacktype && !strcmp("Resin",blacktype);
   pd->privdata.magicard.reject = stp_get_boolean_parameter(v, "RejectBad");
   pd->privdata.magicard.colorsure = stp_get_boolean_parameter(v, "ColorSure");
   pd->privdata.magicard.gamma = stp_get_int_parameter(v, "GammaCurve");
@@ -7332,18 +7332,19 @@ static int magicard_parse_parameters(stp_vars_t *v)
 
   pd->horiz_offset = stp_get_int_parameter(v, "CardOffset");
 
-  if (!strcmp(holokote, "UltraSecure")) {
-    pd->privdata.magicard.holokote = 1;
-  } else if (!strcmp(holokote, "InterlockingRings")) {
-    pd->privdata.magicard.holokote = 2;
-  } else if (!strcmp(holokote, "Flex")) {
-    pd->privdata.magicard.holokote = 3;
-  } else {
-    pd->privdata.magicard.holokote = 0;
+  pd->privdata.magicard.holokote = 0;
+  if (holokote) {
+    if (!strcmp(holokote, "UltraSecure")) {
+      pd->privdata.magicard.holokote = 1;
+    } else if (!strcmp(holokote, "InterlockingRings")) {
+      pd->privdata.magicard.holokote = 2;
+    } else if (!strcmp(holokote, "Flex")) {
+      pd->privdata.magicard.holokote = 3;
+    }
   }
   pd->privdata.magicard.holokote_custom = holokote_custom;
 
-  pd->privdata.magicard.mag_coer = !strcmp("High", mag_coer);
+  pd->privdata.magicard.mag_coer = mag_coer && !strcmp("High", mag_coer);
 
   if (magstripe1 && magstripe1->bytes) {
     int i;
