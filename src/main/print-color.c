@@ -1511,9 +1511,17 @@ stpi_color_traditional_init(stp_vars_t *v,
   size_t total_channel_bits;
 
   if (steps != 256 && steps != 65536)
-    return -1;
+    {
+      stp_eprintf(v, 
+		  "stpi_color_traditional_init: Invalid color steps %lu (must be 256 or 65536)\n", 
+		  (unsigned long) steps);
+      return -1;
+    }
   if (!channel_depth)
-    return -1;
+    {
+      stp_eprintf(v, "stpi_color_traditional_init: ChannelBitDepth not set\n");
+      return -1;
+    }
 
   lut = allocate_lut();
   lut->input_color_description =
@@ -1523,6 +1531,7 @@ stpi_color_traditional_init(stp_vars_t *v,
 
   if (!lut->input_color_description || !lut->output_color_description)
     {
+      stp_eprintf(v, "stpi_color_traditional_init: input/output types not specified\n");
       free_lut(lut);
       return -1;
     }
@@ -1531,6 +1540,7 @@ stpi_color_traditional_init(stp_vars_t *v,
     {
       if (stp_verify_parameter(v, "STPIRawChannels", 1) != PARAMETER_OK)
 	{
+	  stp_eprintf(v, "stpi_color_traditional_init: raw printing requested but STPIRawChannels not set\n");
 	  free_lut(lut);
 	  return -1;
 	}
