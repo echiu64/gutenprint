@@ -1009,7 +1009,7 @@ STP_RELEASE_DATE
 
 MINIMAL_PRINTERS_TO_TEST="escp2-r1800 escp2-3880 \
 	pcl-g_4 pcl-g_5c pcl-500 \
-	mitsubishi-p95d shinko-chcs2145 kodak-1400 canon-cp910 \
+	mitsubishi-p95d shinko-chcs2145 kodak-1400 canon-cp910 mitsubishi-9800d \
 	bjc-s200 bjc-PIXMA-Pro9000mk2 \
 	datamax_oneil_I4212e \
 	lexmark-z43"

@@ -341,13 +341,16 @@ my $srcdir = $ENV{"srcdir"};
 my $sdir;
 
 $geometry =~ s/^=*//;
-if ($geometry =~ /^(([01]?(\.[0-9]*)?)x([01]?(\.[0-9]*)?))?(\+([01]?(\.[0-9]*)?)\+([01]?(\.[0-9]*)?))?$/) {
+if ($geometry =~ /^(([01]?(\.[0-9]*)?)(x([01]?(\.[0-9]*)?))?)?(\+([01]?(\.[0-9]*)?)(\+([01]?(\.[0-9]*)?))?)?$/) {
     my ($H) = $2;
-    my ($V) = $4;
-    my ($L) = $7;
-    my ($T) = $9;
+    my ($V) = $5;
+    my ($L) = $8;
+    my ($T) = $11;
     if ($H) {
 	$hsize = $H;
+	if (not $V) {
+	    $V=$H;
+	}
 	if ($hsize > 1) {
 	    $hsize = 1;
 	}
@@ -359,6 +362,9 @@ if ($geometry =~ /^(([01]?(\.[0-9]*)?)x([01]?(\.[0-9]*)?))?(\+([01]?(\.[0-9]*)?)
 	}
     }
     if ($L) {
+	if (not $T) {
+	    $T=$L;
+	}
 	$left = $L;
     }
     if ($T) {
@@ -896,12 +902,10 @@ sub do_printer($$) {
 		my ($pname) = $print_family ?
 		    "${models{$printer}}-$families{$printer}" : $printer;
 		if ($first_time) {
-		    if (1 || (($case_no % $proc_count) == $proc_rotor)) {
-			if ($quiet < 2) {
-			    set_global_message("$pname\n");
-			} elsif ($quiet == 2) {
-			    set_global_message(".");
-			}
+		    if ($quiet < 2) {
+			set_global_message("$pname\n");
+		    } elsif ($quiet == 2) {
+			set_global_message(".");
 		    }
 		    $first_time = 0;
 		}
@@ -966,6 +970,10 @@ sub do_printer($$) {
 	    }
 	}
     }
+    # Increment the rotor here also, so that if the degree of parallelism is even
+    # and we're running with -o - (an easy way to run minimal cases) we won't wind
+    # up with half the workers running color and half running black and white.
+    $case_no++;
 }
 
 sub restart_testpattern {
