@@ -123,6 +123,7 @@ my $print_family = 0;
 my $res_limit = 0;
 my $proc_rotor = 0;
 my $case_no = 0;
+my $vg = "libtool --mode=execute valgrind";
 
 my @default_options = ();
 my %base_settings = ("DitherAlgorithm" => "Fast");
@@ -388,10 +389,6 @@ if ("$srcdir" eq "" || "$srcdir" eq ".") {
 
 if (! $run_installed && ! defined $ENV{"STP_DATA_PATH"}) {
     $ENV{"STP_DATA_PATH"} = "${sdir}/../xml";
-}
-
-if ($valgrind && ! $run_installed && $enable_shared ne "no") {
-    die "Valgrind is not compatible with --enable-shared in tree.\nPlease use autogen.sh --disable-shared.\n";
 }
 
 if (! defined $ENV{"STP_MODULE_PATH"}) {
@@ -1076,13 +1073,13 @@ sub runit() {
 	$valopts .= ' --vgdb=yes';
     }
     if ($valgrind == 1) {
-	$valgrind_command = "valgrind $valopts -q --num-callers=50 --error-limit=no --leak-check=yes --error-exitcode=1";
+	$valgrind_command = "$vg $valopts -q --num-callers=50 --error-limit=no --leak-check=yes --error-exitcode=1";
     } elsif ($valgrind == 2) {
-	$valgrind_command = "valgrind $valopts --num-callers=50 --error-limit=no --leak-resolution=high --leak-check=yes --error-exitcode=1";
+	$valgrind_command = "$vg $valopts --num-callers=50 --error-limit=no --leak-resolution=high --leak-check=yes --error-exitcode=1";
     } elsif ($valgrind == 3) {
-	$valgrind_command = "valgrind $valopts --error-limit=no --num-callers=50 --show-reachable=yes --leak-resolution=high --leak-check=yes --error-exitcode=1";
+	$valgrind_command = "$vg $valopts --error-limit=no --num-callers=50 --show-reachable=yes --leak-resolution=high --leak-check=yes --error-exitcode=1";
     } elsif ($valgrind == 4) {
-	$valgrind_command = "valgrind $valopts --error-exitcode=1";
+	$valgrind_command = "$vg $valopts --error-exitcode=1";
     }
 
     # O U T P U T #

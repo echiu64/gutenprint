@@ -73,7 +73,7 @@ case "$valcount" in
 esac
 
 if [ -n "$valopts" ] ; then
-    valgrind="valgrind $valopts"
+    valgrind="libtool --mode=execute valgrind $valopts"
 fi
 
 $valgrind ./testdither

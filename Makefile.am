@@ -136,15 +136,17 @@ check-full: scripts/count-cpus
 distcheck-full: scripts/count-cpus
 	STP_TEST_PROFILE=full $(MAKEDISTCHECK_PARALLEL)
 
-# distcheck-valgrind won't work because distcheck does not use
-# --disable-shared.  valgrind doesn't work with that type of build because
-# the in-tree executables aren't actually binaries; they're libtool-based
-# shell scripts that invoke the real binaries.
 check-valgrind: scripts/count-cpus
 	STP_TEST_PROFILE=valgrind $(MAKECHECK_PARALLEL)
 
+distcheck-valgrind: scripts/count-cpus
+	STP_TEST_PROFILE=valgrind $(MAKEDISTCHECK_PARALLEL)
+
 check-valgrind-minimal: scripts/count-cpus
 	STP_TEST_PROFILE=valgrind-minimal $(MAKECHECK_PARALLEL)
+
+distcheck-valgrind-minimal: scripts/count-cpus
+	STP_TEST_PROFILE=valgrind-minimal $(MAKEDISTCHECK_PARALLEL)
 
 checksums: scripts/count-cpus
 	STP_PARALLEL=$(CPUS) make -C src/testpattern checksums-release

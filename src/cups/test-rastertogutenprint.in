@@ -131,12 +131,6 @@ esac
 
 shift $((OPTIND - 1))
 
-if [[ $valgrind > 0 && $enable_shared != no ]] ; then
-    echo 'Valgrind is not compatible with --enable-shared in tree.' 1>&2
-    echo 'Please use autogen.sh --disable-shared.' 1>&2
-    exit 1
-fi
-
 version="@GUTENPRINT_RELEASE_VERSION@";
 rgp="./rastertogutenprint.$version"
 cupsdir="$(cups-config --serverbin)/filter"
@@ -382,7 +376,7 @@ do_output() {
 run_rastertogp() {
     qualarg=$(find_quality "$PPD")
     sizearg=$(find_page_size "$PPD")
-    vg="valgrind $valopts --log-fd=3"
+    vg="libtool --mode=execute valgrind $valopts --log-fd=3"
     vg1="$vg --num-callers=50 --leak-check=yes --error-limit=no --error-exitcode=1"
     rgpc="$rgp 1 1 1 1"
     qarg="$qualarg $sizearg $cupsargs"

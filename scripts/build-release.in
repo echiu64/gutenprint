@@ -107,18 +107,10 @@ function check_git {
     return 0
 }
 
-# 3) Run autogen.sh --disable-shared.  Why --disable-shared?  So we
-#    can run valgrind on it.  Without --disable-shared, the
-#    executables in the tree aren't the real thing; they're just
-#    libtool-based scripts that set up the environment and run the
-#    executable; these, of course, can't be valground.
-#
-#    Later checks (such as the various make distcheck-* commands)
-#    don't use --disable-shared, so everything gets tested
-#    correctly in the end.
+# 3) Run autogen.sh to ensure that we're using default build settings
 
 function run_autogen {
-    ./autogen.sh --disable-shared && return 0
+    ./autogen.sh && return 0
     echo "autogen.sh failed!"
     return 1
 }
