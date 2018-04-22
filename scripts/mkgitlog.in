@@ -55,6 +55,10 @@ sub print_it {
 	    next if (($fn =~ /\.po$/ && $filechanges{$fn} ne 'C' &&
 		      $filechanges{$fn} ne 'D' ) ||
 		     $fn =~ /^ChangeLog\.pre/);
+	    if ($fn =~ /\.(po|eps)$/) {
+		$removelines{$fn} = 0;
+		$addlines{$fn} = 0;
+	    }
 	    if ($fcount++ == 0) {
 		$file_detail .=  "	Files:";
 		$file_detail .=  "	$fn (";
@@ -91,7 +95,7 @@ if ($base_revision) {
     $base_revision = "'$base_revision..HEAD'";
 }
 
-open(GITLOG, "git log -b --diff-algorithm=default --summary --numstat --date=short --pretty=format:'>>>GIT1%n%cd  <%an>	%H%n>>>GIT2%n%B>>>GIT3%n%D%n>>>GIT4' $base_revision|") or die "Can't run git log: $!\n";
+open(GITLOG, "git log -w --diff-algorithm=default --summary --numstat --date=short --pretty=format:'>>>GIT1%n%cd  <%an>	%H%n>>>GIT2%n%B>>>GIT3%n%D%n>>>GIT4' $base_revision|") or die "Can't run git log: $!\n";
 
 while (<GITLOG>) {
     if (/>>>GIT([0-9]+)$/) {
