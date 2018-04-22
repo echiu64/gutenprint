@@ -18,7 +18,7 @@
  */
 
 /**
- * @file gutenprint/types
+ * @file gutenprint/types.h
  * @brief Gutenprint dimension type declarations
  */
 
