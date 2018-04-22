@@ -50,10 +50,13 @@ sub print_it {
 	my ($add) = 0;
 	my ($remove) = 0;
 	my $file_detail;
-	$file_detail .=  "	Files:";
 	my ($fcount) = 0;
 	foreach my $fn (@files) {
+	    next if (($fn =~ /\.po$/ && $filechanges{$fn} ne 'C' &&
+		      $filechanges{$fn} ne 'D' ) ||
+		     $fn =~ /^ChangeLog\.pre/);
 	    if ($fcount++ == 0) {
+		$file_detail .=  "	Files:";
 		$file_detail .=  "	$fn (";
 	    } else {
 		$file_detail .=  "		$fn (";
@@ -66,10 +69,8 @@ sub print_it {
 		$add += +$addlines{$fn};
 	    } else {
 		$file_detail .=  "+$addlines{$fn}, -$removelines{$fn}";
-		if (! ($fn =~ /\.po$/)) {
-		    $remove += $removelines{$fn};
-		    $add += +$addlines{$fn};
-		}
+		$remove += $removelines{$fn};
+		$add += +$addlines{$fn};
 	    }
 	    $file_detail .=  ")\n";
 	}

@@ -32,32 +32,6 @@ Name: gutenprint-5_2_11
 2016-01-15  <rlk>	b1d6fbe2ff52fac4957bbd12a56d63fac15e5e2f
 
 	Lines: +0, -0
-	Files:	po/ca.po (+43, -46)
-		po/cs.po (+43, -46)
-		po/da.po (+43, -46)
-		po/de.po (+43, -46)
-		po/el.po (+43, -46)
-		po/en_GB.po (+43, -46)
-		po/es.po (+43, -46)
-		po/fi.po (+43, -46)
-		po/fr.po (+43, -46)
-		po/gl.po (+43, -46)
-		po/hu.po (+43, -46)
-		po/it.po (+43, -46)
-		po/ja.po (+43, -46)
-		po/nb.po (+43, -46)
-		po/nl.po (+43, -46)
-		po/pl.po (+43, -46)
-		po/pt.po (+43, -46)
-		po/ru.po (+43, -46)
-		po/sk.po (+43, -46)
-		po/sl.po (+43, -46)
-		po/sv.po (+43, -46)
-		po/tr.po (+43, -46)
-		po/uk.po (+43, -46)
-		po/vi.po (+43, -46)
-		po/zh_CN.po (+43, -46)
-		po/zh_TW.po (+43, -46)
 
 	Gutenprint 5.2.11 release
 
@@ -78,32 +52,6 @@ Name: gutenprint-5_2_11
 2016-01-14  <rlk>	32eb4f9e2c44ba018ed25c417fb8becfc459cfd7
 
 	Lines: +0, -0
-	Files:	po/ca.po (+3577, -3526)
-		po/cs.po (+3574, -3526)
-		po/da.po (+3577, -3526)
-		po/de.po (+3577, -3526)
-		po/el.po (+3576, -3526)
-		po/en_GB.po (+3577, -3526)
-		po/es.po (+3575, -3526)
-		po/fi.po (+3576, -3526)
-		po/fr.po (+3577, -3526)
-		po/gl.po (+3577, -3526)
-		po/hu.po (+3577, -3526)
-		po/it.po (+3577, -3526)
-		po/ja.po (+3577, -3526)
-		po/nb.po (+3575, -3526)
-		po/nl.po (+3577, -3526)
-		po/pl.po (+3575, -3526)
-		po/pt.po (+3575, -3526)
-		po/ru.po (+3575, -3526)
-		po/sk.po (+6793, -4669)
-		po/sl.po (+3577, -3526)
-		po/sv.po (+3576, -3526)
-		po/tr.po (+6760, -4698)
-		po/uk.po (+3577, -3526)
-		po/vi.po (+3576, -3526)
-		po/zh_CN.po (+6637, -4561)
-		po/zh_TW.po (+3575, -3526)
 
 	Gutenprint 5.2.11 release
 
@@ -284,7 +232,6 @@ Name: gutenprint-5_2_11
 2015-10-30  <rlk>	5778f298855cd835a626fda08211f414d971abf4
 
 	Lines: +0, -0
-	Files:	po/zh_CN.po (+5064, -7047)
 
 	Update zh_CN
 
@@ -324,14 +271,12 @@ Name: gutenprint-5_2_11
 2015-10-10  <rlk>	3272d17a8cb1787fe4f391b5fc64f9ef4d678745
 
 	Lines: +0, -0
-	Files:	po/sk.po (+4811, -7001)
 
 	Update Slovak translation
 
 2015-10-08  <rlk>	045b106cfb5ac2ba3f53efe1d77233f3de8538d6
 
 	Lines: +0, -0
-	Files:	po/tr.po (+5464, -8207)
 
 	Update Turkish translation
 
@@ -348,7 +293,6 @@ Name: gutenprint-5_2_11-pre2
 2015-10-06  <rlk>	5fe80339174a0786374012b4d53b8af32937b19f
 
 	Lines: +0, -0
-	Files:	po/sk.po (+6726, -4685)
 
 	Gutenprint 5.2.11-pre2 release
 
@@ -381,7 +325,6 @@ Name: gutenprint-5_2_11-pre2
 2015-10-05  <rlk>	8f049bd2d354c92e8e7800c3ab35c2667450c684
 
 	Lines: +0, -0
-	Files:	po/sk.po (+8027, -11460)
 
 	Update Slovenian translation
 
@@ -395,32 +338,6 @@ Name: gutenprint-5_2_11-pre2
 2015-10-04  <rlk>	8acf74dc9540ba5b14e527be86bf79eded205766
 
 	Lines: +0, -0
-	Files:	po/ca.po (+3550, -3121)
-		po/cs.po (+3557, -3134)
-		po/da.po (+3550, -3121)
-		po/de.po (+3550, -3121)
-		po/el.po (+3564, -3136)
-		po/en_GB.po (+3562, -3135)
-		po/es.po (+3557, -3134)
-		po/fi.po (+3565, -3136)
-		po/fr.po (+3552, -3121)
-		po/gl.po (+3565, -3136)
-		po/hu.po (+3550, -3121)
-		po/it.po (+3550, -3121)
-		po/ja.po (+3558, -3136)
-		po/nb.po (+3562, -3140)
-		po/nl.po (+3550, -3121)
-		po/pl.po (+3557, -3140)
-		po/pt.po (+3557, -3134)
-		po/ru.po (+3566, -3138)
-		po/sk.po (+3557, -3134)
-		po/sl.po (+3565, -3136)
-		po/sv.po (+3562, -3135)
-		po/tr.po (+3550, -3121)
-		po/uk.po (+3550, -3121)
-		po/vi.po (+3549, -3121)
-		po/zh_CN.po (+6564, -4549)
-		po/zh_TW.po (+3558, -3136)
 
 	Update for 5.2.11
 
@@ -504,7 +421,6 @@ Name: gutenprint-5_2_11-pre2
 2015-09-25  <rlk>	e445233d495ebb58be6a1dfeb43fcee59497e4b0
 
 	Lines: +0, -0
-	Files:	po/zh_CN.po (+7021, -8300)
 
 	Update translation
 
@@ -1356,32 +1272,6 @@ Name: gutenprint-5_2_11-pre1
 2015-06-26  <rlk>	7a27448ce0adc85eb2d391f2282d08c709915229
 
 	Lines: +0, -0
-	Files:	po/ca.po (+4937, -3536)
-		po/cs.po (+5006, -3623)
-		po/da.po (+4937, -3536)
-		po/de.po (+4938, -3539)
-		po/el.po (+4766, -3386)
-		po/en_GB.po (+4299, -2914)
-		po/es.po (+5006, -3623)
-		po/fi.po (+4300, -2906)
-		po/fr.po (+6189, -4489)
-		po/gl.po (+4301, -2905)
-		po/hu.po (+6095, -4449)
-		po/it.po (+4937, -3536)
-		po/ja.po (+4230, -2846)
-		po/nb.po (+4620, -3245)
-		po/nl.po (+6142, -4469)
-		po/pl.po (+4606, -3230)
-		po/pt.po (+5006, -3623)
-		po/ru.po (+4298, -2910)
-		po/sk.po (+5005, -3623)
-		po/sl.po (+4295, -2899)
-		po/sv.po (+4290, -2907)
-		po/tr.po (+5042, -3646)
-		po/uk.po (+4937, -3536)
-		po/vi.po (+4932, -3535)
-		po/zh_CN.po (+3889, -2779)
-		po/zh_TW.po (+4228, -2845)
 
 	Gutenprint 5.2.11-pre1 release
 
@@ -1992,28 +1882,24 @@ Name: gutenprint-5_2_11-pre1
 2015-04-16  <rlk>	b995ed9d77bc0819d821731e2404a2af8fa660c7
 
 	Lines: +0, -0
-	Files:	po/fr.po (+2, -2)
 
 	Update French translation
 
 2015-04-14  <rlk>	0a4b6e28487c9e61d3cdacef0e779a7059f8b0b8
 
 	Lines: +0, -0
-	Files:	po/fr.po (+617, -677)
 
 	Update French translation
 
 2015-04-12  <rlk>	65d5a517a82d5e59736111c3b3a493943f7aa2f9
 
 	Lines: +0, -0
-	Files:	po/fr.po (+1291, -2381)
 
 	Update French translation
 
 2015-04-11  <rlk>	e6ed8c45f84de131a2152a20384310369e72984b
 
 	Lines: +0, -0
-	Files:	po/fr.po (+338, -1072)
 
 	Update French translation (again)
 
@@ -2041,7 +1927,6 @@ Name: gutenprint-5_2_11-pre1
 2015-04-11  <rlk>	83291dabb136dcee1d987eeafef4383489479baa
 
 	Lines: +0, -0
-	Files:	po/fr.po (+5546, -6008)
 
 	Update French translation
 
@@ -2439,7 +2324,6 @@ Name: gutenprint-5_2_11-pre1
 2014-08-10  <rlk>	93ba5ab98ced92cdfa2e880bfc950f0902d6a339
 
 	Lines: +0, -0
-	Files:	po/hu.po (+5491, -6670)
 
 	Update Hungarian translation
 
@@ -2555,7 +2439,6 @@ Name: gutenprint-5_2_11-pre1
 2014-05-22  <rlk>	b073a7eb90e5c5b88c6e9c0cfa9a37ecf50b1c89
 
 	Lines: +0, -0
-	Files:	po/nl.po (+4297, -4569)
 
 	Update Dutch translation
 
@@ -2617,32 +2500,6 @@ Name: gutenprint-5_2_10
 2014-05-17  <rlk>	fe80fd31b561f42d0b82059b3bc9196ca4ea5865
 
 	Lines: +0, -0
-	Files:	po/ca.po (+4526, -4271)
-		po/cs.po (+64, -64)
-		po/da.po (+64, -64)
-		po/de.po (+4622, -4318)
-		po/el.po (+64, -64)
-		po/en_GB.po (+64, -64)
-		po/es.po (+64, -64)
-		po/fi.po (+64, -64)
-		po/fr.po (+64, -64)
-		po/gl.po (+64, -64)
-		po/hu.po (+64, -64)
-		po/it.po (+64, -64)
-		po/ja.po (+64, -64)
-		po/nb.po (+64, -64)
-		po/nl.po (+64, -64)
-		po/pl.po (+64, -64)
-		po/pt.po (+64, -64)
-		po/ru.po (+64, -64)
-		po/sk.po (+64, -64)
-		po/sl.po (+64, -64)
-		po/sv.po (+64, -64)
-		po/tr.po (+64, -64)
-		po/uk.po (+64, -64)
-		po/vi.po (+64, -64)
-		po/zh_CN.po (+64, -64)
-		po/zh_TW.po (+64, -64)
 
 	Gutenprint 5.2.10 release
 
@@ -2761,7 +2618,6 @@ Name: gutenprint-5_2_10
 2014-03-27  <rlk>	5eae4d8a7c107be19b2a1c6312aabdf8cd50153e
 
 	Lines: +0, -0
-	Files:	po/ca.po (+4254, -4509)
 
 	Update Catalan translation
 
@@ -2775,7 +2631,6 @@ Name: gutenprint-5_2_10
 2014-03-20  <rlk>	b88f3f0131e12899afd8c0972e9417a3cbeea1f5
 
 	Lines: +0, -0
-	Files:	po/de.po (+5177, -6350)
 
 	Update German translation
 
@@ -2884,32 +2739,6 @@ Name: gutenprint-5_2_10-pre2
 2014-03-07  <rlk>	94de4221b41adec3a5ea64d15802ca1fb6e0b935
 
 	Lines: +0, -0
-	Files:	po/ca.po (+1310, -1270)
-		po/cs.po (+1310, -1270)
-		po/da.po (+1310, -1270)
-		po/de.po (+1310, -1270)
-		po/el.po (+1310, -1270)
-		po/en_GB.po (+1310, -1270)
-		po/es.po (+1310, -1270)
-		po/fi.po (+1310, -1270)
-		po/fr.po (+1310, -1270)
-		po/gl.po (+1310, -1270)
-		po/hu.po (+1310, -1270)
-		po/it.po (+1310, -1270)
-		po/ja.po (+1310, -1270)
-		po/nb.po (+1310, -1270)
-		po/nl.po (+1310, -1270)
-		po/pl.po (+1310, -1270)
-		po/pt.po (+1310, -1270)
-		po/ru.po (+1310, -1270)
-		po/sk.po (+1310, -1270)
-		po/sl.po (+1310, -1270)
-		po/sv.po (+1310, -1270)
-		po/tr.po (+1310, -1270)
-		po/uk.po (+1310, -1270)
-		po/vi.po (+1310, -1270)
-		po/zh_CN.po (+1302, -1270)
-		po/zh_TW.po (+1310, -1270)
 
 	Prep for Gutenprint 5.2.10-pre2
 
@@ -3288,32 +3117,6 @@ Name: gutenprint-5_2_10-pre1
 2014-02-15  <rlk>	28995d77dff7e803e110ef1cef15e6ab2c4e79d1
 
 	Lines: +0, -0
-	Files:	po/ca.po (+4462, -4240)
-		po/cs.po (+4311, -4184)
-		po/da.po (+4462, -4248)
-		po/de.po (+4319, -4185)
-		po/el.po (+4311, -4184)
-		po/en_GB.po (+4318, -4185)
-		po/es.po (+4311, -4184)
-		po/fi.po (+4319, -4185)
-		po/fr.po (+4318, -4185)
-		po/gl.po (+4319, -4185)
-		po/hu.po (+4319, -4185)
-		po/it.po (+4489, -4259)
-		po/ja.po (+4318, -4185)
-		po/nb.po (+4308, -4183)
-		po/nl.po (+4500, -4261)
-		po/pl.po (+4308, -4183)
-		po/pt.po (+4311, -4184)
-		po/ru.po (+4314, -4184)
-		po/sk.po (+4311, -4184)
-		po/sl.po (+4319, -4185)
-		po/sv.po (+4319, -4185)
-		po/tr.po (+4319, -4185)
-		po/uk.po (+4473, -4249)
-		po/vi.po (+4369, -4207)
-		po/zh_CN.po (+4297, -4182)
-		po/zh_TW.po (+4310, -4184)
 
 	Gutenprint 5.2.10-pre1 release
 
@@ -3402,7 +3205,6 @@ Name: gutenprint-5_2_10-pre1
 2014-02-11  <rlk>	5af1669a098dd4d5cb6e083bb4d8b6d6ba35d166
 
 	Lines: +0, -0
-	Files:	po/it.po (+3081, -3917)
 
 	Update Italian translation
 
@@ -3865,7 +3667,6 @@ Name: gutenprint-5_2_10-pre1
 2014-01-26  <rlk>	43024117416cbc8c41e2e7bff010de7d274512c8
 
 	Lines: +0, -0
-	Files:	po/da.po (+3037, -3851)
 
 	Update Danish translation
 
@@ -3878,7 +3679,7 @@ Name: gutenprint-5_2_10-pre1
 
 2014-01-26  <rlk>	4e36412ed5adfb61f0e48c5843dbdcd814143505
 
-	Lines: +2, -2
+	Lines: +15417, -2
 	Files:	NEWS (+1, -1)
 		configure.ac (+1, -1)
 		po/vi.po (added +15415)
@@ -3974,7 +3775,6 @@ Name: gutenprint-5_2_10-pre1
 2014-01-23  <rlk>	aeb4d17d160a5c2fa18b110e3102c1b2ba46cb67
 
 	Lines: +0, -0
-	Files:	po/uk.po (+2348, -2341)
 
 	Update Ukrainian translation
 
@@ -3996,8 +3796,6 @@ Name: gutenprint-5_2_10-pre1
 2014-01-22  <rlk>	393445d9978d1cc339a5fd7f3a67276e68e56538
 
 	Lines: +0, -0
-	Files:	po/ca.po (+673, -1497)
-		po/nl.po (+697, -1539)
 
 	Update Catalan and Dutch translations
 
@@ -4014,31 +3812,6 @@ Name: gutenprint-5_2_10-pre1
 2014-01-21  <rlk>	81aae5bca001f57375a78aed704d6d9879452c95
 
 	Lines: +0, -0
-	Files:	po/ca.po (+3387, -3203)
-		po/cs.po (+3341, -3183)
-		po/da.po (+3386, -3202)
-		po/de.po (+3387, -3203)
-		po/el.po (+3344, -3186)
-		po/en_GB.po (+3381, -3197)
-		po/es.po (+3343, -3184)
-		po/fi.po (+3380, -3198)
-		po/fr.po (+3381, -3196)
-		po/gl.po (+3383, -3199)
-		po/hu.po (+3380, -3198)
-		po/it.po (+3387, -3203)
-		po/ja.po (+3378, -3196)
-		po/nb.po (+3263, -3093)
-		po/nl.po (+3386, -3202)
-		po/pl.po (+3340, -3182)
-		po/pt.po (+3341, -3183)
-		po/ru.po (+3379, -3197)
-		po/sk.po (+3341, -3183)
-		po/sl.po (+3383, -3199)
-		po/sv.po (+3379, -3196)
-		po/tr.po (+3386, -3202)
-		po/uk.po (+3695, -4341)
-		po/zh_CN.po (+2890, -2939)
-		po/zh_TW.po (+3376, -3194)
 
 	Update Ukrainian translation
 
@@ -4952,33 +4725,9 @@ Name: gutenprint-5_2_10-pre1
 
 2013-12-14  <rlk>	c3a883a3f1a30626a422e85754061989c6f167e9
 
-	Lines: +1, -1
+	Lines: +16268, -1
 	Files:	configure.ac (+1, -1)
-		po/ca.po (+6976, -5600)
-		po/cs.po (+6872, -5617)
-		po/da.po (+6981, -5608)
-		po/de.po (+6828, -5557)
-		po/el.po (+6870, -5619)
-		po/en_GB.po (+6941, -5672)
-		po/es.po (+6872, -5617)
-		po/fi.po (+6949, -5680)
-		po/fr.po (+6903, -5642)
-		po/gl.po (+6827, -5556)
-		po/hu.po (+6949, -5680)
-		po/it.po (+7001, -5605)
-		po/ja.po (+6959, -5686)
-		po/nb.po (+6854, -5590)
-		po/nl.po (+7014, -5621)
-		po/pl.po (+6871, -5623)
-		po/pt.po (+6872, -5617)
-		po/ru.po (+6948, -5681)
-		po/sk.po (+6872, -5617)
-		po/sl.po (+6974, -5704)
-		po/sv.po (+6931, -5669)
 		po/tr.po (added +16267)
-		po/uk.po (+6998, -5616)
-		po/zh_CN.po (+6347, -5557)
-		po/zh_TW.po (+6925, -5652)
 
 	Add Turkish translation
 
@@ -5282,11 +5031,6 @@ Name: gutenprint-5_2_10-pre1
 2013-09-08  <rlk>	df9ea0c02f64fc883429fa32c57c4f6286950f93
 
 	Lines: +0, -0
-	Files:	po/ca.po (+4071, -3418)
-		po/da.po (+320, -604)
-		po/it.po (+253, -853)
-		po/nl.po (+255, -536)
-		po/uk.po (+241, -511)
 
 	Update some translations
 
@@ -6436,13 +6180,12 @@ Name: gutenprint-5_2_10-pre1
 2013-02-17  <rlk>	93b80708c4dad271e41934289ddb1b11be959a78
 
 	Lines: +0, -0
-	Files:	po/ca.po (+58, -58)
 
 	Update Catalan translation
 
 2013-02-17  <rlk>	abca2997018b861bb281d80c70dcc47c07d59b1a
 
-	Lines: +1, -1
+	Lines: +14290, -1
 	Files:	configure.ac (+1, -1)
 		po/ca.po (added +14289)
 
@@ -6993,7 +6736,6 @@ Name: gutenprint-5_2_9
 2012-07-07  <rlk>	54af5189b3252cee233b6cc4388fff6569b57dbe
 
 	Lines: +0, -0
-	Files:	po/de.po (+4481, -3622)
 
 	Update German translation
 
@@ -7034,7 +6776,6 @@ Name: gutenprint-5_2_9
 2012-06-23  <rlk>	2954a377ded6a28faa5c50c332a7f291c1d59555
 
 	Lines: +0, -0
-	Files:	po/de.po (+4643, -5875)
 
 	Update German translation
 
@@ -7072,29 +6813,6 @@ Name: gutenprint-5_2_8
 2012-06-12  <rlk>	e638a3951dd2e0ce589183ae189bfbbe82eb7277
 
 	Lines: +0, -0
-	Files:	po/cs.po (+2244, -1979)
-		po/da.po (+2229, -1954)
-		po/de.po (+2231, -1960)
-		po/el.po (+2244, -1980)
-		po/en_GB.po (+2227, -1954)
-		po/es.po (+2244, -1979)
-		po/fi.po (+2229, -1954)
-		po/fr.po (+2225, -1957)
-		po/gl.po (+2231, -1955)
-		po/hu.po (+2228, -1954)
-		po/it.po (+2229, -1954)
-		po/ja.po (+2240, -1966)
-		po/nb.po (+2225, -1964)
-		po/nl.po (+2231, -1952)
-		po/pl.po (+2243, -1979)
-		po/pt.po (+2244, -1979)
-		po/ru.po (+2227, -1954)
-		po/sk.po (+2244, -1979)
-		po/sl.po (+2229, -1954)
-		po/sv.po (+2226, -1959)
-		po/uk.po (+2231, -1952)
-		po/zh_CN.po (+2157, -1945)
-		po/zh_TW.po (+2219, -1956)
 
 	Gutenprint 5.2.8 release
 
@@ -9977,29 +9695,6 @@ Name: gutenprint-5_2_8-pre1
 2011-12-27  <rlk>	692e80151ef7755cfcef6240b80598d47ddc062b
 
 	Lines: +0, -0
-	Files:	po/cs.po (+3776, -3402)
-		po/da.po (+3817, -3409)
-		po/de.po (+3819, -3411)
-		po/el.po (+3771, -3401)
-		po/en_GB.po (+3819, -3411)
-		po/es.po (+3775, -3401)
-		po/fi.po (+3815, -3411)
-		po/fr.po (+3846, -3441)
-		po/gl.po (+4009, -3465)
-		po/hu.po (+3819, -3411)
-		po/it.po (+3817, -3409)
-		po/ja.po (+4069, -3426)
-		po/nb.po (+3824, -3430)
-		po/nl.po (+4072, -3417)
-		po/pl.po (+3771, -3401)
-		po/pt.po (+3775, -3401)
-		po/ru.po (+3815, -3411)
-		po/sk.po (+3775, -3401)
-		po/sl.po (+3817, -3409)
-		po/sv.po (+3844, -3439)
-		po/uk.po (+4047, -3403)
-		po/zh_CN.po (+3904, -3439)
-		po/zh_TW.po (+3839, -3440)
 
 	Gutenprint 5.2.8-pre1 release
 
@@ -10083,7 +9778,7 @@ Name: gutenprint-5_2_8-pre1
 
 2011-12-20  <rlk>	6340e23ee992bb0d5b660dbbc4ffc5a829316e41
 
-	Lines: +3, -2
+	Lines: +14019, -2
 	Files:	NEWS (+2, -1)
 		configure.ac (+1, -1)
 		po/zh_CN.po (added +14016)
@@ -11791,7 +11486,6 @@ Name: gutenprint-5_2_8-pre1
 2011-10-19  <rlk>	8d328e698d4605a985589631bdb6db90fd53f854
 
 	Lines: +0, -0
-	Files:	po/ja.po (+3506, -4199)
 
 	Update Japanese translation
 
@@ -11818,7 +11512,7 @@ Name: gutenprint-5_2_8-pre1
 
 2011-09-18  <rlk>	d410e751dfaa961e524dc4ec6090aadbfcb0c54f
 
-	Lines: +2, -2
+	Lines: +14417, -2
 	Files:	NEWS (+1, -1)
 		configure.ac (+1, -1)
 		po/gl.po (added +14415)
@@ -11932,7 +11626,6 @@ Name: gutenprint-5_2_8-pre1
 2011-07-09  <rlk>	e323e630e397330d8a2458edfa78aa8949caaccd
 
 	Lines: +0, -0
-	Files:	po/nl.po (+1949, -2422)
 
 	Update Dutch translation
 
@@ -11976,7 +11669,6 @@ Name: gutenprint-5_2_8-pre1
 
 	Lines: +1, -1
 	Files:	configure.ac (+1, -1)
-		po/uk.po (+228, -47)
 
 	Re-enable Ukrainian translation
 
@@ -11991,7 +11683,6 @@ Name: gutenprint-5_2_8-pre1
 
 	Lines: +1, -1
 	Files:	configure.ac (+1, -1)
-		po/uk.po (+370, -347)
 
 	Add/update Ukrainian translation
 
@@ -12011,27 +11702,7 @@ Name: gutenprint-5_2_8-pre1
 2011-06-14  <gernot2270>	bd17d00954591ea85fcb9c8c925fb0cc4b5d680f
 
 	Lines: +112, -5
-	Files:	po/cs.po (+1611, -1601)
-		po/da.po (+1611, -1601)
-		po/de.po (+1611, -1601)
-		po/el.po (+1611, -1601)
-		po/en_GB.po (+1611, -1601)
-		po/es.po (+1611, -1601)
-		po/fi.po (+1611, -1601)
-		po/fr.po (+1611, -1601)
-		po/hu.po (+1611, -1601)
-		po/it.po (+1611, -1601)
-		po/ja.po (+1611, -1601)
-		po/nb.po (+1611, -1601)
-		po/nl.po (+1611, -1601)
-		po/pl.po (+1611, -1601)
-		po/pt.po (+1611, -1601)
-		po/ru.po (+1611, -1601)
-		po/sk.po (+1611, -1601)
-		po/sl.po (+1611, -1601)
-		po/sv.po (+1611, -1601)
-		po/zh_TW.po (+1611, -1601)
-		src/cups/genppd.c (+1, -0)
+	Files:	src/cups/genppd.c (+1, -0)
 		src/main/canon-inks.h (+29, -4)
 		src/main/canon-media.h (+22, -0)
 		src/main/canon-modes.h (+25, -0)
@@ -12271,26 +11942,6 @@ Name: gutenprint-5_2_7
 2011-05-02  <rlk>	c958ea109bc538a9f66afacce725a9df39c05ce5
 
 	Lines: +0, -0
-	Files:	po/cs.po (+3276, -3090)
-		po/da.po (+1901, -1657)
-		po/de.po (+3280, -3091)
-		po/el.po (+3280, -3091)
-		po/en_GB.po (+3288, -3093)
-		po/es.po (+3293, -3104)
-		po/fi.po (+3288, -3093)
-		po/fr.po (+3304, -3109)
-		po/hu.po (+3288, -3093)
-		po/it.po (+1923, -1666)
-		po/ja.po (+3280, -3091)
-		po/nb.po (+3280, -3091)
-		po/nl.po (+3288, -3093)
-		po/pl.po (+3280, -3091)
-		po/pt.po (+3280, -3091)
-		po/ru.po (+3284, -3092)
-		po/sk.po (+3280, -3091)
-		po/sl.po (+1920, -1667)
-		po/sv.po (+3305, -3110)
-		po/zh_TW.po (+3289, -3106)
 
 	Update i18n for release
 
@@ -12304,7 +11955,7 @@ Name: gutenprint-5_2_7
 
 2011-05-01  <rlk>	515056f7e97aec7f7e0cda9444f287ab42497c5c
 
-	Lines: +2, -2
+	Lines: +14033, -2
 	Files:	NEWS (+1, -1)
 		configure.ac (+1, -1)
 		po/uk.po (added +14031)
@@ -12734,7 +12385,6 @@ Name: gutenprint-5_2_7
 
 	Lines: +1, -1
 	Files:	NEWS (+1, -1)
-		po/it.po (+3500, -3760)
 
 	Update Italian translation
 
@@ -12799,7 +12449,7 @@ Name: gutenprint-5_2_7
 
 2011-03-13  <rlk>	e2d0d20e3c47a35f94ae217a2fcfbe4193488834
 
-	Lines: +5, -1
+	Lines: +14298, -1
 	Files:	NEWS (+4, -0)
 		configure.ac (+1, -1)
 		po/sl.po (added +14293)
@@ -12816,7 +12466,6 @@ Name: gutenprint-5_2_7
 2011-03-13  <rlk>	b6b1f3c8679c5c7d112e1152ea904ab7dabdcd60
 
 	Lines: +0, -0
-	Files:	po/da.po (+3417, -3665)
 
 	Updated Danish translation
 
@@ -12900,25 +12549,6 @@ Name: gutenprint-5_2_7
 
 	Lines: +150, -1
 	Files:	NEWS (+9, -0)
-		po/cs.po (+4676, -4459)
-		po/da.po (+4742, -4457)
-		po/de.po (+4723, -4459)
-		po/el.po (+4679, -4461)
-		po/en_GB.po (+4744, -4459)
-		po/es.po (+4676, -4458)
-		po/fi.po (+4739, -4457)
-		po/fr.po (+4734, -4458)
-		po/hu.po (+4743, -4458)
-		po/it.po (+4744, -4458)
-		po/ja.po (+4676, -4458)
-		po/nb.po (+4702, -4460)
-		po/nl.po (+4741, -4456)
-		po/pl.po (+4676, -4458)
-		po/pt.po (+4676, -4458)
-		po/ru.po (+4730, -4458)
-		po/sk.po (+4678, -4460)
-		po/sv.po (+4729, -4459)
-		po/zh_TW.po (+4693, -4455)
 		src/xml/escp2/model/Makefile.am (+2, -1)
 		src/xml/escp2/model/model_114.xml (added +139)
 
@@ -13201,7 +12831,6 @@ Name: gutenprint-5_2_7
 2011-01-17  <rlk>	56c12112a8508dbf7ce553fa7d8bb9a136c54dbb
 
 	Lines: +0, -0
-	Files:	po/fi.po (+2, -2)
 
 	EMERGENCY translation to fix malformed translation string that's
 	illegal in a PPD file.
@@ -13863,25 +13492,6 @@ Name: gutenprint-5_2_6
 2010-08-11  <rlk>	9f31177bba3440d9614f6f7f150fe9b4f51442b5
 
 	Lines: +0, -0
-	Files:	po/cs.po (+4832, -4137)
-		po/da.po (+4796, -4045)
-		po/de.po (+4796, -4047)
-		po/el.po (+4831, -4138)
-		po/en_GB.po (+4796, -4045)
-		po/es.po (+4831, -4138)
-		po/fi.po (+6051, -5073)
-		po/fr.po (+4796, -4045)
-		po/hu.po (+6122, -4913)
-		po/it.po (+4796, -4045)
-		po/ja.po (+4831, -4138)
-		po/nb.po (+4838, -4139)
-		po/nl.po (+4796, -4045)
-		po/pl.po (+4831, -4138)
-		po/pt.po (+4831, -4138)
-		po/ru.po (+4796, -4047)
-		po/sk.po (+4831, -4138)
-		po/sv.po (+4796, -4047)
-		po/zh_TW.po (+4746, -4047)
 
 	Gutenprint 5.2.6 release
 
@@ -14241,7 +13851,7 @@ Name: gutenprint-5_2_6
 
 2010-04-19  <rlk>	e31da1f8d395de3167766bb57a6d04fababa3f89
 
-	Lines: +1, -1
+	Lines: +13007, -1
 	Files:	configure.ac (+1, -1)
 		po/fi.po (added +13006)
 
@@ -14250,7 +13860,6 @@ Name: gutenprint-5_2_6
 2010-02-14  <rlk>	2a45c9dda87128f19fc183b987a18f837ca45a38
 
 	Lines: +0, -0
-	Files:	po/hu.po (+5496, -6469)
 
 	Update Hungarian translation
 
@@ -14260,24 +13869,6 @@ Name: gutenprint-5_2_5
 2010-02-12  <rlk>	d7ea4da60b86af6333fe4c8ea244c33bf60067a4
 
 	Lines: +0, -0
-	Files:	po/cs.po (+5011, -4641)
-		po/da.po (+4999, -4627)
-		po/de.po (+5400, -4902)
-		po/el.po (+5011, -4640)
-		po/en_GB.po (+5000, -4629)
-		po/es.po (+5011, -4641)
-		po/fr.po (+5000, -4629)
-		po/hu.po (+5000, -4629)
-		po/it.po (+4999, -4627)
-		po/ja.po (+5011, -4641)
-		po/nb.po (+5008, -4637)
-		po/nl.po (+4999, -4627)
-		po/pl.po (+5011, -4642)
-		po/pt.po (+5011, -4641)
-		po/ru.po (+4999, -4628)
-		po/sk.po (+5011, -4641)
-		po/sv.po (+4990, -4619)
-		po/zh_TW.po (+5012, -4641)
 
 	Gutenprint 5.2.5 release
 
@@ -14475,7 +14066,6 @@ Name: gutenprint-5_2_5
 2009-11-08  <rlk>	a734bf9fd29776280905aed53a0d2c88682be06d
 
 	Lines: +0, -0
-	Files:	po/de.po (+3361, -3751)
 
 	Update German translation
 
@@ -14548,24 +14138,6 @@ Name: gutenprint-5_2_4
 2009-08-01  <rlk>	d116ed18a9b650e7b23ae5fe5e35bbe3d36e67fc
 
 	Lines: +0, -0
-	Files:	po/cs.po (+5040, -3974)
-		po/da.po (+1677, -1579)
-		po/de.po (+5040, -3974)
-		po/el.po (+5038, -3973)
-		po/en_GB.po (+5339, -3977)
-		po/es.po (+5038, -3974)
-		po/fr.po (+5132, -4014)
-		po/hu.po (+5130, -4012)
-		po/it.po (+1719, -1598)
-		po/ja.po (+5040, -3974)
-		po/nb.po (+5038, -3972)
-		po/nl.po (+1712, -1594)
-		po/pl.po (+5027, -3972)
-		po/pt.po (+5040, -3974)
-		po/ru.po (+1588, -1540)
-		po/sk.po (+5038, -3974)
-		po/sv.po (+5126, -4014)
-		po/zh_TW.po (+5111, -4014)
 
 	Gutenprint 5.2.4 release
 
@@ -14614,20 +14186,18 @@ Name: gutenprint-5_2_4
 2009-06-30  <rlk>	b67719c8c31d62833365de7e2596665a74d46332
 
 	Lines: +0, -0
-	Files:	po/da.po (+5103, -4241)
 
 	Update Danish translation
 
 2009-06-30  <rlk>	3c6f49efbd9db711c9c3713b4db4665d0e23c077
 
 	Lines: +0, -0
-	Files:	po/ru.po (+1815, -1773)
 
 	Updated Russian translation
 
 2009-06-24  <rlk>	14b29ad3327453a7e90a1babbe9a9144a70f303e
 
-	Lines: +1, -1
+	Lines: +12815, -1
 	Files:	configure.ac (+1, -1)
 		po/ru.po (added +12814)
 
@@ -14643,7 +14213,6 @@ Name: gutenprint-5_2_4
 2009-06-22  <rlk>	351945df13a806280207233f451ff3673464dbf8
 
 	Lines: +0, -0
-	Files:	po/it.po (+11, -5)
 
 	Update Italian translation
 
@@ -14657,7 +14226,6 @@ Name: gutenprint-5_2_4
 2009-06-21  <rlk>	65076f13b711d77ee201e9710f298714ed16b56d
 
 	Lines: +0, -0
-	Files:	po/it.po (+5502, -4370)
 
 	Update Italian translation
 
@@ -14681,7 +14249,6 @@ Name: gutenprint-5_2_4
 2009-06-14  <rlk>	54a42a57c7c0b7a35dc68ca6f3a90aa8f9d903ff
 
 	Lines: +0, -0
-	Files:	po/nl.po (+5107, -4266)
 
 	Updated Dutch translation
 
@@ -15341,23 +14908,6 @@ Name: gutenprint-5_2_3
 2008-12-22  <rlk>	575b0a36a0123fca1760fabfb22888da28c6459c
 
 	Lines: +0, -0
-	Files:	po/cs.po (+3374, -3236)
-		po/da.po (+3376, -3234)
-		po/de.po (+3371, -3235)
-		po/el.po (+3374, -3236)
-		po/en_GB.po (+3376, -3234)
-		po/es.po (+3374, -3236)
-		po/fr.po (+3376, -3234)
-		po/hu.po (+3376, -3234)
-		po/it.po (+3376, -3234)
-		po/ja.po (+3374, -3236)
-		po/nb.po (+3375, -3235)
-		po/nl.po (+3376, -3234)
-		po/pl.po (+3374, -3236)
-		po/pt.po (+3374, -3236)
-		po/sk.po (+3374, -3236)
-		po/sv.po (+3374, -3234)
-		po/zh_TW.po (+3375, -3235)
 
 	Gutenprint 5.2.3 release
 
@@ -15635,14 +15185,12 @@ Name: gutenprint-5_2_2
 2008-11-14  <rlk>	d144a62a912923f8fe4b807f59c84666cd883a98
 
 	Lines: +0, -0
-	Files:	po/it.po (+2898, -2679)
 
 	Update translation
 
 2008-11-14  <rlk>	f13662bc5f8d0874bd09e70647a9001642074830
 
 	Lines: +0, -0
-	Files:	po/it.po (+2686, -2905)
 
 	Fix translation from the translation service
 
@@ -15661,23 +15209,6 @@ Name: gutenprint-5_2_2
 2008-11-13  <rlk>	f1e1b45b53a5a52d12201b264756d58fb013c3c6
 
 	Lines: +0, -0
-	Files:	po/cs.po (+1869, -1857)
-		po/da.po (+1869, -1857)
-		po/de.po (+1869, -1857)
-		po/el.po (+1869, -1857)
-		po/en_GB.po (+1869, -1857)
-		po/es.po (+1869, -1857)
-		po/fr.po (+1869, -1857)
-		po/hu.po (+1869, -1857)
-		po/it.po (+2898, -2679)
-		po/ja.po (+1869, -1857)
-		po/nb.po (+1869, -1857)
-		po/nl.po (+1869, -1857)
-		po/pl.po (+1869, -1857)
-		po/pt.po (+1869, -1857)
-		po/sk.po (+1869, -1857)
-		po/sv.po (+1869, -1857)
-		po/zh_TW.po (+1869, -1857)
 
 	Gutenprint 5.2.2 release
 
@@ -15690,7 +15221,7 @@ Name: gutenprint-5_2_2
 
 2008-11-11  <rlk>	f5897e53df78962bcbf6096b8444bb87a2e4d3d0
 
-	Lines: +1, -1
+	Lines: +11830, -1
 	Files:	configure.ac (+1, -1)
 		po/it.po (added +11829)
 
@@ -15802,22 +15333,6 @@ Name: gutenprint-5_2_1
 2008-10-19  <rlk>	0fd708eca644aa425ae6a4b154bd6d172e20c1c0
 
 	Lines: +0, -0
-	Files:	po/cs.po (+2747, -2447)
-		po/da.po (+2745, -2448)
-		po/de.po (+2738, -2447)
-		po/el.po (+2747, -2447)
-		po/en_GB.po (+2749, -2447)
-		po/es.po (+2747, -2447)
-		po/fr.po (+2749, -2447)
-		po/hu.po (+2749, -2447)
-		po/ja.po (+2747, -2447)
-		po/nb.po (+2749, -2447)
-		po/nl.po (+2745, -2448)
-		po/pl.po (+2747, -2447)
-		po/pt.po (+2747, -2447)
-		po/sk.po (+2747, -2447)
-		po/sv.po (+2749, -2447)
-		po/zh_TW.po (+2747, -2447)
 
 	Gutenprint 5.2.1 release
 
@@ -15841,8 +15356,6 @@ Name: gutenprint-5_2_1
 2008-10-19  <rlk>	c357b850219526a316469b27e99706a1150d611d
 
 	Lines: +0, -0
-	Files:	po/da.po (+1209, -1122)
-		po/nl.po (+1243, -1137)
 
 	Update Danish, Dutch translation
 
@@ -15938,8 +15451,6 @@ Name: gutenprint-5_2_1
 2008-10-12  <rlk>	3893a19ae18986cd504a8f7bad80eec98570d246
 
 	Lines: +0, -0
-	Files:	po/da.po (+81, -183)
-		po/nl.po (+98, -237)
 
 	Update Dutch and Danish translations
 
@@ -15972,22 +15483,6 @@ Name: gutenprint-5_2_0-rc1
 2008-10-04  <rlk>	7bcea9cb9a534487c17fae7983c56d9cb3afc3c7
 
 	Lines: +0, -0
-	Files:	po/cs.po (+1, -1)
-		po/da.po (+1, -1)
-		po/de.po (+1, -1)
-		po/el.po (+1, -1)
-		po/en_GB.po (+1, -1)
-		po/es.po (+1, -1)
-		po/fr.po (+1, -1)
-		po/hu.po (+1, -1)
-		po/ja.po (+1, -1)
-		po/nb.po (+1, -1)
-		po/nl.po (+1, -1)
-		po/pl.po (+1, -1)
-		po/pt.po (+1, -1)
-		po/sk.po (+1, -1)
-		po/sv.po (+1, -1)
-		po/zh_TW.po (+1, -1)
 
 	Gutenprint 5.2.0-rc1 release
 
@@ -16207,22 +15702,6 @@ Name: gutenprint-5_2_0-beta4
 2008-08-18  <rlk>	aa5355e4b758d88f7455f02742f852509fd6345c
 
 	Lines: +0, -0
-	Files:	po/cs.po (+2923, -2900)
-		po/da.po (+3072, -2952)
-		po/de.po (+2933, -2910)
-		po/el.po (+2925, -2902)
-		po/en_GB.po (+2917, -2881)
-		po/es.po (+2923, -2900)
-		po/fr.po (+2934, -2896)
-		po/hu.po (+2934, -2896)
-		po/ja.po (+2923, -2900)
-		po/nb.po (+2925, -2901)
-		po/nl.po (+3105, -2966)
-		po/pl.po (+2925, -2902)
-		po/pt.po (+2924, -2901)
-		po/sk.po (+2923, -2900)
-		po/sv.po (+2936, -2898)
-		po/zh_TW.po (+2920, -2899)
 
 	Gutenprint 5.2.0-beta4 release
 
@@ -16550,14 +16029,12 @@ Name: gutenprint-5_2_0-beta4
 2008-08-01  <rlk>	a61b356f996ecdd3f5c62f1f470da5bda5d50e04
 
 	Lines: +0, -0
-	Files:	po/nl.po (+115, -242)
 
 	Updated Dutch translation
 
 2008-08-01  <rleigh>	a386fa1f34a8b5645a13f30e6f1275eda5be2bec
 
 	Lines: +0, -0
-	Files:	po/en_GB.po (+891, -1626)
 
 	[po] Update British English translation.
 
@@ -16662,7 +16139,6 @@ Name: gutenprint-5_2_0-beta4
 2008-07-28  <rlk>	2fd50fef336fb83fec13fddaa12eddcf5b625797
 
 	Lines: +0, -0
-	Files:	po/da.po (+89, -215)
 
 	Updated Danish translation
 
@@ -16762,22 +16238,6 @@ Name: gutenprint-5_2_0-beta4
 2008-07-26  <rlk>	938e686c8e998cca74aaad4efcdcfa15a94dbd77
 
 	Lines: +0, -0
-	Files:	po/cs.po (+4237, -3349)
-		po/da.po (+4466, -3481)
-		po/de.po (+4240, -3354)
-		po/el.po (+4191, -3304)
-		po/en_GB.po (+4333, -3434)
-		po/es.po (+4195, -3307)
-		po/fr.po (+4242, -3342)
-		po/hu.po (+4337, -3434)
-		po/ja.po (+4195, -3307)
-		po/nb.po (+4191, -3312)
-		po/nl.po (+4498, -3494)
-		po/pl.po (+4284, -3397)
-		po/pt.po (+4195, -3307)
-		po/sk.po (+4195, -3307)
-		po/sv.po (+4190, -3303)
-		po/zh_TW.po (+4237, -3353)
 
 	20080726 translation snapshot
 
@@ -19032,7 +18492,6 @@ Name: gutenprint-5_2_0-beta4
 2008-06-18  <rlk>	d3a4a8c616ebbdcd548f5e28ccc7a947dd54d19d
 
 	Lines: +0, -0
-	Files:	po/da.po (+597, -987)
 
 	Update Danish translation
 
@@ -19280,7 +18739,6 @@ Name: gutenprint-5_2_0-beta4
 2008-06-14  <rlk>	29ed3fafdc880a5c7bf418d7592a1c50a0f64b62
 
 	Lines: +0, -0
-	Files:	po/nl.po (+606, -1018)
 
 	Updated Dutch translation
 
@@ -19290,22 +18748,6 @@ Name: gutenprint-5_2_0-beta3
 2008-06-14  <rlk>	40c0ff8a88a4b600057b0d664927db29601b6d37
 
 	Lines: +0, -0
-	Files:	po/cs.po (+6253, -3457)
-		po/da.po (+7433, -4445)
-		po/de.po (+6594, -3809)
-		po/el.po (+5682, -2887)
-		po/en_GB.po (+7529, -4544)
-		po/es.po (+7080, -4282)
-		po/fr.po (+6634, -3649)
-		po/hu.po (+6530, -3492)
-		po/ja.po (+6951, -4153)
-		po/nb.po (+6481, -3683)
-		po/nl.po (+6699, -3619)
-		po/pl.po (+5973, -3180)
-		po/pt.po (+6964, -4166)
-		po/sk.po (+6968, -4170)
-		po/sv.po (+6627, -3642)
-		po/zh_TW.po (+6270, -3412)
 
 	Gutenprint 5.2.0-beta3 release
 
@@ -20048,7 +19490,6 @@ Name: gutenprint-5_2_0-beta3
 2008-06-01  <rlk>	077e8ae6784d728a2cb89c12039f66a7e4f6ebe2
 
 	Lines: +0, -0
-	Files:	po/nl.po (+799, -993)
 
 	Updated Dutch translation
 
@@ -20108,7 +19549,6 @@ Name: gutenprint-5_2_0-beta3
 2008-05-12  <rlk>	d17cd3f10a01e2ab68acca3f8dee33747fdb1cc8
 
 	Lines: +0, -0
-	Files:	po/hu.po (+742, -901)
 
 	Update Hungarian translation
 
@@ -20244,29 +19684,12 @@ Name: gutenprint-5_2_0-beta1
 2008-04-26  <rlk>	0c365c4299d6d5a8fa7ae2f8f312c8abf058f6ab
 
 	Lines: +0, -0
-	Files:	po/cs.po (+1168, -1176)
-		po/da.po (+699, -628)
-		po/de.po (+1168, -1176)
-		po/el.po (+1155, -1182)
-		po/en_GB.po (+1808, -1642)
-		po/es.po (+1168, -1176)
-		po/fr.po (+1793, -1638)
-		po/hu.po (+1155, -1178)
-		po/ja.po (+1168, -1176)
-		po/nb.po (+1729, -1036)
-		po/nl.po (+731, -641)
-		po/pl.po (+1147, -1184)
-		po/pt.po (+1168, -1176)
-		po/sk.po (+1168, -1176)
-		po/sv.po (+3579, -2499)
-		po/zh_TW.po (+1115, -1192)
 
 	Gutenprint 5.2-beta1 release
 
 2008-04-26  <rlk>	4f835e6d4fbd7cb6eaa53e7834115834a923b974
 
 	Lines: +0, -0
-	Files:	po/da.po (+0, -0)
 
 	Fix Danish translation (somehow got mangled)
 
@@ -20290,14 +19713,12 @@ Name: gutenprint-5_2_0-beta1
 2008-04-25  <rlk>	4a0f83e1f787a6c91f544b9dfdffcf0dc9205769
 
 	Lines: +0, -0
-	Files:	po/da.po (+0, -0)
 
 	Updated Danish translation
 
 2008-04-23  <rlk>	393c80c2ef55f64ad3bfb2fd68d916c73407714f
 
 	Lines: +0, -0
-	Files:	po/nl.po (+1166, -1271)
 
 	Fix some translated strings
 
@@ -20333,49 +19754,18 @@ Name: gutenprint-5_2_0-beta1
 2008-04-15  <rlk>	25c1f8c5505c5088f1fdb45d97eb6a0a9fe22bb3
 
 	Lines: +0, -0
-	Files:	po/en_GB.po (+1940, -2718)
-		po/fr.po (+2448, -3580)
 
 	Updates from translation service
 
 2008-04-15  <rlk>	4d9921c2fae0853133f71a443a7dc12fa76d37ab
 
 	Lines: +0, -0
-	Files:	po/cs.po (+5810, -2495)
-		po/da.po (+2514, -1808)
-		po/de.po (+5328, -2113)
-		po/el.po (+5633, -2371)
-		po/en_GB.po (+5847, -2036)
-		po/es.po (+5806, -2503)
-		po/fr.po (+5803, -2500)
-		po/hu.po (+2494, -1798)
-		po/ja.po (+5812, -2496)
-		po/nl.po (+2551, -1825)
-		po/pl.po (+5477, -2285)
-		po/pt.po (+5814, -2497)
-		po/sk.po (+5688, -2389)
-		po/zh_TW.po (+5741, -2099)
 
 	run msgmerge
 
 2008-04-15  <rlk>	1082d64edcef79e717aeaaff0734cec669c2c10e
 
 	Lines: +0, -0
-	Files:	po/cs.po (+2344, -5076)
-		po/da.po (+2548, -3362)
-		po/de.po (+2302, -4911)
-		po/el.po (+2602, -5283)
-		po/en_GB.po (+3154, -6187)
-		po/es.po (+2683, -5405)
-		po/fr.po (+3490, -5661)
-		po/hu.po (+2534, -3339)
-		po/ja.po (+2940, -5673)
-		po/nl.po (+2560, -3394)
-		po/pl.po (+2309, -4917)
-		po/pt.po (+2575, -5309)
-		po/sk.po (+2913, -5631)
-		po/sv.po (+4116, -5040)
-		po/zh_TW.po (+2728, -6269)
 
 	Resync with tarnslationproject.org
 
@@ -20538,22 +19928,6 @@ Name: gutenprint-5_1_7
 2008-03-07  <rlk>	0c867e65aedd450bf272805dd45175d54d58e421
 
 	Lines: +0, -0
-	Files:	po/cs.po (+1792, -1383)
-		po/da.po (+1792, -1382)
-		po/de.po (+1790, -1382)
-		po/el.po (+1788, -1383)
-		po/en_GB.po (+1792, -1382)
-		po/es.po (+1792, -1383)
-		po/fr.po (+1792, -1382)
-		po/hu.po (+1792, -1382)
-		po/ja.po (+1791, -1382)
-		po/nb.po (+1787, -1382)
-		po/nl.po (+1792, -1382)
-		po/pl.po (+1782, -1385)
-		po/pt.po (+1791, -1382)
-		po/sk.po (+1791, -1382)
-		po/sv.po (+1793, -1382)
-		po/zh_TW.po (+1761, -1366)
 
 	Gutenprint 5.1.7 release
 
@@ -21071,22 +20445,6 @@ Name: gutenprint-5_1_5
 2007-12-29  <rlk>	0dd788b63929d5e90c17f9b7b74ccd875ca6edb5
 
 	Lines: +0, -0
-	Files:	po/cs.po (+1184, -1115)
-		po/da.po (+1187, -1115)
-		po/de.po (+1184, -1115)
-		po/el.po (+1185, -1115)
-		po/en_GB.po (+1187, -1115)
-		po/es.po (+1185, -1115)
-		po/fr.po (+1187, -1115)
-		po/hu.po (+1187, -1115)
-		po/ja.po (+1185, -1115)
-		po/nb.po (+1185, -1115)
-		po/nl.po (+1187, -1115)
-		po/pl.po (+1184, -1115)
-		po/pt.po (+1185, -1115)
-		po/sk.po (+1185, -1115)
-		po/sv.po (+1186, -1115)
-		po/zh_TW.po (+1185, -1115)
 
 	Gutenprint 5.1.5 release
 
@@ -21471,22 +20829,6 @@ Name: gutenprint-5_1_4
 2007-12-09  <rlk>	852f4baa42784428aa9204bf3c7cc6d865342236
 
 	Lines: +0, -0
-	Files:	po/cs.po (+1179, -1748)
-		po/da.po (+1791, -1819)
-		po/de.po (+1187, -1764)
-		po/el.po (+1178, -1748)
-		po/en_GB.po (+1790, -1818)
-		po/es.po (+1179, -1748)
-		po/fr.po (+1791, -1819)
-		po/hu.po (+1788, -1817)
-		po/ja.po (+1179, -1748)
-		po/nb.po (+1179, -1748)
-		po/nl.po (+1791, -1819)
-		po/pl.po (+1178, -1748)
-		po/pt.po (+1179, -1748)
-		po/sk.po (+1179, -1748)
-		po/sv.po (+1789, -1820)
-		po/zh_TW.po (+2808, -2883)
 
 	Gutenprint 5.1.4 release
 
@@ -21684,14 +21026,12 @@ Name: gutenprint-5_1_4
 2007-11-23  <rlk>	e022a6623ca88cee46cdc0c26cad1422a3d41928
 
 	Lines: +0, -0
-	Files:	po/fr.po (+6, -6)
 
 	Shorten translations slightly for PPD compliance.
 
 2007-11-23  <rlk>	b212259515ef1af02ba95b56e4e63871a4047a3f
 
 	Lines: +0, -0
-	Files:	po/nl.po (+6, -6)
 
 	Fix a few punctuation problems.
 
@@ -22339,22 +21679,6 @@ Name: gutenprint-5_1_2
 2007-06-02  <rlk>	3bf7190775f88ed39fed1d709efb7dc5404186a2
 
 	Lines: +0, -0
-	Files:	po/cs.po (+729, -719)
-		po/da.po (+729, -719)
-		po/de.po (+729, -719)
-		po/el.po (+729, -719)
-		po/en_GB.po (+729, -719)
-		po/es.po (+729, -719)
-		po/fr.po (+729, -719)
-		po/hu.po (+729, -719)
-		po/ja.po (+729, -719)
-		po/nb.po (+729, -719)
-		po/nl.po (+729, -719)
-		po/pl.po (+729, -719)
-		po/pt.po (+729, -719)
-		po/sk.po (+729, -719)
-		po/sv.po (+729, -719)
-		po/zh_TW.po (+729, -719)
 
 	Gutenprint 5.1.2 release
 
@@ -22518,22 +21842,6 @@ Name: gutenprint-5_1_2
 2007-05-21  <rlk>	d663932fe6a590a16878b322c53b21979826e09b
 
 	Lines: +0, -0
-	Files:	po/cs.po (+1297, -1133)
-		po/da.po (+1306, -1133)
-		po/de.po (+1273, -1125)
-		po/el.po (+1298, -1134)
-		po/en_GB.po (+1306, -1133)
-		po/es.po (+1297, -1133)
-		po/fr.po (+1308, -1135)
-		po/hu.po (+1306, -1133)
-		po/ja.po (+1297, -1133)
-		po/nb.po (+1297, -1133)
-		po/nl.po (+1306, -1133)
-		po/pl.po (+1296, -1132)
-		po/pt.po (+1297, -1133)
-		po/sk.po (+1297, -1133)
-		po/sv.po (+1306, -1133)
-		po/zh_TW.po (+1304, -1131)
 
 	Gutenprint 5.1.1 release
 
@@ -22869,16 +22177,6 @@ Name: gutenprint-5_1_2
 2007-04-17  <easysw>	03f9f69496ccd143319206601d0666867d47631b
 
 	Lines: +0, -0
-	Files:	po/de.po (+317, -317)
-		po/el.po (+419, -419)
-		po/es.po (+416, -416)
-		po/fr.po (+440, -440)
-		po/ja.po (+777, -777)
-		po/nb.po (+94, -94)
-		po/nl.po (+1, -1)
-		po/pl.po (+121, -121)
-		po/pt.po (+351, -351)
-		po/sk.po (+733, -733)
 
 	Message catalogs need to be in UTF-8 encoding so that the PPD files use
 	the correct encoding for CUPS.
@@ -22888,8 +22186,7 @@ Name: gutenprint-5_1_2
 2007-04-17  <easysw>	9cd486b1fa20f9bfd8782e1e7ced8e30251a7166
 
 	Lines: +5, -4
-	Files:	po/nl.po (+1, -1)
-		src/cups/Makefile.am (+2, -2)
+	Files:	src/cups/Makefile.am (+2, -2)
 		src/cups/cups-genppdconfig.in (+1, -1)
 		src/cups/genppd.c (+2, -1)
 
@@ -23172,22 +22469,6 @@ Name: gutenprint-5_1_0
 2007-03-03  <rlk>	6fa003072078b9a6a4c6ffd5784fb837c0974a1a
 
 	Lines: +0, -0
-	Files:	po/cs.po (+1552, -1442)
-		po/da.po (+1526, -1405)
-		po/de.po (+1556, -1450)
-		po/el.po (+1504, -1420)
-		po/en_GB.po (+1526, -1404)
-		po/es.po (+1555, -1442)
-		po/fr.po (+1530, -1408)
-		po/hu.po (+1529, -1409)
-		po/ja.po (+1550, -1442)
-		po/nb.po (+1493, -1418)
-		po/nl.po (+2406, -2106)
-		po/pl.po (+1489, -1418)
-		po/pt.po (+1552, -1443)
-		po/sk.po (+1553, -1445)
-		po/sv.po (+1581, -1459)
-		po/zh_TW.po (+1531, -1430)
 
 	Gutenprint 5.1.0 release
 
@@ -23203,7 +22484,6 @@ Name: gutenprint-5_1_0
 2007-03-03  <rlk>	1020a5247fc78daabec57f4039126204bc09709a
 
 	Lines: +0, -0
-	Files:	po/nl.po (+3135, -4080)
 
 	Updated Dutch translation
 
@@ -24180,22 +23460,6 @@ Name: gutenprint-5_1_0
 
 	Lines: +565, -1050
 	Files:	configure.ac (+10, -2)
-		po/cs.po (+1495, -1455)
-		po/da.po (+1453, -1394)
-		po/de.po (+1463, -1421)
-		po/el.po (+1490, -1458)
-		po/en_GB.po (+1453, -1394)
-		po/es.po (+1498, -1455)
-		po/fr.po (+1453, -1394)
-		po/hu.po (+1453, -1394)
-		po/ja.po (+1498, -1455)
-		po/nb.po (+1486, -1452)
-		po/nl.po (+1488, -1454)
-		po/pl.po (+1455, -1448)
-		po/pt.po (+1499, -1456)
-		po/sk.po (+1494, -1454)
-		po/sv.po (+1486, -1427)
-		po/zh_TW.po (+1485, -1442)
 		src/cups/Makefile.am (+11, -9)
 		src/cups/canon.c (+0, -693)
 		src/cups/genppd.c (+450, -252)
@@ -24748,22 +24012,6 @@ Name: gutenprint-5_1_0
 2006-07-30  <rlk>	3de4e96b7a2d559232dce8c825d5675a87d33d01
 
 	Lines: +0, -0
-	Files:	po/cs.po (+287, -285)
-		po/da.po (+570, -469)
-		po/de.po (+288, -287)
-		po/el.po (+287, -282)
-		po/en_GB.po (+307, -302)
-		po/es.po (+287, -286)
-		po/fr.po (+287, -282)
-		po/hu.po (+551, -459)
-		po/ja.po (+287, -285)
-		po/nb.po (+287, -285)
-		po/nl.po (+287, -282)
-		po/pl.po (+287, -282)
-		po/pt.po (+287, -285)
-		po/sk.po (+287, -285)
-		po/sv.po (+287, -285)
-		po/zh_TW.po (+287, -282)
 
 	Gutenprint 5.0.0 release
 
@@ -24802,14 +24050,12 @@ Name: gutenprint-5_1_0
 2006-07-20  <rlk>	b338380baa80ac7456a2751238f3a7db8af83fcf
 
 	Lines: +0, -0
-	Files:	po/da.po (+5, -9)
 
 	Another da.po update
 
 2006-07-20  <rlk>	0603ec9ddd9afef807b3c4bd7588d5f086fbc131
 
 	Lines: +0, -0
-	Files:	po/da.po (+16, -12)
 
 	Updated Danish translation
 
@@ -24967,7 +24213,6 @@ Name: gutenprint-5_1_0
 2006-07-04  <rlk>	ed7a1c019fb7cb50621a83b34c27af60a9960bcf
 
 	Lines: +0, -0
-	Files:	po/da.po (+250, -346)
 
 	Updated da.po
 
@@ -25046,7 +24291,6 @@ Name: gutenprint-5_1_0
 
 	Lines: +3, -2
 	Files:	NEWS (+3, -2)
-		po/hu.po (+997, -1677)
 
 	Update Hungarian translation
 
@@ -25153,29 +24397,12 @@ Name: gutenprint-5_1_0
 2006-05-29  <rleigh>	4b5cbaf334a4713fff056c6e47af4c14e87c543e
 
 	Lines: +0, -0
-	Files:	po/en_GB.po (+997, -1691)
 
 	Update British English translation.
 
 2006-05-29  <rlk>	1e1d991423225203d303715381a4c70a53946429
 
 	Lines: +0, -0
-	Files:	po/cs.po (+182, -175)
-		po/da.po (+345, -249)
-		po/de.po (+182, -175)
-		po/el.po (+182, -175)
-		po/en_GB.po (+181, -174)
-		po/es.po (+182, -175)
-		po/fr.po (+918, -1397)
-		po/hu.po (+181, -174)
-		po/ja.po (+182, -175)
-		po/nb.po (+182, -175)
-		po/nl.po (+182, -175)
-		po/pl.po (+182, -175)
-		po/pt.po (+182, -175)
-		po/sk.po (+182, -175)
-		po/sv.po (+361, -254)
-		po/zh_TW.po (+181, -174)
 
 	20060528 snapshot
 
@@ -25261,29 +24488,24 @@ Name: gutenprint-5_1_0
 2006-05-28  <rlk>	73a5eef27b870102508690cfeb08429e62675fa5
 
 	Lines: +0, -0
-	Files:	po/zh_TW.po (+2, -2)
 
 	Fix up name of language
 
 2006-05-28  <rlk>	cb8069baa296626df9cb56c8efd07c6cef5ef17a
 
 	Lines: +0, -0
-	Files:	po/fr.po (+2, -2)
-		po/zh_TW.po (+2, -2)
 
 	Fix up name of language
 
 2006-05-27  <rlk>	339364e355f486a33419241e96599387432d6ff2
 
 	Lines: +0, -0
-	Files:	po/da.po (+92, -196)
 
 	Updated Danish translation
 
 2006-05-27  <rlk>	3ea5943681fa15ab7dfdc2bd28fb118eb67a300c
 
 	Lines: +0, -0
-	Files:	po/fr.po (+2566, -3300)
 
 	Updated French translation from Regis.
 
@@ -25305,7 +24527,6 @@ Name: gutenprint-5_1_0
 2006-05-24  <rlk>	76c69e489c42344950f2ecdc4e1cc05c291bcb8d
 
 	Lines: +0, -0
-	Files:	po/sv.po (+1632, -2131)
 
 	Updated Swedish translation
 
@@ -25342,29 +24563,12 @@ Name: gutenprint-5_0_0-rc3
 2006-05-18  <rlk>	d7039d06cce02fe9376aa1dbc3b74059836b7ef7
 
 	Lines: +0, -0
-	Files:	po/cs.po (+42, -27)
-		po/da.po (+42, -27)
-		po/de.po (+42, -27)
-		po/el.po (+42, -27)
-		po/en_GB.po (+42, -27)
-		po/es.po (+42, -27)
-		po/fr.po (+42, -27)
-		po/hu.po (+42, -27)
-		po/ja.po (+42, -27)
-		po/nb.po (+42, -27)
-		po/nl.po (+42, -27)
-		po/pl.po (+42, -27)
-		po/pt.po (+42, -27)
-		po/sk.po (+42, -27)
-		po/sv.po (+42, -27)
-		po/zh_TW.po (+42, -27)
 
 	Gutenprint 5.0.0-rc3 release
 
 2006-05-15  <rlk>	3e3129d45ef077edb974dd9b265900d016113d2c
 
 	Lines: +0, -0
-	Files:	po/fr.po (+17, -17)
 
 	Clean up a few messages that may break PPD files.
 
@@ -25488,22 +24692,6 @@ Name: gutenprint-5_0_0-rc3
 2006-05-06  <rlk>	7564db88d6b57faf3f6b1999291b9556c966bdc4
 
 	Lines: +0, -0
-	Files:	po/cs.po (+86, -75)
-		po/da.po (+1139, -1002)
-		po/de.po (+86, -75)
-		po/el.po (+86, -75)
-		po/en_GB.po (+86, -75)
-		po/es.po (+86, -75)
-		po/fr.po (+86, -75)
-		po/hu.po (+86, -75)
-		po/ja.po (+86, -75)
-		po/nb.po (+86, -75)
-		po/nl.po (+86, -75)
-		po/pl.po (+86, -75)
-		po/pt.po (+86, -75)
-		po/sk.po (+86, -75)
-		po/sv.po (+86, -75)
-		po/zh_TW.po (+86, -75)
 
 	Gutenprint 20060505 snapshot
 
@@ -25559,23 +24747,18 @@ Name: gutenprint-5_0_0-rc3
 
 	Lines: +5, -0
 	Files:	NEWS (+5, -0)
-		po/cs.po (+2, -2)
-		po/da.po (+2, -2)
-		po/pt.po (+2, -2)
 
 	1478819 bad translation format
 
 2006-05-04  <rlk>	473496e5bac2c3f973c8fbeb0e44eec38c8cc675
 
 	Lines: +0, -0
-	Files:	po/da.po (+0, -0)
 
 	Fix botched po file
 
 2006-05-04  <rlk>	b30cbf2382af2b9ab344f29500d78ad3805fdcd5
 
 	Lines: +0, -0
-	Files:	po/da.po (+0, -0)
 
 	Updated Danish PO
 
@@ -25632,22 +24815,6 @@ Name: gutenprint-5_0_0-rc3
 2006-04-25  <rlk>	9d39985b786972ca0ce9085712bc8c6fa1efdd82
 
 	Lines: +0, -0
-	Files:	po/cs.po (+900, -862)
-		po/da.po (+899, -862)
-		po/de.po (+900, -862)
-		po/el.po (+899, -863)
-		po/en_GB.po (+900, -862)
-		po/es.po (+900, -862)
-		po/fr.po (+900, -862)
-		po/hu.po (+899, -862)
-		po/ja.po (+900, -862)
-		po/nb.po (+900, -862)
-		po/nl.po (+900, -862)
-		po/pl.po (+894, -862)
-		po/pt.po (+900, -862)
-		po/sk.po (+900, -862)
-		po/sv.po (+900, -862)
-		po/zh_TW.po (+895, -862)
 
 	Gutenprint 20060425 snapshot
 
@@ -25717,22 +24884,6 @@ Name: gutenprint-5_0_0-rc3
 2006-04-17  <rlk>	53c95be94e1bb0aafb69e8d64b2c57b52e8358c7
 
 	Lines: +0, -0
-	Files:	po/cs.po (+3055, -1112)
-		po/da.po (+3318, -938)
-		po/de.po (+2603, -716)
-		po/el.po (+2990, -1062)
-		po/en_GB.po (+3273, -933)
-		po/es.po (+3053, -1123)
-		po/fr.po (+4344, -2331)
-		po/hu.po (+4179, -1381)
-		po/ja.po (+3055, -1113)
-		po/nb.po (+2993, -1065)
-		po/nl.po (+3001, -1071)
-		po/pl.po (+2919, -999)
-		po/pt.po (+3055, -1113)
-		po/sk.po (+3053, -1123)
-		po/sv.po (+3055, -1113)
-		po/zh_TW.po (+3313, -930)
 
 	Gutenprint 20060417 snapshot release
 
@@ -26111,7 +25262,6 @@ Name: gutenprint-5_0_0-rc3
 2006-03-03  <rlk>	62bddb19acb94889b746d2d71e6de94ae6b80589
 
 	Lines: +0, -0
-	Files:	po/fr.po (+1933, -1932)
 
 	Updated French translation from Olivier Poulet
 
@@ -26146,7 +25296,7 @@ Name: gutenprint-5_0_0-rc3
 
 2006-02-18  <rlk>	c8ccf05d485263bdc244cec82541c3e6f73fd91f
 
-	Lines: +1, -1
+	Lines: +5117, -1
 	Files:	configure.ac (+1, -1)
 		po/hu.po (added +5116)
 
@@ -26285,21 +25435,6 @@ Name: gutenprint-5_0_0-rc3
 2006-01-21  <rlk>	028e45de3d926e27709e20a571ca67afede01f52
 
 	Lines: +0, -0
-	Files:	po/cs.po (+1271, -960)
-		po/da.po (+1281, -960)
-		po/de.po (+1233, -960)
-		po/el.po (+1271, -959)
-		po/en_GB.po (+1272, -959)
-		po/es.po (+1271, -960)
-		po/fr.po (+1271, -960)
-		po/ja.po (+1271, -960)
-		po/nb.po (+1271, -960)
-		po/nl.po (+1271, -960)
-		po/pl.po (+1268, -958)
-		po/pt.po (+1271, -960)
-		po/sk.po (+1271, -960)
-		po/sv.po (+1273, -960)
-		po/zh_TW.po (+1268, -960)
 
 	Gutenprint 5.0.0-rc2 release
 
@@ -27085,21 +26220,6 @@ Name: gutenprint-5_0_0-rc3
 2005-09-02  <rlk>	a3dbd6544be2261d409a15aabfd0bd00727e467a
 
 	Lines: +0, -0
-	Files:	po/cs.po (+147, -142)
-		po/da.po (+734, -640)
-		po/de.po (+147, -142)
-		po/el.po (+147, -142)
-		po/en_GB.po (+147, -142)
-		po/es.po (+147, -142)
-		po/fr.po (+147, -142)
-		po/ja.po (+147, -142)
-		po/nb.po (+147, -142)
-		po/nl.po (+147, -142)
-		po/pl.po (+147, -142)
-		po/pt.po (+147, -142)
-		po/sk.po (+147, -142)
-		po/sv.po (+147, -142)
-		po/zh_TW.po (+147, -142)
 
 	Gutenprint 5.0.0-rc1 release
 
@@ -27131,7 +26251,6 @@ Name: gutenprint-5_0_0-rc3
 2005-08-17  <rlk>	833d2eba675729061248764de634b39f94ed7a44
 
 	Lines: +0, -0
-	Files:	po/da.po (+1703, -1923)
 
 	Danish translation
 
@@ -27187,21 +26306,6 @@ Name: gutenprint-5_0_0-rc3
 2005-08-13  <rlk>	5823562e32d875ed59bacc2584ffaca4177dbbea
 
 	Lines: +0, -0
-	Files:	po/cs.po (+91, -91)
-		po/da.po (+91, -91)
-		po/de.po (+91, -91)
-		po/el.po (+91, -91)
-		po/en_GB.po (+91, -91)
-		po/es.po (+91, -91)
-		po/fr.po (+91, -91)
-		po/ja.po (+91, -91)
-		po/nb.po (+91, -91)
-		po/nl.po (+91, -91)
-		po/pl.po (+91, -91)
-		po/pt.po (+91, -91)
-		po/sk.po (+91, -91)
-		po/sv.po (+91, -91)
-		po/zh_TW.po (+522, -465)
 
 	Gutenprint 20050813 snapshot
 
@@ -27264,7 +26368,7 @@ Name: gutenprint-5_0_0-rc3
 
 2005-08-10  <rlk>	7e2a42cd5f28ed1c2cc16b43219d0200b6894d9f
 
-	Lines: +1, -1
+	Lines: +5198, -1
 	Files:	configure.ac (+1, -1)
 		po/zh_TW.po (added +5197)
 
@@ -27280,20 +26384,6 @@ Name: gutenprint-5_0_0-rc3
 2005-08-02  <rlk>	d081a6834bf7f82e17c4d4d1703715142040e1c8
 
 	Lines: +0, -0
-	Files:	po/cs.po (+352, -343)
-		po/da.po (+351, -343)
-		po/de.po (+352, -343)
-		po/el.po (+352, -343)
-		po/en_GB.po (+353, -343)
-		po/es.po (+352, -343)
-		po/fr.po (+352, -343)
-		po/ja.po (+352, -343)
-		po/nb.po (+352, -343)
-		po/nl.po (+352, -343)
-		po/pl.po (+352, -343)
-		po/pt.po (+352, -343)
-		po/sk.po (+352, -343)
-		po/sv.po (+352, -343)
 
 	Gutenprint 20050801 snapshot
 
@@ -27402,20 +26492,6 @@ Name: gutenprint-5_0_0-rc3
 2005-07-16  <rlk>	4c1b144253eb73f8f484972e83994c9a17a198dc
 
 	Lines: +0, -0
-	Files:	po/cs.po (+705, -547)
-		po/da.po (+693, -547)
-		po/de.po (+705, -548)
-		po/el.po (+705, -547)
-		po/en_GB.po (+715, -550)
-		po/es.po (+706, -551)
-		po/fr.po (+706, -548)
-		po/ja.po (+706, -548)
-		po/nb.po (+693, -547)
-		po/nl.po (+706, -548)
-		po/pl.po (+693, -547)
-		po/pt.po (+706, -548)
-		po/sk.po (+706, -548)
-		po/sv.po (+706, -548)
 
 	Gutenprint 20050715 snapshot
 
@@ -27940,20 +27016,6 @@ Name: gutenprint-5_0_0-rc3
 2005-04-29  <rlk>	79ee8b9f0f2a74dc2e8ae78d24b0beba06647eb9
 
 	Lines: +0, -0
-	Files:	po/cs.po (+327, -278)
-		po/da.po (+309, -263)
-		po/de.po (+324, -281)
-		po/el.po (+329, -283)
-		po/en_GB.po (+327, -278)
-		po/es.po (+330, -280)
-		po/fr.po (+328, -279)
-		po/ja.po (+327, -278)
-		po/nl.po (+332, -286)
-		po/no.po (+333, -284)
-		po/pl.po (+330, -284)
-		po/pt.po (+327, -278)
-		po/sk.po (+329, -280)
-		po/sv.po (+328, -278)
 
 	Gutenprint 5.0.0-beta4 release
 
@@ -28342,20 +27404,6 @@ Name: gutenprint-5_0_0-rc3
 2005-04-12  <rlk>	9f415324982804aa25e8b9b7a2a427072c3f245a
 
 	Lines: +0, -0
-	Files:	po/cs.po (+1568, -901)
-		po/da.po (+1493, -848)
-		po/de.po (+1540, -909)
-		po/el.po (+1634, -975)
-		po/en_GB.po (+1669, -946)
-		po/es.po (+1574, -926)
-		po/fr.po (+1573, -928)
-		po/ja.po (+1571, -921)
-		po/nl.po (+1567, -917)
-		po/no.po (+1635, -988)
-		po/pl.po (+1527, -883)
-		po/pt.po (+1571, -927)
-		po/sk.po (+1571, -921)
-		po/sv.po (+1671, -1019)
 
 	Update .po files.  They still need to be translated for real.
 
@@ -28770,20 +27818,6 @@ Name: gutenprint-5_0_0-beta3
 2005-02-13  <rlk>	5972ac5b6d8146d850aee9c0537dd1c85c537f11
 
 	Lines: +0, -0
-	Files:	po/cs.po (+341, -318)
-		po/da.po (+341, -318)
-		po/de.po (+338, -318)
-		po/el.po (+341, -318)
-		po/en_GB.po (+341, -318)
-		po/es.po (+341, -318)
-		po/fr.po (+341, -318)
-		po/ja.po (+341, -318)
-		po/nl.po (+341, -318)
-		po/no.po (+341, -318)
-		po/pl.po (+341, -318)
-		po/pt.po (+341, -318)
-		po/sk.po (+341, -318)
-		po/sv.po (+341, -318)
 
 	Gutenprint 5.0.0 beta 3 release
 
@@ -28836,7 +27870,6 @@ Name: gutenprint-5_0_0-beta3
 2005-02-06  <rleigh>	920fad1d2ea06d076e918ea1fee1aac2770c2aaa
 
 	Lines: +0, -0
-	Files:	po/en_GB.po (+1, -1)
 
 	Make sure the encoding of generated PPDs is UTF-8.
 
@@ -29180,7 +28213,6 @@ Name: gutenprint-5_0_0-beta3
 2004-09-22  <rleigh>	24e35b4371275c7426eab1347e9fb209c4c9a651
 
 	Lines: +0, -0
-	Files:	po/en_GB.po (+67, -76)
 
 	Recode from ISO-8859-1 to UTF-8.
 	Update fuzzy translations from Gutenprint renaming.
@@ -29333,20 +28365,6 @@ Name: gutenprint-5_0_0-beta3
 		man/{ijsgimpprint.1.in => ijsgutenprint.1.in} (+35, -34)
 		po/.cvsignore (+2, -2)
 		po/POTFILES.in (+10, -5)
-		po/cs.po (+359, -333)
-		po/da.po (+359, -338)
-		po/de.po (+359, -333)
-		po/el.po (+358, -334)
-		po/en_GB.po (+361, -333)
-		po/es.po (+359, -333)
-		po/fr.po (+359, -333)
-		po/ja.po (+359, -333)
-		po/nl.po (+359, -333)
-		po/no.po (+358, -333)
-		po/pl.po (+359, -338)
-		po/pt.po (+359, -333)
-		po/sk.po (+359, -333)
-		po/sv.po (+359, -333)
 		scripts/Makefile.am (+0, -1)
 		scripts/autogen.sh (+16, -16)
 		scripts/buildgimpprintdebs (removed -5)
@@ -29525,20 +28543,6 @@ Name: gimp-print-5_0_0-beta2
 2004-08-26  <rlk>	bf48317147cb5d6b1cddf38e4734cfc5780ca459
 
 	Lines: +0, -0
-	Files:	po/cs.po (+797, -648)
-		po/da.po (+797, -649)
-		po/de.po (+789, -648)
-		po/el.po (+798, -659)
-		po/en_GB.po (+16, -16)
-		po/es.po (+806, -657)
-		po/fr.po (+806, -657)
-		po/ja.po (+797, -648)
-		po/nl.po (+806, -658)
-		po/no.po (+806, -657)
-		po/pl.po (+795, -648)
-		po/pt.po (+797, -648)
-		po/sk.po (+806, -657)
-		po/sv.po (+797, -648)
 
 	Gimp-Print 5.0.0-beta2 release
 
@@ -29619,7 +28623,6 @@ Name: gimp-print-5_0_0-beta2
 2004-08-22  <rleigh>	cbda0927ad6c622e4eba597bdb283022e91f044d
 
 	Lines: +0, -0
-	Files:	po/en_GB.po (+796, -651)
 
 	Update British English translation for CD label printing and new printers.
 
@@ -30124,7 +29127,6 @@ Name: gimp-print-5_0_0-beta2
 2004-07-04  <rleigh>	edb685938646a651499adae8cb160a4c4c559e0d
 
 	Lines: +0, -0
-	Files:	po/en_GB.po (+128, -320)
 
 	Update the British English translation.
 
@@ -30202,20 +29204,6 @@ Name: gimp-print-5_0_0-beta1
 2004-06-26  <rlk>	cc06cf06191a3d9e4ab00e401c4be8239e7d811a
 
 	Lines: +0, -0
-	Files:	po/cs.po (+457, -337)
-		po/da.po (+437, -333)
-		po/de.po (+457, -338)
-		po/el.po (+439, -334)
-		po/en_GB.po (+526, -351)
-		po/es.po (+457, -338)
-		po/fr.po (+457, -338)
-		po/ja.po (+454, -337)
-		po/nl.po (+451, -336)
-		po/no.po (+439, -333)
-		po/pl.po (+436, -333)
-		po/pt.po (+461, -342)
-		po/sk.po (+457, -338)
-		po/sv.po (+457, -338)
 
 	Gimp-Print 5.0.0-beta1 release
 
@@ -30785,20 +29773,6 @@ Name: gimp-print-5_0_0-alpha3
 2004-05-13  <rlk>	27e953f4998190b77ac340913701cf50f9f074d1
 
 	Lines: +0, -0
-	Files:	po/cs.po (+628, -650)
-		po/da.po (+628, -650)
-		po/de.po (+628, -650)
-		po/el.po (+639, -661)
-		po/en_GB.po (+628, -650)
-		po/es.po (+628, -650)
-		po/fr.po (+628, -650)
-		po/ja.po (+628, -650)
-		po/nl.po (+628, -650)
-		po/no.po (+628, -650)
-		po/pl.po (+628, -650)
-		po/pt.po (+628, -650)
-		po/sk.po (+628, -650)
-		po/sv.po (+628, -650)
 
 	Gimp-Print 5.0.0-alpha3 release
 
@@ -30912,7 +29886,6 @@ Name: gimp-print-5_0_0-alpha3
 2004-05-09  <rleigh>	b005ebc85065969ffd22c029c1dd8057b6c8e601
 
 	Lines: +0, -0
-	Files:	po/en_GB.po (+1, -4)
 
 	Remove RCS tag.
 
@@ -31393,20 +30366,6 @@ Name: gimp-print-5_0_0-alpha2
 2004-04-11  <rlk>	2942829b9353f21c52d0ccb59550a7f691ae520b
 
 	Lines: +0, -0
-	Files:	po/cs.po (+991, -778)
-		po/da.po (+960, -774)
-		po/de.po (+987, -783)
-		po/el.po (+989, -786)
-		po/en_GB.po (+996, -769)
-		po/es.po (+991, -783)
-		po/fr.po (+991, -783)
-		po/ja.po (+991, -782)
-		po/nl.po (+985, -784)
-		po/no.po (+983, -780)
-		po/pl.po (+969, -775)
-		po/pt.po (+991, -782)
-		po/sk.po (+991, -783)
-		po/sv.po (+991, -782)
 
 	Gimp-Print 5.0.0-alpha2 release
 
@@ -32245,20 +31204,6 @@ Name: gimp-print-5_0_0-alpha2
 		man/gimpprint-resolutions.7.in (+2, -2)
 		man/gimpprint.3.in (+2, -2)
 		man/ijsgimpprint.1.in (+2, -2)
-		po/cs.po (+326, -277)
-		po/da.po (+320, -277)
-		po/de.po (+324, -277)
-		po/el.po (+323, -277)
-		po/en_GB.po (+329, -281)
-		po/es.po (+326, -277)
-		po/fr.po (+326, -277)
-		po/ja.po (+326, -277)
-		po/nl.po (+326, -277)
-		po/no.po (+323, -277)
-		po/pl.po (+322, -278)
-		po/pt.po (+326, -277)
-		po/sk.po (+326, -277)
-		po/sv.po (+326, -277)
 		src/cups/cups-genppdconfig.in (+1, -1)
 		src/cups/cups-genppdupdate.in (+1, -1)
 		src/main/array.c (+1, -1)
@@ -32400,20 +31345,6 @@ Name: gimp-print-5_0_0-alpha1
 2004-01-11  <rlk>	235f84423c37f1b2f990f07db21de11f52be8ea1
 
 	Lines: +0, -0
-	Files:	po/cs.po (+17, -17)
-		po/da.po (+17, -17)
-		po/de.po (+17, -17)
-		po/el.po (+17, -17)
-		po/en_GB.po (+17, -17)
-		po/es.po (+17, -17)
-		po/fr.po (+17, -17)
-		po/ja.po (+17, -17)
-		po/nl.po (+17, -17)
-		po/no.po (+17, -17)
-		po/pl.po (+17, -17)
-		po/pt.po (+17, -17)
-		po/sk.po (+17, -17)
-		po/sv.po (+17, -17)
 
 	Gimp-Print 5.0.0-alpha1 release
 
@@ -32612,7 +31543,6 @@ Name: gimp-print-5_0_0-alpha1
 2003-12-13  <rleigh>	3d20aefbf67b4f477b8bff71e4aa20eb91b4df43
 
 	Lines: +0, -0
-	Files:	po/en_GB.po (+41, -416)
 
 	Update British English translation.
 
@@ -32699,20 +31629,6 @@ Name: gimp-print-4_3_25
 2003-12-03  <rlk>	00ace399a51c8377d3dcbf0ae1b287854431e290
 
 	Lines: +0, -0
-	Files:	po/cs.po (+73, -69)
-		po/da.po (+65, -71)
-		po/de.po (+65, -71)
-		po/el.po (+65, -71)
-		po/en_GB.po (+66, -72)
-		po/es.po (+65, -71)
-		po/fr.po (+65, -71)
-		po/ja.po (+65, -71)
-		po/nl.po (+65, -71)
-		po/no.po (+65, -71)
-		po/pl.po (+65, -71)
-		po/pt.po (+65, -71)
-		po/sk.po (+65, -71)
-		po/sv.po (+65, -71)
 
 	Gimp-Print 4.3.25 release
 
@@ -32756,20 +31672,6 @@ Name: gimp-print-4_3_25
 		doc/developer/new-printer.texi (+91, -70)
 		doc/users_guide/gimp.sgml (+0, -12)
 		man/gimpprint-resolutions.7.in (+116, -161)
-		po/cs.po (+87, -272)
-		po/da.po (+86, -80)
-		po/de.po (+87, -265)
-		po/el.po (+86, -195)
-		po/en_GB.po (+86, -80)
-		po/es.po (+87, -283)
-		po/fr.po (+87, -265)
-		po/ja.po (+87, -265)
-		po/nl.po (+87, -290)
-		po/no.po (+86, -80)
-		po/pl.po (+86, -177)
-		po/pt.po (+87, -265)
-		po/sk.po (+87, -283)
-		po/sv.po (+87, -265)
 		src/ghost/README (+14, -50)
 		src/main/escp2-driver.c (+10, -8)
 		src/main/escp2-resolutions.c (+31, -31)
@@ -32911,20 +31813,6 @@ Name: gimp-print-4_3_24
 2003-11-22  <rlk>	f02676dbe444bc0c51089f57c37429c74ba05a21
 
 	Lines: +0, -0
-	Files:	po/cs.po (+772, -623)
-		po/da.po (+770, -622)
-		po/de.po (+769, -623)
-		po/el.po (+773, -623)
-		po/en_GB.po (+779, -623)
-		po/es.po (+773, -623)
-		po/fr.po (+773, -623)
-		po/ja.po (+773, -623)
-		po/nl.po (+771, -623)
-		po/no.po (+771, -623)
-		po/pl.po (+771, -621)
-		po/pt.po (+773, -623)
-		po/sk.po (+773, -623)
-		po/sv.po (+773, -623)
 
 	Gimp-Print 4.3.24
 
@@ -33335,20 +32223,6 @@ Name: gimp-print-4_3_23
 2003-11-05  <rlk>	874f30e490d71bcd9179fa9ef292c3499e11f4ff
 
 	Lines: +0, -0
-	Files:	po/cs.po (+64, -35)
-		po/da.po (+64, -35)
-		po/de.po (+64, -35)
-		po/el.po (+64, -35)
-		po/en_GB.po (+64, -35)
-		po/es.po (+64, -35)
-		po/fr.po (+64, -35)
-		po/ja.po (+64, -35)
-		po/nl.po (+64, -35)
-		po/no.po (+64, -35)
-		po/pl.po (+64, -35)
-		po/pt.po (+64, -35)
-		po/sk.po (+64, -35)
-		po/sv.po (+64, -35)
 
 	Gimp-Print 4.3.23 release
 
@@ -33420,20 +32294,6 @@ Name: gimp-print-4_3_22
 2003-11-02  <rlk>	0c92627c6accab4b89b60f47c04950a5223dfcee
 
 	Lines: +0, -0
-	Files:	po/cs.po (+524, -482)
-		po/da.po (+517, -477)
-		po/de.po (+520, -482)
-		po/el.po (+526, -482)
-		po/en_GB.po (+528, -482)
-		po/es.po (+524, -482)
-		po/fr.po (+524, -482)
-		po/ja.po (+524, -482)
-		po/nl.po (+524, -483)
-		po/no.po (+523, -479)
-		po/pl.po (+518, -477)
-		po/pt.po (+524, -482)
-		po/sk.po (+524, -482)
-		po/sv.po (+524, -482)
 
 	Gimp-Print 4.3.22 release
 
@@ -34135,7 +32995,6 @@ Name: gimp-print-4_3_22
 2003-10-01  <rleigh>	acd1a7a523cc16efc1be994c233e482ea5b81eac
 
 	Lines: +0, -0
-	Files:	po/en_GB.po (+56, -86)
 
 	Update British English translation.
 
@@ -34323,20 +33182,6 @@ Name: gimp-print-4_3_21
 2003-09-24  <rlk>	322b2b02474f0a0ec68a2f0190316f3a3843f8ed
 
 	Lines: +0, -0
-	Files:	po/cs.po (+244, -215)
-		po/da.po (+244, -215)
-		po/de.po (+239, -215)
-		po/el.po (+244, -215)
-		po/en_GB.po (+245, -215)
-		po/es.po (+244, -215)
-		po/fr.po (+244, -215)
-		po/ja.po (+244, -215)
-		po/nl.po (+244, -215)
-		po/no.po (+244, -215)
-		po/pl.po (+244, -215)
-		po/pt.po (+244, -215)
-		po/sk.po (+244, -215)
-		po/sv.po (+244, -215)
 
 	Gimp-Print 4.3.21
 
@@ -34740,20 +33585,6 @@ Name: gimp-print-4_3_20
 2003-09-01  <rlk>	cddbfa3ab8572297b774325ce24d4070f513a473
 
 	Lines: +0, -0
-	Files:	po/cs.po (+124, -119)
-		po/da.po (+123, -119)
-		po/de.po (+124, -119)
-		po/el.po (+123, -119)
-		po/en_GB.po (+132, -120)
-		po/es.po (+124, -119)
-		po/fr.po (+124, -119)
-		po/ja.po (+124, -119)
-		po/nl.po (+124, -119)
-		po/no.po (+123, -119)
-		po/pl.po (+123, -119)
-		po/pt.po (+124, -119)
-		po/sk.po (+124, -119)
-		po/sv.po (+124, -119)
 
 	Gimp-Print 4.3.19 release
 
@@ -35034,20 +33865,6 @@ Name: gimp-print-4_3_19
 2003-08-08  <rlk>	e3341a78b4ddee61e89a9bc10ed5dbeccaa4cd7f
 
 	Lines: +0, -0
-	Files:	po/cs.po (+931, -928)
-		po/da.po (+643, -895)
-		po/de.po (+686, -931)
-		po/el.po (+841, -898)
-		po/en_GB.po (+930, -923)
-		po/es.po (+958, -950)
-		po/fr.po (+954, -950)
-		po/ja.po (+929, -930)
-		po/nl.po (+868, -917)
-		po/no.po (+860, -912)
-		po/pl.po (+850, -907)
-		po/pt.po (+937, -937)
-		po/sk.po (+952, -952)
-		po/sv.po (+934, -929)
 
 	Gimp-Print 4.3.19 release
 
@@ -35532,20 +34349,6 @@ Name: gimp-print-4_3_18
 2003-07-07  <rlk>	cfe10bfda62621721ae47ee5c7da87e83b5fab76
 
 	Lines: +0, -0
-	Files:	po/cs.po (+117, -107)
-		po/da.po (+117, -107)
-		po/de.po (+115, -107)
-		po/el.po (+117, -107)
-		po/en_GB.po (+117, -107)
-		po/es.po (+117, -107)
-		po/fr.po (+117, -107)
-		po/ja.po (+117, -107)
-		po/nl.po (+117, -107)
-		po/no.po (+117, -107)
-		po/pl.po (+117, -107)
-		po/pt.po (+117, -107)
-		po/sk.po (+117, -107)
-		po/sv.po (+117, -107)
 
 	Gimp-Print 4.3.18
 
@@ -35594,7 +34397,6 @@ Name: gimp-print-4_3_18
 2003-06-29  <rleigh>	924d06d1a1070ce71642e3b80764f6cb5eea853d
 
 	Lines: +0, -0
-	Files:	po/en_GB.po (+33, -57)
 
 	Update British English translation
 
@@ -35656,20 +34458,6 @@ Name: gimp-print-4_3_17
 2003-06-21  <rlk>	fcc20ece7642d91b493e8d258a671208a77335f3
 
 	Lines: +0, -0
-	Files:	po/cs.po (+464, -373)
-		po/da.po (+462, -373)
-		po/de.po (+465, -379)
-		po/el.po (+466, -378)
-		po/en_GB.po (+467, -369)
-		po/es.po (+466, -376)
-		po/fr.po (+466, -376)
-		po/ja.po (+466, -376)
-		po/nl.po (+463, -375)
-		po/no.po (+465, -373)
-		po/pl.po (+465, -373)
-		po/pt.po (+466, -376)
-		po/sk.po (+466, -376)
-		po/sv.po (+467, -376)
 
 	Gimp-Print 4.3.17
 
@@ -36068,20 +34856,6 @@ Name: gimp-print-4_3_16
 2003-06-08  <rlk>	35b8a71a881ac869ad426708971f804195904740
 
 	Lines: +0, -0
-	Files:	po/cs.po (+261, -243)
-		po/da.po (+261, -243)
-		po/de.po (+261, -243)
-		po/el.po (+261, -243)
-		po/en_GB.po (+261, -243)
-		po/es.po (+261, -243)
-		po/fr.po (+261, -243)
-		po/ja.po (+261, -243)
-		po/nl.po (+261, -243)
-		po/no.po (+261, -243)
-		po/pl.po (+261, -246)
-		po/pt.po (+261, -243)
-		po/sk.po (+261, -243)
-		po/sv.po (+261, -243)
 
 	Gimp-Print 4.3.16 release
 
@@ -36380,20 +35154,6 @@ Name: gimp-print-4_3_15
 2003-06-01  <rlk>	f4067c69280142528fe408df4fa809df635f4be7
 
 	Lines: +0, -0
-	Files:	po/cs.po (+357, -311)
-		po/da.po (+347, -302)
-		po/de.po (+357, -311)
-		po/el.po (+355, -309)
-		po/en_GB.po (+349, -302)
-		po/es.po (+357, -311)
-		po/fr.po (+357, -311)
-		po/ja.po (+357, -311)
-		po/nl.po (+357, -311)
-		po/no.po (+353, -307)
-		po/pl.po (+344, -303)
-		po/pt.po (+357, -311)
-		po/sk.po (+357, -311)
-		po/sv.po (+357, -311)
 
 	Gimp-Print 4.3.15
 
@@ -36590,7 +35350,6 @@ Name: gimp-print-4_3_15
 2003-05-29  <rleigh>	1bc23449b54a049e44d4e235794d48dbae85b8bb
 
 	Lines: +0, -0
-	Files:	po/en_GB.po (+13, -18)
 
 	Update the British English translation for printer model changes/additions.
 
@@ -36759,20 +35518,6 @@ Name: gimp-print-4_3_15
 2003-05-23  <rlk>	ededc1368b8ca4db5f33fcccdf631f371f29439d
 
 	Lines: +0, -0
-	Files:	po/cs.po (+25, -66)
-		po/da.po (+25, -66)
-		po/de.po (+25, -66)
-		po/el.po (+25, -66)
-		po/en_GB.po (+25, -66)
-		po/es.po (+25, -66)
-		po/fr.po (+25, -66)
-		po/ja.po (+25, -66)
-		po/nl.po (+25, -66)
-		po/no.po (+25, -66)
-		po/pl.po (+25, -66)
-		po/pt.po (+25, -66)
-		po/sk.po (+25, -66)
-		po/sv.po (+25, -66)
 
 	Update po files
 
@@ -36835,20 +35580,6 @@ Name: gimp-print-4_3_14
 2003-05-11  <rlk>	288353080ab2ef91def4f59c69bda123b9bf8d45
 
 	Lines: +0, -0
-	Files:	po/cs.po (+2961, -1669)
-		po/da.po (+462, -450)
-		po/de.po (+462, -450)
-		po/el.po (+462, -450)
-		po/en_GB.po (+462, -450)
-		po/es.po (+462, -450)
-		po/fr.po (+462, -450)
-		po/ja.po (+462, -450)
-		po/nl.po (+462, -450)
-		po/no.po (+462, -450)
-		po/pl.po (+462, -450)
-		po/pt.po (+462, -450)
-		po/sk.po (+462, -450)
-		po/sv.po (+462, -450)
 
 	Gimp-Print 4.3.14
 
@@ -37102,7 +35833,7 @@ Name: gimp-print-4_3_14
 
 2003-05-05  <rlk>	51d622de3951c131a66f066fb7576f068514981a
 
-	Lines: +1641, -1751
+	Lines: +4989, -1751
 	Files:	configure.ac (+2, -3)
 		doc/developer/integrating.texi (+2, -2)
 		doc/developer/new-printer.texi (+12, -12)
@@ -37235,19 +35966,6 @@ Name: gimp-print-4_3_13
 2003-04-18  <rlk>	dd11af2683a7449a08d5206a90eba9f999df6978
 
 	Lines: +0, -0
-	Files:	po/da.po (+2007, -722)
-		po/de.po (+1862, -810)
-		po/el.po (+1977, -798)
-		po/en_GB.po (+467, -442)
-		po/es.po (+1947, -850)
-		po/fr.po (+1938, -841)
-		po/ja.po (+1938, -841)
-		po/nl.po (+1939, -843)
-		po/no.po (+1965, -755)
-		po/pl.po (+1982, -762)
-		po/pt.po (+1940, -839)
-		po/sk.po (+1939, -842)
-		po/sv.po (+1939, -842)
 
 	Gimp-Print 4.3.13 release
 
@@ -37679,7 +36397,6 @@ Name: gimp-print-4_3_13
 
 	Lines: +17, -2
 	Files:	po/POTFILES.in (+2, -0)
-		po/en_GB.po (+1821, -850)
 		src/main/Makefile.am (+14, -1)
 		src/main/print-escp2.c (+1, -1)
 
@@ -37790,19 +36507,6 @@ Name: gimp-print-4_3_12
 2003-03-29  <rlk>	ef08463468b2f90964142d6b329e0c6b938d1c97
 
 	Lines: +0, -0
-	Files:	po/da.po (+455, -370)
-		po/de.po (+476, -375)
-		po/el.po (+485, -383)
-		po/en_GB.po (+476, -376)
-		po/es.po (+476, -375)
-		po/fr.po (+476, -375)
-		po/ja.po (+476, -375)
-		po/nl.po (+464, -374)
-		po/no.po (+469, -372)
-		po/pl.po (+458, -371)
-		po/pt.po (+476, -375)
-		po/sk.po (+476, -375)
-		po/sv.po (+476, -375)
 
 	Gimp-Print 4.3.12 release
 
@@ -38181,19 +36885,6 @@ Name: gimp-print-4_3_11
 2003-03-01  <rlk>	3f6c4782e9ae63eccaf1b0523e312c9b74960320
 
 	Lines: +0, -0
-	Files:	po/da.po (+272, -252)
-		po/de.po (+274, -252)
-		po/el.po (+274, -256)
-		po/en_GB.po (+274, -252)
-		po/es.po (+274, -252)
-		po/fr.po (+274, -252)
-		po/ja.po (+274, -252)
-		po/nl.po (+274, -252)
-		po/no.po (+272, -252)
-		po/pl.po (+273, -256)
-		po/pt.po (+274, -252)
-		po/sk.po (+274, -252)
-		po/sv.po (+274, -252)
 
 	Gimp-Print 4.3.11
 
@@ -38374,19 +37065,6 @@ Name: gimp-print-4_3_10
 2003-02-16  <rlk>	1dba6b1a6f9353ca34af3ad20b8f24aa95ee0e18
 
 	Lines: +0, -0
-	Files:	po/da.po (+122, -122)
-		po/de.po (+122, -122)
-		po/el.po (+122, -122)
-		po/en_GB.po (+122, -122)
-		po/es.po (+122, -122)
-		po/fr.po (+122, -122)
-		po/ja.po (+122, -122)
-		po/nl.po (+122, -122)
-		po/no.po (+122, -122)
-		po/pl.po (+122, -122)
-		po/pt.po (+122, -122)
-		po/sk.po (+122, -122)
-		po/sv.po (+122, -122)
 
 	Gimp-Print 4.3.10
 
@@ -38447,19 +37125,6 @@ Name: gimp-print-4_3_9
 2003-02-15  <rlk>	4a46bcc9b93cd8eb13ed42f29a31670b529b8959
 
 	Lines: +0, -0
-	Files:	po/da.po (+856, -994)
-		po/de.po (+1310, -1153)
-		po/el.po (+1153, -1145)
-		po/en_GB.po (+1266, -1105)
-		po/es.po (+1318, -1172)
-		po/fr.po (+1306, -1156)
-		po/ja.po (+1305, -1155)
-		po/nl.po (+1254, -1152)
-		po/no.po (+998, -1063)
-		po/pl.po (+1045, -1060)
-		po/pt.po (+1306, -1157)
-		po/sk.po (+1312, -1169)
-		po/sv.po (+1317, -1168)
 
 	Gimp-Print 4.3.9 release
 
@@ -39721,8 +38386,6 @@ Name: gimp-print-4_3_9
 2003-01-07  <rleigh>	1a6c530deb5f4474f2a1d68e40d5ecc7bbb3606c
 
 	Lines: +0, -0
-	Files:	po/de.po (+1, -1)
-		po/ja.po (+1, -1)
 
 	Fix CUPS Language description
 
@@ -39814,7 +38477,6 @@ Name: gimp-print-4_3_9
 2003-01-06  <rleigh>	d6ff7845ba9b4a25791f04e9f284a6f123cf54f5
 
 	Lines: +0, -0
-	Files:	po/en_GB.po (+101, -670)
 
 	Update translation.  The new XML data will need translation in the future.
 
@@ -39945,19 +38607,6 @@ Name: gimp-print-4_3_9
 2003-01-05  <rlk>	ed863f486bce17c53cc1e03aaa9820edea0b9800
 
 	Lines: +0, -0
-	Files:	po/da.po (+1220, -1068)
-		po/de.po (+1664, -1551)
-		po/el.po (+1444, -1298)
-		po/en_GB.po (+1666, -1551)
-		po/es.po (+1702, -1585)
-		po/fr.po (+1730, -1614)
-		po/ja.po (+1658, -1543)
-		po/nl.po (+1534, -1403)
-		po/no.po (+1394, -1250)
-		po/pl.po (+1332, -1175)
-		po/pt.po (+1700, -1583)
-		po/sk.po (+1695, -1578)
-		po/sv.po (+1688, -1571)
 
 	Gimp-Print 4.3.7
 
@@ -40651,19 +39300,6 @@ Name: gimp-print-4_3_6
 2002-12-22  <rlk>	7f993d99704387b4454f4717c755bb43deae942c
 
 	Lines: +0, -0
-	Files:	po/da.po (+797, -1208)
-		po/de.po (+1062, -1258)
-		po/el.po (+981, -1259)
-		po/en_GB.po (+1112, -1239)
-		po/es.po (+1189, -1318)
-		po/fr.po (+1114, -1243)
-		po/ja.po (+1113, -1241)
-		po/nl.po (+1043, -1217)
-		po/no.po (+903, -1209)
-		po/pl.po (+866, -1211)
-		po/pt.po (+1130, -1247)
-		po/sk.po (+1112, -1243)
-		po/sv.po (+1113, -1248)
 
 	Gimp-Print 4.3.6 release
 
@@ -42262,19 +40898,6 @@ Name: gimp-print-4_3_6
 2002-10-19  <rlk>	ffe1e717ce216edccf3fb5dc7a30ee40916e6d87
 
 	Lines: +0, -0
-	Files:	po/da.po (+1638, -577)
-		po/de.po (+359, -352)
-		po/el.po (+1029, -654)
-		po/en_GB.po (+998, -632)
-		po/es.po (+961, -711)
-		po/fr.po (+488, -396)
-		po/ja.po (+137, -129)
-		po/nl.po (+1100, -1198)
-		po/no.po (+819, -341)
-		po/pl.po (+1107, -787)
-		po/pt.po (+826, -669)
-		po/sk.po (+866, -650)
-		po/sv.po (+133, -127)
 
 	.
 
@@ -42294,20 +40917,8 @@ Name: gimp-print-4_3_6
 
 2002-10-17  <rlk>	61b6bf438c78579825a96d41966173cd64914463
 
-	Lines: +0, -0
-	Files:	po/da.po (+587, -1680)
-		po/de.po (+633, -715)
-		po/el.po (+675, -1081)
-		po/en_GB.po (+658, -1077)
-		po/es.po (+977, -987)
-		po/fr.po (+1025, -915)
-		po/ja.po (added +3326)
-		po/nl.po (+1380, -1181)
-		po/no.po (+598, -1074)
-		po/pl.po (+810, -1160)
-		po/pt.po (+661, -929)
-		po/sk.po (+673, -942)
-		po/sv.po (+408, -498)
+	Lines: +3326, -0
+	Files:	po/ja.po (added +3326)
 
 	Updates
 
@@ -42474,18 +41085,6 @@ Name: gimp-print-4_3_5
 2002-10-03  <rlk>	3a9707eb8e85d931260fabcd8b5dfd246759b4d5
 
 	Lines: +0, -0
-	Files:	po/da.po (+321, -296)
-		po/de.po (+318, -293)
-		po/el.po (+321, -294)
-		po/en_GB.po (+318, -293)
-		po/es.po (+318, -293)
-		po/fr.po (+318, -293)
-		po/nl.po (+318, -293)
-		po/no.po (+321, -296)
-		po/pl.po (+318, -293)
-		po/pt.po (+318, -293)
-		po/sk.po (+318, -293)
-		po/sv.po (+318, -293)
 
 	Gimp-print 4.3.5 release
 
@@ -42859,10 +41458,6 @@ Name: gimp-print-4_3_5
 2002-08-22  <easysw>	beed8a6fe893b918dc52892d517840ae1d1ace54
 
 	Lines: +0, -0
-	Files:	po/el.po (+1, -1)
-		po/es.po (+1, -1)
-		po/nl.po (+1, -1)
-		po/sk.po (+1, -1)
 
 	Fix language names in translation files.
 
@@ -42882,18 +41477,6 @@ Name: gimp-print-4_3_4
 2002-08-21  <rlk>	7eb1026923d0066dd898396efd9c839a7a92a994
 
 	Lines: +0, -0
-	Files:	po/da.po (+659, -193)
-		po/de.po (+712, -208)
-		po/el.po (+698, -235)
-		po/en_GB.po (+702, -375)
-		po/es.po (+699, -374)
-		po/fr.po (+727, -274)
-		po/nl.po (+712, -305)
-		po/no.po (+659, -193)
-		po/pl.po (+693, -219)
-		po/pt.po (+698, -373)
-		po/sk.po (+698, -370)
-		po/sv.po (+705, -376)
 
 	Gimp-Print 4.3.4
 
@@ -43019,7 +41602,6 @@ Name: gimp-print-4_3_4
 2002-07-22  <rleigh>	1d8e79278dfdfa960a8b0c0cdc3a3b8d06855335
 
 	Lines: +0, -0
-	Files:	po/en_GB.po (+49, -52)
 
 	Update en_GB translation (all fuzzy and unstranslated strings)
 
@@ -43170,18 +41752,6 @@ Name: gimp-print-4_3_3
 2002-07-14  <rlk>	c82da4775bad49dd502be1140fb71a8350200efe
 
 	Lines: +0, -0
-	Files:	po/da.po (+2, -2)
-		po/de.po (+2, -2)
-		po/el.po (+2, -2)
-		po/en_GB.po (+2, -2)
-		po/es.po (+2, -2)
-		po/fr.po (+2, -2)
-		po/nl.po (+2, -2)
-		po/no.po (+2, -2)
-		po/pl.po (+2, -2)
-		po/pt.po (+2, -2)
-		po/sk.po (+2, -2)
-		po/sv.po (+2, -2)
 
 	Gimp-Print 4.3.3 release
 
@@ -43386,18 +41956,6 @@ Name: gimp-print-4_3_2
 2002-06-29  <rlk>	2cfe92e17d1617aeb3bae37dbb7decd02406fb1c
 
 	Lines: +0, -0
-	Files:	po/da.po (+179, -222)
-		po/de.po (+328, -287)
-		po/el.po (+217, -238)
-		po/en_GB.po (+230, -229)
-		po/es.po (+617, -690)
-		po/fr.po (+199, -223)
-		po/nl.po (+183, -222)
-		po/no.po (+179, -222)
-		po/pl.po (+183, -222)
-		po/pt.po (+600, -682)
-		po/sk.po (+610, -694)
-		po/sv.po (+230, -230)
 
 	Gimp-Print 4.3.2
 
@@ -43708,10 +42266,9 @@ Name: gimp-print-4_3_1
 
 2002-06-04  <rlk>	d06133d80e1851a5130ce2516059c346d2cec7b4
 
-	Lines: +1, -1
+	Lines: +2912, -1
 	Files:	configure.ac (+1, -1)
 		po/de.po (added +2911)
-		po/sk.po (+591, -531)
 
 	Add German
 
@@ -43816,7 +42373,7 @@ Name: gimp-print-4_3_1
 
 2002-05-11  <rlk>	2e9233db8bd2be054c760fa3d84cddf65644276c
 
-	Lines: +62, -51
+	Lines: +3299, -51
 	Files:	configure.ac (+1, -1)
 		po/pt.po (added +3237)
 		src/escputil/escputil.c (+61, -50)
@@ -43928,7 +42485,7 @@ Name: gimp-print-4_3_1
 
 2002-04-28  <rlk>	2879e6f0589de5f2dde0243578de4b1ca2404ca3
 
-	Lines: +0, -0
+	Lines: +2959, -0
 	Files:	po/es.po (added +2959)
 
 	Spanish translation
@@ -43939,15 +42496,6 @@ Name: gimp-print-4_3_0
 2002-04-28  <rlk>	431ba8f529e98864ef8e7ecdf0c3ede6e7e149f1
 
 	Lines: +0, -0
-	Files:	po/da.po (+1268, -623)
-		po/el.po (+527, -590)
-		po/en_GB.po (+679, -610)
-		po/fr.po (+540, -601)
-		po/nl.po (+363, -512)
-		po/no.po (+1303, -615)
-		po/pl.po (+705, -815)
-		po/sk.po (+784, -687)
-		po/sv.po (+518, -563)
 
 	4.3.0
 
@@ -44727,7 +43275,7 @@ Name: gimp-print-4_3_0
 
 2002-03-16  <rlk>	71c8038dcaab4e3ce063fc960b31a5fbb5ad6437
 
-	Lines: +1, -1
+	Lines: +2920, -1
 	Files:	configure.in.in (+1, -1)
 		po/nl.po (added +2919)
 
@@ -45003,15 +43551,8 @@ Name: gimp-print-4_3_0
 
 2002-02-16  <rlk>	d0be18613b2ca639b9a3cb9e2a81bceafdc94f29
 
-	Lines: +0, -0
-	Files:	po/da.po (+615, -1254)
-		po/el.po (added +2930)
-		po/en_GB.po (+560, -595)
-		po/fr.po (+560, -489)
-		po/no.po (+608, -1290)
-		po/pl.po (+788, -671)
-		po/sk.po (+637, -699)
-		po/sv.po (+504, -411)
+	Lines: +2930, -0
+	Files:	po/el.po (added +2930)
 
 	Add Greek, update other translations
 
@@ -45040,13 +43581,6 @@ Name: gimp-print-4_3_0
 
 	Lines: +3, -0
 	Files:	po/POTFILES.in (+3, -0)
-		po/da.po (+409, -547)
-		po/en_GB.po (+583, -548)
-		po/fr.po (+478, -549)
-		po/no.po (+409, -547)
-		po/pl.po (+430, -547)
-		po/sk.po (+699, -637)
-		po/sv.po (+583, -548)
 
 	IJS
 
@@ -45095,7 +43629,7 @@ Name: gimp-print-4_3_0
 
 2002-02-14  <rlk>	28e77a3ad76a4dec88e0fec2e205273640cfc01b
 
-	Lines: +0, -0
+	Lines: +3063, -0
 	Files:	po/sk.po (added +3063)
 
 	Add Slovak translation
@@ -45860,12 +44394,6 @@ Name: gimp-print-4_2_0
 2001-11-24  <rlk>	d98bda9da3d29fcc9e2ea32f8747046bc52dc9fa
 
 	Lines: +0, -0
-	Files:	po/da.po (+1, -1)
-		po/en_GB.po (+1, -1)
-		po/fr.po (+1, -1)
-		po/no.po (+1, -1)
-		po/pl.po (+1, -1)
-		po/sv.po (+1, -1)
 
 	Final updated .po's for 4.2.0.
 
@@ -46039,12 +44567,6 @@ Name: gimp-print-4_2_0
 
 	Lines: +39, -35
 	Files:	configure.in.in (+31, -24)
-		po/da.po (+1, -1)
-		po/en_GB.po (+1, -1)
-		po/fr.po (+1, -1)
-		po/no.po (+1, -1)
-		po/pl.po (+1, -1)
-		po/sv.po (+1, -1)
 		src/cups/Makefile.am (+8, -11)
 
 	482797 PPD build fails with DESTDIR set
@@ -46126,12 +44648,6 @@ Name: gimp-print-4_1_99-rc1
 2001-11-12  <rlk>	792761693cf11d6f2ef9b4e0eed0a71b617d8ef1
 
 	Lines: +0, -0
-	Files:	po/da.po (+94, -94)
-		po/en_GB.po (+94, -94)
-		po/fr.po (+94, -94)
-		po/no.po (+94, -94)
-		po/pl.po (+94, -94)
-		po/sv.po (+94, -94)
 
 	4.1.99-rc1 release
 
@@ -46245,12 +44761,6 @@ Name: gimp-print-4_1_99-rc1
 2001-11-10  <rlk>	fc0b2c2e9c6e72f909270cb3d94db9ca834597c0
 
 	Lines: +0, -0
-	Files:	po/da.po (+121, -121)
-		po/en_GB.po (+121, -121)
-		po/fr.po (+458, -434)
-		po/no.po (+121, -121)
-		po/pl.po (+577, -577)
-		po/sv.po (+121, -121)
 
 	Update French translation
 
@@ -46304,7 +44814,7 @@ Name: gimp-print-4_1_99-rc1
 
 2001-11-08  <rlk>	6145ccbe8e9e521c49622765974adf81f9e2f421
 
-	Lines: +1, -1
+	Lines: +2771, -1
 	Files:	configure.in.in (+1, -1)
 		po/pl.po (added +2770)
 
@@ -46313,18 +44823,12 @@ Name: gimp-print-4_1_99-rc1
 2001-11-07  <rlk>	51c89f7296233fc21a76b3a94c683299c87d9f63
 
 	Lines: +0, -0
-	Files:	po/da.po (+1, -1)
-		po/en_GB.po (+14, -13)
-		po/fr.po (+1, -1)
-		po/no.po (+1, -1)
-		po/sv.po (+1, -1)
 
 	Minor updates.
 
 2001-11-06  <rleigh>	bb77465c35f924d6251d493e51d2867413c3b96a
 
 	Lines: +0, -0
-	Files:	po/en_GB.po (+168, -15)
 
 	Complete British English translation
 
@@ -46338,12 +44842,7 @@ Name: gimp-print-4_1_99-rc1
 2001-11-06  <rlk>	84482e060ddd8440d2236e1af8ed3e62d30090a9
 
 	Lines: +1, -0
-	Files:	po/da.po (+12, -12)
-		po/en_GB.po (+12, -12)
-		po/fr.po (+12, -12)
-		po/no.po (+12, -12)
-		po/sv.po (+12, -12)
-		src/cups/Makefile.am (+1, -0)
+	Files:	src/cups/Makefile.am (+1, -0)
 
 	Print the language for the PPD files as they're generated.
 
@@ -46358,11 +44857,6 @@ Name: gimp-print-4_1_99-rc1
 
 	Lines: +18, -153
 	Files:	acconfig.h (+3, -0)
-		po/da.po (+12, -12)
-		po/en_GB.po (+12, -12)
-		po/fr.po (+12, -12)
-		po/no.po (+12, -12)
-		po/sv.po (+12, -12)
 		src/cups/Makefile.am (+4, -10)
 		src/cups/genppd.c (+4, -136)
 		src/main/print-escp2.c (+7, -7)
@@ -46417,11 +44911,6 @@ Name: gimp-print-4_1_99-rc1
 		NEWS.4.2 (+11, -6)
 		README (+1, -1)
 		debian/README.Debian (+7, -7)
-		po/da.po (+38, -38)
-		po/en_GB.po (+38, -38)
-		po/fr.po (+38, -38)
-		po/no.po (+38, -38)
-		po/sv.po (+38, -38)
 
 	Minor updates
 
@@ -46587,11 +45076,6 @@ Name: gimp-print-4_1_99-rc1
 
 	Lines: +12, -12
 	Files:	po/.cvsignore (+2, -5)
-		po/da.po (+1, -1)
-		po/en_GB.po (+1, -1)
-		po/fr.po (+1, -1)
-		po/no.po (+1, -1)
-		po/sv.po (+1, -1)
 		scripts/autogen.sh (+2, -2)
 		src/main/print-escp2.c (+2, -2)
 		src/main/printers.xml (+6, -3)
@@ -46656,11 +45140,6 @@ Name: gimp-print-4_1_99-rc1
 
 	Lines: +25, -5
 	Files:	configure.in.in (+3, -0)
-		po/da.po (+94, -94)
-		po/en_GB.po (+12, -12)
-		po/fr.po (+94, -94)
-		po/no.po (+94, -94)
-		po/sv.po (+94, -94)
 		src/cups/Makefile.am (+11, -5)
 		src/cups/genppd.c (+11, -0)
 
@@ -46739,7 +45218,6 @@ Name: gimp-print-4_1_99-rc1
 2001-10-27  <rleigh>	4bea2c7cd295a819ed3ba1e1fc894af1a0d76487
 
 	Lines: +0, -0
-	Files:	po/en_GB.po (+591, -570)
 
 	Update en_GB translation escputil strings
 
@@ -46770,11 +45248,6 @@ Name: gimp-print-4_1_99-b4
 2001-10-26  <rlk>	bf29ceaaa307a79ba869a46beaf6ac3ce9250d5e
 
 	Lines: +0, -0
-	Files:	po/da.po (+113, -113)
-		po/en_GB.po (+113, -113)
-		po/fr.po (+113, -113)
-		po/no.po (+113, -113)
-		po/sv.po (+113, -113)
 
 	Updates
 
@@ -46809,12 +45282,7 @@ Name: gimp-print-4_1_99-b4
 2001-10-25  <rlk>	f7a12ab869eb59509599c41c4c25269793c3f2d4
 
 	Lines: +28, -6
-	Files:	po/da.po (+1, -1)
-		po/en_GB.po (+1, -1)
-		po/fr.po (+1, -1)
-		po/no.po (+1, -1)
-		po/sv.po (+1, -1)
-		src/main/print-escp2.c (+25, -6)
+	Files:	src/main/print-escp2.c (+25, -6)
 		src/main/printers.xml (+3, -0)
 
 	Improve C80 print quality.
@@ -46867,11 +45335,6 @@ Name: gimp-print-4_1_99-b4
 2001-10-23  <rlk>	109901f36aae2c808a4d4c01ac62f90d80cabd55
 
 	Lines: +0, -0
-	Files:	po/da.po (+1, -1)
-		po/en_GB.po (+5, -8)
-		po/fr.po (+1, -1)
-		po/no.po (+1, -1)
-		po/sv.po (+336, -120)
 
 	Updates
 
@@ -46906,14 +45369,10 @@ Name: gimp-print-4_1_99-b4
 
 2001-10-21  <rlk>	b0d0e54108e219c64fdc27a3b972e44051d5fea9
 
-	Lines: +2, -1
+	Lines: +2766, -1
 	Files:	configure.in.in (+1, -1)
 		po/.cvsignore (+1, -0)
 		po/da.po (added +2764)
-		po/en_GB.po (+1, -1)
-		po/fr.po (+1, -1)
-		po/no.po (+1, -1)
-		po/sv.po (+1, -1)
 
 	Danish translation
 
@@ -46941,10 +45400,6 @@ Name: gimp-print-4_1_99-b4
 2001-10-21  <rlk>	fb10e9c43df9f567f88f3a643f15d45dba1f73e9
 
 	Lines: +0, -0
-	Files:	po/en_GB.po (+199, -112)
-		po/fr.po (+85, -93)
-		po/no.po (+85, -93)
-		po/sv.po (+85, -103)
 
 	Updates
 
@@ -47033,10 +45488,6 @@ Name: gimp-print-4_1_99-b4
 2001-10-18  <rlk>	94d27f5b0ed4dd6949af02b031e2faf3894cb8ad
 
 	Lines: +0, -0
-	Files:	po/en_GB.po (+4, -6)
-		po/fr.po (+4, -6)
-		po/no.po (+4, -6)
-		po/sv.po (+4, -6)
 
 	Minor updates
 
@@ -47050,10 +45501,6 @@ Name: gimp-print-4_1_99-b4
 2001-10-18  <rlk>	2265522d28c2ea41479400e0fbf09525202364e1
 
 	Lines: +0, -0
-	Files:	po/en_GB.po (+107, -183)
-		po/fr.po (+115, -185)
-		po/no.po (+115, -185)
-		po/sv.po (+125, -187)
 
 	Updates
 
@@ -47105,11 +45552,7 @@ Name: gimp-print-4_1_99-b4
 2001-10-17  <rlk>	5a6b3ca4f2e499cf340e1ac0a5903d6fe5b50c81
 
 	Lines: +238, -225
-	Files:	po/en_GB.po (+875, -2)
-		po/fr.po (+1058, -156)
-		po/no.po (+1054, -154)
-		po/sv.po (+903, -2)
-		src/escputil/escputil.c (+238, -225)
+	Files:	src/escputil/escputil.c (+238, -225)
 
 	Mark escputil for i18n.
 
@@ -47136,10 +45579,6 @@ Name: gimp-print-4_1_99-b4
 2001-10-16  <rlk>	63e5b1cc6c9399db64ac4992df223cf24b6463a7
 
 	Lines: +0, -0
-	Files:	po/en_GB.po (+97, -92)
-		po/fr.po (+156, -199)
-		po/no.po (+154, -197)
-		po/sv.po (+40, -3)
 
 	Updates
 
@@ -47161,11 +45600,7 @@ Name: gimp-print-4_1_99-b4
 2001-10-15  <rlk>	293c9bbd193935693740775eb24b63beab356548
 
 	Lines: +1231, -1276
-	Files:	po/en_GB.po (+475, -389)
-		po/fr.po (+199, -156)
-		po/no.po (+197, -154)
-		po/sv.po (+198, -154)
-		src/foomatic/foomatic-printermap (+1, -0)
+	Files:	src/foomatic/foomatic-printermap (+1, -0)
 		src/gimp/gimp_main_window.c (+21, -21)
 		src/main/print-escp2.c (+1209, -1255)
 
@@ -47232,18 +45667,15 @@ Name: gimp-print-4_1_99-b4
 2001-10-15  <easysw>	40c387154593f7b4d4860fa5606117c4884743f9
 
 	Lines: +0, -0
-	Files:	po/en_GB.po (+1, -1)
 
 	Change English to English-GB for en_GB catalog...
 
 2001-10-15  <rlk>	e7b1f8ef096e0c619bc675f3c317001aa7734db2
 
-	Lines: +3, -3
+	Lines: +3955, -3
 	Files:	configure.in.in (+2, -2)
-		po/en_GB.po (+335, -348)
 		po/fr.po (added +2009)
 		po/no.po (added +1943)
-		po/sv.po (+161, -554)
 		src/cups/Makefile.am (+1, -1)
 
 	Add and update language catalogs.
@@ -47444,8 +45876,6 @@ Name: gimp-print-4_1_99-b3
 2001-10-07  <rlk>	75b644145e438f3d9fac74ec48c8051d1daf3b6d
 
 	Lines: +0, -0
-	Files:	po/en_GB.po (+1, -1)
-		po/sv.po (+1, -1)
 
 	Updates
 
@@ -47487,8 +45917,6 @@ Name: gimp-print-4_1_99-b3
 2001-10-07  <rlk>	f0748aa3cd9d77c4a0dc012b5f29cb9f4c3dd412
 
 	Lines: +0, -0
-	Files:	po/en_GB.po (+30, -30)
-		po/sv.po (+30, -30)
 
 	Minor updates.
 
@@ -47496,8 +45924,6 @@ Name: gimp-print-4_1_99-b3
 
 	Lines: +9, -156
 	Files:	po/ChangeLog (removed -156)
-		po/en_GB.po (+1, -1)
-		po/sv.po (+1, -1)
 		scripts/autogen.sh (+9, -0)
 
 	Remove generated po/ChangeLog.  This file causes problems because
@@ -47570,8 +45996,6 @@ Name: gimp-print-4_1_99-b3
 		NEWS (+61, -41)
 		NEWS.4.2 (+8, -2)
 		po/ChangeLog (+48, -0)
-		po/en_GB.po (+21, -21)
-		po/sv.po (+2419, -1997)
 		scripts/autogen.sh (+148, -0)
 		src/ghost/README (+8, -4)
 
@@ -47846,7 +46270,6 @@ Name: gimp-print-4_1_99-b3
 2001-10-01  <rlk>	5894ed57f32419ccc5483c0abc4cb7096df332fc
 
 	Lines: +0, -0
-	Files:	po/en_GB.po (+101, -86)
 
 	Updates
 
@@ -47861,14 +46284,12 @@ Name: gimp-print-4_1_99-b3
 2001-10-01  <rlk>	69739ae712e6ffa32f650f588c2b3da3f9430dbd
 
 	Lines: +0, -0
-	Files:	po/sv.po (+231, -273)
 
 	Quoted printable is indeed evil.
 
 2001-10-01  <rlk>	804307ee0e4896213b81975212f06fbe33228033
 
 	Lines: +0, -0
-	Files:	po/sv.po (+382, -319)
 
 	Update
 
@@ -47933,7 +46354,6 @@ Name: gimp-print-4_1_99-b3
 2001-09-28  <rlk>	458e0c91d39ba633a398a6bb10638daab9672334
 
 	Lines: +0, -0
-	Files:	po/sv.po (+1976, -2408)
 
 	Updates
 
@@ -47957,8 +46377,6 @@ Name: gimp-print-4_1_99-b3
 
 	Lines: +1, -0
 	Files:	po/.cvsignore (+1, -0)
-		po/en_GB.po (+313, -315)
-		po/sv.po (+2408, -1967)
 
 	Update
 
@@ -48020,7 +46438,7 @@ Name: gimp-print-4_1_99-b3
 
 2001-09-24  <rlk>	afe0831e28a42955fd570c22fd58cf667d803d39
 
-	Lines: +279, -62
+	Lines: +2258, -62
 	Files:	NEWS.4.2 (+33, -24)
 		configure.in.in (+1, -1)
 		po/sv.po (added +1979)
@@ -48059,7 +46477,6 @@ Name: gimp-print-4_1_99-b2
 2001-09-21  <rlk>	7bf02d148c3d45fe07c7480ebedc3518255efdf2
 
 	Lines: +0, -0
-	Files:	po/en_GB.po (+80, -80)
 
 	4.1.99-b2 release.
 
@@ -48220,7 +46637,6 @@ Name: gimp-print-4_1_99-b2
 	Files:	.cvsignore (+1, -0)
 		Makefile.am (+10, -5)
 		doc/texinfo.tex (removed -6257)
-		po/en_GB.po (+99, -143)
 		src/cups/Makefile.am (+2, -1)
 		src/foomatic/Makefile.am (+2, -1)
 		src/ghost/Makefile.am (+2, -1)
@@ -48390,7 +46806,6 @@ Name: gimp-print-4_1_99-b2
 		configure.in.in (+15, -7)
 		debian/README.building (+35, -14)
 		po/POTFILES.in (+5, -0)
-		po/en_GB.po (+77, -77)
 		src/Makefile.am (+3, -2)
 
 	Fix gimp-dist target
@@ -48479,7 +46894,6 @@ Name: gimp-print-4_1_99-b2
 
 	Lines: +3, -0
 	Files:	po/POTFILES.in (+3, -0)
-		po/en_GB.po (+48, -27)
 
 	Update en_GB translation
 	Add genppd.c to POTFILE.in
@@ -48551,7 +46965,6 @@ Name: gimp-print-4_1_99-b2
 		configure.in.in (+1, -1)
 		debian/README.Debian (+1, -1)
 		po/.cvsignore (+0, -1)
-		po/en_GB.po (+115, -91)
 		src/ghost/README (+265, -186)
 		src/main/print-escp2.c (+97, -67)
 
@@ -48563,7 +46976,7 @@ Name: gimp-print-4_1_99-b2
 
 2001-09-07  <rleigh>	7939a047b3098e8dfe6fe9c56c2d689d7c3f110f
 
-	Lines: +1, -1
+	Lines: +1, -2108
 	Files:	configure.in.in (+1, -1)
 		po/en_TEST.po (removed -2107)
 
@@ -48608,8 +47021,6 @@ Name: gimp-print-4_1_99-b2
 
 	Lines: +267, -256
 	Files:	NEWS (+0, -1)
-		po/en_GB.po (+342, -68)
-		po/en_TEST.po (+343, -68)
 		src/gimp/gimp_color_window.c (+65, -65)
 		src/gimp/gimp_main_window.c (+201, -187)
 		src/gimp/print_gimp.h (+1, -3)
@@ -48624,8 +47035,6 @@ Name: gimp-print-4_1_99-b1
 2001-09-03  <rlk>	0e74549ff161ba5b91898b3710485063f52fa301
 
 	Lines: +0, -0
-	Files:	po/en_GB.po (+1, -1)
-		po/en_TEST.po (+1, -1)
 
 	Updates
 
@@ -48653,8 +47062,6 @@ Name: gimp-print-4_1_99-b1
 2001-09-03  <rlk>	6d580d002380e4ec33bbde482bf8d6c4d3d9ca0d
 
 	Lines: +0, -0
-	Files:	po/en_GB.po (+1, -1)
-		po/en_TEST.po (+1, -1)
 
 	Final 4.1.99-b1 updates.
 
@@ -48726,8 +47133,6 @@ Name: gimp-print-4_1_99-b1
 		debian/control.in (+3, -3)
 		debian/rules (+8, -5)
 		doc/functions.texi (+2, -2)
-		po/en_GB.po (+114, -107)
-		po/en_TEST.po (+114, -107)
 		src/main/Makefile.am (+0, -1)
 		src/testpattern/Makefile.am (+1, -0)
 
@@ -48764,8 +47169,6 @@ Name: gimp-print-4_1_99-b1
 		README (+2, -2)
 		configure.in.in (+2, -2)
 		debian/README.Debian (+1, -1)
-		po/en_GB.po (+276, -284)
-		po/en_TEST.po (+294, -292)
 		src/ghost/README (+24, -21)
 		src/main/Makefile.am (+6, -6)
 
@@ -49112,8 +47515,6 @@ Name: gimp-print-4_1_99-a3
 	Lines: +69, -32
 	Files:	NEWS (+64, -31)
 		README (+5, -1)
-		po/en_GB.po (+406, -489)
-		po/en_TEST.po (+438, -493)
 
 	More release note updates.
 
@@ -49226,8 +47627,6 @@ Name: gimp-print-4_1_99-a3
 
 	Lines: +95, -15
 	Files:	configure.in.in (+18, -1)
-		po/en_GB.po (+98, -94)
-		po/en_TEST.po (+99, -94)
 		src/Makefile.am (+1, -1)
 		src/printdef/Makefile.am (+1, -0)
 		src/testpattern/.cvsignore (added +4)
@@ -49332,9 +47731,7 @@ Name: gimp-print-4_1_99-a3
 2001-08-11  <rlk>	7cfa927d5bf684db63c350ce37e05b43e4d048bd
 
 	Lines: +154, -19
-	Files:	po/en_GB.po (+91, -91)
-		po/en_TEST.po (+91, -91)
-		src/escputil/escputil.c (+7, -7)
+	Files:	src/escputil/escputil.c (+7, -7)
 		src/foomatic/foomatic-printermap (+5, -2)
 		src/ghost/README (+5, -2)
 		src/main/print-escp2.c (+83, -6)
@@ -49399,8 +47796,6 @@ Name: gimp-print-4_1_99-a3
 		configure.in.in (+17, -31)
 		debian/rules (+0, -1)
 		lib/xmalloc.h (+1, -1)
-		po/en_GB.po (+55, -55)
-		po/en_TEST.po (+55, -55)
 
 	configure.in.in: Fix small bugs in configure.in.in, and upgrade for 2.50 compatibility
 	acconfig.h: remove redundant entries
@@ -49524,8 +47919,6 @@ Name: gimp-print-4_1_99-a3
 	Lines: +106, -38
 	Files:	Makefile.am (+25, -8)
 		configure.in.in (+52, -29)
-		po/en_GB.po (+1, -1)
-		po/en_TEST.po (+1, -1)
 		scripts/patch-gimp (added +25)
 		src/Makefile.am (+4, -1)
 
@@ -49534,9 +47927,7 @@ Name: gimp-print-4_1_99-a3
 2001-08-03  <rlk>	c60d8b86e1378e7e9f4713348dd13e81895f7fb4
 
 	Lines: +8, -1
-	Files:	po/en_GB.po (+1, -1)
-		po/en_TEST.po (+1, -1)
-		src/cups/Makefile.am (+2, -0)
+	Files:	src/cups/Makefile.am (+2, -0)
 		src/foomatic/Makefile.am (+6, -1)
 
 	Build PPD's and foomatic data during build rather than install.
@@ -49575,9 +47966,7 @@ Name: gimp-print-4_1_99-a3
 2001-08-01  <rlk>	22f7b3fc12edf4f118d335514ed7a1c72194d610
 
 	Lines: +17, -4
-	Files:	po/en_GB.po (+95, -95)
-		po/en_TEST.po (+95, -95)
-		src/main/print-escp2.c (+15, -2)
+	Files:	src/main/print-escp2.c (+15, -2)
 		src/main/printers.xml (+1, -1)
 		test/unprint.c (+1, -1)
 
@@ -49694,8 +48083,6 @@ Name: gimp-print-4_1_99-a3
 	Files:	configure.in.in (+3, -3)
 		debian/changelog (+3, -2)
 		debian/rules (+4, -0)
-		po/en_GB.po (+91, -91)
-		po/en_TEST.po (+91, -91)
 
 	Put samples/profile.jpg into cupsys-driver-gimpprint debian package
 
@@ -49784,8 +48171,6 @@ Name: gimp-print-4_1_99-a2
 2001-07-21  <rlk>	634339bb738b62b010eb227e5ebdd2a947e747f8
 
 	Lines: +0, -0
-	Files:	po/en_GB.po (+1, -1)
-		po/en_TEST.po (+1, -1)
 
 	Update
 
@@ -49822,8 +48207,6 @@ Name: gimp-print-4_1_99-a2
 	Files:	Makefile.am (+1, -1)
 		NEWS (+27, -11)
 		configure.in.in (+18, -1)
-		po/en_GB.po (+90, -98)
-		po/en_TEST.po (+98, -100)
 		samples/Makefile.am (added +32)
 		samples/colorbars4.png (added +0)
 		samples/colorsweep.png (added +0)
@@ -49865,8 +48248,6 @@ Name: gimp-print-4_1_99-a2
 	Lines: +382, -202
 	Files:	NEWS (+5, -4)
 		README (+9, -2)
-		po/en_GB.po (+2, -2)
-		po/en_TEST.po (+2, -2)
 		src/ghost/README (+368, -196)
 
 	Update some README's.
@@ -49895,8 +48276,6 @@ Name: gimp-print-4_1_99-a2
 2001-07-18  <rlk>	0d6fcd91be72bd08cd2b61327db11b8c2a6c7bde
 
 	Lines: +0, -0
-	Files:	po/en_GB.po (+242, -242)
-		po/en_TEST.po (+245, -243)
 
 	updates
 
@@ -50088,8 +48467,6 @@ Name: gimp-print-4_1_99-a2
 2001-07-15  <rlk>	7cb84084c09fde304e1786bbc023786a92e18bba
 
 	Lines: +0, -0
-	Files:	po/en_GB.po (+408, -391)
-		po/en_TEST.po (+419, -395)
 
 	Updates
 
@@ -50310,8 +48687,6 @@ Name: gimp-print-4_1_99-a1
 		README (+7, -7)
 		configure.in.in (+4, -3)
 		debian/README.Debian (+7, -6)
-		po/en_GB.po (+190, -189)
-		po/en_TEST.po (+191, -190)
 
 	4.1.99-a1 (4.2 alpha 1) release.
 
@@ -50616,8 +48991,6 @@ Name: gimp-print-4_1_99-a1
 		doc/types.texi (added +93)
 		doc/using.texi (added +239)
 		doc/{README.weave => weave.texi} (+531, -383)
-		po/en_GB.po (+211, -211)
-		po/en_TEST.po (+211, -211)
 
 	Move README.escp2 and README.weave into the Texinfo manual
 	Split Texinfo manual into separate files for ease of maintaining
@@ -50763,8 +49136,6 @@ Name: gimp-print-4_1_10
 		README (+1, -1)
 		configure.in.in (+2, -2)
 		debian/README.Debian (+1, -1)
-		po/en_GB.po (+1, -1)
-		po/en_TEST.po (+1, -1)
 		src/main/print-weave.c (+15, -6)
 
 	Gimp-Print 4.1.10 release
@@ -50801,8 +49172,6 @@ Name: gimp-print-4_1_8
 2001-06-08  <rlk>	1ea0f08724368ee6be207622614a46a7696a4c7a
 
 	Lines: +0, -0
-	Files:	po/en_GB.po (+4, -4)
-		po/en_TEST.po (+4, -4)
 
 	.
 
@@ -50844,8 +49213,6 @@ Name: gimp-print-4_1_8
 2001-06-08  <rlk>	0b916a69abd16bc5091b6af10e0949626271cb27
 
 	Lines: +0, -0
-	Files:	po/en_GB.po (+87, -87)
-		po/en_TEST.po (+87, -87)
 
 	.
 
@@ -50895,8 +49262,6 @@ Name: gimp-print-4_1_8
 	Files:	Makefile.am (+1, -1)
 		acconfig.h (+0, -3)
 		configure.in.in (+0, -4)
-		po/en_GB.po (+172, -172)
-		po/en_TEST.po (+172, -172)
 
 	Remove GIMP_PRINT_MAINT from configure.in.in
 	Fix sed parsing of debian/changelog in Makefile.am
@@ -50905,8 +49270,6 @@ Name: gimp-print-4_1_8
 
 	Lines: +4, -14
 	Files:	configure.in.in (+0, -13)
-		po/en_GB.po (+1, -1)
-		po/en_TEST.po (+1, -1)
 		src/cups/Makefile.am (+1, -1)
 		src/printdef/printdefy.y (+3, -0)
 
@@ -50977,8 +49340,6 @@ Name: gimp-print-4_1_8
 2001-06-03  <rlk>	37e6e03089291ac9b86ac645c45305111dce9244
 
 	Lines: +0, -0
-	Files:	po/en_GB.po (+62, -62)
-		po/en_TEST.po (+62, -62)
 
 	Updates
 
@@ -51017,9 +49378,7 @@ Name: gimp-print-4_1_8
 2001-06-02  <rleigh>	c839b3f222463a38c5cd2adb69e677ff2f173f15
 
 	Lines: +1, -1
-	Files:	po/en_GB.po (+140, -140)
-		po/en_TEST.po (+140, -140)
-		test/Makefile.am (+1, -1)
+	Files:	test/Makefile.am (+1, -1)
 
 	Back out distributing test/mixed-color-1bit.ppm wrongly
 
@@ -51052,8 +49411,6 @@ Name: gimp-print-4_1_8
 
 	Lines: +1, -1
 	Files:	Makefile.am (+1, -1)
-		po/en_GB.po (+407, -258)
-		po/en_TEST.po (+432, -258)
 
 	Make debian/changelog parsing safer
 
@@ -51197,8 +49554,6 @@ Name: gimp-print-4_1_8
 	Files:	Makefile.am (+4, -0)
 		README (+1, -1)
 		debian/changelog (+6, -0)
-		po/en_GB.po (+397, -378)
-		po/en_TEST.po (+407, -383)
 
 	Automatically generate debian/changelog during 'make dist'
 
@@ -51414,8 +49769,6 @@ Name: gimp-print-4_1_8
 		debian/control.in (+1, -0)
 		debian/rules (+1, -0)
 		doc/Makefile.am (+3, -2)
-		po/en_GB.po (+1, -1)
-		po/en_TEST.po (+1, -1)
 
 	configure.in.in: fix incorrect texi2html error message
 	Debian: add new HTML manual to doc-base for libgimpprint-doc
@@ -51428,8 +49781,6 @@ Name: gimp-print-4_1_8
 		configure.in.in (+4, -1)
 		doc/Makefile.am (+31, -1)
 		doc/gimpprint.texi (+2, -2)
-		po/en_GB.po (+1, -1)
-		po/en_TEST.po (+1, -1)
 		src/cups/Makefile.am (+2, -2)
 
 	Add html generation from Texinfo source
@@ -51545,8 +49896,6 @@ Name: gimp-print-4_1_8
 		debian/control.in (+11, -0)
 		debian/rules (+68, -47)
 		doc/gimpprint.texi (+1, -2)
-		po/en_GB.po (+186, -196)
-		po/en_TEST.po (+196, -200)
 
 	Add Debian package libgimpprint-doc, and update debian/rules and
 	debian/control.
@@ -51711,8 +50060,6 @@ Name: gimp-print-4_1_8
 	Files:	Makefile.am (+2, -4)
 		configure.in.in (+4, -1)
 		debian/rules (+6, -3)
-		po/en_GB.po (+366, -418)
-		po/en_TEST.po (+389, -419)
 		src/cups/genppd.c (+6, -0)
 		src/cups/rastertoprinter.c (+7, -0)
 		src/escputil/Makefile.am (+0, -1)
@@ -51934,8 +50281,6 @@ Name: gimp-print-4_1_6
 	Lines: +1, -84
 	Files:	configure.in.in (+1, -1)
 		po/POTFILES.in (+0, -2)
-		po/en_GB.po (+242, -237)
-		po/en_TEST.po (+271, -242)
 		src/gimp/Makefile.am (+0, -2)
 		src/gimp/print.c (+0, -67)
 		src/gimp/print_gimp.h (+0, -12)
@@ -52115,8 +50460,6 @@ Name: gimp-print-4_1_6
 	Lines: +438, -362
 	Files:	NEWS (+5, -1)
 		README (+1, -1)
-		po/en_GB.po (+197, -177)
-		po/en_TEST.po (+202, -177)
 		src/ghost/README (+68, -32)
 		src/main/print-canon.c (+2, -0)
 		src/main/print-dither.c (+13, -8)
@@ -52202,9 +50545,7 @@ Name: gimp-print-4_1_6
 2001-03-24  <rlk>	cdf63575f14c02d15ba344ffba2e2723658025a8
 
 	Lines: +1, -1
-	Files:	po/en_GB.po (+96, -96)
-		po/en_TEST.po (+96, -96)
-		src/foomatic/Makefile.am (+1, -1)
+	Files:	src/foomatic/Makefile.am (+1, -1)
 
 	Fix up foomatic some more.
 
@@ -52359,8 +50700,6 @@ Name: gimp-print-4_1_6
 
 	Lines: +16, -7
 	Files:	debian/rules (+16, -7)
-		po/en_GB.po (+68, -68)
-		po/en_TEST.po (+73, -70)
 
 	Restore CVS build. Call autogen.sh properly.
 
@@ -52449,8 +50788,6 @@ Name: gimp-print-4_1_6
 	Lines: +29, -13
 	Files:	Makefile.am (+22, -9)
 		debian/rules (+7, -4)
-		po/en_GB.po (+96, -96)
-		po/en_TEST.po (+96, -96)
 
 	ChangeLog generating is more strict
 	Debian packaging requires ChangeLog, and will package ChangeLog
@@ -52493,8 +50830,6 @@ Name: gimp-print-4_1_6
 	Files:	debian/rules (+9, -9)
 		debian/{control => control.in} (+4, -4)
 		lib/xmalloc.c (+3, -3)
-		po/en_GB.po (+1, -1)
-		po/en_TEST.po (+1, -1)
 
 	Automagically generate debian/control
 	tidy lib/xmalloc.c
@@ -52600,8 +50935,6 @@ Name: gimp-print-4_1_5
 
 	Lines: +10, -7
 	Files:	NEWS (+4, -1)
-		po/en_GB.po (+173, -173)
-		po/en_TEST.po (+173, -173)
 		src/main/print-escp2.c (+6, -6)
 
 	Update for the Stylus Color 900/980.
@@ -52712,9 +51045,7 @@ Name: gimp-print-4_1_5
 2001-02-28  <rlk>	44f6a24836d244820ec13f116a1be09b4876dc4a
 
 	Lines: +90, -27
-	Files:	po/en_GB.po (+253, -255)
-		po/en_TEST.po (+253, -255)
-		src/main/gimp-print-internal.h (+1, -0)
+	Files:	src/main/gimp-print-internal.h (+1, -0)
 		src/main/print-weave.c (+46, -10)
 		test/escp2-weavetest.c (+42, -16)
 		test/run-weavetest (+1, -1)
@@ -52987,8 +51318,6 @@ Name: gimp-print-4_1_5
 	Lines: +26, -1
 	Files:	Makefile.am (+14, -1)
 		configure.in.in (+12, -0)
-		po/en_GB.po (+118, -98)
-		po/en_TEST.po (+123, -98)
 
 	Added 'gimp-dist' target to package for the GIMP
 
@@ -53555,8 +51884,6 @@ Name: gimp-print-4_1_4
 	Files:	configure.in.in (+5, -2)
 		man/Makefile.am (+2, -2)
 		man/escputil.1.in (+1, -1)
-		po/en_GB.po (+22, -11)
-		po/en_TEST.po (+23, -11)
 		scripts/autogen.sh (+1, -1)
 		src/main/Makefile.am (+1, -1)
 		src/main/gimpprint.m4 (+1, -0)
@@ -53600,8 +51927,6 @@ Name: gimp-print-4_1_4
 		configure.in.in (+106, -20)
 		lib/.cvsignore (+4, -4)
 		po/ChangeLog (+5, -0)
-		po/en_GB.po (+202, -101)
-		po/en_TEST.po (+208, -95)
 		src/include/gimp-print.h (+13, -0)
 		src/main/Makefile.am (+22, -1)
 		src/main/gimpprint-config.in (added +90)
@@ -53621,7 +51946,7 @@ Name: gimp-print-4_1_4
 
 2001-02-08  <rleigh>	ab94859f6f72be14f398af3ab180395a9df2e43d
 
-	Lines: +1, -1
+	Lines: +2955, -1
 	Files:	configure.in.in (+1, -1)
 		po/en_GB.po (added +1475)
 		po/en_TEST.po (added +1479)
