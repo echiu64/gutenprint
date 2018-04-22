@@ -91,7 +91,7 @@ if ($base_revision) {
     $base_revision = "'$base_revision..HEAD'";
 }
 
-open(GITLOG, "git log --diff-algorithm=default --summary --numstat --date=short --pretty=format:'>>>GIT1%n%cd  <%an>	%H%n>>>GIT2%n%B>>>GIT3%n%D%n>>>GIT4' $base_revision|") or die "Can't run git log: $!\n";
+open(GITLOG, "git log -b --diff-algorithm=default --summary --numstat --date=short --pretty=format:'>>>GIT1%n%cd  <%an>	%H%n>>>GIT2%n%B>>>GIT3%n%D%n>>>GIT4' $base_revision|") or die "Can't run git log: $!\n";
 
 while (<GITLOG>) {
     if (/>>>GIT([0-9]+)$/) {
