@@ -1512,8 +1512,8 @@ stpi_color_traditional_init(stp_vars_t *v,
 
   if (steps != 256 && steps != 65536)
     {
-      stp_eprintf(v, 
-		  "stpi_color_traditional_init: Invalid color steps %lu (must be 256 or 65536)\n", 
+      stp_eprintf(v,
+		  "stpi_color_traditional_init: Invalid color steps %lu (must be 256 or 65536)\n",
 		  (unsigned long) steps);
       return -1;
     }
