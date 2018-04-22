@@ -109,9 +109,9 @@ function check_git {
 
 # 3) Run autogen.sh to ensure that we're using default build settings
 
-function run_autogen {
-    ./autogen.sh && return 0
-    echo "autogen.sh failed!"
+function run_build {
+    ./autogen.sh && make ${STP_PARALLEL:+-j$STP_PARALLEL} && return 0
+    echo "preliminary build failed!"
     return 1
 }
 
@@ -483,7 +483,7 @@ function runit {
 
 declare -a OPERATIONS=(preflight
 		       check_git
-		       run_autogen
+		       run_build
 		       run_valgrind_minimal
 		       run_distcheck_fast
 		       run_valgrind
