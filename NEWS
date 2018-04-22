@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.3.0-pre1, an initial development release for
+Welcome to Gutenprint 5.3.0-pre2, an initial development release for
 5.3.  Please read these release notes carefully.
 
 Gutenprint is a suite of printer drivers for UNIX, Linux, and
@@ -83,8 +83,8 @@ for building and installing Gutenprint.
 II) MAJOR CHANGES FROM PREVIOUS RELEASES
 
 1) This is the initial 5.3 pre-release.  Please refer to the release
-   notes from Gutenprint 5.2.13 and the Overall Changes from 5.2.13
-   below.
+   notes from Gutenprint 5.2.13 and later and the Overall Changes from
+   5.2.13 below.
 
 2) The PCL driver now supports color laser printers that use PCL 5c
    natively (as opposed to emulation).  The support is considered to
@@ -104,7 +104,7 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      Xerox DocuPrint C20
      Xerox WorkCentre 7345
 
-  * The following new printers have been added, with color support:
+  * The following new printers have been added, with color support.
 
      Brother HL-2400CeN
      Brother HL-2600CN
@@ -276,6 +276,14 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      Xerox Phaser 8860
      Xerox WorkCentre C2424
 
+     * Many other color laser printers, too numerous to list, have
+       been added on specification; please report success or failure
+       with any other color laser printer using the Generic PCL Color
+       drivers.  Printers that we know about that may be supported are
+       listed as UNTESTED Automatically Generated.  Based on feedback
+       from this pre-release, some or all of these printers may be
+       removed from the list prior to general release.
+
 3) The following BW laser printer has been added:
 
      HP LaserJet 5N
@@ -286,6 +294,11 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      BJC-85
      BJC-1000
      BJC-2100
+
+5) Support for Magicard Tango 2E and Rio 2E printers has been added.
+
+5) Paper size options have been corrected, so that inappropriate paper
+   sizes for many printers have been removed.
 
 ================================================================
 
@@ -630,7 +643,7 @@ present.  Here are the steps we recommend that you follow.
    v) The next screen, entitled "Model/Driver for r300-test", allows
       you to select the precise model of the printer.  Normally, the
       correct model (which will be named something like "Epson Stylus
-      Photo R300 - CUPS+Gutenprint v5.3.0-pre1") will already be
+      Photo R300 - CUPS+Gutenprint v5.3.0-pre2") will already be
       highlighted, and you can click "Modify Printer".  Otherwise, you
       must find and select the correct printer model before clicking
       Modify Printer.  You will likely need to provide your

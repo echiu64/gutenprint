@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.3.0-pre1!  Please read these notes carefully.
+Welcome to Gutenprint 5.3.0-pre2!  Please read these notes carefully.
 
 *** NOTE TO PACKAGERS: Please read the file README.package for issues
     that are of interest to distributors and packagers of Gutenprint.
@@ -15,7 +15,7 @@ I) INTRODUCTION
     that replaces the print plug-in packaged with the GIMP
     distribution.
 
-    Gutenprint 5.3.0-pre1 is the first development release in the new
+    Gutenprint 5.3.0-pre2 is the first development release in the new
     5.3 release train.
 
     Gutenprint was renamed from its original name of Gimp-Print in
@@ -113,7 +113,7 @@ A) OVERVIEW
 	gimp-print-devel@lists.sourceforge.net
 
 	================================================================
-	  Release: gutenprint 5.3.0-pre1 generated on 14 Oct 2017
+	  Release: gutenprint 5.3.0-pre2 generated on 21 Apr 2018
 
 	  Features:
 	    Build CUPS:                                 yes, installing in /usr
@@ -134,6 +134,7 @@ A) OVERVIEW
 	    Exec prefix:                                /usr/local (${prefix})
 	    Data directory:                             /usr/local/share/gutenprint
 	    Library directory:                          /usr/local/lib64/gutenprint (${exec_prefix}/lib64/gutenprint)
+	    Executable directory:                       /usr/local/bin (/usr/local/bin)
 	    XML data directory:                         /usr/local/share/gutenprint/5.3/xml
 	    Module directory:                           /usr/local/lib64/gutenprint/5.3/modules (${exec_prefix}/lib64/gutenprint/5.3/modules)
 	    Install sample images:                      yes
@@ -141,14 +142,14 @@ A) OVERVIEW
 	  General configuration:
 	    Compiler options:                           -Disfinite=finite  -O6  -Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wwrite-strings -Werror-implicit-function-declaration -Winline -Wformat=2 -finline-limit=131072 -D_POSIX_C_SOURCE=200809L -std=c99 -pedantic -Waggregate-return -Wcast-qual -Wshadow -Wredundant-decls
 	    Build static libraries:                     yes
-	    Build shared libraries:                     no
+	    Build shared libraries:                     yes
 	    Maintainer mode:                            yes
 	    Use i18n:                                   yes
 	    Generate profiling information:             no
 	    Generate debugging symbols:                 no
 	    Use modules:                                static
 	    Use readline libraries:                     yes, extra arguments: -lncurses
-	    uname -a output:                            Linux dsl092-065-009 4.13.2-1.g68f4aee-default #1 SMP PREEMPT Thu Sep 14 18:42:01 UTC 2017 (68f4aee) x86_64 x86_64 x86_64 GNU/Linux
+	    uname -a output:                            Linux rlk-mobile.rlk 4.4.126-48-default #1 SMP Sat Apr 7 05:22:50 UTC 2018 (f24992c) x86_64 x86_64 x86_64 GNU/Linux
 	================================================================
 
 
@@ -222,7 +223,7 @@ C) CUPS
     directory" (other ".h" files may also be missing, depending upon
     the missing packages):
 
-	make[3]: Entering directory `/opt/gutenprint/gutenprint-5.3.0-pre1/src/cups'
+	make[3]: Entering directory `/opt/gutenprint/gutenprint-5.3.0-pre2/src/cups'
 	gcc -DHAVE_CONFIG_H -I. -I../..  -I../../include -I../../include
 	   -Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes
 	   -Wmissing-declarations -Wnested-externs -Wwrite-strings
@@ -235,11 +236,11 @@ C) CUPS
 	genppd.c:79:23: error: cups/cups.h: No such file or directory
 	genppd.c:80:25: error: cups/raster.h: No such file or directory
 	make[3]: *** [gutenprint_5_3-genppd.o] Error 1
-	make[3]: Leaving directory `/opt/gutenprint/gutenprint-5.3.0-pre1/src/cups'
+	make[3]: Leaving directory `/opt/gutenprint/gutenprint-5.3.0-pre2/src/cups'
 	make[2]: *** [all-recursive] Error 1
-	make[2]: Leaving directory `/opt/gutenprint/gutenprint-5.3.0-pre1/src'
+	make[2]: Leaving directory `/opt/gutenprint/gutenprint-5.3.0-pre2/src'
 	make[1]: *** [all-recursive] Error 1
-	make[1]: Leaving directory `/opt/gutenprint/gutenprint-5.3.0-pre1'
+	make[1]: Leaving directory `/opt/gutenprint/gutenprint-5.3.0-pre2'
 	make: *** [all] Error 2
 
     Installing the CUPS driver for Gutenprint 5.3 will not interfere
@@ -274,7 +275,7 @@ C) CUPS
       /usr/share/cups/model/gutenprint.  These PPD files can only be
       used by the precise version of Gutenprint that they were built
       with; for example, it is not possible to use PPD files from
-      Gutenprint 5.3.0-pre1 with Gutenprint 5.3.0.
+      Gutenprint 5.3.0-pre2 with Gutenprint 5.3.0.
 
       If you are using CUPS 1.2 or above, these PPD files may not be
       actually installed by default, depending upon your system.
@@ -721,7 +722,7 @@ F) GIMP
     The errors will typically look like this; the important errors are
     the ones "No such file or directory".
 
-	make[3]: Entering directory `/opt/gutenprint/gutenprint-5.3.0-pre1/src/gimp2'
+	make[3]: Entering directory `/opt/gutenprint/gutenprint-5.3.0-pre2/src/gimp2'
 	gcc -DHAVE_CONFIG_H -I. -I../..  -I../../include -I../../include
 	   -Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes
 	   -Wmissing-declarations -Wnested-externs -Wwrite-strings
@@ -734,11 +735,11 @@ F) GIMP
 	print_gimp.h:37:26: error: libgimp/gimp.h: No such file or directory
 	print_gimp.h:38:28: error: libgimp/gimpui.h: No such file or directory
 	make[3]: *** [print-image-gimp.o] Error 1
-	make[3]: Leaving directory `/opt/gutenprint/gutenprint-5.3.0-pre1/src/gimp2'
+	make[3]: Leaving directory `/opt/gutenprint/gutenprint-5.3.0-pre2/src/gimp2'
 	make[2]: *** [all-recursive] Error 1
-	make[2]: Leaving directory `/opt/gutenprint/gutenprint-5.3.0-pre1/src'
+	make[2]: Leaving directory `/opt/gutenprint/gutenprint-5.3.0-pre2/src'
 	make[1]: *** [all-recursive] Error 1
-	make[1]: Leaving directory `/opt/gutenprint/gutenprint-5.3.0-pre1'
+	make[1]: Leaving directory `/opt/gutenprint/gutenprint-5.3.0-pre2'
 	make: *** [all] Error 2
 
     Normally, the Gutenprint configure script detects which version,
@@ -788,8 +789,8 @@ A) PRINTER INSTALLATION
     more than one PPD file for your printer.  Gutenprint PPD files are
     described as
 
-    Epson Stylus Photo R300 - CUPS+Gutenprint v5.3.0-pre1
-    Epson Stylus Photo R300 - CUPS+Gutenprint v5.3.0-pre1 Simplified
+    Epson Stylus Photo R300 - CUPS+Gutenprint v5.3.0-pre2
+    Epson Stylus Photo R300 - CUPS+Gutenprint v5.3.0-pre2 Simplified
 
     The "simplified" PPD files offer a basic set of options only, for
     selecting printer options, standard paper sizes, and basic quality
@@ -814,11 +815,11 @@ A) PRINTER INSTALLATION
     you attempt to use a version of Gutenprint with PPD files not
     built for that precise version, the driver will fail with a
     diagnostic error message.  For example, PPD files built for
-    Gutenprint 5.3.0-pre1 will not work with driver version 5.3.0.
+    Gutenprint 5.3.0-pre2 will not work with driver version 5.3.0.
     You can identify printers using Gutenprint PPD files by the name
     of the PPD file, which will be something like:
 
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.3.0-pre1(en)
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.3.0-pre2(en)
 
     Linux users please note: If you are using CUPS 1.1.11 or higher,
     and you have a USB-connected printer, you must have a printer
