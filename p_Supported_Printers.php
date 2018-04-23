@@ -17,8 +17,8 @@ of them.  We will fill in this list as we verify successful operation
 of these printers.  You can help by testing this with your own printer
 and reporting the results!</p>
 
-<table summary="Supported printers for Gutenrint 5.2.13-pre1">
-<caption style="font-size:135%;margin-bottom:0.50em;"><b>Gutenprint 5.2.13-pre1</b></caption>
+<table summary="Supported printers for Gutenrint 5.2.14">
+<caption style="font-size:135%;margin-bottom:0.50em;"><b>Gutenprint 5.2.14</b></caption>
 <tr><td>Canon BJ-30</td><td>bjc-30</td><td></td></tr>
 <tr><td>Canon BJC-50</td><td>bjc-50</td><td></td></tr>
 <tr><td>Canon BJC-55</td><td>bjc-55</td><td></td></tr>
