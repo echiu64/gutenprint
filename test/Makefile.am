@@ -28,7 +28,7 @@ LOCAL_CPPFLAGS = -I$(top_srcdir)/src/main $(GUTENPRINT_CFLAGS)
 ## It is essentially a giant unit test for the weave code.
 ## testdither doesn't actually test anything; there appears to be no way
 ## for it to actually return anything.
-TESTS = curve run-weavetest testdither
+TESTS = test-curve run-weavetest testdither
 
 ## Programs
 
@@ -36,6 +36,8 @@ if BUILD_TEST
 AM_TESTS_ENVIRONMENT=STP_MODULE_PATH=$(top_builddir)/src/main/.libs:$(top_builddir)/src/main STP_DATA_PATH=$(top_srcdir)/src/xml
 noinst_PROGRAMS = testdither escp2-weavetest unprint pcl-unprint bjc-unprint curve xml-curve pixma_parse gen-printer-list
 endif
+
+noinst_SCRIPTS=test-curve run-weavetest run-testdither
 
 escp2_weavetest_SOURCES = escp2-weavetest.c
 escp2_weavetest_LDADD = $(GUTENPRINT_LIBS)
@@ -73,4 +75,4 @@ pixma_parse_SOURCES = pixma_parse.c pixma_parse.h
 CLEANFILES = mixed-color-1bit.ppm
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = cyan-sweep.tif parse-escp2 run-weavetest run-testdither
+EXTRA_DIST = cyan-sweep.tif parse-escp2 run-weavetest run-testdither test-curve

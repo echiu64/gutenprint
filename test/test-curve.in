@@ -1,0 +1,70 @@
+#!@BASH@
+
+# Driver for curve tester
+#
+# Copyright 2018 Robert Krawitz (rlk@alum.mit.edu)
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the Free
+# Software Foundation; either version 2 of the License, or (at your option)
+# any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+# for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+if [[ -n "$STP_TEST_LOG_PREFIX" ]] ; then
+    redir="${STP_TEST_LOG_PREFIX}${0##*/}_$$.log"
+    exec 1>>"$redir"
+    exec 2>&1
+fi
+
+[[ -n $STP_TEST_DEBUG ]] && DEBUG=echo
+
+set -e
+
+retval=0
+
+if [[ -z $srcdir || $srcdir = . ]] ; then
+    sdir=$(pwd)
+elif [[ $srcdir =~ ^/ ]] ; then
+    sdir="$srcdir"
+else
+    sdir="$(pwd)/$srcdir"
+fi
+
+export STP_DATA_PATH=${STP_DATA_PATH:-"$sdir/../src/xml"}
+export STP_MODULE_PATH=${STP_MODULE_PATH:-"$sdir/../src/main:$sdir/../src/main/.libs"}
+
+declare valgrind=0
+
+if [ -n "$STP_TEST_DEBUG" ] ; then
+    echo "Would run"
+    exit 0
+fi
+
+run_valgrind() {
+    $vg1 "$@"
+}
+
+function runit() {
+    echo "================================================================"
+    echo "$@"
+    [[ -z $STP_TEST_DEBUG ]] && "$@"
+}
+
+case "$STP_TEST_PROFILE" in
+    valgrind*)
+	vg="libtool --mode=execute valgrind $valopts --log-fd=3"
+	valgrind="$vg --num-callers=50 --leak-check=yes --error-limit=no --error-exitcode=1"
+	;;
+    *)
+	valgrind=
+	;;
+esac
+
+$valgrind ./curve

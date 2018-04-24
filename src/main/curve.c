@@ -1652,6 +1652,11 @@ stp_curve_create_from_xmltree(stp_mxml_node_t *curve)  /* The curve node */
  error:
   stp_deprintf(STP_DBG_CURVE_ERRORS,
 	       "stp_curve_create_from_xmltree: error during curve read\n");
+  if (seq)
+    {
+      stp_sequence_destroy(seq);
+      seq = NULL;
+    }
   if (ret)
     stp_curve_destroy(ret);
   stp_xml_exit();

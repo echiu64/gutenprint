@@ -558,6 +558,7 @@ piecewise_curve_checks(stp_curve_t *curve1, int resample_points, int expected)
     }
   else
     TEST_PASS();
+  stp_curve_destroy(curve2);
 
   if (resample_points > 0)
     {
@@ -599,6 +600,8 @@ piecewise_curve_checks(stp_curve_t *curve1, int resample_points, int expected)
       SIMPLE_TEST_CHECK((curve2 = stp_curve_get_subrange(curve1, 0, 2)));
       if (verbose && curve2)
 	stp_curve_write(stdout, curve2);
+      if (curve2)
+	stp_curve_destroy(curve2);
 
       if (resample_points > 10)
 	{
@@ -614,6 +617,8 @@ piecewise_curve_checks(stp_curve_t *curve1, int resample_points, int expected)
 	    }
 	  else
 	    TEST_FAIL();
+	  if (curve2)
+	    stp_curve_destroy(curve2);
 	}
     }
 }
@@ -654,14 +659,6 @@ main(int argc, char **argv)
 	default:
 	  break;
 	}
-    }
-
-  if (getenv("STP_TEST_LOG_PREFIX"))
-    {
-      char path[PATH_MAX+1];
-      (void) snprintf(path, PATH_MAX, "%scurve_%d.log", getenv("STP_TEST_LOG_PREFIX"), getpid());
-      stdout = freopen(path, "w", stdout);
-      dup2(1, 2);
     }
   stp_init();
 
@@ -1018,6 +1015,11 @@ main(int argc, char **argv)
 	  stp_curve_destroy(curve1);
 	  curve1 = NULL;
 	}
+      if (curve2)
+	{
+	  stp_curve_destroy(curve2);
+	  curve2 = NULL;
+	}
     }
 
   TEST("Creating piecewise wrap-around curve");
@@ -1032,6 +1034,7 @@ main(int argc, char **argv)
   SIMPLE_TEST_CHECK(tmp);
   if (verbose)
     printf("%s\n", tmp);
+  stp_free(tmp);
 
   TEST("Check curve is piecewise");
   SIMPLE_TEST_CHECK(stp_curve_is_piecewise(curve1));
@@ -1065,6 +1068,7 @@ main(int argc, char **argv)
   stp_curve_copy(curve2, curve1);
   piecewise_curve_checks(curve2, 100, 48);
   stp_curve_destroy(curve1);
+  stp_curve_destroy(curve2);
 
   TEST("Creating piecewise no-wrap curve with not enough data (PASS is an expected failure)");
   curve1 = stp_curve_create(STP_CURVE_WRAP_NONE);
@@ -1081,6 +1085,7 @@ main(int argc, char **argv)
   SIMPLE_TEST_CHECK(tmp);
   if (verbose)
     printf("%s\n", tmp);
+  stp_free(tmp);
 
   TEST("Check curve is piecewise");
   SIMPLE_TEST_CHECK(stp_curve_is_piecewise(curve1));
@@ -1112,7 +1117,8 @@ main(int argc, char **argv)
   piecewise_curve_checks(curve2, 50, 49);
   stp_curve_copy(curve2, curve1);
   piecewise_curve_checks(curve2, 100, 49);
-
+  stp_curve_destroy(curve2);
+  stp_curve_destroy(curve1);
 
   TEST("Creating piecewise spline wrap-around curve");
   curve1 = stp_curve_create(STP_CURVE_WRAP_AROUND);
@@ -1127,6 +1133,7 @@ main(int argc, char **argv)
   SIMPLE_TEST_CHECK(tmp);
   if (verbose)
     printf("%s\n", tmp);
+  stp_free(tmp);
 
   TEST("Check curve is piecewise");
   SIMPLE_TEST_CHECK(stp_curve_is_piecewise(curve1));
@@ -1173,10 +1180,16 @@ main(int argc, char **argv)
   SIMPLE_TEST_CHECK(tmp);
   if (verbose)
     printf("%s\n", tmp);
+  stp_free(tmp);
 
   TEST("Check curve is piecewise");
   SIMPLE_TEST_CHECK(stp_curve_is_piecewise(curve1));
 
+  if (curve2)
+    {
+      stp_curve_destroy(curve2);
+      curve2 = NULL;
+    }
   TEST("Create copy of piecewise curve");
   curve2 = stp_curve_create_copy(curve1);
   SIMPLE_TEST_CHECK(curve2);
@@ -1204,6 +1217,7 @@ main(int argc, char **argv)
   piecewise_curve_checks(curve2, 50, 49);
   stp_curve_copy(curve2, curve1);
   piecewise_curve_checks(curve2, 100, 49);
+  stp_curve_destroy(curve1);
 
   TEST("Create small piecewise curve");
   curve1 = stp_curve_create_from_string(small_piecewise_curve);
