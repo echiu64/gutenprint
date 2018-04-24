@@ -1137,12 +1137,10 @@ CONFIG_FILE_EXEC([test/parse-escp2])
 CONFIG_FILE_EXEC([test/run-testdither])
 CONFIG_FILE_EXEC([test/run-weavetest])
 AC_CONFIG_FILES([scripts/Makefile])
-CONFIG_FILE_EXEC([scripts/build-release])
 CONFIG_FILE_EXEC([scripts/mkgitlog])
 CONFIG_FILE_EXEC([scripts/gversion])
 CONFIG_FILE_EXEC([scripts/test-gversion])
 CONFIG_FILE_EXEC([scripts/wzpaq])
-CONFIG_FILE_EXEC([scripts/count-cpus])
 AC_CONFIG_COMMANDS([default], [
 echo
 ],

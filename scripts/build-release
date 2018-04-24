@@ -279,10 +279,12 @@ function run_full {
 
 function run_checksums() {
     if make checksums ; then
-	if [[ ! -f src/testpattern/Checksums/sums.$(pkg_version).zpaq ]] ; then
-	    echo "Can't find new checksums file"
+	CSUM_FILE="src/testpattern/Checksums/sums.$(pkg_version).zpaq"
+	if [[ ! -f $CSUM_FILE ]] ; then
+	    echo "Can't find new checksums file $CSUM_FILE"
 	    return 1
 	fi
+	cp -p "$CSUM_FILE" "$ARTIFACTDIR"
 	return 0
     fi
     echo "make checksums failed"
@@ -323,10 +325,8 @@ function run_distcheck_minimal {
 
 # 11) Save away build
 function save_build_artifacts {
-    checksums=src/testpattern/Checksums/sums.$(pkg_version).zpaq
-    [[ -s $checksums ]] && cp -p $checksums $LOGDIR
     tarball=gutenprint-$(pkg_version).tar.xz
-    [[ -s $tarball ]] && cp -p $tarball $LOGDIR
+    [[ -s $tarball ]] && cp -p $tarball $ARTIFACTDIR
 }
 
 # 12) Final release prep
@@ -472,7 +472,9 @@ function runit {
     cmdname=$1
     cmd="$@"
     fcounter=$(printf "%02d" $counter)
-    logfile="$LOGDIR/$fcounter.${cmd// /_/}"
+    local_logdir="$LOGDIR/$fcounter.${cmd// /_/}"
+    mkdir -p $local_logdir
+    logfile="$local_logdir/Master"
     [[ -n $DONTRUN_OP ]] && logfile=/dev/null
     sstime=$(date_sec)
     ssstamp=$(stamp)
@@ -489,10 +491,10 @@ function runit {
     report_progress $fcounter $cmdname
 
     if [[ -z $DONTRUN_OP ]] ; then
-	STP_TEST_LOG_PREFIX="$logfile." $cmd </dev/null 3>&2 2>&1 | timestamp | log "$logfile"
+	STP_TEST_LOG_PREFIX="$local_logdir/" $cmd </dev/null 3>&2 2>&1 | timestamp | log "$logfile"
 	status=${PIPESTATUS[0]}
 	(( $status > 0 )) && msg=FAILED
-	for f in $logfile.* ; do
+	for f in $local_logdir/* ; do
 	    [[ -f $f && ! -s $f ]] && rm -f $f
 	done
     else
@@ -534,6 +536,9 @@ if [[ -L $TOPLOGDIR/Current ]] ; then
     rm -f $TOPLOGDIR/Previous
     mv $TOPLOGDIR/Current $TOPLOGDIR/Previous
 fi
+declare ARTIFACTDIR="$LOGDIR/Artifacts"
+mkdir -p $ARTIFACTDIR
+export ARTIFACTDIR
 
 rm -f "$TOPLOGDIR/Current"
 ln -s $(basename "$LOGDIR") "$TOPLOGDIR/Current"
