@@ -68,16 +68,7 @@ function preflight {
     return 0
 }
 
-# 2) Run autogen.sh to ensure that we're using default build settings
-# This needs to be done
-
-function run_build {
-    ./autogen.sh && make clean && make ${STP_PARALLEL:+-j$STP_PARALLEL} && return 0
-    echo "FATAL error: preliminary build failed!"
-    return 1
-}
-
-# 3) Git pre-checks
+# 2) Git pre-checks (not version-specific)
 
 function check_git {
     "$GIT" fetch
@@ -135,7 +126,29 @@ function check_git {
     return 0
 }
 
-# 4) Run make valgrind-minimal.
+# 3) Run autogen.sh to ensure that we're using default build settings
+# This needs to be done
+
+function run_build {
+    ./autogen.sh && make clean && make ${STP_PARALLEL:+-j$STP_PARALLEL} && return 0
+    echo "FATAL error: preliminary build failed!"
+    return 1
+}
+
+# 4) Git check tag.  This can't be run until after the build, because we
+# don't have the version available until autogen.
+
+function check_git_tag {
+    # Make sure that the tag that we're going to want to apply isn't
+    # already present.
+    if [[ -n $("$GIT" show-ref "refs/tags/$(pkg_tag)") ]] ; then
+	console_log "*** ERROR: Tag named $(pkg_tag) is already present"
+	return 1
+    fi
+    return 0
+}
+
+# 5) Run make valgrind-minimal.
 #
 #    This does a *very* limited set of valgrind checks, running
 #    testpattern and rastertogutenprint on 9 (currently) selected
@@ -148,7 +161,7 @@ function run_valgrind_minimal {
     return 1
 }
 
-# 5) Run make distcheck-fast.
+# 6) Run make distcheck-fast.
 #
 #    This actually builds the tarball, unpacks the tarball, builds it
 #    out of tree, runs a short set of tests against it, does a local
@@ -214,7 +227,7 @@ function run_distcheck_minimal {
     return 1
 }
 
-# 6) Run make check-valgrind
+# 7) Run make check-valgrind
 #
 #    This is slow.  It tests only unique printers, and a lot of extra
 #    combinations with a few printers, all using fast options.  It
@@ -231,7 +244,7 @@ function run_valgrind {
     return 1
 }
 
-# 7) Run make check-full
+# 8) Run make check-full
 #
 #    This one I'm not sure of; do we need this or is this well enough
 #    covered by the combination of distcheck-fast and check-valgrind?
@@ -260,7 +273,7 @@ function run_full {
     return 1
 }
 
-# 8) Run make checksums-release to generate a new regression file.
+# 9) Run make checksums-release to generate a new regression file.
 #
 #    The problem here is what do we require for the release build.  Do
 #    we require a clean regression run (other than added
@@ -291,7 +304,7 @@ function run_checksums() {
     return 1
 }
 
-# 9) Prep the release:
+# 10) Prep the release:
 
 function git_prep_release() {
     # .po files might have changed; nothing else should have!
@@ -310,7 +323,7 @@ function git_prep_release() {
     ${GIT} tag -a "$(pkg_tag)" -m "Gutenprint $(pkg_version) release" || return 1
 }
 
-# 10) make distcheck-minimal
+# 11) make distcheck-minimal
 #
 #     We have to rebuild the tarball in any event here, so that we pick up
 #     the tag (to get a correct change log) and updated .po files.
@@ -323,13 +336,13 @@ function run_distcheck_minimal {
     return 1
 }
 
-# 11) Save away build
+# 12) Save away build
 function save_build_artifacts {
     tarball=gutenprint-$(pkg_version).tar.xz
     [[ -s $tarball ]] && cp -p $tarball $ARTIFACTDIR
 }
 
-# 12) Final release prep
+# 13) Final release prep
 
 function finis {
     STP_DATA_PATH=src/xml test/gen-printer-list > printer-list.$(pkg_version) || return 1
@@ -512,8 +525,9 @@ function runit {
 }
 
 declare -a OPERATIONS=(preflight
-		       run_build
 		       check_git
+		       run_build
+		       check_git_tag
 		       run_valgrind_minimal
 		       run_distcheck_fast
 		       run_valgrind
