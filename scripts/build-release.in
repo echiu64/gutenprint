@@ -1,4 +1,4 @@
-#!@BASH@
+#!/bin/bash
 
 ## Copyright (C) 2018 Robert Krawitz
 ##
@@ -17,13 +17,23 @@
 ##
 ## Build release tarball
 
+# Note that the shebang line is explicit here, not indirected through
+# autoconf.  This allows the script to be run in a non-initialized workspace.
+# We also require this script to be run in the root of a workspace so that
+# it can find the script directory to get the version without having to be
+# autotool-processed.
+
 # 0) Ensure that we're in the root directory and have a sane environment
 
-declare ROOT=@PKGROOT@
-cd $ROOT
-declare VERSION="@GUTENPRINT_VERSION@"
-declare TAG=gutenprint-${VERSION//./_}
 declare GIT=$(type -p git)
+
+if [[ ! -s ChangeLog.pre-5.2.11 ]] ; then
+    echo "$0 must be run from repository top level"
+    exit 1
+fi
+declare ROOT=$(pwd)
+
+STP_PARALLEL=${STP_PARALLEL:-$($ROOT/scripts/count-cpus)}
 
 if [[ -z $GIT ]] ; then
     echo "Can't find git.  Cannot continue."
@@ -37,6 +47,15 @@ if [[ -z $MAKE ]] ; then
     exit 1
 fi
 
+function pkg_version {
+    $ROOT/scripts/gversion pkg
+}
+
+function pkg_tag {
+    declare version=$(pkg_version)
+    echo gutenprint-${version//./_}
+}
+
 # 1) Clean up any trailing whitespace.
 
 function preflight {
@@ -49,7 +68,16 @@ function preflight {
     return 0
 }
 
-# 2) Git pre-checks
+# 2) Run autogen.sh to ensure that we're using default build settings
+# This needs to be done
+
+function run_build {
+    ./autogen.sh && make clean && make ${STP_PARALLEL:+-j$STP_PARALLEL} && return 0
+    echo "FATAL error: preliminary build failed!"
+    return 1
+}
+
+# 3) Git pre-checks
 
 function check_git {
     "$GIT" fetch
@@ -100,19 +128,11 @@ function check_git {
 
     # Make sure that the tag that we're going to want to apply isn't
     # already present.
-    if [[ -n $("$GIT" show-ref "refs/tags/$TAG") ]] ; then
-	console_log "*** ERROR: Tag named $TAG is already present"
+    if [[ -n $("$GIT" show-ref "refs/tags/$(pkg_tag)") ]] ; then
+	console_log "*** ERROR: Tag named $(pkg_tag) is already present"
 	return 1
     fi
     return 0
-}
-
-# 3) Run autogen.sh to ensure that we're using default build settings
-
-function run_build {
-    ./autogen.sh && make ${STP_PARALLEL:+-j$STP_PARALLEL} && return 0
-    echo "preliminary build failed!"
-    return 1
 }
 
 # 4) Run make valgrind-minimal.
@@ -259,7 +279,7 @@ function run_full {
 
 function run_checksums() {
     if make checksums ; then
-	if [[ ! -f src/testpattern/Checksums/sums.$VERSION.zpaq ]] ; then
+	if [[ ! -f src/testpattern/Checksums/sums.$(pkg_version).zpaq ]] ; then
 	    echo "Can't find new checksums file"
 	    return 1
 	fi
@@ -281,11 +301,11 @@ function git_prep_release() {
     # Add any of those changed files.
     ${GIT} add -u || return 1
     # Add the checksums file.
-    ${GIT} add src/testpattern/Checksums/sums.$VERSION.zpaq || return 1
+    ${GIT} add src/testpattern/Checksums/sums.$(pkg_version).zpaq || return 1
     # Commit this change
-    ${GIT} commit -m"Gutenprint $VERSION release" || return 1
+    ${GIT} commit -m"Gutenprint $(pkg_version) release" || return 1
     # Apply the tag.  Ideally we should sign the tag too.
-    ${GIT} tag -a "$TAG" -m "Gutenprint $VERSION release" || return 1
+    ${GIT} tag -a "$(pkg_tag)" -m "Gutenprint $(pkg_version) release" || return 1
 }
 
 # 10) make distcheck-minimal
@@ -301,10 +321,18 @@ function run_distcheck_minimal {
     return 1
 }
 
-# 11) Final release prep
+# 11) Save away build
+function save_build_artifacts {
+    checksums=src/testpattern/Checksums/sums.$(pkg_version).zpaq
+    [[ -s $checksums ]] && cp -p $checksums $LOGDIR
+    tarball=gutenprint-$(pkg_version).tar.xz
+    [[ -s $tarball ]] && cp -p $tarball $LOGDIR
+}
+
+# 12) Final release prep
 
 function finis {
-    STP_DATA_PATH=src/xml test/gen-printer-list > printer-list.$VERSION || return 1
+    STP_DATA_PATH=src/xml test/gen-printer-list > printer-list.$(pkg_version) || return 1
     console_log "Remainder to be done manually:"
     console_log
     console_log "  * git push"
@@ -407,7 +435,7 @@ function finish {
     [[ $status != 0 ]] && msg=FAILED
     estamp=$(stamp)
     [[ $quiet = 1 ]] && echo
-    echo "Gutenprint release build $msg at $estamp ($(time_delta $STIME $etime))" | log "$top_log" -
+    echo "*** Gutenprint release build $msg at $estamp ($(time_delta $STIME $etime))" | log "$top_log" -
     echo "================================================================" | log "$top_log"
     exit $build_status
 }
@@ -482,8 +510,8 @@ function runit {
 }
 
 declare -a OPERATIONS=(preflight
-		       check_git
 		       run_build
+		       check_git
 		       run_valgrind_minimal
 		       run_distcheck_fast
 		       run_valgrind
@@ -491,6 +519,7 @@ declare -a OPERATIONS=(preflight
 		       run_checksums
 		       git_prep_release
 		       run_distcheck_minimal
+		       save_build_artifacts
 		       finis)
 
 [[ -n "$@" ]] && OPERATIONS=("$@")
@@ -519,11 +548,14 @@ done
 
 declare counter=1
 declare top_log="$LOGDIR/00.Master"
+declare git_dirty=
 
 echo "================================================================" | log "-$top_log"
 echo "*** Gutenprint release build started at $SSTAMP on $HOST" | log "$top_log" -
-echo "Directory: $ROOT" | log "$top_log"
-echo "Log Directory: ${LOGDIR#${ROOT}/}" | log "$top_log"
+echo "Directory: $ROOT" | log "$top_log" -
+echo "Log Directory: ${LOGDIR#${ROOT}/}" | log "$top_log" -
+[[ -n $(git status --porcelain -uno) ]] && git_dirty=' (dirty)'
+echo "Git revision: $(git rev-parse @)$git_dirty" | log "$top_log" -
 
 for f in ${OPERATIONS[@]} ; do
     DONTRUN_OP=${DONTRUN}${SKIP_OPS[$f]} runit $f

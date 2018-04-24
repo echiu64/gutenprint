@@ -20,7 +20,7 @@
 
 usage() {
     echo "Usage: $cmd [info] [default] [version]"
-    echo "       info can be empty, or one of major, minor, micro, extra, git"
+    echo "       info can be empty, or one of major, minor, micro, extra, git, hash, pkg"
     echo "       info can also be extra-git, core-version (major.minor),"
     echo "            base-version (major.minor.micro),"
     echo "            full-version (major.minor.micro[-extra]), or all"
@@ -36,6 +36,7 @@ if [ "$#" -gt 3 ] ; then
 fi
 
 root="@PKGROOT@"
+gutenprint_version=@VERSION@
 
 if [ -z "$3" ] ; then
     if [ -d "$root/.git" ] ; then
@@ -124,6 +125,7 @@ case "$1" in
     base-version) get_base_version "$description" ;;
     full-version) get_full_version "$description" ;;
     ''|all)       get_all          "$description" ;;
+    pkg)          echo             "@VERSION@"    ;;
     *)            usage                           ;;
 esac
 

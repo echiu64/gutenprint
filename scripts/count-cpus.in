@@ -1,4 +1,4 @@
-#!@SHELL@
+#!/bin/sh
 
 # Count processors in the system
 #
@@ -17,8 +17,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+# Use explicit /bin/sh in the shebang line to allow this to work in
+# a non-initialized workspace.
+
 # User-specified value takes priority
-if [[ -n $STP_PARALLEL ]] ; then
+if [ -n "$STP_PARALLEL" ] ; then
     echo $STP_PARALLEL
     exit 0
 fi
@@ -26,7 +29,7 @@ fi
 # Linux
 
 nproc=$(type -p nproc)
-if [[ -n $nproc ]] ; then
+if [ -n "$nproc" ] ; then
     nproc
 else
     echo 1
