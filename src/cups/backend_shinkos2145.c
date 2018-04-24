@@ -1,7 +1,7 @@
 /*
  *   Shinko/Sinfonia CHC-S2145 CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013-2016 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2018 Solomon Peachy <pizza@shaftnet.org>
  *
  *   Development of this backend was sponsored by:
  *
@@ -96,7 +96,6 @@ struct shinkos2145_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;
 	uint8_t endp_down;
-	int type;
 
 	uint8_t jobid;
 
@@ -1216,8 +1215,14 @@ static int get_tonecurve(struct shinkos2145_ctx *ctx, int type, char *fname)
 			/* Byteswap appropriately */
 			curves[i] = cpu_to_be16(le16_to_cpu(curves[i]));
 		}
-		write(tc_fd, curves, UPDATE_SIZE * sizeof(uint16_t));
+		ret = write(tc_fd, curves, UPDATE_SIZE * sizeof(uint16_t));
+		if (ret < 0)
+			ERROR("Can't write curve file\n");
+		else
+			ret = 0;
+
 		close(tc_fd);
+
 	}
 
 done:
@@ -1399,18 +1404,10 @@ static void shinkos2145_attach(void *vctx, struct libusb_device_handle *dev,
 			       uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
 {
 	struct shinkos2145_ctx *ctx = vctx;
-	struct libusb_device *device;
-	struct libusb_device_descriptor desc;
 
 	ctx->dev = dev;
 	ctx->endp_up = endp_up;
 	ctx->endp_down = endp_down;
-
-	device = libusb_get_device(dev);
-	libusb_get_device_descriptor(device, &desc);
-
-	ctx->type = lookup_printer_type(&shinkos2145_backend,
-					desc.idVendor, desc.idProduct);
 
 	/* Ensure jobid is sane */
 	ctx->jobid = (jobid & 0x7f);
@@ -1474,7 +1471,7 @@ static int shinkos2145_read_parse(void *vctx, int data_fd) {
 	ctx->databuf = malloc(ctx->datalen);
 	if (!ctx->databuf) {
 		ERROR("Memory allocation failure!\n");
-		return CUPS_BACKEND_FAILED;
+		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 
 	{
@@ -1752,10 +1749,15 @@ static int shinkos2145_query_serno(struct libusb_device_handle *dev, uint8_t end
 #define USB_VID_SHINKO       0x10CE
 #define USB_PID_SHINKO_S2145 0x000E
 
+static const char *shinkos2145_prefixes[] = {
+	"shinkos2145",
+	NULL
+};
+
 struct dyesub_backend shinkos2145_backend = {
-	.name = "Shinko/Sinfonia CHC-S2145",
-	.version = "0.48",
-	.uri_prefix = "shinkos2145",
+	.name = "Shinko/Sinfonia CHC-S2145/S2",
+	.version = "0.50",
+	.uri_prefixes = shinkos2145_prefixes,
 	.cmdline_usage = shinkos2145_cmdline,
 	.cmdline_arg = shinkos2145_cmdline_arg,
 	.init = shinkos2145_init,
@@ -1765,8 +1767,8 @@ struct dyesub_backend shinkos2145_backend = {
 	.main_loop = shinkos2145_main_loop,
 	.query_serno = shinkos2145_query_serno,
 	.devices = {
-	{ USB_VID_SHINKO, USB_PID_SHINKO_S2145, P_SHINKO_S2145, NULL},
-	{ 0, 0, 0, NULL}
+		{ USB_VID_SHINKO, USB_PID_SHINKO_S2145, P_SHINKO_S2145, NULL, "shinkos2145"},
+		{ 0, 0, 0, NULL, NULL}
 	}
 };
 

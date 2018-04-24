@@ -1,5 +1,5 @@
 /*
- *   DNP DS40/DS80 Photo Printer CUPS backend -- libusb-1.0 version
+ *   Citizen / DNP Photo Printer CUPS backend -- libusb-1.0 version
  *
  *   (c) 2013-2018 Solomon Peachy <pizza@shaftnet.org>
  *
@@ -33,6 +33,7 @@
  */
 
 //#define DNP_ONLY
+//#define CITIZEN_ONLY
 
 /* Enables caching of last print type to speed up
    job pipelining.  Without this we always have to
@@ -52,20 +53,6 @@
 #define BACKEND dnpds40_backend
 
 #include "backend_common.h"
-
-#define USB_VID_CITIZEN   0x1343
-#define USB_PID_DNP_DS40  0x0003 // Also Citizen CX
-#define USB_PID_DNP_DS80  0x0004 // Also Citizen CX-W, and Mitsubishi CP-3800DW
-#define USB_PID_DNP_DSRX1 0x0005 // Also Citizen CY
-#define USB_PID_DNP_DS80D 0x0007
-#define USB_PID_DNP_DS620_OLD 0x0008
-
-#define USB_PID_CITIZEN_CW02 0x0006 // Also OP900II
-#define USB_PID_CITIZEN_CX02 0x000A
-
-#define USB_VID_DNP       0x1452
-#define USB_PID_DNP_DS620 0x8b01
-#define USB_PID_DNP_DS820 0x9001
 
 /* Private data structure */
 struct dnpds40_ctx {
@@ -201,6 +188,33 @@ struct dnpds40_cmd {
 
 #define min(__x, __y) ((__x) < (__y)) ? __x : __y
 
+/* Legacy CW-01 spool file support */
+struct cw01_spool_hdr {
+	uint8_t  type; /* 0x00 -> 0x06 */
+	uint8_t  res; /* vertical resolution; 0x00 == 334dpi, 0x01 == 600dpi */
+	uint8_t  copies; /* number of prints */
+	uint8_t  null0;
+	uint32_t plane_len; /* LE */
+	uint8_t  null1[4];
+};
+
+#define DPI_334 0
+#define DPI_600 1
+
+#define TYPE_DSC  0
+#define TYPE_L    1
+#define TYPE_PC   2
+#define TYPE_2DSC 3
+#define TYPE_3L   4
+#define TYPE_A5   5
+#define TYPE_A6   6
+/* Legacy CW-01 spool file support */
+
+static int cw01_read_parse(struct dnpds40_ctx *ctx, int data_fd,
+			   struct cw01_spool_hdr *hdr, int read_data);
+
+
+
 static void dnpds40_build_cmd(struct dnpds40_cmd *cmd, char *arg1, char *arg2, uint32_t arg3_len)
 {
 	memset(cmd, 0x20, sizeof(*cmd));
@@ -242,6 +256,7 @@ static char *dnpds40_printer_type(int type)
 	case P_DNP_DSRX1: return "DSRX1";
 	case P_DNP_DS620: return "DS620";
 	case P_DNP_DS820: return "DS820";
+	case P_CITIZEN_CW01: return "CW01";
 	case P_CITIZEN_OP900II: return "OP900ii";
 	default: break;
 	}
@@ -552,11 +567,11 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
 					desc.idVendor, desc.idProduct);
 
 	{
-		/* Get Firmware Version */
 		struct dnpds40_cmd cmd;
 		uint8_t *resp;
 		int len = 0;
 
+		/* Get Firmware Version */
 		dnpds40_build_cmd(&cmd, "INFO", "FVER", 0);
 
 		resp = dnpds40_resp_cmd(ctx, &cmd, &len);
@@ -606,6 +621,27 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
 		}
 	}
 
+#ifdef DNP_ONLY  /* Only allow DNP printers to work. */
+	{ /* Validate USB Vendor String is "Dai Nippon Printing" */
+		char buf[256];
+		buf[0] = 0;
+		libusb_get_string_descriptor_ascii(dev, desc->iManufacturer, (unsigned char*)buf, STR_LEN_MAX);
+		sanitize_string(buf);
+		if (strncmp(buf, "Dai", 3))
+			return 0;
+	}
+#endif
+#ifdef CITIZEN_ONLY   /* Only allow CITIZEN printers to work. */
+	{ /* Validate USB Vendor String is "CITIZEN SYSTEMS" */
+		char buf[256];
+		buf[0] = 0;
+		libusb_get_string_descriptor_ascii(dev, desc->iManufacturer, (unsigned char*)buf, STR_LEN_MAX);
+		sanitize_string(buf);
+		if (strncmp(buf, "CIT", 3))
+			return 0;
+	}
+#endif
+
 	if (ctx->type == P_DNP_DS80D) {
 		struct dnpds40_cmd cmd;
 		uint8_t *resp;
@@ -632,19 +668,6 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
 			free(resp);
 		}
 	}
-
-#ifdef DNP_ONLY
-	/* Only allow DNP printers to work. Rebadged versions should not. */
-
-	{ /* Validate USB Vendor String is "Dai Nippon Printing" */
-		char buf[256];
-		buf[0] = 0;
-		libusb_get_string_descriptor_ascii(dev, desc->iManufacturer, (unsigned char*)buf, STR_LEN_MAX);
-		sanitize_string(buf);
-		if (strncmp(buf, "Dai", 3))
-			return 0;
-	}
-#endif
 
 	/* Per-printer options */
 	switch (ctx->type) {
@@ -695,6 +718,10 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
 		ctx->supports_6x9 = 1;
 		if (FW_VER_CHECK(1,11))
 			ctx->supports_2x6 = 1;
+		break;
+	case P_CITIZEN_CW01:
+		ctx->native_width = 2048;
+		ctx->supports_6x9 = 1;
 		break;
 	case P_DNP_DS620:
 		ctx->native_width = 1920;
@@ -860,6 +887,22 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
 				break;
 			}
 			break;
+		case P_CITIZEN_CW01:
+			switch (ctx->media) {
+			case 300: // PC
+				ctx->media_count_new = 600;
+				break;
+			case 350: // 2L
+				ctx->media_count_new = 230;
+				break;
+			case 400: // A5W
+				ctx->media_count_new = 280;
+				break;
+			default:
+				ctx->media_count_new = 999; // non-zero
+				break;
+			}
+			break;
 		case P_DNP_DS80:
 		case P_DNP_DS80D:
 			switch (ctx->media) {
@@ -967,7 +1010,24 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 
 		if (ctx->databuf[ctx->datalen + 0] != 0x1b ||
 		    ctx->databuf[ctx->datalen + 1] != 0x50) {
-			ERROR("Unrecognized header data format @%d!\n", ctx->datalen);
+			struct cw01_spool_hdr hdr;
+			/* See if it's the "classic" CW01 header */
+			memcpy(&hdr, ctx->databuf + ctx->datalen, sizeof(hdr));
+			hdr.plane_len = le32_to_cpu(hdr.plane_len);
+
+			if (hdr.type > 0x06 ||
+			    hdr.res > 0x01 ||
+			    hdr.null1[0] || hdr.null1[1] || hdr.null1[2] || hdr.null1[3]) {
+				ERROR("Unrecognized header data format @%d!\n", ctx->datalen);
+			} else {
+				dpi = (hdr.res == DPI_600) ? 600 : 334;
+				i = cw01_read_parse(ctx, data_fd, &hdr, i);
+				if (i == CUPS_BACKEND_OK)
+					goto parsed;
+				else
+					return i;
+			}
+
 			return CUPS_BACKEND_CANCEL;
 		}
 
@@ -1100,7 +1160,7 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 		/* Add in the size of this chunk */
 		ctx->datalen += sizeof(struct dnpds40_cmd) + j;
 	}
-
+parsed:
 	/* If we have no data.. don't bother */
 	if (!ctx->datalen)
 		return CUPS_BACKEND_CANCEL;
@@ -1133,7 +1193,7 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 	}
 
 	/* Make sure MULTICUT is sane, most validation needs this */
-	if (!ctx->multicut) {
+	if (!ctx->multicut && ctx->type != P_CITIZEN_CW01) {
 		WARNING("Missing or illegal MULTICUT command!\n");
 		if (dpi == 300)
 			ctx->buf_needed = 1;
@@ -1193,6 +1253,9 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 		case P_DNP_DS820:
 			// Nothing; all sizes only need 1 buffer
 			break;
+		case P_CITIZEN_CW01:
+			ctx->buf_needed = 2;
+			break;
 		default: /* DS40/CX/RX1/CY/everything else */
 			if (ctx->matte) {
 				if (ctx->multicut == MULTICUT_6x8 ||
@@ -1210,6 +1273,11 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 			}
 			break;
 		}
+	}
+	if (dpi == 334 && ctx->type != P_CITIZEN_CW01)
+	{
+		ERROR("Illegal resolution (%d) for printer!\n", dpi);
+		return CUPS_BACKEND_CANCEL;
 	}
 
 	/* Sanity-check type vs loaded media */
@@ -1547,6 +1615,26 @@ top:
 			free(resp);
 		}
 
+		if (ctx->type == P_CITIZEN_CW01) {
+			/* Get Vertical resolution */
+			dnpds40_build_cmd(&cmd, "INFO", "RESOLUTION_V", 0);
+
+			resp = dnpds40_resp_cmd(ctx, &cmd, &len);
+			if (!resp)
+				return CUPS_BACKEND_FAILED;
+
+			dnpds40_cleanup_string((char*)resp, len);
+
+#if 0  // XXX Fix 600dpi support on CW01
+			// have to read the last DPI, and send the correct CWD over?
+			if (ctx->dpi == 600 && strcmp("RV0334", *char*)resp) {
+				ERROR("600DPI prints not yet supported, need 600DPI CWD load");
+				return CUPS_BACKEND_CANCEL;
+			}
+#endif
+			free(resp);
+		}
+
 		/* Verify we have sufficient media for prints */
 
 #if 0 // disabled this to allow error to be reported on the printer panel
@@ -1610,11 +1698,13 @@ top:
 			return CUPS_BACKEND_FAILED;
 	}
 
-	/* Program in the multicut setting */
-	snprintf(buf, sizeof(buf), "%08u", ctx->multicut);
-	dnpds40_build_cmd(&cmd, "IMAGE", "MULTICUT", 8);
-	if ((ret = dnpds40_do_cmd(ctx, &cmd, (uint8_t*)buf, 8)))
-		return CUPS_BACKEND_FAILED;
+	/* Program in the multicut setting, if one exists */
+	if (ctx->multicut) {
+		snprintf(buf, sizeof(buf), "%08u", ctx->multicut);
+		dnpds40_build_cmd(&cmd, "IMAGE", "MULTICUT", 8);
+		if ((ret = dnpds40_do_cmd(ctx, &cmd, (uint8_t*)buf, 8)))
+			return CUPS_BACKEND_FAILED;
+	}
 
 	/* Finally, send the stream over as individual data chunks */
 	ptr = ctx->databuf;
@@ -1810,6 +1900,60 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 		free(resp);
 	}
 
+	if (ctx->type == P_CITIZEN_CW01) {
+		/* Get Horizonal resolution */
+		dnpds40_build_cmd(&cmd, "INFO", "RESOLUTION_H", 0);
+
+		resp = dnpds40_resp_cmd(ctx, &cmd, &len);
+		if (!resp)
+			return CUPS_BACKEND_FAILED;
+
+		dnpds40_cleanup_string((char*)resp, len);
+
+		INFO("Horizontal Resolution: %s dpi\n", (char*)resp + 3);
+
+		free(resp);
+
+		/* Get Vertical resolution */
+		dnpds40_build_cmd(&cmd, "INFO", "RESOLUTION_V", 0);
+
+		resp = dnpds40_resp_cmd(ctx, &cmd, &len);
+		if (!resp)
+			return CUPS_BACKEND_FAILED;
+
+		dnpds40_cleanup_string((char*)resp, len);
+
+		INFO("Vertical Resolution: %s dpi\n", (char*)resp + 3);
+
+		free(resp);
+
+		/* Get Color Control Data Version */
+		dnpds40_build_cmd(&cmd, "TBL_RD", "Version", 0);
+
+		resp = dnpds40_resp_cmd(ctx, &cmd, &len);
+		if (!resp)
+			return CUPS_BACKEND_FAILED;
+
+		dnpds40_cleanup_string((char*)resp, len);
+
+		INFO("Color Data Version: %s ", (char*)resp);
+
+		free(resp);
+
+		/* Get Color Control Data Checksum */
+		dnpds40_build_cmd(&cmd, "MNT_RD", "CTRLD_CHKSUM", 0);
+
+		resp = dnpds40_resp_cmd(ctx, &cmd, &len);
+		if (!resp)
+			return CUPS_BACKEND_FAILED;
+
+		dnpds40_cleanup_string((char*)resp, len);
+
+		DEBUG2("(%s)\n", (char*)resp);
+
+		free(resp);
+	}
+
 	/* Get Media Color offset */
 	dnpds40_build_cmd(&cmd, "INFO", "MCOLOR", 0);
 
@@ -1861,6 +2005,9 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 	INFO("Media ID: %d\n", atoi((char*)resp+4));
 
 	free(resp);
+
+	if (ctx->type == P_CITIZEN_CW01)
+		goto skip;
 
 	/* Get Ribbon ID code (?) */
 	dnpds40_build_cmd(&cmd, "MNT_RD", "RIBBON_ID_CODE", 0);
@@ -2049,6 +2196,7 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 		free(resp);
 	}
 
+skip:
 	return CUPS_BACKEND_OK;
 }
 
@@ -2112,7 +2260,6 @@ static int dnpds40_get_status(struct dnpds40_ctx *ctx)
 	dnpds40_cleanup_string((char*)resp, len);
 
 	INFO("Free Buffers: %d\n", atoi((char*)resp + 3));
-
 	free(resp);
 
 	/* Report media */
@@ -2497,7 +2644,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 			    optarg[0] != 'B' &&
 			    optarg[0] != 'M')
 				return CUPS_BACKEND_FAILED;
-			if (!ctx->supports_matte) {
+			if (optarg[0] == 'M' && !ctx->supports_matte) {
 				ERROR("Printer FW does not support matte functions, please update!\n");
 				return CUPS_BACKEND_FAILED;
 			}
@@ -2547,11 +2694,33 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 	return 0;
 }
 
+static const char *dnpds40_prefixes[] = {
+	"dnp_citizen",
+	"dnpds40", "dnpds80", "dnpds80dx", "dnpds620", "dnpds820", "dnprx1",
+	"citizencw01", "citizencw02", "citizencx02",
+	NULL
+};
+
+#define USB_VID_CITIZEN   0x1343
+#define USB_PID_DNP_DS40  0x0003 // Also Citizen CX
+#define USB_PID_DNP_DS80  0x0004 // Also Citizen CX-W and Mitsubishi CP-3800DW
+#define USB_PID_DNP_DSRX1 0x0005 // Also Citizen CY
+#define USB_PID_DNP_DS80D 0x0007
+#define USB_PID_DNP_DS620_OLD 0x0008
+
+#define USB_PID_CITIZEN_CW01 0x0002 // Maybe others?
+#define USB_PID_CITIZEN_CW02 0x0006 // Also OP900II
+#define USB_PID_CITIZEN_CX02 0x000A
+
+#define USB_VID_DNP       0x1452
+#define USB_PID_DNP_DS620 0x8b01
+#define USB_PID_DNP_DS820 0x9001
+
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
-	.name = "DNP DS40/DS80/DSRX1/DS620/DS820",
-	.version = "0.97",
-	.uri_prefix = "dnpds40",
+	.name = "DNP DS-series / Citizen C-series",
+	.version = "0.99",
+	.uri_prefixes = dnpds40_prefixes,
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
 	.init = dnpds40_init,
@@ -2561,15 +2730,144 @@ struct dyesub_backend dnpds40_backend = {
 	.main_loop = dnpds40_main_loop,
 	.query_serno = dnpds40_query_serno,
 	.devices = {
-	{ USB_VID_CITIZEN, USB_PID_DNP_DS40, P_DNP_DS40, NULL},
-	{ USB_VID_CITIZEN, USB_PID_DNP_DS80, P_DNP_DS80, NULL},
-	{ USB_VID_CITIZEN, USB_PID_DNP_DSRX1, P_DNP_DSRX1, NULL},
-	{ USB_VID_CITIZEN, USB_PID_DNP_DS620_OLD, P_DNP_DS620, NULL},
-	{ USB_VID_DNP, USB_PID_DNP_DS620, P_DNP_DS620, NULL},
-	{ USB_VID_DNP, USB_PID_DNP_DS80D, P_DNP_DS80D, NULL},
-	{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW02, P_CITIZEN_OP900II, NULL},
-	{ USB_VID_CITIZEN, USB_PID_CITIZEN_CX02, P_DNP_DS620, NULL},
-	{ USB_VID_DNP, USB_PID_DNP_DS820, P_DNP_DS820, NULL},
-	{ 0, 0, 0, NULL}
+		{ USB_VID_CITIZEN, USB_PID_DNP_DS40, P_DNP_DS40, NULL, "dnpds40"},  // Also Citizen CX
+		{ USB_VID_CITIZEN, USB_PID_DNP_DS80, P_DNP_DS80, NULL, "dnpds80"},  // Also Citizen CX-W and Mitsubishi CP-3800DW
+		{ USB_VID_CITIZEN, USB_PID_DNP_DSRX1, P_DNP_DSRX1, NULL, "dnpdx1"}, // Also Citizen CY
+		{ USB_VID_CITIZEN, USB_PID_DNP_DS620_OLD, P_DNP_DS620, NULL, "dnpds620"},
+		{ USB_VID_DNP, USB_PID_DNP_DS620, P_DNP_DS620, NULL, "dnpds620"},
+		{ USB_VID_DNP, USB_PID_DNP_DS80D, P_DNP_DS80D, NULL, "dnpds80dx"},
+		{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW01, P_CITIZEN_CW01, NULL, "citizencw01"}, // Also OP900 ?
+		{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW02, P_CITIZEN_OP900II, NULL, "citizencw02"}, // Also OP900II
+		{ USB_VID_CITIZEN, USB_PID_CITIZEN_CX02, P_DNP_DS620, NULL, "citizencx02"},
+		{ USB_VID_DNP, USB_PID_DNP_DS820, P_DNP_DS820, NULL, "dnpds820"},
+		{ 0, 0, 0, NULL, NULL}
 	}
 };
+
+/* Legacy CW-01 spool file support */
+
+static int cw01_read_parse(struct dnpds40_ctx *ctx, int data_fd,
+			   struct cw01_spool_hdr *hdr, int read_data)
+{
+	int i, remain;
+	uint32_t j;
+	uint8_t *buf;
+	uint8_t plane_hdr[14];
+
+	remain = hdr->plane_len * 3;
+	buf = malloc(remain);
+	if (!buf) {
+		ERROR("Memory allocation failure!\n");
+		return CUPS_BACKEND_RETRY_CURRENT;
+	}
+	j = read_data - sizeof(*hdr);
+	memcpy(buf, ctx->databuf, j);
+	remain -= j;
+	/* Read in the remaining spool data */
+	while (remain) {
+		i = read(data_fd, buf + j, remain);
+
+		if (i < 0)
+			return i;
+
+		remain -= i;
+		j += i;
+	}
+
+	/* Generate plane header (same for all planes) */
+	j = cpu_to_le32(hdr->plane_len) + 24;
+	memset(plane_hdr, 0, sizeof(plane_hdr));
+	plane_hdr[0] = 0x42;
+	plane_hdr[1] = 0x4d;
+	memcpy(plane_hdr + 2, &j, sizeof(j));
+	plane_hdr[10] = 0x40;
+	plane_hdr[11] = 0x04;
+
+	/* Okay, generate a new stream into ctx->databuf! */
+#if 0
+	ctx->datalen += sprintf((char*)ctx->databuf + ctx->datalen,
+				"\033PCNTRL QTY             00000008%07d\r", hdr->copies);
+	ctx->datalen += sprintf((char*)ctx->databuf + ctx->datalen,
+				"\033PCNTRL CUTTER          0000000800000000");
+#else
+	/* QTY is stripped from the stream, and CUTTER is stashed away */
+	ctx->cutter = 0;
+#endif
+
+	j = 0;
+
+	/* Y plane */
+	ctx->datalen += sprintf((char*)ctx->databuf + ctx->datalen,
+				"\033PIMAGE YPLANE          %08u", hdr->plane_len + 24);
+	memcpy(ctx->databuf + ctx->datalen, plane_hdr, sizeof(plane_hdr));
+	ctx->datalen += sizeof(plane_hdr);
+	memcpy(ctx->databuf + ctx->datalen, buf + j, hdr->plane_len);
+	ctx->datalen += hdr->plane_len;
+	j += hdr->plane_len;
+	memset(ctx->databuf + ctx->datalen, 0, 10);
+	ctx->datalen += 10;
+
+	/* M plane */
+	ctx->datalen += sprintf((char*)ctx->databuf + ctx->datalen,
+				"\033PIMAGE MPLANE          %08u", hdr->plane_len + 24);
+	memcpy(ctx->databuf + ctx->datalen, plane_hdr, sizeof(plane_hdr));
+	ctx->datalen += sizeof(plane_hdr);
+	memcpy(ctx->databuf + ctx->datalen, buf + j, hdr->plane_len);
+	ctx->datalen += hdr->plane_len;
+	j += hdr->plane_len;
+	memset(ctx->databuf + ctx->datalen, 0, 10);
+	ctx->datalen += 10;
+
+	/* C plane */
+	ctx->datalen += sprintf((char*)ctx->databuf + ctx->datalen,
+				"\033PIMAGE CPLANE          %08u", hdr->plane_len + 24);
+	memcpy(ctx->databuf + ctx->datalen, plane_hdr, sizeof(plane_hdr));
+	ctx->datalen += sizeof(plane_hdr);
+	memcpy(ctx->databuf + ctx->datalen, buf + j, hdr->plane_len);
+	ctx->datalen += hdr->plane_len;
+	j += hdr->plane_len;
+	memset(ctx->databuf + ctx->datalen, 0, 10);
+	ctx->datalen += 10;
+
+	/* Start */
+	ctx->datalen += sprintf((char*)ctx->databuf + ctx->datalen,
+				"\033PCNTRL START                   ");
+
+	/* We're done */
+	free(buf);
+
+	return CUPS_BACKEND_OK;
+}
+
+/*
+
+Basic spool file format for CW01
+
+TT RR NN 00 XX XX XX XX  00 00 00 00              <- FILE header.
+
+  NN          : copies (0x01 or more)
+  RR          : resolution; 0 == 334 dpi, 1 == 600dpi
+  TT          : type 0x02 == 4x6, 0x01 == 5x3.5
+  XX XX XX XX : plane length (LE)
+                plane length * 3 + 12 == file length.
+
+Followed by three planes, each with this header:
+
+28 00 00 00 00 08 00 00  RR RR 00 00 01 00 08 00
+00 00 00 00 00 00 00 00  5a 33 00 00 YY YY 00 00
+00 01 00 00 00 00 00 00
+
+  RR RR       : rows in LE format
+  YY YY       : 0x335a (334dpi) or 0x5c40 (600dpi)
+
+Followed by 1024 bytes of color tables:
+
+ ff ff ff 00 ... 00 00 00 00
+
+1024+40 = 1064 bytes of header per plane.
+
+Always have 2048 columns of data.
+
+followed by (2048 * rows) bytes of data.
+
+*/

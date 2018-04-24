@@ -1,7 +1,7 @@
 /*
  *   Magicard card printer family CUPS backend -- libusb-1.0 version
  *
- *   (c) 2017 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2017-2018 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -45,6 +45,8 @@
 /* Exported */
 #define USB_VID_MAGICARD     0x0C1F
 #define USB_PID_MAGICARD_TANGO2E 0x1800
+#define USB_PID_MAGICARD_ENDURO  0x4800   // ??
+#define USB_PID_MAGICARD_ENDUROPLUS 0x880A // ??
 
 /* Gamma tables computed with this perl program:
 
@@ -168,11 +170,11 @@ static struct magicard_requests magicard_sta_requests[] = {
 	{ "PSR", "Print Head Serial Number", TYPE_STRING },
 	{ "BSR", "PCB Serial Number", TYPE_STRING },
 	{ "VRS", "Firmware Version", TYPE_STRING },
-	{ "FDC", "Head Density", TYPE_STRINGINT },
-	{ "FSP", "Image Start", TYPE_STRINGINT },
-	{ "FEP", "Image End", TYPE_STRINGINT },
+	{ "FDC", "Head Density", TYPE_STRINGINT },  /* 25 per step */
+	{ "FSP", "Image Start", TYPE_STRINGINT }, /* 8 steps per pixel */
+	{ "FEP", "Image End", TYPE_STRINGINT },   /* 8 steps per pixel */
 	{ "FSS", "Ramp Adjust", TYPE_STRINGINT },
-	{ "FPP", "Head Position", TYPE_STRINGINT },
+	{ "FPP", "Head Position", TYPE_STRINGINT }, /* L-R alignment */
 	{ "MDL", "Model", TYPE_MODEL },  /* 0 == Standard.  Others? */
 	{ "PID", "USB PID", TYPE_STRINGINT_HEX }, /* ASCII integer, but needs to be shown as hex */
 	{ "VID", "USB VID", TYPE_STRINGINT_HEX }, /* ASCII integer, but needs to be shown as hex */
@@ -282,6 +284,48 @@ static int magicard_query_sensors(struct magicard_ctx *ctx)
 		INFO("%s\n", buf);
 	}
 	return 0;
+}
+
+static int magicard_selftest_card(struct magicard_ctx *ctx)
+{
+	int ret = 0;
+	uint8_t buf[256];
+	char buf2[24];
+
+	snprintf(buf2, sizeof(buf2), "TST,");
+	ret = magicard_build_cmd_simple(buf, buf2);
+
+	ret = send_data(ctx->dev, ctx->endp_down,
+			buf, ret);
+	return ret;
+}
+
+static int magicard_reset(struct magicard_ctx *ctx)
+{
+	int ret = 0;
+	uint8_t buf[256];
+	char buf2[24];
+
+	snprintf(buf2, sizeof(buf2), "RST,");
+	ret = magicard_build_cmd_simple(buf, buf2);
+
+	ret = send_data(ctx->dev, ctx->endp_down,
+			buf, ret);
+	return ret;
+}
+
+static int magicard_eject(struct magicard_ctx *ctx)
+{
+	int ret = 0;
+	uint8_t buf[256];
+	char buf2[24];
+
+	snprintf(buf2, sizeof(buf2), "EJT,");
+	ret = magicard_build_cmd_simple(buf, buf2);
+
+	ret = send_data(ctx->dev, ctx->endp_down,
+			buf, ret);
+	return ret;
 }
 
 static int magicard_query_printer(struct magicard_ctx *ctx)
@@ -552,7 +596,7 @@ static int magicard_read_parse(void *vctx, int data_fd) {
 	ctx->databuf = malloc(MAX_PRINTJOB_LEN);
 	if (!ctx->databuf) {
 		ERROR("Memory allocation failure!\n");
-		return CUPS_BACKEND_FAILED;
+		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 
 	/* Copy over initial header */
@@ -679,7 +723,7 @@ static int magicard_read_parse(void *vctx, int data_fd) {
 		uint8_t *srcbuf = malloc(MAX_PRINTJOB_LEN);
 		if (!srcbuf) {
 			ERROR("Memory allocation failure!\n");
-			return CUPS_BACKEND_FAILED;
+			return CUPS_BACKEND_RETRY_CURRENT;
 		}
 
 		memcpy(srcbuf, initial_buf + buf_offset, srcbuf_offset);
@@ -799,6 +843,10 @@ static void magicard_cmdline(void)
 {
 	DEBUG("\t\t[ -s ]           # Query status\n");
 	DEBUG("\t\t[ -q ]           # Query information\n");
+	DEBUG("\t\t[ -I ]           # Query printer sensors\n");
+	DEBUG("\t\t[ -E ]           # Eject card\n");
+	DEBUG("\t\t[ -T ]           # Print self-test card\n");
+	DEBUG("\t\t[ -R ]           # Reset printer\n");
 }
 
 static int magicard_cmdline_arg(void *vctx, int argc, char **argv)
@@ -809,7 +857,7 @@ static int magicard_cmdline_arg(void *vctx, int argc, char **argv)
 	if (!ctx)
 		return -1;
 
-	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "sqI")) >= 0) {
+	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "sqEIRT")) >= 0) {
 		switch(i) {
 		GETOPT_PROCESS_GLOBAL
 		case 's':
@@ -818,8 +866,17 @@ static int magicard_cmdline_arg(void *vctx, int argc, char **argv)
 		case 'q':
 			j = magicard_query_printer(ctx);
 			break;
+		case 'E':
+			j = magicard_eject(ctx);
+			break;
 		case 'I':
 			j = magicard_query_sensors(ctx);
+			break;
+		case 'R':
+			j = magicard_reset(ctx);
+			break;
+		case 'T':
+			j = magicard_selftest_card(ctx);
 			break;
 		}
 
@@ -829,10 +886,16 @@ static int magicard_cmdline_arg(void *vctx, int argc, char **argv)
 	return 0;
 }
 
+static const char *magicard_prefixes[] = {
+	"magicard",
+	"tango2e", "enduro", "enduroplus",
+	NULL
+};
+
 struct dyesub_backend magicard_backend = {
 	.name = "Magicard family",
-	.version = "0.08",
-	.uri_prefix = "magicard",
+	.version = "0.10",
+	.uri_prefixes = magicard_prefixes,
 	.cmdline_arg = magicard_cmdline_arg,
 	.cmdline_usage = magicard_cmdline,
 	.init = magicard_init,
@@ -841,9 +904,11 @@ struct dyesub_backend magicard_backend = {
 	.read_parse = magicard_read_parse,
 	.main_loop = magicard_main_loop,
 	.devices = {
-	{ USB_VID_MAGICARD, USB_PID_MAGICARD_TANGO2E, P_MAGICARD, NULL},
-	{ USB_VID_MAGICARD, 0xFFFF, P_MAGICARD, NULL},
-	{ 0, 0, 0, NULL}
+		{ USB_VID_MAGICARD, USB_PID_MAGICARD_TANGO2E, P_MAGICARD, NULL, "tango2e"},
+		{ USB_VID_MAGICARD, USB_PID_MAGICARD_ENDURO, P_MAGICARD, NULL, "enduro"},	
+		{ USB_VID_MAGICARD, USB_PID_MAGICARD_ENDUROPLUS, P_MAGICARD, NULL, "enduroplus"},
+		{ USB_VID_MAGICARD, 0xFFFF, P_MAGICARD, NULL, "magicard"},
+		{ 0, 0, 0, NULL, "magicard"}
 	}
 };
 
@@ -990,5 +1055,36 @@ struct dyesub_backend magicard_backend = {
    * How to query/read magstripe
    * How to set IP address (etc)
    * How to set other parameters
+
+   "Simple Commands"  (REQ,....,)
+
+  RST    Reset printer
+  TST    Generate self-test page
+  EJT     Eject card
+
+   Other "Simple commands" referenced in Rio Pro/Enduro+ docs
+
+  DEALERSERVICE%s ON/OFF (enter/exit dealer service mode)
+  CAM     Reset print head cam position
+  CHP%s   UP/DOWN  Feed  card into smart encoder
+  CLN     Cleaning cycle
+  DYE     Re-init dye film
+  ENC     Test encoding cycle
+  FEED%d  0/1,+  0/1, load card into standby, >1 feed N cards.
+  FLIP    Flip card in printer
+  FRN%s   ON/OFF -- Film saving
+  HEAD%s  UP/DOWN -- Raise or lower print head.
+  RAMP%d  0-100 Density ramp, 50 default
+  SET     Saves settings into NVDATA
+  STN     Re-init Holokote
+  SNS     Soak cycle, test all sensors
+  SHW%s CAM, TACHO, FLIP, DYE, LID, FRONT, MID, READ, BUTTON1, BUTTON2,
+        SMART, TEMP, ON, OFF
+  LNG%d 0/1/2/3/4/5 == ENG/POR/FRE/GER/SPA/ITA
+  RUN%s CAM, FEED, DYE, MAIN, FLIPPER, FLIPROLL, FAN, PANEL, POUT, CAL, LCD,
+        OFF
+  FLM%s Y/M/C/K/O  Align ribbon at corresponding panel
+  FCL     Init dye calibration routine
+  FCL######  Set dye color to ###### (RGB hex)
 
 */

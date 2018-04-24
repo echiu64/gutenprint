@@ -1,7 +1,7 @@
 /*
  *   CUPS Backend common code
  *
- *   Copyright (c) 2007-2017 Solomon Peachy <pizza@shaftnet.org>
+ *   Copyright (c) 2007-2018 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -28,7 +28,7 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.75G"
+#define BACKEND_VERSION "0.78G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
@@ -54,9 +54,9 @@ static int max_xfer_size = URB_XFER_SIZE;
 static int xfer_timeout = XFER_TIMEOUT;
 
 /* Support Functions */
-static int backend_claim_interface(struct libusb_device_handle *dev, int iface)
+static int backend_claim_interface(struct libusb_device_handle *dev, int iface,
+				   int num_claim_attempts)
 {
-	int attempts = NUM_CLAIM_ATTEMPTS;
 	int ret;
 	do {
 		ret = libusb_claim_interface(dev, iface);
@@ -64,11 +64,13 @@ static int backend_claim_interface(struct libusb_device_handle *dev, int iface)
 			break;
 		if (ret != LIBUSB_ERROR_BUSY)
 			break;
+		if (--num_claim_attempts == 0)
+			break;
 		sleep(1);
-	} while (--attempts > 0);
+	} while (1);
 
 	if (ret)
-		ERROR("Printer open failure (Could not claim printer interface after %d attempts) (%d)\n", NUM_CLAIM_ATTEMPTS, ret);
+		ERROR("Failed to claim interface %d (%d)\n", iface, ret);
 
 	return ret;
 }
@@ -360,14 +362,15 @@ static char *url_decode(char *str) {
 
 /* And now back to our regularly-scheduled programming */
 
-static int print_scan_output(struct libusb_device *device,
-			     struct libusb_device_descriptor *desc,
-			     char *prefix, char *manuf_override,
-			     int found,
-			     int scan_only, char *match_serno,
-			     uint8_t *r_iface, uint8_t *r_altset,
-			     uint8_t *r_endp_up, uint8_t *r_endp_down,
-			     struct dyesub_backend *backend)
+static int probe_device(struct libusb_device *device,
+			struct libusb_device_descriptor *desc,
+			const char *uri_prefix,
+			const char *prefix, char *manuf_override,
+			int found, int num_claim_attempts,
+			int scan_only, char *match_serno,
+			uint8_t *r_iface, uint8_t *r_altset,
+			uint8_t *r_endp_up, uint8_t *r_endp_down,
+			struct dyesub_backend *backend)
 {
 	struct libusb_device_handle *dev;
 	char buf[256];
@@ -381,6 +384,7 @@ static int print_scan_output(struct libusb_device *device,
 	uint8_t endp_up, endp_down;
 
 	DEBUG("Probing VID: %04X PID: %04x\n", desc->idVendor, desc->idProduct);
+	STATE("+connecting-to-device\n");
 
 	if (libusb_open(device, &dev)) {
 		ERROR("Could not open device %04x:%04x (need to be root?)\n", desc->idVendor, desc->idProduct);
@@ -440,14 +444,17 @@ candidate:
 		libusb_detach_kernel_driver(dev, iface);
 
 	/* Claim the interface so we can start querying things! */
-	if (backend_claim_interface(dev, iface)) {
+	if (backend_claim_interface(dev, iface, num_claim_attempts)) {
 		found = -1;
 		goto abort_release;
 	}
 
-	/* Use the appropriate altesetting! */
-	if (altset != 0) {
+	/* Use the appropriate altesetting, but only if the
+	   printer supports more than one.  Some printers don't like
+	   us unconditionally setting this. */
+	if (config->interface[iface].num_altsetting > 1) {
 		if (libusb_set_interface_alt_setting(dev, iface, altset)) {
+			ERROR("Failed to set alternative interface %d/%d\n", iface, altset);
 			found = -1;
 			goto abort_release;
 		}
@@ -563,7 +570,7 @@ candidate:
 		strncpy(buf + k, product, sizeof(buf)-k);
 
 		fprintf(stdout, "direct %s://%s?serial=%s&backend=%s \"%s\" \"%s\" \"%s\" \"\"\n",
-			prefix, buf, serial, backend->uri_prefix,
+			prefix, buf, serial, uri_prefix,
 			descr, descr,
 			ieee_id? ieee_id : "");
 	}
@@ -608,6 +615,8 @@ abort:
 		free (dict[dlen].val);
 	}
 
+	STATE("-connecting-to-device\n");
+
 	return found;
 }
 
@@ -625,7 +634,6 @@ extern struct dyesub_backend mitsu70x_backend;
 extern struct dyesub_backend mitsu9550_backend;
 extern struct dyesub_backend mitsup95d_backend;
 extern struct dyesub_backend dnpds40_backend;
-extern struct dyesub_backend cw01_backend;
 extern struct dyesub_backend magicard_backend;
 
 static struct dyesub_backend *backends[] = {
@@ -643,7 +651,6 @@ static struct dyesub_backend *backends[] = {
 	&mitsu9550_backend,
 	&mitsup95d_backend,
 	&dnpds40_backend,
-	&cw01_backend,
 	&magicard_backend,
 	NULL,
 };
@@ -652,13 +659,16 @@ static int find_and_enumerate(struct libusb_context *ctx,
 			      struct libusb_device ***list,
 			      struct dyesub_backend *backend,
 			      char *match_serno,
-			      int scan_only,
+			      int scan_only, int num_claim_attempts,
 			      uint8_t *r_iface, uint8_t *r_altset,
 			      uint8_t *r_endp_up, uint8_t *r_endp_down)
 {
 	int num;
 	int i, j = 0, k;
 	int found = -1;
+	const char *prefix = NULL;
+
+	STATE("+org.gutenprint-searching-for-device\n");
 
 	/* Enumerate and find suitable device */
 	num = libusb_get_device_list(ctx, list);
@@ -678,12 +688,14 @@ static int find_and_enumerate(struct libusb_context *ctx,
 					    extra_vid == desc.idVendor &&
 					    extra_pid == desc.idProduct) {
 						found = i;
+						prefix = backends[k]->uri_prefixes[0];
 						goto match;
 					}
 				}
 				if (desc.idVendor == backends[k]->devices[j].vid &&
 				    (desc.idProduct == backends[k]->devices[j].pid ||
 				     desc.idProduct == 0xffff)) {
+					prefix = backends[k]->devices[j].prefix;
 					found = i;
 					goto match;
 				}
@@ -693,18 +705,19 @@ static int find_and_enumerate(struct libusb_context *ctx,
 		continue;
 
 	match:
-		found = print_scan_output((*list)[i], &desc,
-					  URI_PREFIX, backends[k]->devices[j].manuf_str,
-					  found,
-					  scan_only, match_serno,
-					  r_iface, r_altset,
-					  r_endp_up, r_endp_down,
-					  backends[k]);
+		found = probe_device((*list)[i], &desc, prefix,
+				     URI_PREFIX, backends[k]->devices[j].manuf_str,
+				     found, num_claim_attempts,
+				     scan_only, match_serno,
+				     r_iface, r_altset,
+				     r_endp_up, r_endp_down,
+				     backends[k]);
 
 		if (found != -1 && !scan_only)
 			break;
 	}
 
+	STATE("-org.gutenprint-searching-for-device\n");
 	return found;
 }
 
@@ -717,10 +730,13 @@ static struct dyesub_backend *find_backend(char *uri_prefix)
 
 	for (i = 0; ; i++) {
 		struct dyesub_backend *backend = backends[i];
+		const char **alias;
 		if (!backend)
 			return NULL;
-		if (!strcmp(uri_prefix, backend->uri_prefix))
-			return backend;
+		for (alias = backend->uri_prefixes ; alias && *alias ; alias++) {
+			if (!strcmp(uri_prefix, *alias))
+				return backend;
+		}
 	}
 	return NULL;
 }
@@ -728,7 +744,7 @@ static struct dyesub_backend *find_backend(char *uri_prefix)
 void print_license_blurb(void)
 {
 	const char *license = "\n\
-Copyright 2007-2017 Solomon Peachy <pizza AT shaftnet DOT org>\n\
+Copyright 2007-2018 Solomon Peachy <pizza AT shaftnet DOT org>\n\
 \n\
 This program is free software; you can redistribute it and/or modify it\n\
 under the terms of the GNU General Public License as published by the Free\n\
@@ -776,18 +792,30 @@ void print_help(char *argv0, struct dyesub_backend *backend)
 		DEBUG("  [ -d copies ] \n");
 		DEBUG("  [ - | infile ] \n");
 		for (i = 0; ; i++) {
+			const char **alias;
+
 			backend = backends[i];
 			if (!backend)
 				break;
-			DEBUG("  BACKEND=%s\t# %s version %s\n",
-			      backend->uri_prefix, backend->name, backend->version);
+			DEBUG("\t# %s version %s\n",
+			      backend->name, backend->version);
+			DEBUG("  BACKEND=");
+			for (alias = backend->uri_prefixes ; alias && *alias ; alias++)
+				DEBUG2("%s ", *alias);
+			DEBUG2("\n");
+
 			if (backend->cmdline_usage)
 				backend->cmdline_usage();
 		}
 	} else {
+		const char **alias;
 		DEBUG("Standalone %s backend version %s\n",
 		      backend->name, backend->version);
-		DEBUG("\t%s\n", backend->uri_prefix);
+		DEBUG("\t");
+		for (alias = backend->uri_prefixes ; alias && *alias ; alias++)
+			DEBUG2("%s ", *alias);
+		DEBUG2("\n");
+
 		DEBUG("\t[ -D ] [ -G ] [ -f ]\n");
 		if (backend->cmdline_usage)
 			backend->cmdline_usage();
@@ -798,9 +826,9 @@ void print_help(char *argv0, struct dyesub_backend *backend)
 	i = libusb_init(&ctx);
 	if (i) {
 		ERROR("Failed to initialize libusb (%d)\n", i);
-		exit(CUPS_BACKEND_STOP);
+		exit(CUPS_BACKEND_RETRY_CURRENT);
 	}
-	find_and_enumerate(ctx, &list, backend, NULL, 1, NULL, NULL, NULL, NULL);
+	find_and_enumerate(ctx, &list, backend, NULL, 1, 1, NULL, NULL, NULL, NULL);
 	libusb_free_device_list(list, 1);
 	libusb_exit(ctx);
 }
@@ -834,7 +862,7 @@ int main (int argc, char **argv)
 
 	DEBUG("Multi-Call Dye-sublimation CUPS Backend version %s\n",
 	      BACKEND_VERSION);
-	DEBUG("Copyright 2007-2017 Solomon Peachy\n");
+	DEBUG("Copyright 2007-2018 Solomon Peachy\n");
 	DEBUG("This free software comes with ABSOLUTELY NO WARRANTY! \n");
 	DEBUG("Licensed under the GNU GPL.  Run with '-G' for more details.\n");
 	DEBUG("\n");
@@ -940,13 +968,14 @@ int main (int argc, char **argv)
 	ret = libusb_init(&ctx);
 	if (ret) {
 		ERROR("Failed to initialize libusb (%d)\n", ret);
-		ret = CUPS_BACKEND_STOP;
+		ret = CUPS_BACKEND_RETRY_CURRENT;
 		goto done;
 	}
 
 	/* If we don't have a valid backend, print help and terminate */
 	if (!backend) {
 		print_help(argv[0], NULL); // probes all devices
+		libusb_exit(ctx);
 		exit(1);
 	}
 
@@ -954,16 +983,17 @@ int main (int argc, char **argv)
 	if (!uri) {
 		if (argc < 2) {
 			print_help(argv[0], backend); // probes all devices
+			libusb_exit(ctx);
 			exit(1);
 		}
 	}
 
 	/* Enumerate devices */
-	found = find_and_enumerate(ctx, &list, backend, use_serno, 0, &iface, &altset, &endp_up, &endp_down);
+	found = find_and_enumerate(ctx, &list, backend, use_serno, 0, NUM_CLAIM_ATTEMPTS, &iface, &altset, &endp_up, &endp_down);
 
 	if (found == -1) {
 		ERROR("Printer open failure (No matching printers found!)\n");
-		ret = CUPS_BACKEND_HOLD;
+		ret = CUPS_BACKEND_RETRY;
 		goto done;
 	}
 
@@ -971,7 +1001,7 @@ int main (int argc, char **argv)
 	ret = libusb_open(list[found], &dev);
 	if (ret) {
 		ERROR("Printer open failure (Need to be root?) (%d)\n", ret);
-		ret = CUPS_BACKEND_STOP;
+		ret = CUPS_BACKEND_RETRY_CURRENT;
 		goto done;
 	}
 
@@ -980,15 +1010,16 @@ int main (int argc, char **argv)
 		ret = libusb_detach_kernel_driver(dev, iface);
 		if (ret) {
 			ERROR("Printer open failure (Could not detach printer from kernel) (%d)\n", ret);
-			ret = CUPS_BACKEND_STOP;
+			ret = CUPS_BACKEND_RETRY_CURRENT;
 			goto done_close;
 		}
 	}
 
 	/* Claim the interface so we can start using this! */
-	ret = backend_claim_interface(dev, iface);
+	ret = backend_claim_interface(dev, iface, NUM_CLAIM_ATTEMPTS);
 	if (ret) {
-		ret = CUPS_BACKEND_STOP;
+		ERROR("Printer open failure (Unable to claim interface) (%d)\n", ret);
+		ret = CUPS_BACKEND_RETRY;
 		goto done_close;
 	}
 
@@ -1010,6 +1041,7 @@ int main (int argc, char **argv)
 
 	/* Attach backend to device */
 	backend->attach(backend_ctx, dev, endp_up, endp_down, jobid);
+//	STATE("+org.gutenprint-attached-to-device\n");
 
 	if (!uri) {
 		if (backend->cmdline_arg(backend_ctx, argc, argv) < 0)
@@ -1030,6 +1062,7 @@ int main (int argc, char **argv)
 		data_fd = open(fname, O_RDONLY);
 		if (data_fd < 0) {
 			perror("ERROR:Can't open input file");
+			libusb_exit(ctx);
 			exit(1);
 		}
 	}
@@ -1038,12 +1071,14 @@ int main (int argc, char **argv)
 	i = fcntl(data_fd, F_GETFL, 0);
 	if (i < 0) {
 		perror("ERROR:Can't open input");
+		libusb_exit(ctx);
 		exit(1);
 	}
 	i &= ~O_NONBLOCK;
 	i = fcntl(data_fd, F_SETFL, i);
 	if (i < 0) {
 		perror("ERROR:Can't open input");
+		libusb_exit(ctx);
 		exit(1);
 	}
 
@@ -1094,13 +1129,15 @@ done_close:
 	libusb_close(dev);
 done:
 
-	if (backend && backend_ctx)
+	if (backend && backend_ctx) {
 		backend->teardown(backend_ctx);
+//		STATE("-org.gutenprint-attached-to-device");
+	}
 
 	if (list)
 		libusb_free_device_list(list, 1);
-	if (ctx)
-		libusb_exit(ctx);
+
+	libusb_exit(ctx);
 
 	return ret;
 }

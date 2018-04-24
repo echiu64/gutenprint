@@ -295,8 +295,6 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      BJC-1000
      BJC-2100
 
-5) Support for Magicard Tango 2E and Rio 2E printers has been added.
-
 5) Paper size options have been corrected, so that inappropriate paper
    sizes for many printers have been removed.
 
@@ -489,21 +487,23 @@ A) GENERAL USER-VISIBLE CHANGES
 
    2) Added support for the following printers:
 
-	Canon SELPHY CP1300
-	Magicard Tango 2E
-	Magicard Rio 2E
+     Canon SELPHY CP1300
+     Magicard Tango 2E
+     Magicard Rio 2E
+     Magicard Avalon E     (Experimental)
+     Magicard Enduro       (Experimental)
+     Magicard Enduro Plus  (Experimental)
 
    3) Enhanced support and bugfixes for the following printers:
 
 	Fujifilm ASK-300
 	Sony UP-DR150 and UP-DR200
-	Canon SELPHY CP-820, CP-910, CP-1000, and CP-1200
-	DNP DS620
-	DNP RX1HS
-	Citizen CY-02
+	Canon SELPHY CP820, CP910, CP1000, and CP1200
+	DNP DS40, DS620, and RX1HS
+	Citizen CW-01 and CY-02
 	Mitusbishi CP-D70DW, CP-D707DW, and CP-D80DW
 	Shinko/Sinfonia S1245
-	Canon SELPHY CP820, CP910, CP1000, and CP1200
+	Mitsubishi CP9800DW, CP9800DW-S, and CP-9810DW
 
    4) Improved the performance of all dye-sublimation printers
 

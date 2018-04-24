@@ -1,7 +1,7 @@
 /*
  *   Sony UP-DR150 Photo Printer CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013-2016 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2018 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -120,7 +120,7 @@ static int updr150_read_parse(void *vctx, int data_fd) {
 	ctx->databuf = malloc(MAX_PRINTJOB_LEN);
 	if (!ctx->databuf) {
 		ERROR("Memory allocation failure!\n");
-		return CUPS_BACKEND_FAILED;
+		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 
 	while(run) {
@@ -276,10 +276,15 @@ static int updr150_cmdline_arg(void *vctx, int argc, char **argv)
 	return 0;
 }
 
+static const char *sonyupdr150_prefixes[] = {
+	"sonyupdr150", "sonyupdr200", "sonyupcr10",
+	NULL
+};
+
 struct dyesub_backend updr150_backend = {
 	.name = "Sony UP-DR150/UP-DR200/UP-CR10",
-	.version = "0.19",
-	.uri_prefix = "sonyupdr150",
+	.version = "0.21",
+	.uri_prefixes = sonyupdr150_prefixes,
 	.cmdline_arg = updr150_cmdline_arg,
 	.init = updr150_init,
 	.attach = updr150_attach,
@@ -287,10 +292,10 @@ struct dyesub_backend updr150_backend = {
 	.read_parse = updr150_read_parse,
 	.main_loop = updr150_main_loop,
 	.devices = {
-	{ USB_VID_SONY, USB_PID_SONY_UPDR150, P_SONY_UPDR150, NULL},
-	{ USB_VID_SONY, USB_PID_SONY_UPDR200, P_SONY_UPDR150, NULL},
-	{ USB_VID_SONY, USB_PID_SONY_UPCR10, P_SONY_UPCR10, NULL},
-	{ 0, 0, 0, NULL}
+		{ USB_VID_SONY, USB_PID_SONY_UPDR150, P_SONY_UPDR150, NULL, "sonyupdr150"},
+		{ USB_VID_SONY, USB_PID_SONY_UPDR200, P_SONY_UPDR150, NULL, "sonyupdr200"},
+		{ USB_VID_SONY, USB_PID_SONY_UPCR10, P_SONY_UPCR10, NULL, "sonyupcr10"},
+		{ 0, 0, 0, NULL, NULL}
 	}
 };
 

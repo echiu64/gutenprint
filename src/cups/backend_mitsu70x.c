@@ -1,7 +1,7 @@
 /*
  *   Mitsubishi CP-D70/D707 Photo Printer CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013-2017 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2018 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -984,7 +984,7 @@ repeat:
 
 	if (!ctx->databuf) {
 		ERROR("Memory allocation failure!\n");
-		return CUPS_BACKEND_FAILED;
+		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 
 	memcpy(ctx->databuf + ctx->datalen, &mhdr, sizeof(mhdr));
@@ -1013,7 +1013,7 @@ repeat:
 		spoolbuflen = 0; spoolbuf = malloc(remain);
 		if (!spoolbuf) {
 			ERROR("Memory allocation failure!\n");
-			return CUPS_BACKEND_FAILED;
+			return CUPS_BACKEND_RETRY_CURRENT;
 		}
 
 		/* Read in the BGR data */
@@ -1033,7 +1033,7 @@ repeat:
 			uint8_t *buf = malloc(LUT_LEN);
 			if (!buf) {
 				ERROR("Memory allocation failure!\n");
-				return CUPS_BACKEND_FAILED;
+				return CUPS_BACKEND_RETRY_CURRENT;
 			}
 			if (ctx->Get3DColorTable(buf, ctx->lutfname)) {
 				ERROR("Unable to open LUT file '%s'\n", ctx->lutfname);
@@ -1141,6 +1141,8 @@ repeat:
 				/* Back off the buffer so we "wrap" on the print row. */
 				ctx->datalen -= ((LAMINATE_STRIDE - ctx->cols) * 2);
 			}
+			/* We're done */
+			close(fd);
 
 			/* Zero out the tail end of the buffer. */
 			j = be16_to_cpu(mhdr.lamcols) * be16_to_cpu(mhdr.lamrows) * 2;
@@ -1904,7 +1906,7 @@ static int mitsu70x_query_status(struct mitsu70x_ctx *ctx)
 	ret = mitsu70x_get_printerstatus(ctx, &resp);
 	if (!ret)
 		mitsu70x_dump_printerstatus(ctx, &resp);
-
+	
 	return ret;
 }
 
@@ -1986,12 +1988,17 @@ static int mitsu70x_cmdline_arg(void *vctx, int argc, char **argv)
 	return 0;
 }
 
+static const char *mitsu70x_prefixes[] = {
+	"mitsu70x",
+	"mitsud80", "mitsuk60", "kodak305", "fujiask300",
+	NULL,
+};
 
 /* Exported */
 struct dyesub_backend mitsu70x_backend = {
-	.name = "Mitsubishi CP-D70/D707/K60/D80",
-	.version = "0.74",
-	.uri_prefix = "mitsu70x",
+	.name = "Mitsubishi CP-D70 family",
+	.version = "0.76",
+	.uri_prefixes = mitsu70x_prefixes,
 	.cmdline_usage = mitsu70x_cmdline,
 	.cmdline_arg = mitsu70x_cmdline_arg,
 	.init = mitsu70x_init,
@@ -2001,13 +2008,13 @@ struct dyesub_backend mitsu70x_backend = {
 	.main_loop = mitsu70x_main_loop,
 	.query_serno = mitsu70x_query_serno,
 	.devices = {
-		{ USB_VID_MITSU, USB_PID_MITSU_D70X, P_MITSU_D70X, NULL},
-		{ USB_VID_MITSU, USB_PID_MITSU_K60, P_MITSU_K60, NULL},
-		{ USB_VID_MITSU, USB_PID_MITSU_D80, P_MITSU_D80, NULL},
-//		{ USB_VID_MITSU, USB_PID_MITSU_D90, P_MITSU_D90, NULL},
-		{ USB_VID_KODAK, USB_PID_KODAK305, P_KODAK_305, NULL},
-		{ USB_VID_FUJIFILM, USB_PID_FUJI_ASK300, P_FUJI_ASK300, NULL},
-	{ 0, 0, 0, NULL}
+		{ USB_VID_MITSU, USB_PID_MITSU_D70X, P_MITSU_D70X, NULL, "mitsu70x"},
+		{ USB_VID_MITSU, USB_PID_MITSU_K60, P_MITSU_K60, NULL, "mitsuk60"},
+		{ USB_VID_MITSU, USB_PID_MITSU_D80, P_MITSU_D80, NULL, "mitsud80"},
+//		{ USB_VID_MITSU, USB_PID_MITSU_D90, P_MITSU_D90, NULL, "mitsud90"}, // XXX add me in!
+		{ USB_VID_KODAK, USB_PID_KODAK305, P_KODAK_305, NULL, "kodak305"},
+		{ USB_VID_FUJIFILM, USB_PID_FUJI_ASK300, P_FUJI_ASK300, NULL, "fujiask300"},
+		{ 0, 0, 0, NULL, NULL}
 	}
 };
 

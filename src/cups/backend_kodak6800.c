@@ -1,7 +1,7 @@
 /*
  *   Kodak 6800/6850 Photo Printer CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013-2017 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2018 Solomon Peachy <pizza@shaftnet.org>
  *
  *   Development of this backend was sponsored by:
  *
@@ -1087,7 +1087,7 @@ static int kodak6800_read_parse(void *vctx, int data_fd) {
 	ctx->databuf = malloc(ctx->datalen);
 	if (!ctx->databuf) {
 		ERROR("Memory allocation failure!\n");
-		return CUPS_BACKEND_FAILED;
+		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 
 	{
@@ -1255,11 +1255,17 @@ static int kodak6800_main_loop(void *vctx, int copies) {
 	return CUPS_BACKEND_OK;
 }
 
+static const char *kodak6800_prefixes[] = {
+	"kodak68x0",
+	"kodak6800", "kodak6850",
+	NULL
+};
+
 /* Exported */
 struct dyesub_backend kodak6800_backend = {
 	.name = "Kodak 6800/6850",
-	.version = "0.58",
-	.uri_prefix = "kodak6800",
+	.version = "0.59",
+	.uri_prefixes = kodak6800_prefixes,
 	.cmdline_usage = kodak6800_cmdline,
 	.cmdline_arg = kodak6800_cmdline_arg,
 	.init = kodak6800_init,
@@ -1269,9 +1275,9 @@ struct dyesub_backend kodak6800_backend = {
 	.main_loop = kodak6800_main_loop,
 	.query_serno = kodak6800_query_serno,
 	.devices = {
-	{ USB_VID_KODAK, USB_PID_KODAK_6800, P_KODAK_6800, "Kodak"},
-	{ USB_VID_KODAK, USB_PID_KODAK_6850, P_KODAK_6850, "Kodak"},
-	{ 0, 0, 0, NULL}
+		{ USB_VID_KODAK, USB_PID_KODAK_6800, P_KODAK_6800, "Kodak", "kodak6800"},
+		{ USB_VID_KODAK, USB_PID_KODAK_6850, P_KODAK_6850, "Kodak", "kodak6850"},
+		{ 0, 0, 0, NULL, NULL}
 	}
 };
 

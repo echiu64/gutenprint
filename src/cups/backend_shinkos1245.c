@@ -1,7 +1,7 @@
 /*
  *   Shinko/Sinfonia CHC-S1245 CUPS backend -- libusb-1.0 version
  *
- *   (c) 2015-2017 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2015-2018 Solomon Peachy <pizza@shaftnet.org>
  *
  *   Low-level documentation was provided by Sinfonia, Inc.  Thank you!
  *
@@ -1356,7 +1356,7 @@ static int shinkos1245_read_parse(void *vctx, int data_fd) {
 	ctx->databuf = malloc(ctx->datalen);
 	if (!ctx->databuf) {
 		ERROR("Memory allocation failure!\n");
-		return CUPS_BACKEND_FAILED;
+		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 
 	{
@@ -1640,10 +1640,15 @@ static int shinkos1245_query_serno(struct libusb_device_handle *dev, uint8_t end
 #define USB_VID_SHINKO       0x10CE
 #define USB_PID_SHINKO_S1245 0x0007
 
+static const char *shinkos1245_prefixes[] = {
+	"shinkos1245",
+	NULL
+};
+
 struct dyesub_backend shinkos1245_backend = {
-	.name = "Shinko/Sinfonia CHC-S1245",
-	.version = "0.18",
-	.uri_prefix = "shinkos1245",
+	.name = "Shinko/Sinfonia CHC-S1245/E1",
+	.version = "0.19",
+	.uri_prefixes = shinkos1245_prefixes,
 	.cmdline_usage = shinkos1245_cmdline,
 	.cmdline_arg = shinkos1245_cmdline_arg,
 	.init = shinkos1245_init,
@@ -1653,8 +1658,8 @@ struct dyesub_backend shinkos1245_backend = {
 	.main_loop = shinkos1245_main_loop,
 	.query_serno = shinkos1245_query_serno,
 	.devices = {
-	{ USB_VID_SHINKO, USB_PID_SHINKO_S1245, P_SHINKO_S1245, NULL},
-	{ 0, 0, 0, NULL}
+		{ USB_VID_SHINKO, USB_PID_SHINKO_S1245, P_SHINKO_S1245, NULL, "shinkos1245"},
+		{ 0, 0, 0, NULL, NULL}
 	}
 };
 

@@ -1,7 +1,7 @@
 /*
  *   Kodak Professional 1400/805 CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013-2016 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2018 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -375,7 +375,7 @@ static int kodak1400_read_parse(void *vctx, int data_fd) {
 	ctx->plane_b = malloc(ctx->hdr.planesize);
 	if (!ctx->plane_r || !ctx->plane_g || !ctx->plane_b) {
 		ERROR("Memory allocation failure!\n");
-		return CUPS_BACKEND_FAILED;
+		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 	for (i = 0 ; i < ctx->hdr.rows ; i++) {
 		int j;
@@ -613,10 +613,15 @@ top:
 #define USB_PID_MITSU_3020D  0x038B
 #define USB_PID_MITSU_3020DA 0x03AA
 
+static const char *kodak1400_prefixes[] = {
+	"kodak1400", "kodak805", "mitsu3020d", "mitsu3020da",
+	NULL,
+};
+
 struct dyesub_backend kodak1400_backend = {
 	.name = "Kodak 1400/805",
-	.version = "0.34",
-	.uri_prefix = "kodak1400",
+	.version = "0.35",
+	.uri_prefixes = kodak1400_prefixes,
 	.cmdline_usage = kodak1400_cmdline,
 	.cmdline_arg = kodak1400_cmdline_arg,
 	.init = kodak1400_init,
@@ -625,11 +630,11 @@ struct dyesub_backend kodak1400_backend = {
 	.read_parse = kodak1400_read_parse,
 	.main_loop = kodak1400_main_loop,
 	.devices = {
-	{ USB_VID_KODAK, USB_PID_KODAK_1400, P_KODAK_1400_805, "Kodak"},
-	{ USB_VID_KODAK, USB_PID_KODAK_805, P_KODAK_1400_805, "Kodak"},
-	{ USB_VID_MITSU, USB_PID_MITSU_3020D, P_KODAK_1400_805, NULL},
-	{ USB_VID_MITSU, USB_PID_MITSU_3020DA, P_KODAK_1400_805, NULL},
-	{ 0, 0, 0, NULL}
+		{ USB_VID_KODAK, USB_PID_KODAK_1400, P_KODAK_1400_805, "Kodak", "kodak1400"},
+		{ USB_VID_KODAK, USB_PID_KODAK_805, P_KODAK_1400_805, "Kodak", "kodak805"},
+		{ USB_VID_MITSU, USB_PID_MITSU_3020D, P_KODAK_1400_805, NULL, "mitsu3020d"},
+		{ USB_VID_MITSU, USB_PID_MITSU_3020DA, P_KODAK_1400_805, NULL, "mitsu3020da" },
+		{ 0, 0, 0, NULL, NULL}
 	}
 };
 
