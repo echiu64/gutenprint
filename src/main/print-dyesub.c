@@ -9501,7 +9501,6 @@ dyesub_render_row_interlaced_u8(stp_vars_t *v,
 				const dyesub_cap_t *caps,
 				int in_row,
 				char *dest,
-				int bytes_per_pixel,
 				int plane)
 {
   int w;
@@ -9531,7 +9530,6 @@ dyesub_render_row_interlaced_u16(stp_vars_t *v,
 				 const dyesub_cap_t *caps,
 				 int in_row,
 				 unsigned short *dest,
-				 int bytes_per_pixel,
 				 int plane)
 {
   int w;
@@ -9549,8 +9547,7 @@ dyesub_render_row_interlaced_u16(stp_vars_t *v,
           row = (pv->imgw_px - 1) - row;
         }
       src = &(pv->image_data[row][col * pv->out_channels]);
-
-      dyesub_render_pixel_u16(src, dest + w*bytes_per_pixel,
+      dyesub_render_pixel_u16(src, dest + w,
 			      pv, plane);
     }
 }
@@ -9629,12 +9626,12 @@ dyesub_print_plane(stp_vars_t *v,
 	      if (pv->bytes_per_ink_channel == 1)
 #endif
 		dyesub_render_row_interlaced_u8(v, pv, caps, row,
-						destrow + bpp * pv->outl_px, bpp, p);
+						destrow + bpp * pv->outl_px, p);
 #ifndef M98XX_8BPP
 	      else
 		dyesub_render_row_interlaced_u16(v, pv, caps, row,
 						 (unsigned short *)(destrow + bpp * pv->outl_px),
-						 bpp, p);
+						 p);
 #endif
 	    }
 	  else
