@@ -4,7 +4,7 @@
  *
  *   Copyright 2003-2006 Michael Mraka (Michael.Mraka@linux.cz)
  *
- *   Copyright 2007-2017 Solomon Peachy (pizza@shaftnet.org)
+ *   Copyright 2007-2018 Solomon Peachy (pizza@shaftnet.org)
  *
  *   The plug-in is based on the code of the RAW plugin for the GIMP of
  *   Michael Sweet (mike@easysw.com) and Robert Krawitz (rlk@alum.mit.edu)
@@ -43,6 +43,7 @@
 
 //#define S6145_YMC
 //#define M98XX_8BPP
+//#define CW01_NATIVE
 
 #define DYESUB_FEATURE_NONE		 0x00000000
 #define DYESUB_FEATURE_FULL_WIDTH	 0x00000001
@@ -5918,6 +5919,8 @@ static void dnpds40_plane_init(stp_vars_t *v)
   stp_put32_le(11808, v); /* horizontal pixels per meter, fixed at 300dpi */
   if (pd->h_dpi == 600)
     stp_put32_le(23615, v); /* vertical pixels per meter @ 600dpi */
+  if (pd->h_dpi == 334)
+    stp_put32_le(13146, v); /* vertical pixels per meter @ 334dpi */
   else
     stp_put32_le(11808, v); /* vertical pixels per meter @ 300dpi */
   stp_put32_le(256, v);    /* entries in color table  */
@@ -6713,7 +6716,14 @@ LIST(dyesub_printsize_list_t, citizen_cw01_printsize_list, dyesub_printsize_t, c
 static void citizen_cw01_printer_start(stp_vars_t *v)
 {
   dyesub_privdata_t *pd = get_privdata(v);
+#ifdef CW01_NATIVE
+  /* Set quantity.. Backend overrides as needed. */
+  stp_zprintf(v, "\033PCNTRL QTY             00000008%07d\r", pd->copies);
+  /* Set cutter, nothing fancy */
+  stp_zprintf(v, "\033PCNTRL CUTTER          0000000800000000");
 
+  /* CW-01 has no other smarts.  No multicut, no matte. */
+#else
   int media = 0;
 
   if (strcmp(pd->pagesize,"w252h338") == 0)
@@ -6745,12 +6755,15 @@ static void citizen_cw01_printer_start(stp_vars_t *v)
 
   stp_put32_le(media, v);
   stp_put32_le(0x0, v);
+#endif
 }
 
 static void citizen_cw01_plane_init(stp_vars_t *v)
 {
+#ifdef CW01_NATIVE
+  dnpds40_plane_init(v);
+#else
   dyesub_privdata_t *pd = get_privdata(v);
-
   int i;
 
   stp_put32_le(0x28, v);
@@ -6775,6 +6788,14 @@ static void citizen_cw01_plane_init(stp_vars_t *v)
     tmp = i | (i << 8) | (i << 16);
     stp_put32_le(tmp, v);
   }
+#endif
+}
+
+static void citizen_cw01_printer_end(stp_vars_t *v)
+{
+#ifdef CW01_NATIVE
+  dnpds40_printer_end(v);
+#endif
 }
 
 /* Magicard Series */
@@ -8627,7 +8648,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_WHITE_BORDER
       | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_NATIVECOPIES,
-    &citizen_cw01_printer_start, NULL,
+    &citizen_cw01_printer_start, &citizen_cw01_printer_end,
     &citizen_cw01_plane_init, NULL,
     NULL, NULL,
     NULL,
