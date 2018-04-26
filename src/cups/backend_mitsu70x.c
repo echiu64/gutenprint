@@ -1010,7 +1010,8 @@ repeat:
 		remain = ctx->rows * ctx->cols * 3;
 		DEBUG("Reading in %d bytes of 8bpp BGR data\n", remain);
 
-		spoolbuflen = 0; spoolbuf = malloc(remain);
+		spoolbuflen = 0;
+		spoolbuf = malloc(remain);
 		if (!spoolbuf) {
 			ERROR("Memory allocation failure!\n");
 			return CUPS_BACKEND_RETRY_CURRENT;
@@ -1019,10 +1020,14 @@ repeat:
 		/* Read in the BGR data */
 		while (remain) {
 			i = read(data_fd, spoolbuf + spoolbuflen, remain);
-			if (i == 0)
+			if (i == 0) {
+				free(spoolbuf);
 				return CUPS_BACKEND_CANCEL;
-			if (i < 0)
+			}
+			if (i < 0) {
+				free(spoolbuf);
 				return CUPS_BACKEND_CANCEL;
+			}
 			spoolbuflen += i;
 			remain -= i;
 		}
@@ -1115,7 +1120,7 @@ repeat:
 		if (ctx->matte) {
 			int fd;
 			uint32_t j;
-			DEBUG("Reading %d bytes of matte data from disk (%d/%d)\n", ctx->matte, ctx->cols, LAMINATE_STRIDE);
+			DEBUG("Reading %u bytes of matte data from disk (%d/%d)\n", ctx->matte, ctx->cols, LAMINATE_STRIDE);
 			fd = open(ctx->laminatefname, O_RDONLY);
 			if (fd < 0) {
 				ERROR("Unable to open matte lamination data file '%s'\n", ctx->laminatefname);
@@ -1449,7 +1454,7 @@ static int d70_library_callback(void *context, void *buffer, uint32_t len)
 		if (chunk > CHUNK_LEN)
 			chunk = CHUNK_LEN;
 
-		ret = send_data(ctx->dev, ctx->endp_down, buffer + offset, chunk);
+		ret = send_data(ctx->dev, ctx->endp_down, (uint8_t*)buffer + offset, chunk);
 		if (ret < 0)
 			break;
 
@@ -1997,7 +2002,7 @@ static const char *mitsu70x_prefixes[] = {
 /* Exported */
 struct dyesub_backend mitsu70x_backend = {
 	.name = "Mitsubishi CP-D70 family",
-	.version = "0.76",
+	.version = "0.77",
 	.uri_prefixes = mitsu70x_prefixes,
 	.cmdline_usage = mitsu70x_cmdline,
 	.cmdline_arg = mitsu70x_cmdline_arg,

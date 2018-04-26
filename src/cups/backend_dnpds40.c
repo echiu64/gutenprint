@@ -1276,7 +1276,7 @@ parsed:
 	}
 	if (dpi == 334 && ctx->type != P_CITIZEN_CW01)
 	{
-		ERROR("Illegal resolution (%d) for printer!\n", dpi);
+		ERROR("Illegal resolution (%u) for printer!\n", dpi);
 		return CUPS_BACKEND_CANCEL;
 	}
 
@@ -1357,7 +1357,7 @@ parsed:
 			break;
 		case 600: //"A4"
 			if (ctx->multicut < MULTICUT_A5 || ctx->multicut > MULTICUT_A4x5X2) {
-				ERROR("Incorrect media for job loaded (%d vs %d)\n", ctx->media, ctx->multicut);
+				ERROR("Incorrect media for job loaded (%u vs %u)\n", ctx->media, ctx->multicut);
 				return CUPS_BACKEND_CANCEL;
 			}
 			/* A4xn and A5 can be rewound */
@@ -2719,7 +2719,7 @@ static const char *dnpds40_prefixes[] = {
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS-series / Citizen C-series",
-	.version = "0.99",
+	.version = "0.100",
 	.uri_prefixes = dnpds40_prefixes,
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
@@ -2767,8 +2767,10 @@ static int cw01_read_parse(struct dnpds40_ctx *ctx, int data_fd,
 	while (remain) {
 		i = read(data_fd, buf + j, remain);
 
-		if (i < 0)
+		if (i < 0) {
+			free(buf);
 			return i;
+		}
 
 		remain -= i;
 		j += i;

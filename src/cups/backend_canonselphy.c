@@ -588,6 +588,9 @@ static int canonselphy_get_status(struct canonselphy_ctx *ctx)
 	/* Read in the printer status, twice. */
 	ret = read_data(ctx->dev, ctx->endp_up,
 			(uint8_t*) rdbuf, READBACK_LEN, &num);
+	if (ret < 0)
+		return CUPS_BACKEND_FAILED;
+
 	ret = read_data(ctx->dev, ctx->endp_up,
 			(uint8_t*) rdbuf, READBACK_LEN, &num);
 
@@ -749,7 +752,7 @@ static int canonselphy_read_parse(void *vctx, int data_fd)
 		return CUPS_BACKEND_CANCEL;
 	}
 
-	if (ctx->printer->type != ctx->type) {
+	if (printer_type != ctx->type) {
 		ERROR("Printer/Job mismatch (%d/%d)\n", ctx->type, ctx->printer->type);
 		return CUPS_BACKEND_CANCEL;
 	}
@@ -1111,7 +1114,7 @@ static const char *canonselphy_prefixes[] = {
 
 struct dyesub_backend canonselphy_backend = {
 	.name = "Canon SELPHY CP/ES (legacy)",
-	.version = "0.98",
+	.version = "0.99",
 	.uri_prefixes = canonselphy_prefixes,
 	.cmdline_usage = canonselphy_cmdline,
 	.cmdline_arg = canonselphy_cmdline_arg,

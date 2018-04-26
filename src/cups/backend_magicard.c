@@ -732,11 +732,13 @@ static int magicard_read_parse(void *vctx, int data_fd) {
 		while (remain > 0) {
 			i = read(data_fd, srcbuf + srcbuf_offset, remain);
 			if (i < 0) {
-				ERROR("Data Read Error: %d (%d) @%d)\n", i, remain, srcbuf_offset);
+				ERROR("Data Read Error: %d (%u) @%u)\n", i, remain, srcbuf_offset);
+				free(srcbuf);
 				return i;
 			}
 			if (i == 0) {
-				ERROR("Short read! (%d/%d)\n", i, remain);
+				ERROR("Short read! (%d/%u)\n", i, remain);
+				free(srcbuf);
 				return CUPS_BACKEND_CANCEL;
 			}
 			srcbuf_offset += i;
@@ -793,11 +795,11 @@ static int magicard_read_parse(void *vctx, int data_fd) {
 		while (remain > 0) {
 			i = read(data_fd, ctx->databuf + ctx->datalen, remain);
 			if (i < 0) {
-				ERROR("Data Read Error: %d (%d) @%d)\n", i, remain, ctx->datalen);
+				ERROR("Data Read Error: %d (%u) @%d)\n", i, remain, ctx->datalen);
 				return i;
 			}
 			if (i == 0) {
-				ERROR("Short read! (%d/%d)\n", i, remain);
+				ERROR("Short read! (%d/%u)\n", i, remain);
 				return CUPS_BACKEND_CANCEL;
 			}
 			ctx->datalen += i;
@@ -894,7 +896,7 @@ static const char *magicard_prefixes[] = {
 
 struct dyesub_backend magicard_backend = {
 	.name = "Magicard family",
-	.version = "0.10",
+	.version = "0.11",
 	.uri_prefixes = magicard_prefixes,
 	.cmdline_arg = magicard_cmdline_arg,
 	.cmdline_usage = magicard_cmdline,

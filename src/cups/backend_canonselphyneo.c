@@ -284,6 +284,9 @@ static int selphyneo_main_loop(void *vctx, int copies) {
 	ret = read_data(ctx->dev, ctx->endp_up,
 			(uint8_t*) &rdback, sizeof(rdback), &num);
 
+	if (ret < 0)
+		return CUPS_BACKEND_FAILED;
+
 	/* And again, for the markers */
 	ret = read_data(ctx->dev, ctx->endp_up,
 			(uint8_t*) &rdback, sizeof(rdback), &num);
@@ -434,7 +437,7 @@ static const char *canonselphyneo_prefixes[] = {
 
 struct dyesub_backend canonselphyneo_backend = {
 	.name = "Canon SELPHY CP (new)",
-	.version = "0.13",
+	.version = "0.14",
 	.uri_prefixes = canonselphyneo_prefixes,
 	.cmdline_usage = selphyneo_cmdline,
 	.cmdline_arg = selphyneo_cmdline_arg,
