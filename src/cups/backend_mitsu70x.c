@@ -1911,7 +1911,7 @@ static int mitsu70x_query_status(struct mitsu70x_ctx *ctx)
 	ret = mitsu70x_get_printerstatus(ctx, &resp);
 	if (!ret)
 		mitsu70x_dump_printerstatus(ctx, &resp);
-	
+
 	return ret;
 }
 

@@ -907,7 +907,7 @@ struct dyesub_backend magicard_backend = {
 	.main_loop = magicard_main_loop,
 	.devices = {
 		{ USB_VID_MAGICARD, USB_PID_MAGICARD_TANGO2E, P_MAGICARD, NULL, "tango2e"},
-		{ USB_VID_MAGICARD, USB_PID_MAGICARD_ENDURO, P_MAGICARD, NULL, "enduro"},	
+		{ USB_VID_MAGICARD, USB_PID_MAGICARD_ENDURO, P_MAGICARD, NULL, "enduro"},
 		{ USB_VID_MAGICARD, USB_PID_MAGICARD_ENDUROPLUS, P_MAGICARD, NULL, "enduroplus"},
 		{ USB_VID_MAGICARD, 0xFFFF, P_MAGICARD, NULL, "magicard"},
 		{ 0, 0, 0, NULL, "magicard"}

@@ -832,7 +832,7 @@ hdr_done:
 			}
 			CColorConv3D_DoColorConv(lut, ctx->databuf + sizeof(struct mitsu9550_plane),
 						 ctx->cols, ctx->rows, ctx->cols * 3, COLORCONV_BGR);
-			CColorConv3D_Destroy3DColorTable(lut);			
+			CColorConv3D_Destroy3DColorTable(lut);
 			ctx->hdr2.unkc[9] = 0;
 		}
 
