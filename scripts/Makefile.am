@@ -30,12 +30,14 @@ EXTRA_DIST = \
 	count-cpus \
 	global.mk \
 	gversion \
+	test-gversion \
 	mkgitlog \
 	wzpaq
 
 noinst_SCRIPTS= \
 	build-release \
 	gversion \
+	test-gversion \
 	mkgitlog \
 	wzpaq
 

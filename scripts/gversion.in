@@ -40,11 +40,7 @@ gutenprint_version=@VERSION@
 
 if [ -z "$3" ] ; then
     if [ -d "$root/.git" ] ; then
-	git describe --dirty --always --first-parent 2>/dev/null | sed 's/^[^0-9]*-//' > "$root/git-version-stamp"
-    fi
-
-    if [ -f "$root/git-version-stamp" ] ; then
-	description=`cat "$root/git-version-stamp"`
+	description=$(git describe --dirty --always --first-parent 2>/dev/null)
     else
 	description='(unknown)'
     fi
@@ -58,75 +54,116 @@ if [ -z "$description" ] ; then
     exit 0
 fi
 
+xed() {
+    if [[ -n "$PREFIX" ]] ; then
+	sed -e h -e "s/$/ $PREFIX => /" -e x -e 's/^[^0-9]*-//' "$@" -e H -e x -e "s/\n//"
+    else
+	sed -e 's/^[^0-9]*-//' "$@"
+    fi
+}
+
 get_major() {
-    echo "$1" | sed -e 's/[-_\.].*//'
+    xed -e 's/[-_\.].*//'
 }
 
 get_minor() {
-    echo "$1" | sed -e 's/^[0-9]*[-_\.]//' \
-		    -e 's/[-_\.].*//'
+    xed -e 's/^[0-9]*[-_\.]//' \
+	-e 's/[-_\.].*//'
 }
 
 get_micro() {
-    echo "$1" | sed -e 's/^[0-9]*[-_\.][0-9]*[-_\.]//' \
-		    -e 's/[-_\.].*//'
+    xed -e 's/^[0-9]*[-_\.][0-9]*[-_\.]//' \
+	-e 's/[-_\.].*//'
 }
 
 get_extra() {
-    echo "$1" | sed -e 's/^[0-9]*[-_\.][0-9]*[-_\.][0-9]*\([a-zA-Z]\|\)//' \
-		    -e 's/-\([0-9]*-\|\)g[0-9a-zA-Z]*\(-dirty\|\)$//' \
-    		    -e 's/^_/-/'
+    xed -e 's/^[0-9]*[-_\.][0-9]*[-_\.][0-9]*\([a-zA-Z]\|\)//' \
+	-e 's/-\([0-9]*-\|\)g[0-9a-zA-Z]*\(-dirty\|\)$//' \
+    	-e 's/^_/-/'
 }
 
 get_git() {
-    echo "$1" | sed -e 's/^[0-9]*[-_\.][0-9]*[-_\.][0-9]*\([a-zA-Z]\|\)//' \
-		    -e 's/^[-_\.][a-zA-Z][a-zA-Z]*[0-9]*\([a-zA-Z]\|\)//' \
-		    -e 's/^[-_\.]/-/'
+    xed -e 's/^[0-9]*[-_\.][0-9]*[-_\.][0-9]*\([a-zA-Z]\|\)//' \
+	-e 's/^[-_\.][a-zA-Z][a-zA-Z]*[0-9]*\([a-zA-Z]\|\)//' \
+	-e 's/^[-_\.]/-/' \
+	-e 's/-0-g[0-9a-f]*\(-dirty\|\)//'
+}
+
+get_git_hash() {
+    xed -e 's/^[0-9]*[-_\.][0-9]*[-_\.][0-9]*\([a-zA-Z]\|\)//' \
+	-e 's/^[-_\.][a-zA-Z][a-zA-Z]*[0-9]*\([a-zA-Z]\|\)//' \
+	-e 's/^[-_\.]/-/' \
+	-e 's/^-[0-9]*-g//' \
+	-e 's/-dirty$//'
 }
 
 get_extra_git() {
-    echo "$1" | sed -e 's/^[0-9]*[-_\.][0-9]*[-_\.][0-9]*\([a-zA-Z]\|\)//' \
-		    -e 's/^[-_\.]/-/'
+    xed -e 's/^[0-9]*[-_\.][0-9]*[-_\.][0-9]*\([a-zA-Z]\|\)//' \
+	-e 's/^[-_\.]/-/' \
+	-e 's/-0-g[0-9a-f]*\(-dirty\|\)$/\1/'
 }
 
 get_core_version() {
-    echo "$1" | sed -e 's/^\([0-9]*[-_\.][0-9]*\).*/\1/' \
-		    -e 's/[-_\.]/./g'
+    xed -e 's/^\([0-9]*[-_\.][0-9]*\).*/\1/' \
+	-e 's/[-_\.]/./g'
 }
 
 get_base_version() {
-    echo "$1" | sed -e 's/^\([0-9]*[-_\.][0-9]*[-_\.][0-9]*\([a-zA-Z]\|\)\).*/\1/' \
-		    -e 's/[-_\.]/./g'
+    xed -e 's/^\([0-9]*[-_\.][0-9]*[-_\.][0-9]*\([a-zA-Z]\|\)\).*/\1/' \
+	-e 's/[-_\.]/./g'
 }
 
 get_full_version() {
-    echo "$1" | sed -e 's/-[0-9]*-g[0-9a-z]*\(-dirty\|\)$//' \
-		    -e 's/[-_\.]/=/g' \
-		    -e 's/=/./' \
-		    -e 's/=/./' \
-		    -e 's/=/-/'
+    xed -e 's/-[0-9]*-g[0-9a-z]*\(-dirty\|\)$//' \
+	-e 's/[-_\.]/=/g' \
+	-e 's/=/./' \
+	-e 's/=/./' \
+	-e 's/=/-/'
 }
 
 get_all() {
-    echo "$1" | sed -e 's/[-_\.]/=/g' \
-		    -e 's/=/./' \
-		    -e 's/=/./' \
-		    -e 's/=/-/g'
+    xed -e 's/[-_\.]/=/g' \
+	-e 's/=/./' \
+	-e 's/=/./' \
+	-e 's/=/-/g' \
+	-e 's/-0-g[0-9a-f]*\(-dirty\|\)$/\1/'
 }
 
-case "$1" in
-    major)        get_major        "$description" ;;
-    minor)        get_minor        "$description" ;;
-    micro)        get_micro        "$description" ;;
-    extra)        get_extra        "$description" ;;
-    git)          get_git          "$description" ;;
-    extra-git)    get_extra_git    "$description" ;;
-    core-version) get_core_version "$description" ;;
-    base-version) get_base_version "$description" ;;
-    full-version) get_full_version "$description" ;;
-    ''|all)       get_all          "$description" ;;
-    pkg)          echo             "@VERSION@"    ;;
-    *)            usage                           ;;
+get_everything() {
+    xed -e 's/[-_\.]/=/g' \
+	-e 's/=/./' \
+	-e 's/=/./' \
+	-e 's/=/-/g'
+}
+
+get_pkg() {
+    echo "$gutenprint_version"
+}
+
+doit() {
+    echo ">>>$1<<<"
+    case "$1" in
+	major)        get_major        ;;
+	minor)        get_minor        ;;
+	micro)        get_micro        ;;
+	extra)        get_extra        ;;
+	git)          get_git          ;;
+	git-hash)     get_git_hash     ;;
+	extra-git)    get_extra_git    ;;
+	core-version) get_core_version ;;
+	base-version) get_base_version ;;
+	full-version) get_full_version ;;
+	''|all)       get_all          ;;
+	everything)   get_everything   ;;
+	pkg)          get_pkg          ;;
+	*)            usage            ;;
+    esac
+}
+
+case "$description" in
+    -) doit $1 ;;
+    --) PREFIX="$1" doit $1 ;;
+    *) doit $1 <<< $description
 esac
 
 exit 0

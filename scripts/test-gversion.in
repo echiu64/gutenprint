@@ -19,7 +19,7 @@ major=5
 minor='-0 _2'
 micro='-0 _1 -12 _0a -1a _12a'
 extra='-pre0 -rc1 _beta2a'
-git='-15-g40e406b -15-g40e406b-dirty'
+git='-15-g40e406b -15-g40e406b-dirty -0-g40e406b -0-g40e406b-dirty'
 
 types="
 major
@@ -27,24 +27,24 @@ minor
 micro
 extra
 git
+git-hash
 extra-git
 core-version
 base-version
 full-version
-all"
+all
+everything"
 
-for a in $major ; do
-    for b in $minor ; do
-	for c in $micro ; do
-	    for d in '' $extra ; do
-		for e in '' $git ; do
-		    f="$a$b$c$d$e"
-		    for g in $types ; do
-			echo -n "$f $g => "
-			./gversion "$g" X "$f"
-		    done
-		done
-	    done
-	done
-    done
+for g in $types ; do
+    (for a in $major ; do
+	 for b in $minor ; do
+	     for c in $micro ; do
+		 for d in '' $extra ; do
+		     for e in '' $git ; do
+			 echo "$a$b$c$d$e"
+		     done
+		 done
+	     done
+	 done
+     done) | ./gversion "$g" X --
 done
