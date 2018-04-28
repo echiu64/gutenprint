@@ -19,7 +19,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see https://www.gnu.org/licenses/.
 </copyright>
-<escp2Model name="sp950">
+<escp2Model name="sp950" base="escp2/model/base/baseline_360.xml">
  <inputSlots src="escp2/inputslots/cd_cutter_roll_feed.xml"/>
  <qualityPresets src="escp2/qualitypresets/standard.xml"/>
  <verticalBorderlessSequence>SN4\000\000\002\027\000\000\000\000\000\000\001\003\000\204\003\252\000\204\006\270\004\364\006v\005\230\011\226\000\304\004\226\000\206\002\270\012\031\030\031\031\031\031\004444\004\001\000\000\040\011</verticalBorderlessSequence>
@@ -46,7 +46,6 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <NozzleSeparation>1</NozzleSeparation>
  </headConfiguration>
  <physicalChannels>6</physicalChannels>
- <baseSeparation>360</baseSeparation>
  <resolutionScale>14400</resolutionScale>
  <minimumResolution>360 180</minimumResolution>
  <maximumResolution>2880 1440</maximumResolution>

@@ -1513,36 +1513,36 @@ get_resolution_bounds_by_paper_type(const stp_vars_t *v,
 	case PAPER_PLAIN:
 	  *min_x = 0;
 	  *min_y = 0;
-	  *max_x = 1440;
-	  *max_y = 720;
+	  *max_x = escp2_base_separation(v) * 4;
+	  *max_y = escp2_base_separation(v) * 2;
 	  break;
 	case PAPER_GOOD:
-	  *min_x = 360;
-	  *min_y = 360;
-	  *max_x = 1440;
-	  *max_y = 1440;
+	  *min_x = escp2_base_separation(v);
+	  *min_y = escp2_base_separation(v);
+	  *max_x = escp2_base_separation(v) * 4;
+	  *max_y = escp2_base_separation(v) * 4;
 	  break;
 	case PAPER_PHOTO:
-	  *min_x = 720;
-	  *min_y = 360;
+	  *min_x = escp2_base_separation(v) * 2;
+	  *min_y = escp2_base_separation(v);
 	  *max_x = 2880;
-	  *max_y = 1440;
+	  *max_y = escp2_base_separation(v) * 4;
 	  if (*min_x >= escp2_max_hres(v))
 	    *min_x = escp2_max_hres(v);
 	  break;
 	case PAPER_PREMIUM_PHOTO:
-	  *min_x = 720;
-	  *min_y = 720;
+	  *min_x = escp2_base_separation(v) * 2;
+	  *min_y = escp2_base_separation(v) * 2;
 	  *max_x = 0;
 	  *max_y = 0;
 	  if (*min_x >= escp2_max_hres(v))
 	    *min_x = escp2_max_hres(v);
 	  break;
 	case PAPER_TRANSPARENCY:
-	  *min_x = 360;
-	  *min_y = 360;
-	  *max_x = 720;
-	  *max_y = 720;
+	  *min_x = escp2_base_separation(v);
+	  *min_y = escp2_base_separation(v);
+	  *max_x = escp2_base_separation(v) * 2;
+	  *max_y = escp2_base_separation(v) * 2;
 	  break;
 	}
       stp_dprintf(STP_DBG_ESCP2, v,
@@ -1700,6 +1700,7 @@ get_default_inktype(const stp_vars_t *v)
       const res_t *res = stpi_escp2_find_resolution(v);
       if (res)
 	{
+	  /* Hard-coded value for old printers */
 	  if (res->vres == 360 && res->hres == escp2_base_res(v))
 	    {
 	      int i;
@@ -3873,26 +3874,28 @@ lcm(unsigned a, unsigned b)
     return a * b / gcd(a, b);
 }
 
+/* XXX -- How do we handle 300 DPI base? */
 static int
-adjusted_vertical_resolution(const res_t *res)
+adjusted_vertical_resolution(const stp_vars_t *v, const res_t *res)
 {
-  if (res->vres >= 720)
+  if (res->vres >= escp2_base_separation(v) * 2)
     return res->vres;
-  else if (res->hres >= 720)	/* Special case 720x360 */
-    return 720;
+  else if (res->hres >= escp2_base_separation(v) * 2)	/* Special case 720x360 */
+    return escp2_base_separation(v) * 2;
   else if (res->vres % 90 == 0)
     return res->vres;
   else
-    return lcm(res->hres, res->vres);
+    return lcm(res->hres, res->vres); /* E. g. 360x240 => 720 */
 }
 
 static int
-adjusted_horizontal_resolution(const res_t *res)
+adjusted_horizontal_resolution(const stp_vars_t *v, const res_t *res)
 {
+  /* XXX -- How do we handle 300 DPI base? */
   if (res->vres % 90 == 0)
     return res->hres;
   else
-    return lcm(res->hres, res->vres);
+    return lcm(res->hres, res->vres); /* E. g. 360x240 => 720 */
 }
 
 static void
@@ -3901,8 +3904,8 @@ setup_resolution(stp_vars_t *v)
   escp2_privdata_t *pd = get_privdata(v);
   const res_t *res = stpi_escp2_find_resolution(v);
 
-  int vertical = adjusted_vertical_resolution(res);
-  int horizontal = adjusted_horizontal_resolution(res);
+  int vertical = adjusted_vertical_resolution(v, res);
+  int horizontal = adjusted_horizontal_resolution(v, res);
 
   pd->res = res;
   pd->use_extended_commands =
@@ -3919,6 +3922,7 @@ setup_resolution(stp_vars_t *v)
     }
   else
     {
+      /* Hard-coded values for older printers */
       pd->unit_scale = 3600;
       if (pd->res->hres <= 720)
 	pd->micro_units = vertical;

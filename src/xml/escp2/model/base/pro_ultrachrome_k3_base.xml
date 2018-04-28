@@ -19,7 +19,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see https://www.gnu.org/licenses/.
 </copyright>
-<escp2Model name="pro_ultrachrome_k3_base">
+<escp2Model name="pro_ultrachrome_k3_base" base="escp2/model/base/baseline_360.xml">
  <qualityPresets src="escp2/qualitypresets/standard.xml"/>
  <printerWeaves src="escp2/weaves/pro7600.xml"/>
  <resolutions src="escp2/resolutions/prox600.xml"/>
@@ -38,7 +38,6 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <NozzleSeparation>1</NozzleSeparation>
  </headConfiguration>
  <physicalChannels>8</physicalChannels>
- <baseSeparation>360</baseSeparation>
  <resolutionScale>14400</resolutionScale>
  <minimumResolution>360 180</minimumResolution>
  <maximumResolution>2880 2880</maximumResolution>

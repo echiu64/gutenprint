@@ -19,7 +19,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see https://www.gnu.org/licenses/.
 </copyright>
-<escp2Model name="picmate">
+<escp2Model name="picmate" base="escp2/model/base/baseline_360.xml">
  <inputSlots src="escp2/inputslots/default.xml"/>
  <qualityPresets src="escp2/qualitypresets/picturemate.xml"/>
  <preinitSequence>\000\000\000\033\001@EJL\0401284.4\012@EJL\040\040\040\040\040\012\033@</preinitSequence>
@@ -37,7 +37,6 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <FirstNozzle>0</FirstNozzle>
   <NozzleSeparation>3</NozzleSeparation>
  </headConfiguration>
- <baseSeparation>360</baseSeparation>
  <resolutionScale>28800</resolutionScale>
  <minimumResolution>1440 720</minimumResolution>
  <maximumResolution>5760 1440</maximumResolution>

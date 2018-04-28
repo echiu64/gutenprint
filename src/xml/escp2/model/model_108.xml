@@ -19,7 +19,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see https://www.gnu.org/licenses/.
 </copyright>
-<escp2Model id="108">
+<escp2Model id="108" base="escp2/model/base/baseline_360.xml">
  <media src="escp2/media/pro_ultrachrome_k3.xml"/>
  <inputSlots src="escp2/inputslots/pro3880.xml"/>
  <qualityPresets src="escp2/qualitypresets/standard.xml"/>
@@ -45,7 +45,6 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <NozzleSeparation>1</NozzleSeparation>
  </headConfiguration>
  <physicalChannels>9</physicalChannels>
- <baseSeparation>360</baseSeparation>
  <resolutionScale>14400</resolutionScale>
  <minimumResolution>360 180</minimumResolution>
  <maximumResolution>2880 2880</maximumResolution>

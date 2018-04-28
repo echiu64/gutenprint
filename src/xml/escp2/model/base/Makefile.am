@@ -24,6 +24,8 @@ include $(top_srcdir)/scripts/global.mk
 pkgxmldatadir = $(pkgdatadir)/@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@/xml/escp2/model/base
 
 pkgxmldata_DATA =				\
+	baseline_300.xml			\
+	baseline_360.xml			\
 	bx.xml					\
 	c1xx.xml				\
 	c2x.xml					\

@@ -19,7 +19,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see https://www.gnu.org/licenses/.
 </copyright>
-<escp2Model name="r200">
+<escp2Model name="r200" base="escp2/model/base/baseline_360.xml">
  <media src="escp2/media/photo_gen3.xml"/>
  <inputSlots src="escp2/inputslots/cd_roll_feed.xml"/>
  <qualityPresets src="escp2/qualitypresets/standard.xml"/>
@@ -41,7 +41,6 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <NozzleSeparation>3</NozzleSeparation>
  </headConfiguration>
  <physicalChannels>6</physicalChannels>
- <baseSeparation>360</baseSeparation>
  <resolutionScale>14400</resolutionScale>
  <minimumResolution>360 120</minimumResolution>
  <maximumResolution>2880 1440</maximumResolution>
