@@ -92,8 +92,6 @@ my $global_printer;
 my $global_messages;
 my $global_page;
 my $global_case;
-my $enable_static = "@ENABLE_STATIC@";
-my $enable_shared = "@ENABLE_SHARED@";
 
 my @extras = ();
 my @job_extras = ();
