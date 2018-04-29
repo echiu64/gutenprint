@@ -141,7 +141,6 @@ get_pkg() {
 }
 
 doit() {
-    echo ">>>$1<<<"
     case "$1" in
 	major)        get_major        ;;
 	minor)        get_minor        ;;
