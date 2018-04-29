@@ -118,7 +118,7 @@ test "$gettext_major" -eq 0 && {
   echo
   echo "**Error**: You must have \`autopoint' installed to"
   echo "create a Gutenprint distribution."
-  echo "Get ftp://ftp.gnu.org/pub/gnu/gettext/gettext-0.11.5.tar.gz"
+  echo "Get ftp://ftp.gnu.org/pub/gnu/gettext/gettext-0.16.tar.gz"
   echo "(or a newer version if it is available)"
   DIE=1
   NO_AUTOMAKE=yes
