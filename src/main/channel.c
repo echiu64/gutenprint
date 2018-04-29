@@ -468,43 +468,43 @@ stp_dump_channels(const stp_vars_t *v)
 {
   stpi_channel_group_t *cg = get_channel_group(v);
   int i, j;
-  stp_erprintf("   channel_count  %d\n", cg->channel_count);
-  stp_erprintf("   total_channels %d\n", cg->total_channels);
-  stp_erprintf("   input_channels %d\n", cg->input_channels);
-  stp_erprintf("   aux_channels   %d\n", cg->aux_output_channels);
-  stp_erprintf("   gcr_channels   %d\n", cg->gcr_channels);
-  stp_erprintf("   width          %ld\n", (long)cg->width);
-  stp_erprintf("   ink_limit      %d\n", cg->ink_limit);
-  stp_erprintf("   gloss_limit    %d\n", cg->gloss_limit);
-  stp_erprintf("   max_density    %d\n", cg->max_density);
-  stp_erprintf("   curve_count    %d\n", cg->curve_count);
-  stp_erprintf("   black_channel  %d\n", cg->black_channel);
-  stp_erprintf("   gloss_channel  %d\n", cg->gloss_channel);
-  stp_erprintf("   gloss_physical %d\n", cg->gloss_physical_channel);
-  stp_erprintf("   cyan           %.3f\n", cg->cyan_balance);
-  stp_erprintf("   magenta        %.3f\n", cg->magenta_balance);
-  stp_erprintf("   yellow         %.3f\n", cg->yellow_balance);
-  stp_erprintf("   input_data     %p\n", (void *) cg->input_data);
-  stp_erprintf("   multi_tmp      %p\n", (void *) cg->multi_tmp);
-  stp_erprintf("   split_input    %p\n", (void *) cg->split_input);
-  stp_erprintf("   output_data    %p\n", (void *) cg->output_data);
-  stp_erprintf("   gcr_data       %p\n", (void *) cg->gcr_data);
-  stp_erprintf("   alloc_data_1   %p\n", (void *) cg->alloc_data_1);
-  stp_erprintf("   alloc_data_2   %p\n", (void *) cg->alloc_data_2);
-  stp_erprintf("   alloc_data_3   %p\n", (void *) cg->alloc_data_3);
-  stp_erprintf("   gcr_curve      %p\n", (void *) cg->gcr_curve);
+  stp_eprintf(v, "   channel_count  %d\n", cg->channel_count);
+  stp_eprintf(v, "   total_channels %d\n", cg->total_channels);
+  stp_eprintf(v, "   input_channels %d\n", cg->input_channels);
+  stp_eprintf(v, "   aux_channels   %d\n", cg->aux_output_channels);
+  stp_eprintf(v, "   gcr_channels   %d\n", cg->gcr_channels);
+  stp_eprintf(v, "   width          %ld\n", (long)cg->width);
+  stp_eprintf(v, "   ink_limit      %d\n", cg->ink_limit);
+  stp_eprintf(v, "   gloss_limit    %d\n", cg->gloss_limit);
+  stp_eprintf(v, "   max_density    %d\n", cg->max_density);
+  stp_eprintf(v, "   curve_count    %d\n", cg->curve_count);
+  stp_eprintf(v, "   black_channel  %d\n", cg->black_channel);
+  stp_eprintf(v, "   gloss_channel  %d\n", cg->gloss_channel);
+  stp_eprintf(v, "   gloss_physical %d\n", cg->gloss_physical_channel);
+  stp_eprintf(v, "   cyan           %.3f\n", cg->cyan_balance);
+  stp_eprintf(v, "   magenta        %.3f\n", cg->magenta_balance);
+  stp_eprintf(v, "   yellow         %.3f\n", cg->yellow_balance);
+  stp_eprintf(v, "   input_data     %p\n", (void *) cg->input_data);
+  stp_eprintf(v, "   multi_tmp      %p\n", (void *) cg->multi_tmp);
+  stp_eprintf(v, "   split_input    %p\n", (void *) cg->split_input);
+  stp_eprintf(v, "   output_data    %p\n", (void *) cg->output_data);
+  stp_eprintf(v, "   gcr_data       %p\n", (void *) cg->gcr_data);
+  stp_eprintf(v, "   alloc_data_1   %p\n", (void *) cg->alloc_data_1);
+  stp_eprintf(v, "   alloc_data_2   %p\n", (void *) cg->alloc_data_2);
+  stp_eprintf(v, "   alloc_data_3   %p\n", (void *) cg->alloc_data_3);
+  stp_eprintf(v, "   gcr_curve      %p\n", (void *) cg->gcr_curve);
   for (i = 0; i < cg->channel_count; i++)
     {
-      stp_erprintf("   Channel %d:\n", i);
+      stp_eprintf(v, "   Channel %d:\n", i);
       for (j = 0; j < cg->c[i].subchannel_count; j++)
 	{
 	  stpi_subchannel_t *sch = &(cg->c[i].sc[j]);
-	  stp_erprintf("      Subchannel %d:\n", j);
-	  stp_erprintf("         value   %.3f:\n", sch->value);
-	  stp_erprintf("         lower   %.3f:\n", sch->lower);
-	  stp_erprintf("         upper   %.3f:\n", sch->upper);
-	  stp_erprintf("         cutoff  %.3f:\n", sch->cutoff);
-	  stp_erprintf("         density %d:\n", sch->s_density);
+	  stp_eprintf(v, "      Subchannel %d:\n", j);
+	  stp_eprintf(v, "         value   %.3f:\n", sch->value);
+	  stp_eprintf(v, "         lower   %.3f:\n", sch->lower);
+	  stp_eprintf(v, "         upper   %.3f:\n", sch->upper);
+	  stp_eprintf(v, "         cutoff  %.3f:\n", sch->cutoff);
+	  stp_eprintf(v, "         density %d:\n", sch->s_density);
 	}
     }
 }
