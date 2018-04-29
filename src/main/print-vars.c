@@ -78,6 +78,8 @@ struct stp_vars			/* Plug-in variables */
   void *outdata;
   void (*errfunc)(void *data, const char *buffer, size_t bytes);
   void *errdata;
+  void (*dbgfunc)(void *data, const char *buffer, size_t bytes);
+  void *dbgdata;
   int verified;			/* Ensure that params are OK! */
 };
 
@@ -365,10 +367,10 @@ pre##_set_##s(stp_vars_t *v, const char *val)				\
 {									\
   CHECK_VARS(v);							\
   if (val)								\
-    stp_deprintf(STP_DBG_VARS, "set %s to %s (0x%p)\n", #s, val,	\
+    stp_dprintf(STP_DBG_VARS, v, "set %s to %s (0x%p)\n", #s, val,	\
                  (const void *) v);					\
   else									\
-    stp_deprintf(STP_DBG_VARS, "clear %s (0x%p)\n", #s,			\
+    stp_dprintf(STP_DBG_VARS, v, "clear %s (0x%p)\n", #s,			\
                  (const void *) v);					\
   if (v->s == val)							\
     return;								\
@@ -421,8 +423,10 @@ DEF_FUNCS(page_width, stp_dimension_t, stp)
 DEF_FUNCS(page_height, stp_dimension_t, stp)
 DEF_FUNCS(outdata, void *, stp)
 DEF_FUNCS(errdata, void *, stp)
+DEF_FUNCS(dbgdata, void *, stp)
 DEF_FUNCS(outfunc, stp_outfunc_t, stp)
 DEF_FUNCS(errfunc, stp_outfunc_t, stp)
+DEF_FUNCS(dbgfunc, stp_outfunc_t, stp)
 
 void
 stp_set_verified(stp_vars_t *v, int val)
@@ -489,10 +493,10 @@ stp_set_string_parameter_n(stp_vars_t *v, const char *parameter,
 {
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_STRING_LIST];
   if (value)
-    stp_deprintf(STP_DBG_VARS, "stp_set_string_parameter(0x%p, %s, %s)\n",
+    stp_dprintf(STP_DBG_VARS, v, "stp_set_string_parameter(0x%p, %s, %s)\n",
 		 (const void *) v, parameter, value);
   else
-    stp_deprintf(STP_DBG_VARS, "stp_set_string_parameter(0x%p, %s)\n",
+    stp_dprintf(STP_DBG_VARS, v, "stp_set_string_parameter(0x%p, %s)\n",
 		 (const void *) v, parameter);
   set_raw_parameter(list, parameter, value, bytes,
 		    STP_PARAMETER_TYPE_STRING_LIST);
@@ -506,7 +510,7 @@ stp_set_string_parameter(stp_vars_t *v, const char *parameter,
   int byte_count = 0;
   if (value)
       byte_count = strlen(value);
-  stp_deprintf(STP_DBG_VARS, "stp_set_string_parameter(0x%p, %s, %s)\n",
+  stp_dprintf(STP_DBG_VARS, v, "stp_set_string_parameter(0x%p, %s, %s)\n",
 	       (const void *) v, parameter, value ? value : "NULL");
   stp_set_string_parameter_n(v, parameter, value, byte_count);
   stp_set_verified(v, 0);
@@ -517,7 +521,7 @@ stp_set_default_string_parameter_n(stp_vars_t *v, const char *parameter,
 				   const char *value, size_t bytes)
 {
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_STRING_LIST];
-  stp_deprintf(STP_DBG_VARS, "stp_set_default_string_parameter(0x%p, %s, %s)\n",
+  stp_dprintf(STP_DBG_VARS, v, "stp_set_default_string_parameter(0x%p, %s, %s)\n",
 	       (const void *) v, parameter, value ? value : "NULL");
   set_default_raw_parameter(list, parameter, value, bytes,
 			    STP_PARAMETER_TYPE_STRING_LIST);
@@ -604,7 +608,7 @@ stp_set_file_parameter(stp_vars_t *v, const char *parameter,
   size_t byte_count = 0;
   if (value)
     byte_count = strlen(value);
-  stp_deprintf(STP_DBG_VARS, "stp_set_file_parameter(0x%p, %s, %s)\n",
+  stp_dprintf(STP_DBG_VARS, v, "stp_set_file_parameter(0x%p, %s, %s)\n",
 	       (const void *) v, parameter, value ? value : "NULL");
   set_raw_parameter(list, parameter, value, byte_count,
 		    STP_PARAMETER_TYPE_FILE);
@@ -616,7 +620,7 @@ stp_set_file_parameter_n(stp_vars_t *v, const char *parameter,
 			 const char *value, size_t byte_count)
 {
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_FILE];
-  stp_deprintf(STP_DBG_VARS, "stp_set_file_parameter(0x%p, %s, %s)\n",
+  stp_dprintf(STP_DBG_VARS, v, "stp_set_file_parameter(0x%p, %s, %s)\n",
 	       (const void *) v, parameter, value ? value : "NULL");
   set_raw_parameter(list, parameter, value, byte_count,
 		    STP_PARAMETER_TYPE_FILE);
@@ -631,7 +635,7 @@ stp_set_default_file_parameter(stp_vars_t *v, const char *parameter,
   size_t byte_count = 0;
   if (value)
     byte_count = strlen(value);
-  stp_deprintf(STP_DBG_VARS, "stp_set_default_file_parameter(0x%p, %s, %s)\n",
+  stp_dprintf(STP_DBG_VARS, v, "stp_set_default_file_parameter(0x%p, %s, %s)\n",
 	       (const void *) v, parameter, value ? value : "NULL");
   set_default_raw_parameter(list, parameter, value, byte_count,
 			    STP_PARAMETER_TYPE_FILE);
@@ -643,7 +647,7 @@ stp_set_default_file_parameter_n(stp_vars_t *v, const char *parameter,
 				 const char *value, size_t byte_count)
 {
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_FILE];
-  stp_deprintf(STP_DBG_VARS, "stp_set_default_file_parameter(0x%p, %s, %s)\n",
+  stp_dprintf(STP_DBG_VARS, v, "stp_set_default_file_parameter(0x%p, %s, %s)\n",
 	       (const void *) v, parameter, value ? value : "NULL");
   set_default_raw_parameter(list, parameter, value, byte_count,
 			    STP_PARAMETER_TYPE_FILE);
@@ -677,7 +681,7 @@ stp_set_curve_parameter(stp_vars_t *v, const char *parameter,
 {
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_CURVE];
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
-  stp_deprintf(STP_DBG_VARS, "stp_set_curve_parameter(0x%p, %s)\n",
+  stp_dprintf(STP_DBG_VARS, v, "stp_set_curve_parameter(0x%p, %s)\n",
 	       (const void *) v, parameter);
   if (curve)
     {
@@ -711,7 +715,7 @@ stp_set_default_curve_parameter(stp_vars_t *v, const char *parameter,
 {
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_CURVE];
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
-  stp_deprintf(STP_DBG_VARS, "stp_set_default_curve_parameter(0x%p, %s)\n",
+  stp_dprintf(STP_DBG_VARS, v, "stp_set_default_curve_parameter(0x%p, %s)\n",
 	       (const void *) v, parameter);
   if (!item)
     {
@@ -756,7 +760,7 @@ stp_set_array_parameter(stp_vars_t *v, const char *parameter,
 {
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_ARRAY];
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
-  stp_deprintf(STP_DBG_VARS, "stp_set_array_parameter(0x%p, %s)\n",
+  stp_dprintf(STP_DBG_VARS, v, "stp_set_array_parameter(0x%p, %s)\n",
 	       (const void *) v, parameter);
   if (array)
     {
@@ -789,7 +793,7 @@ stp_set_default_array_parameter(stp_vars_t *v, const char *parameter,
 {
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_ARRAY];
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
-  stp_deprintf(STP_DBG_VARS, "stp_set_default_array_parameter(0x%p, %s)\n",
+  stp_dprintf(STP_DBG_VARS, v, "stp_set_default_array_parameter(0x%p, %s)\n",
 	       (const void *) v, parameter);
   if (!item)
     {
@@ -834,7 +838,7 @@ stp_set_int_parameter(stp_vars_t *v, const char *parameter, int ival)
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_INT];
   value_t *val;
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
-  stp_deprintf(STP_DBG_VARS, "stp_set_int_parameter(0x%p, %s, %d)\n",
+  stp_dprintf(STP_DBG_VARS, v, "stp_set_int_parameter(0x%p, %s, %d)\n",
 	       (const void *) v, parameter, ival);
   if (item)
     {
@@ -860,7 +864,7 @@ stp_set_default_int_parameter(stp_vars_t *v, const char *parameter, int ival)
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_INT];
   value_t *val;
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
-  stp_deprintf(STP_DBG_VARS, "stp_set_default_int_parameter(0x%p, %s, %d)\n",
+  stp_dprintf(STP_DBG_VARS, v, "stp_set_default_int_parameter(0x%p, %s, %d)\n",
 	       (const void *) v, parameter, ival);
   if (!item)
     {
@@ -879,7 +883,7 @@ stp_clear_int_parameter(stp_vars_t *v, const char *parameter)
 {
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_INT];
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
-  stp_deprintf(STP_DBG_VARS, "stp_clear_int_parameter(0x%p, %s)\n",
+  stp_dprintf(STP_DBG_VARS, v, "stp_clear_int_parameter(0x%p, %s)\n",
 	       (const void *) v, parameter);
   if (item)
     stp_list_item_destroy(list, item);
@@ -909,8 +913,8 @@ stp_get_int_parameter(const stp_vars_t *v, const char *parameter)
       else
 	{
 	  stp_parameter_description_destroy(&desc);
-	  stp_erprintf
-	    ("Gutenprint: Attempt to retrieve unset integer parameter %s\n",
+	  stp_eprintf
+	    (v, "Gutenprint: Attempt to retrieve unset integer parameter %s\n",
 	     parameter);
 	  return 0;
 	}
@@ -923,7 +927,7 @@ stp_set_boolean_parameter(stp_vars_t *v, const char *parameter, int ival)
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_BOOLEAN];
   value_t *val;
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
-  stp_deprintf(STP_DBG_VARS, "stp_set_boolean_parameter(0x%p, %s, %d)\n",
+  stp_dprintf(STP_DBG_VARS, v, "stp_set_boolean_parameter(0x%p, %s, %d)\n",
 	       (const void *) v, parameter, ival);
   if (item)
     {
@@ -953,7 +957,7 @@ stp_set_default_boolean_parameter(stp_vars_t *v, const char *parameter,
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_BOOLEAN];
   value_t *val;
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
-  stp_deprintf(STP_DBG_VARS, "stp_set_default_boolean_parameter(0x%p, %s, %d)\n",
+  stp_dprintf(STP_DBG_VARS, v, "stp_set_default_boolean_parameter(0x%p, %s, %d)\n",
 	       (const void *) v, parameter, ival);
   if (!item)
     {
@@ -975,7 +979,7 @@ stp_clear_boolean_parameter(stp_vars_t *v, const char *parameter)
 {
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_BOOLEAN];
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
-  stp_deprintf(STP_DBG_VARS, "stp_clear_boolean_parameter(0x%p, %s)\n",
+  stp_dprintf(STP_DBG_VARS, v, "stp_clear_boolean_parameter(0x%p, %s)\n",
 	       (const void *) v, parameter);
   if (item)
     stp_list_item_destroy(list, item);
@@ -1005,8 +1009,8 @@ stp_get_boolean_parameter(const stp_vars_t *v, const char *parameter)
       else
 	{
 	  stp_parameter_description_destroy(&desc);
-	  stp_erprintf
-	    ("Gutenprint: Attempt to retrieve unset boolean parameter %s\n",
+	  stp_eprintf
+	    (v, "Gutenprint: Attempt to retrieve unset boolean parameter %s\n",
 	     parameter);
 	  return 0;
 	}
@@ -1019,7 +1023,7 @@ stp_set_dimension_parameter(stp_vars_t *v, const char *parameter, stp_dimension_
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_DIMENSION];
   value_t *val;
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
-  stp_deprintf(STP_DBG_VARS, "stp_set_dimension_parameter(0x%p, %s, %f)\n",
+  stp_dprintf(STP_DBG_VARS, v, "stp_set_dimension_parameter(0x%p, %s, %f)\n",
 	       (const void *) v, parameter, sval);
   if (item)
     {
@@ -1046,7 +1050,7 @@ stp_set_default_dimension_parameter(stp_vars_t *v, const char *parameter,
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_DIMENSION];
   value_t *val;
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
-  stp_deprintf(STP_DBG_VARS, "stp_set_default_dimension_parameter(0x%p, %s, %f)\n",
+  stp_dprintf(STP_DBG_VARS, v, "stp_set_default_dimension_parameter(0x%p, %s, %f)\n",
 	       (const void *) v, parameter, sval);
   if (!item)
     {
@@ -1065,7 +1069,7 @@ stp_clear_dimension_parameter(stp_vars_t *v, const char *parameter)
 {
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_DIMENSION];
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
-  stp_deprintf(STP_DBG_VARS, "stp_clear_dimension_parameter(0x%p, %s)\n",
+  stp_dprintf(STP_DBG_VARS, v, "stp_clear_dimension_parameter(0x%p, %s)\n",
 	       (const void *) v, parameter);
   if (item)
     stp_list_item_destroy(list, item);
@@ -1095,8 +1099,8 @@ stp_get_dimension_parameter(const stp_vars_t *v, const char *parameter)
       else
 	{
 	  stp_parameter_description_destroy(&desc);
-	  stp_erprintf
-	    ("Gutenprint: Attempt to retrieve unset dimension parameter %s\n",
+	  stp_eprintf
+	    (v, "Gutenprint: Attempt to retrieve unset dimension parameter %s\n",
 	     parameter);
 	  return 0;
 	}
@@ -1109,7 +1113,7 @@ stp_set_float_parameter(stp_vars_t *v, const char *parameter, double dval)
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_DOUBLE];
   value_t *val;
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
-  stp_deprintf(STP_DBG_VARS, "stp_set_float_parameter(0x%p, %s, %f)\n",
+  stp_dprintf(STP_DBG_VARS, v, "stp_set_float_parameter(0x%p, %s, %f)\n",
 	       (const void *) v, parameter, dval);
   if (item)
     {
@@ -1136,7 +1140,7 @@ stp_set_default_float_parameter(stp_vars_t *v, const char *parameter,
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_DOUBLE];
   value_t *val;
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
-  stp_deprintf(STP_DBG_VARS, "stp_set_default_float_parameter(0x%p, %s, %f)\n",
+  stp_dprintf(STP_DBG_VARS, v, "stp_set_default_float_parameter(0x%p, %s, %f)\n",
 	       (const void *) v, parameter, dval);
   if (!item)
     {
@@ -1155,7 +1159,7 @@ stp_clear_float_parameter(stp_vars_t *v, const char *parameter)
 {
   stp_list_t *list = v->params[STP_PARAMETER_TYPE_DOUBLE];
   stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
-  stp_deprintf(STP_DBG_VARS, "stp_clear_float_parameter(0x%p, %s)\n",
+  stp_dprintf(STP_DBG_VARS, v, "stp_clear_float_parameter(0x%p, %s)\n",
 	       (const void *) v, parameter);
   if (item)
     stp_list_item_destroy(list, item);
@@ -1185,8 +1189,8 @@ stp_get_float_parameter(const stp_vars_t *v, const char *parameter)
       else
 	{
 	  stp_parameter_description_destroy(&desc);
-	  stp_erprintf
-	    ("Gutenprint: Attempt to retrieve unset float parameter %s\n",
+	  stp_eprintf
+	    (v, "Gutenprint: Attempt to retrieve unset float parameter %s\n",
 	     parameter);
 	  return 1.0;
 	}
@@ -1212,7 +1216,7 @@ stp_scale_float_parameter(stp_vars_t *v, const char *parameter,
       val = desc.deflt.dbl;
       stp_parameter_description_destroy(&desc);
     }
-  stp_deprintf(STP_DBG_VARS, "stp_scale_float_parameter(%p, %s, %f*%f)\n",
+  stp_dprintf(STP_DBG_VARS, v, "stp_scale_float_parameter(%p, %s, %f*%f)\n",
 	       (const void *) v, parameter, val, scale);
   stp_set_float_parameter(v, parameter, val * scale);
 }
@@ -1386,7 +1390,7 @@ void									\
 stp_set_##type##_parameter_active(stp_vars_t *v, const char *parameter, \
 				  stp_parameter_activity_t active)	\
 {									\
-  stp_deprintf(STP_DBG_VARS,						\
+  stp_dprintf(STP_DBG_VARS, v,						\
 	       "stp_set_%s_parameter_active(0x%p, %s, %d)\n",		\
 	       #type, (const void *) v, parameter, active);		\
   stp_set_parameter_active(v, parameter, active, index);		\
@@ -1433,6 +1437,12 @@ stp_vars_copy(stp_vars_t *vd, const stp_vars_t *vs)
 
   if (vs == vd)
     return;
+  stp_set_outdata(vd, stp_get_outdata(vs));
+  stp_set_errdata(vd, stp_get_errdata(vs));
+  stp_set_dbgdata(vd, stp_get_dbgdata(vs));
+  stp_set_outfunc(vd, stp_get_outfunc(vs));
+  stp_set_errfunc(vd, stp_get_errfunc(vs));
+  stp_set_dbgfunc(vd, stp_get_dbgfunc(vs));
   stp_set_driver(vd, stp_get_driver(vs));
   stp_set_color_conversion(vd, stp_get_color_conversion(vs));
   stp_set_left(vd, stp_get_left(vs));
@@ -1441,10 +1451,6 @@ stp_vars_copy(stp_vars_t *vd, const stp_vars_t *vs)
   stp_set_height(vd, stp_get_height(vs));
   stp_set_page_width(vd, stp_get_page_width(vs));
   stp_set_page_height(vd, stp_get_page_height(vs));
-  stp_set_outdata(vd, stp_get_outdata(vs));
-  stp_set_errdata(vd, stp_get_errdata(vs));
-  stp_set_outfunc(vd, stp_get_outfunc(vs));
-  stp_set_errfunc(vd, stp_get_errfunc(vs));
   for (i = 0; i < STP_PARAMETER_TYPE_INVALID; i++)
     {
       stp_list_destroy(vd->params[i]);
@@ -1612,75 +1618,75 @@ debug_print_parameter_description(const stp_parameter_t *desc, const char *who,
   char *curve;
   if (! (stp_get_debug_level() & STP_DBG_VARS))
     return;
-  stp_deprintf(STP_DBG_VARS, "Describe %s: vars 0x%p from %s type %d class %d level %d\n",
+  stp_dprintf(STP_DBG_VARS, v, "Describe %s: vars 0x%p from %s type %d class %d level %d\n",
 	       desc->name, (const void *) v, who,
 	       desc->p_type, desc->p_class, desc->p_level);
-  stp_deprintf(STP_DBG_VARS, "   driver %s mandatory %d active %d channel %d verify %d ro %d\n",
+  stp_dprintf(STP_DBG_VARS, v, "   driver %s mandatory %d active %d channel %d verify %d ro %d\n",
 	       stp_get_driver(v), desc->is_mandatory, desc->is_active,
 	       desc->channel, desc->verify_this_parameter, desc->read_only);
   switch (desc->p_type)
     {
     case STP_PARAMETER_TYPE_STRING_LIST:
-      stp_deprintf(STP_DBG_VARS,
+      stp_dprintf(STP_DBG_VARS, v,
 		   "   String default: %s\n",
 		   desc->deflt.str ? desc->deflt.str : "(null)");
       if (desc->bounds.str)
 	for (i = 0; i < stp_string_list_count(desc->bounds.str); i++)
 	  {
 	    if (i == 0)
-	      stp_deprintf(STP_DBG_VARS, "          Choices: %s\n",
+	      stp_dprintf(STP_DBG_VARS, v, "          Choices: %s\n",
 			   stp_string_list_param(desc->bounds.str, i)->name);
 	    else
-	      stp_deprintf(STP_DBG_VARS, "                 : %s\n",
+	      stp_dprintf(STP_DBG_VARS, v, "                 : %s\n",
 			   stp_string_list_param(desc->bounds.str, i)->name);
 	  }
       break;
     case STP_PARAMETER_TYPE_INT:
-      stp_deprintf(STP_DBG_VARS,
+      stp_dprintf(STP_DBG_VARS, v,
 		   "   Integer default: %d Bounds: %d %d\n",
 		   desc->deflt.integer,
 		   desc->bounds.integer.lower, desc->bounds.integer.upper);
       break;
     case STP_PARAMETER_TYPE_DIMENSION:
-      stp_deprintf(STP_DBG_VARS,
+      stp_dprintf(STP_DBG_VARS, v,
 		   "   Dimension default: %f Bounds: %f %f\n",
 		   desc->deflt.dimension,
 		   desc->bounds.dimension.lower, desc->bounds.dimension.upper);
       break;
     case STP_PARAMETER_TYPE_BOOLEAN:
-      stp_deprintf(STP_DBG_VARS,
+      stp_dprintf(STP_DBG_VARS, v,
 		   "   Boolean default: %d\n", desc->deflt.boolean);
       break;
     case STP_PARAMETER_TYPE_DOUBLE:
-      stp_deprintf(STP_DBG_VARS,
+      stp_dprintf(STP_DBG_VARS, v,
 		   "   Double default: %f Bounds: %f %f\n",
 		   desc->deflt.dbl,
 		   desc->bounds.dbl.lower, desc->bounds.dbl.upper);
       break;
     case STP_PARAMETER_TYPE_FILE:
-      stp_deprintf(STP_DBG_VARS, "   File (no default)\n");
+      stp_dprintf(STP_DBG_VARS, v, "   File (no default)\n");
       break;
     case STP_PARAMETER_TYPE_RAW:
-      stp_deprintf(STP_DBG_VARS, "   Raw (no default)\n");
+      stp_dprintf(STP_DBG_VARS, v, "   Raw (no default)\n");
       break;
     case STP_PARAMETER_TYPE_CURVE:
       curve = stp_curve_write_string(desc->deflt.curve);
-      stp_deprintf(STP_DBG_VARS,
+      stp_dprintf(STP_DBG_VARS, v,
 		   "   Curve default: %s\n", curve);
       stp_free(curve);
       curve = stp_curve_write_string(desc->bounds.curve);
-      stp_deprintf(STP_DBG_VARS,
+      stp_dprintf(STP_DBG_VARS, v,
 		   "          bounds: %s\n", curve);
       stp_free(curve);
       break;
     case STP_PARAMETER_TYPE_ARRAY:
-      stp_deprintf(STP_DBG_VARS, "   Array\n");
+      stp_dprintf(STP_DBG_VARS, v, "   Array\n");
       break;
     case STP_PARAMETER_TYPE_INVALID:
-      stp_deprintf(STP_DBG_VARS, "   *** Invalid ***\n");
+      stp_dprintf(STP_DBG_VARS, v, "   *** Invalid ***\n");
       break;
     default:
-      stp_deprintf(STP_DBG_VARS, "   Unknown type!\n");
+      stp_dprintf(STP_DBG_VARS, v, "   Unknown type!\n");
     }
 }
 
@@ -1714,7 +1720,7 @@ stp_describe_parameter(const stp_vars_t *v, const char *name,
   if (description->p_type != STP_PARAMETER_TYPE_INVALID)
     debug_print_parameter_description(description, "generic", v);
   else
-    stp_deprintf(STP_DBG_VARS, "Describing invalid parameter %s\n", name);
+    stp_dprintf(STP_DBG_VARS, v, "Describing invalid parameter %s\n", name);
 }
 
 stp_string_list_t *
@@ -1949,10 +1955,10 @@ fill_vars_from_xmltree(stp_mxml_node_t *prop, stp_mxml_node_t *root,
   char *locale = stp_strdup(setlocale(LC_ALL, NULL));
   setlocale(LC_ALL, "C");
 #endif
-  stp_deprintf(STP_DBG_XML, "Enter fill_vars_from_xmltree()\n");
+  stp_dprintf(STP_DBG_XML, v, "Enter fill_vars_from_xmltree()\n");
   while (prop)
     {
-      stp_deprintf(STP_DBG_XML, "Property type %d (%s)\n", prop->type,
+      stp_dprintf(STP_DBG_XML, v, "Property type %d (%s)\n", prop->type,
 		   prop->type == STP_MXML_ELEMENT ? prop->value.element.name :
 		   (prop->type == STP_MXML_TEXT ? prop->value.text.string : "(nil)"));
       if (prop->type == STP_MXML_ELEMENT &&
@@ -1963,7 +1969,7 @@ fill_vars_from_xmltree(stp_mxml_node_t *prop, stp_mxml_node_t *root,
 	  const char *p_type = stp_mxmlElementGetAttr(prop, "type");
 	  const char *p_name = stp_mxmlElementGetAttr(prop, "name");
 	  if (!strcmp(prop_name, "parameter") && (!p_type || !p_name))
-	    stp_erprintf("Bad property found!\n");
+	    stp_eprintf(v, "Bad property found!\n");
 	  else if (!strcmp(prop_name, "parameter"))
 	    {
 	      const char *active = stp_mxmlElementGetAttr(prop, "active");
@@ -1977,7 +1983,7 @@ fill_vars_from_xmltree(stp_mxml_node_t *prop, stp_mxml_node_t *root,
 					      STP_MXML_DESCEND);
 		  STPI_ASSERT(cnode && cnode->type == STP_MXML_ELEMENT &&
 			 cnode->child, v);
-		  stp_deprintf(STP_DBG_XML, "Found parameter ref %s\n", cref);
+		  stp_dprintf(STP_DBG_XML, v, "Found parameter ref %s\n", cref);
 		  cnode = cnode->child;
 		}
 	      if (strcmp(p_type, "float") == 0)
@@ -1988,7 +1994,7 @@ fill_vars_from_xmltree(stp_mxml_node_t *prop, stp_mxml_node_t *root,
 			(v, p_name, stp_xmlstrtod(cnode->value.text.string));
 		      type = STP_PARAMETER_TYPE_DOUBLE;
 		      if (stp_get_debug_level() & STP_DBG_XML)
-			stp_deprintf(STP_DBG_XML, "  Set float '%s' to '%s' (%f)\n",
+			stp_dprintf(STP_DBG_XML, v, "  Set float '%s' to '%s' (%f)\n",
 				     p_name, cnode->value.text.string,
 				     stp_get_float_parameter(v, p_name));
 		    }
@@ -2001,7 +2007,7 @@ fill_vars_from_xmltree(stp_mxml_node_t *prop, stp_mxml_node_t *root,
 			(v, p_name, (int) stp_xmlstrtol(cnode->value.text.string));
 		      type = STP_PARAMETER_TYPE_DOUBLE;
 		      if (stp_get_debug_level() & STP_DBG_XML)
-			stp_deprintf(STP_DBG_XML, "  Set int '%s' to '%s' (%d)\n",
+			stp_dprintf(STP_DBG_XML, v, "  Set int '%s' to '%s' (%d)\n",
 				     p_name, cnode->value.text.string,
 				     stp_get_int_parameter(v, p_name));
 		    }
@@ -2014,7 +2020,7 @@ fill_vars_from_xmltree(stp_mxml_node_t *prop, stp_mxml_node_t *root,
 			(v, p_name, (int) stp_xmlstrtodim(cnode->value.text.string));
 		      type = STP_PARAMETER_TYPE_DOUBLE;
 		      if (stp_get_debug_level() & STP_DBG_XML)
-			stp_deprintf(STP_DBG_XML, "  Set dimension '%s' to '%s' (%f)\n",
+			stp_dprintf(STP_DBG_XML, v, "  Set dimension '%s' to '%s' (%f)\n",
 				     p_name, cnode->value.text.string,
 				     stp_get_dimension_parameter(v, p_name));
 		    }
@@ -2027,7 +2033,7 @@ fill_vars_from_xmltree(stp_mxml_node_t *prop, stp_mxml_node_t *root,
 			(v, p_name, (int) stp_xmlstrtol(cnode->value.text.string));
 		      type = STP_PARAMETER_TYPE_DOUBLE;
 		      if (stp_get_debug_level() & STP_DBG_XML)
-			stp_deprintf(STP_DBG_XML, "  Set bool '%s' to '%s' (%d)\n",
+			stp_dprintf(STP_DBG_XML, v, "  Set bool '%s' to '%s' (%d)\n",
 				     p_name, cnode->value.text.string,
 				     stp_get_boolean_parameter(v, p_name));
 		    }
@@ -2040,7 +2046,7 @@ fill_vars_from_xmltree(stp_mxml_node_t *prop, stp_mxml_node_t *root,
 			(v, p_name, cnode->value.text.string);
 		      type = STP_PARAMETER_TYPE_DOUBLE;
 		      if (stp_get_debug_level() & STP_DBG_XML)
-			stp_deprintf(STP_DBG_XML, "  Set string '%s' to '%s' (%s)\n",
+			stp_dprintf(STP_DBG_XML, v, "  Set string '%s' to '%s' (%s)\n",
 				     p_name, cnode->value.text.string,
 				     stp_get_string_parameter(v, p_name));
 		    }
@@ -2053,7 +2059,7 @@ fill_vars_from_xmltree(stp_mxml_node_t *prop, stp_mxml_node_t *root,
 			(v, p_name, cnode->value.text.string);
 		      type = STP_PARAMETER_TYPE_DOUBLE;
 		      if (stp_get_debug_level() & STP_DBG_XML)
-			stp_deprintf(STP_DBG_XML, "  Set file '%s' to '%s' (%s)\n",
+			stp_dprintf(STP_DBG_XML, v, "  Set file '%s' to '%s' (%s)\n",
 				     p_name, cnode->value.text.string,
 				     stp_get_file_parameter(v, p_name));
 		    }
@@ -2067,7 +2073,7 @@ fill_vars_from_xmltree(stp_mxml_node_t *prop, stp_mxml_node_t *root,
 			{
 			  stp_set_raw_parameter(v, p_name, raw->data,raw->bytes);
 			  type = STP_PARAMETER_TYPE_DOUBLE;
-			  stp_deprintf(STP_DBG_XML, "  Set raw '%s' to '%s'\n",
+			  stp_dprintf(STP_DBG_XML, v, "  Set raw '%s' to '%s'\n",
 				       p_name, cnode->value.text.string);
 			  stp_free(stpi_cast_safe(raw->data));
 			  stp_free(raw);
@@ -2087,7 +2093,7 @@ fill_vars_from_xmltree(stp_mxml_node_t *prop, stp_mxml_node_t *root,
 		  if (stp_get_debug_level() & STP_DBG_XML)
 		    {
 		      char *cv = stp_curve_write_string(curve);
-		      stp_deprintf(STP_DBG_XML, "  Set curve '%s' (%s)\n",
+		      stp_dprintf(STP_DBG_XML, v, "  Set curve '%s' (%s)\n",
 				   p_name, cv);
 		      stp_free(cv);
 		    }
@@ -2103,12 +2109,12 @@ fill_vars_from_xmltree(stp_mxml_node_t *prop, stp_mxml_node_t *root,
 		  STPI_ASSERT(array, v);
 		  type = STP_PARAMETER_TYPE_DOUBLE;
 		  stp_set_array_parameter(v, p_name, array);
-		  stp_deprintf(STP_DBG_XML, "  Set array '%s'\n", p_name);
+		  stp_dprintf(STP_DBG_XML, v, "  Set array '%s'\n", p_name);
 		  stp_array_destroy(array);
 		}
 	      else
 		{
-		  stp_erprintf("Bad property %s type %s\n", p_name, p_type);
+		  stp_eprintf(v, "Bad property %s type %s\n", p_name, p_type);
 		}
 	      if (active && type != STP_PARAMETER_TYPE_INVALID)
 		{
@@ -2123,7 +2129,7 @@ fill_vars_from_xmltree(stp_mxml_node_t *prop, stp_mxml_node_t *root,
 	    }
 	  else if (child->type == STP_MXML_TEXT)
 	    {
-	      stp_deprintf(STP_DBG_XML, "  Set property %s ('%s')\n",
+	      stp_dprintf(STP_DBG_XML, v, "  Set property %s ('%s')\n",
 			   prop_name, child->value.text.string ?
 			   child->value.text.string : "(nil)");
 	      if (!strcmp(prop_name, "driver"))
@@ -2147,12 +2153,12 @@ fill_vars_from_xmltree(stp_mxml_node_t *prop, stp_mxml_node_t *root,
       else
 	{
 	  if (prop->type == STP_MXML_ELEMENT)
-	    stp_deprintf(STP_DBG_XML, "Unexpected node type %d name %s\n",
+	    stp_dprintf(STP_DBG_XML, v, "Unexpected node type %d name %s\n",
 			 prop->type, prop->value.element.name);
 	}
       prop = prop->next;
     }
-  stp_deprintf(STP_DBG_XML, "End fill_vars_from_xmltree()\n");
+  stp_dprintf(STP_DBG_XML, v, "End fill_vars_from_xmltree()\n");
 #ifdef HAVE_LOCALE_H
   setlocale(LC_ALL, locale);
   stp_free(locale);

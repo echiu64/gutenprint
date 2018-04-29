@@ -566,7 +566,8 @@ static const int float_parameter_count =
  */
 
 static const char *
-dpl_val_to_string (int code,	/* I: Code */
+dpl_val_to_string (const stp_vars_t *v,
+		   int code,	/* I: Code */
 		   const dpl_t * options,	/* I: Options */
 		   int num_options)	/* I: Num options */
 {
@@ -587,13 +588,14 @@ dpl_val_to_string (int code,	/* I: Code */
 	}
     }
 
-  stp_deprintf (STP_DBG_DPL, "Code: %d, String: %s\n", code, string);
+  stp_dprintf (STP_DBG_DPL, v, "Code: %d, String: %s\n", code, string);
 
   return (string);
 }
 
 static const char *
-dpl_val_to_text (int code,	/* I: Code */
+dpl_val_to_text (const stp_vars_t *v,
+		 int code,	/* I: Code */
 		 const dpl_t * options,	/* I: Options */
 		 int num_options)	/* I: Num options */
 {
@@ -614,7 +616,7 @@ dpl_val_to_text (int code,	/* I: Code */
 	}
     }
 
-  stp_deprintf (STP_DBG_DPL, "Code: %d, String: %s\n", code, string);
+  stp_dprintf (STP_DBG_DPL, v, "Code: %d, String: %s\n", code, string);
 
   return (string);
 }
@@ -624,9 +626,10 @@ dpl_val_to_text (int code,	/* I: Code */
  */
 
 static const dpl_cap_t *	/* O: Capabilities */
-dpl_get_model_capabilities (int model)	/* I: Model */
+dpl_get_model_capabilities (const stp_vars_t *v)	/* I: Model */
 {
   int i;
+  int model = stp_get_model_id(v);
   int models = sizeof (dpl_model_capabilities) / sizeof (dpl_cap_t);
   for (i = 0; i < models; i++)
     {
@@ -635,7 +638,7 @@ dpl_get_model_capabilities (int model)	/* I: Model */
 	  return &(dpl_model_capabilities[i]);
 	}
     }
-  stp_erprintf ("dpl: model %d not found in capabilities list.\n", model);
+  stp_eprintf (v, "dpl: model %d not found in capabilities list.\n", model);
   return &(dpl_model_capabilities[0]);
 }
 
@@ -678,8 +681,7 @@ dpl_get_multiplier (const stp_vars_t * v)
   int multiplier;
   int i;
   int max_dpi;
-  int model = stp_get_model_id (v);
-  const dpl_cap_t *caps = dpl_get_model_capabilities (model);
+  const dpl_cap_t *caps = dpl_get_model_capabilities (v);
 
   for (i = 0; i < NUM_RESOLUTIONS; i++)
     {
@@ -736,9 +738,9 @@ static const stp_param_string_t label_separator_types[] = {
  */
 
 static int
-dpl_papersize_valid (const stp_papersize_t * pt, int model)
+dpl_papersize_valid (const stp_vars_t *v, const stp_papersize_t * pt)
 {
-  const dpl_cap_t *caps = dpl_get_model_capabilities (model);
+  const dpl_cap_t *caps = dpl_get_model_capabilities (v);
   unsigned int pwidth = pt->width;
   unsigned int pheight = pt->height;
 
@@ -806,16 +808,16 @@ dpl_parameters (const stp_vars_t * v, const char *name,
   if (name == NULL)
     return;
 
-  stp_deprintf (STP_DBG_DPL, "dpl_parameters(): Name = %s\n", name);
+  stp_dprintf (STP_DBG_DPL, v, "dpl_parameters(): Name = %s\n", name);
 
-  caps = dpl_get_model_capabilities (model);
+  caps = dpl_get_model_capabilities (v);
 
-  stp_deprintf (STP_DBG_DPL, "Printer model = %d\n", model);
-  stp_deprintf (STP_DBG_DPL, "PageWidth = %d, PageHeight = %d\n",
+  stp_dprintf (STP_DBG_DPL, v, "Printer model = %d\n", model);
+  stp_dprintf (STP_DBG_DPL, v, "PageWidth = %d, PageHeight = %d\n",
 		caps->custom_max_width, caps->custom_max_height);
-  stp_deprintf (STP_DBG_DPL, "MinPageWidth = %d, MinPageHeight = %d\n",
+  stp_dprintf (STP_DBG_DPL, v, "MinPageWidth = %d, MinPageHeight = %d\n",
 		caps->custom_min_width, caps->custom_min_height);
-  stp_deprintf (STP_DBG_DPL, "Resolutions: %d\n", caps->resolutions);
+  stp_dprintf (STP_DBG_DPL, v, "Resolutions: %d\n", caps->resolutions);
 
   for (i = 0; i < the_parameter_count; i++)
     if (strcmp (name, the_parameters[i].name) == 0)
@@ -846,7 +848,7 @@ dpl_parameters (const stp_vars_t * v, const char *name,
       while (ptli)
 	{
 	  const stp_papersize_t *pt = stpi_paperlist_item_get_data(ptli);
-	  if (strlen (pt->name) > 0 && dpl_papersize_valid (pt, model))
+	  if (strlen (pt->name) > 0 && dpl_papersize_valid (v, pt))
 	    stp_string_list_add_string(description->bounds.str,
 				       pt->name, gettext(pt->text));
 	  ptli = stpi_paperlist_item_next(ptli);
@@ -858,16 +860,16 @@ dpl_parameters (const stp_vars_t * v, const char *name,
     {
       description->bounds.str = stp_string_list_create ();
       description->deflt.str =
-	dpl_val_to_string (caps->max_resolution, dpl_resolutions,
+	dpl_val_to_string (v, caps->max_resolution, dpl_resolutions,
 			   NUM_RESOLUTIONS);
       for (i = 0; i < NUM_RESOLUTIONS; i++)
 	if (caps->resolutions & dpl_resolutions[i].dpl_code)
 	  {
 	    stp_string_list_add_string
 	      (description->bounds.str,
-	       dpl_val_to_string (dpl_resolutions[i].dpl_code,
+	       dpl_val_to_string (v, dpl_resolutions[i].dpl_code,
 				  dpl_resolutions, NUM_RESOLUTIONS),
-	       dpl_val_to_text (dpl_resolutions[i].dpl_code,
+	       dpl_val_to_text (v, dpl_resolutions[i].dpl_code,
 				dpl_resolutions, NUM_RESOLUTIONS));
 	  }
     }
@@ -968,7 +970,7 @@ static void
 dpl_limit (const stp_vars_t * v,	/* I */
 	   stp_dimension_t *width, stp_dimension_t *height, stp_dimension_t *min_width, stp_dimension_t *min_height)
 {
-  const dpl_cap_t *caps = dpl_get_model_capabilities (stp_get_model_id (v));
+  const dpl_cap_t *caps = dpl_get_model_capabilities (v);
   *width = caps->custom_max_width;
   *height = caps->custom_max_height;
   *min_width = caps->custom_min_width;
@@ -1101,8 +1103,7 @@ dpl_do_print (stp_vars_t * v, stp_image_t * image)
   unsigned zero_mask;
   int image_height;
   int image_width;
-  int model = stp_get_model_id (v);
-  const dpl_cap_t *caps = dpl_get_model_capabilities (model);
+  const dpl_cap_t *caps = dpl_get_model_capabilities (v);
   const char *speed = stp_get_string_parameter(v, "Speed");
 
   if (!stp_verify (v))
@@ -1129,7 +1130,7 @@ dpl_do_print (stp_vars_t * v, stp_image_t * image)
 
   dpl_describe_resolution (v, &xdpi, &ydpi);
 
-  stp_deprintf (STP_DBG_DPL, "dpl: resolution=%dx%d\n", (int) xdpi, (int) ydpi);
+  stp_dprintf (STP_DBG_DPL, v, "dpl: resolution=%dx%d\n", (int) xdpi, (int) ydpi);
   if (xdpi <= 0 || ydpi <= 0)
     {
       stp_eprintf (v, "No resolution found; cannot print.\n");
@@ -1269,7 +1270,7 @@ dpl_do_print (stp_vars_t * v, stp_image_t * image)
   pcx_header (v, image);
 
 
-  stp_deprintf (STP_DBG_DPL, "Normal init\n");
+  stp_dprintf (STP_DBG_DPL, v, "Normal init\n");
 
   /*
    * Allocate memory for the raster data...
@@ -1376,8 +1377,7 @@ dpl_pcx (stp_vars_t * v,	/* I - Print file or command */
   int in = 0;
   int out = 0;
   stp_resolution_t xdpi, ydpi;
-  int model = stp_get_model_id (v);
-  const dpl_cap_t *caps = dpl_get_model_capabilities (model);
+  const dpl_cap_t *caps = dpl_get_model_capabilities (v);
   int i;
   int max_dpi;
   int dpi_adjust;

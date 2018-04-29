@@ -413,7 +413,8 @@ runall() {
 	    runme "$f"
 	    (( $? != 0 )) && retval=1
 	    echo "$output"
-	    grep 'ERROR:' <<< $output
+	    echo ================================================================
+	    grep 'ERROR:' <<< "$output"
 	    (( $? == 0 )) && retval=1
 	fi
 	jobno=$((($jobno+1) % $jobs))

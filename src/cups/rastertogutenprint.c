@@ -110,6 +110,7 @@ typedef struct
 
 static void	cups_writefunc(void *file, const char *buf, size_t bytes);
 static void	cups_errfunc(void *file, const char *buf, size_t bytes);
+static void	cups_dbgfunc(void *file, const char *buf, size_t bytes);
 static void	cancel_job(int sig);
 static const char *Image_get_appname(stp_image_t *image);
 static stp_image_status_t Image_get_row(stp_image_t *image,
@@ -352,11 +353,6 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings,
 
   if (! suppress_messages)
     fprintf(stderr, "DEBUG: Gutenprint: Initialize page\n");
-
-  stp_set_outfunc(v, cups_writefunc);
-  stp_set_errfunc(v, cups_errfunc);
-  stp_set_outdata(v, stdout);
-  stp_set_errdata(v, stderr);
 
   if (cups->header.cupsBitsPerColor == 16)
     set_string_parameter(v, "ChannelBitDepth", "16");
@@ -1129,9 +1125,15 @@ main(int  argc,				/* I - Number of command-line arguments */
   theImage.rep = &cups;
 
   (void) gettimeofday(&t1, NULL);
+  stp_set_global_errfunc(cups_errfunc);
+  stp_set_global_dbgfunc(cups_dbgfunc);
+  stp_set_global_errdata(stderr);
+  stp_set_global_dbgdata(stderr);
   stp_init();
   version_id = stp_get_version();
   default_settings = stp_vars_create();
+  stp_set_outfunc(default_settings, cups_writefunc);
+  stp_set_outdata(default_settings, stdout);
 
  /*
   * Check for valid arguments...
@@ -1462,13 +1464,38 @@ cups_errfunc(void *file, const char *buf, size_t bytes)
     {
       if (bytes - where > 6 && strncmp(buf, "ERROR:", 6) == 0)
 	{
-	  fputs("ERROR: Gutenprint error:", prn);
+	  fputs("ERROR: Gutenprint:", prn);
 	  buf += 6;
 	}
       else if (print_messages_as_errors)
-	fputs("ERROR: Gutenprint error: ", prn);
-      else
-	fputs("DEBUG: Gutenprint internal: ", prn);
+	fputs("ERROR: Gutenprint: ", prn);
+      else if (strncmp(buf, "DEBUG", 5) != 0)
+	fputs("DEBUG: Gutenprint: ", prn);
+      while (next_nl < bytes)
+	{
+	  if (buf[next_nl++] == '\n')
+	    break;
+	}
+      fwrite(buf + where, 1, next_nl - where, prn);
+      where = next_nl;
+    }
+}
+
+static void
+cups_dbgfunc(void *file, const char *buf, size_t bytes)
+{
+  size_t next_nl = 0;
+  size_t where = 0;
+  FILE *prn = (FILE *)file;
+  while (where < bytes)
+    {
+      if (bytes - where > 6 && strncmp(buf, "ERROR:", 6) == 0)
+	{
+	  fputs("ERROR: Gutenprint:", prn);
+	  buf += 6;
+	}
+      else if (strncmp(buf, "DEBUG", 5) != 0)
+	fputs("DEBUG: Gutenprint: ", prn);
       while (next_nl < bytes)
 	{
 	  if (buf[next_nl++] == '\n')

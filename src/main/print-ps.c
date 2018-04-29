@@ -93,7 +93,8 @@ static const int the_parameter_count =
 sizeof(the_parameters) / sizeof(const stp_parameter_t);
 
 static int
-ps_option_to_param(stp_parameter_t *param, stp_mxml_node_t *option)
+ps_option_to_param(const stp_vars_t *v, stp_parameter_t *param,
+		   stp_mxml_node_t *option)
 {
   const char *group_text = stp_mxmlElementGetAttr(option, "grouptext");
 
@@ -119,7 +120,7 @@ ps_option_to_param(stp_parameter_t *param, stp_mxml_node_t *option)
       param->is_active = 1;
       param->verify_this_parameter = 1;
       param->name = stp_mxmlElementGetAttr(option, "stpname");
-      stp_deprintf(STP_DBG_PS,
+      stp_dprintf(STP_DBG_PS, v,
 		   "Gutenprint parameter %s type %d mandatory %d class %d level %d channel %d default %s %f",
 		   param->name, param->p_type, param->is_mandatory,
 		   param->p_class, param->p_level, param->channel,
@@ -130,7 +131,7 @@ ps_option_to_param(stp_parameter_t *param, stp_mxml_node_t *option)
 	  param->deflt.dbl = stp_default_value;
 	  param->bounds.dbl.upper = upper_bound;
 	  param->bounds.dbl.lower = lower_bound;
-	  stp_deprintf(STP_DBG_PS, " %.3f %.3f %.3f\n",
+	  stp_dprintf(STP_DBG_PS, v, " %.3f %.3f %.3f\n",
 		       param->deflt.dbl, param->bounds.dbl.upper,
 		       param->bounds.dbl.lower);
 	  break;
@@ -138,7 +139,7 @@ ps_option_to_param(stp_parameter_t *param, stp_mxml_node_t *option)
 	  param->deflt.dimension = atoi(default_value);
 	  param->bounds.dimension.upper = (stp_dimension_t) upper_bound;
 	  param->bounds.dimension.lower = (stp_dimension_t) lower_bound;
-	  stp_deprintf(STP_DBG_PS, " %f %f %f\n",
+	  stp_dprintf(STP_DBG_PS, v, " %f %f %f\n",
 		       param->deflt.dimension, param->bounds.dimension.upper,
 		       param->bounds.dimension.lower);
 	  break;
@@ -146,16 +147,16 @@ ps_option_to_param(stp_parameter_t *param, stp_mxml_node_t *option)
 	  param->deflt.integer = atoi(default_value);
 	  param->bounds.integer.upper = (int) upper_bound;
 	  param->bounds.integer.lower = (int) lower_bound;
-	  stp_deprintf(STP_DBG_PS, " %d %d %d\n",
+	  stp_dprintf(STP_DBG_PS, v, " %d %d %d\n",
 		       param->deflt.integer, param->bounds.integer.upper,
 		       param->bounds.integer.lower);
 	  break;
 	case STP_PARAMETER_TYPE_BOOLEAN:
 	  param->deflt.boolean = strcasecmp(default_value, "true") == 0 ? 1 : 0;
-	  stp_deprintf(STP_DBG_PS, " %d\n", param->deflt.boolean);
+	  stp_dprintf(STP_DBG_PS, v, " %d\n", param->deflt.boolean);
 	  break;
 	default:
-	  stp_deprintf(STP_DBG_PS, "\n");
+	  stp_dprintf(STP_DBG_PS, v, "\n");
 	  break;
 	}
     }
@@ -262,7 +263,7 @@ ps_list_parameters(const stp_vars_t *v)
 	  option = stpi_xmlppd_find_option_index(m_ppd, i);
 	  if (option)
 	    {
-	      ps_option_to_param(param, option);
+	      ps_option_to_param(v, param, option);
 	      if (param->p_type != STP_PARAMETER_TYPE_INVALID &&
 		  strcmp(param->name, "PageRegion") != 0 &&
 		  strcmp(param->name, "PageSize") != 0)
@@ -373,7 +374,7 @@ ps_parameters_internal(const stp_vars_t *v, const char *name,
       }
   }
 
-  ps_option_to_param(description, option);
+  ps_option_to_param(v, description, option);
   if (description->p_type != STP_PARAMETER_TYPE_STRING_LIST)
     return;
   num_choices = atoi(stp_mxmlElementGetAttr(option, "num_choices"));

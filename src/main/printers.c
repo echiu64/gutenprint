@@ -909,7 +909,9 @@ stp_verify_printer_params(stp_vars_t *v)
   stp_set_verified((stp_vars_t *) v, answer);
   if (errbuf.bytes > 0)
     {
+      stp_eprintf(v, ">>>>>>>> Writing errbuf <<<<<<\n");
       stp_eprintf(v, "%s", errbuf.data);
+      stp_eprintf(v, ">>>>>>>> Wrote errbuf <<<<<<\n");
       stp_free(errbuf.data);
     }
   stp_dprintf(STP_DBG_VARS, v, "** Exiting stp_verify_printer_params(0x%p) => %d\n",

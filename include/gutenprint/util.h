@@ -46,12 +46,69 @@ extern "C" {
 
 /**
  * Initialise libgimpprint.
- * This function must be called prior to any other use of the library.
+ * This function must be called prior to any other use of the library
+ * except as specifically noted.
  * It is responsible for loading modules and XML data and initialising
  * internal data structures.
  * @returns 0 on success, 1 on failure.
  */
 extern int stp_init(void);
+
+/**
+ * Set global error output function.  This may be called prior to
+ * stp_init().
+ * @param function to perform error output.  Default is to write to stderr.
+ */
+extern void stp_set_global_errfunc(stp_outfunc_t val);
+
+/**
+ * Get global error output function.  This may be called prior to
+ * stp_init().
+ * @returns current global output function; null if default.
+ */
+extern stp_outfunc_t stp_get_global_errfunc(void);
+
+/**
+ * Set global debug output function.  This may be called prior to
+ * stp_init().
+ * @param function to perform debug output.  Default is to write to stderr
+ */
+extern void stp_set_global_dbgfunc(stp_outfunc_t val);
+
+/**
+ * Get global debug output function.  This may be called prior to
+ * stp_init().
+ * @returns current global output function; null if default.
+ */
+extern stp_outfunc_t stp_get_global_dbgfunc(void);
+
+/**
+ * Set global error output data.  This may be called prior to
+ * stp_init().
+ * @param data (e. g. FILE * or file descriptor) to perform error output.
+ */
+extern void stp_set_global_errdata(void * val);
+
+/**
+ * Get global error output data.  This may be called prior to
+ * stp_init().
+ * @returns current global output data; null if default.
+ */
+extern void * stp_get_global_errdata(void);
+
+/**
+ * Set global debug output data.  This may be called prior to
+ * stp_init().
+ * @param data (e. g. FILE * or file descriptor) to perform debug output.
+ */
+extern void stp_set_global_dbgdata(void *val);
+
+/**
+ * Get global debug output data.  This may be called prior to
+ * stp_init().
+ * @returns current global output data; null if default.
+ */
+extern void * stp_get_global_dbgdata(void);
 
 /**
  * Set the output encoding.  This function sets the encoding that all

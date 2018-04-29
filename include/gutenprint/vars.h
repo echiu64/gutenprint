@@ -395,7 +395,7 @@ extern void stp_set_outfunc(stp_vars_t *v, stp_outfunc_t val);
 extern stp_outfunc_t stp_get_outfunc(const stp_vars_t *v);
 
 /**
- * Set the function used to print error and diagnostic information.
+ * Set the function used to print error information.
  * These must be supplied by the caller.  errdata is passed as an
  * arguments to errfunc; typically it will be a file descriptor.
  * @param v the vars to use.
@@ -409,6 +409,22 @@ extern void stp_set_errfunc(stp_vars_t *v, stp_outfunc_t val);
  * @returns the outfunc.
  */
 extern stp_outfunc_t stp_get_errfunc(const stp_vars_t *v);
+
+/**
+ * Set the function used to print diagnostic information.
+ * These must be supplied by the caller.  dbgdata is passed as an
+ * arguments to dbgfunc; typically it will be a file descriptor.
+ * @param v the vars to use.
+ * @param val the value to set.
+ */
+extern void stp_set_dbgfunc(stp_vars_t *v, stp_outfunc_t val);
+
+/**
+ * Get the function used to print output information.
+ * @param v the vars to use.
+ * @returns the outfunc.
+ */
+extern stp_outfunc_t stp_get_dbgfunc(const stp_vars_t *v);
 
 /**
  * Set the output data.
@@ -441,6 +457,22 @@ extern void stp_set_errdata(stp_vars_t *v, void *val);
  * @returns the output data.
  */
 extern void *stp_get_errdata(const stp_vars_t *v);
+
+/**
+ * Set the debug output data.
+ * @param v the vars to use.
+ * @param val the debug data.  This will typically be a file
+ * descriptor, but it is entirely up to the caller exactly what type
+ * this might be.
+ */
+extern void stp_set_dbgdata(stp_vars_t *v, void *val);
+
+/**
+ * Get the debug output data.
+ * @param v the vars to use.
+ * @returns the output data.
+ */
+extern void *stp_get_dbgdata(const stp_vars_t *v);
 
 /**
  * Merge defaults for a printer with user-chosen settings.

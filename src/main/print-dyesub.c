@@ -353,7 +353,7 @@ typedef struct /* printer specific parameters */
 
 
 static int dyesub_feature(const dyesub_cap_t *caps, int feature);
-static const dyesub_cap_t* dyesub_get_model_capabilities(int model);
+static const dyesub_cap_t* dyesub_get_model_capabilities(const stp_vars_t *v, int model);
 static const overcoat_t* dyesub_get_overcoat_pattern(stp_vars_t *v);
 static const dyesub_media_t* dyesub_get_mediatype(stp_vars_t *v);
 static void  dyesub_nputc(stp_vars_t *v, char byte, int count);
@@ -561,7 +561,7 @@ static void p300_plane_end_func(stp_vars_t *v)
   dyesub_privdata_t *pd = get_privdata(v);
 
   stp_zprintf(v, "\033\033\033P%cS", c[pd->plane-1]);
-  stp_deprintf(STP_DBG_DYESUB, "dyesub: p300_plane_end_func: %c\n",
+  stp_dprintf(STP_DBG_DYESUB, v, "dyesub: p300_plane_end_func: %c\n",
 	c[pd->plane-1]);
 }
 
@@ -576,7 +576,7 @@ static void p300_block_init_func(stp_vars_t *v)
   stp_put16_be(pd->block_max_h, v);
   stp_put16_be(pd->block_max_w, v);
 
-  stp_deprintf(STP_DBG_DYESUB, "dyesub: p300_block_init_func: %d-%dx%d-%d\n",
+  stp_dprintf(STP_DBG_DYESUB, v, "dyesub: p300_block_init_func: %d-%dx%d-%d\n",
 	pd->block_min_w, pd->block_max_w,
 	pd->block_min_h, pd->block_max_h);
 }
@@ -843,11 +843,11 @@ static void p440_block_end_func(stp_vars_t *v)
   dyesub_privdata_t *pd = get_privdata(v);
   int pad = (64 - (((pd->block_max_w - pd->block_min_w + 1)
 	  * (pd->block_max_h - pd->block_min_h + 1) * 3) % 64)) % 64;
-  stp_deprintf(STP_DBG_DYESUB,
+  stp_dprintf(STP_DBG_DYESUB, v,
 		  "dyesub: max_x %d min_x %d max_y %d min_y %d\n",
   		  pd->block_max_w, pd->block_min_w,
 	  	  pd->block_max_h, pd->block_min_h);
-  stp_deprintf(STP_DBG_DYESUB, "dyesub: olympus-p440 padding=%d\n", pad);
+  stp_dprintf(STP_DBG_DYESUB, v, "dyesub: olympus-p440 padding=%d\n", pad);
   dyesub_nputc(v, '\0', pad);
 }
 
@@ -903,11 +903,11 @@ static void ps100_printer_end_func(stp_vars_t *v)
   dyesub_privdata_t *pd = get_privdata(v);
   int pad = (64 - (((pd->block_max_w - pd->block_min_w + 1)
 	  * (pd->block_max_h - pd->block_min_h + 1) * 3) % 64)) % 64;
-  stp_deprintf(STP_DBG_DYESUB,
+  stp_dprintf(STP_DBG_DYESUB, v,
 		  "dyesub: max_x %d min_x %d max_y %d min_y %d\n",
   		  pd->block_max_w, pd->block_min_w,
 	  	  pd->block_max_h, pd->block_min_h);
-  stp_deprintf(STP_DBG_DYESUB, "dyesub: olympus-ps100 padding=%d\n", pad);
+  stp_dprintf(STP_DBG_DYESUB, v, "dyesub: olympus-ps100 padding=%d\n", pad);
   dyesub_nputc(v, '\0', pad);		/* padding to 64B blocks */
 
   stp_zprintf(v, "\033PY"); dyesub_nputc(v, '\0', 61);
@@ -1768,7 +1768,7 @@ static void cx400_printer_init_func(stp_vars_t *v)
   char pg = '\0';
   const char *pname = "XXXXXX";
 
-  stp_deprintf(STP_DBG_DYESUB,
+  stp_dprintf(STP_DBG_DYESUB, v,
 	"dyesub: fuji driver %s\n", stp_get_driver(v));
   if (strcmp(stp_get_driver(v),"fujifilm-cx400") == 0)
     pname = "NX1000";
@@ -2152,7 +2152,7 @@ kodak_9810_load_parameters(const stp_vars_t *v, const char *name,
 			   stp_parameter_t *description)
 {
   int	i;
-  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
   if (caps->parameter_count && caps->parameters)
@@ -2534,7 +2534,7 @@ kodak_8500_load_parameters(const stp_vars_t *v, const char *name,
 			   stp_parameter_t *description)
 {
   int	i;
-  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
   if (caps->parameter_count && caps->parameters)
@@ -2812,7 +2812,7 @@ mitsu_p95d_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
   int	i;
-  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
   if (caps->parameter_count && caps->parameters)
@@ -3218,7 +3218,7 @@ mitsu_p93d_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
   int	i;
-  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
   if (caps->parameter_count && caps->parameters)
@@ -3783,7 +3783,7 @@ mitsu9500_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
   int	i;
-  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
   if (caps->parameter_count && caps->parameters)
@@ -3895,7 +3895,7 @@ mitsu9550_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
   int	i;
-  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
   if (caps->parameter_count && caps->parameters)
@@ -4214,7 +4214,7 @@ mitsu98xx_load_parameters(const stp_vars_t *v, const char *name,
 			  stp_parameter_t *description)
 {
   int	i;
-  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
   if (caps->parameter_count && caps->parameters)
@@ -4260,7 +4260,7 @@ static int mitsu98xx_parse_parameters(stp_vars_t *v)
   const char *quality = stp_get_string_parameter(v, "PrintSpeed");
   dyesub_privdata_t *pd = get_privdata(v);
   const overcoat_t *overcoat = NULL;
-  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
   /* No need to set global params if there's no privdata yet */
@@ -4533,7 +4533,7 @@ mitsu70x_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
   int	i;
-  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
   if (caps->parameter_count && caps->parameters)
@@ -4607,7 +4607,7 @@ static int mitsu70x_parse_parameters(stp_vars_t *v)
 
 static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
 {
-  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
   dyesub_privdata_t *pd = get_privdata(v);
 
@@ -4745,7 +4745,7 @@ mitsu_k60_load_parameters(const stp_vars_t *v, const char *name,
 			  stp_parameter_t *description)
 {
   int	i;
-  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
   if (caps->parameter_count && caps->parameters)
@@ -4921,7 +4921,7 @@ mitsu_d90_load_parameters(const stp_vars_t *v, const char *name,
 			  stp_parameter_t *description)
 {
   int	i;
-  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
   if (caps->parameter_count && caps->parameters)
@@ -5356,7 +5356,7 @@ shinko_chcs1245_load_parameters(const stp_vars_t *v, const char *name,
 			   stp_parameter_t *description)
 {
   int	i;
-  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
   if (caps->parameter_count && caps->parameters)
@@ -6623,7 +6623,7 @@ ds820_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
   int	i;
-  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
   if (caps->parameter_count && caps->parameters)
@@ -7143,7 +7143,7 @@ magicard_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
 {
   int	i;
-  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
   if (caps->parameter_count && caps->parameters)
@@ -8871,7 +8871,7 @@ static const stp_param_string_t duplex_types[] =
 };
 #define NUM_DUPLEX (sizeof (duplex_types) / sizeof (stp_param_string_t))
 
-static const dyesub_cap_t* dyesub_get_model_capabilities(int model)
+static const dyesub_cap_t* dyesub_get_model_capabilities(const stp_vars_t *v, int model)
 {
   int i;
   int models = sizeof(dyesub_model_capabilities) / sizeof(dyesub_cap_t);
@@ -8881,7 +8881,7 @@ static const dyesub_cap_t* dyesub_get_model_capabilities(int model)
       if (dyesub_model_capabilities[i].model == model)
         return &(dyesub_model_capabilities[i]);
     }
-  stp_deprintf(STP_DBG_DYESUB,
+  stp_dprintf(STP_DBG_DYESUB, v,
   	"dyesub: model %d not found in capabilities list.\n", model);
   return &(dyesub_model_capabilities[0]);
 }
@@ -8889,7 +8889,7 @@ static const dyesub_cap_t* dyesub_get_model_capabilities(int model)
 static const overcoat_t* dyesub_get_overcoat_pattern(stp_vars_t *v)
 {
   const char *lpar = stp_get_string_parameter(v, "Laminate");
-  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
   const overcoat_list_t *llist = caps->overcoat;
   const overcoat_t *l = NULL;
@@ -8907,7 +8907,7 @@ static const overcoat_t* dyesub_get_overcoat_pattern(stp_vars_t *v)
 static const dyesub_media_t* dyesub_get_mediatype(stp_vars_t *v)
 {
   const char *mpar = stp_get_string_parameter(v, "MediaType");
-  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
                                               stp_get_model_id(v));
   const dyesub_media_list_t *mlist = caps->media;
   const dyesub_media_t *m = NULL;
@@ -8930,7 +8930,7 @@ dyesub_printsize(const stp_vars_t *v,
   int i;
   const char *page = stp_get_string_parameter(v, "PageSize");
   const char *resolution = stp_get_string_parameter(v, "Resolution");
-  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
   const dyesub_printsize_list_t *p = caps->printsize;
 
@@ -8944,7 +8944,7 @@ dyesub_printsize(const stp_vars_t *v,
           return;
         }
     }
-  stp_erprintf("dyesub_printsize: printsize not found (%s, %s)\n",
+  stp_eprintf(v, "dyesub_printsize: printsize not found (%s, %s)\n",
 	       page, resolution);
 }
 
@@ -8957,7 +8957,7 @@ dyesub_feature(const dyesub_cap_t *caps, int feature)
 static stp_parameter_list_t
 dyesub_list_parameters(const stp_vars_t *v)
 {
-  const dyesub_cap_t *caps = dyesub_get_model_capabilities(stp_get_model_id(v));
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v, stp_get_model_id(v));
 
   stp_parameter_list_t *ret = stp_parameter_list_create();
   int i;
@@ -8978,7 +8978,7 @@ dyesub_parameters(const stp_vars_t *v, const char *name,
 	       stp_parameter_t *description)
 {
   int	i;
-  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
   description->p_type = STP_PARAMETER_TYPE_INVALID;
@@ -9159,7 +9159,7 @@ dyesub_parameters(const stp_vars_t *v, const char *name,
 static const dyesub_pagesize_t*
 dyesub_get_pagesize(const stp_vars_t *v, const char *page)
 {
-  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
   const dyesub_pagesize_list_t *p = caps->pages;
   int i;
@@ -9216,7 +9216,7 @@ dyesub_imageable_area_internal(const stp_vars_t *v,
 {
   stp_dimension_t width, height;
   const dyesub_pagesize_t *pt = dyesub_current_pagesize(v);
-  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
   dyesub_media_size(v, &width, &height);
@@ -9263,7 +9263,7 @@ dyesub_maximum_imageable_area(const stp_vars_t *v,
 {
   int not_used;
   const int model = stp_get_model_id(v);
-  const dyesub_cap_t *caps = dyesub_get_model_capabilities(model);
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v, model);
 
   /* For printers that report FEATURE_WHITE_BORDER, we need to
      respect the margins they define as that's the printable area.
@@ -9292,7 +9292,7 @@ dyesub_describe_resolution(const stp_vars_t *v,
 			   stp_resolution_t *x, stp_resolution_t *y)
 {
   const char *resolution = stp_get_string_parameter(v, "Resolution");
-  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
   							stp_get_model_id(v));
   const dyesub_resolution_list_t *r = caps->resolution;
   int i;
@@ -9318,7 +9318,7 @@ static const char *
 dyesub_describe_output_internal(const stp_vars_t *v, dyesub_print_vars_t *pv)
 {
   const char *ink_type      = stp_get_string_parameter(v, "InkType");
-  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
   							stp_get_model_id(v));
   const char *output_type;
   int i;
@@ -9407,7 +9407,7 @@ dyesub_exec(stp_vars_t *v,
 {
   if (func)
     {
-      stp_deprintf(STP_DBG_DYESUB, "dyesub: %s\n", debug_string);
+      stp_dprintf(STP_DBG_DYESUB, v, "dyesub: %s\n", debug_string);
       (*func)(v);
     }
 }
@@ -9419,7 +9419,7 @@ dyesub_exec_check(stp_vars_t *v,
 {
   if (func)
     {
-      stp_deprintf(STP_DBG_DYESUB, "dyesub: %s\n", debug_string);
+      stp_dprintf(STP_DBG_DYESUB, v, "dyesub: %s\n", debug_string);
       return (*func)(v);
     }
   return 1;
@@ -9481,7 +9481,7 @@ dyesub_read_image(stp_vars_t *v,
     {
       if (stp_color_get_row(v, image, i, &zero_mask))
         {
-	  stp_deprintf(STP_DBG_DYESUB,
+	  stp_dprintf(STP_DBG_DYESUB, v,
 	  	"dyesub_read_image: "
 		"stp_color_get_row(..., %d, ...) == 0\n", i);
 	  dyesub_free_image(pv, image);
@@ -9491,7 +9491,7 @@ dyesub_read_image(stp_vars_t *v,
       pv->image_rows = i+1;
       if (!image_data[i])
         {
-	  stp_deprintf(STP_DBG_DYESUB,
+	  stp_dprintf(STP_DBG_DYESUB, v,
 	  	"dyesub_read_image: "
 		"(image_data[%d] = stp_malloc()) == NULL\n", i);
 	  dyesub_free_image(pv, image);
@@ -9697,7 +9697,7 @@ dyesub_print_plane(stp_vars_t *v,
 	  row = dyesub_interpolate(h + pv->prnt_px - pv->outt_px,
 				   pv->outh_px, pv->imgh_px);
 
-	  stp_deprintf(STP_DBG_DYESUB,
+	  stp_dprintf(STP_DBG_DYESUB, v,
 		       "dyesub_print_plane: h = %d, row = %d\n", h, row);
 
 	  if (pv->plane_interlacing || pv->row_interlacing)
@@ -9745,7 +9745,7 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
 
   const int model           = stp_get_model_id(v);
   const char *ink_type;
-  const dyesub_cap_t *caps = dyesub_get_model_capabilities(model);
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v, model);
   int max_print_px_width = 0;
   int max_print_px_height = 0;
   int w_dpi, h_dpi;
@@ -9851,7 +9851,7 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   if (page_mode == DYESUB_LANDSCAPE)
     dyesub_swap_ints(&w_dpi, &h_dpi);
 
-  stp_deprintf(STP_DBG_DYESUB,
+  stp_dprintf(STP_DBG_DYESUB, v,
 	      "paper (pt)   %f x %f\n"
 	      "image (px)   %d x %d\n"
 	      "image (pt)   %f x %f\n"
@@ -9895,7 +9895,7 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   /* If there's a mismatch in channels, that is ALWAYS a problem */
   if (pv.out_channels != pv.ink_channels)
     {
-       stp_deprintf(STP_DBG_DYESUB,
+       stp_dprintf(STP_DBG_DYESUB, v,
 		    "Input and output channel count mismatch! (%d vs %d)\n", pv.out_channels, pv.ink_channels);
       stp_image_conclude(image);
       stp_free(pd);
@@ -10036,7 +10036,7 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   for (pl = 0; pl < (pv.plane_interlacing ? pv.ink_channels : 1); pl++)
     {
       pd->plane = pv.ink_order[pl];
-      stp_deprintf(STP_DBG_DYESUB, "dyesub: plane %d\n", pd->plane);
+      stp_dprintf(STP_DBG_DYESUB, v, "dyesub: plane %d\n", pd->plane);
 
       /* plane init */
       dyesub_exec(v, caps->plane_init_func, "caps->plane_init");
@@ -10076,7 +10076,7 @@ dyesub_job_start(const stp_vars_t *v, stp_image_t *image)
   const dyesub_cap_t *caps;
   stp_vars_t *nv = stp_vars_create_copy(v);
 
-  caps = dyesub_get_model_capabilities(stp_get_model_id(nv));
+  caps = dyesub_get_model_capabilities(v, stp_get_model_id(nv));
 
   if (caps->job_start_func)
      caps->job_start_func(nv);
@@ -10091,7 +10091,7 @@ dyesub_job_end(const stp_vars_t *v, stp_image_t *image)
   const dyesub_cap_t *caps;
   stp_vars_t *nv = stp_vars_create_copy(v);
 
-  caps = dyesub_get_model_capabilities(stp_get_model_id(nv));
+  caps = dyesub_get_model_capabilities(v, stp_get_model_id(nv));
 
   if (caps->job_end_func)
     caps->job_end_func(nv);
@@ -10104,7 +10104,7 @@ dyesub_job_end(const stp_vars_t *v, stp_image_t *image)
 static int dyesub_verify_printer_params(stp_vars_t *v)
 {
   const int model           = stp_get_model_id(v);
-  const dyesub_cap_t *caps  = dyesub_get_model_capabilities(model);
+  const dyesub_cap_t *caps  = dyesub_get_model_capabilities(v, model);
   int result;
   result = stp_verify_printer_params(v);
   if (result != 1)
