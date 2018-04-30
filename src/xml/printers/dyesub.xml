@@ -107,7 +107,7 @@
       <printer translate="name" name="Dai Nippon Printing DS820" driver="dnp-ds820" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DP-DS820;" manufacturer="Dai Nippon Printing" model="6007" />
       <printer translate="name" name="Dai Nippon Printing DSRX1" driver="dnp-dsrx1" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DS-RX1;" manufacturer="Dai Nippon Printing" model="6002" />
       <printer translate="name" name="Dai Nippon Printing SL10" driver="dnp-sl10" manufacturer="Dai Nippon Printing" model="2005">EXPERIMENTAL</printer>
-      <printer translate="name" name="Fujifilm ASK-300" driver="fujifilm-ask-300" manufacturer="Fujifilm" model="4112" />
+      <printer translate="name" name="Fujifilm ASK-300" deviceid="MFG:FUJIFILM;CMD:ASK-300;MDL:ASK Printer;CLS:FUJIFILM USB Printer;DES:FUJIFILM ASK Printer" driver="fujifilm-ask-300" manufacturer="Fujifilm" model="4112" />
       <printer translate="name" name="Fujifilm FinePix-NX-500" driver="fujifilm-nx500" manufacturer="Fujifilm" model="3002" />
       <printer translate="name" name="Fujifilm Printpix-CX-400" driver="fujifilm-cx400" manufacturer="Fujifilm" model="3000" />
       <printer translate="name" name="Fujifilm Printpix-CX-550" driver="fujifilm-cx550" manufacturer="Fujifilm" model="3001" />
