@@ -40,7 +40,11 @@ gutenprint_version=@VERSION@
 
 if [ -z "$3" ] ; then
     if [ -d "$root/.git" ] ; then
-	description=$(git describe --dirty --always --first-parent 2>/dev/null)
+	git describe --dirty --always --first-parent 2>/dev/null | sed 's/^[^0-9]*-//' > "$root/git-version-stamp"
+    fi
+
+    if [ -f "$root/git-version-stamp" ] ; then
+	description=`cat "$root/git-version-stamp"`
     else
 	description='(unknown)'
     fi

@@ -56,7 +56,7 @@ function pkg_tag {
     echo gutenprint-${version//./_}
 }
 
-# 1) Clean up any trailing whitespace.
+# Clean up any trailing whitespace.
 
 function preflight {
     declare -l trailing_ws="$("$GIT" grep -Il '[	 ]$')"
@@ -68,7 +68,7 @@ function preflight {
     return 0
 }
 
-# 2) Git pre-checks (not version-specific)
+# Git pre-checks (not version-specific)
 
 function check_git {
     "$GIT" fetch
@@ -126,8 +126,8 @@ function check_git {
     return 0
 }
 
-# 3) Run autogen.sh to ensure that we're using default build settings
-# This needs to be done
+# Run autogen.sh to ensure that we're using default build settings
+# Everything else depends on this.
 
 function run_build {
     ./autogen.sh && make clean && make ${STP_PARALLEL:+-j$STP_PARALLEL} && return 0
@@ -135,7 +135,7 @@ function run_build {
     return 1
 }
 
-# 4) Git check tag.  This can't be run until after the build, because we
+# Git check tag.  This can't be run until after the build, because we
 # don't have the version available until autogen.
 
 function check_git_tag {
@@ -148,7 +148,33 @@ function check_git_tag {
     return 0
 }
 
-# 5) Run make valgrind-minimal.
+# Check that we can build a clone of this workspace
+function _check_git_builds {
+    rev=$(git rev-parse @)
+    cwd=$(pwd)
+    cd $TESTREPO || return 1
+    git clone $cwd .
+    if [[ $? != 0 ]] ; then
+	echo "Unable to clone repo"
+	return 1
+    fi
+    git checkout "$rev" || return 1
+    STP_LOG_NO_SUBDIR=1 STP_LOG_DIR=$STP_TEST_LOG_PREFIX scripts/build-release preflight run_build run_valgrind_minimal run_distcheck_minimal
+    status=$?
+    return $status
+}
+
+function check_git_builds {
+    export TESTREPO=$(mktemp -d)
+    cwd=$(pwd)
+    _check_git_builds
+    status=$?
+    cd $cwd
+    [[ -d $TESTREPO ]] && rm -rf $TESTREPO
+    return $status
+}
+
+# Run make valgrind-minimal.
 #
 #    This does a *very* limited set of valgrind checks, running
 #    testpattern and rastertogutenprint on 9 (currently) selected
@@ -161,7 +187,7 @@ function run_valgrind_minimal {
     return 1
 }
 
-# 6) Run make distcheck-fast.
+# Run make distcheck-fast.
 #
 #    This actually builds the tarball, unpacks the tarball, builds it
 #    out of tree, runs a short set of tests against it, does a local
@@ -227,16 +253,16 @@ function run_distcheck_minimal {
     return 1
 }
 
-# 7) Run make check-valgrind
+# Run make check-valgrind
 #
-#    This is slow.  It tests only unique printers, and a lot of extra
-#    combinations with a few printers, all using fast options.  It
-#    uses both CUPS and run-testpattern-2 testing.  However, it's
-#    essentially embarrassingly parallel.
+# This is slow.  It tests only unique printers, and a lot of extra
+# combinations with a few printers, all using fast options.  It
+# uses both CUPS and run-testpattern-2 testing.  However, it's
+# essentially embarrassingly parallel.
 #
-#    I'd like not to go too long without running it, as it's easy for
-#    things to make their way in.  For CI purposes, if we ever go
-#    there, like to find a happy medium.
+# I'd like not to go too long without running it, as it's easy for
+# things to make their way in.  For CI purposes, if we ever go
+# there, like to find a happy medium.
 
 function run_valgrind {
     make check-valgrind && return 0
@@ -244,7 +270,7 @@ function run_valgrind {
     return 1
 }
 
-# 8) Run make check-full
+# Run make check-full
 #
 #    This one I'm not sure of; do we need this or is this well enough
 #    covered by the combination of distcheck-fast and check-valgrind?
@@ -273,22 +299,22 @@ function run_full {
     return 1
 }
 
-# 9) Run make checksums-release to generate a new regression file.
+# Run make checksums-release to generate a new regression file.
 #
-#    The problem here is what do we require for the release build.  Do
-#    we require a clean regression run (other than added
-#    printers/modes)?  There are legitimate reasons for changing, and
-#    having to rerun the procedure because the release engineer forgot a
-#    command line option is a bit harsh.  Something better might be to
-#    simply record changes unless there's an outright failure here, and
-#    let those be reviewed.
+# The problem here is what do we require for the release build.  Do
+# we require a clean regression run (other than added
+# printers/modes)?  There are legitimate reasons for changing, and
+# having to rerun the procedure because the release engineer forgot a
+# command line option is a bit harsh.  Something better might be to
+# simply record changes unless there's an outright failure here, and
+# let those be reviewed.
 #
-#    For CI purposes, the default might be to require no changes, with
-#    human intervention if there are.
+# For CI purposes, the default might be to require no changes, with
+# human intervention if there are.
 #
-#    This takes about 30 minutes on my laptop.  This is extremely
-#    scalable.  Give us a really big machine instance to run it on, this
-#    will run really fast.
+# This takes about 30 minutes on my laptop.  This is extremely
+# scalable.  Give us a really big machine instance to run it on, this
+# will run really fast.
 
 function run_checksums() {
     if make checksums ; then
@@ -304,7 +330,7 @@ function run_checksums() {
     return 1
 }
 
-# 10) Prep the release:
+# Prep the release
 
 function git_prep_release() {
     # .po files might have changed; nothing else should have!
@@ -323,12 +349,12 @@ function git_prep_release() {
     ${GIT} tag -a "$(pkg_tag)" -m "Gutenprint $(pkg_version) release" || return 1
 }
 
-# 11) make distcheck-minimal
+# make distcheck-minimal
 #
-#     We have to rebuild the tarball in any event here, so that we pick up
-#     the tag (to get a correct change log) and updated .po files.
-#     A minimal distcheck only takes about a minute; we might as well
-#     do a final sanity check.
+# We have to rebuild the tarball in any event here, so that we pick up
+# the tag (to get a correct change log) and updated .po files.
+# A minimal distcheck only takes about a minute; we might as well
+# do a final sanity check.
 
 function run_distcheck_minimal {
     make distcheck-minimal && return 0
@@ -336,13 +362,13 @@ function run_distcheck_minimal {
     return 1
 }
 
-# 12) Save away build
+#  Save away build
 function save_build_artifacts {
     tarball=gutenprint-$(pkg_version).tar.xz
     [[ -s $tarball ]] && cp -p $tarball $ARTIFACTDIR
 }
 
-# 13) Final release prep
+# Final release prep
 
 function finis {
     STP_DATA_PATH=src/xml test/gen-printer-list > printer-list.$(pkg_version) || return 1
@@ -450,7 +476,7 @@ function finish {
     [[ $quiet = 1 ]] && echo
     echo "*** Gutenprint release build $msg at $estamp ($(time_delta $STIME $etime))" | log "$top_log" -
     echo "================================================================" | log "$top_log"
-    exit $build_status
+    exit $status
 }
 
 # Log the output to the console as well as the master log file and the
@@ -521,13 +547,17 @@ function runit {
     fi
     counter=$((counter+1))
 
-    [[ $status != 0 ]] && finish $status
+    if (( $status != 0 )) ; then
+	finish $status
+    fi
+    return $status
 }
 
 declare -a OPERATIONS=(preflight
 		       check_git
 		       run_build
 		       check_git_tag
+		       check_git_builds
 		       run_valgrind_minimal
 		       run_distcheck_fast
 		       run_valgrind
@@ -545,17 +575,17 @@ declare SSTAMP=$(stamp)
 declare STIME=$(date_sec)
 declare TOPLOGDIR=${STP_LOG_DIR:-"$ROOT/BuildLogs"}
 declare LOGDIR="$TOPLOGDIR/Log.${SSTAMP// /_}"
+[[ -n $STP_LOG_NO_SUBDIR ]] && LOGDIR=$TOPLOGDIR
 mkdir -p $LOGDIR
-if [[ -L $TOPLOGDIR/Current ]] ; then
+if [[ -z $STP_LOG_NO_SUBDIR && -L $TOPLOGDIR/Current ]] ; then
     rm -f $TOPLOGDIR/Previous
     mv $TOPLOGDIR/Current $TOPLOGDIR/Previous
+    rm -f "$TOPLOGDIR/Current"
+    ln -s $(basename "$LOGDIR") "$TOPLOGDIR/Current"
 fi
 declare ARTIFACTDIR="$LOGDIR/Artifacts"
 mkdir -p $ARTIFACTDIR
 export ARTIFACTDIR
-
-rm -f "$TOPLOGDIR/Current"
-ln -s $(basename "$LOGDIR") "$TOPLOGDIR/Current"
 
 skip_ops=${STP_BUILD_SKIP//,/ }
 
@@ -576,8 +606,10 @@ echo "Log Directory: ${LOGDIR#${ROOT}/}" | log "$top_log" -
 [[ -n $(git status --porcelain -uno) ]] && git_dirty=' (dirty)'
 echo "Git revision: $(git rev-parse @)$git_dirty" | log "$top_log" -
 
+declare -i status=0
 for f in ${OPERATIONS[@]} ; do
     DONTRUN_OP=${DONTRUN}${SKIP_OPS[$f]} runit $f
+    (($? != 0)) && status=1
 done
 
-finish 0
+finish $status
