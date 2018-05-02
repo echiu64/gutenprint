@@ -4374,7 +4374,6 @@ static void mitsu_cp98xx_printer_init(stp_vars_t *v, int model)
   stp_putc(0x5a, v);
   stp_putc(0x54, v);
   stp_putc(0x80, v);  /* special flag to say this is 8bpp packed BGR */
-  stp_putc(0x10, v);
   stp_put16_be(0, v); /* Starting column for this block */
   stp_put16_be(0, v); /* Starting row for this block */
   stp_put16_be(pd->w_size, v);
