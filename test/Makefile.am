@@ -28,7 +28,7 @@ LOCAL_CPPFLAGS = -I$(top_srcdir)/src/main $(GUTENPRINT_CFLAGS)
 ## It is essentially a giant unit test for the weave code.
 ## testdither doesn't actually test anything; there appears to be no way
 ## for it to actually return anything.
-TESTS = test-curve run-weavetest testdither
+TESTS = test-curve run-weavetest run-testdither
 
 ## Programs
 

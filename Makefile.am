@@ -115,44 +115,59 @@ MAKEDISTCHECK_PARALLEL=STP_PARALLEL=$(CPUS) $(MAKEDISTCHECK)
 check-parallel: scripts/count-cpus
 	$(MAKECHECK_PARALLEL)
 
-distcheck-parallel: scripts/count-cpus
-	$(MAKEDISTCHECK_PARALLEL)
-
-check-fast: scripts/count-cpus
-	STP_TEST_PROFILE=fast $(MAKECHECK_PARALLEL)
-
-distcheck-fast: scripts/count-cpus
-	STP_TEST_PROFILE=fast $(MAKEDISTCHECK_PARALLEL)
 
 check-minimal: scripts/count-cpus
 	STP_TEST_PROFILE=minimal $(MAKECHECK_PARALLEL)
 
-distcheck-minimal: scripts/count-cpus
-	STP_TEST_PROFILE=minimal $(MAKEDISTCHECK_PARALLEL)
+check-fast: scripts/count-cpus
+	STP_TEST_PROFILE=fast $(MAKECHECK_PARALLEL)
 
 check-full: scripts/count-cpus
 	STP_TEST_PROFILE=full $(MAKECHECK_PARALLEL)
 
-distcheck-full: scripts/count-cpus
-	STP_TEST_PROFILE=full $(MAKEDISTCHECK_PARALLEL)
+
+check-valgrind-minimal: scripts/count-cpus
+	STP_TEST_PROFILE=valgrind_minimal $(MAKECHECK_PARALLEL)
+
+check-valgrind-fast: scripts/count-cpus
+	STP_TEST_PROFILE=valgrind_fast $(MAKECHECK_PARALLEL)
 
 check-valgrind: scripts/count-cpus
 	STP_TEST_PROFILE=valgrind $(MAKECHECK_PARALLEL)
 
+
+distcheck-parallel: scripts/count-cpus
+	$(MAKEDISTCHECK_PARALLEL)
+
+
+distcheck-minimal: scripts/count-cpus
+	STP_TEST_PROFILE=minimal $(MAKEDISTCHECK_PARALLEL)
+
+distcheck-fast: scripts/count-cpus
+	STP_TEST_PROFILE=fast $(MAKEDISTCHECK_PARALLEL)
+
+distcheck-full: scripts/count-cpus
+	STP_TEST_PROFILE=full $(MAKEDISTCHECK_PARALLEL)
+
+
+distcheck-valgrind-minimal: scripts/count-cpus
+	STP_TEST_PROFILE=valgrind_minimal $(MAKEDISTCHECK_PARALLEL)
+
+distcheck-valgrind-fast: scripts/count-cpus
+	STP_TEST_PROFILE=valgrind_fast $(MAKEDISTCHECK_PARALLEL)
+
 distcheck-valgrind: scripts/count-cpus
 	STP_TEST_PROFILE=valgrind $(MAKEDISTCHECK_PARALLEL)
 
-check-valgrind-minimal: scripts/count-cpus
-	STP_TEST_PROFILE=valgrind-minimal $(MAKECHECK_PARALLEL)
-
-distcheck-valgrind-minimal: scripts/count-cpus
-	STP_TEST_PROFILE=valgrind-minimal $(MAKEDISTCHECK_PARALLEL)
 
 checksums: scripts/count-cpus
 	STP_PARALLEL=$(CPUS) make -C src/testpattern checksums-release
 
-build-release: scripts/build-release
+build-release: scripts/build-release scripts/count-cpus
 	STP_PARALLEL=$(CPUS) /usr/bin/time scripts/build-release
+
+sanity: scripts/build-release scripts/count-cpus
+	STP_PARALLEL=$(CPUS) /usr/bin/time scripts/build-release preflight check_git check_git_builds
 
 ## Clean
 

@@ -17,6 +17,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+# Don't want to run this at all as part of automated test
+[ -n "$STP_TEST_SUITE" ] && exit 77
+
 if [[ -n "$STP_TEST_LOG_PREFIX" ]] ; then
     redir="${STP_TEST_LOG_PREFIX}${0##*/}_$$.log"
     exec 1>>"$redir"

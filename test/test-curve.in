@@ -22,9 +22,6 @@ if [[ -n "$STP_TEST_LOG_PREFIX" ]] ; then
     exec 1>>"$redir"
     exec 2>&1
 fi
-
-[[ -n $STP_TEST_DEBUG ]] && DEBUG=echo
-
 set -e
 
 retval=0
@@ -42,15 +39,6 @@ export STP_MODULE_PATH=${STP_MODULE_PATH:-"$sdir/../src/main:$sdir/../src/main/.
 
 declare valgrind=0
 
-if [ -n "$STP_TEST_DEBUG" ] ; then
-    echo "Would run"
-    exit 0
-fi
-
-run_valgrind() {
-    $vg1 "$@"
-}
-
 function runit() {
     echo "================================================================"
     echo "$@"
@@ -67,4 +55,4 @@ case "$STP_TEST_PROFILE" in
 	;;
 esac
 
-$valgrind ./curve
+runit $valgrind ./curve

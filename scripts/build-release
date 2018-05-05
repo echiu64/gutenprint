@@ -183,7 +183,13 @@ function check_git_builds {
 
 function run_valgrind_minimal {
     make check-valgrind-minimal && return 0
-    echo "make check-valgrind_minimal failed"
+    echo "make check-valgrind-minimal failed"
+    return 1
+}
+
+function run_valgrind_fast {
+    make check-valgrind-fast && return 0
+    echo "make check-valgrind-fast failed"
     return 1
 }
 

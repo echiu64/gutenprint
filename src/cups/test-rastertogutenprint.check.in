@@ -23,9 +23,7 @@ if [[ -n "$STP_TEST_LOG_PREFIX" ]] ; then
     exec 2>&1
 fi
 
-[[ -n $STP_TEST_DEBUG ]] && DEBUG=echo
-
-[[ -z $STP_TEST_SUITE || -z $STP_TEST_PROFILE ]] && STP_TEST_PROFILE=full
+STP_TEST_PROFILE=${STP_TEST_PROFILE:-full}
 
 set -e
 
@@ -38,24 +36,36 @@ function runit() {
     [[ -z $STP_TEST_DEBUG ]] && "$@"
 }
 
+function test_minimal() {
+    runit ./test-rastertogutenprint -s $FASTOPT -p 1 \
+	  $MIN_PRINTERS
+}
+
+function test_fast() {
+    runit ./test-rastertogutenprint -S -s $FASTOPT -p 2
+}
+
+function test_full() {
+    runit ./test-rastertogutenprint -l -p 2 $FASTOPT
+    runit ./test-rastertogutenprint -S -s -X
+}
+
+function test_valgrind_minimal() {
+    runit ./test-rastertogutenprint -v -v -s $FASTOPT -p 1 \
+	  $MIN_PRINTERS
+}
+
+function test_valgrind_fast() {
+    test_valgrind_minimal
+}
+
+function test_valgrind() {
+    runit ./test-rastertogutenprint -v -v -S -s $FASTOPT -p 2
+}
+
 case "$STP_TEST_PROFILE" in
-    full)
-	runit ./test-rastertogutenprint -l -p 2 $FASTOPT
-	runit ./test-rastertogutenprint -S -s -X
-	;;
-    fast)
-	runit ./test-rastertogutenprint -S -s $FASTOPT -p 2
-	;;
-    valgrind)
-	runit ./test-rastertogutenprint -v -v -S -s $FASTOPT -p 2
-	;;
-    valgrind-minimal)
-	runit ./test-rastertogutenprint -v -v -s $FASTOPT -p 1 \
-	       $MIN_PRINTERS
-	;;
-    minimal)
-	runit ./test-rastertogutenprint -s $FASTOPT -p 1 \
-	       $MIN_PRINTERS
+    full|fast|valgrind|valgrind_minimal|valgrind_fast|minimal)
+	test_$STP_TEST_PROFILE
 	;;
     *)
 	exit 77

@@ -24,9 +24,7 @@ if [[ -n "$STP_TEST_LOG_PREFIX" ]] ; then
     exec 2>&1
 fi
 
-[[ -n $STP_TEST_DEBUG ]] && DEBUG=echo
-
-[[ -z $STP_TEST_SUITE && -z $STP_TEST_PROFILE ]] && STP_TEST_PROFILE=full
+STP_TEST_PROFILE=${STP_TEST_PROFILE:-full}
 
 set -e
 
@@ -39,56 +37,70 @@ function runit() {
     [[ -z $STP_TEST_DEBUG ]] && "$@"
 }
 
+function test_minimal() {
+    runit ./run-testpattern-2 -s $FASTOPT -dColorCorrection=Raw \
+	  -o InkType -o InkSet,RawChannels -o Duplex \
+	  -o MediaType -o InputSlot -o FullBleed -o UseGloss \
+	  -o Orientation -o LabelSeparator -o Resolution -T 720 \
+	  "$@" $MIN_PRINTERS
+    runit ./run-testpattern-2 -s $FASTOPT -dColorCorrection=Raw -o - -G 1x1
+}
+
+function test_fast() {
+    runit ./run-testpattern-2 -s $FASTOPT -dColorCorrection=Raw \
+	  -o InkType -o InkSet,RawChannels -o Duplex \
+	  -o MediaType -o InputSlot -o FullBleed -o UseGloss \
+	  -o Orientation -o LabelSeparator -o Resolution -T 720 "$@"
+    runit ./run-testpattern-2 $FASTOPT -dColorCorrection=Raw -o -
+    runit ./run-testpattern-2 -s $FASTOPT \
+	  -o TPMode,ColorCorrection,InkType,UseGloss $MIN_PRINTERS
+    runit ./run-testpattern-2 -s $FASTOPT -o - -G 1x1
+}
+
+function test_full() {
+    runit ./run-testpattern-2 -s
+    runit ./run-testpattern-2 $FASTOPT -dColorCorrection=Raw -o - -G 1x1
+    runit ./run-testpattern-2 -s \
+	  -oPageSize,Resolution=MIN,DitherAlgorithm=VeryFast
+    runit ./run-testpattern-2 -s $FASTOPT \
+	  -o TPMode,ColorCorrection,InkType,UseGloss
+}
+
+function test_valgrind_minimal() {
+    runit ./run-testpattern-2 -s -v -v $FASTOPT -o InkType \
+	  -o InkSet,RawChannels -o Duplex -o MediaType -o InputSlot \
+	  -o FullBleed -o UseGloss -o Orientation -o LabelSeparator "$@" \
+	  $MIN_PRINTERS
+    runit ./run-testpattern-2 -s -v -v $FASTOPT -o - -G 1x1 "$@" \
+	  $MIN_PRINTERS
+}
+
+function test_valgrind_fast() {
+    test_valgrind_minimal
+    runit ./run-testpattern-2 -s -v -v $FASTOPT -o - "$@"
+}
+
+function test_valgrind() {
+    runit ./run-testpattern-2 -s -v -v $FASTOPT -o InkType \
+	  -o InkSet,RawChannels -o Duplex -o MediaType -o InputSlot \
+	  -o FullBleed -o UseGloss -o Orientation -o LabelSeparator "$@"
+    runit ./run-testpattern-2 -s -v -v $FASTOPT \
+	  -o TPMode,ColorCorrection,InkType,UseGloss "$@" $MIN_PRINTERS
+    runit ./run-testpattern-2 -s -v -v $FASTOPT -dColorCorrection=Raw -o - -G 1x1
+}
+
+function test_checksums() {
+    export STP_DEBUG=$(printf "0x%x" $((0x8000000 | ${STP_DEBUG:-0})))
+    runit ./run-testpattern-2 -q -M ':3' "$@"
+    runit ./run-testpattern-2 -F -s -q -M ':3' \
+	  -o PageSize,Resolution=MIN,DitherAlgorithm=VeryFast "$@"
+    runit ./run-testpattern-2 -F -s -q -M ':3' $FASTOPT \
+	  -o TPMode,ColorCorrection,InkType,UseGloss "$@"
+}
+
 case "$STP_TEST_PROFILE" in
-    full)
-	runit ./run-testpattern-2 -s
-	runit ./run-testpattern-2 $FASTOPT -dColorCorrection=Raw -o - -G 1x1
-	runit ./run-testpattern-2 -s \
-	       -oPageSize,Resolution=MIN,DitherAlgorithm=VeryFast
-	runit ./run-testpattern-2 -s $FASTOPT \
-	       -o TPMode,ColorCorrection,InkType,UseGloss
-	;;
-    fast)
-	runit ./run-testpattern-2 -s $FASTOPT -dColorCorrection=Raw \
-	       -o InkType -o InkSet,RawChannels -o Duplex \
-	       -o MediaType -o InputSlot -o FullBleed -o UseGloss \
-	       -o Orientation -o LabelSeparator -o Resolution -T 720 "$@"
-	runit ./run-testpattern-2 $FASTOPT -dColorCorrection=Raw -o -
-	runit ./run-testpattern-2 -s $FASTOPT \
-	       -o TPMode,ColorCorrection,InkType,UseGloss $MIN_PRINTERS
-	runit ./run-testpattern-2 -s $FASTOPT -o - -G 1x1
-	;;
-    valgrind)
-	runit ./run-testpattern-2 -s -v -v $FASTOPT -o InkType \
-	       -o InkSet,RawChannels -o Duplex -o MediaType -o InputSlot \
-	       -o FullBleed -o UseGloss -o Orientation -o LabelSeparator "$@"
-	runit ./run-testpattern-2 -s -v -v $FASTOPT \
-	       -o TPMode,ColorCorrection,InkType,UseGloss "$@" $MIN_PRINTERS
-	runit ./run-testpattern-2 -s -v -v $FASTOPT -dColorCorrection=Raw -o - -G 1x1
-	;;
-    checksums)
-	export STP_DEBUG=$(printf "0x%x" $((0x8000000 | ${STP_DEBUG:-0})))
-	runit ./run-testpattern-2 -q -M ':3' "$@"
-	runit ./run-testpattern-2 -F -s -q -M ':3' \
-	       -o PageSize,Resolution=MIN,DitherAlgorithm=VeryFast "$@"
-	runit ./run-testpattern-2 -F -s -q -M ':3' $FASTOPT \
-	       -o TPMode,ColorCorrection,InkType,UseGloss "$@"
-	;;
-    minimal)
-	runit ./run-testpattern-2 -s $FASTOPT -dColorCorrection=Raw \
-	       -o InkType -o InkSet,RawChannels -o Duplex \
-	       -o MediaType -o InputSlot -o FullBleed -o UseGloss \
-	       -o Orientation -o LabelSeparator -o Resolution -T 720 \
-	       "$@" $MIN_PRINTERS
-	runit ./run-testpattern-2 -s $FASTOPT -dColorCorrection=Raw -o - -G 1x1
-	;;
-    valgrind-minimal)
-	runit ./run-testpattern-2 -s -v -v $FASTOPT -o InkType \
-	       -o InkSet,RawChannels -o Duplex -o MediaType -o InputSlot \
-	       -o FullBleed -o UseGloss -o Orientation -o LabelSeparator "$@" \
-	       $MIN_PRINTERS
-	runit ./run-testpattern-2 -s -v -v $FASTOPT -o - -G 1x1 "$@" \
-	       $MIN_PRINTERS
+    full|fast|valgrind|checksums|minimal|valgrind_minimal|valgrind_fast)
+	test_$STP_TEST_PROFILE
 	;;
     *)
 	exit 77
