@@ -4604,18 +4604,21 @@ static int mitsu70x_parse_parameters(stp_vars_t *v)
   return 1;
 }
 
-static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
+static void mitsu_cpd70k60_job_start(stp_vars_t *v)
 {
-  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
-		  				stp_get_model_id(v));
-  dyesub_privdata_t *pd = get_privdata(v);
-
-  /* Printer wakeup */
+  /* Printer wakeup, once per job. */
   stp_putc(0x1b, v);
   stp_putc(0x45, v);
   stp_putc(0x57, v);
   stp_putc(0x55, v);
   dyesub_nputc(v, 0x00, 508);
+}
+
+static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
+{
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
+						stp_get_model_id(v));
+  dyesub_privdata_t *pd = get_privdata(v);
 
   /* Each copy gets this.. */
   stp_putc(0x1b, v);
@@ -5064,7 +5067,7 @@ static void mitsu_cpd90_printer_init(stp_vars_t *v)
   dyesub_nputc(v, 0x00, 512 - 32);
 }
 
-static void mitsu_cpd90_printer_end(stp_vars_t *v)
+static void mitsu_cpd90_job_end(stp_vars_t *v)
 {
   dyesub_privdata_t *pd = get_privdata(v);
 
@@ -8229,7 +8232,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No block funcs */
     NULL,
     &mitsu_cpd70x_overcoat_list, NULL,
-    NULL, NULL,
+    mitsu_cpd70k60_job_start, NULL,
     mitsu70x_parameters,
     mitsu70x_parameter_count,
     mitsu70x_load_parameters,
@@ -8248,7 +8251,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No block funcs */
     NULL,
     &mitsu_cpd70x_overcoat_list, NULL,
-    NULL, NULL,
+    mitsu_cpd70k60_job_start, NULL,
     mitsu70x_parameters,
     mitsu70x_parameter_count,
     mitsu_k60_load_parameters,
@@ -8267,7 +8270,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No block funcs */
     NULL,
     &mitsu_cpd70x_overcoat_list, NULL,
-    NULL, NULL,
+    mitsu_cpd70k60_job_start, NULL,
     mitsu70x_parameters,
     mitsu70x_parameter_count,
     mitsu70x_load_parameters,
@@ -8286,7 +8289,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No block funcs */
     NULL,
     &mitsu_cpd70x_overcoat_list, NULL,
-    NULL, NULL,
+    mitsu_cpd70k60_job_start, NULL,
     mitsu70x_parameters,
     mitsu70x_parameter_count,
     mitsu_k60_load_parameters,
@@ -8300,12 +8303,12 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cpd90_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_NATIVECOPIES,
-    &mitsu_cpd90_printer_init, &mitsu_cpd90_printer_end,
+    &mitsu_cpd90_printer_init, NULL,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
     NULL,
     &mitsu_cpd70x_overcoat_list, NULL,
-    NULL, NULL,
+    NULL, mitsu_cpd90_job_end,
     mitsu_d90_parameters,
     mitsu_d90_parameter_count,
     mitsu_d90_load_parameters,
@@ -8361,7 +8364,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No block funcs */
     NULL,
     &mitsu_cpd70x_overcoat_list, NULL,
-    NULL, NULL,
+    mitsu_cpd70k60_job_start, NULL,
     mitsu70x_parameters,
     mitsu70x_parameter_count,
     mitsu_k60_load_parameters,
