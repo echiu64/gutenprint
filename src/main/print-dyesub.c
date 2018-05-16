@@ -5069,7 +5069,11 @@ static void mitsu_cpd90_printer_init(stp_vars_t *v)
 
 static void mitsu_cpd90_job_end(stp_vars_t *v)
 {
-  dyesub_privdata_t *pd = get_privdata(v);
+  int delay;
+  if (stp_check_int_parameter(v, "ComboWait", STP_PARAMETER_ACTIVE))
+    delay = stp_get_int_parameter(v, "ComboWait");
+  else
+    delay = 5;
 
   /* Wrap it up */
   stp_putc(0x1b, v);
@@ -5077,7 +5081,7 @@ static void mitsu_cpd90_job_end(stp_vars_t *v)
   stp_putc(0x51, v);
   stp_putc(0x31, v);
   stp_putc(0x00, v);
-  stp_putc(pd->privdata.m70x.delay, v);
+  stp_putc(delay, v);
 }
 
 /* Fujifilm ASK-300 */
