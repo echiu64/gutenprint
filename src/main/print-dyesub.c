@@ -5064,7 +5064,7 @@ static void mitsu_cpd90_printer_init(stp_vars_t *v)
   stp_put16_be(pd->h_size, v);  /* Rows */
   dyesub_nputc(v, 0x00, 2);
 
-  dyesub_nputc(v, 0x00, 512 - 32);
+  dyesub_nputc(v, 0x00, 512 - 16);
 }
 
 static void mitsu_cpd90_job_end(stp_vars_t *v)

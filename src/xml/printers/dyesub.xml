@@ -153,7 +153,7 @@
       <printer translate="name" name="Mitsubishi CP-9810D" driver="mitsubishi-9810d" manufacturer="Mitsubishi" model="4104">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-9810DW" driver="mitsubishi-9810dw" manufacturer="Mitsubishi" model="4104">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-D80DW" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CPD80D;CLS:PRINTER;DES:MITSUBISHI_CPD80D" driver="mitsubishi-d80dw" manufacturer="Mitsubishi" model="4107" />
-      <printer translate="name" name="Mitsubishi CP-D90DW" driver="mitsubishi-d90dw" manufacturer="Mitsubishi" model="4109">EXPERIMENTAL</printer>
+      <printer translate="name" name="Mitsubishi CP-D90DW" deviceid-"MFG:MITSUBISHI;CMD:MEL;MDL:CPD90D;CLS:PRINTER;DES:MITSUBISHI_CPD90D" driver="mitsubishi-d90dw" manufacturer="Mitsubishi" model="4109" />
       <printer translate="name" name="Mitsubishi CP-D70DW" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP60D70D707D;CLS:PRINTER;DES:MITSUBISHI CP60D70D707D" driver="mitsubishi-d70dw" manufacturer="Mitsubishi" model="4105" />
       <printer translate="name" name="Mitsubishi CP-D707DW" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP60D70D707D;CLS:PRINTER;DES:MITSUBISHI CP60D70D707D" driver="mitsubishi-d707dw" manufacturer="Mitsubishi" model="4105">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-K60DW-S" driver="mitsubishi-k60dw" manufacturer="Mitsubishi" model="4106" />
