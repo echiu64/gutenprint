@@ -4759,10 +4759,14 @@ static const dyesub_pagesize_t mitsu_cpd90_page[] =
   DEFINE_PAPER_SIMPLE( "w360h504", "5x7", PT1(1550,300), PT1(2128,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w360h360", "5x5", PT1(1527,300), PT1(1550,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER_SIMPLE( "w432h432", "6x6", PT1(1827,300), PT1(1852,300), DYESUB_LANDSCAPE),
+  // XXX add 6x6+2x6!
   DEFINE_PAPER_SIMPLE( "w432h576", "6x8", PT1(1852,300), PT1(2428,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w432h576-div2", "4x6*2", PT1(1852,300), PT1(2488,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w432h612", "6x8.5", PT1(1852,300), PT1(2568,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w432h648", "6x9", PT1(1852,300), PT1(2729,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w432h648-div2", "4.4x6*2", PT1(1852,300), PT1(2728,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w432h648-div3", "3x6*2", PT1(1852,300), PT1(2724,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w432h648-div4", "2x6*4", PT1(1852,300), PT1(2628,300), DYESUB_PORTRAIT),
 };
 
 LIST(dyesub_pagesize_list_t, mitsu_cpd90_page_list, dyesub_pagesize_t, mitsu_cpd90_page);
@@ -4776,12 +4780,15 @@ static const dyesub_printsize_t mitsu_cpd90_printsize[] =
   { "300x300", "w360h360", 1527, 1550},
   { "300x300", "w360h504", 1550, 2128},
   { "300x300", "w432h432", 1827, 1852},
+  // XXX add 6x6+2x6!
   { "300x300", "w432h576", 1852, 2428},
   { "300x300", "w432h576-div2", 1852, 2488},
   { "300x300", "w432h612", 1852, 2568},
   { "300x300", "w432h648", 1852, 2729},
+  { "300x300", "w432h648-div2", 1852, 2728},
+  { "300x300", "w432h648-div3", 1852, 2724},
+  { "300x300", "w432h648-div4", 1852, 2628},
 };
-
 LIST(dyesub_printsize_list_t, mitsu_cpd90_printsize_list, dyesub_printsize_t, mitsu_cpd90_printsize);
 
 static const dyesub_stringitem_t mitsu_d90_qualities[] =
@@ -4922,28 +4929,44 @@ static void mitsu_cpd90_printer_init(stp_vars_t *v)
   stp_putc(0x00, v);
   stp_putc(0x01, v);
   stp_putc(0x00, v);
-  if (strcmp(pd->pagesize,"w432h576-div2") == 0)
-    stp_putc(0x01, v);
-  else
-    stp_putc(0x00, v);
 
   if (strcmp(pd->pagesize,"w432h576-div2") == 0) {
+    stp_putc(0x01, v);
     stp_putc(0x04, v);
     stp_putc(0xbe, v);
-    dyesub_nputc(v, 0x00, 14);
+    dyesub_nputc(v, 0x00, 6);
   } else if (strcmp(pd->pagesize,"w288h432-div2") == 0) {
+    stp_putc(0x00, v);
     stp_putc(0x02, v);
     stp_putc(0x65, v);
+    dyesub_nputc(v, 0x00, 6);
+  } else if (strcmp(pd->pagesize,"w432h648-div2") == 0) {
     stp_putc(0x01, v);
+    stp_putc(0x05, v);
+    stp_putc(0x36, v);
+    dyesub_nputc(v, 0x00, 6);
+  } else if (strcmp(pd->pagesize,"w432h648-div3") == 0) {
     stp_putc(0x00, v);
+    stp_putc(0x03, v);
+    stp_putc(0x90, v);
     stp_putc(0x00, v);
-    stp_putc(0x01, v);
-    dyesub_nputc(v, 0x00, 10);
+    stp_putc(0x07, v);
+    stp_putc(0x14, v);
+    dyesub_nputc(v, 0x00, 3);
+  } else if (strcmp(pd->pagesize,"w432h648-div4") == 0) {
+    stp_putc(0x00, v);
+    stp_putc(0x02, v);
+    stp_putc(0x97, v);
+    stp_putc(0x00, v);
+    stp_putc(0x05, v);
+    stp_putc(0x22, v);
+    stp_putc(0x00, v);
+    stp_putc(0x07, v);
+    stp_putc(0xad, v);
   } else {
-    dyesub_nputc(v, 0x00, 16);
+    dyesub_nputc(v, 0x00, 9);
   }
-
-  dyesub_nputc(v, 0x00, 16);
+  dyesub_nputc(v, 0x00, 24);
 
   stp_zfwrite((pd->overcoat->seq).data, 1,
 	      (pd->overcoat->seq).bytes, v); /* Lamination mode */
@@ -4955,7 +4978,7 @@ static void mitsu_cpd90_printer_init(stp_vars_t *v)
 
   dyesub_nputc(v, 0x00, 512 - 64);
 
-  /* Second header block */
+  /* Data Plane header */
   stp_putc(0x1b, v);
   stp_putc(0x5a, v);
   stp_putc(0x54, v);
