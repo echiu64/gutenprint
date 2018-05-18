@@ -1791,8 +1791,9 @@ stpui_print(const stpui_plist_t *printer, stpui_image_t *image)
       stp_set_errfunc(np->v, stpui_get_errfunc());
       stp_set_outdata(np->v, prn);
       stp_set_errdata(np->v, stpui_get_errdata());
+      stp_start_job(np->v, &(image->im));
       print_status = stp_print(np->v, &(image->im));
-
+      stp_end_job(np->v, &(image->im));
       /*
        * Note that we do not use popen() to create the output, therefore
        * we do not use pclose() to close it.  See bug 1013565.
