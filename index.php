@@ -37,7 +37,7 @@ download links.</p>
 
 <H2><font color="#ff0000">Gutenprint 5.2.14 is available!</font></h2>
 
-<P><strong><em><font color="#ff0000">New as of April 23, 2018!</strong></em></font>The Gutenprint project is pleased to announce Gutenprint 5.2.14.  This release adds full color support for most color laser printers, fixes some important bugs, adds support for additional printers, and offers improvements for others.  This package is available in source form, Macintosh OS X installer will follow.  <a
+<P><strong><em><font color="#ff0000">New as of April 23, 2018!</strong></em></font>The Gutenprint project is pleased to announce Gutenprint 5.2.14.  This release adds full color support for most color laser printers, fixes some important bugs, adds support for additional printers, and offers improvements for others.  This package is available in source form, and also in binary installer form for Macintosh OS X.  <a
 href="https://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.14/">You
 can read the release notes and download it here</a>.  </p>
 
