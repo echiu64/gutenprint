@@ -129,13 +129,11 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Headlines </h2>
 
-<!--
 		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.14 is released!</span>
 			<br>
-			<a href="MacOSX.php#5.2.14">April 9, 2018</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.14, a stable release Gutenprint 5.2.  This release adds full color support for most color laser printers, fixes some important bugs, adds support for additional printers, and offers improvements for others. <b>NOTE: Users of many dye sublimation printers must follow a special installation procedure.  Please read the release notes very carefully!</b>  See the <a href="MacOSX.php#5.2.14">Release notes</a> for more detail.  See the <b>Downloads</b> section for download links.
+			<a href="MacOSX.php#5.2.14">May 17, 2018</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.14, a stable release Gutenprint 5.2.  This release adds full color support for most color laser printers, fixes some important bugs, adds support for additional printers, and offers improvements for others. <b>NOTE: Users of many dye sublimation printers must follow a special installation procedure.  Please read the release notes very carefully!</b>  See the <a href="MacOSX.php#5.2.14">Release notes</a> for more detail.  See the <b>Downloads</b> section for download links.
 		</p>
--->
 		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.13-pre1 is released!</span>
 			<br>
@@ -192,7 +190,6 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 <!-- indent text -->
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Downloads</h2>
-<!--
 		<p>
 			<b>Gutenprint 5.2.14</b>
 			<br>
@@ -201,7 +198,7 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 		<p>
 The Gutenprint project is pleased to announce Gutenprint 5.2.14, a stable release of Gutenprint 5.2.  &nbsp;&nbsp;(<a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.14/gutenprint-5.2.14.tar.bz2/download">source code</a>)
 </p>
--->
+
 		<p>
 			<b>Gutenprint 5.2.13-pre1</b>
 			<br>
@@ -310,7 +307,6 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.10, a stable releas
 <hr>
 <h3> News Items </h3>
 <!-- Yuk.  Have to use tables to get news item head formatting as it was before. Gecko browsers will not float text properly. Even IE Mac 5.2.3 does this right -->
-<!--
 <a name="5.2.14"></a>
 <table cellpadding="0" bgcolor="#d0d0d0" width="60%">
 	<tr>
@@ -335,7 +331,6 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.10, a stable releas
 	<li> Offers improvements for some printers</li>
 </ol>
 </p>
--->
 <a name="5.2.13-pre1"></a>
 <table cellpadding="0" bgcolor="#d0d0d0" width="60%">
 	<tr>
