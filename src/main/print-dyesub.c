@@ -42,7 +42,6 @@
 #endif
 
 //#define S6145_YMC
-//#define M98XX_8BPP
 //#define CW01_NATIVE
 
 #define DYESUB_FEATURE_NONE		 0x00000000
@@ -54,11 +53,6 @@
 #define DYESUB_FEATURE_PLANE_INTERLACE	 0x00000020
 #define DYESUB_FEATURE_PLANE_LEFTTORIGHT 0x00000040
 #define DYESUB_FEATURE_ROW_INTERLACE	 0x00000080
-#ifndef M98XX_8BPP
-#define DYESUB_FEATURE_12BPP             0x00000100  // TODO: cp98xx only
-#define DYESUB_FEATURE_16BPP             0x00000200  // TODO:  Remove!
-#define DYESUB_FEATURE_BIGENDIAN         0x00000400  // TODO: cp98xx only
-#endif
 #define DYESUB_FEATURE_DUPLEX            0x00000800
 #define DYESUB_FEATURE_MONOCHROME        0x00001000
 #define DYESUB_FEATURE_NATIVECOPIES      0x00002000
@@ -87,14 +81,6 @@
 /*
  * Random implementation from POSIX.1-2001 to yield reproducible results.
  */
-#ifndef M98XX_8BPP
-static int xrand(unsigned long *seed)
-{
-  *seed = *seed * 1103515245ul + 12345ul;
-  return ((unsigned) (*seed / 65536ul) % 32768ul);
-}
-#endif
-
 typedef struct
 {
   const char *output_type;
@@ -285,9 +271,6 @@ typedef struct
   const dyesub_media_t* media;
   const char* slot;
   int print_mode;
-#ifndef M98XX_8BPP
-  int bpp;
-#endif
   const char* duplex_mode;
   int page_number;
   int copies;
@@ -308,10 +291,6 @@ typedef struct {
   int out_channels;
   int ink_channels;
   const char *ink_order;
-#ifndef M98XX_8BPP
-  int bytes_per_ink_channel;
-  int bits_per_ink_channel;
-#endif
   int byteswap;
   int plane_interlacing;
   int row_interlacing;
@@ -4183,9 +4162,7 @@ LIST(overcoat_list_t, mitsu_cp9810_overcoat_list, overcoat_t, mitsu_cp9810_overc
 static const dyesub_stringitem_t mitsu9810_qualities[] =
 {
   { "Fine",      N_ ("Fine (Standard Media") },
-#ifdef M98XX_8BPP
   { "FineHG",    N_ ("Fine (High Grade Media)") },
-#endif
   { "SuperFine", N_ ("Super Fine") },
 };
 LIST(dyesub_stringlist_t, mitsu9810_quality_list, dyesub_stringitem_t, mitsu9810_qualities);
@@ -4198,14 +4175,12 @@ static const stp_parameter_t mitsu98xx_parameters[] =
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
-#ifdef M98XX_8BPP
   {
     "UseLUT", N_("Internal Color Correction"), "Color=Yes,Category=Advanced Printer Setup",
     N_("Use Internal Color Correction"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
-#endif
 };
 #define mitsu98xx_parameter_count (sizeof(mitsu98xx_parameters) / sizeof(const stp_parameter_t))
 
@@ -4241,13 +4216,11 @@ mitsu98xx_load_parameters(const stp_vars_t *v, const char *name,
       description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
       description->is_active = 1;
     }
-#ifdef M98XX_8BPP
   else if (strcmp(name, "UseLUT") == 0)
     {
       description->deflt.boolean = 0;
       description->is_active = 1;
     }
-#endif
   else
   {
      return 0;
@@ -4278,9 +4251,7 @@ static int mitsu98xx_parse_parameters(stp_vars_t *v)
     pd->privdata.m9550.quality = 0x10;
   }
 
-#ifdef M98XX_8BPP
   pd->privdata.m70x.use_lut = stp_get_boolean_parameter(v, "UseLUT");
-#endif
 
   /* Matte lamination forces SuperFine mode */
   if (caps->overcoat) {
@@ -4291,23 +4262,6 @@ static int mitsu98xx_parse_parameters(stp_vars_t *v)
   }
 
   return 1;
-}
-
-static void mitsu_cp98xx_plane_init(stp_vars_t *v)
-{
-#ifndef M98XX_8BPP
-  dyesub_privdata_t *pd = get_privdata(v);
-
-  /* Plane data header */
-  stp_putc(0x1b, v);
-  stp_putc(0x5a, v);
-  stp_putc(0x54, v);
-  stp_putc(0x10, v);
-  stp_put16_be(0, v); /* Starting column for this block */
-  stp_put16_be(0, v); /* Starting row for this block */
-  stp_put16_be(pd->w_size, v);
-  stp_put16_be(pd->h_size, v); /* Number of rows in this block */
-#endif
 }
 
 static void mitsu_cp98xx_printer_init(stp_vars_t *v, int model)
@@ -4349,11 +4303,7 @@ static void mitsu_cp98xx_printer_init(stp_vars_t *v, int model)
   dyesub_nputc(v, 0x00, 8);
   stp_putc(pd->privdata.m9550.quality, v);
   dyesub_nputc(v, 0x00, 9);
-#ifdef M98XX_8BPP
   stp_putc(pd->privdata.m70x.use_lut, v);  /* Use LUT? EXTENSION! */
-#else
-  stp_putc(0x00, v);
-#endif
   stp_putc(0x01, v);
 
   /* Unknown */
@@ -4368,7 +4318,6 @@ static void mitsu_cp98xx_printer_init(stp_vars_t *v, int model)
   stp_putc(0x01, v);
   dyesub_nputc(v, 0x00, 36);
 
-#ifdef M98XX_8BPP
   /* Put out a single plane header */
   stp_putc(0x1b, v);
   stp_putc(0x5a, v);
@@ -4378,7 +4327,6 @@ static void mitsu_cp98xx_printer_init(stp_vars_t *v, int model)
   stp_put16_be(0, v); /* Starting row for this block */
   stp_put16_be(pd->w_size, v);
   stp_put16_be(pd->h_size, v); /* Number of rows in this block */
-#endif
 }
 
 static void mitsu_cp9810_printer_init(stp_vars_t *v)
@@ -4393,56 +4341,11 @@ static void mitsu_cp9800_printer_init(stp_vars_t *v)
 
 static void mitsu_cp9810_printer_end(stp_vars_t *v)
 {
-#ifndef M98XX_8BPP
-  dyesub_privdata_t *pd = get_privdata(v);
-#endif
-
   /* Job Footer */
   stp_putc(0x1b, v);
   stp_putc(0x50, v);
   stp_putc(0x4c, v); /* XXX 9800DW-S uses 0x4e, backend corrects */
   stp_putc(0x00, v);
-
-#ifndef M98XX_8BPP
-  if (pd->overcoat &&
-      *((const char*)((pd->overcoat->seq).data)) == 0x01) {
-
-    /* Generate a full plane of lamination data */
-
-    /* The Windows drivers generate a lamination pattern consisting of
-       four values: 0x0202, 0x01f1, 0x0808, 0x0737 in roughly a 16:10:4:1
-       ratio.
-
-       There seem to be some patterns but more analysis is needed.
-    */
-
-    int r, c;
-    unsigned long seed = 1;
-
-    mitsu_cp98xx_plane_init(v); /* First generate plane header */
-
-    /* Now generate lamination pattern */
-    for (c = 0 ; c < pd->w_size ; c++) {
-      for (r = 0 ; r < pd->h_size ; r++) {
-	int i = xrand(&seed) & 0x1f;
-	if (i < 16)
-	  stp_put16_be(0x0202, v);
-	else if (i < 26)
-	  stp_put16_be(0x01f1, v);
-	else if (i < 30)
-	  stp_put16_be(0x0808, v);
-	else
-	  stp_put16_be(0x0737, v);
-      }
-    }
-
-    /* Lamination Footer */
-    stp_putc(0x1b, v);
-    stp_putc(0x50, v);
-    stp_putc(0x56, v);
-    stp_putc(0x00, v);
-  }
-#endif
 }
 
 /* Mitsubishi CP-D70D/CP-D707 */
@@ -8195,25 +8098,15 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Mitsubishi CP9810D */
     4104,
-#ifdef M98XX_8BPP
     &bgr_ink_list,
-#else
-    &ymc_ink_list,
-#endif
     &res_300dpi_list,
     &mitsu_cp9810_page_list,
     &mitsu_cp9810_printsize_list,
     SHRT_MAX,
-#ifdef M98XX_8BPP
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_NATIVECOPIES,
-#else
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_12BPP
-      | DYESUB_FEATURE_BIGENDIAN | DYESUB_FEATURE_NATIVECOPIES,
-#endif
+      | DYESUB_FEATURE_NATIVECOPIES,
     &mitsu_cp9810_printer_init, &mitsu_cp9810_printer_end,
-    &mitsu_cp98xx_plane_init, NULL,
+    NULL, NULL,
     NULL, NULL, /* No block funcs */
     NULL,
     &mitsu_cp9810_overcoat_list, NULL,
@@ -8376,25 +8269,15 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Mitsubishi CP9800D */
     4113,
-#ifdef M98XX_8BPP
     &bgr_ink_list,
-#else
-    &ymc_ink_list,
-#endif
     &res_300dpi_list,
     &mitsu_cp9810_page_list,
     &mitsu_cp9810_printsize_list,
     SHRT_MAX,
-#ifdef M98XX_8BPP
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_NATIVECOPIES,
-#else
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_12BPP
-      | DYESUB_FEATURE_BIGENDIAN | DYESUB_FEATURE_NATIVECOPIES,
-#endif
+      | DYESUB_FEATURE_NATIVECOPIES,
     &mitsu_cp9800_printer_init, &mitsu_cp9810_printer_end,
-    &mitsu_cp98xx_plane_init, NULL,
+    NULL, NULL,
     NULL, NULL, /* No block funcs */
     NULL,
     NULL, NULL,
@@ -9521,24 +9404,6 @@ dyesub_render_pixel_u8(unsigned short *src, char *dest,
 #endif
 }
 
-#ifndef M98XX_8BPP
-static void
-dyesub_render_pixel_u16(unsigned short *src, unsigned short *dest,
-			dyesub_print_vars_t *pv,
-			int plane)
-{
-  /* Scale down to output bit depth */
-  if (pv->bits_per_ink_channel == 16)
-    *dest = src[plane];
-  else
-    *dest = src[plane] >> (16 - pv->bits_per_ink_channel);
-
-  /* Byteswap if needed */
-  if (pv->byteswap)
-    *dest = ((*dest >> 8) & 0xff) | ((*dest & 0xff) << 8); // macro?
-}
-#endif
-
 static void
 dyesub_render_pixel_packed_u8(unsigned short *src, char *dest,
 			      dyesub_print_vars_t *pv)
@@ -9609,36 +9474,6 @@ dyesub_render_row_interlaced_u8(stp_vars_t *v,
     }
 }
 
-#ifndef M98XX_8BPP
-static void
-dyesub_render_row_interlaced_u16(stp_vars_t *v,
-				 dyesub_print_vars_t *pv,
-				 const dyesub_cap_t *caps,
-				 int in_row,
-				 unsigned short *dest,
-				 int plane)
-{
-  int w;
-  unsigned short *src;
-
-  for (w = 0; w < pv->outw_px; w++)
-    {
-      int row = in_row;
-      int col = dyesub_interpolate(w, pv->outw_px, pv->imgw_px);
-      if (pv->plane_lefttoright)
-	col = pv->imgw_px - col - 1;
-      if (pv->print_mode == DYESUB_LANDSCAPE)
-        { /* "rotate" image */
-          dyesub_swap_ints(&col, &row);
-          row = (pv->imgw_px - 1) - row;
-        }
-      src = &(pv->image_data[row][col * pv->out_channels]);
-      dyesub_render_pixel_u16(src, dest + w,
-			      pv, plane);
-    }
-}
-#endif
-
 static int
 dyesub_print_plane(stp_vars_t *v,
 		   dyesub_print_vars_t *pv,
@@ -9647,11 +9482,7 @@ dyesub_print_plane(stp_vars_t *v,
 		   int plane)
 {
   int h;
-#ifdef M98XX_8BPP
   int bpp = ((pv->plane_interlacing || pv->row_interlacing) ? 1 : pv->ink_channels);
-#else
-  int bpp = ((pv->plane_interlacing || pv->row_interlacing) ? 1 : pv->ink_channels) * pv->bytes_per_ink_channel;
-#endif
   size_t rowlen = pv->prnw_px * bpp;
   char *destrow = stp_malloc(rowlen); /* Allocate a buffer for the rendered rows */
   if (!destrow)
@@ -9708,17 +9539,8 @@ dyesub_print_plane(stp_vars_t *v,
 
 	  if (pv->plane_interlacing || pv->row_interlacing)
 	    {
-#ifndef M98XX_8BPP
-	      if (pv->bytes_per_ink_channel == 1)
-#endif
-		dyesub_render_row_interlaced_u8(v, pv, caps, row,
+	      dyesub_render_row_interlaced_u8(v, pv, caps, row,
 						destrow + bpp * pv->outl_px, p);
-#ifndef M98XX_8BPP
-	      else
-		dyesub_render_row_interlaced_u16(v, pv, caps, row,
-						 (unsigned short *)(destrow + bpp * pv->outl_px),
-						 p);
-#endif
 	    }
 	  else
             dyesub_render_row_packed_u8(v, pv, caps, row,
@@ -9887,16 +9709,8 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   for (i = 0; i < pv.ink_channels; i++)
     stp_channel_add(v, i, 0, 1.0);
 
-#ifndef M98XX_8BPP
-  /* Scale to native output */
-  if (dyesub_feature(caps, DYESUB_FEATURE_12BPP) || dyesub_feature(caps, DYESUB_FEATURE_16BPP)) {
-    pv.out_channels = stp_color_init(v, image, 65536);
-  } else
-#endif
-  {
-    pv.out_channels = stp_color_init(v, image, 256);
-    stp_set_float_parameter(v, "AppGammaScale", 1.0);
-  }
+  pv.out_channels = stp_color_init(v, image, 256);
+  stp_set_float_parameter(v, "AppGammaScale", 1.0);
 
   /* If there's a mismatch in channels, that is ALWAYS a problem */
   if (pv.out_channels != pv.ink_channels)
@@ -9907,29 +9721,6 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
       stp_free(pd);
       return 2;
     }
-
-#ifndef M98XX_8BPP
-  if (dyesub_feature(caps, DYESUB_FEATURE_12BPP)) {
-    pv.bytes_per_ink_channel = 2;
-    pv.bits_per_ink_channel = 12;
-  } else if (dyesub_feature(caps, DYESUB_FEATURE_16BPP)) {
-    pv.bytes_per_ink_channel = 2;
-    pv.bits_per_ink_channel = 16;
-  } else {
-    pv.bytes_per_ink_channel = 1;
-    pv.bits_per_ink_channel = 8;
-  }
-
-  if (pv.bytes_per_ink_channel > 1) {
-#if (__BYTE_ORDER == __LITTLE_ENDIAN)
-    pv.byteswap = dyesub_feature(caps, DYESUB_FEATURE_BIGENDIAN);
-#elif (__BYTE_ORDER == __BIG_ENDIAN)
-    pv.byteswap = !dyesub_feature(caps, DYESUB_FEATURE_BIGENDIAN);
-#else
-#error "Unable to determine endianness, aborting compilation!"
-#endif
-  }
-#endif
 
   pv.image_data = dyesub_read_image(v, &pv, image);
   if (ink_type)
@@ -10028,9 +9819,6 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   pd->w_size = pv.prnw_px;
   pd->h_size = pv.prnh_px;
   pd->print_mode = pv.print_mode;
-#ifndef M98XX_8BPP
-  pd->bpp = pv.bits_per_ink_channel;
-#endif
 
   /* FIXME:  Provide a way of disabling/altering these curves */
   /* XXX reuse 'UseLUT' from mitsu70x?  or 'SimpleGamma' ? */
