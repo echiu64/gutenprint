@@ -113,7 +113,6 @@ typedef int (*send_image_dataFN)(struct BandImage *out, void *context,
 #define USB_PID_MITSU_D70X  0x3B30
 #define USB_PID_MITSU_K60   0x3B31
 #define USB_PID_MITSU_D80   0x3B36
-#define USB_PID_MITSU_D90   0x3B60
 #define USB_VID_KODAK       0x040a
 #define USB_PID_KODAK305    0x404f
 #define USB_VID_FUJIFILM    0x04cb
@@ -135,14 +134,16 @@ struct mitsu70x_ctx {
 	uint8_t *databuf;
 	int datalen;
 
+	struct marker marker[2];
+
 	uint32_t matte;
 
 	uint16_t jobid;
 	uint16_t rows;
 	uint16_t cols;
 
-	uint16_t last_donor_l;
-	uint16_t last_donor_u;
+	uint16_t last_l;
+	uint16_t last_u;
 	int num_decks;
 
 	char *laminatefname;
@@ -382,7 +383,7 @@ static int mitsu70x_get_printerstatus(struct mitsu70x_ctx *ctx, struct mitsu70x_
 
 /* Error dumps, etc */
 
-static char *mitsu70x_temperatures(uint8_t temp)
+const char *mitsu70x_temperatures(uint8_t temp)
 {
 	switch(temp) {
 	case TEMPERATURE_NORMAL:
@@ -397,7 +398,7 @@ static char *mitsu70x_temperatures(uint8_t temp)
 	return "Unknown Temperature Status";
 }
 
-static char *mitsu70x_mechastatus(uint8_t *sts)
+static const char *mitsu70x_mechastatus(uint8_t *sts)
 {
 	switch(sts[0]) {
 	case MECHA_STATUS_INIT:
@@ -417,7 +418,7 @@ static char *mitsu70x_mechastatus(uint8_t *sts)
 	return "Unknown Mechanical Status";
 }
 
-static char *mitsu70x_jobstatuses(uint8_t *sts)
+static const char *mitsu70x_jobstatuses(uint8_t *sts)
 {
 	switch(sts[0]) {
 	case JOB_STATUS0_NONE:
@@ -504,7 +505,7 @@ static char *mitsu70x_jobstatuses(uint8_t *sts)
 	return "Unknown status0";
 }
 
-static char *mitsu70x_errorclass(uint8_t *err)
+static const char *mitsu70x_errorclass(uint8_t *err)
 {
 	switch(err[1]) {
 	case ERROR_STATUS1_PAPER:
@@ -535,7 +536,7 @@ static char *mitsu70x_errorclass(uint8_t *err)
 	return "Unknown error class";
 }
 
-static char *mitsu70x_errorrecovery(uint8_t *err)
+static const char *mitsu70x_errorrecovery(uint8_t *err)
 {
 	switch(err[1]) {
 	case ERROR_STATUS2_AUTO:
@@ -566,7 +567,7 @@ static char *mitsu70x_errorrecovery(uint8_t *err)
 	return "Unknown recovery";
 }
 
-static char *mitsu70x_errors(uint8_t *err)
+static const char *mitsu70x_errors(uint8_t *err)
 {
 	switch(err[0]) {
 	case ERROR_STATUS0_NOSTRIPBIN:
@@ -632,7 +633,7 @@ static char *mitsu70x_errors(uint8_t *err)
 	return "Unknown error";
 }
 
-static const char *mitsu70x_media_types(uint8_t brand, uint8_t type)
+const char *mitsu70x_media_types(uint8_t brand, uint8_t type)
 {
 	if (brand == 0xff && type == 0x01)
 		return "CK-D735 (3.5x5)";
@@ -687,12 +688,10 @@ static void *mitsu70x_init(void)
 	return ctx;
 }
 
-static void mitsu70x_attach(void *vctx, struct libusb_device_handle *dev,
-			    uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
+static int mitsu70x_attach(void *vctx, struct libusb_device_handle *dev, int type,
+			   uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
 {
 	struct mitsu70x_ctx *ctx = vctx;
-	struct libusb_device *device;
-	struct libusb_device_descriptor desc;
 
 	ctx->jobid = jobid;
 	if (!ctx->jobid)
@@ -701,14 +700,9 @@ static void mitsu70x_attach(void *vctx, struct libusb_device_handle *dev,
 	ctx->dev = dev;
 	ctx->endp_up = endp_up;
 	ctx->endp_down = endp_down;
+	ctx->type = type;
 
-	device = libusb_get_device(dev);
-	libusb_get_device_descriptor(device, &desc);
-
-	ctx->type = lookup_printer_type(&mitsu70x_backend,
-					desc.idVendor, desc.idProduct);
-
-	ctx->last_donor_l = ctx->last_donor_u = 65535;
+	ctx->last_l = ctx->last_u = 65535;
 
 	/* Attempt to open the library */
 #if defined(WITH_DYNAMIC)
@@ -722,13 +716,13 @@ static void mitsu70x_attach(void *vctx, struct libusb_device_handle *dev,
 			ERROR("Problem resolving API Version symbol in imaging processing library, too old or not installed?\n");
 			DL_CLOSE(ctx->dl_handle);
 			ctx->dl_handle = NULL;
-			return;
+			return CUPS_BACKEND_FAILED;
 		}
 		if (ctx->GetAPIVersion() != REQUIRED_LIB_APIVERSION) {
 			ERROR("Image processing library API version mismatch!\n");
 			DL_CLOSE(ctx->dl_handle);
 			ctx->dl_handle = NULL;
-			return;
+			return CUPS_BACKEND_FAILED;
 		}
 
 		ctx->Get3DColorTable = DL_SYM(ctx->dl_handle, "CColorConv3D_Get3DColorTable");
@@ -749,6 +743,7 @@ static void mitsu70x_attach(void *vctx, struct libusb_device_handle *dev,
 			ERROR("Problem resolving symbols in imaging processing library\n");
 			DL_CLOSE(ctx->dl_handle);
 			ctx->dl_handle = NULL;
+			return CUPS_BACKEND_FAILED;
 		} else {
 			DEBUG("Image processing library successfully loaded\n");
 		}
@@ -773,10 +768,23 @@ static void mitsu70x_attach(void *vctx, struct libusb_device_handle *dev,
 	struct mitsu70x_printerstatus_resp resp;
 	int ret;
 
-	ret = mitsu70x_get_printerstatus(ctx, &resp);
-	if (ret) {
-		ERROR("Unable to get printer status! (%d)\n", ret);
-		return;
+	if (test_mode < TEST_MODE_NOATTACH) {
+		ret = mitsu70x_get_printerstatus(ctx, &resp);
+		if (ret) {
+			ERROR("Unable to get printer status! (%d)\n", ret);
+			return CUPS_BACKEND_FAILED;
+		}
+	} else {
+		resp.upper.mecha_status[0] = MECHA_STATUS_INIT;
+		resp.lower.mecha_status[0] = MECHA_STATUS_INIT;
+		resp.upper.capacity = cpu_to_be16(230);
+		resp.lower.capacity = cpu_to_be16(230);
+		resp.upper.remain = cpu_to_be16(200);
+		resp.lower.remain = cpu_to_be16(200);
+		resp.upper.media_brand = 0xff;
+		resp.lower.media_brand = 0xff;
+		resp.upper.media_type = 0x0f;
+		resp.lower.media_type = 0x0f;
 	}
 
 	if (ctx->type == P_MITSU_D70X &&
@@ -785,6 +793,21 @@ static void mitsu70x_attach(void *vctx, struct libusb_device_handle *dev,
 		ctx->num_decks = 2;
 	else
 		ctx->num_decks = 1;
+
+	/* Set up markers */
+	ctx->marker[0].color = "#00FFFF#FF00FF#FFFF00";
+	ctx->marker[0].name = mitsu70x_media_types(resp.lower.media_brand, resp.lower.media_type);
+	ctx->marker[0].levelmax = be16_to_cpu(resp.lower.capacity);
+	ctx->marker[0].levelnow = be16_to_cpu(resp.lower.remain);
+
+	if (ctx->num_decks == 2) {
+		ctx->marker[1].color = "#00FFFF#FF00FF#FFFF00";
+		ctx->marker[1].name = mitsu70x_media_types(resp.upper.media_brand, resp.upper.media_type);
+		ctx->marker[1].levelmax = be16_to_cpu(resp.upper.capacity);
+		ctx->marker[1].levelnow = be16_to_cpu(resp.upper.remain);
+	}
+
+	return CUPS_BACKEND_OK;
 }
 
 static void mitsu70x_teardown(void *vctx) {
@@ -851,8 +874,8 @@ repeat:
 	}
 
 	/* Sanity check header */
-	if (mhdr.hdr[0] != 0x1b &&
-	    mhdr.hdr[1] != 0x5a &&
+	if (mhdr.hdr[0] != 0x1b ||
+	    mhdr.hdr[1] != 0x5a ||
 	    mhdr.hdr[2] != 0x54) {
 		ERROR("Unrecognized data format!\n");
 		return CUPS_BACKEND_CANCEL;
@@ -1294,7 +1317,8 @@ static int mitsu70x_get_printerstatus(struct mitsu70x_ctx *ctx, struct mitsu70x_
 	cmdbuf[0] = 0x1b;
 	cmdbuf[1] = 0x56;
 	cmdbuf[2] = 0x32;
-	cmdbuf[3] = 0x30;
+	cmdbuf[3] = 0x30; /* or x31 or x32, for SINGLE DECK query!
+			     Results will only have one deck. */
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
 			     cmdbuf, 4)))
 		return ret;
@@ -1406,6 +1430,7 @@ static int mitsu70x_set_printermode(struct mitsu70x_ctx *ctx, uint8_t enabled)
 	return 0;
 }
 #endif
+
 static int mitsu70x_wakeup(struct mitsu70x_ctx *ctx, int wait)
 {
 	int ret;
@@ -1522,23 +1547,6 @@ top:
 	ret = mitsu70x_get_printerstatus(ctx, &resp);
 	if (ret)
 		return CUPS_BACKEND_FAILED;
-
-	if (ctx->num_decks == 2) {
-		ATTR("marker-colors=#00FFFF#FF00FF#FFFF00,#00FFFF#FF00FF#FFFF00\n");
-		ATTR("marker-high-levels=100,100\n");
-		ATTR("marker-low-levels=10,10\n");
-		ATTR("marker-names='\"%s\"','\"%s\"'\n",
-		     mitsu70x_media_types(resp.lower.media_brand, resp.lower.media_type),
-		     mitsu70x_media_types(resp.upper.media_brand, resp.upper.media_type));
-		ATTR("marker-types=ribbonWax,ribbonWax\n");
-	} else {
-		ATTR("marker-colors=#00FFFF#FF00FF#FFFF00\n");
-		ATTR("marker-high-levels=100\n");
-		ATTR("marker-low-levels=10\n");
-		ATTR("marker-names='%s'\n",
-		     mitsu70x_media_types(resp.lower.media_brand, resp.lower.media_type));
-		ATTR("marker-types=ribbonWax\n");
-	}
 
 	/* FW sanity checking */
 	if (ctx->type == P_KODAK_305) {
@@ -1680,37 +1688,23 @@ skip_status:
 	INFO("Waiting for printer to acknowledge completion\n");
 
 	do {
-		uint16_t donor_u, donor_l;
-
 		sleep(1);
 
 		ret = mitsu70x_get_printerstatus(ctx, &resp);
 		if (ret)
 			return CUPS_BACKEND_FAILED;
 
-		donor_l = be16_to_cpu(resp.lower.remain) * 100 / be16_to_cpu(resp.lower.capacity);
-
+		ctx->marker[0].levelmax = be16_to_cpu(resp.lower.capacity);
+		ctx->marker[0].levelnow = be16_to_cpu(resp.lower.remain);
 		if (ctx->num_decks == 2) {
-			donor_u = be16_to_cpu(resp.upper.remain) * 100 / be16_to_cpu(resp.upper.capacity);
-			if (donor_l != ctx->last_donor_l ||
-			    donor_u != ctx->last_donor_u) {
-				ctx->last_donor_l = donor_l;
-				ctx->last_donor_u = donor_u;
-				ATTR("marker-levels=%d,%d\n", donor_l, donor_u);
-				ATTR("marker-message='\"%d native prints remaining on %s media\"','\"%d native prints remaining on %s media\"'\n",
-				     be16_to_cpu(resp.lower.remain),
-				     mitsu70x_media_types(resp.lower.media_brand, resp.lower.media_type),
-				     be16_to_cpu(resp.upper.remain),
-				     mitsu70x_media_types(resp.upper.media_brand, resp.upper.media_type));
-			}
-		} else {
-			if (donor_l != ctx->last_donor_l) {
-				ctx->last_donor_l = donor_l;
-				ATTR("marker-levels=%d\n", donor_l);
-				ATTR("marker-message=\"%d native prints remaining on %s media\"\n",
-				     be16_to_cpu(resp.lower.remain),
-				     mitsu70x_media_types(resp.lower.media_brand, resp.lower.media_type));
-			}
+			ctx->marker[1].levelmax = be16_to_cpu(resp.upper.capacity);
+			ctx->marker[1].levelnow = be16_to_cpu(resp.upper.remain);
+		}
+		if (ctx->marker[0].levelnow != ctx->last_l ||
+		    ctx->marker[1].levelnow != ctx->last_u) {
+			dump_markers(ctx->marker, ctx->num_decks, 0);
+			ctx->last_l = ctx->marker[0].levelnow;
+			ctx->last_u = ctx->marker[1].levelnow;
 		}
 
 		/* Query job status for our used jobid */
@@ -1993,6 +1987,40 @@ static int mitsu70x_cmdline_arg(void *vctx, int argc, char **argv)
 	return 0;
 }
 
+static int mitsu70x_query_markers(void *vctx, struct marker **markers, int *count)
+{
+	struct mitsu70x_ctx *ctx = vctx;
+	struct mitsu70x_printerstatus_resp resp;
+	int ret;
+
+	*markers = ctx->marker;
+	*count = ctx->num_decks;
+
+	/* Tell CUPS about the consumables we report */
+	ret = mitsu70x_get_printerstatus(ctx, &resp);
+	if (ret)
+		return CUPS_BACKEND_FAILED;
+
+	if (resp.power) {
+		ret = mitsu70x_wakeup(ctx, 1);
+		if (ret)
+			return CUPS_BACKEND_FAILED;
+
+		ret = mitsu70x_get_printerstatus(ctx, &resp);
+		if (ret)
+			return CUPS_BACKEND_FAILED;
+	}
+
+	ctx->marker[0].levelmax = be16_to_cpu(resp.lower.capacity);
+	ctx->marker[0].levelnow = be16_to_cpu(resp.lower.remain);
+	if (ctx->num_decks == 2) {
+		ctx->marker[1].levelmax = be16_to_cpu(resp.upper.capacity);
+		ctx->marker[1].levelnow = be16_to_cpu(resp.upper.remain);
+	}
+
+	return CUPS_BACKEND_OK;
+}
+
 static const char *mitsu70x_prefixes[] = {
 	"mitsu70x",
 	"mitsud80", "mitsuk60", "kodak305", "fujiask300",
@@ -2002,7 +2030,7 @@ static const char *mitsu70x_prefixes[] = {
 /* Exported */
 struct dyesub_backend mitsu70x_backend = {
 	.name = "Mitsubishi CP-D70 family",
-	.version = "0.77",
+	.version = "0.79",
 	.uri_prefixes = mitsu70x_prefixes,
 	.cmdline_usage = mitsu70x_cmdline,
 	.cmdline_arg = mitsu70x_cmdline_arg,
@@ -2012,11 +2040,11 @@ struct dyesub_backend mitsu70x_backend = {
 	.read_parse = mitsu70x_read_parse,
 	.main_loop = mitsu70x_main_loop,
 	.query_serno = mitsu70x_query_serno,
+	.query_markers = mitsu70x_query_markers,
 	.devices = {
 		{ USB_VID_MITSU, USB_PID_MITSU_D70X, P_MITSU_D70X, NULL, "mitsu70x"},
 		{ USB_VID_MITSU, USB_PID_MITSU_K60, P_MITSU_K60, NULL, "mitsuk60"},
 		{ USB_VID_MITSU, USB_PID_MITSU_D80, P_MITSU_D80, NULL, "mitsud80"},
-//		{ USB_VID_MITSU, USB_PID_MITSU_D90, P_MITSU_D90, NULL, "mitsud90"}, // XXX add me in!
 		{ USB_VID_KODAK, USB_PID_KODAK305, P_KODAK_305, NULL, "kodak305"},
 		{ USB_VID_FUJIFILM, USB_PID_FUJI_ASK300, P_FUJI_ASK300, NULL, "fujiask300"},
 		{ 0, 0, 0, NULL, NULL}

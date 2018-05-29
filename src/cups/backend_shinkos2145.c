@@ -91,24 +91,6 @@ struct s2145_printjob_hdr {
 	uint32_t unk21;
 } __attribute__((packed));
 
-/* Private data structure */
-struct shinkos2145_ctx {
-	struct libusb_device_handle *dev;
-	uint8_t endp_up;
-	uint8_t endp_down;
-
-	uint8_t jobid;
-
-	struct s2145_printjob_hdr hdr;
-
-	uint8_t *databuf;
-	int datalen;
-
-	uint16_t last_donor;
-	uint16_t last_remain;
-	uint16_t media_prints;
-};
-
 /* Structs for printer */
 struct s2145_cmd_hdr {
 	uint16_t cmd;
@@ -802,6 +784,26 @@ struct s2145_getunique_resp {
 	uint8_t  data[24];  /* Not necessarily all used. */
 } __attribute__((packed));
 
+/* Private data structure */
+struct shinkos2145_ctx {
+	struct libusb_device_handle *dev;
+	uint8_t endp_up;
+	uint8_t endp_down;
+
+	uint8_t jobid;
+
+	int type;
+
+	struct s2145_printjob_hdr hdr;
+
+	uint8_t *databuf;
+	int datalen;
+
+	struct s2145_mediainfo_resp media;
+	struct marker marker;
+	int media_code;
+};
+
 #define READBACK_LEN 128    /* Needs to be larger than largest response hdr */
 #define CMDBUF_LEN sizeof(struct s2145_print_cmd)
 
@@ -972,26 +974,9 @@ static int get_errorlog(struct shinkos2145_ctx *ctx)
 	return 0;
 }
 
-static int get_mediainfo(struct shinkos2145_ctx *ctx)
+static void dump_mediainfo(struct s2145_mediainfo_resp *resp)
 {
-	struct s2145_cmd_hdr cmd;
-	struct s2145_mediainfo_resp *resp = (struct s2145_mediainfo_resp *) rdbuf;
-	int ret, num = 0;
 	int i;
-
-	cmd.cmd = cpu_to_le16(S2145_CMD_MEDIAINFO);
-	cmd.len = cpu_to_le16(0);
-
-	if ((ret = s2145_do_cmd(ctx,
-				(uint8_t*)&cmd, sizeof(cmd),
-				sizeof(*resp),
-				&num)) < 0) {
-		ERROR("Failed to execute %s command\n", cmd_names(cmd.cmd));
-		return ret;
-	}
-
-	if (le16_to_cpu(resp->hdr.payload_len) != (sizeof(struct s2145_mediainfo_resp) - sizeof(struct s2145_status_hdr)))
-		return -2;
 
 	INFO("Supported Media Information: %u entries:\n", resp->count);
 	for (i = 0 ; i < resp->count ; i++) {
@@ -1002,7 +987,6 @@ static int get_mediainfo(struct shinkos2145_ctx *ctx)
 		     resp->items[i].media_type, media_types(resp->items[i].media_type),
 		     resp->items[i].print_type, print_methods(resp->items[i].print_type));
 	}
-	return 0;
 }
 
 static int get_user_string(struct shinkos2145_ctx *ctx)
@@ -1356,7 +1340,7 @@ int shinkos2145_cmdline_arg(void *vctx, int argc, char **argv)
 			j = set_tonecurve(ctx, TONECURVE_CURRENT, optarg);
 			break;
 		case 'm':
-			j = get_mediainfo(ctx);
+			dump_mediainfo(&ctx->media);
 			break;
 		case 'r':
 			j = reset_curve(ctx, RESET_USER_CURVE);
@@ -1400,22 +1384,59 @@ static void *shinkos2145_init(void)
 	return ctx;
 }
 
-static void shinkos2145_attach(void *vctx, struct libusb_device_handle *dev,
-			       uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
+static int shinkos2145_attach(void *vctx, struct libusb_device_handle *dev, int type,
+			      uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
 {
 	struct shinkos2145_ctx *ctx = vctx;
+	int i;
 
 	ctx->dev = dev;
 	ctx->endp_up = endp_up;
 	ctx->endp_down = endp_down;
+	ctx->type = type;
 
 	/* Ensure jobid is sane */
 	ctx->jobid = (jobid & 0x7f);
 	if (!ctx->jobid)
 		ctx->jobid++;
 
-	/* Initialize donor */
-	ctx->last_donor = ctx->last_remain = ctx->media_prints = 65535;
+	int media_prints = 65536;
+	if (test_mode < TEST_MODE_NOATTACH) {
+		/* Query Media */
+		struct s2145_cmd_hdr cmd;
+		struct s2145_mediainfo_resp *resp = (struct s2145_mediainfo_resp *) rdbuf;
+		int num = 0;
+
+		cmd.cmd = cpu_to_le16(S2145_CMD_MEDIAINFO);
+		cmd.len = cpu_to_le16(0);
+
+		if (s2145_do_cmd(ctx,
+				 (uint8_t*)&cmd, sizeof(cmd),
+				 sizeof(*resp),
+				 &num)) {
+			ERROR("Failed to execute %s command\n", cmd_names(cmd.cmd));
+			return CUPS_BACKEND_FAILED;
+		}
+		memcpy(&ctx->media, resp, sizeof(ctx->media));
+
+		/* Figure out the media type... */
+		for (i = 0 ; i < ctx->media.count ; i++) {
+			if (print_counts(ctx->media.items[i].code) < media_prints) {
+				media_prints = print_counts(ctx->media.items[i].code);
+				ctx->media_code = ctx->media.items[i].code;
+			}
+		}
+	} else {
+		media_prints = 680;
+		ctx->media_code = PRINT_MEDIA_6x9;
+	}
+
+	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
+	ctx->marker.name = print_sizes(ctx->media_code);
+	ctx->marker.levelmax = media_prints;
+	ctx->marker.levelnow = -2;
+
+	return CUPS_BACKEND_OK;
 }
 
 static void shinkos2145_teardown(void *vctx) {
@@ -1521,48 +1542,19 @@ static int shinkos2145_main_loop(void *vctx, int copies) {
 	struct s2145_cmd_hdr *cmd = (struct s2145_cmd_hdr *) cmdbuf;;
 	struct s2145_print_cmd *print = (struct s2145_print_cmd *) cmdbuf;
 	struct s2145_status_resp *sts = (struct s2145_status_resp *) rdbuf;
-	struct s2145_mediainfo_resp *media = (struct s2145_mediainfo_resp *) rdbuf;
-
-	/* Send Media Query */
-	memset(cmdbuf, 0, CMDBUF_LEN);
-	cmd->cmd = cpu_to_le16(S2145_CMD_MEDIAINFO);
-	cmd->len = cpu_to_le16(0);
-
-	if ((ret = s2145_do_cmd(ctx,
-				cmdbuf, sizeof(*cmd),
-				sizeof(*media),
-				&num)) < 0) {
-		ERROR("Failed to execute %s command\n", cmd_names(cmd->cmd));
-		return CUPS_BACKEND_FAILED;
-	}
-
-	if (le16_to_cpu(media->hdr.payload_len) != (sizeof(struct s2145_mediainfo_resp) - sizeof(struct s2145_status_hdr)))
-		return CUPS_BACKEND_FAILED;
 
 	/* Validate print sizes */
-	for (i = 0; i < media->count ; i++) {
-		/* Figure out the media type... */
-		int media_prints = print_counts(media->items[i].code);
-		if (media_prints < ctx->media_prints)
-			ctx->media_prints = media_prints;
-
+	for (i = 0; i < ctx->media.count ; i++) {
 		/* Look for matching media */
-		if (le16_to_cpu(media->items[i].columns) == cpu_to_le16(le32_to_cpu(ctx->hdr.columns)) &&
-		    le16_to_cpu(media->items[i].rows) == cpu_to_le16(le32_to_cpu(ctx->hdr.rows)) &&
-		    media->items[i].print_type == le32_to_cpu(ctx->hdr.method))
+		if (le16_to_cpu(ctx->media.items[i].columns) == cpu_to_le16(le32_to_cpu(ctx->hdr.columns)) &&
+		    le16_to_cpu(ctx->media.items[i].rows) == cpu_to_le16(le32_to_cpu(ctx->hdr.rows)) &&
+		    ctx->media.items[i].print_type == le32_to_cpu(ctx->hdr.method))
 			break;
 	}
-	if (i == media->count) {
+	if (i == ctx->media.count) {
 		ERROR("Incorrect media loaded for print!\n");
 		return CUPS_BACKEND_HOLD;
 	}
-
-        /* Tell CUPS about the consumables we report */
-        ATTR("marker-colors=#00FFFF#FF00FF#FFFF00\n");
-        ATTR("marker-high-levels=100\n");
-        ATTR("marker-low-levels=10\n");
-        ATTR("marker-names='Color'\n");
-        ATTR("marker-types=ribbonWax\n");
 
 	// XXX check copies against remaining media!
 
@@ -1586,23 +1578,14 @@ top:
 	}
 
 	if (memcmp(rdbuf, rdbuf2, READBACK_LEN)) {
-		uint16_t donor, remain;
-
 		memcpy(rdbuf2, rdbuf, READBACK_LEN);
 
 		INFO("Printer Status: 0x%02x (%s)\n",
 		     sts->hdr.status, status_str(sts->hdr.status));
 
-		/* Guessimate a percentage for the remaining media */
-		donor = le32_to_cpu(sts->count_ribbon_left) * 100 / ctx->media_prints;
-		if (donor != ctx->last_donor) {
-			ctx->last_donor = donor;
-			ATTR("marker-levels=%d\n", donor);
-		}
-		remain = le32_to_cpu(sts->count_ribbon_left);
-		if (remain != ctx->last_remain) {
-			ctx->last_remain = remain;
-			ATTR("marker-message=\"%d prints remaining on ribbon\"\n", remain);
+		if (ctx->marker.levelnow != (int)sts->count_ribbon_left) {
+			ctx->marker.levelnow = sts->count_ribbon_left;
+			dump_markers(&ctx->marker, 1, 0);
 		}
 
 		if (sts->hdr.result != RESULT_SUCCESS)
@@ -1685,7 +1668,8 @@ top:
 			INFO("Fast return mode enabled.\n");
 			state = S_FINISHED;
 		} else if (sts->hdr.status == STATUS_READY ||
-			   sts->hdr.status == STATUS_FINISHED) {
+			   sts->hdr.status == STATUS_FINISHED ||
+			   sts->hdr.status == ERROR_PRINTER) {
 			state = S_FINISHED;
 		}
 		break;
@@ -1695,6 +1679,16 @@ top:
 
 	if (state != S_FINISHED)
 		goto top;
+
+	if (sts->hdr.status == ERROR_PRINTER) {
+		if(sts->hdr.error == ERROR_NONE)
+			sts->hdr.error = sts->hdr.status;
+		INFO(" Error 0x%02x (%s) 0x%02x/0x%02x (%s)\n",
+		     sts->hdr.error,
+		     error_str(sts->hdr.error),
+		     sts->hdr.printer_major,
+		     sts->hdr.printer_minor, error_codes(sts->hdr.printer_major, sts->hdr.printer_minor));
+	}
 
 	INFO("Print complete\n");
 
@@ -1745,6 +1739,33 @@ static int shinkos2145_query_serno(struct libusb_device_handle *dev, uint8_t end
 	return CUPS_BACKEND_OK;
 }
 
+static int shinkos2145_query_markers(void *vctx, struct marker **markers, int *count)
+{
+	struct shinkos2145_ctx *ctx = vctx;
+	struct s2145_cmd_hdr cmd;
+	struct s2145_status_resp *sts = (struct s2145_status_resp *) rdbuf;
+	int num;
+
+	/* Query Status */
+	cmd.cmd = cpu_to_le16(S2145_CMD_STATUS);
+	cmd.len = cpu_to_le16(0);
+
+	if (s2145_do_cmd(ctx,
+			 (uint8_t*)&cmd, sizeof(cmd),
+			 sizeof(*sts),
+			 &num)) {
+		ERROR("Failed to execute %s command\n", cmd_names(cmd.cmd));
+		return CUPS_BACKEND_FAILED;
+	}
+
+	ctx->marker.levelnow = ctx->marker.levelmax - le32_to_cpu(sts->count_ribbon_left);
+
+	*markers = &ctx->marker;
+	*count = 1;
+
+	return CUPS_BACKEND_OK;
+}
+
 /* Exported */
 #define USB_VID_SHINKO       0x10CE
 #define USB_PID_SHINKO_S2145 0x000E
@@ -1756,7 +1777,7 @@ static const char *shinkos2145_prefixes[] = {
 
 struct dyesub_backend shinkos2145_backend = {
 	.name = "Shinko/Sinfonia CHC-S2145/S2",
-	.version = "0.50",
+	.version = "0.52",
 	.uri_prefixes = shinkos2145_prefixes,
 	.cmdline_usage = shinkos2145_cmdline,
 	.cmdline_arg = shinkos2145_cmdline_arg,
@@ -1766,6 +1787,7 @@ struct dyesub_backend shinkos2145_backend = {
 	.read_parse = shinkos2145_read_parse,
 	.main_loop = shinkos2145_main_loop,
 	.query_serno = shinkos2145_query_serno,
+	.query_markers = shinkos2145_query_markers,
 	.devices = {
 		{ USB_VID_SHINKO, USB_PID_SHINKO_S2145, P_SHINKO_S2145, NULL, "shinkos2145"},
 		{ 0, 0, 0, NULL, NULL}

@@ -28,7 +28,7 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.79G"
+#define BACKEND_VERSION "0.86G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
@@ -49,6 +49,7 @@ int extra_vid = -1;
 int extra_pid = -1;
 int extra_type = -1;
 int copies = 1;
+int test_mode = 0;
 
 static int max_xfer_size = URB_XFER_SIZE;
 static int xfer_timeout = XFER_TIMEOUT;
@@ -73,6 +74,30 @@ static int backend_claim_interface(struct libusb_device_handle *dev, int iface,
 		ERROR("Failed to claim interface %d (%d)\n", iface, ret);
 
 	return ret;
+}
+
+static int lookup_printer_type(struct dyesub_backend *backend, uint16_t idVendor, uint16_t idProduct)
+{
+	int i;
+	int type = P_UNKNOWN;
+
+	for (i = 0 ; backend->devices[i].vid ; i++) {
+		if (extra_pid != -1 &&
+		    extra_vid != -1 &&
+		    extra_type != -1) {
+			if (backend->devices[i].type == extra_type &&
+			    extra_vid == idVendor &&
+			    extra_pid == idProduct) {
+				return extra_type;
+			}
+		}
+		if (idVendor == backend->devices[i].vid &&
+		    idProduct == backend->devices[i].pid) {
+			return backend->devices[i].type;
+		}
+	}
+
+	return type;
 }
 
 /* Interface **MUST** already be claimed! */
@@ -114,6 +139,9 @@ static char *get_device_id(struct libusb_device_handle *dev, int iface)
 		*buf = '\0';
 		goto done;
 	}
+
+	/* IEEE1284 length field includs the header! */
+	length -= 2;
 
 	/* Move, and terminate */
 	memmove(buf, buf + 2, length);
@@ -635,6 +663,7 @@ extern struct dyesub_backend mitsu9550_backend;
 extern struct dyesub_backend mitsup95d_backend;
 extern struct dyesub_backend dnpds40_backend;
 extern struct dyesub_backend magicard_backend;
+extern struct dyesub_backend mitsud90_backend;
 
 static struct dyesub_backend *backends[] = {
 	&canonselphy_backend,
@@ -648,6 +677,7 @@ static struct dyesub_backend *backends[] = {
 	&shinkos6245_backend,
 	&updr150_backend,
 	&mitsu70x_backend,
+	&mitsud90_backend,
 	&mitsu9550_backend,
 	&mitsup95d_backend,
 	&dnpds40_backend,
@@ -667,6 +697,15 @@ static int find_and_enumerate(struct libusb_context *ctx,
 	int i, j = 0, k;
 	int found = -1;
 	const char *prefix = NULL;
+
+	if (test_mode >= TEST_MODE_NOATTACH) {
+		found = 1;
+		*r_endp_up = 0x82;
+		*r_endp_down = 0x01;
+		*r_iface = 0;
+		*r_altset = 0;
+		return found;
+	}
 
 	STATE("+org.gutenprint-searching-for-device\n");
 
@@ -741,6 +780,27 @@ static struct dyesub_backend *find_backend(char *uri_prefix)
 	return NULL;
 }
 
+static int query_markers(struct dyesub_backend *backend, void *ctx, int full)
+{
+	struct marker *markers = NULL;
+	int marker_count = 0;
+	int ret;
+
+	if (!backend->query_markers)
+		return CUPS_BACKEND_OK;
+
+	if (test_mode >= TEST_MODE_NOPRINT)
+		return CUPS_BACKEND_OK;
+
+	ret = backend->query_markers(ctx, &markers, &marker_count);
+	if (ret)
+		return ret;
+
+	dump_markers(markers, marker_count, full);
+
+	return CUPS_BACKEND_OK;
+}
+
 void print_license_blurb(void)
 {
 	const char *license = "\n\
@@ -757,7 +817,8 @@ or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License\n\
 for more details.\n\
 \n\
 You should have received a copy of the GNU General Public License\n\
-along with this program.  If not, see <https://www.gnu.org/licenses/>.\n\
+along with this program; if not, write to the Free Software\n\
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n\
 \n          [http://www.gnu.org/licenses/gpl-3.0.html]\n\n";
 
 	fprintf(stderr, "%s", license);
@@ -767,7 +828,6 @@ void print_help(char *argv0, struct dyesub_backend *backend)
 {
 	struct libusb_context *ctx = NULL;
 	struct libusb_device **list = NULL;
-	int i;
 
 	char *ptr = strrchr(argv0, '/');
 	if (ptr)
@@ -823,15 +883,49 @@ void print_help(char *argv0, struct dyesub_backend *backend)
 	}
 
 	/* Probe for printers */
-	i = libusb_init(&ctx);
-	if (i) {
-		ERROR("Failed to initialize libusb (%d)\n", i);
-		exit(CUPS_BACKEND_RETRY_CURRENT);
-	}
 	find_and_enumerate(ctx, &list, backend, NULL, 1, 1, NULL, NULL, NULL, NULL);
 	libusb_free_device_list(list, 1);
-	libusb_exit(ctx);
 }
+
+int parse_cmdstream(struct dyesub_backend *backend, void *backend_ctx, int fd)
+{
+	FILE *fp = stdin;
+	char line[128];
+	char *lp;
+
+	if (fd != fileno(stdin)) {
+		fp = fdopen(fd, "r");
+		if (!fp) {
+			ERROR("Can't open data stream!\n");
+			return CUPS_BACKEND_FAILED;
+		}
+	}
+	while (fgets(line, sizeof(line), fp) != NULL) {
+		/* Strip trailing newline */
+		lp = line + strlen(line) - 1;
+		if (*lp == '\n')
+			*lp = '\0';
+		/* And leading spaces */
+		for (lp = line; isspace(*lp); lp++);
+		/* And comments and blank lines */
+		if (*lp == '#' || !*lp)
+			continue;
+
+		/* Parse command! */
+		if (strncasecmp(lp, "ReportLevels", 12) == 0) {
+			query_markers(backend, backend_ctx, 1);
+/* XXX TODO: ReportStatus, AutoConfigure, PrintSelfTestPage?  What about others, eg reset or cancel job? */
+		} else {
+			WARNING("Invalid printer command \"%s\"!\n", lp);
+		}
+	}
+
+	/* Clean up */
+	if (fp != stdin)
+		fclose(fp);
+
+	return CUPS_BACKEND_OK;
+};
 
 int main (int argc, char **argv)
 {
@@ -856,8 +950,10 @@ int main (int argc, char **argv)
 	int current_page = 0;
 
 	char *uri;
+	char *type;
 	char *fname = NULL;
 	char *use_serno = NULL;
+	int  printer_type;
 
 	DEBUG("Multi-Call Dye-sublimation CUPS Backend version %s\n",
 	      BACKEND_VERSION);
@@ -872,8 +968,8 @@ int main (int argc, char **argv)
 	if (getenv("EXTRA_PID"))
 		extra_pid = strtol(getenv("EXTRA_PID"), NULL, 16);
 	if (getenv("EXTRA_VID"))
-		extra_pid = strtol(getenv("EXTRA_VID"), NULL, 16);
-	if (getenv("EXTRA_PID"))
+		extra_vid = strtol(getenv("EXTRA_VID"), NULL, 16);
+	if (getenv("EXTRA_TYPE"))
 		extra_type = atoi(getenv("EXTRA_TYPE"));
 	if (getenv("BACKEND"))
 		backend = find_backend(getenv("BACKEND"));
@@ -883,8 +979,17 @@ int main (int argc, char **argv)
 		max_xfer_size = atoi(getenv("MAX_XFER_SIZE"));
 	if (getenv("XFER_TIMEOUT"))
 		xfer_timeout = atoi(getenv("XFER_TIMEOUT"));
+	if (getenv("TEST_MODE"))
+		test_mode = atoi(getenv("TEST_MODE"));
+
+	if (test_mode >= TEST_MODE_NOATTACH && (extra_vid == -1 || extra_pid == -1)) {
+		ERROR("Must specify EXTRA_VID, EXTRA_PID in test mode > 1!\n");
+		exit(1);
+	}
+
 	use_serno = getenv("SERIAL");
-	uri = getenv("DEVICE_URI");  /* CUPS backend mode? */
+	uri = getenv("DEVICE_URI");  /* CUPS backend mode! */
+	type = getenv("FINAL_CONTENT_TYPE"); /* CUPS content type -- ie raster or command */
 
 	if (uri) {
 		/* CUPS backend mode */
@@ -974,16 +1079,16 @@ int main (int argc, char **argv)
 	/* If we don't have a valid backend, print help and terminate */
 	if (!backend) {
 		print_help(argv[0], NULL); // probes all devices
-		libusb_exit(ctx);
-		exit(1);
+		ret = CUPS_BACKEND_OK;
+		goto done;
 	}
 
 	/* If we're in standalone mode, print help only if no args */
 	if (!uri) {
 		if (argc < 2) {
 			print_help(argv[0], backend); // probes all devices
-			libusb_exit(ctx);
-			exit(1);
+			ret = CUPS_BACKEND_OK;
+			goto done;
 		}
 	}
 
@@ -994,6 +1099,12 @@ int main (int argc, char **argv)
 		ERROR("Printer open failure (No matching printers found!)\n");
 		ret = CUPS_BACKEND_RETRY;
 		goto done;
+	}
+
+	if (test_mode) {
+		WARNING("**** TEST MODE %d!\n", test_mode);
+		if (test_mode >= TEST_MODE_NOATTACH)
+			goto bypass;
 	}
 
 	/* Open an appropriate device */
@@ -1024,19 +1135,47 @@ int main (int argc, char **argv)
 
 	/* Use the appropriate altesetting! */
 	if (altset != 0) {
-		if (libusb_set_interface_alt_setting(dev, iface, altset)) {
-			found = -1;
+		ret = libusb_set_interface_alt_setting(dev, iface, altset);
+		if (ret) {
+			ERROR("Printer open failure (Unable to issue altsettinginterface) (%d)\n", ret);
+			ret = CUPS_BACKEND_RETRY;
 			goto done_close;
 		}
 	}
 
+bypass:
 	/* Initialize backend */
 	DEBUG("Initializing '%s' backend (version %s)\n",
 	      backend->name, backend->version);
 	backend_ctx = backend->init();
 
+	if (test_mode < TEST_MODE_NOATTACH) {
+		struct libusb_device *device;
+		struct libusb_device_descriptor desc;
+
+		device = libusb_get_device(dev);
+		libusb_get_device_descriptor(device, &desc);
+
+		printer_type = lookup_printer_type(backend,
+						   desc.idVendor, desc.idProduct);
+	} else {
+		printer_type = lookup_printer_type(backend,
+						   extra_vid, extra_pid);
+	}
+
+	if (printer_type <= P_UNKNOWN) {
+		ERROR("Unable to lookup printer type\n");
+		ret = CUPS_BACKEND_FAILED;
+		goto done_close;
+	}
+
 	/* Attach backend to device */
-	backend->attach(backend_ctx, dev, endp_up, endp_down, jobid);
+	if (backend->attach(backend_ctx, dev, printer_type, endp_up, endp_down, jobid)) {
+		ERROR("Unable to attach to printer!");
+		ret = CUPS_BACKEND_FAILED;
+		goto done_close;
+	}
+
 //	STATE("+org.gutenprint-attached-to-device\n");
 
 	if (!uri) {
@@ -1058,8 +1197,8 @@ int main (int argc, char **argv)
 		data_fd = open(fname, O_RDONLY);
 		if (data_fd < 0) {
 			perror("ERROR:Can't open input file");
-			libusb_exit(ctx);
-			exit(1);
+			ret = CUPS_BACKEND_FAILED;
+			goto done;
 		}
 	}
 
@@ -1067,15 +1206,15 @@ int main (int argc, char **argv)
 	i = fcntl(data_fd, F_GETFL, 0);
 	if (i < 0) {
 		perror("ERROR:Can't open input");
-		libusb_exit(ctx);
-		exit(1);
+		ret = CUPS_BACKEND_FAILED;
+		goto done;
 	}
 	i &= ~O_NONBLOCK;
 	i = fcntl(data_fd, F_SETFL, i);
 	if (i < 0) {
 		perror("ERROR:Can't open input");
-		libusb_exit(ctx);
-		exit(1);
+		ret = CUPS_BACKEND_FAILED;
+		goto done;
 	}
 
 	/* Ignore SIGPIPE */
@@ -1084,6 +1223,13 @@ int main (int argc, char **argv)
 
 	/* Time for the main processing loop */
 	INFO("Printing started (%d copies)\n", copies);
+
+	/* See if it's a CUPS command stream, and if yes, handle it! */
+	if (type && !strcmp("application/vnd.cups-command", type))
+	{
+		ret = parse_cmdstream(backend, backend_ctx, data_fd);
+		goto done_claimed;
+	}
 
 newpage:
 
@@ -1095,15 +1241,29 @@ newpage:
 			goto done_claimed;
 	}
 
-	INFO("Printing page %d\n", ++current_page);
-
-	ret = backend->main_loop(backend_ctx, copies);
+	/* Dump the full marker dump */
+	ret = query_markers(backend, backend_ctx, !current_page);
 	if (ret)
 		goto done_claimed;
+
+	INFO("Printing page %d\n", ++current_page);
+
+	if (test_mode >= TEST_MODE_NOPRINT ) {
+		WARNING("**** TEST MODE, bypassing printing!\n");
+	} else {
+		ret = backend->main_loop(backend_ctx, copies);
+		if (ret)
+			goto done_claimed;
+	}
 
 	/* Log the completed page */
 	if (!uri)
 		PAGE("%d %d\n", current_page, copies);
+
+	/* Dump a marker status update */
+	ret = query_markers(backend, backend_ctx, !current_page);
+	if (ret)
+		goto done_claimed;
 
 	/* Since we have no way of telling if there's more data remaining
 	   to be read (without actually trying to read it), always assume
@@ -1119,10 +1279,12 @@ done_multiple:
 	ret = CUPS_BACKEND_OK;
 
 done_claimed:
-	libusb_release_interface(dev, iface);
+	if (test_mode < TEST_MODE_NOATTACH)
+		libusb_release_interface(dev, iface);
 
 done_close:
-	libusb_close(dev);
+	if (test_mode < TEST_MODE_NOATTACH)
+		libusb_close(dev);
 done:
 
 	if (backend && backend_ctx) {
@@ -1138,28 +1300,92 @@ done:
 	return ret;
 }
 
-int lookup_printer_type(struct dyesub_backend *backend, uint16_t idVendor, uint16_t idProduct)
+void dump_markers(struct marker *markers, int marker_count, int full)
 {
 	int i;
-	int type = -1;
 
-	for (i = 0 ; backend->devices[i].vid ; i++) {
-		if (extra_pid != -1 &&
-		    extra_vid != -1 &&
-		    extra_type != -1) {
-			if (backend->devices[i].type == extra_type &&
-			    extra_vid == idVendor &&
-			    extra_pid == idProduct) {
-				return extra_type;
-			}
-		}
-		if (idVendor == backend->devices[i].vid &&
-		    idProduct == backend->devices[i].pid) {
-			return backend->devices[i].type;
-		}
+	if (!full)
+		goto minimal;
+
+	ATTR("marker-colors=");
+	for (i = 0 ; i < marker_count; i++) {
+		DEBUG2(markers[i].color);
+		if ((i+1) < marker_count)
+			DEBUG2(",");
 	}
+	DEBUG2("\n");
 
-	return type;
+	ATTR("marker-high-levels=");
+	for (i = 0 ; i < marker_count; i++) {
+		DEBUG2("%d", 100);
+		if ((i+1) < marker_count)
+			DEBUG2(",");
+	}
+	DEBUG2("\n");
+
+	ATTR("marker-low-levels=");
+	for (i = 0 ; i < marker_count; i++) {
+		DEBUG2("%d", 10);
+		if ((i+1) < marker_count)
+			DEBUG2(",");
+	}
+	DEBUG2("\n");
+
+	ATTR("marker-names=");
+	for (i = 0 ; i < marker_count; i++) {
+		DEBUG2("'\"%s\"'", markers[i].name);
+		if ((i+1) < marker_count)
+			DEBUG2(",");
+	}
+	DEBUG2("\n");
+
+	ATTR("marker-types=");
+	for (i = 0 ; i < marker_count; i++) {
+		DEBUG2("ribbonWax");
+		if ((i+1) < marker_count)
+			DEBUG2(",");
+	}
+	DEBUG2("\n");
+
+minimal:
+	ATTR("marker-levels=");
+	for (i = 0 ; i < marker_count; i++) {
+		int val;
+		if (markers[i].levelmax <= 0 || markers[i].levelnow < 0)
+			val = (markers[i].levelnow <= 0) ? markers[i].levelnow : -1;
+		else if (markers[i].levelmax == 100)
+			val = markers[i].levelnow;
+		else
+			val = markers[i].levelnow * 100 / markers[i].levelmax;
+		DEBUG2("%d", val);
+		if ((i+1) < marker_count)
+			DEBUG2(",");
+	}
+	DEBUG2("\n");
+
+	/* Only dump a message if the marker is not a percentage */
+	if (markers[0].levelmax != 100) {
+		ATTR("marker-message=");
+		for (i = 0 ; i < marker_count; i++) {
+			switch (markers[i].levelnow) {
+			case -1:
+				DEBUG2("'\"Unable to query remaining prints on %s media\"'", markers[i].name);
+				break;
+			case -2:
+				DEBUG2("'\"Unknown remaining prints on %s media\"'", markers[i].name);
+				break;
+			case -3:
+				DEBUG2("'\"One or more remaining prints on %s media\"'", markers[i].name);
+				break;
+			default:
+				DEBUG2("'\"%d native prints remaining on %s media\"'", markers[i].levelnow, markers[i].name);
+				break;
+			}
+			if ((i+1) < marker_count)
+				DEBUG2(",");
+		}
+		DEBUG2("\n");
+	}
 }
 
 uint16_t uint16_to_packed_bcd(uint16_t val)

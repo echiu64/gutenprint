@@ -260,43 +260,6 @@ struct shinkos6145_correctionparam {
 	uint8_t  pad[3948];       // @12436, null.
 } __attribute__((packed)); /* 16384 bytes */
 
-/* Private data structure */
-struct shinkos6145_ctx {
-	struct libusb_device_handle *dev;
-	uint8_t endp_up;
-	uint8_t endp_down;
-	int type;
-
-	uint8_t jobid;
-
-	struct s6145_printjob_hdr hdr;
-
-	uint8_t image_avg[3]; /* CMY */
-
-	uint8_t *databuf;
-	size_t datalen;
-
-	uint8_t ribbon_type;
-	uint8_t input_ymc;
-
-	uint16_t last_donor;
-	uint16_t last_remain;
-	uint16_t last_ribbon;
-
-	uint8_t *eeprom;
-	size_t eepromlen;
-
-	void *dl_handle;
-	ImageProcessingFN ImageProcessing;
-	ImageAvrCalcFN ImageAvrCalc;
-
-	struct shinkos6145_correctionparam *corrdata;
-	size_t corrdatalen;
-};
-
-static int shinkos6145_get_imagecorr(struct shinkos6145_ctx *ctx);
-static int shinkos6145_get_eeprom(struct shinkos6145_ctx *ctx);
-
 /* Structs for printer */
 struct s6145_cmd_hdr {
 	uint16_t cmd;
@@ -1116,6 +1079,41 @@ struct s6145_imagecorr_data {
 	uint8_t  data[16];
 } __attribute__((packed));
 
+/* Private data structure */
+struct shinkos6145_ctx {
+	struct libusb_device_handle *dev;
+	uint8_t endp_up;
+	uint8_t endp_down;
+	int type;
+
+	uint8_t jobid;
+
+	struct s6145_printjob_hdr hdr;
+
+	uint8_t image_avg[3]; /* CMY */
+
+	uint8_t *databuf;
+	size_t datalen;
+
+	uint8_t input_ymc;
+
+	struct marker marker;
+
+	struct s6145_mediainfo_resp media;
+
+	uint8_t *eeprom;
+	size_t eepromlen;
+
+	void *dl_handle;
+	ImageProcessingFN ImageProcessing;
+	ImageAvrCalcFN ImageAvrCalc;
+
+	struct shinkos6145_correctionparam *corrdata;
+	size_t corrdatalen;
+};
+
+static int shinkos6145_get_imagecorr(struct shinkos6145_ctx *ctx);
+static int shinkos6145_get_eeprom(struct shinkos6145_ctx *ctx);
 static int get_param(struct shinkos6145_ctx *ctx, int target, uint32_t *param);
 
 #define READBACK_LEN 512    /* Needs to be larger than largest response hdr */
@@ -1235,7 +1233,7 @@ static int get_status(struct shinkos6145_ctx *ctx)
 	INFO("Head Distance:         %08u inches\n", le32_to_cpu(resp2->head_distance));
 
 	/* Query various params */
-	if(ctx->type == P_SHINKO_S6145D) {
+	if (ctx->type == P_SHINKO_S6145D) {
 		if ((ret = get_param(ctx, PARAM_REGION_CODE, &val))) {
 			ERROR("Failed to execute command\n");
 			return ret;
@@ -1356,26 +1354,9 @@ static int get_errorlog(struct shinkos6145_ctx *ctx)
 	return 0;
 }
 
-static int get_mediainfo(struct shinkos6145_ctx *ctx)
+static void dump_mediainfo(struct s6145_mediainfo_resp *resp)
 {
-	struct s6145_cmd_hdr cmd;
-	struct s6145_mediainfo_resp *resp = (struct s6145_mediainfo_resp *) rdbuf;
-	int ret, num = 0;
 	int i;
-
-	cmd.cmd = cpu_to_le16(S6145_CMD_MEDIAINFO);
-	cmd.len = cpu_to_le16(0);
-
-	if ((ret = s6145_do_cmd(ctx,
-				(uint8_t*)&cmd, sizeof(cmd),
-				sizeof(*resp),
-				&num)) < 0) {
-		ERROR("Failed to execute %s command\n", cmd_names(cmd.cmd));
-		return ret;
-	}
-
-	if (le16_to_cpu(resp->hdr.payload_len) != (sizeof(struct s6145_mediainfo_resp) - sizeof(struct s6145_status_hdr)))
-		return -2;
 
 	INFO("Loaded Media Type:  %s\n", print_ribbons(resp->ribbon));
 	INFO("Supported Print Sizes: %u entries:\n", resp->count);
@@ -1386,7 +1367,6 @@ static int get_mediainfo(struct shinkos6145_ctx *ctx)
 		     le16_to_cpu(resp->items[i].rows),
 		     resp->items[i].print_method, print_methods(resp->items[i].print_method));
 	}
-	return 0;
 }
 
 static int cancel_job(struct shinkos6145_ctx *ctx, char *str)
@@ -1866,7 +1846,7 @@ int shinkos6145_cmdline_arg(void *vctx, int argc, char **argv)
 			j = set_tonecurve(ctx, TONECURVE_CURRENT, optarg);
 			break;
 		case 'm':
-			j = get_mediainfo(ctx);
+			dump_mediainfo(&ctx->media);
 			break;
 		case 'q':
 			j = shinkos6145_dump_eeprom(ctx, optarg);
@@ -1910,22 +1890,15 @@ static void *shinkos6145_init(void)
 	return ctx;
 }
 
-static void shinkos6145_attach(void *vctx, struct libusb_device_handle *dev,
-			       uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
+static int shinkos6145_attach(void *vctx, struct libusb_device_handle *dev, int type,
+			      uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
 {
 	struct shinkos6145_ctx *ctx = vctx;
-	struct libusb_device *device;
-	struct libusb_device_descriptor desc;
 
 	ctx->dev = dev;
 	ctx->endp_up = endp_up;
 	ctx->endp_down = endp_down;
-
-	device = libusb_get_device(dev);
-	libusb_get_device_descriptor(device, &desc);
-
-	ctx->type = lookup_printer_type(&shinkos6145_backend,
-					desc.idVendor, desc.idProduct);
+	ctx->type = type;
 
 	/* Attempt to open the library */
 #if defined(WITH_DYNAMIC)
@@ -1953,8 +1926,30 @@ static void shinkos6145_attach(void *vctx, struct libusb_device_handle *dev,
 	/* Ensure jobid is sane */
 	ctx->jobid = (jobid & 0x7f) + 1;
 
-	/* Initialize donor */
-	ctx->last_donor = ctx->last_remain = 65535;
+	if (test_mode < TEST_MODE_NOATTACH) {
+		/* Query Media */
+		struct s6145_mediainfo_resp *resp = (struct s6145_mediainfo_resp *) rdbuf;
+		struct s6145_cmd_hdr cmd;
+		int num;
+
+		if (s6145_do_cmd(ctx,
+				 (uint8_t*)&cmd, sizeof(cmd),
+				 sizeof(*resp),
+				 &num)) {
+			ERROR("Failed to execute %s command\n", cmd_names(cmd.cmd));
+			return CUPS_BACKEND_FAILED;
+		}
+		memcpy(&ctx->media, resp, sizeof(*resp));
+	} else {
+		ctx->media.ribbon = RIBBON_6x8;
+	}
+
+	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
+	ctx->marker.name = print_ribbons(ctx->media.ribbon);
+	ctx->marker.levelmax = ribbon_sizes(ctx->media.ribbon);
+	ctx->marker.levelnow = -2;
+
+	return CUPS_BACKEND_OK;
 }
 
 static void shinkos6145_teardown(void *vctx) {
@@ -2099,6 +2094,11 @@ static int shinkos6145_read_parse(void *vctx, int data_fd) {
 		return CUPS_BACKEND_CANCEL;
 	}
 
+	if (!ctx->hdr.rows || !ctx->hdr.columns) {
+		ERROR("Bad print job header!\n");
+		return CUPS_BACKEND_CANCEL;
+	}
+
 	/* Extended spool format to re-purpose an unused header field.
 	   When bit 0 is set, this tells the backend that the data is
 	   already in planar YMC format (vs packed RGB) so we don't need
@@ -2198,16 +2198,6 @@ static int shinkos6145_main_loop(void *vctx, int copies) {
 		return CUPS_BACKEND_HOLD;
 	}
 
-	ctx->last_ribbon = media->ribbon;
-
-        /* Tell CUPS about the consumables we report */
-        ATTR("marker-colors=#00FFFF#FF00FF#FFFF00\n");
-        ATTR("marker-high-levels=100\n");
-        ATTR("marker-low-levels=10\n");
-        ATTR("marker-names='%s'\n", print_ribbons(media->ribbon));
-        ATTR("marker-types=ribbonWax\n");
-	ctx->ribbon_type = media->ribbon;
-
 	// XXX check copies against remaining media?
 
 	/* Query printer mode */
@@ -2237,23 +2227,14 @@ top:
 	}
 
 	if (memcmp(rdbuf, rdbuf2, READBACK_LEN)) {
-		uint16_t donor, remain;
-
 		memcpy(rdbuf2, rdbuf, READBACK_LEN);
 
 		INFO("Printer Status: 0x%02x (%s)\n",
 		     sts->hdr.status, status_str(sts->hdr.status));
 
-		/* Guessimate a percentage for the remaining media */
-		donor = le32_to_cpu(sts->count_ribbon_left) * 100 / ribbon_sizes(ctx->ribbon_type);
-		if (donor != ctx->last_donor) {
-			ctx->last_donor = donor;
-			ATTR("marker-levels=%d\n", donor);
-		}
-		remain = le32_to_cpu(sts->count_ribbon_left);
-		if (remain != ctx->last_remain) {
-			ctx->last_remain = remain;
-			ATTR("marker-message=\"%d prints remaining on '%s' ribbon\"\n", remain, print_ribbons(media->ribbon));
+		if (ctx->marker.levelnow != (int)sts->count_ribbon_left) {
+			ctx->marker.levelnow = sts->count_ribbon_left;
+			dump_markers(&ctx->marker, 1, 0);
 		}
 
 		if (sts->hdr.result != RESULT_SUCCESS)
@@ -2351,6 +2332,7 @@ top:
 			INFO("Calling image processing library...\n");
 
 			if (ctx->ImageAvrCalc(ctx->databuf, le32_to_cpu(ctx->hdr.columns), le32_to_cpu(ctx->hdr.rows), ctx->image_avg)) {
+				free(databuf2);
 				ERROR("Library returned error!\n");
 				return CUPS_BACKEND_FAILED;
 			}
@@ -2482,6 +2464,33 @@ static int shinkos6145_query_serno(struct libusb_device_handle *dev, uint8_t end
 	return CUPS_BACKEND_OK;
 }
 
+static int shinkos6145_query_markers(void *vctx, struct marker **markers, int *count)
+{
+	struct shinkos6145_ctx *ctx = vctx;
+	struct s6145_cmd_hdr cmd;
+	struct s6145_status_resp *sts = (struct s6145_status_resp *) rdbuf;
+	int num;
+
+	/* Query Status */
+	cmd.cmd = cpu_to_le16(S6145_CMD_GETSTATUS);
+	cmd.len = cpu_to_le16(0);
+
+	if (s6145_do_cmd(ctx,
+			 (uint8_t*)&cmd, sizeof(cmd),
+			 sizeof(*sts),
+			 &num)) {
+		ERROR("Failed to execute %s command\n", cmd_names(cmd.cmd));
+		return CUPS_BACKEND_FAILED;
+	}
+
+	ctx->marker.levelnow = le32_to_cpu(sts->count_ribbon_left);
+
+	*markers = &ctx->marker;
+	*count = 1;
+
+	return CUPS_BACKEND_OK;
+}
+
 /* Exported */
 #define USB_VID_SHINKO        0x10CE
 #define USB_PID_SHINKO_S6145  0x0019
@@ -2494,7 +2503,7 @@ static const char *shinkos6145_prefixes[] = {
 
 struct dyesub_backend shinkos6145_backend = {
 	.name = "Shinko/Sinfonia CHC-S6145/CS2",
-	.version = "0.23",
+	.version = "0.26",
 	.uri_prefixes = shinkos6145_prefixes,
 	.cmdline_usage = shinkos6145_cmdline,
 	.cmdline_arg = shinkos6145_cmdline_arg,
@@ -2504,6 +2513,7 @@ struct dyesub_backend shinkos6145_backend = {
 	.read_parse = shinkos6145_read_parse,
 	.main_loop = shinkos6145_main_loop,
 	.query_serno = shinkos6145_query_serno,
+	.query_markers = shinkos6145_query_markers,
 	.devices = {
 		{ USB_VID_SHINKO, USB_PID_SHINKO_S6145, P_SHINKO_S6145, NULL, "shinkos6145"},
 		{ USB_VID_SHINKO, USB_PID_SHINKO_S6145D, P_SHINKO_S6145D, NULL, "brava21"},

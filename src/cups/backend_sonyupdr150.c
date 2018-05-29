@@ -57,6 +57,8 @@ struct updr150_ctx {
 	int datalen;
 
 	uint32_t copies_offset;
+
+	struct marker marker;
 };
 
 static void* updr150_init(void)
@@ -70,26 +72,26 @@ static void* updr150_init(void)
 	return ctx;
 }
 
-static void updr150_attach(void *vctx, struct libusb_device_handle *dev,
-			   uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
+static int updr150_attach(void *vctx, struct libusb_device_handle *dev, int type,
+			  uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
 {
 	struct updr150_ctx *ctx = vctx;
-	struct libusb_device *device;
-	struct libusb_device_descriptor desc;
 
 	UNUSED(jobid);
 
 	ctx->dev = dev;
 	ctx->endp_up = endp_up;
 	ctx->endp_down = endp_down;
-
-	device = libusb_get_device(dev);
-	libusb_get_device_descriptor(device, &desc);
-
-	ctx->type = lookup_printer_type(&updr150_backend,
-					desc.idVendor, desc.idProduct);
+	ctx->type = type;
 
 	ctx->copies_offset = 0;
+
+	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
+	ctx->marker.name = "Unknown";
+	ctx->marker.levelmax = -1;
+	ctx->marker.levelnow = -2;
+
+	return CUPS_BACKEND_OK;
 }
 
 static void updr150_teardown(void *vctx) {
@@ -276,6 +278,16 @@ static int updr150_cmdline_arg(void *vctx, int argc, char **argv)
 	return 0;
 }
 
+static int updr150_query_markers(void *vctx, struct marker **markers, int *count)
+{
+	struct updr150_ctx *ctx = vctx;
+
+	*markers = &ctx->marker;
+	*count = 1;
+
+	return CUPS_BACKEND_OK;
+}
+
 static const char *sonyupdr150_prefixes[] = {
 	"sonyupdr150", "sonyupdr200", "sonyupcr10",
 	NULL
@@ -283,7 +295,7 @@ static const char *sonyupdr150_prefixes[] = {
 
 struct dyesub_backend updr150_backend = {
 	.name = "Sony UP-DR150/UP-DR200/UP-CR10",
-	.version = "0.21",
+	.version = "0.23",
 	.uri_prefixes = sonyupdr150_prefixes,
 	.cmdline_arg = updr150_cmdline_arg,
 	.init = updr150_init,
@@ -291,6 +303,7 @@ struct dyesub_backend updr150_backend = {
 	.teardown = updr150_teardown,
 	.read_parse = updr150_read_parse,
 	.main_loop = updr150_main_loop,
+	.query_markers = updr150_query_markers,
 	.devices = {
 		{ USB_VID_SONY, USB_PID_SONY_UPDR150, P_SONY_UPDR150, NULL, "sonyupdr150"},
 		{ USB_VID_SONY, USB_PID_SONY_UPDR200, P_SONY_UPDR150, NULL, "sonyupdr200"},

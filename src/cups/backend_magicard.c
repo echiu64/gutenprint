@@ -113,7 +113,7 @@ struct magicard_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;
 	uint8_t endp_down;
-	uint8_t type;
+	int type;
 
 	uint8_t x_gp_8bpp;
 	uint8_t x_gp_rk;
@@ -123,6 +123,8 @@ struct magicard_ctx {
 	int datalen;
 
 	int hdr_len;
+
+	struct marker marker;
 };
 
 struct magicard_cmd_header {
@@ -450,25 +452,24 @@ static void* magicard_init(void)
 	return ctx;
 }
 
-static void magicard_attach(void *vctx, struct libusb_device_handle *dev,
+static int magicard_attach(void *vctx, struct libusb_device_handle *dev, int type,
 			   uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
 {
 	struct magicard_ctx *ctx = vctx;
-	struct libusb_device *device;
-	struct libusb_device_descriptor desc;
 
 	UNUSED(jobid);
 
 	ctx->dev = dev;
 	ctx->endp_up = endp_up;
 	ctx->endp_down = endp_down;
+	ctx->type = type;
 
-	device = libusb_get_device(dev);
-	libusb_get_device_descriptor(device, &desc);
+	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";  // XXX YMCK too!
+	ctx->marker.name = "Unknown"; // LC1/LC3/LC6/LC8
+	ctx->marker.levelmax = -1;
+	ctx->marker.levelnow = -2;
 
-	ctx->type = lookup_printer_type(&magicard_backend,
-					desc.idVendor, desc.idProduct);
-
+	return CUPS_BACKEND_OK;
 }
 
 static void magicard_teardown(void *vctx) {
@@ -888,6 +889,16 @@ static int magicard_cmdline_arg(void *vctx, int argc, char **argv)
 	return 0;
 }
 
+static int magicard_query_markers(void *vctx, struct marker **markers, int *count)
+{
+	struct magicard_ctx *ctx = vctx;
+
+	*markers = &ctx->marker;
+	*count = 1;
+
+	return CUPS_BACKEND_OK;
+}
+
 static const char *magicard_prefixes[] = {
 	"magicard",
 	"tango2e", "enduro", "enduroplus",
@@ -896,7 +907,7 @@ static const char *magicard_prefixes[] = {
 
 struct dyesub_backend magicard_backend = {
 	.name = "Magicard family",
-	.version = "0.11",
+	.version = "0.13",
 	.uri_prefixes = magicard_prefixes,
 	.cmdline_arg = magicard_cmdline_arg,
 	.cmdline_usage = magicard_cmdline,
@@ -905,6 +916,7 @@ struct dyesub_backend magicard_backend = {
 	.teardown = magicard_teardown,
 	.read_parse = magicard_read_parse,
 	.main_loop = magicard_main_loop,
+	.query_markers = magicard_query_markers,
 	.devices = {
 		{ USB_VID_MAGICARD, USB_PID_MAGICARD_TANGO2E, P_MAGICARD, NULL, "tango2e"},
 		{ USB_VID_MAGICARD, USB_PID_MAGICARD_ENDURO, P_MAGICARD, NULL, "enduro"},

@@ -88,48 +88,50 @@
 
 /* To enumerate supported devices */
 enum {
-	P_ANY = 0,
-	P_ES1,
-	P_ES2_20,
-	P_ES3_30,
-	P_ES40,
-	P_CP790,
-	P_CP_XXX,
-	P_CP10,
-	P_CP910,
-	P_KODAK_6800,
-	P_KODAK_6850,
-	P_KODAK_1400_805,
-	P_KODAK_605,
-	P_KODAK_305,
-	P_SHINKO_S2145,
-	P_SHINKO_S1245,
-	P_SHINKO_S6245,
-	P_SHINKO_S6145,
-	P_SHINKO_S6145D,
-	P_SONY_UPDR150,
-	P_SONY_UPCR10,
-	P_MITSU_D70X,
-	P_MITSU_D80,
-	P_MITSU_K60,
-	P_MITSU_9550,
-	P_MITSU_9550S,
-	P_MITSU_9600,
-	P_MITSU_9800,
-	P_MITSU_9800S,
-	P_MITSU_9810,
-	P_MITSU_P93D,
-	P_MITSU_P95D,
-	P_DNP_DS40,
-	P_DNP_DS80,
-	P_DNP_DS80D,
-	P_CITIZEN_CW01,
-	P_CITIZEN_OP900II,
-	P_DNP_DSRX1,
-	P_DNP_DS620,
-	P_DNP_DS820,
-	P_FUJI_ASK300,
-	P_MAGICARD,
+	P_UNKNOWN = 0,
+	P_CP_XXX = 1,
+	P_CP10 = 2,
+	P_CP790 = 3,
+	P_CP900 = 4,
+	P_CP910 = 5,
+	P_ES1 = 6,
+	P_ES2_20 = 7,
+	P_ES3_30 = 8,
+	P_ES40 = 9,
+	P_KODAK_1400_805 = 10,
+	P_KODAK_6800 = 11,
+	P_KODAK_6850 = 12,
+	P_KODAK_305 = 13,
+	P_KODAK_605 = 14,
+	P_SHINKO_S1245 = 15,
+	P_SHINKO_S2145 = 16,
+	P_SHINKO_S6145 = 17,
+	P_SHINKO_S6145D = 18,
+	P_SHINKO_S6245 = 19,
+	P_SONY_UPCR10 = 20,
+	P_SONY_UPDR150 = 21,
+	P_MITSU_9550 = 22,
+	P_MITSU_9550S = 23,
+	P_MITSU_9600 = 24,
+	P_MITSU_9800 = 25,
+	P_MITSU_9800S = 26,
+	P_MITSU_9810 = 27,
+	P_MITSU_D70X = 28,
+	P_MITSU_D80 = 29,
+	P_MITSU_D90 = 30,
+	P_MITSU_K60 = 31,
+	P_MITSU_P93D = 32,
+	P_MITSU_P95D = 33,
+	P_CITIZEN_CW01 = 34,
+	P_CITIZEN_OP900II = 35,
+	P_DNP_DS40 = 36,
+	P_DNP_DS620 = 37,
+	P_DNP_DS80 = 38,
+	P_DNP_DS80D = 39,
+	P_DNP_DS820 = 40,
+	P_DNP_DSRX1 = 41,
+	P_FUJI_ASK300 = 42,
+	P_MAGICARD = 43,
 	P_END,
 };
 
@@ -141,6 +143,13 @@ struct device_id {
 	char *prefix;
 };
 
+struct marker {
+	const char *color;  /* Eg "#00FFFF" */
+	const char *name;   /* Eg "CK9015 (4x6)" */
+	int levelmax; /* Max media count, eg '600', or '-1' */
+	int levelnow; /* Remaining media, -3, -2, -1, 0..N.  See CUPS. */
+};
+
 /* Backend Functions */
 struct dyesub_backend {
 	const char *name;
@@ -148,13 +157,14 @@ struct dyesub_backend {
 	const char **uri_prefixes;
 	void (*cmdline_usage)(void);  /* Optional */
 	void *(*init)(void);
-	void (*attach)(void *ctx, struct libusb_device_handle *dev,
+	int  (*attach)(void *ctx, struct libusb_device_handle *dev, int type,
 		       uint8_t endp_up, uint8_t endp_down, uint8_t jobid);
 	void (*teardown)(void *ctx);
 	int  (*cmdline_arg)(void *ctx, int argc, char **argv);
 	int  (*read_parse)(void *ctx, int data_fd);
 	int  (*main_loop)(void *ctx, int copies);
 	int  (*query_serno)(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, char *buf, int buf_len); /* Optional */
+	int  (*query_markers)(void *ctx, struct marker **markers, int *count);
 	const struct device_id devices[];
 };
 
@@ -163,7 +173,8 @@ int send_data(struct libusb_device_handle *dev, uint8_t endp,
 	      uint8_t *buf, int len);
 int read_data(struct libusb_device_handle *dev, uint8_t endp,
 	      uint8_t *buf, int buflen, int *readlen);
-int lookup_printer_type(struct dyesub_backend *backend, uint16_t idVendor, uint16_t idProduct);
+
+void dump_markers(struct marker *markers, int marker_count, int full);
 
 void print_license_blurb(void);
 void print_help(char *argv0, struct dyesub_backend *backend);
@@ -179,6 +190,14 @@ extern int extra_vid;
 extern int extra_pid;
 extern int extra_type;
 extern int copies;
+extern int test_mode;
+
+enum {
+	TEST_MODE_NONE = 0,
+	TEST_MODE_NOPRINT,
+	TEST_MODE_NOATTACH,
+	TEST_MODE_MAX,
+};
 
 #if defined(BACKEND)
 extern struct dyesub_backend BACKEND;
