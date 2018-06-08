@@ -9446,8 +9446,7 @@ dyesub_render_row_packed_u8(stp_vars_t *v,
 			    const dyesub_cap_t *caps,
 			    int in_row,
 			    char *dest,
-			    int bytes_per_pixel,
-			    int plane)
+			    int bytes_per_pixel)
 {
   int w;
   unsigned short *src;
@@ -9531,7 +9530,6 @@ dyesub_print_plane(stp_vars_t *v,
   for (h = 0; h <= pv->prnb_px - pv->prnt_px; h++)
     {
       int p = pv->row_interlacing ? 0 : plane;
-      int row;
 
       do {
 
@@ -9554,20 +9552,20 @@ dyesub_print_plane(stp_vars_t *v,
 	}
       else
         {
-	  row = dyesub_interpolate(h + pv->prnt_px - pv->outt_px,
-				   pv->outh_px, pv->imgh_px);
+	  int srcrow = dyesub_interpolate(h + pv->prnt_px - pv->outt_px,
+					  pv->outh_px, pv->imgh_px);
 
 	  stp_dprintf(STP_DBG_DYESUB, v,
-		       "dyesub_print_plane: h = %d, row = %d\n", h, row);
+		       "dyesub_print_plane: h = %d, row = %d\n", h, srcrow);
 
 	  if (pv->plane_interlacing || pv->row_interlacing)
 	    {
-	      dyesub_render_row_interlaced_u8(v, pv, caps, row,
+	      dyesub_render_row_interlaced_u8(v, pv, caps, srcrow,
 						destrow + bpp * pv->outl_px, p);
 	    }
 	  else
-            dyesub_render_row_packed_u8(v, pv, caps, row,
-					destrow + bpp * pv->outl_px, bpp, p);
+            dyesub_render_row_packed_u8(v, pv, caps, srcrow,
+					destrow + bpp * pv->outl_px, bpp);
 	}
       /* And send it out */
       stp_zfwrite(destrow, rowlen, 1, v);
