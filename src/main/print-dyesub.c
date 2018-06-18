@@ -4362,8 +4362,8 @@ static const dyesub_pagesize_t mitsu_cpd70x_page[] =
   DEFINE_PAPER_SIMPLE( "w432h648", "6x9", PT1(1864,300), PT1(2730,300), DYESUB_PORTRAIT),
   DEFINE_PAPER( "w432h576-div2", "4x6*2", PT1(1864,300), PT1(2730,300), 0, 0, PT1(236,300), 0, DYESUB_PORTRAIT),
 #if 0 /* Theoretically supported, no way to test */
-  DEFINE_PAPER_SIMPLE( "w432h576-div3", "3x6*3", PT1(1864,300), PT1(2730,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w432h576-div4", "2x6*4", PT1(1864,300), PT1(2730,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w432h648-div3", "3x6*3", PT1(1864,300), PT1(2730,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w432h648-div2", "4.4x6*2", PT1(1864,300), PT1(2730,300), DYESUB_PORTRAIT),
 #endif
 };
@@ -4383,8 +4383,8 @@ static const dyesub_printsize_t mitsu_cpd70x_printsize[] =
   { "300x300", "w432h648", 1864, 2730},
   { "300x300", "w432h576-div2", 1864, 2730},
 #if 0
-  { "300x300", "w432h576-div3", 1864, 2730},
   { "300x300", "w432h576-div4", 1864, 2730},
+  { "300x300", "w432h648-div3", 1864, 2730},
   { "300x300", "w432h648-div2", 1864, 2730},
 #endif
 };
@@ -4576,7 +4576,7 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
 #if 0
   } else if (strcmp(pd->pagesize,"w432h648-div2") == 0) {
     stp_putc(0x02, v);
-  } else if (strcmp(pd->pagesize,"w432h576-div3") == 0) {
+  } else if (strcmp(pd->pagesize,"w432h648-div3") == 0) {
     stp_putc(0x03, v);
   } else if (strcmp(pd->pagesize,"w432h576-div4") == 0) {
     stp_putc(0x04, v);
