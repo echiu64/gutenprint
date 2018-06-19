@@ -5045,6 +5045,94 @@ static void fuji_ask300_printer_init(stp_vars_t *v)
   mitsu_cpd70k60_printer_init(v, 0x80);
 }
 
+/* Fujifilm ASK-2000/2500 */
+static const dyesub_pagesize_t fuji_ask2000_page[] =
+{
+  DEFINE_PAPER_SIMPLE( "B7", "3.5x5", PT1(1074,300), PT1(1536,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w288h432", "4x6", PT1(1228,300), PT1(1832,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w360h504", "5x7", PT1(1568,300), PT1(2130,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w432h576", "6x8", PT1(1832,300), PT1(2432,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER( "w432h576-div2", "4x6*2", PT1(1832,300), PT1(2732,300), 0, 0, PT1(236,300), 0, DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w432h648", "6x9", PT1(1832,300), PT1(2748,300), DYESUB_PORTRAIT),
+};
+
+LIST(dyesub_pagesize_list_t, fuji_ask2000_page_list, dyesub_pagesize_t, fuji_ask2000_page);
+
+static const dyesub_printsize_t fuji_ask2000_printsize[] =
+{
+  { "300x300", "B7", 1074, 1536},
+  { "300x300", "w288h432", 1228, 1832},
+  { "300x300", "w360h504", 1536, 2130},
+  { "300x300", "w432h576", 1864, 2432},
+  { "300x300", "w432h576-div2", 1864, 2732},
+  { "300x300", "w432h648", 1864, 2748},
+};
+
+LIST(dyesub_printsize_list_t, fuji_ask2000_printsize_list, dyesub_printsize_t, fuji_ask2000_printsize);
+
+static void fuji_ask2000_printer_init(stp_vars_t *v)
+{
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  stp_zfwrite("\x1b\x23\x00\x00\x00\x04\x00\xff\xff\xff\xff", 1, 11, v);
+  stp_zfwrite("\x1b\x1e\x00\x00\x00\x0c\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", 1, 19, v);
+  stp_zfwrite("\x1b\xee\x00\x00\x00\x02\x00", 1, 7, v);
+  stp_put16_be(pd->copies, v);
+  stp_zfwrite("\x1b\xe1\x00\x00\x00\x0b\x00\x00\x04\x0c\x00\x00\x00\x00", 1, 14, v);
+  stp_put16_be(pd->w_size, v);
+  stp_put16_be(pd->h_size, v);
+  stp_zfwrite("\x1b\x15\x00\x00\x00\x0d\x00\x00\x00\x00\x00\x60\x00\x00\x00\x00", 1, 16, v);
+  stp_put16_be(pd->w_size, v);
+  stp_put16_be(pd->h_size, v);
+  stp_zfwrite("\x1b\xea\x00\x00\x00\x00", 1, 6, v);
+  stp_put32_be(pd->w_size * pd->h_size * 3, v); /* Data length */
+  stp_putc(0x00, v);
+}
+
+static void fuji_ask2000_printer_end(stp_vars_t *v)
+{
+  stp_zfwrite("\x1b\x23\x00\x00\x00\x04\x00\xff\xff\xff\xff", 1, 11, v);
+  stp_zfwrite("\x1b\x0a\x00\x00\x00\x00\x00", 1, 7, v);
+  stp_zfwrite("\x1b\x23\x00\x00\x00\x04\x00\xff\xff\xff\xff", 1, 11, v);
+}
+
+/* Fujifilm ASK-4000 */
+static const dyesub_pagesize_t fuji_ask4000_page[] =
+{
+  DEFINE_PAPER_SIMPLE( "c8x10", "8x10", PT1(2444,300), PT1(3044,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w576h864", "8x12", PT1(2444,300), PT1(3644,300), DYESUB_PORTRAIT),
+};
+
+LIST(dyesub_pagesize_list_t, fuji_ask4000_page_list, dyesub_pagesize_t, fuji_ask4000_page);
+
+static const dyesub_printsize_t fuji_ask4000_printsize[] =
+{
+  { "300x300", "c8x10", 2444, 3044},
+  { "300x300", "w576h864", 2444, 3644},
+};
+
+LIST(dyesub_printsize_list_t, fuji_ask4000_printsize_list, dyesub_printsize_t, fuji_ask4000_printsize);
+
+static void fuji_ask4000_printer_init(stp_vars_t *v)
+{
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  stp_zfwrite("\x1b\x1e\x00\x00\x00\x0c\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", 1, 19, v);
+  stp_zfwrite("\x1b\xee\x00\x00\x00\x02\x00", 1, 7, v);
+  stp_put16_be(pd->copies, v);
+  stp_zfwrite("\x1b\xe1\x00\x00\x00\x0b\x00\x00\x04\x0c\x00\x00\x00\x00", 1, 14, v);
+  stp_put16_be(pd->w_size, v);
+  stp_put16_be(pd->h_size, v);
+  stp_zfwrite("\x1b\xea\x00\x00\x00\x00", 1, 6, v);
+  stp_put32_be(pd->w_size * pd->h_size * 3, v); /* Data length */
+  stp_putc(0x00, v);
+}
+
+static void fuji_ask4000_printer_end(stp_vars_t *v)
+{
+  stp_zfwrite("\x1b\x0a\x00\x00\x00\x00\x00", 1, 7, v);
+}
+
 /* Shinko CHC-S9045 (experimental) */
 static const dyesub_pagesize_t shinko_chcs9045_page[] =
 {
@@ -8370,6 +8458,38 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     mitsu_p93d_parameter_count,
     mitsu_p93d_load_parameters,
     mitsu_p93d_parse_parameters,
+  },
+  { /* Fujifilm ASK-2000/2500 */
+    4200,
+    &bgr_ink_list,
+    &res_300dpi_list,
+    &fuji_ask2000_page_list,
+    &fuji_ask2000_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    &fuji_ask2000_printer_init, &fuji_ask2000_printer_end,
+    NULL, NULL,
+    NULL, NULL, /* No block funcs */
+    NULL,
+    NULL, NULL,
+    NULL, NULL,
+    NULL, 0, NULL, NULL,
+  },
+  { /* Fujifilm ASK-4000 */
+    4201,
+    &bgr_ink_list,
+    &res_300dpi_list,
+    &fuji_ask4000_page_list,
+    &fuji_ask4000_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    &fuji_ask4000_printer_init, &fuji_ask4000_printer_end,
+    NULL, NULL,
+    NULL, NULL, /* No block funcs */
+    NULL,
+    NULL, NULL,
+    NULL, NULL,
+    NULL, 0, NULL, NULL,
   },
   { /* Shinko CHC-S9045 (experimental) */
     5000,
