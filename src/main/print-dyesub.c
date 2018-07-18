@@ -183,6 +183,7 @@ typedef struct {
 typedef struct
 {
   int multicut;
+  int nocutwaste;
   const char *print_speed; /* DS820 only */
 } dnp_privdata_t;
 
@@ -5837,6 +5838,61 @@ static const overcoat_t dnpds40_overcoat[] =
 
 LIST(overcoat_list_t, dnpds40_overcoat_list, overcoat_t, dnpds40_overcoat);
 
+static const stp_parameter_t ds40_parameters[] =
+{
+  {
+    "NoCutWaste", N_("No Cut-Paper Waste"), "Color=No,Category=Advanced Printer Setup",
+    N_("No Cut-Paper Waste"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 0, STP_CHANNEL_NONE, 1, 0
+  },
+};
+
+#define ds40_parameter_count (sizeof(ds40_parameters) / sizeof(const stp_parameter_t))
+
+static int
+ds40_load_parameters(const stp_vars_t *v, const char *name,
+		     stp_parameter_t *description)
+{
+  int	i;
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
+					stp_get_model_id(v));
+
+  if (caps->parameter_count && caps->parameters)
+    {
+      for (i = 0; i < caps->parameter_count; i++)
+        if (strcmp(name, caps->parameters[i].name) == 0)
+          {
+	    stp_fill_parameter_settings(description, &(caps->parameters[i]));
+	    break;
+          }
+    }
+
+  if (strcmp(name, "NoCutWaste") == 0)
+    {
+      description->is_active = 1;
+      description->deflt.boolean = 0;
+    }
+  else
+    {
+     return 0;
+    }
+
+  return 1;
+}
+
+static int ds40_parse_parameters(stp_vars_t *v)
+{
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  int nocutwaste = stp_get_boolean_parameter(v, "NoCutWaste");
+
+  if (pd) {
+    pd->privdata.dnp.nocutwaste = nocutwaste;
+  }
+
+  return 1;
+}
 
 static void dnp_printer_start_common(stp_vars_t *v)
 {
@@ -5862,15 +5918,16 @@ static void dnpds40_printer_start(stp_vars_t *v)
   if (!strcmp(pd->pagesize, "w432h576-w432h432_w432h144")) {
     stp_zprintf(v, "\033PCNTRL FULL_CUTTER_SET 00000016");
     stp_zprintf(v, "060020000000000\r");
+  } else if (!strcmp(pd->pagesize, "w288h432-div2") ||
+	     !strcmp(pd->pagesize, "w432h576-div4")) {
+    stp_zprintf(v, "\033PCNTRL CUTTER          00000008");
+    stp_zprintf(v, "00000120");
+  } else if (pd->privdata.dnp.nocutwaste) {
+    stp_zprintf(v, "\033PCNTRL CUTTER          00000008");
+    stp_zprintf(v, "00000001");
   } else {
-    stp_zprintf(v, "\033PCNTRL CUTTER          0000000800000");
-    if (!strcmp(pd->pagesize, "w288h432-div2")) {
-      stp_zprintf(v, "120");
-    } else if (!strcmp(pd->pagesize, "w432h576-div4")) {
-      stp_zprintf(v, "120");
-    } else {
-      stp_zprintf(v, "000");
-    }
+    stp_zprintf(v, "\033PCNTRL CUTTER          00000008");
+    stp_zprintf(v, "00000000");
   }
 
   /* Configure multi-cut/page size */
@@ -6016,6 +6073,7 @@ static int dnpds80_parse_parameters(stp_vars_t *v)
   const char *pagesize = stp_get_string_parameter(v, "PageSize");
   dyesub_privdata_t *pd = get_privdata(v);
   int multicut = 0;
+  int nocutwaste = stp_get_boolean_parameter(v, "NoCutWaste");
 
   if (!strcmp(pagesize, "c8x10")) {
     multicut = 6;
@@ -6053,8 +6111,10 @@ static int dnpds80_parse_parameters(stp_vars_t *v)
   }
 
   /* No need to set global params if there's no privdata yet */
-  if (pd)
+  if (pd) {
     pd->privdata.dnp.multicut = multicut;
+    pd->privdata.dnp.nocutwaste = nocutwaste;
+  }
 
  return 1;
 }
@@ -6067,7 +6127,11 @@ static void dnpds80_printer_start(stp_vars_t *v)
   dnp_printer_start_common(v);
 
   /* Set cutter option to "normal" */
-  stp_zprintf(v, "\033PCNTRL CUTTER          0000000800000000");
+  stp_zprintf(v, "\033PCNTRL CUTTER          00000008");
+  if (pd->privdata.dnp.nocutwaste)
+    stp_zprintf(v, "00000001");
+  else
+    stp_zprintf(v, "00000000");
 
   /* Configure multi-cut/page size */
   stp_zprintf(v, "\033PIMAGE MULTICUT        00000008%08d", pd->privdata.dnp.multicut);
@@ -6089,10 +6153,12 @@ static int dnpds80dx_parse_parameters(stp_vars_t *v)
   const char* duplex_mode;
   dyesub_privdata_t *pd = get_privdata(v);
   int multicut = 0;
+  int nocutwaste;
 
   pagesize = stp_get_string_parameter(v, "PageSize");
   duplex_mode = stp_get_string_parameter(v, "Duplex");
   media = dyesub_get_mediatype(v);
+  nocutwaste = stp_get_boolean_parameter(v, "NoCutWaste");
 
   if (!strcmp(media->name, "Roll")) {
     if (strcmp(duplex_mode, "None") && strcmp(duplex_mode, "Standard")) {
@@ -6147,6 +6213,7 @@ static int dnpds80dx_parse_parameters(stp_vars_t *v)
      multicut += 200; /* Duplex, front */
 
   pd->privdata.dnp.multicut = multicut;
+  pd->privdata.dnp.nocutwaste = nocutwaste;
 
   return 1;
 }
@@ -6279,13 +6346,15 @@ static void dnpdsrx1_printer_start(stp_vars_t *v)
   dnp_printer_start_common(v);
 
   /* Set cutter option to "normal" */
-  stp_zprintf(v, "\033PCNTRL CUTTER          0000000800000");
+  stp_zprintf(v, "\033PCNTRL CUTTER          00000008");
   if (!strcmp(pd->pagesize, "w288h432-div2")) {
-    stp_zprintf(v, "120");
+    stp_zprintf(v, "00000120");
   } else if (!strcmp(pd->pagesize, "w432h576-div4")) {
-    stp_zprintf(v, "120");
+    stp_zprintf(v, "00000120");
+  } else if (pd->privdata.dnp.nocutwaste) {
+    stp_zprintf(v, "00000001");
   } else {
-    stp_zprintf(v, "000");
+    stp_zprintf(v, "00000000");
   }
 
   /* Configure multi-cut/page size */
@@ -6410,6 +6479,9 @@ static void dnpds620_printer_start(stp_vars_t *v)
   } else if (!strcmp(pd->pagesize, "w288h432-div2")) {
     stp_zprintf(v, "\033PCNTRL CUTTER          00000008");
     stp_zprintf(v, "00000120");
+  } else if (pd->privdata.dnp.nocutwaste) {
+    stp_zprintf(v, "\033PCNTRL CUTTER          00000008");
+    stp_zprintf(v, "00000001");
   } else {
     stp_zprintf(v, "\033PCNTRL CUTTER          00000008");
     stp_zprintf(v, "00000000");
@@ -6554,6 +6626,15 @@ static void dnpds820_printer_start(stp_vars_t *v)
   /* Common code */
   dnp_printer_start_common(v);
 
+  /* No-cut waste */
+  if (pd->privdata.dnp.nocutwaste) {
+    stp_zprintf(v, "\033PCNTRL CUTTER          00000008");
+    stp_zprintf(v, "00000001");
+  } else {
+    stp_zprintf(v, "\033PCNTRL CUTTER          00000008");
+    stp_zprintf(v, "00000000");
+  }
+
   /* Configure multi-cut/page size */
   stp_zprintf(v, "\033PIMAGE MULTICUT        00000008000000");
 
@@ -6636,6 +6717,12 @@ static const stp_parameter_t ds820_parameters[] =
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
+  {
+    "NoCutWaste", N_("No Cut-Paper Waste"), "Color=No,Category=Advanced Printer Setup",
+    N_("No Cut-Paper Waste"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 0, STP_CHANNEL_NONE, 1, 0
+  },
 };
 #define ds820_parameter_count (sizeof(ds820_parameters) / sizeof(const stp_parameter_t))
 
@@ -6671,6 +6758,11 @@ ds820_load_parameters(const stp_vars_t *v, const char *name,
       description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
       description->is_active = 1;
     }
+  else if (strcmp(name, "NoCutWaste") == 0)
+    {
+      description->is_active = 1;
+      description->deflt.boolean = 0;
+    }
   else
   {
      return 0;
@@ -6681,12 +6773,12 @@ ds820_load_parameters(const stp_vars_t *v, const char *name,
 static int ds820_parse_parameters(stp_vars_t *v)
 {
   dyesub_privdata_t *pd = get_privdata(v);
-  const char *print_speed;
-
-  print_speed = stp_get_string_parameter(v, "PrintSpeed");
+  const char *print_speed = stp_get_string_parameter(v, "PrintSpeed");
+  int nocutwaste = stp_get_boolean_parameter(v, "NoCutWaste");
 
   if (pd) {
     pd->privdata.dnp.print_speed = print_speed;
+    pd->privdata.dnp.nocutwaste = nocutwaste;
   }
 
   return 1;
@@ -8619,7 +8711,10 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL,
     &dnpds40_overcoat_list, NULL,
     NULL, NULL,
-    NULL, 0, NULL, NULL,
+    ds40_parameters,
+    ds40_parameter_count,
+    ds40_load_parameters,
+    ds40_parse_parameters,
   },
   { /* Dai Nippon Printing DS80 */
     6001,
@@ -8636,7 +8731,10 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL,
     &dnpds40_overcoat_list, NULL,
     NULL, NULL,
-    NULL, 0, NULL, dnpds80_parse_parameters,
+    ds40_parameters,
+    ds40_parameter_count,
+    ds40_load_parameters,
+    dnpds80dx_parse_parameters,
   },
   { /* Dai Nippon Printing DSRX1 */
     6002,
@@ -8653,7 +8751,10 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL,
     &dnpds40_overcoat_list, NULL,
     NULL, NULL,
-    NULL, 0, NULL, NULL,
+    ds40_parameters,
+    ds40_parameter_count,
+    ds40_load_parameters,
+    ds40_parse_parameters,
   },
   { /* Dai Nippon Printing DS620 */
     6003,
@@ -8670,7 +8771,10 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL,
     &dnpds620_overcoat_list, NULL,
     NULL, NULL,
-    NULL, 0, NULL, NULL,
+    ds40_parameters,
+    ds40_parameter_count,
+    ds40_load_parameters,
+    ds40_parse_parameters,
   },
   { /* Citizen CW-01 */
     6005,
@@ -8704,7 +8808,10 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL,
     &dnpds40_overcoat_list, &dnpds80dx_media_list,
     NULL, NULL,
-    NULL, 0, NULL, dnpds80dx_parse_parameters,
+    ds40_parameters,
+    ds40_parameter_count,
+    ds40_load_parameters,
+    dnpds80dx_parse_parameters,
   },
   { /* Dai Nippon Printing DS820 */
     6007,
