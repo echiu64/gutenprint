@@ -8734,7 +8734,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     ds40_parameters,
     ds40_parameter_count,
     ds40_load_parameters,
-    dnpds80dx_parse_parameters,
+    dnpds80_parse_parameters,
   },
   { /* Dai Nippon Printing DSRX1 */
     6002,
