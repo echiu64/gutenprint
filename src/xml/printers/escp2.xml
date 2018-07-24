@@ -80,6 +80,7 @@
       <printer translate="name" name="Epson B-500DN" driver="escp2-b500dn" manufacturer="Epson" model="87" parameters="standard_params" />
       <printer translate="name" name="Epson B-508DN" driver="escp2-b508dn" manufacturer="Epson" model="87" parameters="standard_params" />
       <printer translate="name" name="Epson B-510DN" driver="escp2-b510dn" manufacturer="Epson" model="87" parameters="standard_params" />
+      <printer translate="name" name="Epson Expression ET-2600 EcoTank" driver="escp2-et2600" manufacturer="Epson" model="80" parameters="cx3500_params" />
       <printer translate="name" name="Epson L120" driver="escp2-l120" manufacturer="Epson" model="80" parameters="cx3500_params" />
       <printer translate="name" name="Epson L210" driver="escp2-l210" manufacturer="Epson" model="80" parameters="cx3500_params" />
       <printer translate="name" name="Epson L310" driver="escp2-l310" manufacturer="Epson" model="129" parameters="cx3500_params" />
