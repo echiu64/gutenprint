@@ -5997,7 +5997,7 @@ static void dnpds40_plane_init(stp_vars_t *v)
   stp_put32_le(11808, v); /* horizontal pixels per meter, fixed at 300dpi */
   if (pd->h_dpi == 600)
     stp_put32_le(23615, v); /* vertical pixels per meter @ 600dpi */
-  if (pd->h_dpi == 334)
+  else if (pd->h_dpi == 334)
     stp_put32_le(13146, v); /* vertical pixels per meter @ 334dpi */
   else
     stp_put32_le(11808, v); /* vertical pixels per meter @ 300dpi */
