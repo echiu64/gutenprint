@@ -57,7 +57,7 @@ extern int stp_init(void);
 /**
  * Set global error output function.  This may be called prior to
  * stp_init().
- * @param function to perform error output.  Default is to write to stderr.
+ * @param val function to perform error output.  Default is to write to stderr.
  */
 extern void stp_set_global_errfunc(stp_outfunc_t val);
 
@@ -71,7 +71,7 @@ extern stp_outfunc_t stp_get_global_errfunc(void);
 /**
  * Set global debug output function.  This may be called prior to
  * stp_init().
- * @param function to perform debug output.  Default is to write to stderr
+ * @param val function to perform debug output.  Default is to write to stderr
  */
 extern void stp_set_global_dbgfunc(stp_outfunc_t val);
 
@@ -85,7 +85,7 @@ extern stp_outfunc_t stp_get_global_dbgfunc(void);
 /**
  * Set global error output data.  This may be called prior to
  * stp_init().
- * @param data (e. g. FILE * or file descriptor) to perform error output.
+ * @param val data (e. g. FILE * or file descriptor) to perform error output.
  */
 extern void stp_set_global_errdata(void * val);
 
@@ -99,7 +99,7 @@ extern void * stp_get_global_errdata(void);
 /**
  * Set global debug output data.  This may be called prior to
  * stp_init().
- * @param data (e. g. FILE * or file descriptor) to perform debug output.
+ * @param val data (e. g. FILE * or file descriptor) to perform debug output.
  */
 extern void stp_set_global_dbgdata(void *val);
 

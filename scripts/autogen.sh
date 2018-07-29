@@ -313,7 +313,7 @@ if test -d /usr/share/sgml/docbook ;  then
 fi
 
 {
-  test -d "/usr/share/sgml/docbook_4" || test -d "/usr/share/sgml/docbook/dtd/4.0" || test -d "/usr/share/sgml/docbook_4.1" || test -n "$fedora_docbook"
+  test -d "/usr/share/sgml/docbook_4" || test -d "/usr/share/sgml/docbook/dtd/4.0" || test -d "/usr/share/sgml/docbook/dtd/4.1" || test -d "/usr/share/sgml/docbook_4.1" || test -n "$fedora_docbook"
 } || {
   echo " "
   echo "***Warning***: You must have Docbook v4 installed to"
