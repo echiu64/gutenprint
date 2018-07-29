@@ -595,6 +595,23 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL
   },
+  { /* Canon BJC S9000 */
+    "S9000", 3,
+    INCH(13), INCH(23),      /* from product specs online: H: 13", V: 19" (leave at 23") */
+    10, 10, 9, 15,  /* confirmed */
+    &canon_MULTIPASS_MP150_slotlist,
+    CANON_CAP_STD0|CANON_CAP_I|CANON_CAP_px|CANON_CAP_rr,0,
+    2,0,
+    0, /* Upper/Lower Cassette option */
+    control_cmd_PIXMA_iP2700,
+    &canon_BJC_S900_modelist,
+    &canon_BJC_S800_paperlist,
+    &canon_BJC_S900_modeuselist,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+  },  
   { /* Canon  BJ 30   *//* heads: BC-10 */
     "30", 1,
     INCH(19/2), INCH(14),
