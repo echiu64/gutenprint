@@ -2735,8 +2735,7 @@ static const char *dnpds40_prefixes[] = {
 #define USB_PID_DNP_DS40  0x0003 // Also Citizen CX
 #define USB_PID_DNP_DS80  0x0004 // Also Citizen CX-W and Mitsubishi CP-3800DW
 #define USB_PID_DNP_DSRX1 0x0005 // Also Citizen CY
-#define USB_PID_DNP_DS80D 0x0007
-#define USB_PID_DNP_DS620_OLD 0x0008
+#define USB_PID_DNP_DS80D 0x0008
 
 #define USB_PID_CITIZEN_CW01 0x0002 // Maybe others?
 #define USB_PID_CITIZEN_CW02 0x0006 // Also OP900II
@@ -2749,7 +2748,7 @@ static const char *dnpds40_prefixes[] = {
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS-series / Citizen C-series",
-	.version = "0.103",
+	.version = "0.103.1",
 	.uri_prefixes = dnpds40_prefixes,
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
@@ -2764,7 +2763,6 @@ struct dyesub_backend dnpds40_backend = {
 		{ USB_VID_CITIZEN, USB_PID_DNP_DS40, P_DNP_DS40, NULL, "dnpds40"},  // Also Citizen CX
 		{ USB_VID_CITIZEN, USB_PID_DNP_DS80, P_DNP_DS80, NULL, "dnpds80"},  // Also Citizen CX-W and Mitsubishi CP-3800DW
 		{ USB_VID_CITIZEN, USB_PID_DNP_DSRX1, P_DNP_DSRX1, NULL, "dnpdx1"}, // Also Citizen CY
-		{ USB_VID_CITIZEN, USB_PID_DNP_DS620_OLD, P_DNP_DS620, NULL, "dnpds620"},
 		{ USB_VID_DNP, USB_PID_DNP_DS620, P_DNP_DS620, NULL, "dnpds620"},
 		{ USB_VID_CITIZEN, USB_PID_DNP_DS80D, P_DNP_DS80D, NULL, "dnpds80dx"},
 		{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW01, P_CITIZEN_CW01, NULL, "citizencw01"}, // Also OP900 ?
