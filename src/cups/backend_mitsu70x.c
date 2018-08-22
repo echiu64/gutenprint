@@ -125,31 +125,44 @@ typedef int (*send_image_dataFN)(struct BandImage *out, void *context,
 #define CHUNK_LEN (256*1024)
 
 /* Private data structure */
+struct mitsu70x_printjob {
+	uint8_t *databuf;
+	int datalen;
+
+	uint8_t *spoolbuf;
+	int spoolbuflen;
+
+	uint16_t rows;
+	uint16_t cols;
+	uint32_t planelen;
+	uint32_t matte;
+	int raw_format;
+	int copies;
+
+	/* These are used only for the image processing */
+	int sharpen; /* ie mhdr.sharpen - 1 */
+	int reverse;
+
+	char *laminatefname;
+	char *lutfname;
+	char *cpcfname;
+	char *ecpcfname;
+};
+
 struct mitsu70x_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;
 	uint8_t endp_down;
 	int type;
 
-	uint8_t *databuf;
-	int datalen;
+	uint16_t jobid;
 
 	struct marker marker[2];
-
-	uint32_t matte;
-
-	uint16_t jobid;
-	uint16_t rows;
-	uint16_t cols;
+	uint8_t medias[2];
 
 	uint16_t last_l;
 	uint16_t last_u;
 	int num_decks;
-
-	char *laminatefname;
-	char *lutfname;
-	char *cpcfname;
-	char *ecpcfname;
 
 	void *dl_handle;
 	lib70x_getapiversionFN GetAPIVersion;
@@ -172,12 +185,6 @@ struct mitsu70x_ctx {
 	char *last_cpcfname;
 	char *last_ecpcfname;
 
-	int raw_format;
-	int reverse;
-	int sharpen; /* ie mhdr.sharpen - 1 */
-
-	uint8_t rew[2]; /* 1 for rewind ok (default!) */
-
 	struct BandImage output;
 };
 
@@ -192,7 +199,9 @@ struct mitsu70x_jobstatus {
 	uint8_t  mecha_status[2];
 	uint8_t  temperature;
 	uint8_t  error_status[3];
-	uint8_t  reserved[6];
+	uint8_t  mecha_status_up[2];
+	uint8_t  temperature_up;
+	uint8_t  error_status_up[3];
 } __attribute__((packed));
 
 struct mitsu70x_job {
@@ -380,6 +389,7 @@ struct mitsu70x_hdr {
 } __attribute__((packed));
 
 static int mitsu70x_get_printerstatus(struct mitsu70x_ctx *ctx, struct mitsu70x_printerstatus_resp *resp);
+static int mitsu70x_main_loop(void *vctx, const void *vjob);
 
 /* Error dumps, etc */
 
@@ -787,9 +797,9 @@ static int mitsu70x_attach(void *vctx, struct libusb_device_handle *dev, int typ
 		resp.lower.media_type = 0x0f;
 	}
 
+	/* Figure out if we're a D707 with two decks */
 	if (ctx->type == P_MITSU_D70X &&
-	    resp.upper.mecha_status[0] != MECHA_STATUS_INIT &&
-		resp.upper.capacity != 0xffff)
+	    resp.upper.mecha_status[0] != MECHA_STATUS_INIT)
 		ctx->num_decks = 2;
 	else
 		ctx->num_decks = 1;
@@ -799,15 +809,28 @@ static int mitsu70x_attach(void *vctx, struct libusb_device_handle *dev, int typ
 	ctx->marker[0].name = mitsu70x_media_types(resp.lower.media_brand, resp.lower.media_type);
 	ctx->marker[0].levelmax = be16_to_cpu(resp.lower.capacity);
 	ctx->marker[0].levelnow = be16_to_cpu(resp.lower.remain);
+	ctx->medias[0] = resp.lower.media_type & 0xf;
 
 	if (ctx->num_decks == 2) {
 		ctx->marker[1].color = "#00FFFF#FF00FF#FFFF00";
 		ctx->marker[1].name = mitsu70x_media_types(resp.upper.media_brand, resp.upper.media_type);
 		ctx->marker[1].levelmax = be16_to_cpu(resp.upper.capacity);
 		ctx->marker[1].levelnow = be16_to_cpu(resp.upper.remain);
+		ctx->medias[1] = resp.upper.media_type & 0xf;
 	}
 
 	return CUPS_BACKEND_OK;
+}
+
+static void mitsu70x_cleanup_job(const void *vjob) {
+	const struct mitsu70x_printjob *job = vjob;
+
+	if (job->databuf)
+		free(job->databuf);
+	if (job->spoolbuf)
+		free(job->spoolbuf);
+
+	free((void*)job);
 }
 
 static void mitsu70x_teardown(void *vctx) {
@@ -815,9 +838,6 @@ static void mitsu70x_teardown(void *vctx) {
 
 	if (!ctx)
 		return;
-
-	if (ctx->databuf)
-		free(ctx->databuf);
 
 	if (ctx->dl_handle) {
 		if (ctx->cpcdata)
@@ -834,34 +854,174 @@ static void mitsu70x_teardown(void *vctx) {
 	free(ctx);
 }
 
-static int mitsu70x_read_parse(void *vctx, int data_fd) {
+#define JOB_EQUIV(__x)  if (job1->__x != job2->__x) goto done
+
+static struct mitsu70x_printjob *combine_jobs(const struct mitsu70x_printjob *job1,
+					      const struct mitsu70x_printjob *job2)
+{
+	struct mitsu70x_printjob *newjob = NULL;
+	uint16_t newrows;
+	uint16_t newcols;
+	uint32_t newpad, finalpad;
+	uint16_t lamoffset;
+
+	const struct mitsu70x_hdr *hdr1, *hdr2;
+	struct mitsu70x_hdr *newhdr;
+
+        /* Sanity check */
+        if (!job1 || !job2)
+                goto done;
+
+	hdr1 = (struct mitsu70x_hdr *) job1->databuf;
+	hdr2 = (struct mitsu70x_hdr *) job2->databuf;
+
+	JOB_EQUIV(rows);
+	JOB_EQUIV(cols);
+	JOB_EQUIV(matte);
+	JOB_EQUIV(sharpen);
+
+	if (hdr1->multicut || hdr2->multicut)
+		goto done;
+	if (job1->raw_format || job2->raw_format)
+		goto done;
+	if (hdr1->speed != hdr2->speed)
+		goto done;
+
+	switch (job1->rows) {
+	case 1218:  /* K60, EK305 */
+		newrows = 2454;
+		newpad = 16;
+		finalpad = 0;
+		lamoffset = 0;
+		break;
+	case 1228:  /* D70, ASK300, D80 */
+		newrows = 2730;
+		newpad = 38;
+		finalpad = 236;
+		lamoffset = 12;
+		break;
+	case 1076: /* EK305, K60 3.5x5" prints */
+		newrows = 2190;
+		newpad = 49;
+		finalpad = 0;
+		lamoffset = 0;
+		break;
+	default:
+		goto done;
+	}
+	newcols = job1->cols;
+	newpad *= newcols;
+	finalpad *= newcols;
+
+	/* Okay, it's kosher to proceed */
+
+	DEBUG("Combining jobs to save media\n");
+
+        newjob = malloc(sizeof(*newjob));
+        if (!newjob) {
+                ERROR("Memory allocation failure!\n");
+                goto done;
+        }
+        memcpy(newjob, job1, sizeof(*newjob));
+
+	newjob->spoolbuf = NULL;
+	newjob->rows = newrows;
+	newjob->cols = newcols;
+	newjob->planelen = (((newrows * newcols * 2) + 511) /512) * 512;
+	if (newjob->matte) {
+		newjob->matte = ((((newrows + lamoffset) * newcols * 2) + 511) / 512) * 512;
+	}
+        newjob->databuf = malloc(sizeof(*newhdr) + newjob->planelen * 3 + newjob->matte);
+        newjob->datalen = 0;
+        if (!newjob->databuf) {
+		mitsu70x_cleanup_job(newjob);
+		newjob = NULL;
+                ERROR("Memory allocation failure!\n");
+                goto done;
+        }
+	newhdr = (struct mitsu70x_hdr *) newjob->databuf;
+
+	/* Copy over header */
+	memcpy(newhdr, hdr1, sizeof(*newhdr));
+	newjob->datalen += sizeof(*newhdr);
+
+	newhdr->rows = cpu_to_be16(newrows);
+	newhdr->cols = cpu_to_be16(newcols);
+
+	if (newjob->matte) {
+		newhdr->lamrows = cpu_to_be16(newrows + lamoffset);
+		newhdr->lamcols = cpu_to_be16(newcols);
+	}
+	newhdr->multicut = 1;
+	newhdr->deck = 0;  /* Let printer decide */
+
+	newjob->spoolbuf = malloc(newrows * newcols * 3);
+	newjob->spoolbuflen = 0;
+	if (!newjob->spoolbuf) {
+		mitsu70x_cleanup_job(newjob);
+		newjob = NULL;
+                ERROR("Memory allocation failure!\n");
+                goto done;
+	}
+
+	/* Fill in padding */
+	memset(newjob->spoolbuf + newjob->spoolbuflen, 0xff, finalpad * 3);
+	newjob->spoolbuflen += finalpad * 3;
+
+	/* Copy image payload */
+	memcpy(newjob->spoolbuf + newjob->spoolbuflen, job1->spoolbuf,
+	       job1->spoolbuflen);
+	newjob->spoolbuflen += job1->spoolbuflen;
+
+	/* Fill in padding */
+	memset(newjob->spoolbuf + newjob->spoolbuflen, 0xff, newpad * 3);
+	newjob->spoolbuflen += newpad * 3;
+
+	/* Copy image payload */
+	memcpy(newjob->spoolbuf + newjob->spoolbuflen, job2->spoolbuf,
+	       job2->spoolbuflen);
+	newjob->spoolbuflen += job2->spoolbuflen;
+
+	/* Okay, we're done. */
+
+done:
+	return newjob;
+}
+#undef JOB_EQUIV
+
+static int mitsu70x_read_parse(void *vctx, const void **vjob, int data_fd, int copies) {
 	struct mitsu70x_ctx *ctx = vctx;
 	int i, remain;
 	struct mitsu70x_hdr mhdr;
-	uint32_t planelen;
+
+	struct mitsu70x_printjob *job = NULL;
+	struct dyesub_joblist *list;
+	int can_combine;
 
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
 
-	if (ctx->databuf) {
-		free(ctx->databuf);
-		ctx->databuf = NULL;
+	job = malloc(sizeof(*job));
+	if (!job) {
+		ERROR("Memory allocation failure!\n");
+		return CUPS_BACKEND_RETRY_CURRENT;
 	}
-
-	/* Reset some state */
-	ctx->matte = 0;
-	ctx->rew[0] = 1;
-	ctx->rew[1] = 1;
+	memset(job, 0, sizeof(*job));
+	job->copies = copies;
 
 repeat:
 	/* Read in initial header */
 	remain = sizeof(mhdr);
 	while (remain > 0) {
 		i = read(data_fd, ((uint8_t*)&mhdr) + sizeof(mhdr) - remain, remain);
-		if (i == 0)
+		if (i == 0) {
+			mitsu70x_cleanup_job(job);
 			return CUPS_BACKEND_CANCEL;
-		if (i < 0)
+		}
+		if (i < 0) {
+			mitsu70x_cleanup_job(job);
 			return CUPS_BACKEND_CANCEL;
+		}
 		remain -= i;
 	}
 
@@ -878,10 +1038,11 @@ repeat:
 	    mhdr.hdr[1] != 0x5a ||
 	    mhdr.hdr[2] != 0x54) {
 		ERROR("Unrecognized data format!\n");
+		mitsu70x_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
 	}
 
-	ctx->raw_format = !mhdr.mode;
+	job->raw_format = !mhdr.mode;
 
 	/* Sanity check Matte mode */
 	if (!mhdr.laminate && mhdr.laminate_mode) {
@@ -900,61 +1061,61 @@ repeat:
 
 	/* Figure out the correction data table to use */
 	if (ctx->type == P_MITSU_D70X) {
-		ctx->laminatefname = CORRTABLE_PATH "/D70MAT01.raw";
-		ctx->lutfname = CORRTABLE_PATH "/CPD70L01.lut";
+		job->laminatefname = CORRTABLE_PATH "/D70MAT01.raw";
+		job->lutfname = CORRTABLE_PATH "/CPD70L01.lut";
 
 		if (mhdr.speed == 3) {
-			ctx->cpcfname = CORRTABLE_PATH "/CPD70S01.cpc";
+			job->cpcfname = CORRTABLE_PATH "/CPD70S01.cpc";
 		} else if (mhdr.speed == 4) {
-			ctx->cpcfname = CORRTABLE_PATH "/CPD70U01.cpc";
+			job->cpcfname = CORRTABLE_PATH "/CPD70U01.cpc";
 		} else {
-			ctx->cpcfname = CORRTABLE_PATH "/CPD70N01.cpc";
+			job->cpcfname = CORRTABLE_PATH "/CPD70N01.cpc";
 		}
 		if (mhdr.hdr[3] != 0x01) {
 			WARNING("Print job has wrong submodel specifier (%x)\n", mhdr.hdr[3]);
 			mhdr.hdr[3] = 0x01;
 		}
 	} else if (ctx->type == P_MITSU_D80) {
-		ctx->laminatefname = CORRTABLE_PATH "/D80MAT01.raw";
-		ctx->lutfname = CORRTABLE_PATH "/CPD80L01.lut";
+		job->laminatefname = CORRTABLE_PATH "/D80MAT01.raw";
+		job->lutfname = CORRTABLE_PATH "/CPD80L01.lut";
 
 		if (mhdr.speed == 3) {
-			ctx->cpcfname = CORRTABLE_PATH "/CPD80S01.cpc";
-			ctx->ecpcfname = CORRTABLE_PATH "/CPD80E01.cpc";
+			job->cpcfname = CORRTABLE_PATH "/CPD80S01.cpc";
+			job->ecpcfname = CORRTABLE_PATH "/CPD80E01.cpc";
 		} else if (mhdr.speed == 4) {
-			ctx->cpcfname = CORRTABLE_PATH "/CPD80U01.cpc";
-			ctx->ecpcfname = NULL;
+			job->cpcfname = CORRTABLE_PATH "/CPD80U01.cpc";
+			job->ecpcfname = NULL;
 		} else {
-			ctx->cpcfname = CORRTABLE_PATH "/CPD80N01.cpc";
-			ctx->ecpcfname = NULL;
+			job->cpcfname = CORRTABLE_PATH "/CPD80N01.cpc";
+			job->ecpcfname = NULL;
 		}
 		if (mhdr.hdr[3] != 0x01) {
 			WARNING("Print job has wrong submodel specifier (%x)\n", mhdr.hdr[3]);
 			mhdr.hdr[3] = 0x01;
 		}
 	} else if (ctx->type == P_MITSU_K60) {
-		ctx->laminatefname = CORRTABLE_PATH "/S60MAT02.raw";
-		ctx->lutfname = CORRTABLE_PATH "/CPS60L01.lut";
+		job->laminatefname = CORRTABLE_PATH "/S60MAT02.raw";
+		job->lutfname = CORRTABLE_PATH "/CPS60L01.lut";
 
 		if (mhdr.speed == 3 || mhdr.speed == 4) {
 			mhdr.speed = 4; /* Ultra Fine */
-			ctx->cpcfname = CORRTABLE_PATH "/CPS60T03.cpc";
+			job->cpcfname = CORRTABLE_PATH "/CPS60T03.cpc";
 		} else {
-			ctx->cpcfname = CORRTABLE_PATH "/CPS60T01.cpc";
+			job->cpcfname = CORRTABLE_PATH "/CPS60T01.cpc";
 		}
 		if (mhdr.hdr[3] != 0x00) {
 			WARNING("Print job has wrong submodel specifier (%x)\n", mhdr.hdr[3]);
 			mhdr.hdr[3] = 0x00;
 		}
 	} else if (ctx->type == P_KODAK_305) {
-		ctx->laminatefname = CORRTABLE_PATH "/EK305MAT.raw"; // Same as K60
-		ctx->lutfname = CORRTABLE_PATH "/EK305L01.lut";
+		job->laminatefname = CORRTABLE_PATH "/EK305MAT.raw"; // Same as K60
+		job->lutfname = CORRTABLE_PATH "/EK305L01.lut";
 
 		if (mhdr.speed == 3 || mhdr.speed == 4) {
 			mhdr.speed = 4; /* Ultra Fine */
-			ctx->cpcfname = CORRTABLE_PATH "/EK305T03.cpc";
+			job->cpcfname = CORRTABLE_PATH "/EK305T03.cpc";
 		} else {
-			ctx->cpcfname = CORRTABLE_PATH "/EK305T01.cpc";
+			job->cpcfname = CORRTABLE_PATH "/EK305T01.cpc";
 		}
 		// XXX what about using K60 media if we read back the proper code?
 		if (mhdr.hdr[3] != 0x90) {
@@ -962,13 +1123,13 @@ repeat:
 			mhdr.hdr[3] = 0x90;
 		}
 	} else if (ctx->type == P_FUJI_ASK300) {
-		ctx->laminatefname = CORRTABLE_PATH "/ASK300M2.raw"; // Same as D70
-//		ctx->lutfname = CORRTABLE_PATH "/CPD70L01.lut";  // XXX guess, driver did not come with external LUT!
+		job->laminatefname = CORRTABLE_PATH "/ASK300M2.raw"; // Same as D70
+//		job->lutfname = CORRTABLE_PATH "/CPD70L01.lut";  // XXX guess, driver did not come with external LUT!
 		if (mhdr.speed == 3 || mhdr.speed == 4) {
 			mhdr.speed = 3; /* Super Fine */
-			ctx->cpcfname = CORRTABLE_PATH "/ASK300T3.cpc";
+			job->cpcfname = CORRTABLE_PATH "/ASK300T3.cpc";
 		} else {
-			ctx->cpcfname = CORRTABLE_PATH "/ASK300T1.cpc";
+			job->cpcfname = CORRTABLE_PATH "/ASK300T1.cpc";
 		}
 		if (mhdr.hdr[3] != 0x80) {
 			WARNING("Print job has wrong submodel specifier (%x)\n", mhdr.hdr[3]);
@@ -976,10 +1137,10 @@ repeat:
 		}
 	}
 	if (!mhdr.use_lut)
-		ctx->lutfname = NULL;
+		job->lutfname = NULL;
 
-	ctx->sharpen = mhdr.sharpen - 1;
-	ctx->reverse = !mhdr.reversed;
+	job->sharpen = mhdr.sharpen - 1;
+	job->reverse = !mhdr.reversed;
 
 	/* Clean up header back to pristine. */
 	mhdr.use_lut = 0;
@@ -988,195 +1149,162 @@ repeat:
 	mhdr.reversed = 0;
 
 	/* Work out total printjob size */
-	ctx->cols = be16_to_cpu(mhdr.cols);
-	ctx->rows = be16_to_cpu(mhdr.rows);
+	job->cols = be16_to_cpu(mhdr.cols);
+	job->rows = be16_to_cpu(mhdr.rows);
 
-	planelen = ctx->rows * ctx->cols * 2;
-	planelen = (planelen + 511) / 512 * 512; /* Round to nearest 512 bytes. */
+	job->planelen = job->rows * job->cols * 2;
+	job->planelen = (job->planelen + 511) / 512 * 512; /* Round to nearest 512 bytes. */
 
 	if (!mhdr.laminate && mhdr.laminate_mode) {
 		i = be16_to_cpu(mhdr.lamcols) * be16_to_cpu(mhdr.lamrows) * 2;
 		i = (i + 511) / 512 * 512; /* Round to nearest 512 bytes. */
-		ctx->matte = i;
+		job->matte = i;
 	}
 
-	remain = 3 * planelen + ctx->matte;
+	remain = 3 * job->planelen + job->matte;
 
-	ctx->datalen = 0;
-	ctx->databuf = malloc(sizeof(mhdr) + remain + LAMINATE_STRIDE*2);  /* Give us a bit extra */
+	job->datalen = 0;
+	job->databuf = malloc(sizeof(mhdr) + remain + LAMINATE_STRIDE*2);  /* Give us a bit extra */
 
-	if (!ctx->databuf) {
+	if (!job->databuf) {
 		ERROR("Memory allocation failure!\n");
+		mitsu70x_cleanup_job(job);
 		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 
-	memcpy(ctx->databuf + ctx->datalen, &mhdr, sizeof(mhdr));
-	ctx->datalen += sizeof(mhdr);
+	memcpy(job->databuf + job->datalen, &mhdr, sizeof(mhdr));
+	job->datalen += sizeof(mhdr);
 
-	if (ctx->raw_format) { /* RAW MODE */
+	if (job->raw_format) { /* RAW MODE */
 		DEBUG("Reading in %d bytes of 16bpp YMCL data\n", remain);
 
 		/* Read in the spool data */
 		while(remain) {
-			i = read(data_fd, ctx->databuf + ctx->datalen, remain);
-			if (i == 0)
-				return CUPS_BACKEND_CANCEL;
-			if (i < 0)
-				return CUPS_BACKEND_CANCEL;
-			ctx->datalen += i;
-			remain -= i;
-		}
-	} else {  /* RAW MODE OFF */
-		int spoolbuflen = 0;
-		uint8_t *spoolbuf;
-
-		remain = ctx->rows * ctx->cols * 3;
-		DEBUG("Reading in %d bytes of 8bpp BGR data\n", remain);
-
-		spoolbuflen = 0;
-		spoolbuf = malloc(remain);
-		if (!spoolbuf) {
-			ERROR("Memory allocation failure!\n");
-			return CUPS_BACKEND_RETRY_CURRENT;
-		}
-
-		/* Read in the BGR data */
-		while (remain) {
-			i = read(data_fd, spoolbuf + spoolbuflen, remain);
+			i = read(data_fd, job->databuf + job->datalen, remain);
 			if (i == 0) {
-				free(spoolbuf);
+				mitsu70x_cleanup_job(job);
 				return CUPS_BACKEND_CANCEL;
 			}
 			if (i < 0) {
-				free(spoolbuf);
+				mitsu70x_cleanup_job(job);
 				return CUPS_BACKEND_CANCEL;
 			}
-			spoolbuflen += i;
+			job->datalen += i;
 			remain -= i;
 		}
+		goto done;
+	}
 
-		/* Run through basic LUT, if present and enabled */
-		if (ctx->dl_handle && ctx->lutfname && !ctx->lut) {  /* printer-specific, it is fixed per-job */
-			DEBUG("Running print data through LUT\n");
-			uint8_t *buf = malloc(LUT_LEN);
-			if (!buf) {
-				ERROR("Memory allocation failure!\n");
-				return CUPS_BACKEND_RETRY_CURRENT;
-			}
-			if (ctx->Get3DColorTable(buf, ctx->lutfname)) {
-				ERROR("Unable to open LUT file '%s'\n", ctx->lutfname);
-				return CUPS_BACKEND_CANCEL;
-			}
-			ctx->lut = ctx->Load3DColorTable(buf);
-			free(buf);
-			if (!ctx->lut) {
-				ERROR("Unable to parse LUT file '%s'!\n", ctx->lutfname);
-				return CUPS_BACKEND_CANCEL;
-			}
-			ctx->DoColorConv(ctx->lut, spoolbuf, ctx->cols, ctx->rows, ctx->cols * 3, COLORCONV_BGR);
-		}
+	/* Non-RAW mode! */
 
-		if (ctx->dl_handle) {
-			struct BandImage input;
+	remain = job->rows * job->cols * 3;
+	DEBUG("Reading in %d bytes of 8bpp BGR data\n", remain);
 
+	job->spoolbuflen = 0;
+	job->spoolbuf = malloc(remain);
+	if (!job->spoolbuf) {
+		ERROR("Memory allocation failure!\n");
+		mitsu70x_cleanup_job(job);
+		return CUPS_BACKEND_RETRY_CURRENT;
+	}
 
-			/* Load in the CPC file, if needed */
-			if (ctx->cpcfname && ctx->cpcfname != ctx->last_cpcfname) {
-				ctx->last_cpcfname = ctx->cpcfname;
-				if (ctx->cpcdata)
-					ctx->DestroyCPCData(ctx->cpcdata);
-				ctx->cpcdata = ctx->GetCPCData(ctx->cpcfname);
-				if (!ctx->cpcdata) {
-					ERROR("Unable to load CPC file '%s'\n", ctx->cpcfname);
-					return CUPS_BACKEND_CANCEL;
-				}
-			}
-
-			/* Load in the secondary CPC, if needed */
-			if (ctx->ecpcfname != ctx->last_ecpcfname) {
-				ctx->last_ecpcfname = ctx->ecpcfname;
-				if (ctx->ecpcdata)
-					ctx->DestroyCPCData(ctx->ecpcdata);
-				if (ctx->ecpcfname) {
-					ctx->ecpcdata = ctx->GetCPCData(ctx->ecpcfname);
-					if (!ctx->ecpcdata) {
-						ERROR("Unable to load CPC file '%s'\n", ctx->cpcfname);
-						return CUPS_BACKEND_CANCEL;
-					}
-				} else {
-					ctx->ecpcdata = NULL;
-				}
-			}
-
-			/* Convert using image processing library */
-			input.origin_rows = input.origin_cols = 0;
-			input.rows = ctx->rows;
-			input.cols = ctx->cols;
-			input.imgbuf = spoolbuf;
-			input.bytes_per_row = ctx->cols * 3;
-
-			ctx->output.origin_rows = ctx->output.origin_cols = 0;
-			ctx->output.rows = ctx->rows;
-			ctx->output.cols = ctx->cols;
-			ctx->output.imgbuf = ctx->databuf + ctx->datalen;
-			ctx->output.bytes_per_row = ctx->cols * 3 * 2;
-
-			DEBUG("Running print data through processing library\n");
-			if (ctx->DoImageEffect(ctx->cpcdata, ctx->ecpcdata,
-					       &input, &ctx->output, ctx->sharpen, ctx->reverse, ctx->rew)) {
-				ERROR("Image Processing failed, aborting!\n");
-				return CUPS_BACKEND_CANCEL;
-			}
-		} else {
-			// XXXFALLBACK write fallback code?
-			ERROR("!!! Image Processing Library not found, aborting!\n");
+	/* Read in the BGR data */
+	while (remain) {
+		i = read(data_fd, job->spoolbuf + job->spoolbuflen, remain);
+		if (i == 0) {
+			mitsu70x_cleanup_job(job);
 			return CUPS_BACKEND_CANCEL;
 		}
+		if (i < 0) {
+			mitsu70x_cleanup_job(job);
+			return CUPS_BACKEND_CANCEL;
+		}
+		job->spoolbuflen += i;
+		remain -= i;
+	}
 
-		/* Move up the pointer to after the image data */
-		ctx->datalen += 3*planelen;
+	if (!ctx->dl_handle) {
+		// XXXFALLBACK write fallback code?
+		ERROR("!!! Image Processing Library not found, aborting!\n");
+		mitsu70x_cleanup_job(job);
+		return CUPS_BACKEND_CANCEL;
+	}
 
-		/* Clean up */
-		free(spoolbuf);
-
-		/* Now that we've filled everything in, read matte from file */
-		if (ctx->matte) {
-			int fd;
-			uint32_t j;
-			DEBUG("Reading %u bytes of matte data from disk (%d/%d)\n", ctx->matte, ctx->cols, LAMINATE_STRIDE);
-			fd = open(ctx->laminatefname, O_RDONLY);
-			if (fd < 0) {
-				ERROR("Unable to open matte lamination data file '%s'\n", ctx->laminatefname);
-				return CUPS_BACKEND_CANCEL;
-			}
-
-			for (j = 0 ; j < be16_to_cpu(mhdr.lamrows) ; j++) {
-				remain = LAMINATE_STRIDE * 2;
-
-				/* Read one row of lamination data at a time */
-				while (remain) {
-					i = read(fd, ctx->databuf + ctx->datalen, remain);
-					if (i < 0)
-						return CUPS_BACKEND_CANCEL;
-					if (i == 0) {
-						/* We hit EOF, restart from beginning */
-						lseek(fd, 0, SEEK_SET);
-						continue;
-					}
-					ctx->datalen += i;
-					remain -= i;
-				}
-				/* Back off the buffer so we "wrap" on the print row. */
-				ctx->datalen -= ((LAMINATE_STRIDE - ctx->cols) * 2);
-			}
-			/* We're done */
-			close(fd);
-
-			/* Zero out the tail end of the buffer. */
-			j = be16_to_cpu(mhdr.lamcols) * be16_to_cpu(mhdr.lamrows) * 2;
-			memset(ctx->databuf + ctx->datalen, 0, ctx->matte - j);
+	/* Run through basic LUT, if present and enabled */
+	if (job->lutfname && !ctx->lut) {  /* printer-specific, it is fixed per-job */
+		uint8_t *buf = malloc(LUT_LEN);
+		if (!buf) {
+			ERROR("Memory allocation failure!\n");
+			mitsu70x_cleanup_job(job);
+			return CUPS_BACKEND_RETRY_CURRENT;
+		}
+		if (ctx->Get3DColorTable(buf, job->lutfname)) {
+			ERROR("Unable to open LUT file '%s'\n", job->lutfname);
+			mitsu70x_cleanup_job(job);
+			return CUPS_BACKEND_CANCEL;
+		}
+		ctx->lut = ctx->Load3DColorTable(buf);
+		free(buf);
+		if (!ctx->lut) {
+			ERROR("Unable to parse LUT file '%s'!\n", job->lutfname);
+			mitsu70x_cleanup_job(job);
+			return CUPS_BACKEND_CANCEL;
 		}
 	}
+
+	if (job->lutfname && ctx->lut) {
+		DEBUG("Running print data through LUT\n");
+		ctx->DoColorConv(ctx->lut, job->spoolbuf, job->cols, job->rows, job->cols * 3, COLORCONV_BGR);
+	}
+
+done:
+	list = dyesub_joblist_create(&mitsu70x_backend, ctx);
+
+	/* 6x4 can be combined, only on 6x8/6x9" media. */
+	// XXX TODO: Don't combine if one deck is an exact match!
+	// XXX what about splitting copies between decks?
+	can_combine = 0;
+	if (job->rows == 1218 ||
+	    job->rows == 1228) {
+		if (ctx->medias[0] == 0xf ||
+		    ctx->medias[0] == 0x5 ||
+		    ctx->medias[1] == 0xf || /* Two decks possible */
+		    ctx->medias[1] == 0x5)
+			can_combine = !job->raw_format;
+	} else if (job->rows == 1076) {
+		if (ctx->type == P_KODAK_305 ||
+		    ctx->type == P_MITSU_K60) {
+			if (ctx->medias[0] == 0x4)  /* Only one deck */
+				can_combine = !job->raw_format;
+		}
+	}
+
+	if (copies > 1 && can_combine) {
+		struct mitsu70x_printjob *combined;
+                combined = combine_jobs(job, job);
+                if (combined) {
+                        combined->copies = job->copies / 2;
+			dyesub_joblist_addjob(list, combined);
+
+			if (job->copies & 1) {
+				job->copies = 1;
+			} else {
+				mitsu70x_cleanup_job(job);
+				job = NULL;
+			}
+		}
+	}
+
+	if (job) {
+		dyesub_joblist_addjob(list, job);
+	}
+
+	/* All further work is in main loop */
+	if (test_mode >= TEST_MODE_NOPRINT)
+		dyesub_joblist_print(list);
+
+	*vjob = list;
+
 	return CUPS_BACKEND_OK;
 }
 
@@ -1249,7 +1377,7 @@ static int mitsu70x_get_jobs(struct mitsu70x_ctx *ctx, struct mitsu70x_jobs *res
 }
 #endif
 
-static int mitsu70x_get_memorystatus(struct mitsu70x_ctx *ctx, uint8_t mcut, struct mitsu70x_memorystatus_resp *resp)
+static int mitsu70x_get_memorystatus(struct mitsu70x_ctx *ctx, const struct mitsu70x_printjob *job, uint8_t mcut, struct mitsu70x_memorystatus_resp *resp)
 {
 	uint8_t cmdbuf[CMDBUF_LEN];
 
@@ -1263,11 +1391,11 @@ static int mitsu70x_get_memorystatus(struct mitsu70x_ctx *ctx, uint8_t mcut, str
 	cmdbuf[1] = 0x56;
 	cmdbuf[2] = 0x33;
 	cmdbuf[3] = 0x00;
-	tmp = cpu_to_be16(ctx->cols);
+	tmp = cpu_to_be16(job->cols);
 	memcpy(cmdbuf + 4, &tmp, 2);
 
 	/* We have to lie about print sizes in 4x6*2 multicut modes */
-	tmp = ctx->rows;
+	tmp = job->rows;
 	if (tmp == 2730 && mcut == 1) {
 		if (ctx->type == P_MITSU_D70X ||
 		    ctx->type == P_FUJI_ASK300) {
@@ -1277,7 +1405,7 @@ static int mitsu70x_get_memorystatus(struct mitsu70x_ctx *ctx, uint8_t mcut, str
 
 	tmp = cpu_to_be16(tmp);
 	memcpy(cmdbuf + 6, &tmp, 2);
-	cmdbuf[8] = ctx->matte ? 0x80 : 0x00;
+	cmdbuf[8] = job->matte ? 0x80 : 0x00;
 	cmdbuf[9] = 0x00;
 
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
@@ -1305,7 +1433,6 @@ static int mitsu70x_get_memorystatus(struct mitsu70x_ctx *ctx, uint8_t mcut, str
 
 	return 0;
 }
-
 
 static int mitsu70x_get_printerstatus(struct mitsu70x_ctx *ctx, struct mitsu70x_printerstatus_resp *resp)
 {
@@ -1490,7 +1617,7 @@ static int d70_library_callback(void *context, void *buffer, uint32_t len)
 	return ret;
 }
 
-static int mitsu70x_main_loop(void *vctx, int copies)
+static int mitsu70x_main_loop(void *vctx, const void *vjob)
 {
 	struct mitsu70x_ctx *ctx = vctx;
 	struct mitsu70x_jobstatus jobstatus;
@@ -1500,11 +1627,131 @@ static int mitsu70x_main_loop(void *vctx, int copies)
 	int statusdump = 0;
 
 	int ret;
+	int copies;
+
+	struct mitsu70x_printjob *job = (struct mitsu70x_printjob *) vjob; // XXX not clean.
+//	const struct mitsu70x_printjob *job = vjob;
 
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
+	if (!job)
+		return CUPS_BACKEND_FAILED;
 
-	hdr = (struct mitsu70x_hdr*) ctx->databuf;
+	copies = job->copies;
+	hdr = (struct mitsu70x_hdr*) job->databuf;
+
+	if (job->raw_format)
+		goto bypass;
+
+	struct BandImage input;
+	uint8_t rew[2] = { 1, 1 }; /* 1 for rewind ok (default!) */
+
+	/* Load in the CPC file, if needed */
+	if (job->cpcfname && job->cpcfname != ctx->last_cpcfname) {
+		ctx->last_cpcfname = job->cpcfname;
+		if (ctx->cpcdata)
+			ctx->DestroyCPCData(ctx->cpcdata);
+		ctx->cpcdata = ctx->GetCPCData(job->cpcfname);
+		if (!ctx->cpcdata) {
+			ERROR("Unable to load CPC file '%s'\n", job->cpcfname);
+			return CUPS_BACKEND_CANCEL;
+		}
+	}
+
+	/* Load in the secondary CPC, if needed */
+	if (job->ecpcfname != ctx->last_ecpcfname) {
+		ctx->last_ecpcfname = job->ecpcfname;
+		if (ctx->ecpcdata)
+			ctx->DestroyCPCData(ctx->ecpcdata);
+		if (job->ecpcfname) {
+			ctx->ecpcdata = ctx->GetCPCData(job->ecpcfname);
+			if (!ctx->ecpcdata) {
+				ERROR("Unable to load CPC file '%s'\n", job->cpcfname);
+				return CUPS_BACKEND_CANCEL;
+			}
+		} else {
+			ctx->ecpcdata = NULL;
+		}
+	}
+
+	/* Convert using image processing library */
+	input.origin_rows = input.origin_cols = 0;
+	input.rows = job->rows;
+	input.cols = job->cols;
+	input.imgbuf = job->spoolbuf;
+	input.bytes_per_row = job->cols * 3;
+
+	ctx->output.origin_rows = ctx->output.origin_cols = 0;
+	ctx->output.rows = job->rows;
+	ctx->output.cols = job->cols;
+	ctx->output.imgbuf = job->databuf + job->datalen;
+	ctx->output.bytes_per_row = job->cols * 3 * 2;
+
+	DEBUG("Running print data through processing library\n");
+	if (ctx->DoImageEffect(ctx->cpcdata, ctx->ecpcdata,
+			       &input, &ctx->output, job->sharpen, job->reverse, rew)) {
+		ERROR("Image Processing failed, aborting!\n");
+		return CUPS_BACKEND_CANCEL;
+	}
+
+	/* Twiddle rewind stuff if needed */
+	if (ctx->type != P_MITSU_D70X) {
+		hdr->rewind[0] = !rew[0];
+		hdr->rewind[1] = !rew[1];
+		DEBUG("Rewind Inhibit? %02x %02x\n", hdr->rewind[0], hdr->rewind[1]);
+	}
+
+	/* Move up the pointer to after the image data */
+	job->datalen += 3*job->planelen;
+
+	/* Clean up */
+	// XXX not really necessary.
+	free(job->spoolbuf);
+	job->spoolbuf = NULL;
+	job->spoolbuflen = 0;
+
+	/* Now that we've filled everything in, read matte from file */
+	if (job->matte) {
+		int fd;
+		uint32_t j;
+		DEBUG("Reading %u bytes of matte data from disk (%d/%d)\n", job->matte, job->cols, LAMINATE_STRIDE);
+		fd = open(job->laminatefname, O_RDONLY);
+		if (fd < 0) {
+			ERROR("Unable to open matte lamination data file '%s'\n", job->laminatefname);
+			return CUPS_BACKEND_CANCEL;
+		}
+
+		for (j = 0 ; j < be16_to_cpu(hdr->lamrows) ; j++) {
+			int remain = LAMINATE_STRIDE * 2;
+
+			/* Read one row of lamination data at a time */
+			while (remain) {
+				int i = read(fd, job->databuf + job->datalen, remain);
+				if (i < 0)
+					return CUPS_BACKEND_CANCEL;
+				if (i == 0) {
+					/* We hit EOF, restart from beginning */
+					lseek(fd, 0, SEEK_SET);
+					continue;
+				}
+				job->datalen += i;
+				remain -= i;
+			}
+			/* Back off the buffer so we "wrap" on the print row. */
+			job->datalen -= ((LAMINATE_STRIDE - job->cols) * 2);
+		}
+		/* We're done */
+		close(fd);
+
+		/* Zero out the tail end of the buffer. */
+		j = be16_to_cpu(hdr->lamcols) * be16_to_cpu(hdr->lamrows) * 2;
+		memset(job->databuf + job->datalen, 0, job->matte - j);
+	}
+
+bypass:
+	/* Bypass */
+	if (test_mode >= TEST_MODE_NOPRINT)
+		return CUPS_BACKEND_OK;
 
 	INFO("Waiting for printer idle...\n");
 
@@ -1520,9 +1767,22 @@ top:
 	if (ret)
 		return CUPS_BACKEND_FAILED;
 
+	// XXX TODO: Goal here is to find a deck we can use!
+	// so... get disposition of both decks.
+	// figure out which decks are legal to use
+
 	/* Make sure temperature is sane */
 	if (jobstatus.temperature == TEMPERATURE_COOLING) {
-		INFO("Printer cooling down...\n");
+		if (ctx->num_decks == 2)
+			INFO("Lower deck cooling down...\n");
+		else
+			INFO("Printer cooling down...\n");
+		sleep(1);
+		goto top;
+	}
+	if (ctx->num_decks == 2 &&
+	    jobstatus.temperature_up == TEMPERATURE_COOLING) {
+		INFO("Upper deck cooling down...\n");
 		sleep(1);
 		goto top;
 	}
@@ -1586,7 +1846,7 @@ skip_status:
 		struct mitsu70x_memorystatus_resp memory;
 		INFO("Checking Memory availability\n");
 
-		ret = mitsu70x_get_memorystatus(ctx, hdr->multicut, &memory);
+		ret = mitsu70x_get_memorystatus(ctx, job, hdr->multicut, &memory);
 		if (ret)
 			return CUPS_BACKEND_FAILED;
 
@@ -1637,18 +1897,10 @@ skip_status:
 		hdr->deck = 1;  /* All others only have a "lower" deck. */
 	}
 
-
-	/* Twiddle rewind stuff if needed */
-	if (ctx->type != P_MITSU_D70X) {
-		hdr->rewind[0] = !ctx->rew[0];
-		hdr->rewind[1] = !ctx->rew[1];
-		DEBUG("Rewind Inhibit? %02x %02x\n", hdr->rewind[0], hdr->rewind[1]);
-	}
-
 	/* K60 and EK305 need the mcut type 1 specified for 4x6 prints! */
 	if ((ctx->type == P_MITSU_K60 || ctx->type == P_KODAK_305) &&
-	    ctx->cols == 0x0748 &&
-	    ctx->rows == 0x04c2 && !hdr->multicut) {
+	    job->cols == 0x0748 &&
+	    job->rows == 0x04c2 && !hdr->multicut) {
 		hdr->multicut = 1;
 	}
 
@@ -1656,16 +1908,16 @@ skip_status:
 	INFO("Sending Print Job (internal id %u)\n", ctx->jobid);
 
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
-			     ctx->databuf,
+			     job->databuf,
 			     sizeof(struct mitsu70x_hdr))))
 		return CUPS_BACKEND_FAILED;
 
-	if (ctx->dl_handle && !ctx->raw_format) {
+	if (ctx->dl_handle && !job->raw_format) {
 		if (ctx->SendImageData(&ctx->output, ctx, d70_library_callback))
 			return CUPS_BACKEND_FAILED;
 
-		if (ctx->matte)
-			if (d70_library_callback(ctx, ctx->databuf + ctx->datalen - ctx->matte, ctx->matte))
+		if (job->matte)
+			if (d70_library_callback(ctx, job->databuf + job->datalen - job->matte, job->matte))
 			    return CUPS_BACKEND_FAILED;
 	} else { // Fallback code..
                /* K60 and 305 need data sent in 256K chunks, but the first
@@ -1675,10 +1927,10 @@ skip_status:
 		int sent = 512;
 		while (chunk > 0) {
 			if ((ret = send_data(ctx->dev, ctx->endp_down,
-					     ctx->databuf + sent, chunk)))
+					     job->databuf + sent, chunk)))
 				return CUPS_BACKEND_FAILED;
 			sent += chunk;
-			chunk = ctx->datalen - sent;
+			chunk = job->datalen - sent;
 			if (chunk > CHUNK_LEN)
 				chunk = CHUNK_LEN;
 		}
@@ -1712,6 +1964,8 @@ skip_status:
 		if (ret)
 			return CUPS_BACKEND_FAILED;
 
+		// XXX need to examine status of the correct deck for the job!
+
 		/* See if we hit a printer error. */
 		if (jobstatus.error_status[0]) {
 			ERROR("%s/%s -> %s:  %02x/%02x/%02x\n",
@@ -1736,6 +1990,7 @@ skip_status:
 			     jobstatus.job_status[2],
 			     jobstatus.job_status[3]);
 
+		/* Check for job completion */
 		if (jobstatus.job_status[0] == JOB_STATUS0_END) {
 			if (jobstatus.job_status[1] ||
 			    jobstatus.job_status[2] ||
@@ -1869,15 +2124,38 @@ static int mitsu70x_query_jobs(struct mitsu70x_ctx *ctx)
 	INFO("JOB00 ID     : %06u\n", jobstatus.jobid);
 	INFO("JOB00 status : %s\n", mitsu70x_jobstatuses(jobstatus.job_status));
 	INFO("Power Status: %s\n", jobstatus.power ? "Sleeping" : "Awake");
-	INFO("Mechanical Status: %s\n",
-	     mitsu70x_mechastatus(jobstatus.mecha_status));
-	if (jobstatus.error_status[0]) {
-		INFO("%s/%s -> %s\n",
-		     mitsu70x_errorclass(jobstatus.error_status),
-		     mitsu70x_errors(jobstatus.error_status),
-		     mitsu70x_errorrecovery(jobstatus.error_status));
+
+	if (ctx->num_decks == 2) {
+		INFO("Lower Deck Mechanical Status: %s\n",
+		     mitsu70x_mechastatus(jobstatus.mecha_status));
+		if (jobstatus.error_status[0]) {
+			INFO("%s/%s -> %s\n",
+			     mitsu70x_errorclass(jobstatus.error_status),
+			     mitsu70x_errors(jobstatus.error_status),
+			     mitsu70x_errorrecovery(jobstatus.error_status));
+		}
+		INFO("Lower Deck Temperature: %s\n", mitsu70x_temperatures(jobstatus.temperature));
+
+		INFO("Upper Deck Mechanical Status: %s\n",
+		     mitsu70x_mechastatus(jobstatus.mecha_status_up));
+		if (jobstatus.error_status[0]) {
+			INFO("%s/%s -> %s\n",
+			     mitsu70x_errorclass(jobstatus.error_status_up),
+			     mitsu70x_errors(jobstatus.error_status_up),
+			     mitsu70x_errorrecovery(jobstatus.error_status_up));
+		}
+		INFO("Lower Deck Temperature: %s\n", mitsu70x_temperatures(jobstatus.temperature_up));
+	} else {
+		INFO("Mechanical Status: %s\n",
+		     mitsu70x_mechastatus(jobstatus.mecha_status));
+		if (jobstatus.error_status[0]) {
+			INFO("%s/%s -> %s\n",
+			     mitsu70x_errorclass(jobstatus.error_status),
+			     mitsu70x_errors(jobstatus.error_status),
+			     mitsu70x_errorrecovery(jobstatus.error_status));
+		}
+		INFO("Temperature: %s\n", mitsu70x_temperatures(jobstatus.temperature));
 	}
-	INFO("Temperature: %s\n", mitsu70x_temperatures(jobstatus.temperature));
 	// memory status?
 
 #if 0
@@ -2030,13 +2308,15 @@ static const char *mitsu70x_prefixes[] = {
 /* Exported */
 struct dyesub_backend mitsu70x_backend = {
 	.name = "Mitsubishi CP-D70 family",
-	.version = "0.79",
+	.version = "0.83",
 	.uri_prefixes = mitsu70x_prefixes,
+	.flags = BACKEND_FLAG_JOBLIST,
 	.cmdline_usage = mitsu70x_cmdline,
 	.cmdline_arg = mitsu70x_cmdline_arg,
 	.init = mitsu70x_init,
 	.attach = mitsu70x_attach,
 	.teardown = mitsu70x_teardown,
+	.cleanup_job = mitsu70x_cleanup_job,
 	.read_parse = mitsu70x_read_parse,
 	.main_loop = mitsu70x_main_loop,
 	.query_serno = mitsu70x_query_serno,

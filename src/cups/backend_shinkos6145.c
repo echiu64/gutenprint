@@ -1080,6 +1080,15 @@ struct s6145_imagecorr_data {
 } __attribute__((packed));
 
 /* Private data structure */
+struct shinkos6145_printjob {
+	uint8_t *databuf;
+	size_t datalen;
+
+	struct s6145_printjob_hdr hdr;
+
+	int copies;
+};
+
 struct shinkos6145_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;
@@ -1088,14 +1097,7 @@ struct shinkos6145_ctx {
 
 	uint8_t jobid;
 
-	struct s6145_printjob_hdr hdr;
-
 	uint8_t image_avg[3]; /* CMY */
-
-	uint8_t *databuf;
-	size_t datalen;
-
-	uint8_t input_ymc;
 
 	struct marker marker;
 
@@ -1952,14 +1954,22 @@ static int shinkos6145_attach(void *vctx, struct libusb_device_handle *dev, int 
 	return CUPS_BACKEND_OK;
 }
 
+static void shinkos6145_cleanup_job(const void *vjob)
+{
+	const struct shinkos6145_printjob *job = vjob;
+
+	if (job->databuf)
+		free(job->databuf);
+
+	free((void*)job);
+}
+
 static void shinkos6145_teardown(void *vctx) {
 	struct shinkos6145_ctx *ctx = vctx;
 
 	if (!ctx)
 		return;
 
-	if (ctx->databuf)
-		free(ctx->databuf);
 	if (ctx->eeprom)
 		free(ctx->eeprom);
 	if (ctx->corrdata)
@@ -1972,7 +1982,9 @@ static void shinkos6145_teardown(void *vctx) {
 	free(ctx);
 }
 
-static void lib6145_calc_avg(struct shinkos6145_ctx *ctx, uint16_t rows, uint16_t cols)
+static void lib6145_calc_avg(struct shinkos6145_ctx *ctx,
+			     const struct shinkos6145_printjob *job,
+			     uint16_t rows, uint16_t cols)
 {
 	uint32_t plane, i, planelen;
 	planelen = rows * cols;
@@ -1981,7 +1993,7 @@ static void lib6145_calc_avg(struct shinkos6145_ctx *ctx, uint16_t rows, uint16_
 		uint64_t sum = 0;
 
 		for (i = 0 ; i < planelen ; i++) {
-			sum += ctx->databuf[(planelen * plane) + i];
+			sum += job->databuf[(planelen * plane) + i];
 		}
 		ctx->image_avg[plane] = (sum / planelen);
 	}
@@ -2062,40 +2074,72 @@ static void lib6145_process_image(uint8_t *src, uint16_t *dest,
 	}
 }
 
-static int shinkos6145_read_parse(void *vctx, int data_fd) {
+static int shinkos6145_read_parse(void *vctx, const void **vjob, int data_fd, int copies) {
 	struct shinkos6145_ctx *ctx = vctx;
 	int ret;
 	uint8_t tmpbuf[4];
+	uint8_t input_ymc;
+
+	struct shinkos6145_printjob *job = NULL;
 
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
 
+	job = malloc(sizeof(*job));
+	if (!job) {
+		ERROR("Memory allocation failure!\n");
+		return CUPS_BACKEND_RETRY_CURRENT;
+	}
+	memset(job, 0, sizeof(*job));
+	job->copies = copies;  // XXX hdr.copies?
+
 	/* Read in then validate header */
-	ret = read(data_fd, &ctx->hdr, sizeof(ctx->hdr));
-	if (ret < 0 || ret != sizeof(ctx->hdr)) {
+	ret = read(data_fd, &job->hdr, sizeof(job->hdr));
+	if (ret < 0 || ret != sizeof(job->hdr)) {
+		shinkos6145_cleanup_job(job);
 		if (ret == 0)
 			return CUPS_BACKEND_CANCEL;
 		ERROR("Read failed (%d/%d/%d)\n",
-		      ret, 0, (int)sizeof(ctx->hdr));
+		      ret, 0, (int)sizeof(job->hdr));
 		perror("ERROR: Read failed");
 		return ret;
 	}
 
-	if (le32_to_cpu(ctx->hdr.len1) != 0x10 ||
-	    le32_to_cpu(ctx->hdr.len2) != 0x64 ||
-	    le32_to_cpu(ctx->hdr.dpi) != 300) {
+#define SWAP_HDR(__x)  job->hdr.__x = le32_to_cpu(job->hdr.__x)
+
+	SWAP_HDR(len1);
+	SWAP_HDR(model);
+	SWAP_HDR(media_w);
+	SWAP_HDR(len2);
+	SWAP_HDR(media);
+	SWAP_HDR(method);
+	SWAP_HDR(qual);
+	SWAP_HDR(oc_mode);
+	SWAP_HDR(columns);
+	SWAP_HDR(rows);
+	SWAP_HDR(copies);
+	SWAP_HDR(dpi);
+	SWAP_HDR(ext_flags);
+
+#undef SWAP_HDR
+
+	if (job->hdr.len1 != 0x10 ||
+	    job->hdr.len2 != 0x64 ||
+	    job->hdr.dpi != 300) {
 		ERROR("Unrecognized header data format!\n");
+		shinkos6145_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
 	}
 
-	if (le32_to_cpu(ctx->hdr.model) != 6145) {
-		ERROR("Unrecognized printer (%u)!\n", le32_to_cpu(ctx->hdr.model));
-
+	if (job->hdr.model != 6145) {
+		ERROR("Unrecognized printer (%u)!\n", job->hdr.model);
+		shinkos6145_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
 	}
 
-	if (!ctx->hdr.rows || !ctx->hdr.columns) {
+	if (!job->hdr.rows || !job->hdr.columns) {
 		ERROR("Bad print job header!\n");
+		shinkos6145_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
 	}
 
@@ -2103,29 +2147,26 @@ static int shinkos6145_read_parse(void *vctx, int data_fd) {
 	   When bit 0 is set, this tells the backend that the data is
 	   already in planar YMC format (vs packed RGB) so we don't need
 	   to do the conversion ourselves.  Saves some processing overhead */
-	ctx->input_ymc = le32_to_cpu(ctx->hdr.ext_flags) & 0x01;
+	input_ymc = job->hdr.ext_flags & 0x01;
 
-	if (ctx->databuf) {
-		free(ctx->databuf);
-		ctx->databuf = NULL;
-	}
-
-	ctx->datalen = le32_to_cpu(ctx->hdr.rows) * le32_to_cpu(ctx->hdr.columns) * 3;
-	ctx->databuf = malloc(ctx->datalen);
-	if (!ctx->databuf) {
+	job->datalen = job->hdr.rows * job->hdr.columns * 3;
+	job->databuf = malloc(job->datalen);
+	if (!job->databuf) {
 		ERROR("Memory allocation failure!\n");
+		shinkos6145_cleanup_job(job);
 		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 
 	{
-		int remain = ctx->datalen;
-		uint8_t *ptr = ctx->databuf;
+		int remain = job->datalen;
+		uint8_t *ptr = job->databuf;
 		do {
 			ret = read(data_fd, ptr, remain);
 			if (ret < 0) {
 				ERROR("Read failed (%d/%d/%zu)\n",
-				      ret, remain, ctx->datalen);
+				      ret, remain, job->datalen);
 				perror("ERROR: Read failed");
+				shinkos6145_cleanup_job(job);
 				return ret;
 			}
 			ptr += ret;
@@ -2139,6 +2180,7 @@ static int shinkos6145_read_parse(void *vctx, int data_fd) {
 		ERROR("Read failed (%d/%d/%d)\n",
 		      ret, 4, 4);
 		perror("ERROR: Read failed");
+		shinkos6145_cleanup_job(job);
 		return ret;
 	}
 	if (tmpbuf[0] != 0x04 ||
@@ -2146,13 +2188,45 @@ static int shinkos6145_read_parse(void *vctx, int data_fd) {
 	    tmpbuf[2] != 0x02 ||
 	    tmpbuf[3] != 0x01) {
 		ERROR("Unrecognized footer data format!\n");
+		shinkos6145_cleanup_job(job);
 		return CUPS_BACKEND_FAILED;
 	}
+
+	/* Convert packed RGB to planar YMC if necessary */
+	if (!input_ymc) {
+		INFO("Converting Packed RGB to Planar YMC\n");
+		int planelen = job->hdr.columns * job->hdr.rows;
+		uint8_t *databuf3 = malloc(job->datalen);
+		int i;
+		if (!databuf3) {
+			ERROR("Memory allocation failure!\n");
+			shinkos6145_cleanup_job(job);
+			return CUPS_BACKEND_RETRY_CURRENT;
+		}
+		for (i = 0 ; i < planelen ; i++) {
+			uint8_t r, g, b;
+			r = job->databuf[3*i];
+			g = job->databuf[3*i+1];
+			b = job->databuf[3*i+2];
+			databuf3[i] = 255 - b;
+			databuf3[planelen + i] = 255 - g;
+			databuf3[planelen + planelen + i] = 255 - r;
+		}
+		free(job->databuf);
+		job->databuf = databuf3;
+	}
+
+	// if (job->copies > 1 && hdr->media == 0 && hdr->method == 0)
+	// and if printer_media == 6x8 or 6x9
+	// combine 4x6 + 4x6 -> 8x6
+	// 1844x2492 = 1844x1240.. delta = 12.
+
+	*vjob = job;
 
 	return CUPS_BACKEND_OK;
 }
 
-static int shinkos6145_main_loop(void *vctx, int copies) {
+static int shinkos6145_main_loop(void *vctx, const void *vjob) {
 	struct shinkos6145_ctx *ctx = vctx;
 
 	int ret, num;
@@ -2167,6 +2241,11 @@ static int shinkos6145_main_loop(void *vctx, int copies) {
 	struct s6145_mediainfo_resp *media = (struct s6145_mediainfo_resp *) rdbuf;
 
 	uint32_t cur_mode;
+
+	struct shinkos6145_printjob *job = (struct shinkos6145_printjob*) vjob; /* XXX stupid, we can't do this. */
+
+	if (!job)
+		return CUPS_BACKEND_FAILED;
 
 	/* Send Media Query */
 	memset(cmdbuf, 0, CMDBUF_LEN);
@@ -2187,10 +2266,10 @@ static int shinkos6145_main_loop(void *vctx, int copies) {
 	/* Validate print sizes */
 	for (i = 0; i < media->count ; i++) {
 		/* Look for matching media */
-		if (le16_to_cpu(media->items[i].columns) == cpu_to_le16(le32_to_cpu(ctx->hdr.columns)) &&
-		    le16_to_cpu(media->items[i].rows) == cpu_to_le16(le32_to_cpu(ctx->hdr.rows)) &&
-		    media->items[i].print_method == le32_to_cpu(ctx->hdr.method) &&
-		    media->items[i].media_code == le32_to_cpu(ctx->hdr.media))
+		if (le16_to_cpu(media->items[i].columns) == job->hdr.columns &&
+		    le16_to_cpu(media->items[i].rows) == job->hdr.rows &&
+		    media->items[i].print_method == job->hdr.method &&
+		    media->items[i].media_code == job->hdr.media)
 			break;
 	}
 	if (i == media->count) {
@@ -2261,7 +2340,7 @@ top:
 	case S_PRINTER_READY_CMD: {
 		/* Set matte/etc */
 
-		uint32_t oc_mode = le32_to_cpu(ctx->hdr.oc_mode);
+		uint32_t oc_mode = job->hdr.oc_mode;
 		uint32_t updated = 0;
 
 		if (!oc_mode) /* if nothing set, default to glossy */
@@ -2302,52 +2381,35 @@ top:
 
 		/* Set up library transform... */
 		uint32_t newlen = le16_to_cpu(ctx->corrdata->headDots) *
-			le32_to_cpu(ctx->hdr.rows) * sizeof(uint16_t) * 4;
+			job->hdr.rows * sizeof(uint16_t) * 4;
 		uint16_t *databuf2 = malloc(newlen);
 
 		/* Set the size in the correctiondata */
-		ctx->corrdata->width = cpu_to_le16(le32_to_cpu(ctx->hdr.columns));
-		ctx->corrdata->height = cpu_to_le16(le32_to_cpu(ctx->hdr.rows));
+		ctx->corrdata->width = cpu_to_le16(job->hdr.columns);
+		ctx->corrdata->height = cpu_to_le16(job->hdr.rows);
 
-		/* Convert packed RGB to planar YMC if necessary */
-		if (!ctx->input_ymc) {
-			int planelen = le16_to_cpu(ctx->corrdata->width) * le16_to_cpu(ctx->corrdata->height);
-			uint8_t *databuf3 = malloc(ctx->datalen);
-
-			for (i = 0 ; i < planelen ; i++) {
-				uint8_t r, g, b;
-				r = ctx->databuf[3*i];
-				g = ctx->databuf[3*i+1];
-				b = ctx->databuf[3*i+2];
-				databuf3[i] = 255 - b;
-				databuf3[planelen + i] = 255 - g;
-				databuf3[planelen + planelen + i] = 255 - r;
-			}
-			free(ctx->databuf);
-			ctx->databuf = databuf3;
-		}
 
 		/* Perform the actual library transform */
 		if (ctx->dl_handle) {
 			INFO("Calling image processing library...\n");
 
-			if (ctx->ImageAvrCalc(ctx->databuf, le32_to_cpu(ctx->hdr.columns), le32_to_cpu(ctx->hdr.rows), ctx->image_avg)) {
+			if (ctx->ImageAvrCalc(job->databuf, job->hdr.columns, job->hdr.rows, ctx->image_avg)) {
 				free(databuf2);
 				ERROR("Library returned error!\n");
 				return CUPS_BACKEND_FAILED;
 			}
-			ctx->ImageProcessing(ctx->databuf, databuf2, ctx->corrdata);
+			ctx->ImageProcessing(job->databuf, databuf2, ctx->corrdata);
 		} else {
 			WARNING("Utilizing fallback internal image processing code\n");
 			WARNING(" *** Output quality will be poor! *** \n");
 
-			lib6145_calc_avg(ctx, le32_to_cpu(ctx->hdr.columns), le32_to_cpu(ctx->hdr.rows));
-			lib6145_process_image(ctx->databuf, databuf2, ctx->corrdata, oc_mode);
+			lib6145_calc_avg(ctx, job, job->hdr.columns, job->hdr.rows);
+			lib6145_process_image(job->databuf, databuf2, ctx->corrdata, oc_mode);
 		}
 
-		free(ctx->databuf);
-		ctx->databuf = (uint8_t*) databuf2;
-		ctx->datalen = newlen;
+		free(job->databuf);
+		job->databuf = (uint8_t*) databuf2;
+		job->datalen = newlen;
 
 		INFO("Sending print job (internal id %u)\n", ctx->jobid);
 
@@ -2356,16 +2418,16 @@ top:
 		print->hdr.len = cpu_to_le16(sizeof (*print) - sizeof(*cmd));
 
 		print->id = ctx->jobid;
-		print->count = cpu_to_le16(copies);
-		print->columns = cpu_to_le16(le32_to_cpu(ctx->hdr.columns));
-		print->rows = cpu_to_le16(le32_to_cpu(ctx->hdr.rows));
+		print->count = cpu_to_le16(job->copies);
+		print->columns = cpu_to_le16(job->hdr.columns);
+		print->rows = cpu_to_le16(job->hdr.rows);
 		print->image_avg = ctx->image_avg[2]; /* Cyan level */
-		print->method = cpu_to_le32(ctx->hdr.method);
+		print->method = cpu_to_le32(job->hdr.method);
 		print->combo_wait = 0;
 
 		/* Brava21 header has a few quirks */
 		if(ctx->type == P_SHINKO_S6145D) {
-			print->media = ctx->hdr.media;
+			print->media = job->hdr.media;
 			print->unk_1 = 0x01;
 		}
 
@@ -2392,7 +2454,7 @@ top:
 		// XXX we shouldn't send the lamination layer over if
 		// it's not needed.  hdr->oc_mode == PRINT_MODE_NO_OC
 		if ((ret = send_data(ctx->dev, ctx->endp_down,
-				     ctx->databuf, ctx->datalen)))
+				     job->databuf, job->datalen)))
 			return CUPS_BACKEND_FAILED;
 
 		INFO("Waiting for printer to acknowledge completion\n");
@@ -2503,13 +2565,14 @@ static const char *shinkos6145_prefixes[] = {
 
 struct dyesub_backend shinkos6145_backend = {
 	.name = "Shinko/Sinfonia CHC-S6145/CS2",
-	.version = "0.26",
+	.version = "0.28",
 	.uri_prefixes = shinkos6145_prefixes,
 	.cmdline_usage = shinkos6145_cmdline,
 	.cmdline_arg = shinkos6145_cmdline_arg,
 	.init = shinkos6145_init,
 	.attach = shinkos6145_attach,
 	.teardown = shinkos6145_teardown,
+	.cleanup_job = shinkos6145_cleanup_job,
 	.read_parse = shinkos6145_read_parse,
 	.main_loop = shinkos6145_main_loop,
 	.query_serno = shinkos6145_query_serno,

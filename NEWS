@@ -389,6 +389,25 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
 6) Paper size options have been corrected, so that inappropriate paper
    sizes for many printers have been removed.
 
+7) The USB dye-sublimation printer backend has been considerably
+   enhanced.  As well as many bugfixes, the following user-visable
+   changes have been made:
+
+    * Much improved status and media reporting via standard CUPS
+      marker attributes.
+
+    * Simpler, cleaner URI scheme.  This is an example of a typical
+      URI reported by older Gutenprint release:
+
+	gutenprint53+usb://Dai+Nippon+Printing/DP-DS620?serial=123456783&backend=dnpds40
+
+      The same printer will now generate this URI scheme:
+
+	gutenprint53+usb://dnpds620/12345678
+    
+      The backend will continue to parse the old scheme indefinitely, so that
+      existing installations will function normally.
+
 ================================================================
 
 
@@ -424,13 +443,6 @@ B) PRINTER-SPECIFIC ISSUES
      printer named "Generic PCL 6/PCL XL LF Printer".  Please report
      any such printers to gimp-print-devel@lists.sourceforge.net; they
      will be fixed in the next available release.
-
-  4) Color laser printers are currently supported only in black and
-     white mode.  At present, we do not have resources to add a color
-     laser driver.  If you have interest in this area and the
-     requisite skills, please contact
-     gimp-print-devel@lists.sourceforge.net.
-
 
 ----------------
 

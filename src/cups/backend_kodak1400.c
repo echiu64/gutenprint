@@ -76,21 +76,26 @@ struct kodak1400_hdr {
 
 
 /* Private data structure */
+struct kodak1400_printjob {
+	struct kodak1400_hdr hdr;
+	uint8_t *plane_r;
+	uint8_t *plane_g;
+	uint8_t *plane_b;
+
+	int copies;
+};
+
 struct kodak1400_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;
 	uint8_t endp_down;
 	int type;
 
-	struct kodak1400_hdr hdr;
-	uint8_t *plane_r;
-	uint8_t *plane_g;
-	uint8_t *plane_b;
-
 	struct marker marker;
 };
 
 static int send_plane(struct kodak1400_ctx *ctx,
+		      const struct kodak1400_printjob *job,
 		      uint8_t planeno, uint8_t *planedata,
 		      uint8_t *cmdbuf)
 {
@@ -116,9 +121,9 @@ static int send_plane(struct kodak1400_ctx *ctx,
 	cmdbuf[3] = planeno;
 
 	if (planedata) {
-		temp16 = htons(ctx->hdr.columns);
+		temp16 = htons(job->hdr.columns);
 		memcpy(cmdbuf+7, &temp16, 2);
-		temp16 = htons(ctx->hdr.rows);
+		temp16 = htons(job->hdr.rows);
 		memcpy(cmdbuf+9, &temp16, 2);
 	}
 
@@ -128,10 +133,10 @@ static int send_plane(struct kodak1400_ctx *ctx,
 
 	if (planedata) {
 		int i;
-		for (i = 0 ; i < ctx->hdr.rows ; i++) {
+		for (i = 0 ; i < job->hdr.rows ; i++) {
 			if ((ret = send_data(ctx->dev, ctx->endp_down,
-					     planedata + i * ctx->hdr.columns,
-					     ctx->hdr.columns)))
+					     planedata + i * job->hdr.columns,
+					     job->hdr.columns)))
 				return ret;
 		}
 	}
@@ -315,91 +320,96 @@ static int kodak1400_attach(void *vctx, struct libusb_device_handle *dev, int ty
 	return CUPS_BACKEND_OK;
 }
 
+static void kodak1400_cleanup_job(const void *vjob)
+{
+	const struct kodak1400_printjob *job = vjob;
+
+	if (job->plane_r)
+		free(job->plane_r);
+	if (job->plane_g)
+		free(job->plane_g);
+	if (job->plane_b)
+		free(job->plane_b);
+
+	free((void*)job);
+}
+
 static void kodak1400_teardown(void *vctx) {
 	struct kodak1400_ctx *ctx = vctx;
 
 	if (!ctx)
 		return;
 
-	if (ctx->plane_r)
-		free(ctx->plane_r);
-	if (ctx->plane_g)
-		free(ctx->plane_g);
-	if (ctx->plane_b)
-		free(ctx->plane_b);
 	free(ctx);
 }
 
-static int kodak1400_read_parse(void *vctx, int data_fd) {
+static int kodak1400_read_parse(void *vctx, const void **vjob, int data_fd, int copies) {
 	struct kodak1400_ctx *ctx = vctx;
 	int i, ret;
+
+	struct kodak1400_printjob *job = NULL;
 
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
 
-	if (ctx->plane_r) {
-		free(ctx->plane_r);
-		ctx->plane_r = NULL;
-	}
-	if (ctx->plane_g) {
-		free(ctx->plane_g);
-		ctx->plane_g = NULL;
-	}
-	if (ctx->plane_b) {
-		free(ctx->plane_b);
-		ctx->plane_b = NULL;
-	}
-
-	/* Read in then validate header */
-	ret = read(data_fd, &ctx->hdr, sizeof(ctx->hdr));
-	if (ret < 0 || ret != sizeof(ctx->hdr)) {
-		if (ret == 0)
-			return CUPS_BACKEND_CANCEL;
-		ERROR("Read failed (%d/%d/%d)\n",
-		      ret, 0, (int)sizeof(ctx->hdr));
-		perror("ERROR: Read failed");
-		return CUPS_BACKEND_CANCEL;
-	}
-	if (ctx->hdr.hdr[0] != 'P' ||
-	    ctx->hdr.hdr[1] != 'G' ||
-	    ctx->hdr.hdr[2] != 'H' ||
-	    ctx->hdr.hdr[3] != 'D') {
-		ERROR("Unrecognized data format!\n");
-		return CUPS_BACKEND_CANCEL;
-	}
-	ctx->hdr.planesize = le32_to_cpu(ctx->hdr.planesize);
-	ctx->hdr.rows = le16_to_cpu(ctx->hdr.rows);
-	ctx->hdr.columns = le16_to_cpu(ctx->hdr.columns);
-
-	/* Set up plane data */
-	ctx->plane_r = malloc(ctx->hdr.planesize);
-	ctx->plane_g = malloc(ctx->hdr.planesize);
-	ctx->plane_b = malloc(ctx->hdr.planesize);
-	if (!ctx->plane_r || !ctx->plane_g || !ctx->plane_b) {
+	job = malloc(sizeof(*job));
+	if (!job) {
 		ERROR("Memory allocation failure!\n");
 		return CUPS_BACKEND_RETRY_CURRENT;
 	}
-	for (i = 0 ; i < ctx->hdr.rows ; i++) {
+	memset(job, 0, sizeof(*job));
+	job->copies = copies;
+
+	/* Read in then validate header */
+	ret = read(data_fd, &job->hdr, sizeof(job->hdr));
+	if (ret < 0 || ret != sizeof(job->hdr)) {
+		if (ret == 0)
+			return CUPS_BACKEND_CANCEL;
+		ERROR("Read failed (%d/%d/%d)\n",
+		      ret, 0, (int)sizeof(job->hdr));
+		perror("ERROR: Read failed");
+		return CUPS_BACKEND_CANCEL;
+	}
+	if (job->hdr.hdr[0] != 'P' ||
+	    job->hdr.hdr[1] != 'G' ||
+	    job->hdr.hdr[2] != 'H' ||
+	    job->hdr.hdr[3] != 'D') {
+		ERROR("Unrecognized data format!\n");
+		return CUPS_BACKEND_CANCEL;
+	}
+	job->hdr.planesize = le32_to_cpu(job->hdr.planesize);
+	job->hdr.rows = le16_to_cpu(job->hdr.rows);
+	job->hdr.columns = le16_to_cpu(job->hdr.columns);
+
+	/* Set up plane data */
+	job->plane_r = malloc(job->hdr.planesize);
+	job->plane_g = malloc(job->hdr.planesize);
+	job->plane_b = malloc(job->hdr.planesize);
+	if (!job->plane_r || !job->plane_g || !job->plane_b) {
+		ERROR("Memory allocation failure!\n");
+		return CUPS_BACKEND_RETRY_CURRENT;
+	}
+	for (i = 0 ; i < job->hdr.rows ; i++) {
 		int j;
 		uint8_t *ptr;
 		for (j = 0 ; j < 3 ; j++) {
 			int remain;
 			if (j == 0)
-				ptr = ctx->plane_r + i * ctx->hdr.columns;
+				ptr = job->plane_r + i * job->hdr.columns;
 			else if (j == 1)
-				ptr = ctx->plane_g + i * ctx->hdr.columns;
+				ptr = job->plane_g + i * job->hdr.columns;
 			else if (j == 2)
-				ptr = ctx->plane_b + i * ctx->hdr.columns;
+				ptr = job->plane_b + i * job->hdr.columns;
 			else
 				ptr = NULL;
 
-			remain = ctx->hdr.columns;
+			remain = job->hdr.columns;
 			do {
 				ret = read(data_fd, ptr, remain);
 				if (ret < 0) {
 					ERROR("Read failed (%d/%d/%u) (%d/%u @ %d)\n",
-					      ret, remain, ctx->hdr.columns,
-					      i, ctx->hdr.rows, j);
+					      ret, remain, job->hdr.columns,
+					      i, job->hdr.rows, j);
 					perror("ERROR: Read failed");
 					return CUPS_BACKEND_CANCEL;
 				}
@@ -409,13 +419,15 @@ static int kodak1400_read_parse(void *vctx, int data_fd) {
 		}
 	}
 
+	*vjob = job;
+
 	return CUPS_BACKEND_OK;
 }
 
 static uint8_t idle_data[READBACK_LEN] = { 0xe4, 0x72, 0x00, 0x00,
 					   0x00, 0x00, 0x00, 0x00 };
 
-static int kodak1400_main_loop(void *vctx, int copies) {
+static int kodak1400_main_loop(void *vctx, const void *vjob) {
 	struct kodak1400_ctx *ctx = vctx;
 
 	uint8_t rdbuf[READBACK_LEN], rdbuf2[READBACK_LEN];
@@ -423,6 +435,16 @@ static int kodak1400_main_loop(void *vctx, int copies) {
 	int last_state = -1, state = S_IDLE;
 	int num, ret;
 	uint16_t temp16;
+	int copies;
+
+	const struct kodak1400_printjob *job = vjob;
+
+	if (!ctx)
+		return CUPS_BACKEND_FAILED;
+	if (!job)
+		return CUPS_BACKEND_FAILED;
+
+	copies = job->copies;
 
 top:
 	if (state != last_state) {
@@ -478,9 +500,9 @@ top:
 		cmdbuf[0] = 0x1b;
 		cmdbuf[1] = 0x5a;
 		cmdbuf[2] = 0x53;
-		temp16 = be16_to_cpu(ctx->hdr.columns);
+		temp16 = be16_to_cpu(job->hdr.columns);
 		memcpy(cmdbuf+3, &temp16, 2);
-		temp16 = be16_to_cpu(ctx->hdr.rows);
+		temp16 = be16_to_cpu(job->hdr.rows);
 		memcpy(cmdbuf+5, &temp16, 2);
 
 		if ((ret = send_data(ctx->dev, ctx->endp_down,
@@ -491,7 +513,7 @@ top:
 		memset(cmdbuf, 0, CMDBUF_LEN);
 		cmdbuf[0] = 0x1b;
 		cmdbuf[1] = 0x59;
-		cmdbuf[2] = ctx->hdr.matte; // ???
+		cmdbuf[2] = job->hdr.matte; // ???
 
 		if ((ret = send_data(ctx->dev, ctx->endp_down,
 				    cmdbuf, CMDBUF_LEN)))
@@ -501,7 +523,7 @@ top:
 		memset(cmdbuf, 0, CMDBUF_LEN);
 		cmdbuf[0] = 0x1b;
 		cmdbuf[1] = 0x60;
-		cmdbuf[2] = ctx->hdr.laminate;
+		cmdbuf[2] = job->hdr.laminate;
 
 		if (send_data(ctx->dev, ctx->endp_down,
 			     cmdbuf, CMDBUF_LEN))
@@ -511,7 +533,7 @@ top:
 		memset(cmdbuf, 0, CMDBUF_LEN);
 		cmdbuf[0] = 0x1b;
 		cmdbuf[1] = 0x62;
-		cmdbuf[2] = ctx->hdr.lam_strength;
+		cmdbuf[2] = job->hdr.lam_strength;
 
 		if ((ret = send_data(ctx->dev, ctx->endp_down,
 				    cmdbuf, CMDBUF_LEN)))
@@ -521,7 +543,7 @@ top:
 		memset(cmdbuf, 0, CMDBUF_LEN);
 		cmdbuf[0] = 0x1b;
 		cmdbuf[1] = 0x61;
-		cmdbuf[2] = ctx->hdr.unk1; // ???
+		cmdbuf[2] = job->hdr.unk1; // ???
 
 		if ((ret = send_data(ctx->dev, ctx->endp_down,
 				    cmdbuf, CMDBUF_LEN)))
@@ -531,7 +553,7 @@ top:
 		break;
 	case S_PRINTER_READY_Y:
 		INFO("Sending YELLOW plane\n");
-		if ((ret = send_plane(ctx, 1, ctx->plane_b, cmdbuf)))
+		if ((ret = send_plane(ctx, job, 1, job->plane_b, cmdbuf)))
 			return CUPS_BACKEND_FAILED;
 		state = S_PRINTER_SENT_Y;
 		break;
@@ -541,7 +563,7 @@ top:
 		break;
 	case S_PRINTER_READY_M:
 		INFO("Sending MAGENTA plane\n");
-		if ((ret = send_plane(ctx, 2, ctx->plane_g, cmdbuf)))
+		if ((ret = send_plane(ctx, job, 2, job->plane_g, cmdbuf)))
 			return CUPS_BACKEND_FAILED;
 		state = S_PRINTER_SENT_M;
 		break;
@@ -551,13 +573,13 @@ top:
 		break;
 	case S_PRINTER_READY_C:
 		INFO("Sending CYAN plane\n");
-		if ((ret = send_plane(ctx, 3, ctx->plane_r, cmdbuf)))
+		if ((ret = send_plane(ctx, job, 3, job->plane_r, cmdbuf)))
 			return CUPS_BACKEND_FAILED;
 		state = S_PRINTER_SENT_C;
 		break;
 	case S_PRINTER_SENT_C:
 		if (!memcmp(rdbuf, idle_data, READBACK_LEN)) {
-			if (ctx->hdr.laminate)
+			if (job->hdr.laminate)
 				state = S_PRINTER_READY_L;
 			else
 				state = S_PRINTER_DONE;
@@ -565,7 +587,7 @@ top:
 		break;
 	case S_PRINTER_READY_L:
 		INFO("Laminating page\n");
-		if ((ret = send_plane(ctx, 4, NULL, cmdbuf)))
+		if ((ret = send_plane(ctx, job, 4, NULL, cmdbuf)))
 			return CUPS_BACKEND_FAILED;
 		state = S_PRINTER_SENT_L;
 		break;
@@ -634,13 +656,14 @@ static const char *kodak1400_prefixes[] = {
 
 struct dyesub_backend kodak1400_backend = {
 	.name = "Kodak 1400/805",
-	.version = "0.37",
+	.version = "0.38",
 	.uri_prefixes = kodak1400_prefixes,
 	.cmdline_usage = kodak1400_cmdline,
 	.cmdline_arg = kodak1400_cmdline_arg,
 	.init = kodak1400_init,
 	.attach = kodak1400_attach,
 	.teardown = kodak1400_teardown,
+	.cleanup_job = kodak1400_cleanup_job,
 	.read_parse = kodak1400_read_parse,
 	.main_loop = kodak1400_main_loop,
 	.query_markers = kodak1400_query_markers,

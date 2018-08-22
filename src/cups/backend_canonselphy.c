@@ -535,18 +535,9 @@ done:
 }
 
 /* Private data structure */
-struct canonselphy_ctx {
-	struct libusb_device_handle *dev;
-	uint8_t endp_up;
-	uint8_t endp_down;
-	int type;
-
-	struct printer_data *printer;
-	struct marker marker;
-
-	uint8_t bw_mode;
-
+struct canonselphy_printjob {
 	int16_t paper_code;
+	uint8_t bw_mode;
 
 	uint32_t plane_len;
 
@@ -556,7 +547,17 @@ struct canonselphy_ctx {
 	uint8_t *plane_c;
 	uint8_t *footer;
 
-	uint8_t *buffer;
+	int copies;
+};
+
+struct canonselphy_ctx {
+	struct libusb_device_handle *dev;
+	uint8_t endp_up;
+	uint8_t endp_down;
+	int type;
+
+	struct printer_data *printer;
+	struct marker marker;
 
 	uint8_t cp900;
 };
@@ -609,13 +610,6 @@ static void *canonselphy_init(void)
 
 	/* Static initialization */
 	setup_paper_codes();
-
-	ctx->buffer = malloc(MAX_HEADER);
-	if (!ctx->buffer) {
-		ERROR("Memory Allocation Failure!\n");
-		free(ctx);
-		ctx = NULL;
-	}
 
 	return ctx;
 }
@@ -678,70 +672,86 @@ static int canonselphy_attach(void *vctx, struct libusb_device_handle *dev, int 
 	return CUPS_BACKEND_OK;
 }
 
+static void canonselphy_cleanup_job(const void *vjob) {
+	const struct canonselphy_printjob *job = vjob;
+
+	if (job->header)
+		free(job->header);
+	if (job->plane_y)
+		free(job->plane_y);
+	if (job->plane_m)
+		free(job->plane_m);
+	if (job->plane_c)
+		free(job->plane_c);
+	if (job->footer)
+		free(job->footer);
+
+	free((void*)job);
+}
+
 static void canonselphy_teardown(void *vctx) {
 	struct canonselphy_ctx *ctx = vctx;
 
 	if (!ctx)
 		return;
 
-	if (ctx->header)
-		free(ctx->header);
-	if (ctx->plane_y)
-		free(ctx->plane_y);
-	if (ctx->plane_m)
-		free(ctx->plane_m);
-	if (ctx->plane_c)
-		free(ctx->plane_c);
-	if (ctx->footer)
-		free(ctx->footer);
-
-	if (ctx->buffer)
-		free(ctx->buffer);
-
 	free(ctx);
 }
 
-static int canonselphy_read_parse(void *vctx, int data_fd)
+static int canonselphy_read_parse(void *vctx, const void **vjob, int data_fd, int copies)
 {
 	struct canonselphy_ctx *ctx = vctx;
 	int i, remain;
 	int printer_type;
 	int offset = 0;
+	uint8_t rdbuf[MAX_HEADER];
+
+	struct canonselphy_printjob *job = NULL;
 
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
 
+	job = malloc(sizeof(*job));
+	if (!job) {
+		ERROR("Memory allocation failure!\n");
+		return CUPS_BACKEND_RETRY_CURRENT;
+	}
+	memset(job, 0, sizeof(*job));
+	job->copies = copies;
+
 	/* The CP900 job *may* have a 4-byte null footer after the
 	   job contents.  Ignore it if it comes through here.. */
-	i = read(data_fd, ctx->buffer, 4);
+	i = read(data_fd, rdbuf, 4);
 	if (i != 4) {
 		if (i == 0)
 			return CUPS_BACKEND_CANCEL;
 		ERROR("Read failed (%d/%d)\n", i, 4);
 		perror("ERROR: Read failed");
+		canonselphy_cleanup_job(job);
 		return CUPS_BACKEND_FAILED;
 	}
 	/* if it's not the null header.. don't ignore! */
-	if (ctx->buffer[0] != 0 ||
-	    ctx->buffer[1] != 0 ||
-	    ctx->buffer[2] != 0 ||
-	    ctx->buffer[3] != 0) {
+	if (rdbuf[0] != 0 ||
+	    rdbuf[1] != 0 ||
+	    rdbuf[2] != 0 ||
+	    rdbuf[3] != 0) {
 		offset = 4;
 	}
 
 	/* Read the rest of the header.. */
-	i = read(data_fd, ctx->buffer + offset, MAX_HEADER - offset);
+	i = read(data_fd, rdbuf + offset, MAX_HEADER - offset);
 	if (i != MAX_HEADER - offset) {
 		if (i == 0)
 			return CUPS_BACKEND_CANCEL;
 		ERROR("Read failed (%d/%d)\n",
 		      i, MAX_HEADER - offset);
 		perror("ERROR: Read failed");
+		canonselphy_cleanup_job(job);
 		return CUPS_BACKEND_FAILED;
 	}
 
 	/* Figure out printer this file is intended for */
-	printer_type = parse_printjob(ctx->buffer, &ctx->bw_mode, &ctx->plane_len);
+	printer_type = parse_printjob(rdbuf, &job->bw_mode, &job->plane_len);
 	/* Special cases for some models */
 	if (printer_type == P_ES40_CP790) {
 		if (ctx->type == P_CP790)
@@ -750,91 +760,71 @@ static int canonselphy_read_parse(void *vctx, int data_fd)
 			printer_type = P_ES40;
 	}
 
-	/* Look up the printer entry */
-	if (!ctx->printer) {
-		ERROR("Unable to look up printer type!\n");
-		return CUPS_BACKEND_CANCEL;
-	}
-
 	if (printer_type != ctx->type) {
 		ERROR("Printer/Job mismatch (%d/%d)\n", ctx->type, ctx->printer->type);
+		free(job);
 		return CUPS_BACKEND_CANCEL;
 	}
 
-	INFO("%sFile intended for a '%s' printer\n",  ctx->bw_mode? "B/W " : "", ctx->printer->model);
+	INFO("%sFile intended for a '%s' printer\n",  job->bw_mode? "B/W " : "", ctx->printer->model);
 
 	/* Paper code setup */
 	if (ctx->printer->pgcode_offset != -1)
-		ctx->paper_code = ctx->printer->paper_codes[ctx->buffer[ctx->printer->pgcode_offset]];
+		job->paper_code = ctx->printer->paper_codes[rdbuf[ctx->printer->pgcode_offset]];
 	else
-		ctx->paper_code = -1;
+		job->paper_code = -1;
 
 	/* Add in plane header length! */
-	ctx->plane_len += 12;
-
-	/* Now prep for the job */
-	if (ctx->header) {
-		free(ctx->header);
-		ctx->header = NULL;
-	}
-	if (ctx->plane_y) {
-		free(ctx->plane_y);
-		ctx->plane_y = NULL;
-	}
-	if (ctx->plane_m) {
-		free(ctx->plane_m);
-		ctx->plane_m = NULL;
-	}
-	if (ctx->plane_c) {
-		free(ctx->plane_c);
-		ctx->plane_c = NULL;
-	}
-	if (ctx->footer) {
-		free(ctx->footer);
-		ctx->footer = NULL;
-	}
+	job->plane_len += 12;
 
 	/* Set up buffers */
-	ctx->plane_y = malloc(ctx->plane_len);
-	ctx->plane_m = malloc(ctx->plane_len);
-	ctx->plane_c = malloc(ctx->plane_len);
-	ctx->header = malloc(ctx->printer->init_length);
-	ctx->footer = malloc(ctx->printer->foot_length);
-	if (!ctx->plane_y || !ctx->plane_m || !ctx->plane_c || !ctx->header ||
-	    (ctx->printer->foot_length && !ctx->footer)) {
+	job->plane_y = malloc(job->plane_len);
+	job->plane_m = malloc(job->plane_len);
+	job->plane_c = malloc(job->plane_len);
+	job->header = malloc(ctx->printer->init_length);
+	job->footer = malloc(ctx->printer->foot_length);
+	if (!job->plane_y || !job->plane_m || !job->plane_c || !job->header ||
+	    (ctx->printer->foot_length && !job->footer)) {
 		ERROR("Memory allocation failure!\n");
+		canonselphy_cleanup_job(job);
 		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 
 	/* Move over chunks already read in */
-	memcpy(ctx->header, ctx->buffer, ctx->printer->init_length);
-	memcpy(ctx->plane_y, ctx->buffer+ctx->printer->init_length,
+	memcpy(job->header, rdbuf, ctx->printer->init_length);
+	memcpy(job->plane_y, rdbuf+ctx->printer->init_length,
 	       MAX_HEADER-ctx->printer->init_length);
 
 	/* Read in YELLOW plane */
-	remain = ctx->plane_len - (MAX_HEADER-ctx->printer->init_length);
+	remain = job->plane_len - (MAX_HEADER-ctx->printer->init_length);
 	while (remain > 0) {
-		i = read(data_fd, ctx->plane_y + (ctx->plane_len - remain), remain);
-		if (i < 0)
+		i = read(data_fd, job->plane_y + (job->plane_len - remain), remain);
+		if (i < 0) {
+			canonselphy_cleanup_job(job);
 			return CUPS_BACKEND_CANCEL;
+		}
 		remain -= i;
 	}
 
 	/* Read in MAGENTA plane */
-	remain = ctx->plane_len;
+	remain = job->plane_len;
 	while (remain > 0) {
-		i = read(data_fd, ctx->plane_m + (ctx->plane_len - remain), remain);
-		if (i < 0)
+		i = read(data_fd, job->plane_m + (job->plane_len - remain), remain);
+		if (i < 0) {
+			canonselphy_cleanup_job(job);
 			return CUPS_BACKEND_CANCEL;
+		}
 		remain -= i;
 	}
 
 	/* Read in CYAN plane */
-	remain = ctx->plane_len;
+	remain = job->plane_len;
 	while (remain > 0) {
-		i = read(data_fd, ctx->plane_c + (ctx->plane_len - remain), remain);
-		if (i < 0)
+		i = read(data_fd, job->plane_c + (job->plane_len - remain), remain);
+		if (i < 0) {
+			canonselphy_cleanup_job(job);
 			return CUPS_BACKEND_CANCEL;
+		}
 		remain -= i;
 	}
 
@@ -842,22 +832,36 @@ static int canonselphy_read_parse(void *vctx, int data_fd)
 	if (ctx->printer->foot_length) {
 		remain = ctx->printer->foot_length;
 		while (remain > 0) {
-			i = read(data_fd, ctx->footer + (ctx->printer->foot_length - remain), remain);
-			if (i < 0)
+			i = read(data_fd, job->footer + (ctx->printer->foot_length - remain), remain);
+			if (i < 0) {
+				canonselphy_cleanup_job(job);
 				return CUPS_BACKEND_CANCEL;
+			}
 			remain -= i;
 		}
 	}
 
+	*vjob = job;
+
 	return CUPS_BACKEND_OK;
 }
 
-static int canonselphy_main_loop(void *vctx, int copies) {
+static int canonselphy_main_loop(void *vctx, const void *vjob) {
 	struct canonselphy_ctx *ctx = vctx;
 
 	uint8_t rdbuf[READBACK_LEN], rdbuf2[READBACK_LEN];
 	int last_state = -1, state = S_IDLE;
 	int ret, num;
+	int copies;
+
+	const struct canonselphy_printjob *job = vjob;
+
+	if (!ctx)
+		return CUPS_BACKEND_FAILED;
+	if (!job)
+		return CUPS_BACKEND_FAILED;
+
+	copies = job->copies;
 
 	/* Read in the printer status to clear last state */
 	ret = read_data(ctx->dev, ctx->endp_up,
@@ -909,10 +913,10 @@ top:
 			break;
 
 		/* Make sure paper/ribbon is correct */
-		if (ctx->paper_code != -1) {
+		if (job->paper_code != -1) {
 			if (ctx->type == P_CP_XXX) {
 				uint8_t pc = rdbuf[ctx->printer->paper_code_offset];
-				if (((pc >> 4) & 0xf) != (ctx->paper_code & 0x0f)) {
+				if (((pc >> 4) & 0xf) != (job->paper_code & 0x0f)) {
 
 					if (pc & 0xf0) {
 						ERROR("Incorrect paper tray loaded, aborting job!\n");
@@ -922,7 +926,7 @@ top:
 						return CUPS_BACKEND_STOP;
 					}
 				}
-				if ((pc & 0xf) != (ctx->paper_code & 0xf)) {
+				if ((pc & 0xf) != (job->paper_code & 0xf)) {
 					if (pc & 0x0f) {
 						ERROR("Incorrect ribbon loaded, aborting job!\n");
 						return CUPS_BACKEND_HOLD;
@@ -934,9 +938,9 @@ top:
 				}
 			} else {
 				if (rdbuf[ctx->printer->paper_code_offset] !=
-				    ctx->paper_code) {
+				    job->paper_code) {
 					ERROR("Incorrect media/ribbon loaded (%02x vs %02x), aborting job!\n",
-					      ctx->paper_code,
+					      job->paper_code,
 					      rdbuf[ctx->printer->paper_code_offset]);
 					return CUPS_BACKEND_HOLD;  /* Hold this job, don't stop queue */
 				}
@@ -948,14 +952,14 @@ top:
 			if (ribbon == 0xf) {
 				ERROR("No ribbon loaded, aborting!\n");
 				return CUPS_BACKEND_STOP;
-			} else if (ribbon != ctx->paper_code) {
+			} else if (ribbon != job->paper_code) {
 				ERROR("Incorrect ribbon loaded, aborting job!\n");
 				return CUPS_BACKEND_HOLD;
 			}
 			if (paper == 0xf) {
 				ERROR("No paper tray loaded, aborting!\n");
 				return CUPS_BACKEND_STOP;
-			} else if (paper != ctx->paper_code) {
+			} else if (paper != job->paper_code) {
 				ERROR("Incorrect paper loaded, aborting job!\n");
 				return CUPS_BACKEND_HOLD;
 			}
@@ -966,7 +970,7 @@ top:
 	case S_PRINTER_READY:
 		INFO("Printing started; Sending init sequence\n");
 		/* Send printer init */
-		if ((ret = send_data(ctx->dev, ctx->endp_down, ctx->header, ctx->printer->init_length)))
+		if ((ret = send_data(ctx->dev, ctx->endp_down, job->header, ctx->printer->init_length)))
 			return CUPS_BACKEND_FAILED;
 
 		state = S_PRINTER_INIT_SENT;
@@ -977,19 +981,19 @@ top:
 		}
 		break;
 	case S_PRINTER_READY_Y:
-		if (ctx->bw_mode)
+		if (job->bw_mode)
 			INFO("Sending BLACK plane\n");
 		else
 			INFO("Sending YELLOW plane\n");
 
-		if ((ret = send_data(ctx->dev, ctx->endp_down, ctx->plane_y, ctx->plane_len)))
+		if ((ret = send_data(ctx->dev, ctx->endp_down, job->plane_y, job->plane_len)))
 			return CUPS_BACKEND_FAILED;
 
 		state = S_PRINTER_Y_SENT;
 		break;
 	case S_PRINTER_Y_SENT:
 		if (!fancy_memcmp(rdbuf, ctx->printer->ready_m_readback, READBACK_LEN)) {
-			if (ctx->bw_mode)
+			if (job->bw_mode)
 				state = S_PRINTER_DONE;
 			else
 				state = S_PRINTER_READY_M;
@@ -998,7 +1002,7 @@ top:
 	case S_PRINTER_READY_M:
 		INFO("Sending MAGENTA plane\n");
 
-		if ((ret = send_data(ctx->dev, ctx->endp_down, ctx->plane_m, ctx->plane_len)))
+		if ((ret = send_data(ctx->dev, ctx->endp_down, job->plane_m, job->plane_len)))
 			return CUPS_BACKEND_FAILED;
 
 		state = S_PRINTER_M_SENT;
@@ -1011,7 +1015,7 @@ top:
 	case S_PRINTER_READY_C:
 		INFO("Sending CYAN plane\n");
 
-		if ((ret = send_data(ctx->dev, ctx->endp_down, ctx->plane_c, ctx->plane_len)))
+		if ((ret = send_data(ctx->dev, ctx->endp_down, job->plane_c, job->plane_len)))
 			return CUPS_BACKEND_FAILED;
 
 		state = S_PRINTER_C_SENT;
@@ -1039,7 +1043,7 @@ top:
 		if (ctx->printer->foot_length) {
 			INFO("Cleaning up\n");
 
-			if ((ret = send_data(ctx->dev, ctx->endp_down, ctx->footer, ctx->printer->foot_length)))
+			if ((ret = send_data(ctx->dev, ctx->endp_down, job->footer, ctx->printer->foot_length)))
 				return CUPS_BACKEND_FAILED;
 		}
 		state = S_FINISHED;
@@ -1140,7 +1144,7 @@ static const char *canonselphy_prefixes[] = {
 
 struct dyesub_backend canonselphy_backend = {
 	.name = "Canon SELPHY CP/ES (legacy)",
-	.version = "0.101",
+	.version = "0.102",
 	.uri_prefixes = canonselphy_prefixes,
 	.cmdline_usage = canonselphy_cmdline,
 	.cmdline_arg = canonselphy_cmdline_arg,
@@ -1148,6 +1152,7 @@ struct dyesub_backend canonselphy_backend = {
 	.attach = canonselphy_attach,
 	.teardown = canonselphy_teardown,
 	.read_parse = canonselphy_read_parse,
+	.cleanup_job = canonselphy_cleanup_job,
 	.main_loop = canonselphy_main_loop,
 	.query_markers = canonselphy_query_markers,
 	.devices = {

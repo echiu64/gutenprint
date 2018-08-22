@@ -40,23 +40,18 @@
 
 #include "backend_common.h"
 
-/* Exported */
-#define USB_VID_SONY         0x054C
-#define USB_PID_SONY_UPDR150 0x01E8
-#define USB_PID_SONY_UPDR200 0x035F
-#define USB_PID_SONY_UPCR10  0x0226
-
 /* Private data structure */
+struct updr150_printjob {
+	uint8_t *databuf;
+	int datalen;
+	int copies;
+};
+
 struct updr150_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;
 	uint8_t endp_down;
 	int type;
-
-	uint8_t *databuf;
-	int datalen;
-
-	uint32_t copies_offset;
 
 	struct marker marker;
 };
@@ -84,8 +79,6 @@ static int updr150_attach(void *vctx, struct libusb_device_handle *dev, int type
 	ctx->endp_down = endp_down;
 	ctx->type = type;
 
-	ctx->copies_offset = 0;
-
 	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
 	ctx->marker.name = "Unknown";
 	ctx->marker.levelmax = -1;
@@ -94,153 +87,180 @@ static int updr150_attach(void *vctx, struct libusb_device_handle *dev, int type
 	return CUPS_BACKEND_OK;
 }
 
+static void updr150_cleanup_job(const void *vjob)
+{
+	const struct updr150_printjob *job = vjob;
+
+	if (job->databuf)
+		free(job->databuf);
+
+	free((void*)job);
+}
+
 static void updr150_teardown(void *vctx) {
 	struct updr150_ctx *ctx = vctx;
 
 	if (!ctx)
 		return;
 
-	if (ctx->databuf)
-		free(ctx->databuf);
 	free(ctx);
 }
 
 #define MAX_PRINTJOB_LEN 16736455
-static int updr150_read_parse(void *vctx, int data_fd) {
+static int updr150_read_parse(void *vctx, const void **vjob, int data_fd, int copies) {
 	struct updr150_ctx *ctx = vctx;
 	int len, run = 1;
+	uint32_t copies_offset = 0;
+
+	struct updr150_printjob *job = NULL;
 
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
 
-	if (ctx->databuf) {
-		free(ctx->databuf);
-		ctx->databuf = NULL;
-	}
-
-	ctx->datalen = 0;
-	ctx->databuf = malloc(MAX_PRINTJOB_LEN);
-	if (!ctx->databuf) {
+	job = malloc(sizeof(*job));
+	if (!job) {
 		ERROR("Memory allocation failure!\n");
+		return CUPS_BACKEND_RETRY_CURRENT;
+	}
+	memset(job, 0, sizeof(*job));
+	job->copies = copies;
+
+	job->datalen = 0;
+	job->databuf = malloc(MAX_PRINTJOB_LEN);
+	if (!job->databuf) {
+		ERROR("Memory allocation failure!\n");
+		updr150_cleanup_job(job);
 		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 
 	while(run) {
 		int i;
 		int keep = 0;
-		i = read(data_fd, ctx->databuf + ctx->datalen, 4);
-		if (i < 0)
+		i = read(data_fd, job->databuf + job->datalen, 4);
+		if (i < 0) {
+			updr150_cleanup_job(job);
 			return CUPS_BACKEND_CANCEL;
+		}
 		if (i == 0)
 			break;
 
-		memcpy(&len, ctx->databuf + ctx->datalen, sizeof(len));
+		memcpy(&len, job->databuf + job->datalen, sizeof(len));
 		len = le32_to_cpu(len);
 
 		/* Filter out chunks we don't send to the printer */
-		switch (len) {
-		case 0xffffff60:
-		case 0xffffff6a:
-		case 0xffffffeb:
-		case 0xffffffec:
-		case 0xffffffed:
-		case 0xfffffff4:
-		case 0xfffffff8:
-		case 0xfffffff9:
-		case 0xfffffffa:
-		case 0xfffffffb:
-		case 0xfffffffc:
-		case 0xffffffff:
-			if(dyesub_debug)
-				DEBUG("Block ID '%08x' (len %d)\n", len, 0);
-			len = 0;
-			break;
-		case 0xfffffff3:
-			if(dyesub_debug)
-				DEBUG("Block ID '%08x' (len %d)\n", len, 0);
-			len = 0;
-			if (ctx->type == P_SONY_UPDR150)
-				run = 0;
-			break;
-		case 0xfffffff7:
-			if(dyesub_debug)
-				DEBUG("Block ID '%08x' (len %d)\n", len, 0);
-			len = 0;
-			if (ctx->type == P_SONY_UPCR10)
-				run = 0;
-			break;
-		case 0xffffffef:
-		case 0xfffffff5:
-			if(dyesub_debug)
-				DEBUG("Block ID '%08x' (len %d)\n", len, 4);
-			len = 4;
-			break;
-		default:
-			if (len & 0xff000000) {
-				ERROR("Unknown block ID '%08x', aborting!\n", len);
-				return CUPS_BACKEND_CANCEL;
-			} else {
-				/* Only keep these chunks */
+		if (len & 0xf0000000) {
+			switch (len) {
+			case 0xfffffff3:
 				if(dyesub_debug)
-					DEBUG("Data block (len %d)\n", len);
-				keep = 1;
+					DEBUG("Block ID '%08x' (len %d)\n", len, 0);
+				len = 0;
+				if (ctx->type == P_SONY_UPDR150)
+					run = 0;
+				break;
+			case 0xfffffff7:
+				if(dyesub_debug)
+					DEBUG("Block ID '%08x' (len %d)\n", len, 0);
+				len = 0;
+				if (ctx->type == P_SONY_UPCR10)
+					run = 0;
+				break;
+			case 0xfffffff8: // 895
+			case 0xfffffff4: // 897
+				if(dyesub_debug)
+					DEBUG("Block ID '%08x' (len %d)\n", len, 0);
+				len = 0;
+				if (ctx->type == P_SONY_UPD89x)
+					run = 0;
+				break;
+			case 0xffffffeb:
+			case 0xffffffec:
+			case 0xffffffed:
+			case 0xffffffee:
+			case 0xffffffef:
+			case 0xfffffff5:
+				if(dyesub_debug)
+					DEBUG("Block ID '%08x' (len %d)\n", len, 4);
+				len = 4;
+				break;
+			default:
+				if(dyesub_debug)
+					DEBUG("Block ID '%08x' (len %d)\n", len, 0);
+				len = 0;
+				break;
 			}
-			break;
+		} else {
+			/* Only keep these chunks */
+			if(dyesub_debug)
+				DEBUG("Data block (len %d)\n", len);
+			keep = 1;
 		}
 		if (keep)
-			ctx->datalen += sizeof(uint32_t);
+			job->datalen += sizeof(uint32_t);
 
 		/* Read in the data chunk */
 		while(len > 0) {
-			i = read(data_fd, ctx->databuf + ctx->datalen, len);
-			if (i < 0)
+			i = read(data_fd, job->databuf + job->datalen, len);
+			if (i < 0) {
+				updr150_cleanup_job(job);
 				return CUPS_BACKEND_CANCEL;
+			}
 			if (i == 0)
 				break;
 
-			if (ctx->databuf[ctx->datalen] == 0x1b &&
-			    ctx->databuf[ctx->datalen + 1] == 0xee) {
+			if (job->databuf[job->datalen] == 0x1b &&
+			    job->databuf[job->datalen + 1] == 0xee) {
 				if (ctx->type == P_SONY_UPCR10)
-					ctx->copies_offset = ctx->datalen + 8;
+					copies_offset = job->datalen + 8;
 				else
-					ctx->copies_offset = ctx->datalen + 12;
+					copies_offset = job->datalen + 12;
 			}
 
 			if (keep)
-				ctx->datalen += i;
+				job->datalen += i;
 			len -= i;
 		}
 	}
-	if (!ctx->datalen)
+	if (!job->datalen) {
+		updr150_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
+	}
+
+	/* Some models specify copies in the print job */
+	if (copies_offset) {
+		job->databuf[copies_offset] = job->copies;
+		job->copies = 1;
+	}
+
+	*vjob = job;
 
 	return CUPS_BACKEND_OK;
 }
 
-static int updr150_main_loop(void *vctx, int copies) {
+static int updr150_main_loop(void *vctx, const void *vjob) {
 	struct updr150_ctx *ctx = vctx;
 	int i, ret;
+	int copies;
+
+	const struct updr150_printjob *job = vjob;
 
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
+	if (!job)
+		return CUPS_BACKEND_FAILED;
 
-	/* Some models specify copies in the print job */
-	if (ctx->copies_offset) {
-		ctx->databuf[ctx->copies_offset] = copies;
-		copies = 1;
-	}
+	copies = job->copies;
 
 top:
 	i = 0;
-	while (i < ctx->datalen) {
+	while (i < job->datalen) {
 		uint32_t len;
-		memcpy(&len, ctx->databuf + i, sizeof(len));
+		memcpy(&len, job->databuf + i, sizeof(len));
 		len = le32_to_cpu(len);
 
 		i += sizeof(uint32_t);
 
 		if ((ret = send_data(ctx->dev, ctx->endp_down,
-				     ctx->databuf + i, len)))
+				     job->databuf + i, len)))
 			return CUPS_BACKEND_FAILED;
 
 		i += len;
@@ -290,17 +310,28 @@ static int updr150_query_markers(void *vctx, struct marker **markers, int *count
 
 static const char *sonyupdr150_prefixes[] = {
 	"sonyupdr150", "sonyupdr200", "sonyupcr10",
+	"sonyupd895", "sonyupd897", "sonyupd898",
 	NULL
 };
 
+/* Exported */
+#define USB_VID_SONY         0x054C
+#define USB_PID_SONY_UPDR150 0x01E8
+#define USB_PID_SONY_UPDR200 0x035F
+#define USB_PID_SONY_UPCR10  0x0226
+//#define USB_PID_SONY_UPD895 XXXXX // 0x7ea6?
+//#define USB_PID_SONY_UPD897 XXXXX // 0xbce7?
+//#define USB_PID_SONY_UPD898 XXXXX // 0x589a?
+
 struct dyesub_backend updr150_backend = {
 	.name = "Sony UP-DR150/UP-DR200/UP-CR10",
-	.version = "0.23",
+	.version = "0.25",
 	.uri_prefixes = sonyupdr150_prefixes,
 	.cmdline_arg = updr150_cmdline_arg,
 	.init = updr150_init,
 	.attach = updr150_attach,
 	.teardown = updr150_teardown,
+	.cleanup_job = updr150_cleanup_job,
 	.read_parse = updr150_read_parse,
 	.main_loop = updr150_main_loop,
 	.query_markers = updr150_query_markers,
@@ -308,6 +339,9 @@ struct dyesub_backend updr150_backend = {
 		{ USB_VID_SONY, USB_PID_SONY_UPDR150, P_SONY_UPDR150, NULL, "sonyupdr150"},
 		{ USB_VID_SONY, USB_PID_SONY_UPDR200, P_SONY_UPDR150, NULL, "sonyupdr200"},
 		{ USB_VID_SONY, USB_PID_SONY_UPCR10, P_SONY_UPCR10, NULL, "sonyupcr10"},
+//		{ USB_VID_SONY, USB_PID_SONY_UPD895MD, P_SONY_UPD89x, NULL, "sonyupd895"},
+//		{ USB_VID_SONY, USB_PID_SONY_UPD897MD, P_SONY_UPD89x, NULL, "sonyupd897"},
+//		{ USB_VID_SONY, USB_PID_SONY_UPD898MD, P_SONY_UPD89x, NULL, "sonyupd898"},
 		{ 0, 0, 0, NULL, NULL}
 	}
 };
@@ -318,25 +352,18 @@ struct dyesub_backend updr150_backend = {
    arguments.  The purpose of the commands is unknown, but they presumably
    instruct the driver to perform certain things.
 
-   If you treat these 4 bytes as a 32-bit little-endian number, if the
-   most significant four bits are bits are non-zero, the value is is to
+   If you treat these 4 bytes as a 32-bit little-endian number, if any of the
+   most significant 4 bits are non-zero, the value is is to
    be interpreted as a driver command.  If the most significant bits are
    zero, the value signifies that the following N bytes of data should be
    sent to the printer as-is.
 
    Known driver "commands":
 
-   6a ff ff ff
-   fc ff ff ff
-   fb ff ff ff
-   f4 ff ff ff
-   ed ff ff ff
-   f9 ff ff ff
-   f8 ff ff ff
-   ec ff ff ff
-   eb ff ff ff
-   fa ff ff ff
-   f3 ff ff ff
+   eb ff ff ff  ?? 00 00 00
+   ec ff ff ff  ?? 00 00 00
+   ed ff ff ff  ?? 00 00 00
+   ee ff ff ff  ?? 00 00 00
    ef ff ff ff  XX 00 00 00   # XX == print size (0x01/0x02/0x03/0x04)
    f5 ff ff ff  YY 00 00 00   # YY == ??? (seen 0x01)
 
@@ -422,6 +449,117 @@ f7 ff ff ff
  SH SH SH SH == Plane size, Big Endian (Rows * Cols * 3)
  NN == Copies
 
+ **************
 
+  Sony UP-D895 spool format:
+
+ XX XX == cols, BE (fixed at 1280/0x500)
+ YY YY == rows, BE (798/0x031e,1038/0x040e,1475/0x05c3, 2484/09b4) @ 960/1280/1920/3840+4096
+ SS SS SS SS == data len (rows * cols, LE)
+ S' S' S' S' == data len (rows * cols, BE)
+ NN  == copies (1 -> ??)
+ GG GG == ???  0000/0050/011b/04aa/05aa at each resolution.
+ G' == Gamma  01 (soft), 03 (hard), 02 (normal)
+
+ 9c ff ff ff 97 ff ff ff  00 00 00 00 00 00 00 00  00 00 00 00 ff ff ff ff
+
+ 14 00 00 00
+ 1b 15 00 00 00 0d 00 00  00 00 00 01 GG GG 00 00  YY YY XX XX
+ 0b 00 00 00
+ 1b ea 00 00 00 00 S' S'  S' S' 00
+ SS SS SS SS
+ ...DATA... (rows * cols)
+ ff ff ff ff
+ 09 00 00 00
+ 1b ee 00 00 00 02 00 00  NN
+ 0f 00 00 00
+ 1b e5 00 00 00 08 00 00  00 00 00 00 00 00 00
+ 0c 00 00 00
+ 1b c0 00 00 00 05 00 02  00 00 01 G'
+ 11 00 00 00
+ 1b c0 00 01 00 0a 00 02  01 00 06 00 00 00 00 00  00
+ 12 00 00 00
+ 1b e1 00 00 00 0b 00 00  08 00 GG GG 00 00 YY YY  XX XX
+ 07 00 00 00
+ 1b 0a 00 00 00 00 00
+ fd ff ff ff f7 ff ff ff  f8 ff ff ff
+
+ **************
+
+  Sony UP-D897 spool format:
+
+ NN NN == copies  (00 for printer selected)
+ XX XX == cols (fixed @ 1280)
+ YY YY == rows
+ GG    == gamma -- Table 2 == 2, Table 1 == 3, Table 3 == 1, Table 4 == 4
+ DD    == "dark"  +- 64.
+ LL    == "light" +- 64.
+ AA    == "advanced" +- 32.
+ SS    == Sharpness 0-14
+ ZZ ZZ ZZ ZZ == Data length (BE)
+ Z` Z` Z` Z` == Data length (LE)
+
+
+ 83 ff ff ff fc ff ff ff  fb ff ff ff f5 ff ff ff  f1 ff ff ff f0 ff ff ff  ef ff ff ff
+
+ 07 00 00 00
+ 1b 15 00 00 00 0d 00
+ 0d 00 00 00
+ 00 00 00 00 01 00 a2 00  00 YY YY XX XX
+
+ 0b 00 00 00
+ 1b ea 00 00 00 00 ZZ ZZ  ZZ ZZ 00
+
+ Z` Z` Z` Z`
+ ...DATA...
+
+ ea ff ff ff
+
+ 07 00 00 00
+ 1b ee 00 00 00 02 00
+ 02 00 00 00
+ 00 NN
+
+ ee ff ff ff 01 00 00 00
+
+ 07 00 00 00
+ 1b e5 00 00 00 08 00
+ 08 00 00 00
+ 00 00 00 00 DD LL SS AA
+
+ eb ff ff ff ?? 00 00 00   <--- 02/05   5 at #3, 2 otherwise.  Sharpness?
+
+ 07 00 00 00
+ 1b c0 00 00 00 05 00
+ 05 00 00 00
+ 02 00 00 01 GG
+
+ ec ff ff ff ?? 00 00 00   <--- 01/00/02/01/01  Seen.  Unknown.
+
+ 07 00 00 00
+ 1b c0 00 01 00 0a 00
+ 0a 00 00 00
+ 02 01 00 06 00 00 00 00  00 00
+
+ ed ff ff ff 00 00 00 00
+
+ 07 00 00 00
+ 1b e1 00 00 00 0b 00
+ 0b 00 00 00
+ 00 08 00 00 a2 00 00 YY  YY XX XX
+
+ fa ff ff ff
+
+ 07 00 00 00
+ 1b 0a 00 00 00 00 00
+
+ fc ff ff ff
+ fd ff ff ff
+ ff ff ff ff
+
+ 07 00 00 00
+ 1b 17 00 00 00 00 00
+
+ f4 ff ff ff
 
 */

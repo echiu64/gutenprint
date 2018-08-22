@@ -108,21 +108,20 @@ static uint8_t gammas[2][256] = {
 	}
 };
 
+struct magicard_printjob {
+	uint8_t *databuf;
+	int datalen;
+
+	int hdr_len;
+	int copies;
+};
+
 /* Private data structure */
 struct magicard_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;
 	uint8_t endp_down;
 	int type;
-
-	uint8_t x_gp_8bpp;
-	uint8_t x_gp_rk;
-	uint8_t k_only;
-
-	uint8_t *databuf;
-	int datalen;
-
-	int hdr_len;
 
 	struct marker marker;
 };
@@ -292,10 +291,8 @@ static int magicard_selftest_card(struct magicard_ctx *ctx)
 {
 	int ret = 0;
 	uint8_t buf[256];
-	char buf2[24];
 
-	snprintf(buf2, sizeof(buf2), "TST,");
-	ret = magicard_build_cmd_simple(buf, buf2);
+	ret = magicard_build_cmd_simple(buf, "TST,");
 
 	ret = send_data(ctx->dev, ctx->endp_down,
 			buf, ret);
@@ -306,10 +303,8 @@ static int magicard_reset(struct magicard_ctx *ctx)
 {
 	int ret = 0;
 	uint8_t buf[256];
-	char buf2[24];
 
-	snprintf(buf2, sizeof(buf2), "RST,");
-	ret = magicard_build_cmd_simple(buf, buf2);
+	ret = magicard_build_cmd_simple(buf, "RST,");
 
 	ret = send_data(ctx->dev, ctx->endp_down,
 			buf, ret);
@@ -320,10 +315,8 @@ static int magicard_eject(struct magicard_ctx *ctx)
 {
 	int ret = 0;
 	uint8_t buf[256];
-	char buf2[24];
 
-	snprintf(buf2, sizeof(buf2), "EJT,");
-	ret = magicard_build_cmd_simple(buf, buf2);
+	ret = magicard_build_cmd_simple(buf, "EJT,");
 
 	ret = send_data(ctx->dev, ctx->endp_down,
 			buf, ret);
@@ -472,14 +465,21 @@ static int magicard_attach(void *vctx, struct libusb_device_handle *dev, int typ
 	return CUPS_BACKEND_OK;
 }
 
+static void magicard_cleanup_job(const void *vjob)
+{
+	const struct magicard_printjob *job = vjob;
+
+	if (job->databuf)
+		free(job->databuf);
+
+	free((void*)job);
+}
+
 static void magicard_teardown(void *vctx) {
 	struct magicard_ctx *ctx = vctx;
 
 	if (!ctx)
 		return;
-
-	if (ctx->databuf)
-		free(ctx->databuf);
 
 	free(ctx);
 }
@@ -554,7 +554,7 @@ static void downscale_and_extract(int gamma, uint32_t pixels,
 
 #define MAX_PRINTJOB_LEN (1016*672*4) + 1024  /* 1016*672 * 4color */
 #define INITIAL_BUF_LEN 1024
-static int magicard_read_parse(void *vctx, int data_fd) {
+static int magicard_read_parse(void *vctx, const void **vjob, int data_fd, int copies) {
 	struct magicard_ctx *ctx = vctx;
 	uint8_t initial_buf[INITIAL_BUF_LEN + 1];
 	uint32_t buf_offset = 0;
@@ -565,16 +565,33 @@ static int magicard_read_parse(void *vctx, int data_fd) {
 	uint32_t len_y = 0, len_m = 0, len_c = 0, len_k = 0;
 	int gamma = 0;
 
+	uint8_t x_gp_8bpp;
+	uint8_t x_gp_rk;
+	uint8_t k_only;
+
+	struct magicard_printjob *job = NULL;
+
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
 
+	job = malloc(sizeof(*job));
+	if (!job) {
+		ERROR("Memory allocation failure!\n");
+		return CUPS_BACKEND_RETRY_CURRENT;
+	}
+	memset(job, 0, sizeof(*job));
+	job->copies = copies;
+
 	/* Read in the first chunk */
 	i = read(data_fd, initial_buf, INITIAL_BUF_LEN);
-	if (i < 0)
+	if (i < 0) {
+		magicard_cleanup_job(job);
 		return i;
-	if (i == 0)
+	} else if (i == 0) {
+		magicard_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;  /* Ie no data, we're done */
-	if (i < INITIAL_BUF_LEN) {
+	} else if (i < INITIAL_BUF_LEN) {
+		magicard_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
 	}
 
@@ -582,37 +599,39 @@ static int magicard_read_parse(void *vctx, int data_fd) {
 	if (initial_buf[0] != 0x05 ||
 	    initial_buf[64] != 0x01 ||
 	    initial_buf[65] != 0x2c) {
-		ERROR("Unrecognized header data format @%d!\n", ctx->datalen);
+		ERROR("Unrecognized header data format @%d!\n", job->datalen);
+		magicard_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
 	}
 
 	initial_buf[INITIAL_BUF_LEN] = 0;
 
 	/* We can start allocating! */
-	if (ctx->databuf) {
-		free(ctx->databuf);
-		ctx->databuf = NULL;
+	if (job->databuf) {
+		free(job->databuf);
+		job->databuf = NULL;
 	}
-	ctx->datalen = 0;
-	ctx->databuf = malloc(MAX_PRINTJOB_LEN);
-	if (!ctx->databuf) {
+	job->datalen = 0;
+	job->databuf = malloc(MAX_PRINTJOB_LEN);
+	if (!job->databuf) {
 		ERROR("Memory allocation failure!\n");
+		magicard_cleanup_job(job);
 		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 
 	/* Copy over initial header */
-	memcpy(ctx->databuf + ctx->datalen, initial_buf + buf_offset, 65);
-	ctx->datalen += 65;
+	memcpy(job->databuf + job->datalen, initial_buf + buf_offset, 65);
+	job->datalen += 65;
 	buf_offset += 65;
 
 	/* Start parsing headers */
-	ctx->x_gp_8bpp = ctx->x_gp_rk = ctx->k_only = ctx->hdr_len = 0;
+	x_gp_8bpp = x_gp_rk = k_only = job->hdr_len = 0;
 
 	char *ptr;
 	ptr = strtok((char*)initial_buf + ++buf_offset, ",\x1c");
 	while (ptr && *ptr != 0x1c) {
 		if (!strcmp("X-GP-8", ptr)) {
-			ctx->x_gp_8bpp = 1;
+			x_gp_8bpp = 1;
 		} else if (!strncmp("TDT", ptr, 3)) {
 			/* Strip out the timestamp, replace it with one from the backend */
 		} else if (!strncmp("IMF", ptr,3)) {
@@ -620,7 +639,7 @@ static int magicard_read_parse(void *vctx, int data_fd) {
 //		} else if (!strncmp("ESS", ptr, 3)) {
 //			/* Strip out copies */
 		} else if (!strcmp("X-GP-RK", ptr)) {
-			ctx->x_gp_rk = 1;
+			x_gp_rk = 1;
 		} else if (!strncmp("ICC", ptr,3)) {
 			/* Gamma curve is not handled by printer,
 			   strip it out and use it! */
@@ -637,7 +656,7 @@ static int magicard_read_parse(void *vctx, int data_fd) {
 			}
 		} else {
 			/* Everything else goes in */
-			ctx->datalen += sprintf((char*)ctx->databuf + ctx->datalen, ",%s", ptr);
+			job->datalen += sprintf((char*)job->databuf + job->datalen, ",%s", ptr);
 		}
 
 		/* Keep going */
@@ -652,60 +671,63 @@ static int magicard_read_parse(void *vctx, int data_fd) {
 	/* Sanity checks */
 	if (!len_y || !len_m || !len_c) {
 		ERROR("Plane lengths missing? %u/%u/%u!\n", len_y, len_m, len_c);
+		magicard_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
 	}
 	if (len_y != len_m || len_y != len_c) {
 		ERROR("Inconsistent data plane lengths! %u/%u/%u!\n", len_y, len_m, len_c);
+		magicard_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
 	}
-	if (ctx->x_gp_rk && len_k) {
+	if (x_gp_rk && len_k) {
 		ERROR("Data stream already has a K layer!\n");
+		magicard_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
 	}
 
 	/* Generate a timestamp */
-	ctx->datalen += sprintf((char*)ctx->databuf + ctx->datalen, ",TDT%08X", (uint32_t) time(NULL));
+	job->datalen += sprintf((char*)job->databuf + job->datalen, ",TDT%08X", (uint32_t) time(NULL));
 
 	/* Generate image format tag */
-	if (ctx->k_only == 1) {
-		ctx->datalen += sprintf((char*)ctx->databuf + ctx->datalen, ",IMFK");
-	} else if (ctx->x_gp_rk || len_k) {
+	if (k_only == 1) {
+		job->datalen += sprintf((char*)job->databuf + job->datalen, ",IMFK");
+	} else if (x_gp_rk || len_k) {
 		/* We're adding K, so make this BGRK */
-		ctx->datalen += sprintf((char*)ctx->databuf + ctx->datalen, ",IMFBGRK");
+		job->datalen += sprintf((char*)job->databuf + job->datalen, ",IMFBGRK");
 	} else {
 		/* Just BGR */
-		ctx->datalen += sprintf((char*)ctx->databuf + ctx->datalen, ",IMFBGR");
+		job->datalen += sprintf((char*)job->databuf + job->datalen, ",IMFBGR");
 	}
 
 	/* Insert SZB/G/R/K length descriptors */
-	if (ctx->x_gp_8bpp) {
-		if (ctx->k_only == 1) {
-			ctx->datalen += sprintf((char*)ctx->databuf + ctx->datalen, ",SZK%u", len_c / 8);
+	if (x_gp_8bpp) {
+		if (k_only == 1) {
+			job->datalen += sprintf((char*)job->databuf + job->datalen, ",SZK%u", len_c / 8);
 		} else {
-			ctx->datalen += sprintf((char*)ctx->databuf + ctx->datalen, ",SZB%u", len_y * 6 / 8);
-			ctx->datalen += sprintf((char*)ctx->databuf + ctx->datalen, ",SZG%u", len_m * 6 / 8);
-			ctx->datalen += sprintf((char*)ctx->databuf + ctx->datalen, ",SZR%u", len_c * 6 / 8);
+			job->datalen += sprintf((char*)job->databuf + job->datalen, ",SZB%u", len_y * 6 / 8);
+			job->datalen += sprintf((char*)job->databuf + job->datalen, ",SZG%u", len_m * 6 / 8);
+			job->datalen += sprintf((char*)job->databuf + job->datalen, ",SZR%u", len_c * 6 / 8);
 			/* Add in a SZK length indication if requested */
-			if (ctx->x_gp_rk == 1) {
-				ctx->datalen += sprintf((char*)ctx->databuf + ctx->datalen, ",SZK%u", len_c / 8);
+			if (x_gp_rk == 1) {
+				job->datalen += sprintf((char*)job->databuf + job->datalen, ",SZK%u", len_c / 8);
 			}
 		}
 	} else {
-		ctx->datalen += sprintf((char*)ctx->databuf + ctx->datalen, ",SZB%u", len_y);
-		ctx->datalen += sprintf((char*)ctx->databuf + ctx->datalen, ",SZG%u", len_m);
-		ctx->datalen += sprintf((char*)ctx->databuf + ctx->datalen, ",SZR%u", len_c);
+		job->datalen += sprintf((char*)job->databuf + job->datalen, ",SZB%u", len_y);
+		job->datalen += sprintf((char*)job->databuf + job->datalen, ",SZG%u", len_m);
+		job->datalen += sprintf((char*)job->databuf + job->datalen, ",SZR%u", len_c);
 		/* Add in a SZK length indication if requested */
 		if (len_k) {
-			ctx->datalen += sprintf((char*)ctx->databuf + ctx->datalen, ",SZK%u", len_k);
+			job->datalen += sprintf((char*)job->databuf + job->datalen, ",SZK%u", len_k);
 		}
 	}
 
 	/* Terminate command stream */
-	ctx->databuf[ctx->datalen++] = 0x1c;
+	job->databuf[job->datalen++] = 0x1c;
 
 	/* Let's figure out how long the image data stream is supposed to be. */
 	uint32_t remain;
-	if (ctx->k_only) {
+	if (k_only) {
 		remain = len_k + 3;
 	} else {
 		remain = len_y + len_m + len_c + 3 * 3;
@@ -717,12 +739,13 @@ static int magicard_read_parse(void *vctx, int data_fd) {
 	remain++;  /* Add in a byte for the end of job marker. This is our final value. */
 
 	/* This is how much of the initial buffer is the header length. */
-	ctx->hdr_len = ctx->datalen;
+	job->hdr_len = job->datalen;
 
-	if (ctx->x_gp_8bpp) {
+	if (x_gp_8bpp) {
 		uint32_t srcbuf_offset = INITIAL_BUF_LEN - buf_offset;
 		uint8_t *srcbuf = malloc(MAX_PRINTJOB_LEN);
 		if (!srcbuf) {
+			magicard_cleanup_job(job);
 			ERROR("Memory allocation failure!\n");
 			return CUPS_BACKEND_RETRY_CURRENT;
 		}
@@ -734,11 +757,13 @@ static int magicard_read_parse(void *vctx, int data_fd) {
 			i = read(data_fd, srcbuf + srcbuf_offset, remain);
 			if (i < 0) {
 				ERROR("Data Read Error: %d (%u) @%u)\n", i, remain, srcbuf_offset);
+				magicard_cleanup_job(job);
 				free(srcbuf);
 				return i;
 			}
 			if (i == 0) {
 				ERROR("Short read! (%d/%u)\n", i, remain);
+				magicard_cleanup_job(job);
 				free(srcbuf);
 				return CUPS_BACKEND_CANCEL;
 			}
@@ -754,7 +779,7 @@ static int magicard_read_parse(void *vctx, int data_fd) {
 		in_c = in_m + len_m + 3;
 
 		/* Set up destination pointers */
-		out_y = ctx->databuf + ctx->datalen;
+		out_y = job->databuf + job->datalen;
 		out_m = out_y + (len_y * 6 / 8) + 3;
 		out_c = out_m + (len_m * 6 / 8) + 3;
 		out_k = out_c + (len_c * 6 / 8) + 3;
@@ -764,69 +789,78 @@ static int magicard_read_parse(void *vctx, int data_fd) {
 		memcpy(out_c - 3, in_m + len_m, 3);
 		memcpy(out_k - 3, in_c + len_c, 3);
 
-		if (!ctx->x_gp_rk)
+		if (!x_gp_rk)
 			out_k = NULL;
 
-		INFO("Converting image data to printer's native format %s\n", ctx->x_gp_rk ? "and extracting K channel" : "");
+		INFO("Converting image data to printer's native format %s\n", x_gp_rk ? "and extracting K channel" : "");
 
 		downscale_and_extract(gamma, len_y, in_y, in_m, in_c,
 				      out_y, out_m, out_c, out_k);
 
 		/* Pad out the length appropriately. */
-		ctx->datalen += ((len_c * 6 / 8) + 3) * 3;
+		job->datalen += ((len_c * 6 / 8) + 3) * 3;
 
 		/* If there's a K plane, compute length.. */
 		if (out_k) {
-			ctx->datalen += (len_c / 8);
-			ctx->databuf[ctx->datalen++] = 0x1c;
-			ctx->databuf[ctx->datalen++] = 0x4b;
-			ctx->databuf[ctx->datalen++] = 0x3a;
+			job->datalen += (len_c / 8);
+			job->databuf[job->datalen++] = 0x1c;
+			job->databuf[job->datalen++] = 0x4b;
+			job->databuf[job->datalen++] = 0x3a;
 		}
 
 		/* Terminate the entire stream */
-		ctx->databuf[ctx->datalen++] = 0x03;
+		job->databuf[job->datalen++] = 0x03;
 
 		free(srcbuf);
 	} else {
 		uint32_t srcbuf_offset = INITIAL_BUF_LEN - buf_offset;
-		memcpy(ctx->databuf + ctx->datalen, initial_buf + buf_offset, srcbuf_offset);
-		ctx->datalen += srcbuf_offset;
+		memcpy(job->databuf + job->datalen, initial_buf + buf_offset, srcbuf_offset);
+		job->datalen += srcbuf_offset;
 
 		/* Finish loading the data */
 		while (remain > 0) {
-			i = read(data_fd, ctx->databuf + ctx->datalen, remain);
+			i = read(data_fd, job->databuf + job->datalen, remain);
 			if (i < 0) {
-				ERROR("Data Read Error: %d (%u) @%d)\n", i, remain, ctx->datalen);
+				ERROR("Data Read Error: %d (%u) @%d)\n", i, remain, job->datalen);
+				magicard_cleanup_job(job);
 				return i;
 			}
 			if (i == 0) {
+				magicard_cleanup_job(job);
 				ERROR("Short read! (%d/%u)\n", i, remain);
 				return CUPS_BACKEND_CANCEL;
 			}
-			ctx->datalen += i;
+			job->datalen += i;
 			remain -= i;
 		}
 	}
 
+	*vjob = job;
+
 	return CUPS_BACKEND_OK;
 }
 
-static int magicard_main_loop(void *vctx, int copies) {
+static int magicard_main_loop(void *vctx, const void *vjob) {
 	struct magicard_ctx *ctx = vctx;
 	int ret;
+
+	const struct magicard_printjob *job = vjob;
 
 	// XXX printer handles copy generation..
 	// but it's a numeric parameter.  Bleh.
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
+	if (!job)
+		return CUPS_BACKEND_FAILED;
 
+	copies = job->copies;
 top:
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
-			     ctx->databuf, ctx->hdr_len)))
+			     job->databuf, job->hdr_len)))
 		return CUPS_BACKEND_FAILED;
 
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
-			     ctx->databuf + ctx->hdr_len, ctx->datalen - ctx->hdr_len)))
+			     job->databuf + job->hdr_len, job->datalen - job->hdr_len)))
 		return CUPS_BACKEND_FAILED;
 
 	/* Clean up */
@@ -907,13 +941,14 @@ static const char *magicard_prefixes[] = {
 
 struct dyesub_backend magicard_backend = {
 	.name = "Magicard family",
-	.version = "0.13",
+	.version = "0.14",
 	.uri_prefixes = magicard_prefixes,
 	.cmdline_arg = magicard_cmdline_arg,
 	.cmdline_usage = magicard_cmdline,
 	.init = magicard_init,
 	.attach = magicard_attach,
 	.teardown = magicard_teardown,
+	.cleanup_job = magicard_cleanup_job,
 	.read_parse = magicard_read_parse,
 	.main_loop = magicard_main_loop,
 	.query_markers = magicard_query_markers,

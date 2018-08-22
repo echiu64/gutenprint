@@ -49,30 +49,31 @@
 #define USB_PID_MITSU_P95D  0x3b10
 
 /* Private data structure */
+struct mitsup95d_printjob {
+	uint8_t *databuf;
+	uint32_t datalen;
+
+	uint8_t hdr[2];  // 1b 51
+	uint8_t hdr1[50]; // 1b 57 20 2e ...
+	uint8_t hdr2[50]; // 1b 57 21 2e ...
+	uint8_t hdr3[50]; // 1b 57 22 2e ...
+	uint8_t hdr4[42];  // 1b 58 ...
+	int hdr4_len;      // 36 (P95) or 42 (P93)
+
+	uint8_t plane[12]; // 1b 5a 74 00 ...
+
+	uint8_t mem_clr[4]; // 1b 5a 43 00
+	int mem_clr_present;
+
+	uint8_t ftr[2];
+};
+
 struct mitsup95d_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;
 	uint8_t endp_down;
 
 	int type;
-
-	uint8_t mem_clr[4]; // 1b 5a 43 00
-	int mem_clr_present;
-
-	uint8_t hdr[2];  // 1b 51
-
-	uint8_t hdr1[50]; // 1b 57 20 2e ...
-	uint8_t hdr2[50]; // 1b 57 21 2e ...
-	uint8_t hdr3[50]; // 1b 57 22 2e ...
-
-	uint8_t hdr4[42];  // 1b 58 ...
-	int hdr4_len;      // 36 (P95) or 42 (P93)
-	uint8_t plane[12]; // 1b 5a 74 00 ...
-
-	uint8_t *databuf;
-	uint32_t datalen;
-
-	uint8_t ftr[2];
 
 	struct marker marker;
 };
@@ -158,18 +159,26 @@ static int mitsup95d_attach(void *vctx, struct libusb_device_handle *dev, int ty
 	return CUPS_BACKEND_OK;
 }
 
+static void mitsup95d_cleanup_job(const void *vjob)
+{
+	const struct mitsup95d_printjob *job = vjob;
+
+	if (job->databuf)
+		free(job->databuf);
+
+	free((void*)job);
+}
+
 static void mitsup95d_teardown(void *vctx) {
 	struct mitsup95d_ctx *ctx = vctx;
 
 	if (!ctx)
 		return;
 
-	if (ctx->databuf)
-		free(ctx->databuf);
 	free(ctx);
 }
 
-static int mitsup95d_read_parse(void *vctx, int data_fd) {
+static int mitsup95d_read_parse(void *vctx, const void **vjob, int data_fd, int copies) {
 	struct mitsup95d_ctx *ctx = vctx;
 	uint8_t buf[2];  /* Enough to read in any header */
 	uint8_t tmphdr[50];
@@ -178,35 +187,45 @@ static int mitsup95d_read_parse(void *vctx, int data_fd) {
 	int remain;
 	int ptr_offset;
 
+	struct mitsup95d_printjob *job = NULL;
+
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
 
-	if (ctx->databuf) {
-		free(ctx->databuf);
-		ctx->databuf = NULL;
+	job = malloc(sizeof(*job));
+	if (!job) {
+		ERROR("Memory allocation failure!\n");
+		return CUPS_BACKEND_RETRY_CURRENT;
 	}
-	ctx->mem_clr_present = 0;
+	memset(job, 0, sizeof(*job));
+
+	job->mem_clr_present = 0;
 
 top:
 	i = read(data_fd, buf, sizeof(buf));
 
-	if (i == 0)
+	if (i == 0) {
+		mitsup95d_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
-	if (i < 0)
+	}
+	if (i < 0) {
+		mitsup95d_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
+	}
 	if (buf[0] != 0x1b) {
 		ERROR("malformed data stream\n");
+		mitsup95d_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
 	}
 
 	switch (buf[1]) {
 	case 0x50: /* Footer */
 		remain = 2;
-		ptr = ctx->ftr;
+		ptr = job->ftr;
 		break;
 	case 0x51: /* Job Header */
 		remain = 2;
-		ptr = ctx->hdr;
+		ptr = job->hdr;
 		break;
 	case 0x57: /* Geeneral headers */
 		remain = sizeof(tmphdr);
@@ -214,11 +233,11 @@ top:
 		break;
 	case 0x58: /* User Comment */
 		if (ctx->type == P_MITSU_P93D)
-			ctx->hdr4_len = 42;
+			job->hdr4_len = 42;
 		else
-			ctx->hdr4_len = 36;
-		remain = ctx->hdr4_len;
-		ptr = ctx->hdr4;
+			job->hdr4_len = 36;
+		remain = job->hdr4_len;
+		ptr = job->hdr4;
 		break;
 	case 0x5a: /* Plane header OR printer reset */
 		// reset memory: 1b 5a 43 ...  [len 04]
@@ -229,6 +248,7 @@ top:
 		break;
 	default:
 		ERROR("Unrecognized command! (%02x %02x)\n", buf[0], buf[1]);
+		mitsup95d_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
 	}
 
@@ -238,21 +258,25 @@ top:
 
 	while (remain) {
 		i = read(data_fd, ptr + ptr_offset, remain);
-		if (i == 0)
+		if (i == 0) {
+			mitsup95d_cleanup_job(job);
 			return CUPS_BACKEND_CANCEL;
-		if (i < 0)
+		}
+		if (i < 0) {
+			mitsup95d_cleanup_job(job);
 			return CUPS_BACKEND_CANCEL;
+		}
 		remain -= i;
 		ptr_offset += i;
 
 		/* Handle the ambiguous 0x5a block */
 		if (buf[1] == 0x5a && remain == 0) {
 			if (tmphdr[2] == 0x74) { /* plane header */
-				ptr = ctx->plane;
+				ptr = job->plane;
 				remain = 12 - ptr_offset; /* Finish reading */
 			} else if (tmphdr[2] == 0x43) { /* reset memory */
-				ptr = ctx->mem_clr;
-				ctx->mem_clr_present = 1;
+				ptr = job->mem_clr;
+				job->mem_clr_present = 1;
 				remain = 4 - ptr_offset;
 			}
 			memcpy(ptr, tmphdr, ptr_offset);
@@ -264,71 +288,84 @@ top:
 		if (tmphdr[3] != 46) {
 			ERROR("Unexpected header chunk: %02x %02x %02x %02x\n",
 			      tmphdr[0], tmphdr[1], tmphdr[2], tmphdr[3]);
+			mitsup95d_cleanup_job(job);
 			return CUPS_BACKEND_CANCEL;
 		}
 		switch (tmphdr[2]) {
 		case 0x20:
-			ptr = ctx->hdr1;
+			ptr = job->hdr1;
 			break;
 		case 0x21:
-			ptr = ctx->hdr2;
+			ptr = job->hdr2;
 			break;
 		case 0x22:
-			ptr = ctx->hdr3;
+			ptr = job->hdr3;
 			break;
 		default:
-			ERROR("Unexpected header chunk: %02x %02x %02x %02x\n",
+			WARNING("Unexpected header chunk: %02x %02x %02x %02x\n",
 			      tmphdr[0], tmphdr[1], tmphdr[2], tmphdr[3]);
 		}
 		memcpy(ptr, tmphdr, sizeof(tmphdr));
-	} else if (ptr == ctx->plane) {
-		uint16_t rows = ctx->plane[10] << 8 | ctx->plane[11];
-		uint16_t cols = ctx->plane[8] << 8 | ctx->plane[9];
+	} else if (ptr == job->plane) {
+		uint16_t rows = job->plane[10] << 8 | job->plane[11];
+		uint16_t cols = job->plane[8] << 8 | job->plane[9];
 
 		remain = rows * cols;
 
 		/* Allocate buffer for the payload */
-		ctx->datalen = 0;
-		ctx->databuf = malloc(remain);
-		if (!ctx->databuf) {
+		job->datalen = 0;
+		job->databuf = malloc(remain);
+		if (!job->databuf) {
 			ERROR("Memory allocation failure!\n");
+			mitsup95d_cleanup_job(job);
 			return CUPS_BACKEND_RETRY_CURRENT;
 		}
 
 		/* Read it in */
 		while (remain) {
-			i = read(data_fd, ctx->databuf + ctx->datalen, remain);
-			if (i == 0)
+			i = read(data_fd, job->databuf + job->datalen, remain);
+			if (i == 0) {
+				mitsup95d_cleanup_job(job);
 				return CUPS_BACKEND_CANCEL;
-			if (i < 0)
+			}
+			if (i < 0) {
+				mitsup95d_cleanup_job(job);
 				return CUPS_BACKEND_CANCEL;
+			}
 			remain -= i;
-			ctx->datalen += i;
+			job->datalen += i;
 		}
-	} else if (ptr == ctx->ftr) {
+	} else if (ptr == job->ftr) {
+
+		/* XXX Update unknown header field to match sniffs */
+		if (ctx->type == P_MITSU_P95D) {
+			if (job->hdr1[18] == 0x00)
+				job->hdr1[18] = 0x01;
+		}
+
+		/* Update printjob header to reflect number of requested copies */
+		if (job->hdr2[13] != 0xff)
+			job->hdr2[13] = copies;
+
+		*vjob = job;
 		return CUPS_BACKEND_OK;
 	}
 
 	goto top;
 }
 
-static int mitsup95d_main_loop(void *vctx, int copies) {
+static int mitsup95d_main_loop(void *vctx, const void *vjob) {
 	struct mitsup95d_ctx *ctx = vctx;
 	uint8_t queryresp[QUERYRESP_SIZE_MAX];
 	int ret;
 
+	const struct mitsup95d_printjob *job = vjob;
+
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
+	if (!job)
+		return CUPS_BACKEND_FAILED;
 
-	/* Update printjob header to reflect number of requested copies */
-	if (ctx->hdr2[13] != 0xff)
-		ctx->hdr2[13] = copies;
-
-	if (ctx->type == P_MITSU_P95D) {
-		/* XXX Update unknown header field to match sniffs */
-		if (ctx->hdr1[18] == 0x00)
-			ctx->hdr1[18] = 0x01;
-	}
 
 	INFO("Waiting for printer idle\n");
 
@@ -360,37 +397,37 @@ static int mitsup95d_main_loop(void *vctx, int copies) {
 	INFO("Sending print job\n");
 
 	/* Send over Memory Clear, if present */
-	if (ctx->mem_clr_present) {
+	if (job->mem_clr_present) {
 		if ((ret = send_data(ctx->dev, ctx->endp_down,
-				     ctx->mem_clr, sizeof(ctx->mem_clr))))
+				     job->mem_clr, sizeof(job->mem_clr))))
 			return CUPS_BACKEND_FAILED;
 	}
 
 	/* Send Job Start */
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
-			     ctx->hdr, sizeof(ctx->hdr))))
+			     job->hdr, sizeof(job->hdr))))
 		return CUPS_BACKEND_FAILED;
 
 	/* Send over headers */
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
-			     ctx->hdr1, sizeof(ctx->hdr1))))
+			     job->hdr1, sizeof(job->hdr1))))
 		return CUPS_BACKEND_FAILED;
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
-			     ctx->hdr2, sizeof(ctx->hdr2))))
+			     job->hdr2, sizeof(job->hdr2))))
 		return CUPS_BACKEND_FAILED;
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
-			     ctx->hdr3, sizeof(ctx->hdr3))))
+			     job->hdr3, sizeof(job->hdr3))))
 		return CUPS_BACKEND_FAILED;
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
-			     ctx->hdr4, ctx->hdr4_len)))
+			     job->hdr4, job->hdr4_len)))
 		return CUPS_BACKEND_FAILED;
 
 	/* Send plane header and image data */
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
-			     ctx->plane, sizeof(ctx->plane))))
+			     job->plane, sizeof(job->plane))))
 		return CUPS_BACKEND_FAILED;
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
-			     ctx->databuf, ctx->datalen)))
+			     job->databuf, job->datalen)))
 		return CUPS_BACKEND_FAILED;
 
 	/* Query Status to sanity-check job */
@@ -420,7 +457,7 @@ static int mitsup95d_main_loop(void *vctx, int copies) {
 
 	/* Send over Footer */
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
-			     ctx->ftr, sizeof(ctx->ftr))))
+			     job->ftr, sizeof(job->ftr))))
 		return CUPS_BACKEND_FAILED;
 
 	INFO("Waiting for completion\n");
@@ -562,13 +599,14 @@ static const char *mitsup95d_prefixes[] = {
 /* Exported */
 struct dyesub_backend mitsup95d_backend = {
 	.name = "Mitsubishi P93D/P95D",
-	.version = "0.09",
+	.version = "0.10",
 	.uri_prefixes = mitsup95d_prefixes,
 	.cmdline_arg = mitsup95d_cmdline_arg,
 	.cmdline_usage = mitsup95d_cmdline,
 	.init = mitsup95d_init,
 	.attach = mitsup95d_attach,
 	.teardown = mitsup95d_teardown,
+	.cleanup_job = mitsup95d_cleanup_job,
 	.read_parse = mitsup95d_read_parse,
 	.main_loop = mitsup95d_main_loop,
 	.query_markers = mitsup95d_query_markers,

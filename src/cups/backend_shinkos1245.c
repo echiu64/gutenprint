@@ -402,6 +402,13 @@ struct shinkos1245_resp_matte {
 #define MATTE_MODE_MATTE 0x00
 
 /* Private data structure */
+struct shinkos1245_printjob {
+	uint8_t *databuf;
+	int datalen;
+
+	int copies;
+};
+
 struct shinkos1245_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;
@@ -418,8 +425,6 @@ struct shinkos1245_ctx {
 
 	struct marker marker;
 
-	uint8_t *databuf;
-	int datalen;
 	int tonecurve;
 };
 
@@ -1312,6 +1317,15 @@ static int shinkos1245_attach(void *vctx, struct libusb_device_handle *dev, int 
 	return CUPS_BACKEND_OK;
 }
 
+static void shinkos1245_cleanup_job(const void *vjob)
+{
+	const struct shinkos1245_printjob *job = vjob;
+
+	if (job->databuf)
+		free(job->databuf);
+
+	free((void*)job);
+}
 
 static void shinkos1245_teardown(void *vctx) {
 	struct shinkos1245_ctx *ctx = vctx;
@@ -1319,31 +1333,43 @@ static void shinkos1245_teardown(void *vctx) {
 	if (!ctx)
 		return;
 
-	if (ctx->databuf)
-		free(ctx->databuf);
-
 	free(ctx);
 }
 
-static int shinkos1245_read_parse(void *vctx, int data_fd) {
+static int shinkos1245_read_parse(void *vctx, const void **vjob, int data_fd, int copies) {
 	struct shinkos1245_ctx *ctx = vctx;
 	int ret;
 	uint8_t tmpbuf[4];
 
+	struct shinkos1245_printjob *job = NULL;
+
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
 
+	job = malloc(sizeof(*job));
+	if (!job) {
+		ERROR("Memory allocation failure!\n");
+		return CUPS_BACKEND_RETRY_CURRENT;
+	}
+	memset(job, 0, sizeof(*job));
+	job->copies = copies;
+
 	/* Read in then validate header */
 	ret = read(data_fd, &ctx->hdr, sizeof(ctx->hdr));
-	if (ret < 0)
+	if (ret < 0) {
+		shinkos1245_cleanup_job(job);
 		return ret;
-	if (ret != sizeof(ctx->hdr))
+	}
+	if (ret != sizeof(ctx->hdr)) {
+		shinkos1245_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
+	}
 
 	if (le32_to_cpu(ctx->hdr.len1) != 0x10 ||
 	    le32_to_cpu(ctx->hdr.len2) != 0x64 ||
 	    le32_to_cpu(ctx->hdr.dpi) != 300) {
 		ERROR("Unrecognized header data format!\n");
+		shinkos1245_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
 	}
 
@@ -1351,6 +1377,7 @@ static int shinkos1245_read_parse(void *vctx, int data_fd) {
 
 	if(ctx->hdr.model != 1245) {
 		ERROR("Unrecognized printer (%u)!\n", ctx->hdr.model);
+		shinkos1245_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
 	}
 
@@ -1365,27 +1392,24 @@ static int shinkos1245_read_parse(void *vctx, int data_fd) {
 	ctx->hdr.copies = le32_to_cpu(ctx->hdr.copies);
 
 	/* Allocate space */
-	if (ctx->databuf) {
-		free(ctx->databuf);
-		ctx->databuf = NULL;
-	}
-
-	ctx->datalen = ctx->hdr.rows * ctx->hdr.columns * 3;
-	ctx->databuf = malloc(ctx->datalen);
-	if (!ctx->databuf) {
+	job->datalen = ctx->hdr.rows * ctx->hdr.columns * 3;
+	job->databuf = malloc(job->datalen);
+	if (!job->databuf) {
 		ERROR("Memory allocation failure!\n");
+		shinkos1245_cleanup_job(job);
 		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 
 	{
-		int remain = ctx->datalen;
-		uint8_t *ptr = ctx->databuf;
+		int remain = job->datalen;
+		uint8_t *ptr = job->databuf;
 		do {
 			ret = read(data_fd, ptr, remain);
 			if (ret < 0) {
 				ERROR("Read failed (%d/%d/%d)\n",
-				      ret, remain, ctx->datalen);
+				      ret, remain, job->datalen);
 				perror("ERROR: Read failed");
+				shinkos1245_cleanup_job(job);
 				return ret;
 			}
 			ptr += ret;
@@ -1399,6 +1423,7 @@ static int shinkos1245_read_parse(void *vctx, int data_fd) {
 		ERROR("Read failed (%d/%d/%d)\n",
 		      ret, 4, 4);
 		perror("ERROR: Read failed");
+		shinkos1245_cleanup_job(job);
 		return ret;
 	}
 	if (tmpbuf[0] != 0x04 ||
@@ -1406,16 +1431,27 @@ static int shinkos1245_read_parse(void *vctx, int data_fd) {
 	    tmpbuf[2] != 0x02 ||
 	    tmpbuf[3] != 0x01) {
 		ERROR("Unrecognized footer data format!\n");
+		shinkos1245_cleanup_job(job);
 		return CUPS_BACKEND_FAILED;
 	}
 
+	*vjob = job;
 	return CUPS_BACKEND_OK;
 }
 
-static int shinkos1245_main_loop(void *vctx, int copies) {
+static int shinkos1245_main_loop(void *vctx, const void *vjob) {
 	struct shinkos1245_ctx *ctx = vctx;
 	int i, num, last_state = -1, state = S_IDLE;
 	struct shinkos1245_resp_status status1, status2;
+
+	const struct shinkos1245_printjob *job = vjob;
+
+	if (!ctx)
+		return CUPS_BACKEND_FAILED;
+	if (!job)
+		return CUPS_BACKEND_FAILED;
+
+	copies = job->copies;
 
 	/* Make sure print size is supported */
 	for (i = 0 ; i < ctx->num_medias ; i++) {
@@ -1558,7 +1594,7 @@ top:
 		/* Send over data */
 		INFO("Sending image data to printer\n");
 		if ((i = send_data(ctx->dev, ctx->endp_down,
-				     ctx->databuf, ctx->datalen)))
+				   job->databuf, job->datalen)))
 			return CUPS_BACKEND_FAILED;
 
 		INFO("Waiting for printer to acknowledge completion\n");
@@ -1584,11 +1620,6 @@ top:
 		goto top;
 
 	INFO("Print complete\n");
-
-	if (copies && --copies) {
-		state = S_IDLE;
-		goto top;
-	}
 
 	return CUPS_BACKEND_OK;
 
@@ -1659,13 +1690,14 @@ static const char *shinkos1245_prefixes[] = {
 
 struct dyesub_backend shinkos1245_backend = {
 	.name = "Shinko/Sinfonia CHC-S1245/E1",
-	.version = "0.23",
+	.version = "0.24",
 	.uri_prefixes = shinkos1245_prefixes,
 	.cmdline_usage = shinkos1245_cmdline,
 	.cmdline_arg = shinkos1245_cmdline_arg,
 	.init = shinkos1245_init,
 	.attach = shinkos1245_attach,
 	.teardown = shinkos1245_teardown,
+	.cleanup_job = shinkos1245_cleanup_job,
 	.read_parse = shinkos1245_read_parse,
 	.main_loop = shinkos1245_main_loop,
 	.query_serno = shinkos1245_query_serno,

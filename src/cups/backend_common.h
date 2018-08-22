@@ -132,6 +132,7 @@ enum {
 	P_DNP_DSRX1 = 41,
 	P_FUJI_ASK300 = 42,
 	P_MAGICARD = 43,
+	P_SONY_UPD89x = 44,
 	P_END,
 };
 
@@ -150,27 +151,42 @@ struct marker {
 	int levelnow; /* Remaining media, -3, -2, -1, 0..N.  See CUPS. */
 };
 
+#define BACKEND_FLAG_JOBLIST 0x00000001
+
 /* Backend Functions */
 struct dyesub_backend {
 	const char *name;
 	const char *version;
 	const char **uri_prefixes;
+	uint32_t flags;
 	void (*cmdline_usage)(void);  /* Optional */
 	void *(*init)(void);
 	int  (*attach)(void *ctx, struct libusb_device_handle *dev, int type,
 		       uint8_t endp_up, uint8_t endp_down, uint8_t jobid);
 	void (*teardown)(void *ctx);
 	int  (*cmdline_arg)(void *ctx, int argc, char **argv);
-	int  (*read_parse)(void *ctx, int data_fd);
-	int  (*main_loop)(void *ctx, int copies);
+	int  (*read_parse)(void *ctx, const void **job, int data_fd, int copies);
+	void (*cleanup_job)(const void *job);
+	int  (*main_loop)(void *ctx, const void *job);
 	int  (*query_serno)(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, char *buf, int buf_len); /* Optional */
 	int  (*query_markers)(void *ctx, struct marker **markers, int *count);
 	const struct device_id devices[];
 };
 
+#define DYESUB_MAX_JOB_ENTRIES 2
+
+struct dyesub_joblist {
+	// TODO: mutex/lock
+	struct dyesub_backend *backend;
+	void *ctx;
+	int num_entries;
+	int copies;
+	const void *entries[DYESUB_MAX_JOB_ENTRIES];
+};
+
 /* Exported functions */
 int send_data(struct libusb_device_handle *dev, uint8_t endp,
-	      uint8_t *buf, int len);
+	      const uint8_t *buf, int len);
 int read_data(struct libusb_device_handle *dev, uint8_t endp,
 	      uint8_t *buf, int buflen, int *readlen);
 
@@ -181,6 +197,12 @@ void print_help(char *argv0, struct dyesub_backend *backend);
 
 uint16_t uint16_to_packed_bcd(uint16_t val);
 uint32_t packed_bcd_to_uint32(char *in, int len);
+
+/* Job list manipulation */
+struct dyesub_joblist *dyesub_joblist_create(struct dyesub_backend *backend, void *ctx);
+int dyesub_joblist_addjob(struct dyesub_joblist *list, const void *job);
+void dyesub_joblist_cleanup(const struct dyesub_joblist *list);
+int dyesub_joblist_print(const struct dyesub_joblist *list);
 
 /* Global data */
 extern int terminate;

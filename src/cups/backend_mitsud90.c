@@ -418,6 +418,12 @@ static void mitsud90_dump_status(struct mitsud90_status_resp *resp)
 }
 
 /* Private data structure */
+struct mitsud90_printjob {
+	uint8_t *databuf;
+	int datalen;
+	int copies;
+};
+
 struct mitsud90_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;
@@ -425,9 +431,7 @@ struct mitsud90_ctx {
 
 	int type;
 
-	uint8_t *databuf;
-	int datalen;
-
+	/* Used in parsing.. */
 	struct mitsud90_job_footer holdover;
 	int holdover_on;
 
@@ -545,117 +549,143 @@ static int mitsud90_attach(void *vctx, struct libusb_device_handle *dev, int typ
 	return CUPS_BACKEND_OK;
 }
 
+static void mitsud90_cleanup_job(const void *vjob)
+{
+	const struct mitsud90_printjob *job = vjob;
+
+	if (job->databuf)
+		free(job->databuf);
+
+	free((void*)job);
+}
+
 static void mitsud90_teardown(void *vctx) {
 	struct mitsud90_ctx *ctx = vctx;
 
 	if (!ctx)
 		return;
 
-	if (ctx->databuf) {
-		free(ctx->databuf);
-		ctx->databuf = NULL;
-	}
-
 	free(ctx);
 }
 
-static int mitsud90_read_parse(void *vctx, int data_fd) {
+static int mitsud90_read_parse(void *vctx, const void **vjob, int data_fd, int copies) {
 	struct mitsud90_ctx *ctx = vctx;
 	int i, remain;
 	struct mitsud90_job_hdr *hdr;
 
+	struct mitsud90_printjob *job;;
+
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
 
-	if (ctx->databuf) {
-		free(ctx->databuf);
-		ctx->databuf = NULL;
+	job = malloc(sizeof(*job));
+	if (!job) {
+		ERROR("Memory allocation failure!\n");
+		return CUPS_BACKEND_RETRY_CURRENT;
 	}
+	memset(job, 0, sizeof(*job));
+	job->copies = copies;
 
 	/* Just allocate a worst-case buffer */
-	ctx->datalen = 0;
-	ctx->databuf = malloc(sizeof(struct mitsud90_job_hdr) +
+	job->datalen = 0;
+	job->databuf = malloc(sizeof(struct mitsud90_job_hdr) +
 			      sizeof(struct mitsud90_plane_hdr) +
 			      sizeof(struct mitsud90_job_footer) +
 			      1852*2729*3);
-
-	if (!ctx->databuf) {
+	if (!job->databuf) {
 		ERROR("Memory allocation failure!\n");
+		mitsud90_cleanup_job(job);
 		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 
 	/* Make sure there's no holdover */
 	if (ctx->holdover_on) {
-		memcpy(ctx->databuf, &ctx->holdover, sizeof(ctx->holdover));
-		ctx->datalen += sizeof(ctx->holdover);
+		memcpy(job->databuf, &ctx->holdover, sizeof(ctx->holdover));
+		job->datalen += sizeof(ctx->holdover);
 		ctx->holdover_on = 0;
 	}
 
 	/* Read in first header. */
-	remain = sizeof(struct mitsud90_job_hdr) - ctx->datalen;
+	remain = sizeof(struct mitsud90_job_hdr) - job->datalen;
 	while (remain) {
-		i = read(data_fd, (ctx->databuf + ctx->datalen), remain);
-		if (i == 0)
+		i = read(data_fd, (job->databuf + job->datalen), remain);
+		if (i == 0) {
+			mitsud90_cleanup_job(job);
 			return CUPS_BACKEND_CANCEL;
-		if (i < 0)
+		}
+		if (i < 0) {
+			mitsud90_cleanup_job(job);
 			return CUPS_BACKEND_CANCEL;
+		}
 		remain -= i;
-		ctx->datalen += i;
+		job->datalen += i;
 	}
 
 	/* Sanity check header */
-	hdr = (struct mitsud90_job_hdr *) ctx->databuf;
+	hdr = (struct mitsud90_job_hdr *) job->databuf;
 	if (hdr->hdr[0] != 0x1b ||
 	    hdr->hdr[1] != 0x53 ||
 	    hdr->hdr[2] != 0x50 ||
 	    hdr->hdr[3] != 0x30 ) {
 		ERROR("Unrecognized data format (%02x%02x%02x%02x)!\n",
 		      hdr->hdr[0], hdr->hdr[1], hdr->hdr[2], hdr->hdr[3]);
+		mitsud90_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
 	}
 
 	/* Now read in the rest */
 	remain = sizeof(struct mitsud90_plane_hdr) + be16_to_cpu(hdr->cols) * be16_to_cpu(hdr->rows) * 3;
 	while(remain) {
-		i = read(data_fd, ctx->databuf + ctx->datalen, remain);
-		if (i == 0)
+		i = read(data_fd, job->databuf + job->datalen, remain);
+		if (i == 0) {
+			mitsud90_cleanup_job(job);
 			return CUPS_BACKEND_CANCEL;
-		if (i < 0)
+		}
+		if (i < 0) {
+			mitsud90_cleanup_job(job);
 			return CUPS_BACKEND_CANCEL;
-		ctx->datalen += i;
+		}
+		job->datalen += i;
 		remain -= i;
 	}
 
 	/* Read in the footer.  Hopefully. */
 	remain = sizeof(struct mitsud90_job_footer);
-	i = read(data_fd, ctx->databuf + ctx->datalen, remain);
-	if (i == 0)
+	i = read(data_fd, job->databuf + job->datalen, remain);
+	if (i == 0) {
+		mitsud90_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
-	if (i < 0)
+	}
+	if (i < 0) {
+		mitsud90_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
+	}
 
 	/* See if this is a job footer.  If it is, keep, else holdover. */
-	if (ctx->databuf[ctx->datalen + 0] != 0x1b ||
-	    ctx->databuf[ctx->datalen + 1] != 0x42 ||
-	    ctx->databuf[ctx->datalen + 2] != 0x51 ||
-	    ctx->databuf[ctx->datalen + 3] != 0x31) {
-		memcpy(&ctx->holdover, ctx->databuf + ctx->datalen, sizeof(struct mitsud90_job_footer));
+	if (job->databuf[job->datalen + 0] != 0x1b ||
+	    job->databuf[job->datalen + 1] != 0x42 ||
+	    job->databuf[job->datalen + 2] != 0x51 ||
+	    job->databuf[job->datalen + 3] != 0x31) {
+		memcpy(&ctx->holdover, job->databuf + job->datalen, sizeof(struct mitsud90_job_footer));
 	        ctx->holdover_on = 1;
 	} else {
-		ctx->datalen += i;
+		job->datalen += i;
 		ctx->holdover_on = 0;
 	}
 
 	/* Sanity check */
 	if (hdr->pano.pano_on) {
 		ERROR("Unable to handle panorama jobs yet\n");
+		mitsud90_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
 	}
+
+	*vjob = job;
 
 	return CUPS_BACKEND_OK;
 }
 
-static int mitsud90_main_loop(void *vctx, int copies) {
+static int mitsud90_main_loop(void *vctx, const void *vjob) {
 	struct mitsud90_ctx *ctx = vctx;
 	struct mitsud90_job_hdr *hdr;
 	struct mitsud90_status_resp resp;
@@ -663,11 +693,17 @@ static int mitsud90_main_loop(void *vctx, int copies) {
 
 	int sent;
 	int ret;
+	int copies;
+
+	const struct mitsud90_printjob *job = vjob;
 
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
+	if (!job)
+		return CUPS_BACKEND_FAILED;
+	copies = job->copies;
 
-	hdr = (struct mitsud90_job_hdr*) ctx->databuf;
+	hdr = (struct mitsud90_job_hdr*) job->databuf;
 
 	INFO("Waiting for printer idle...\n");
 
@@ -755,21 +791,21 @@ top:
 
 	/* Send header */
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
-			     ctx->databuf + sent, sizeof(*hdr))))
+			     job->databuf + sent, sizeof(*hdr))))
 		return CUPS_BACKEND_FAILED;
 	sent += sizeof(*hdr);
 
 	/* Send Plane header */
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
-			     ctx->databuf + sent, sizeof(*hdr))))
+			     job->databuf + sent, sizeof(*hdr))))
 		return CUPS_BACKEND_FAILED;
 	sent += sizeof(*hdr);
 
 	/* Send payload + footer */
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
-			     ctx->databuf + sent, ctx->datalen - sent)))
+			     job->databuf + sent, job->datalen - sent)))
 		return CUPS_BACKEND_FAILED;
-	sent += (ctx->datalen - sent);
+	sent += (job->datalen - sent);
 
 	/* Wait for completion */
 	do {
@@ -1187,12 +1223,13 @@ static const char *mitsud90_prefixes[] = {
 /* Exported */
 struct dyesub_backend mitsud90_backend = {
 	.name = "Mitsubishi CP-D90DW",
-	.version = "0.10",
+	.version = "0.11",
 	.uri_prefixes = mitsud90_prefixes,
 	.cmdline_arg = mitsud90_cmdline_arg,
 	.cmdline_usage = mitsud90_cmdline,
 	.init = mitsud90_init,
 	.attach = mitsud90_attach,
+	.cleanup_job = mitsud90_cleanup_job,
 	.teardown = mitsud90_teardown,
 	.read_parse = mitsud90_read_parse,
 	.main_loop = mitsud90_main_loop,

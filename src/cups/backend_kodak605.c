@@ -166,6 +166,12 @@ static const char *kodak68xx_mediatypes(int type)
 #define CMDBUF_LEN 4
 
 /* Private data structure */
+struct kodak605_printjob {
+	struct kodak605_hdr hdr;
+	uint8_t *databuf;
+	int datalen;
+};
+
 struct kodak605_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;
@@ -173,14 +179,10 @@ struct kodak605_ctx {
 	int type;
 	uint8_t jobid;
 
-	struct kodak605_hdr hdr;
-
 	struct kodak605_media_list *media;
 
 	struct marker marker;
 
-	uint8_t *databuf;
-	int datalen;
 };
 
 static int kodak605_get_media(struct kodak605_ctx *ctx, struct kodak605_media_list *media)
@@ -298,63 +300,75 @@ static int kodak605_attach(void *vctx, struct libusb_device_handle *dev, int typ
 	return CUPS_BACKEND_OK;
 }
 
+static void kodak605_cleanup_job(const void *vjob)
+{
+	const struct kodak605_printjob *job = vjob;
+
+	if (job->databuf)
+		free(job->databuf);
+
+	free((void*)job);
+}
+
 static void kodak605_teardown(void *vctx) {
 	struct kodak605_ctx *ctx = vctx;
 
 	if (!ctx)
 		return;
 
-	if (ctx->databuf)
-		free(ctx->databuf);
 	free(ctx);
 }
 
-static int kodak605_read_parse(void *vctx, int data_fd) {
+static int kodak605_read_parse(void *vctx, const void **vjob, int data_fd, int copies) {
 	struct kodak605_ctx *ctx = vctx;
 	int ret;
+
+	struct kodak605_printjob *job = NULL;
 
 	if (!ctx)
 		return CUPS_BACKEND_CANCEL;
 
-	if (ctx->databuf) {
-		free(ctx->databuf);
-		ctx->databuf = NULL;
+	job = malloc(sizeof(*job));
+	if (!job) {
+		ERROR("Memory allocation failure!\n");
+		return CUPS_BACKEND_RETRY_CURRENT;
 	}
+	memset(job, 0, sizeof(*job));
 
 	/* Read in then validate header */
-	ret = read(data_fd, &ctx->hdr, sizeof(ctx->hdr));
-	if (ret < 0 || ret != sizeof(ctx->hdr)) {
+	ret = read(data_fd, &job->hdr, sizeof(job->hdr));
+	if (ret < 0 || ret != sizeof(job->hdr)) {
 		if (ret == 0)
 			return CUPS_BACKEND_CANCEL;
 		ERROR("Read failed (%d/%d/%d)\n",
-		      ret, 0, (int)sizeof(ctx->hdr));
+		      ret, 0, (int)sizeof(job->hdr));
 		perror("ERROR: Read failed");
 		return CUPS_BACKEND_CANCEL;
 	}
 
-	if (ctx->hdr.hdr[0] != 0x01 ||
-	    ctx->hdr.hdr[1] != 0x40 ||
-	    ctx->hdr.hdr[2] != 0x0a ||
-	    ctx->hdr.hdr[3] != 0x00) {
+	if (job->hdr.hdr[0] != 0x01 ||
+	    job->hdr.hdr[1] != 0x40 ||
+	    job->hdr.hdr[2] != 0x0a ||
+	    job->hdr.hdr[3] != 0x00) {
 		ERROR("Unrecognized data format!\n");
 		return CUPS_BACKEND_CANCEL;
 	}
 
-	ctx->datalen = le16_to_cpu(ctx->hdr.rows) * le16_to_cpu(ctx->hdr.columns) * 3;
-	ctx->databuf = malloc(ctx->datalen);
-	if (!ctx->databuf) {
+	job->datalen = le16_to_cpu(job->hdr.rows) * le16_to_cpu(job->hdr.columns) * 3;
+	job->databuf = malloc(job->datalen);
+	if (!job->databuf) {
 		ERROR("Memory allocation failure!\n");
 		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 
 	{
-		int remain = ctx->datalen;
-		uint8_t *ptr = ctx->databuf;
+		int remain = job->datalen;
+		uint8_t *ptr = job->databuf;
 		do {
 			ret = read(data_fd, ptr, remain);
 			if (ret < 0) {
 				ERROR("Read failed (%d/%d/%d)\n",
-				      ret, remain, ctx->datalen);
+				      ret, remain, job->datalen);
 				perror("ERROR: Read failed");
 				return CUPS_BACKEND_CANCEL;
 			}
@@ -363,27 +377,36 @@ static int kodak605_read_parse(void *vctx, int data_fd) {
 		} while (remain);
 	}
 
+	/* Printer handles generating copies.. */
+	if (le16_to_cpu(job->hdr.copies) < copies)
+		job->hdr.copies = cpu_to_le16(copies);
+
+	*vjob = job;
+
 	return CUPS_BACKEND_OK;
 }
 
-static int kodak605_main_loop(void *vctx, int copies) {
+static int kodak605_main_loop(void *vctx, const void *vjob) {
 	struct kodak605_ctx *ctx = vctx;
 
 	struct kodak605_status sts;
 
 	int num, ret;
 
+	const struct kodak605_printjob *job = vjob;
+
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
+	if (!job)
+		return CUPS_BACKEND_FAILED;
 
-	/* Printer handles generating copies.. */
-	if (le16_to_cpu(ctx->hdr.copies) < copies)
-		ctx->hdr.copies = cpu_to_le16(copies);
+	struct kodak605_hdr hdr;
+	memcpy(&hdr, &job->hdr, sizeof(hdr));
 
 	/* Validate against supported media list */
 	for (num = 0 ; num < ctx->media->count; num++) {
-		if (ctx->media->entries[num].rows == ctx->hdr.rows &&
-		    ctx->media->entries[num].cols == ctx->hdr.columns)
+		if (ctx->media->entries[num].rows == hdr.rows &&
+		    ctx->media->entries[num].cols == hdr.columns)
 			break;
 	}
 	if (num == ctx->media->count) {
@@ -424,12 +447,12 @@ static int kodak605_main_loop(void *vctx, int copies) {
 	}
 
 	/* Use specified jobid */
-	ctx->hdr.jobid = ctx->jobid;
+	hdr.jobid = ctx->jobid;
 
 	{
 		INFO("Sending image header (internal id %u)\n", ctx->jobid);
 		if ((ret = send_data(ctx->dev, ctx->endp_down,
-				     (uint8_t*)&ctx->hdr, sizeof(ctx->hdr))))
+				     (uint8_t*)&hdr, sizeof(hdr))))
 			return CUPS_BACKEND_FAILED;
 
 		struct kodak605_sts_hdr resp;
@@ -447,7 +470,7 @@ static int kodak605_main_loop(void *vctx, int copies) {
 
 	INFO("Sending image data\n");
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
-			     ctx->databuf, ctx->datalen)))
+			     job->databuf, job->datalen)))
 		return CUPS_BACKEND_FAILED;
 
 	INFO("Image data sent\n");
@@ -689,13 +712,14 @@ static const char *kodak605_prefixes[] = {
 /* Exported */
 struct dyesub_backend kodak605_backend = {
 	.name = "Kodak 605",
-	.version = "0.30",
+	.version = "0.31",
 	.uri_prefixes = kodak605_prefixes,
 	.cmdline_usage = kodak605_cmdline,
 	.cmdline_arg = kodak605_cmdline_arg,
 	.init = kodak605_init,
 	.attach = kodak605_attach,
 	.teardown = kodak605_teardown,
+	.cleanup_job = kodak605_cleanup_job,
 	.read_parse = kodak605_read_parse,
 	.main_loop = kodak605_main_loop,
 	.query_markers = kodak605_query_markers,

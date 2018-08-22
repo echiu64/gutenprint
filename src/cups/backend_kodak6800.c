@@ -223,6 +223,13 @@ struct kodak68x0_media_readback {
 #define CMDBUF_LEN 17
 
 /* Private data structure */
+struct kodak6800_printjob {
+	struct kodak6800_hdr hdr;
+	uint8_t *databuf;
+	int datalen;
+	int copies;
+};
+
 struct kodak6800_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;
@@ -233,10 +240,6 @@ struct kodak6800_ctx {
 	uint8_t jobid;
 
 	struct kodak68x0_media_readback *media;
-
-	struct kodak6800_hdr hdr;
-	uint8_t *databuf;
-	int datalen;
 
 	struct marker marker;
 };
@@ -1040,63 +1043,75 @@ static int kodak6800_attach(void *vctx, struct libusb_device_handle *dev, int ty
 	return CUPS_BACKEND_OK;
 }
 
+static void kodak6800_cleanup_job(const void *vjob)
+{
+	const struct kodak6800_printjob *job = vjob;
+
+	if (job->databuf)
+		free(job->databuf);
+
+	free((void*)job);
+}
+
 static void kodak6800_teardown(void *vctx) {
 	struct kodak6800_ctx *ctx = vctx;
 
 	if (!ctx)
 		return;
 
-	if (ctx->databuf)
-		free(ctx->databuf);
 	free(ctx);
 }
 
-static int kodak6800_read_parse(void *vctx, int data_fd) {
+static int kodak6800_read_parse(void *vctx, const void **vjob, int data_fd, int copies) {
 	struct kodak6800_ctx *ctx = vctx;
 	int ret;
+
+	struct kodak6800_printjob *job = NULL;
 
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
 
-	if (ctx->databuf) {
-		free(ctx->databuf);
-		ctx->databuf = NULL;
+	job = malloc(sizeof(*job));
+	if (!job) {
+		ERROR("Memory allocation failure!\n");
+		return CUPS_BACKEND_RETRY_CURRENT;
 	}
+	memset(job, 0, sizeof(*job));
 
 	/* Read in then validate header */
-	ret = read(data_fd, &ctx->hdr, sizeof(ctx->hdr));
-	if (ret < 0 || ret != sizeof(ctx->hdr)) {
+	ret = read(data_fd, &job->hdr, sizeof(job->hdr));
+	if (ret < 0 || ret != sizeof(job->hdr)) {
 		if (ret == 0)
 			return CUPS_BACKEND_CANCEL;
 		ERROR("Read failed (%d/%d/%d)\n",
-		      ret, 0, (int)sizeof(ctx->hdr));
+		      ret, 0, (int)sizeof(job->hdr));
 		perror("ERROR: Read failed");
 		return CUPS_BACKEND_CANCEL;
 	}
-	if (ctx->hdr.hdr[0] != 0x03 ||
-	    ctx->hdr.hdr[1] != 0x1b ||
-	    ctx->hdr.hdr[2] != 0x43 ||
-	    ctx->hdr.hdr[3] != 0x48 ||
-	    ctx->hdr.hdr[4] != 0x43) {
+	if (job->hdr.hdr[0] != 0x03 ||
+	    job->hdr.hdr[1] != 0x1b ||
+	    job->hdr.hdr[2] != 0x43 ||
+	    job->hdr.hdr[3] != 0x48 ||
+	    job->hdr.hdr[4] != 0x43) {
 		ERROR("Unrecognized data format!\n");
 		return CUPS_BACKEND_CANCEL;
 	}
 
-	ctx->datalen = be16_to_cpu(ctx->hdr.rows) * be16_to_cpu(ctx->hdr.columns) * 3;
-	ctx->databuf = malloc(ctx->datalen);
-	if (!ctx->databuf) {
+	job->datalen = be16_to_cpu(job->hdr.rows) * be16_to_cpu(job->hdr.columns) * 3;
+	job->databuf = malloc(job->datalen);
+	if (!job->databuf) {
 		ERROR("Memory allocation failure!\n");
 		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 
 	{
-		int remain = ctx->datalen;
-		uint8_t *ptr = ctx->databuf;
+		int remain = job->datalen;
+		uint8_t *ptr = job->databuf;
 		do {
 			ret = read(data_fd, ptr, remain);
 			if (ret < 0) {
 				ERROR("Read failed (%d/%d/%d)\n",
-				      ret, remain, ctx->datalen);
+				      ret, remain, job->datalen);
 				perror("ERROR: Read failed");
 				return CUPS_BACKEND_CANCEL;
 			}
@@ -1105,29 +1120,39 @@ static int kodak6800_read_parse(void *vctx, int data_fd) {
 		} while (remain);
 	}
 
-	return CUPS_BACKEND_OK;
-}
-
-static int kodak6800_main_loop(void *vctx, int copies) {
-	struct kodak6800_ctx *ctx = vctx;
-	struct kodak68x0_status_readback status;
-
-	int num, ret;
-
-	if (!ctx)
-		return CUPS_BACKEND_FAILED;
-
         /* Fix max print count. */
         if (copies > 9999) // XXX test against remaining media
                 copies = 9999;
 
 	/* Printer handles generating copies.. */
-	ctx->hdr.copies = cpu_to_be16(uint16_to_packed_bcd(copies));
+	if (le16_to_cpu(job->hdr.copies) < copies)
+		job->hdr.copies = cpu_to_be16(uint16_to_packed_bcd(copies));
+
+	*vjob = job;
+
+	return CUPS_BACKEND_OK;
+}
+
+static int kodak6800_main_loop(void *vctx, const void *vjob) {
+	struct kodak6800_ctx *ctx = vctx;
+	struct kodak68x0_status_readback status;
+
+	int num, ret;
+
+	const struct kodak6800_printjob *job = vjob;
+
+	if (!ctx)
+		return CUPS_BACKEND_FAILED;
+	if (!job)
+		return CUPS_BACKEND_FAILED;
+
+	struct kodak6800_hdr hdr;
+	memcpy(&hdr, &job->hdr, sizeof(hdr));
 
 	/* Validate against supported media list */
 	for (num = 0 ; num < ctx->media->count; num++) {
-		if (ctx->media->sizes[num].height == ctx->hdr.rows &&
-		    ctx->media->sizes[num].width == ctx->hdr.columns &&
+		if (ctx->media->sizes[num].height == hdr.rows &&
+		    ctx->media->sizes[num].width == hdr.columns &&
 		    ctx->media->sizes[num].code2 == 0x00) // XXX code2?
 			break;
 	}
@@ -1182,20 +1207,20 @@ static int kodak6800_main_loop(void *vctx, int copies) {
 			return ret;
 	}
 
-	ctx->hdr.jobid = ctx->jobid;
+	hdr.jobid = ctx->jobid;
 
 #if 0
 	/* If we want to disable 4x6 rewind on 8x6 media.. */
 	// XXX not sure about this...?
-	if (ctx->hdr.size == 0x00 &&
+	if (hdr.size == 0x00 &&
 	    be16_to_cpu(ctx->media->sizes[0].width) == 0x0982) {
-		ctx->hdr.size = 0x06;
-		ctx->hdr.mode = 0x01;
+		hdr.size = 0x06;
+		hdr.mode = 0x01;
 	}
 #endif
 
 	INFO("Sending Print Job (internal id %u)\n", ctx->jobid);
-	if ((ret = kodak6800_do_cmd(ctx, (uint8_t*) &ctx->hdr, sizeof(ctx->hdr),
+	if ((ret = kodak6800_do_cmd(ctx, (uint8_t*) &hdr, sizeof(hdr),
 				    &status, sizeof(status),
 				    &num)))
 		return ret;
@@ -1208,7 +1233,7 @@ static int kodak6800_main_loop(void *vctx, int copies) {
 //	sleep(1); // Appears to be necessary for reliability
 	INFO("Sending image data\n");
 	if ((send_data(ctx->dev, ctx->endp_down,
-			     ctx->databuf, ctx->datalen)) != 0)
+			     job->databuf, job->datalen)) != 0)
 		return CUPS_BACKEND_FAILED;
 
 	INFO("Waiting for printer to acknowledge completion\n");
@@ -1230,9 +1255,9 @@ static int kodak6800_main_loop(void *vctx, int copies) {
 		}
 
 		/* If all prints are complete, we're done! */
-		if (status.b1_jobid == ctx->hdr.jobid && status.b1_complete == status.b1_total)
+		if (status.b1_jobid == hdr.jobid && status.b1_complete == status.b1_total)
 			break;
-		if (status.b2_jobid == ctx->hdr.jobid && status.b2_complete == status.b2_total)
+		if (status.b2_jobid == hdr.jobid && status.b2_complete == status.b2_total)
 			break;
 
 		if (fast_return) {
@@ -1273,13 +1298,14 @@ static const char *kodak6800_prefixes[] = {
 /* Exported */
 struct dyesub_backend kodak6800_backend = {
 	.name = "Kodak 6800/6850",
-	.version = "0.62",
+	.version = "0.63",
 	.uri_prefixes = kodak6800_prefixes,
 	.cmdline_usage = kodak6800_cmdline,
 	.cmdline_arg = kodak6800_cmdline_arg,
 	.init = kodak6800_init,
 	.attach = kodak6800_attach,
 	.teardown = kodak6800_teardown,
+	.cleanup_job = kodak6800_cleanup_job,
 	.read_parse = kodak6800_read_parse,
 	.main_loop = kodak6800_main_loop,
 	.query_serno = kodak6800_query_serno,

@@ -28,7 +28,7 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.86G"
+#define BACKEND_VERSION "0.88G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
@@ -50,6 +50,7 @@ int extra_pid = -1;
 int extra_type = -1;
 int copies = 1;
 int test_mode = 0;
+int old_uri = 0;
 
 static int max_xfer_size = URB_XFER_SIZE;
 static int xfer_timeout = XFER_TIMEOUT;
@@ -267,7 +268,7 @@ done:
 }
 
 int send_data(struct libusb_device_handle *dev, uint8_t endp,
-	      uint8_t *buf, int len)
+	      const uint8_t *buf, int len)
 {
 	int num = 0;
 
@@ -278,7 +279,7 @@ int send_data(struct libusb_device_handle *dev, uint8_t endp,
 	while (len) {
 		int len2 = (len > max_xfer_size) ? max_xfer_size: len;
 		int ret = libusb_bulk_transfer(dev, endp,
-					       buf, len2,
+					       (uint8_t*) buf, len2,
 					       &num, xfer_timeout);
 
 		if ((dyesub_debug > 1 && len < 4096) ||
@@ -587,20 +588,27 @@ candidate:
 	}
 
 	if (scan_only) {
-		int k = 0;
+		if (!old_uri) {
+			fprintf(stdout, "direct %s://%s/%s \"%s\" \"%s\" \"%s\" \"\"\n",
+				prefix, uri_prefix, serial,
+				descr, descr,
+				ieee_id ? ieee_id : "");
+		} else {
+			int k = 0;
 
-		/* URLify the manuf and model strings */
-		strncpy(buf, manuf, sizeof(buf) - 2);
-		k = strlen(buf);
-		buf[k++] = '/';
-		buf[k] = 0;
+			/* URLify the manuf and model strings */
+			strncpy(buf, manuf, sizeof(buf) - 2);
+			k = strlen(buf);
+			buf[k++] = '/';
+			buf[k] = 0;
 
-		strncpy(buf + k, product, sizeof(buf)-k);
+			strncpy(buf + k, product, sizeof(buf)-k);
 
-		fprintf(stdout, "direct %s://%s?serial=%s&backend=%s \"%s\" \"%s\" \"%s\" \"\"\n",
-			prefix, buf, serial, uri_prefix,
-			descr, descr,
-			ieee_id? ieee_id : "");
+			fprintf(stdout, "direct %s://%s?serial=%s&backend=%s \"%s\" \"%s\" \"%s\" \"\"\n",
+				prefix, buf, serial, uri_prefix,
+				descr, descr,
+				ieee_id? ieee_id : "");
+		}
 	}
 
 	/* If a serial number was passed down, use it. */
@@ -818,7 +826,7 @@ for more details.\n\
 \n\
 You should have received a copy of the GNU General Public License\n\
 along with this program.  If not, see https://www.gnu.org/licenses/.\n\
-\n          [http://www.gnu.org/licenses/gpl-3.0.html]\n\n";
+\n          [http://www.gnu.org/licenses/gpl-2.0.html]\n\n";
 
 	fprintf(stderr, "%s", license);
 }
@@ -840,7 +848,7 @@ void print_help(char *argv0, struct dyesub_backend *backend)
 	if (!backend) {
 		int i;
 		DEBUG("Environment variables:\n");
-		DEBUG(" DYESUB_DEBUG EXTRA_PID EXTRA_VID EXTRA_TYPE BACKEND SERIAL\n");
+		DEBUG(" DYESUB_DEBUG EXTRA_PID EXTRA_VID EXTRA_TYPE BACKEND SERIAL OLD_URI_SCHEME\n");
 		DEBUG("CUPS Usage:\n");
 		DEBUG("\tDEVICE_URI=someuri %s job user title num-copies options [ filename ]\n", URI_PREFIX);
 		DEBUG("\n");
@@ -870,7 +878,7 @@ void print_help(char *argv0, struct dyesub_backend *backend)
 		const char **alias;
 		DEBUG("Standalone %s backend version %s\n",
 		      backend->name, backend->version);
-		DEBUG("\t");
+		DEBUG("\t supporting: ");
 		for (alias = backend->uri_prefixes ; alias && *alias ; alias++)
 			DEBUG2("%s ", *alias);
 		DEBUG2("\n");
@@ -940,6 +948,8 @@ int main (int argc, char **argv)
 
 	int data_fd = fileno(stdin);
 
+	const void *job = NULL;
+
 	int i;
 
 	int ret = CUPS_BACKEND_OK;
@@ -980,6 +990,8 @@ int main (int argc, char **argv)
 		xfer_timeout = atoi(getenv("XFER_TIMEOUT"));
 	if (getenv("TEST_MODE"))
 		test_mode = atoi(getenv("TEST_MODE"));
+	if (getenv("OLD_URI_SCHEME"))
+		old_uri = atoi(getenv("OLD_URI_SCHEME"));
 
 	if (test_mode >= TEST_MODE_NOATTACH && (extra_vid == -1 || extra_pid == -1)) {
 		ERROR("Must specify EXTRA_VID, EXTRA_PID in test mode > 1!\n");
@@ -1008,35 +1020,52 @@ int main (int argc, char **argv)
 
 		/* Figure out backend based on URI */
 		{
-			char *ptr = strstr (uri, "backend="), *ptr2;
-			if (!ptr) {
-				ERROR("Invalid URI prefix (%s)\n", uri);
-				exit(1);
-			}
-			ptr += 8;
-			ptr2 = strchr(ptr, '&');
-			if (ptr2)
-				*ptr2 = 0;
+			char *ptr = strstr(uri, "backend="), *ptr2;
+			if (ptr) { /* Original format */
+				ptr += 8;
+				ptr2 = strchr(ptr, '&');
+				if (ptr2)
+					*ptr2 = 0;
 
-			backend = find_backend(ptr);
-			if (!backend) {
-				ERROR("Invalid backend (%s)\n", ptr);
-				exit(1);
-			}
-			if (ptr2)
-				*ptr2 = '&';
-		}
+				backend = find_backend(ptr);
+				if (!backend) {
+					ERROR("Invalid backend (%s)\n", ptr);
+					exit(1);
+				}
+				if (ptr2)
+					*ptr2 = '&';
 
-		use_serno = strchr(uri, '=');
-		if (!use_serno || !*(use_serno+1)) {
-			ERROR("Invalid URI (%s)\n", uri);
-			exit(1);
-		}
-		use_serno++;
-		{
-			char *ptr = strchr(use_serno, '&');
-			if (ptr)
-				*ptr = 0;
+				use_serno = strchr(uri, '=');
+				if (!use_serno || !*(use_serno+1)) {
+					ERROR("Invalid URI (%s)\n", uri);
+					exit(1);
+				}
+				use_serno++;
+				ptr = strchr(use_serno, '&');
+				if (ptr)
+					*ptr = 0;
+			} else { /* New format */
+				// prefix://backend/serno
+				ptr = strchr(uri, '/');
+				ptr += 2;
+				use_serno = strchr(ptr, '/');
+				if (!use_serno || !*(use_serno+1)) {
+					ERROR("Invalid URI (%s)\n", uri);
+					exit(1);
+				}
+				*use_serno = 0;
+				use_serno++;
+
+				backend = find_backend(ptr);
+				if (!backend) {
+					ERROR("Invalid backend (%s)\n", ptr);
+					exit(1);
+				}
+
+				ptr = strchr(ptr, '?');
+				if (ptr)
+					*ptr = 0;
+			}
 		}
 
 		/* Always enable fast return in CUPS mode */
@@ -1233,11 +1262,25 @@ bypass:
 newpage:
 
 	/* Read in data */
-	if ((ret = backend->read_parse(backend_ctx, data_fd))) {
+	if ((ret = backend->read_parse(backend_ctx, &job, data_fd, copies))) {
 		if (current_page)
 			goto done_multiple;
 		else
 			goto done_claimed;
+	}
+
+	/* The backend parser might not return a job due to job dependencies.
+	   Try and read another page. */
+	if (!job)
+		goto newpage;
+
+	/* Create our own joblist if necessary */
+	if (!(backend->flags & BACKEND_FLAG_JOBLIST)) {
+		struct dyesub_joblist *list = dyesub_joblist_create(backend, backend_ctx);
+		if (!list)
+			goto done_claimed;
+		dyesub_joblist_addjob(list, job);
+		job = list;
 	}
 
 	/* Dump the full marker dump */
@@ -1250,10 +1293,13 @@ newpage:
 	if (test_mode >= TEST_MODE_NOPRINT ) {
 		WARNING("**** TEST MODE, bypassing printing!\n");
 	} else {
-		ret = backend->main_loop(backend_ctx, copies);
-		if (ret)
-			goto done_claimed;
+		ret = dyesub_joblist_print(job);
 	}
+
+	dyesub_joblist_cleanup(job);
+
+	if (ret)
+		goto done_claimed;
 
 	/* Log the completed page */
 	if (!uri)
@@ -1420,4 +1466,67 @@ uint32_t packed_bcd_to_uint32(char *in, int len)
 		in++;
 	}
         return out;
+}
+
+/* Job list manipulation */
+struct dyesub_joblist *dyesub_joblist_create(struct dyesub_backend *backend, void *ctx)
+{
+	struct dyesub_joblist *list;
+
+	list = malloc(sizeof(struct dyesub_joblist));
+	if (!list) {
+		ERROR("Memory allocation failure\n");
+		return NULL;
+	}
+	list->backend = backend;
+	list->ctx = ctx;
+	list->num_entries = 0;
+	list->copies = 1;
+
+	return list;
+}
+
+void dyesub_joblist_cleanup(const struct dyesub_joblist *list)
+{
+	int i;
+	for (i = 0; i < list->num_entries ; i++) {
+		if (list->entries[i])
+			list->backend->cleanup_job(list->entries[i]);
+	}
+	free((void*)list);
+}
+
+int dyesub_joblist_addjob(struct dyesub_joblist *list, const void *job)
+{
+	if (list->num_entries >= DYESUB_MAX_JOB_ENTRIES)
+		return 1;
+
+	list->entries[list->num_entries++] = job;
+
+	return 0;
+}
+
+int dyesub_joblist_print(const struct dyesub_joblist *list)
+{
+	int i, j;
+	int ret;
+	for (i = 0 ; i < list->copies ; i++) {
+		for (j = 0 ; j < list->num_entries ; j++) {
+			if (list->entries[j]) {
+				ret = list->backend->main_loop(list->ctx, list->entries[j]);
+				if (ret)
+					return ret;
+
+#if 0
+				/* Free up the job as we go along
+				   if we're on the final copy */
+				if (i + 1 == list->copies) {
+					list->backend->cleanup_job(list->entries[j]);
+					list->entries[j] = NULL;
+				}
+#endif
+			}
+		}
+	}
+	return CUPS_BACKEND_OK;
 }

@@ -785,6 +785,14 @@ struct s2145_getunique_resp {
 } __attribute__((packed));
 
 /* Private data structure */
+struct shinkos2145_printjob {
+	struct s2145_printjob_hdr hdr;
+
+	uint8_t *databuf;
+	int datalen;
+	int copies;
+};
+
 struct shinkos2145_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;
@@ -793,11 +801,6 @@ struct shinkos2145_ctx {
 	uint8_t jobid;
 
 	int type;
-
-	struct s2145_printjob_hdr hdr;
-
-	uint8_t *databuf;
-	int datalen;
 
 	struct s2145_mediainfo_resp media;
 	struct marker marker;
@@ -1439,70 +1442,82 @@ static int shinkos2145_attach(void *vctx, struct libusb_device_handle *dev, int 
 	return CUPS_BACKEND_OK;
 }
 
+static void shinkos2145_cleanup_job(const void *vjob)
+{
+	const struct shinkos2145_printjob *job = vjob;
+
+	if (job->databuf)
+		free(job->databuf);
+
+	free((void*)job);
+}
+
 static void shinkos2145_teardown(void *vctx) {
 	struct shinkos2145_ctx *ctx = vctx;
 
 	if (!ctx)
 		return;
 
-	if (ctx->databuf)
-		free(ctx->databuf);
-
 	free(ctx);
 }
 
-static int shinkos2145_read_parse(void *vctx, int data_fd) {
+static int shinkos2145_read_parse(void *vctx, const void **vjob, int data_fd, int copies) {
 	struct shinkos2145_ctx *ctx = vctx;
 	int ret;
 	uint8_t tmpbuf[4];
 
+	struct shinkos2145_printjob *job = NULL;
+
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
 
+	job = malloc(sizeof(*job));
+	if (!job) {
+		ERROR("Memory allocation failure!\n");
+		return CUPS_BACKEND_RETRY_CURRENT;
+	}
+	memset(job, 0, sizeof(*job));
+	job->copies = copies; // XXX hdr.copies
+
 	/* Read in then validate header */
-	ret = read(data_fd, &ctx->hdr, sizeof(ctx->hdr));
-	if (ret < 0 || ret != sizeof(ctx->hdr)) {
+	ret = read(data_fd, &job->hdr, sizeof(job->hdr));
+	if (ret < 0 || ret != sizeof(job->hdr)) {
 		if (ret == 0)
 			return CUPS_BACKEND_CANCEL;
 		ERROR("Read failed (%d/%d/%d)\n",
-		      ret, 0, (int)sizeof(ctx->hdr));
+		      ret, 0, (int)sizeof(job->hdr));
 		perror("ERROR: Read failed");
 		return ret;
 	}
 
-	if (le32_to_cpu(ctx->hdr.len1) != 0x10 ||
-	    le32_to_cpu(ctx->hdr.len2) != 0x64 ||
-	    le32_to_cpu(ctx->hdr.dpi) != 300) {
+	if (le32_to_cpu(job->hdr.len1) != 0x10 ||
+	    le32_to_cpu(job->hdr.len2) != 0x64 ||
+	    le32_to_cpu(job->hdr.dpi) != 300) {
 		ERROR("Unrecognized header data format!\n");
 		return CUPS_BACKEND_CANCEL;
 	}
 
-	if (le32_to_cpu(ctx->hdr.model) != 2145) {
-		ERROR("Unrecognized printer (%u)!\n", le32_to_cpu(ctx->hdr.model));
+	if (le32_to_cpu(job->hdr.model) != 2145) {
+		ERROR("Unrecognized printer (%u)!\n", le32_to_cpu(job->hdr.model));
 
 		return CUPS_BACKEND_CANCEL;
 	}
 
-	if (ctx->databuf) {
-		free(ctx->databuf);
-		ctx->databuf = NULL;
-	}
-
-	ctx->datalen = le32_to_cpu(ctx->hdr.rows) * le32_to_cpu(ctx->hdr.columns) * 3;
-	ctx->databuf = malloc(ctx->datalen);
-	if (!ctx->databuf) {
+	job->datalen = le32_to_cpu(job->hdr.rows) * le32_to_cpu(job->hdr.columns) * 3;
+	job->databuf = malloc(job->datalen);
+	if (!job->databuf) {
 		ERROR("Memory allocation failure!\n");
 		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 
 	{
-		int remain = ctx->datalen;
-		uint8_t *ptr = ctx->databuf;
+		int remain = job->datalen;
+		uint8_t *ptr = job->databuf;
 		do {
 			ret = read(data_fd, ptr, remain);
 			if (ret < 0) {
 				ERROR("Read failed (%d/%d/%d)\n",
-				      ret, remain, ctx->datalen);
+				      ret, remain, job->datalen);
 				perror("ERROR: Read failed");
 				return ret;
 			}
@@ -1527,10 +1542,12 @@ static int shinkos2145_read_parse(void *vctx, int data_fd) {
 		return CUPS_BACKEND_FAILED;
 	}
 
+	*vjob = job;
+
 	return CUPS_BACKEND_OK;
 }
 
-static int shinkos2145_main_loop(void *vctx, int copies) {
+static int shinkos2145_main_loop(void *vctx, const void *vjob) {
 	struct shinkos2145_ctx *ctx = vctx;
 
 	int ret, num;
@@ -1543,12 +1560,14 @@ static int shinkos2145_main_loop(void *vctx, int copies) {
 	struct s2145_print_cmd *print = (struct s2145_print_cmd *) cmdbuf;
 	struct s2145_status_resp *sts = (struct s2145_status_resp *) rdbuf;
 
+	struct shinkos2145_printjob *job = (struct shinkos2145_printjob*) vjob;
+
 	/* Validate print sizes */
 	for (i = 0; i < ctx->media.count ; i++) {
 		/* Look for matching media */
-		if (le16_to_cpu(ctx->media.items[i].columns) == cpu_to_le16(le32_to_cpu(ctx->hdr.columns)) &&
-		    le16_to_cpu(ctx->media.items[i].rows) == cpu_to_le16(le32_to_cpu(ctx->hdr.rows)) &&
-		    ctx->media.items[i].print_type == le32_to_cpu(ctx->hdr.method))
+		if (le16_to_cpu(ctx->media.items[i].columns) == cpu_to_le16(le32_to_cpu(job->hdr.columns)) &&
+		    le16_to_cpu(ctx->media.items[i].rows) == cpu_to_le16(le32_to_cpu(job->hdr.rows)) &&
+		    ctx->media.items[i].print_type == le32_to_cpu(job->hdr.method))
 			break;
 	}
 	if (i == ctx->media.count) {
@@ -1628,12 +1647,12 @@ top:
 		print->hdr.len = cpu_to_le16(sizeof (*print) - sizeof(*cmd));
 
 		print->id = ctx->jobid;
-		print->count = cpu_to_le16(copies);
-		print->columns = cpu_to_le16(le32_to_cpu(ctx->hdr.columns));
-		print->rows = cpu_to_le16(le32_to_cpu(ctx->hdr.rows));
-		print->media = le32_to_cpu(ctx->hdr.media);
-		print->mode = le32_to_cpu(ctx->hdr.mode);
-		print->method = le32_to_cpu(ctx->hdr.method);
+		print->count = cpu_to_le16(job->copies);
+		print->columns = cpu_to_le16(le32_to_cpu(job->hdr.columns));
+		print->rows = cpu_to_le16(le32_to_cpu(job->hdr.rows));
+		print->media = le32_to_cpu(job->hdr.media);
+		print->mode = le32_to_cpu(job->hdr.mode);
+		print->method = le32_to_cpu(job->hdr.method);
 
 		if ((ret = s2145_do_cmd(ctx,
 					cmdbuf, sizeof(*print),
@@ -1656,7 +1675,7 @@ top:
 
 		INFO("Sending image data to printer\n");
 		if ((ret = send_data(ctx->dev, ctx->endp_down,
-				     ctx->databuf, ctx->datalen)))
+				     job->databuf, job->datalen)))
 			return CUPS_BACKEND_FAILED;
 
 		INFO("Waiting for printer to acknowledge completion\n");
@@ -1777,13 +1796,14 @@ static const char *shinkos2145_prefixes[] = {
 
 struct dyesub_backend shinkos2145_backend = {
 	.name = "Shinko/Sinfonia CHC-S2145/S2",
-	.version = "0.52",
+	.version = "0.53",
 	.uri_prefixes = shinkos2145_prefixes,
 	.cmdline_usage = shinkos2145_cmdline,
 	.cmdline_arg = shinkos2145_cmdline_arg,
 	.init = shinkos2145_init,
 	.attach = shinkos2145_attach,
 	.teardown = shinkos2145_teardown,
+	.cleanup_job = shinkos2145_cleanup_job,
 	.read_parse = shinkos2145_read_parse,
 	.main_loop = shinkos2145_main_loop,
 	.query_serno = shinkos2145_query_serno,
