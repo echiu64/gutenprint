@@ -1092,6 +1092,13 @@ static const char *aux_colors[] =
     N_("Orange"),		/* d */
     NULL,			/* e */
     NULL,			/* f */
+    NULL,			/* 10 */
+    NULL,			/* 11 */
+    NULL,			/* 12 */
+    N_("Red"),			/* 13 */
+    NULL,			/* 14 */
+    NULL,			/* 15 */
+    N_("Red"),			/* 16 */
   };
 static int aux_color_count = sizeof(aux_colors) / sizeof(const char *);
 

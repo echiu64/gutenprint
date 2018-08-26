@@ -296,9 +296,10 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      BJC-2100
      BJC S9000
 
-5) The following Epson inkjet printer has been added:
+5) The following Epson inkjet printers have been added:
 
      Epson Expression ET-2600 EcoTank ET
+     Epson Expression XP-15000 Series (PRELIMINARY)
 
 6) Paper size options have been corrected, so that inappropriate paper
    sizes for many printers have been removed.

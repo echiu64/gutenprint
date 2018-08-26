@@ -31,6 +31,7 @@ pkgxmldata_DATA =				\
 	c80.xml					\
 	c82.xml					\
 	claria.xml				\
+	claria_xp.xml				\
 	cmy.xml					\
 	cmykrb.xml				\
 	cmykro.xml				\
