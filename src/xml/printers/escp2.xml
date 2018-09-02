@@ -81,6 +81,7 @@
       <printer translate="name" name="Epson B-508DN" driver="escp2-b508dn" manufacturer="Epson" model="87" parameters="standard_params" />
       <printer translate="name" name="Epson B-510DN" driver="escp2-b510dn" manufacturer="Epson" model="87" parameters="standard_params" />
       <printer translate="name" name="Epson Expression ET-2600 EcoTank" driver="escp2-et2600" manufacturer="Epson" model="80" parameters="cx3500_params" />
+      <printer translate="name" name="Epson Expression ET-2750 EcoTank" driver="escp2-et2750" manufacturer="Epson" model="80" parameters="cx3500_params" />
       <printer translate="name" name="Epson XP-15000 Series" deviceid="MFG:EPSON;CMD:ESCPL2,BDC,ESCPR7,END4,GENEP;MDL:XP-15000 Series;CLS:PRINTER;DES:EPSON XP-15000 Series;CID:EpsonRGB;FID:FXN,DPA,WFA,ETA,AFN,DAN,WRA;RID:20;DDS:022500;ELG:1000;SN:583436523031363416" driver="escp2-xp15000" manufacturer="Epson" model="132" parameters="standard_params" />
       <printer translate="name" name="Epson L120" driver="escp2-l120" manufacturer="Epson" model="80" parameters="cx3500_params" />
       <printer translate="name" name="Epson L210" driver="escp2-l210" manufacturer="Epson" model="80" parameters="cx3500_params" />

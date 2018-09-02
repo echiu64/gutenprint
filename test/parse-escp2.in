@@ -21,6 +21,7 @@ use strict;
 getopts('VvO:');
 
 use vars qw($atend
+	    $escpr
 	    $stuff
 	    $opt_v
 	    $opt_V
@@ -29,6 +30,7 @@ use vars qw($atend
 	    $curpos
 	    $esc
 	    $initial_vertical_position
+	    $null
 	    $page_mgmt_unit
 	    $horizontal_position
 	    $horizontal_unit
@@ -48,6 +50,7 @@ use vars qw($atend
 	    @offsets);
 
 $atend = 0;
+$escpr = 0;
 %chartable = ();
 %xchartable = ();
 %nchartable = ();
@@ -87,6 +90,7 @@ map {
 map { $keylengths{$_} = length $_ } @seqkeys;
 
 $esc = "\033";
+$null = "\000";
 
 $curpos = 0;
 $curoffset = 0;
@@ -145,6 +149,36 @@ sub get_byte($) {
 sub get_byte_at($) {
     my ($offset) = @_;
     return get_byte(get_raw_at($offset, 1))
+}
+
+sub get_blong_at($) {
+    my ($offset) = @_;
+    return get_blong(substr($stuff, $curoffset + $offset, 4));
+}
+
+sub get_bshort_at($) {
+    my ($offset) = @_;
+    return get_bshort(substr($stuff, $curoffset + $offset, 2));
+}
+
+sub get_blong($) {
+    my ($string) = @_;
+    my ($tmp) = unpack("N", $string);
+    if ($tmp >= (1 << 31)) {
+	return -(0xffffffff ^ $tmp) - 1;
+    } else {
+	return $tmp;
+    }
+}
+
+sub get_bshort($) {
+    my ($string) = @_;
+    my ($tmp) = unpack("n", $string);
+    if ($tmp >= (1 << 15)) {
+	return -(0xffff ^ $tmp) - 1;
+    } else {
+	return $tmp;
+    }
 }
 
 sub get_string_at($$) {
@@ -207,6 +241,159 @@ sub increment_curpos($) {
     my ($curpos_increment) = @_;
     $curpos += $curpos_increment;
     $curoffset += $curpos_increment;
+}
+
+sub print_escpr_data($$$$$) {
+    my ($outbytes, $compression, $bpp, $offset, $expected) = @_;
+    if ($compression == 0) {
+	printf("%*v02x ", " ", substr($stuff, $offset, $outbytes * 3));
+	if ($expected != $outbytes) {
+	    printf "**** Wrong byte count: got %d, expected %d (%x)!!!", $outbytes, $expected, $expected;
+	}
+    } else {
+	my ($totbytes) = 0;
+	my ($orig_outbytes) = $outbytes;
+	while ($outbytes > 0) {
+	    my ($place) = $offset + $orig_outbytes - $outbytes;
+	    my $counter = ord(substr($stuff, $place, 1));
+	    $place++;
+	    $outbytes--;
+	    if ($counter <= 127) {
+		$counter++;
+		$counter *= $bpp;
+		$outbytes -= $counter;
+		printf("%*v02x ", " ", substr($stuff, $place, $counter));
+	    } else {
+		$counter = 257 - $counter;
+		$counter *= $bpp;
+		$outbytes -= $bpp;
+		my ($fchar) = sprintf "%*v02x ", " ", substr($stuff, $place, $bpp);
+		my ($outdata);
+		map { $outdata .= $fchar } (0..$counter - 1);
+		print $outdata;
+	    }
+	    $totbytes += $counter;
+	}
+	$totbytes /= $bpp;
+	if ($totbytes != $expected) {
+	    print "**** Wrong byte count: got $totbytes, expected $expected!!!";
+	}
+    }
+}
+
+sub do_escpr() {
+    my ($print_width, $print_length, $bpp);
+    while (fill_buffer(4)) {
+	printf("\n%08x    ", $curpos);
+	my ($cmd) = substr($stuff, $curoffset, 1);
+	my ($ncmd) = $nchartable{$cmd};
+	printf(" %02x ", $ncmd);
+	increment_curpos(1);
+	if ($cmd ne "$esc") {
+	    next;
+	}
+	my ($class) = substr($stuff, $curoffset, 1);
+	printf(" %s ", $class);
+	increment_curpos(1);
+	if ($class eq "@") {
+	    return;
+	}
+	my ($skipchars) = get_long(substr($stuff, $curoffset + 0, 4));
+	printf " %08x ", $skipchars;
+	increment_curpos(4);
+	fill_buffer(4);
+	my ($remaining) = $skipchars;
+	$cmd = substr($stuff, $curoffset + 0, 4);
+	printf(" %4s ", $cmd);
+	increment_curpos(4);
+	fill_buffer($skipchars);
+	if ($cmd eq "setq") {	# Set Quality
+	    my (@qualities) = qw(draft normal high);
+	    my (@colormono) = qw(color mono);
+	    my (@colordepth) = qw(24 8);
+	    printf("%*v02x ", " ", substr($stuff, $curoffset + 0, $skipchars));
+	    if ($opt_v) {
+		printf(" (Set Quality: Media: %02x Quality: %s Color: %s Brightness: %02x Contrast: %02x Saturation: %02x Color Depth: %x (%s) Palette Size: %04x)",
+		       get_byte_at(0),
+		       $qualities[get_byte_at(1)],
+		       $colormono[get_byte_at(2)],
+		       get_byte_at(3),
+		       get_byte_at(4),
+		       get_byte_at(5),
+		       get_byte_at(6),
+		       $colordepth[get_byte_at(6)],
+		       get_short_at(7));
+	    }
+	    $bpp = get_byte_at(6) ? 1 : 3;
+	    increment_curpos($skipchars);
+	} elsif ($cmd eq "setj") { # Set Job
+	    my (@resolution) = qw(360 720);
+	    my (@direction) = qw(bi uni);
+	    printf("%*v02x ", " ", substr($stuff, $curoffset + 0, $skipchars));
+	    if ($opt_v) {
+		printf(" (Set Job: Paper (%d %d) (%.1f %.1f) Top %d Left %d Printable (%d %d) (%.2f %.2f) In Resolution %s Direction %s)",
+		       get_blong_at(0),
+		       get_blong_at(4),
+		       get_blong_at(0) / $resolution[get_byte_at(20)],
+		       get_blong_at(4) / $resolution[get_byte_at(20)],
+		       get_bshort_at(8),
+		       get_bshort_at(10),
+		       get_blong_at(12),
+		       get_blong_at(16),
+		       get_blong_at(12) / $resolution[get_byte_at(20)],
+		       get_blong_at(16) / $resolution[get_byte_at(20)],
+		       $resolution[get_byte_at(20)],
+		       $direction[get_byte_at(21)]);
+	    }
+	    $print_width = get_blong_at(12);
+	    $print_length = get_blong_at(16);
+	    increment_curpos($skipchars);
+	} elsif ($cmd eq "sttp") { # Start Page
+	    printf("%*v02x ", " ", substr($stuff, $curoffset + 0, $skipchars));
+	} elsif ($cmd eq "dsnd") { # Data Send
+	    printf("%*v02x ", " ", substr($stuff, $curoffset + 0, 7));
+	    if ($opt_v) {
+		printf(" (Send Data: Offset (%d %d) Compression %d Size %d) ",
+		       get_bshort_at(0),
+		       get_bshort_at(2),
+		       get_byte_at(4),
+		       get_bshort_at(5));
+	    }
+	    if ($opt_V) {
+		print_escpr_data(get_bshort_at(5), get_byte_at(4), $bpp, $curoffset + 7, $print_width);
+		increment_curpos($skipchars);
+	    } else {
+		increment_curpos($skipchars);
+	    }
+	} elsif ($cmd eq "bsnd") { # Data Send -- ???
+	    printf("%*v02x ", " ", substr($stuff, $curoffset + 0, 34));
+	    my ($data_size) = get_blong_at(18) + get_blong_at(22) + get_blong_at(26);
+	    if ($opt_v) {
+		printf(" (Send Data: Offset (%d %d) Compression %d Size %d %d %d = %x, delta = %x) ",
+		       get_bshort_at(3),
+		       get_bshort_at(5),
+		       get_byte_at(7),
+		       get_blong_at(18),
+		       get_blong_at(22),
+		       get_blong_at(26),
+		       $data_size,
+		       $skipchars - ($data_size + 42))
+	    }
+	    if ($opt_V) {
+		print_escpr_data($data_size, get_byte_at(7), $bpp, $curoffset + 34, $print_width);
+	    }
+	    increment_curpos($skipchars);
+	} elsif ($cmd eq "endp") { # End Page
+	    printf("%*v02x ", " ", substr($stuff, $curoffset + 0, $skipchars));
+	    increment_curpos($skipchars);
+	} elsif ($cmd eq "endj") { # End Job
+	    printf("%*v02x ", " ", substr($stuff, $curoffset + 0, $skipchars));
+	    increment_curpos($skipchars);
+	} else {
+	    printf("%*v02x ", " ", substr($stuff, $curoffset + 0, $skipchars));
+	    increment_curpos($skipchars);
+	}
+    }
 }
 
 sub print_remote_SN($) {
@@ -358,25 +545,16 @@ sub print_remote_PP($) {
     print(" (Set input slot, printer-specific)");
 }
 
-sub do_remote_command() {
-    printf "\n%08x  1b  (  R ", $curpos;
-    increment_curpos(3);
-    fill_buffer(2);
-    my ($nlchar) = get_byte_at(0);
-    my ($nhchar) = get_byte_at(1);
-    my $skipchars = ($nhchar * 256) + $nlchar;
-    increment_curpos(2);
-    fill_buffer($skipchars);
-    print get_string_at(0, $skipchars);
-    increment_curpos($skipchars);
+sub do_remote() {
     while (fill_buffer(2) && get_raw_at(0, 2) =~ /[A-Z0-9][A-Z0-9]/) {
 	printf "\n%08x    ", $curpos;
 	my ($cmd) = get_raw_at(0, 2);
 	print $cmd;
 	increment_curpos(2);
 	fill_buffer(2);
-	$nlchar = get_byte_at(0);
-	$nhchar = get_byte_at(1);
+	my $nlchar = get_byte_at(0);
+	my $nhchar = get_byte_at(1);
+	my $skipchars;
 	if ($cmd eq "DF") {
 	    $skipchars = 0;
 	} else {
@@ -393,6 +571,25 @@ sub do_remote_command() {
 	    }
 	}
 	increment_curpos($skipchars);
+    }
+}
+
+sub do_remote_command() {
+    printf "\n%08x  1b  (  R ", $curpos;
+    increment_curpos(3);
+    fill_buffer(2);
+    my ($nlchar) = get_byte_at(0);
+    my ($nhchar) = get_byte_at(1);
+    my $skipchars = ($nhchar * 256) + $nlchar;
+    increment_curpos(2);
+    fill_buffer($skipchars);
+    my $rstring = get_string_at(0, $skipchars);
+    print $rstring;
+    increment_curpos($skipchars);
+    if ($rstring eq "00 ESCPR") {
+	do_escpr();
+    } else {
+	do_remote();
     }
 }
 
