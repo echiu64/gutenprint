@@ -63,7 +63,7 @@ function preflight {
     if [[ -n $trailing_ws ]] ; then
 	console_log "The following files have trailing whitespace:"
 	console_log "$trailing_ws"
-	return 1
+	return 2
     fi
     return 0
 }
@@ -77,7 +77,7 @@ function check_git {
     if [[ -n $("$GIT" status -uno --porcelain) ]] ; then
 	console_log "*** ERROR: Uncommitted changes in repository:"
 	"$GIT" status -uno | console_log
-	return 1
+	return 2
     fi
 
     # Ensure that the workspace is up to date (git status -uno
@@ -87,14 +87,16 @@ function check_git {
 
     ahead=$("$GIT" rev-list $("$GIT" rev-parse @{u})..@)
     behind=$("$GIT" rev-list $("$GIT" rev-parse @)..@{u})
-    if [[ -z $ahead && -z $behind ]] ; then
-	# Neither ahead nor behind.  Perfect.
-	echo "Repository and workspace are up to date, good!"
-    elif [[ -z $ahead ]] ; then
+    if [[ -n $ahead && -n $behind ]] ; then
+	# Oops!  Both ahead *and* behind remote.  Really bad news!
+	console_log "*** ERROR: HEAD and remote have diverged!"
+	console_log "***        Please merge and rebase all changes!"
+	return 2
+    elif [[ -n $behind ]] ; then
 	# We're behind.  Not good.
 	console_log "*** ERROR: Behind remote by $(wc -w <<< $behind) commits."
-	return 1
-    elif [[ -z $behind ]] ; then
+	return 2
+    elif [[ -n $ahead ]] ; then
 	# We're ahead.  That's OK as long as there are no merge commits...
 	merges=0
 	for h in $ahead ; do
@@ -103,18 +105,10 @@ function check_git {
 	done
 	console_log "*** Warning: Ahead of remote."
 	if (( $merges > 0 )) ; then
-	    if (( $merges == 1 )) ; then
-		console_log "*** ERROR: 1 merge between HEAD and remote"
-	    else
-		console_log "*** ERROR: $merges merges between HEAD and remote"
-	    fi
-	    return 1
+	    (( $merges != 1 )) && pl=s
+	    console_log "*** ERROR: $merges merge$pl between HEAD and remote"
+	    return 2
 	fi
-    else
-	# Oops!  Both ahead *and* behind remote.  Really bad news!
-	console_log "*** ERROR: HEAD and remote have diverged!"
-	console_log "***        Please merge and rebase all changes!"
-	return 1
     fi
 
     # Make sure that the tag that we're going to want to apply isn't
@@ -143,14 +137,14 @@ function check_git_tag {
     # already present.
     if [[ -n $("$GIT" show-ref "refs/tags/$(pkg_tag)") ]] ; then
 	console_log "*** ERROR: Tag named $(pkg_tag) is already present"
-	return 1
+	return 2
     fi
     return 0
 }
 
 # Check that we can build a clone of this workspace
 function _check_git_builds {
-    rev=$(git rev-parse @)
+    rev=$("GIT" rev-parse @)
     cwd=$(pwd)
     cd $TESTREPO || return 1
     git clone $cwd .
@@ -160,8 +154,6 @@ function _check_git_builds {
     fi
     git checkout "$rev" || return 1
     STP_LOG_NO_SUBDIR=1 STP_LOG_DIR=$STP_TEST_LOG_PREFIX scripts/build-release preflight run_build run_valgrind_minimal run_distcheck_minimal
-    status=$?
-    return $status
 }
 
 function check_git_builds {
@@ -184,13 +176,13 @@ function check_git_builds {
 function run_valgrind_minimal {
     make check-valgrind-minimal && return 0
     echo "make check-valgrind-minimal failed"
-    return 1
+    return 2
 }
 
 function run_valgrind_fast {
     make check-valgrind-fast && return 0
     echo "make check-valgrind-fast failed"
-    return 1
+    return 2
 }
 
 # Run make distcheck-fast.
@@ -248,7 +240,7 @@ function run_valgrind_fast {
 function run_distcheck_fast {
     make distcheck-fast && return 0
     echo "make distcheck-fast failed"
-    return 1
+    return 2
 }
 
 # Not used in the normal execution of the script, but useful for testing.
@@ -256,7 +248,7 @@ function run_distcheck_fast {
 function run_distcheck_minimal {
     make distcheck-minimal && return 0
     echo "make distcheck-minimal failed"
-    return 1
+    return 2
 }
 
 # Run make check-valgrind
@@ -273,7 +265,7 @@ function run_distcheck_minimal {
 function run_valgrind {
     make check-valgrind && return 0
     echo "make check-valgrind failed"
-    return 1
+    return 2
 }
 
 # Run make check-full
@@ -302,7 +294,7 @@ function run_valgrind {
 function run_full {
     make check-full && return 0
     echo "make check-full failed"
-    return 1
+    return 2
 }
 
 # Run make checksums-release to generate a new regression file.
@@ -327,13 +319,13 @@ function run_checksums() {
 	CSUM_FILE="src/testpattern/Checksums/sums.$(pkg_version).zpaq"
 	if [[ ! -f $CSUM_FILE ]] ; then
 	    echo "Can't find new checksums file $CSUM_FILE"
-	    return 1
+	    return 2
 	fi
 	cp -p "$CSUM_FILE" "$ARTIFACTDIR"
 	return 0
     fi
     echo "make checksums failed"
-    return 1
+    return 2
 }
 
 # Prep the release
@@ -393,7 +385,7 @@ function finis {
 
 ################################################################
 #
-# Running and logging stuff.
+# Runtime
 #
 ################################################################
 
@@ -553,9 +545,6 @@ function runit {
     fi
     counter=$((counter+1))
 
-    if (( $status != 0 )) ; then
-	finish $status
-    fi
     return $status
 }
 
@@ -609,13 +598,17 @@ echo "================================================================" | log "-
 echo "*** Gutenprint release build started at $SSTAMP on $HOST" | log "$top_log" -
 echo "Directory: $ROOT" | log "$top_log" -
 echo "Log Directory: ${LOGDIR#${ROOT}/}" | log "$top_log" -
-[[ -n $(git status --porcelain -uno) ]] && git_dirty=' (dirty)'
-echo "Git revision: $(git rev-parse @)$git_dirty" | log "$top_log" -
+[[ -n $("GIT" status --porcelain -uno) ]] && git_dirty=' (dirty)'
+echo "Git revision: $("GIT" rev-parse @)$git_dirty" | log "$top_log" -
 
 declare -i status=0
 for f in ${OPERATIONS[@]} ; do
     DONTRUN_OP=${DONTRUN}${SKIP_OPS[$f]} runit $f
-    (($? != 0)) && status=1
+    case "$?" in
+	0) true     ;;
+	1) finish 1 ;;
+	*) status=1 ;;
+    esac
 done
 
 finish $status

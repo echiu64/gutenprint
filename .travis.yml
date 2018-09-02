@@ -1,0 +1,34 @@
+language: c
+sript: ./build-release
+compiler:
+  - gcc
+  - clang
+addons:
+  apt:
+    packages:
+    - autoconf
+    - autogen
+    - automake
+    - bison
+    - bzip2
+    - cups-client
+    - docbook
+    - docbook-utils
+    - doxygen
+    - dvips-fontdata-n2bk
+    - flex
+    - gettext
+    - imagemagick
+    - libcups2-dev
+    - libcupsimage2-dev
+    - libtool
+    - openjade
+    - pdfjam
+    - sgml-base
+    - sgml-data
+    - sgmltools-lite
+    - texi2html
+    - time
+    - valgrind
+    - xz
+    - zpaq
