@@ -298,9 +298,92 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
 
 5) The following Epson inkjet printers have been added:
 
+     Epson Expression ET-2550 EcoTank ET (UNTESTED)
      Epson Expression ET-2600 EcoTank ET
+     Epson Expression ET-2650 EcoTank ET (UNTESTED)
+     Epson Expression ET-2700 EcoTank ET (UNTESTED)
      Epson Expression ET-2750 EcoTank ET
+     Epson Expression ET-2750 EcoTank Business Edition (UNTESTED)
      Epson Expression XP-15000 Series (PRELIMINARY)
+
+   The following printers are known not to be supported by any current
+   driver; if you are interested in assisting or contributing one of
+   these printers for development, please contact us.  Note that many
+   of these are network printers that likely support IPP Everywhere
+   without requiring a driver.
+
+     Epson Expression ET-3600 EcoTank
+     Epson Expression Home XP-5100
+     Epson WorkForce ET-3750
+     Epson WorkForce ET-4750
+     Epson WorkForce ET-8700
+     Epson WorkForce ET-16500
+     Epson WorkForce WF-2750
+     Epson WorkForce WF-2760
+     Epson WorkForce WF-2860
+     Epson WorkForce WF-6530
+     Epson WorkForce WF-7210
+     Epson WorkForce WF-7710
+     Epson WorkForce WF-7720
+     Epson WorkForce Enterprise WF-C17590
+     Epson WorkForce Enterprise WF-C20590
+     Epson WorkForce Pro WF-3720
+     Epson WorkForce Pro WF-4630
+     Epson WorkForce Pro WF-4720
+     Epson WorkForce Pro WF-4730
+     Epson WorkForce Pro WF-4734
+     Epson WorkForce Pro WF-4740
+     Epson WorkForce Pro WF-5110
+     Epson WorkForce Pro WF-5190
+     Epson WorkForce Pro WF-5620
+     Epson WorkForce Pro WF-5690
+     Epson WorkForce Pro WF-6090
+     Epson WorkForce Pro WF-6590
+     Epson WorkForce Pro WF-7110
+     Epson WorkForce Pro WF-7620
+     Epson WorkForce Pro WF-8090
+     Epson WorkForce Pro WF-8590
+     Epson WorkForce Pro WF-C5210
+     Epson WorkForce Pro WF-C5290
+     Epson WorkForce Pro WF-C5710
+     Epson WorkForce Pro WF-C5790
+     Epson WorkForce Pro WF-C7610
+     Epson WorkForce Pro WF-C7710
+     Epson WorkForce Pro WF-C7720
+     Epson WorkForce Pro WF-C8190
+     Epson WorkForce Pro WF-C8690
+     Epson WorkForce Pro WF-C869R
+     Epson WorkForce Pro WF-M5194
+     Epson WorkForce Pro WF-M5299
+     Epson WorkForce Pro WF-M5694
+     Epson WorkForce Pro WF-M5799
+     Epson WorkForce Pro WF-R4640
+     Epson WorkForce Pro WF-R5190
+     Epson WorkForce Pro WF-R5690
+
+   The following printers may work with an existing driver; if you
+   have one and are interested in testing, please contact us:
+
+     Epson Expression Home XP-340
+     Epson Expression Home XP-434
+     Epson Expression Home XP-440
+     Epson Expression Home XP-446
+     Epson Expression Premium ET-7700
+     Epson Expression Premium ET-7750
+     Epson Expression Photo XP-860
+     Epson Expression Photo XP-960
+     Epson Expression Photo XP-8500
+     Epson PictureMate PM-400
+     Epson Premium XP-640
+     Epson Premium XP-820
+     Epson Premium XP-830
+     Epson Premium XP-6000
+     Epson Stylus C88+ (will likely work with C88 driver up to
+                        2880x1440 DPI)
+     Epson WorkForce WF-100
+     Epson WorkForce WF-2630
+     Epson WorkForce WF-M1560 (may work with existing driver in black
+     	   	     	       and white mode)
 
 6) Paper size options have been corrected, so that inappropriate paper
    sizes for many printers have been removed.
