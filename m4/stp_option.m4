@@ -137,10 +137,11 @@ AC_DEFUN([STP_CONDITIONAL],
 AC_DEFUN([STP_ADD_COMPILER_ARG],[
   AC_MSG_CHECKING(if m4_ifval([$2], [$2 ], [${CC} ])supports $1)
   stp_acOLDCFLAGS="${CFLAGS}"
-  CFLAGS="${m4_ifval([$3], [$3], [CFLAGS])} $1"
+  NCFLAGS="${m4_ifval([$3], [$3], [CFLAGS])} $1"
+  CFLAGS="$NCFLAGS -Werror"
   AC_TRY_COMPILE(,,
       [ AC_MSG_RESULT(yes);
-        stp_newCFLAGS="$CFLAGS"],
+        stp_newCFLAGS="$NCFLAGS"],
       [ AC_MSG_RESULT(no);
 	stp_newCFLAGS="$stp_acOLDCFLAGS"])
   CFLAGS="$stp_acOLDCFLAGS"
