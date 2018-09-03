@@ -32,6 +32,7 @@ STP_TEST_PROFILE=${STP_TEST_PROFILE:-full}
 
 set -e
 
+declare QUIET=${TRAVIS_MODE:+-q}
 declare FASTOPT="-dDitherAlgorithm=VeryFast -dResolution=MIN -dPageSize=MIN"
 declare MIN_PRINTERS="@MINIMAL_PRINTERS_TO_TEST@"
 
@@ -51,22 +52,22 @@ function test_minimal() {
 }
 
 function test_fast() {
-    runit ./run-testpattern-2 -s $FASTOPT -dColorCorrection=Raw \
+    runit ./run-testpattern-2 -s $QUIET $FASTOPT -dColorCorrection=Raw \
 	  -o InkType -o InkSet,RawChannels -o Duplex \
 	  -o MediaType -o InputSlot -o FullBleed -o UseGloss \
 	  -o Orientation -o LabelSeparator -o Resolution -T 720 "$@"
-    runit ./run-testpattern-2 $FASTOPT -dColorCorrection=Raw -o -
+    runit ./run-testpattern-2 $QUIET $FASTOPT -dColorCorrection=Raw -o -
     runit ./run-testpattern-2 -s $FASTOPT \
 	  -o TPMode,ColorCorrection,InkType,UseGloss $MIN_PRINTERS
-    runit ./run-testpattern-2 -s $FASTOPT -o - -G 1x1
+    runit ./run-testpattern-2 -s $QUIET $FASTOPT -o - -G 1x1
 }
 
 function test_full() {
-    runit ./run-testpattern-2 -s
-    runit ./run-testpattern-2 $FASTOPT -dColorCorrection=Raw -o - -G 1x1
-    runit ./run-testpattern-2 -s \
+    runit ./run-testpattern-2 -s $QUIET
+    runit ./run-testpattern-2 $QUIET $FASTOPT -dColorCorrection=Raw -o - -G 1x1
+    runit ./run-testpattern-2 -s $QUIET \
 	  -oPageSize,Resolution=MIN,DitherAlgorithm=VeryFast
-    runit ./run-testpattern-2 -s $FASTOPT \
+    runit ./run-testpattern-2 -s $QUIET $FASTOPT \
 	  -o TPMode,ColorCorrection,InkType,UseGloss
 }
 
@@ -81,16 +82,16 @@ function test_valgrind_minimal() {
 
 function test_valgrind_fast() {
     test_valgrind_minimal
-    runit ./run-testpattern-2 -s -v -v $FASTOPT -o - "$@"
+    runit ./run-testpattern-2 -s -v -v $QUIET $FASTOPT -o - "$@"
 }
 
 function test_valgrind() {
-    runit ./run-testpattern-2 -s -v -v $FASTOPT -o InkType \
+    runit ./run-testpattern-2 -s -v -v $QUIET $FASTOPT -o InkType \
 	  -o InkSet,RawChannels -o Duplex -o MediaType -o InputSlot \
 	  -o FullBleed -o UseGloss -o Orientation -o LabelSeparator "$@"
     runit ./run-testpattern-2 -s -v -v $FASTOPT \
 	  -o TPMode,ColorCorrection,InkType,UseGloss "$@" $MIN_PRINTERS
-    runit ./run-testpattern-2 -s -v -v $FASTOPT -dColorCorrection=Raw -o - -G 1x1
+    runit ./run-testpattern-2 -s -v -v $QUIET $FASTOPT -dColorCorrection=Raw -o - -G 1x1
 }
 
 function test_checksums() {
