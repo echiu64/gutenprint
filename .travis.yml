@@ -14,13 +14,18 @@ addons:
     - bzip2
     - cups-client
     - docbook
+    - docbook-dsssl
+    - docbook-simple
     - docbook-utils
+    - docbook-xml
+    - docbook-xsl
     - doxygen
     - dvips-fontdata-n2bk
     - flex
     - gettext
     - imagemagick
     - jade
+    - jadetex
     - libcups2-dev
     - libcupsimage2-dev
     - libtool
