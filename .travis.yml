@@ -30,5 +30,5 @@ addons:
     - texi2html
     - time
     - valgrind
-    - xz
+    - xz-utils
     - zpaq
