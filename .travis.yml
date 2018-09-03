@@ -1,5 +1,5 @@
 language: c
-script: ./build-release
+script: ./scripts/build-release
 compiler:
   - gcc
   - clang
