@@ -1,5 +1,9 @@
 language: c
-script: TRAVIS_MODE=1 ./scripts/build-release preflight run_build run_valgrind_minimal run_distcheck_fast
+script: TRAVIS_MODE=1 ./scripts/build-release preflight run_build_fresh run_valgrind_minimal run_distcheck_fast
+# Need all history to build change log.
+git:
+  depth: false
+  quiet: true
 compiler:
   - gcc
   - clang

@@ -122,6 +122,14 @@ function run_build {
     return 1
 }
 
+# Same as above, without make clean if we know we're in a clean
+# environment (e. g. CI)
+function run_build_fresh {
+    ./autogen.sh && make ${STP_PARALLEL:+-j$STP_PARALLEL} && return 0
+    echo "FATAL error: preliminary build failed!"
+    return 1
+}
+
 # Git check tag.  This can't be run until after the build, because we
 # don't have the version available until autogen.
 
