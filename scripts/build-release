@@ -236,14 +236,6 @@ function run_distcheck_fast {
     return 2
 }
 
-# Not used in the normal execution of the script, but useful for testing.
-
-function run_distcheck_minimal {
-    make distcheck-minimal && return 0
-    echo "make distcheck-minimal failed"
-    return 2
-}
-
 # Run make check-valgrind
 #
 # This is slow.  It tests only unique printers, and a lot of extra
@@ -351,6 +343,12 @@ function run_distcheck_minimal {
     make distcheck-minimal && return 0
     echo "Final make distcheck-minimal failed"
     return 1
+}
+
+function run_check_minimal {
+    make check-minimal && return 0
+    echo "Final make distcheck-minimal failed"
+    return 2
 }
 
 #  Save away build
@@ -471,6 +469,15 @@ function finish {
     [[ $quiet = 1 ]] && echo
     echo "*** Gutenprint release build $msg at $estamp ($(time_delta $STIME $etime))" | log "$top_log" -
     echo "================================================================" | log "$top_log"
+    if [[ -n $TRAVIS_MODE ]] ; then
+	# We really don't want the termination message
+	exec 3>&2
+	exec 2>/dev/null
+	kill %1
+	wait %1
+	exec 2>&3
+	exec 3>&-
+    fi
     exit $status
 }
 
@@ -493,6 +500,10 @@ function console_log {
     else
 	log /dev/fd/3 - | timestamp | log - "$top_log" - | cut -c26-
     fi
+}
+
+function travis_deadman {
+    while : ; do sleep 10; echo Mark | timestamp | log -; done
 }
 
 function timestamp {
@@ -590,6 +601,11 @@ done
 declare counter=1
 declare top_log="$LOGDIR/00.Master"
 declare git_dirty=
+
+if [[ -n $TRAVIS_MODE ]] ; then
+    export BUILD_VERBOSE=1
+    travis_deadman&
+fi
 
 echo "================================================================" | log "-$top_log"
 echo "*** Gutenprint release build started at $SSTAMP on $HOST" | log "$top_log" -

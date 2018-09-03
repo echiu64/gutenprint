@@ -31,11 +31,14 @@ main(int argc, char **argv)
   if (getenv("STP_TEST_LOG_PREFIX"))
     {
       char path[PATH_MAX+1];
+      if (getenv("BUILD_VERBOSE"))
+	dup2(2, 3);
       (void) snprintf(path, PATH_MAX, "%scheck_duplicate_printers_%d.log", getenv("STP_TEST_LOG_PREFIX"), getpid());
       stdout = freopen(path, "w", stdout);
       dup2(1, 2);
     }
   setenv("STP_CHECK_DUPLICATE_PRINTERS", "TRUE", 1);
+  fprintf(stderr, "CHECK_DUPLICATE_PRINTERS\n");
   stp_init();			/* Aborts if duplicates are found */
   return 0;
 }

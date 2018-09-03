@@ -1,4 +1,4 @@
-#!@BASH@
+#!@BASHREAL@
 
 # Test PPD conformance
 #
@@ -31,7 +31,11 @@
 
 if [[ -n "$STP_TEST_LOG_PREFIX" ]] ; then
     redir="${STP_TEST_LOG_PREFIX}${0##*/}_$$.log"
-    exec 1>>"$redir"
+    if [[ -n $BUILD_VERBOSE ]] ; then
+	exec > >(tee -a "$redir" >&3)
+    else
+	exec 1>>"$redir"
+    fi
     exec 2>&1
 fi
 
