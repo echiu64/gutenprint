@@ -84,6 +84,7 @@ static void
 stpi_papersize_freefunc(void *item)
 {
   stp_papersize_t *paper = (stp_papersize_t *) (item);
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wcast-qual"
   STP_SAFE_FREE(paper->name);
   STP_SAFE_FREE(paper->text);
@@ -192,8 +193,8 @@ static int
 papersize_size_mismatch(stp_dimension_t l, stp_dimension_t w,
 			const stp_papersize_t *val)
 {
-  stp_dimension_t hdiff = abs(l - (stp_dimension_t) val->height);
-  stp_dimension_t vdiff = abs(w - (stp_dimension_t) val->width);
+  stp_dimension_t hdiff = STP_DABS(l - (stp_dimension_t) val->height);
+  stp_dimension_t vdiff = STP_DABS(w - (stp_dimension_t) val->width);
   return hdiff > vdiff ? hdiff : vdiff;
 }
 

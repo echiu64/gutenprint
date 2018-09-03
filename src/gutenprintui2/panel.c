@@ -36,6 +36,7 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <math.h>
 
 #define MAXIMUM_PARAMETER_LEVEL STP_PARAMETER_LEVEL_ADVANCED4
 
@@ -5121,8 +5122,8 @@ preview_motion_callback (GtkWidget      *widget,
     return;
   if (move_constraint == MOVE_CONSTRAIN)
     {
-      int dx = abs(event->x - mouse_x);
-      int dy = abs(event->y - mouse_y);
+      int dx = STP_DABS(event->x - mouse_x);
+      int dy = STP_DABS(event->y - mouse_y);
       if (dx > dy && dx > 3)
 	move_constraint = MOVE_HORIZONTAL;
       else if (dy > dx && dy > 3)

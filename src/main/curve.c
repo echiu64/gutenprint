@@ -571,7 +571,7 @@ int
 stp_curve_set_interpolation_type(stp_curve_t *curve, stp_curve_type_t itype)
 {
   CHECK_CURVE(curve);
-  if (itype < 0 || itype >= stpi_curve_type_count)
+  if (itype >= stpi_curve_type_count)
     return 0;
   curve->curve_type = itype;
   return 1;

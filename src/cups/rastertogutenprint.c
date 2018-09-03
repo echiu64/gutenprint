@@ -398,10 +398,10 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings,
 
   set_special_parameter(v, "Quality", cups->header.cupsRowFeed - 1);
 
-  if (cups->header.MediaClass && strlen(cups->header.MediaClass) > 0)
+  if (strlen(cups->header.MediaClass) > 0)
     set_string_parameter(v, "InputSlot", cups->header.MediaClass);
 
-  if (cups->header.MediaType && strlen(cups->header.MediaType) > 0)
+  if (strlen(cups->header.MediaType) > 0)
     set_string_parameter(v, "MediaType", cups->header.MediaType);
 
   if (! suppress_messages)
@@ -1238,7 +1238,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   cupsMarkOptions(ppd, num_options, options);
   size = ppdPageSize(ppd, NULL);
 
-  if (size->name)
+  if (size)
     page_size_name = stp_strdup(size->name);
 
   if (! suppress_messages)

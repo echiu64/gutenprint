@@ -2735,7 +2735,7 @@ flush_pass(stp_vars_t *v, int passno, int vertical_subpass)
   paperShift = (pass->logicalpassstart - pd->last_pass_offset) * (caps->y_raster_res/ydpi);
   for (j = 0; j < pd->ncolors; j++)
     stp_dprintf(STP_DBG_LEXMARK, v, "Color %d: active %d line %p jets %d offset %ld\n",
-		j, lineactive[0].v[j], bufs[0].v[j], linecount[0].v[j],
+		j, lineactive[0].v[j], (void *)bufs[0].v[j], linecount[0].v[j],
 		lineoffs[0].v[j]);
 
       /*** do we have to print something with the color cartridge ? ***/

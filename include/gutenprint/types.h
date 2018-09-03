@@ -30,7 +30,9 @@ extern "C" {
 #endif
 
 typedef double stp_dimension_t;
+#define STP_DABS fabs
 typedef int stp_resolution_t;
+#define STP_RABS abs
 
 #ifdef __cplusplus
   }
