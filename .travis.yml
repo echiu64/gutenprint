@@ -9,6 +9,7 @@ addons:
     - autoconf
     - autogen
     - automake
+    - autopoint
     - bison
     - bzip2
     - cups-client
@@ -19,11 +20,13 @@ addons:
     - flex
     - gettext
     - imagemagick
+    - jade
     - libcups2-dev
     - libcupsimage2-dev
     - libtool
     - openjade
     - pdfjam
+    - perl
     - sgml-base
     - sgml-data
     - sgmltools-lite
