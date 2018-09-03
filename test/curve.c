@@ -59,12 +59,15 @@ struct test_failure
 static struct test_failure *test_failure_head = NULL;
 static struct test_failure *test_failure_tail = NULL;
 
+static const char *current_test_name;
+static int current_test_line;
+
 static void
 TEST_internal(const char *name, int line)
 {
   global_test_count++;
-  printf("%d.%d: Checking %s... ", global_test_count, line, name);
-  fflush(stdout);
+  current_test_name = name;
+  current_test_line = line;
 }
 
 #define TEST(name) TEST_internal(name, __LINE__)
@@ -72,7 +75,9 @@ TEST_internal(const char *name, int line)
 static void
 TEST_PASS(void)
 {
-  printf("PASS\n");
+  if (verbose)
+    printf("%d.%d: Checking %s... PASS\n", global_test_count, current_test_line,
+	   current_test_name);
   fflush(stdout);
 }
 
@@ -95,7 +100,8 @@ TEST_FAIL(void)
     }
 
   global_error_count++;
-  printf("FAIL\n");
+  printf("%d.%d: Checking %s... FAIL\n", global_test_count, current_test_line,
+	 current_test_name);
   fflush(stdout);
 }
 
@@ -696,7 +702,7 @@ main(int argc, char **argv)
     }
 
   if (!quiet)
-    printf("Testing known bad curves...\n");
+    printf("Testing known bad curves... (expect messages)\n");
   for (i = 0; i < bad_curve_count; i++)
     {
       stp_curve_t *bad = NULL;
@@ -1241,6 +1247,6 @@ main(int argc, char **argv)
 	}
     }
   else
-    printf("All tests passed successfully.\n");
+    printf("All %d tests passed successfully.\n", global_test_count);
   return global_error_count ? 1 : 0;
 }
