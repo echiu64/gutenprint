@@ -1,5 +1,5 @@
 language: c
-script: BUILD_VERBOSE=1 ./scripts/build-release
+script: BUILD_VERBOSE=1 travis_wait 480 ./scripts/build-release
 compiler:
   - gcc
   - clang
