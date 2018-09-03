@@ -1,5 +1,5 @@
 language: c
-script: ./scripts/build-release
+script: BUILD_VERBOSE=1 ./scripts/build-release
 compiler:
   - gcc
   - clang

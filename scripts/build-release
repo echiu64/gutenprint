@@ -423,7 +423,7 @@ function report_progress {
 # This allows us to log to multiple outputs, including stdout and
 # (where available) file descriptors.  Ideally we'd be able to build a
 # pipeline and eval it, but it's not clear that that's possible.
-function log {
+function log1 {
     if [[ $# == 0 || ($# == 1 && $1 == -) ]] ; then
 	cat
     else
@@ -434,25 +434,29 @@ function log {
 	if [[ $dest == - && $# > 0 ]] ; then
 	    # Protect against someone inadvertently specifying - twice!
 	    if [[ $1 == - ]] ; then
-		log "$@"
+		log1 "$@"
 	    else
-		log "$@" -
+		log1 "$@" -
 	    fi
 	elif [[ $dest == -* ]] ; then
 	    dest=${dest:1}
 	    if [[ $# == 0 ]] ; then
 		cat > "$dest"
 	    else
-		tee "$dest" | log "$@"
+		tee "$dest" | log1 "$@"
 	    fi
 	else
 	    if [[ $# == 0 ]] ; then
 		cat >> "$dest"
 	    else
-		tee -a "$dest" | log "$@"
+		tee -a "$dest" | log1 "$@"
 	    fi
 	fi
     fi
+}
+
+function log {
+    log1 "$@" ${BUILD_VERBOSE:+-}
 }
 
 function time_delta {
