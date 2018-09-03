@@ -547,6 +547,7 @@ AC_PATH_PROG([FIND], [find])
 AC_PATH_PROG([PERL], [perl])
 AC_PATH_PROG([GLIB_MKENUMS], [glib-mkenums])
 AC_PATH_PROG([CONVERT], [convert])
+AC_PATH_PROG([BASHREAL], [bash])
 if test x${USE_MAINTAINER_MODE} = xyes ; then
   if test x${CONVERT} = x ; then
     AC_MSG_WARN([PostScript developer's guide cannot be regenerated!])
