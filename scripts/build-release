@@ -110,13 +110,6 @@ function check_git {
 	    return 2
 	fi
     fi
-
-    # Make sure that the tag that we're going to want to apply isn't
-    # already present.
-    if [[ -n $("$GIT" show-ref "refs/tags/$(pkg_tag)") ]] ; then
-	console_log "*** ERROR: Tag named $(pkg_tag) is already present"
-	return 1
-    fi
     return 0
 }
 
