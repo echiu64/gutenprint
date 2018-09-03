@@ -611,7 +611,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL,
     NULL
-  },  
+  },
   { /* Canon  BJ 30   *//* heads: BC-10 */
     "30", 1,
     INCH(19/2), INCH(14),

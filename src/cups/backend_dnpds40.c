@@ -1799,7 +1799,7 @@ top:
 
 			count -= ctx->mediaoffset;
 		}
-		ctx->marker.levelnow = count;		
+		ctx->marker.levelnow = count;
 		dump_markers(&ctx->marker, 1, 0);
 	}
 
