@@ -1,5 +1,5 @@
 language: c
-script: TRAVIS_MODE=1 ./scripts/build-release preflight run_build run_valgrind_mimal run_distcheck_fast
+script: TRAVIS_MODE=1 ./scripts/build-release preflight run_build run_valgrind_minimal run_distcheck_fast
 compiler:
   - gcc
   - clang

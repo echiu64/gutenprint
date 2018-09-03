@@ -502,8 +502,10 @@ function console_log {
     fi
 }
 
+# Travis times out if there's no output for 10 minutes, but some things
+# go silent for quite a while
 function travis_deadman {
-    while : ; do sleep 10; echo Mark | timestamp | log -; done
+    while : ; do sleep 60; echo Mark | timestamp | log -; done
 }
 
 function timestamp {
