@@ -32,7 +32,9 @@ addons:
     - jadetex
     - libcups2-dev
     - libcupsimage2-dev
+    - libgimp2.0-dev
     - libtool
+    - libusb-1.0-0-dev
     - openjade
     - pdfjam
     - perl
