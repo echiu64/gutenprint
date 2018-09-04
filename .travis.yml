@@ -1,5 +1,5 @@
 language: c
-script: TRAVIS_MODE=1 ./scripts/build-release preflight run_build_fresh run_valgrind_minimal run_distcheck_fast
+script: TRAVIS_MODE=1 ./scripts/build-release preflight run_build_fresh run_valgrind_minimal run_distcheck_fast run_valgrind_fast
 # Need all history to build change log.
 git:
   depth: false
@@ -7,6 +7,12 @@ git:
 compiler:
   - gcc
   - clang
+notifications:
+  email:
+    recipients:
+    - rlk@alum.mit.edu
+    on_success: always
+    on_failure: always
 addons:
   apt:
     packages:
