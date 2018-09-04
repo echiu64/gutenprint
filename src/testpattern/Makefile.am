@@ -73,16 +73,16 @@ Checksums:
 	$(MKDIR_P) Checksums
 
 checksums: $(CSUM_DEPS)
-	$(CHECKSUM_ENV) ./run-testpattern-2.check 3>&1 | ./compress-checksums | $(COMPRESS) > "$(CSUM_FILE)@CSUF@"
+	$(CHECKSUM_ENV) ./run-testpattern-2.check 4>&1 | ./compress-checksums | $(COMPRESS) > "$(CSUM_FILE)@CSUF@"
 
 checksums-fast: $(CSUM_DEPS)
-	$(CHECKSUM_ENV) ./run-testpattern-2.check -s 3>&1 | ./compress-checksums | $(COMPRESS) > "$(CSUM_FILE)@CSUF@"
+	$(CHECKSUM_ENV) ./run-testpattern-2.check -s 4>&1 | ./compress-checksums | $(COMPRESS) > "$(CSUM_FILE)@CSUF@"
 
 checksums-release: $(CSUM_DEPS)
 	if [ -n "$$STP_TEST_LOG_PREFIX" ] ; then \
-	  $(CHECKSUM_ENV) ./run-testpattern-2.check 3>&1 | ./compress-checksums | $(COMPRESS) | tee "$${STP_TEST_LOG_PREFIX}checksums_$$$$@CSUF@" > "$(CSUM_RELEASE_FILE)@CSUF@" ; \
+	  $(CHECKSUM_ENV) ./run-testpattern-2.check 4>&1 | ./compress-checksums | $(COMPRESS) | tee "$${STP_TEST_LOG_PREFIX}checksums_$$$$@CSUF@" > "$(CSUM_RELEASE_FILE)@CSUF@" ; \
 	else \
-	  $(CHECKSUM_ENV) ./run-testpattern-2.check 3>&1 | ./compress-checksums | $(COMPRESS) > "$(CSUM_RELEASE_FILE)@CSUF@" ; \
+	  $(CHECKSUM_ENV) ./run-testpattern-2.check 4>&1 | ./compress-checksums | $(COMPRESS) > "$(CSUM_RELEASE_FILE)@CSUF@" ; \
 	fi
 endif
 

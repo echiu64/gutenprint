@@ -1089,7 +1089,7 @@ sub runit() {
 	mkdir $csum_dir || die "Can't create directory $csum_dir: $!\n";
     }
 
-    if (defined $csum_file) {
+    if (defined $csum_file && ! $csum_file =~ /^\:([0-9]+)$/) {
 	unlink $csum_file;
 	system "touch $csum_file";
     }

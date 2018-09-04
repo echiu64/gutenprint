@@ -96,10 +96,10 @@ function test_valgrind() {
 
 function test_checksums() {
     export STP_DEBUG=$(printf "0x%x" $((0x8000000 | ${STP_DEBUG:-0})))
-    runit ./run-testpattern-2 -q -M ':3' "$@"
-    runit ./run-testpattern-2 -F -s -q -M ':3' \
+    runit ./run-testpattern-2 -q -M ':4' "$@"
+    runit ./run-testpattern-2 -F -s -q -M ':4' \
 	  -o PageSize,Resolution=MIN,DitherAlgorithm=VeryFast "$@"
-    runit ./run-testpattern-2 -F -s -q -M ':3' $FASTOPT \
+    runit ./run-testpattern-2 -F -s -q -M ':4' $FASTOPT \
 	  -o TPMode,ColorCorrection,InkType,UseGloss "$@"
 }
 
