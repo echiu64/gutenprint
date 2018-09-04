@@ -621,6 +621,7 @@ echo "================================================================" | log "-
 echo "*** Gutenprint release build started at $SSTAMP on $HOST" | log "$top_log" -
 echo "Directory: $ROOT" | log "$top_log" -
 echo "Log Directory: ${LOGDIR#${ROOT}/}" | log "$top_log" -
+echo "Parallelism: $STP_PARALLEL" | log "$top_log" -
 [[ -n $("$GIT" status --porcelain -uno) ]] && git_dirty=' (dirty)'
 echo "Git revision: $("$GIT" rev-parse @)$git_dirty" | log "$top_log" -
 
