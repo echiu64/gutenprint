@@ -22,6 +22,8 @@ addons:
     - autopoint
     - bison
     - bzip2
+    - cups-filters
+    - cups-filters-core-drivers
     - cups-client
     - docbook
     - docbook-dsssl
