@@ -50,8 +50,8 @@ least 300 MHz.  Fast printers may require a faster processor to
 achieve maximum printing speed.
 
 For general use, you should have the Common UNIX Printing System, CUPS
-(version 1.1.15 or above).  Please the rest of the release notes, in
-particular the Exceptions and Workarounds, for full details on
+(version 1.1.15 or above).  Please read the rest of the release notes,
+in particular the Exceptions and Workarounds, for full details on
 installation, as there is important information to be aware of.  CUPS
 is the printing system used on Macintosh OS X 10.3 and above, and many
 other systems use it.  The combination of CUPS and Gutenprint provides
@@ -104,7 +104,7 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      Xerox DocuPrint C20
      Xerox WorkCentre 7345
 
-  * The following new printers have been added, with color support.
+  * The following new printers have been added, with color support:
 
      Brother HL-2400CeN
      Brother HL-2600CN
@@ -277,12 +277,12 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      Xerox WorkCentre C2424
 
      * Many other color laser printers, too numerous to list, have
-       been added on specification; please report success or failure
-       with any other color laser printer using the Generic PCL Color
-       drivers.  Printers that we know about that may be supported are
-       listed as UNTESTED Automatically Generated.  Based on feedback
-       from this pre-release, some or all of these printers may be
-       removed from the list prior to general release.
+       been added based on specification; please report success or
+       failure with any other color laser printer using the Generic
+       PCL Color drivers.  Printers that we know about that may be
+       supported are listed as UNTESTED Automatically Generated.
+       Based on feedback from this pre-release, some or all of these
+       printers may be removed from the list prior to general release.
 
 3) The following BW laser printer has been added:
 
