@@ -42,7 +42,6 @@
 #endif
 
 //#define S6145_YMC
-//#define CW01_NATIVE
 
 #define DYESUB_FEATURE_NONE		 0x00000000
 #define DYESUB_FEATURE_FULL_WIDTH	 0x00000001
@@ -6829,86 +6828,12 @@ LIST(dyesub_printsize_list_t, citizen_cw01_printsize_list, dyesub_printsize_t, c
 static void citizen_cw01_printer_start(stp_vars_t *v)
 {
   dyesub_privdata_t *pd = get_privdata(v);
-#ifdef CW01_NATIVE
   /* Set quantity.. Backend overrides as needed. */
   stp_zprintf(v, "\033PCNTRL QTY             00000008%07d\r", pd->copies);
   /* Set cutter, nothing fancy */
   stp_zprintf(v, "\033PCNTRL CUTTER          0000000800000000");
 
   /* CW-01 has no other smarts.  No multicut, no matte. */
-#else
-  int media = 0;
-
-  if (strcmp(pd->pagesize,"w252h338") == 0)
-	  media = 0x00;
-  else if (strcmp(pd->pagesize,"B7") == 0)
-	  media = 0x01;
-  else if (strcmp(pd->pagesize,"w288h432") == 0)
-	  media = 0x02;
-  else if (strcmp(pd->pagesize,"w338h504") == 0)
-	  media = 0x03;
-  else if (strcmp(pd->pagesize,"w360h504") == 0)
-	  media = 0x04;
-  else if (strcmp(pd->pagesize,"w432h576") == 0)
-	  media = 0x05;
-  else if (strcmp(pd->pagesize,"w432h576") == 0)
-	  media = 0x06;
-
-  stp_putc(media, v);
-  if (pd->h_dpi == 600) {
-    stp_putc(0x01, v);
-  } else {
-    stp_putc(0x00, v);
-  }
-  stp_putc(pd->copies, v);
-  stp_putc(0x00, v);
-
-  /* Compute plane size */
-  media = (pd->w_size * pd->h_size) + 1024 + 40;
-
-  stp_put32_le(media, v);
-  stp_put32_le(0x0, v);
-#endif
-}
-
-static void citizen_cw01_plane_init(stp_vars_t *v)
-{
-#ifdef CW01_NATIVE
-  dnpds40_plane_init(v);
-#else
-  dyesub_privdata_t *pd = get_privdata(v);
-  int i;
-
-  stp_put32_le(0x28, v);
-  stp_put32_le(0x0800, v);
-  stp_put16_le(pd->h_size, v);  /* number of rows */
-  stp_put16_le(0x0, v);
-  stp_put32_le(0x080001, v);
-  stp_put32_le(0x00, v);
-  stp_put32_le(0x00, v);
-  stp_put32_le(0x335a, v);
-  if (pd->h_dpi == 600) {
-    stp_put32_le(0x5c40, v);
-  } else {
-    stp_put32_le(0x335a, v);
-  }
-  stp_put32_le(0x0100, v);
-  stp_put32_le(0x00, v);
-
-  /* Write the color curve data. */
-  for (i = 0xff; i >= 0 ; i--) {
-    unsigned long tmp;
-    tmp = i | (i << 8) | (i << 16);
-    stp_put32_le(tmp, v);
-  }
-#endif
-}
-
-static void citizen_cw01_printer_end(stp_vars_t *v)
-{
-#ifdef CW01_NATIVE
-  dnpds40_printer_end(v);
-#endif
 }
 
 /* Magicard Series */
@@ -8785,8 +8710,8 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_WHITE_BORDER
       | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_NATIVECOPIES,
-    &citizen_cw01_printer_start, &citizen_cw01_printer_end,
-    &citizen_cw01_plane_init, NULL,
+    &citizen_cw01_printer_start, &dnpds40_printer_end,
+    &dnpds40_plane_init, NULL,
     NULL, NULL,
     NULL,
     NULL, NULL,
