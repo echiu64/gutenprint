@@ -59,7 +59,7 @@ function pkg_tag {
 # Clean up any trailing whitespace.
 
 function preflight {
-    declare -l trailing_ws="$("$GIT" grep -Il '[	 ]$')"
+    local trailing_ws="$("$GIT" grep -Il '[	 ]$')"
     if [[ -n $trailing_ws ]] ; then
 	console_log "The following files have trailing whitespace:"
 	console_log "$trailing_ws"

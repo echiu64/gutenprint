@@ -404,7 +404,7 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
       The same printer will now generate this URI scheme:
 
 	gutenprint53+usb://dnpds620/12345678
-    
+
       The backend will continue to parse the old scheme indefinitely, so that
       existing installations will function normally.
 
