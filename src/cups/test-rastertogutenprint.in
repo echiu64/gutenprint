@@ -479,4 +479,5 @@ if [[ -d ppd/C ]] ; then
 fi
 
 [[ -n $tfile ]] && rm -f "$tfile"
+(( $retval == 0 )) && rm -rf ppd/C && rmdir ppd
 exit $retval
