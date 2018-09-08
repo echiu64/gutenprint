@@ -43,6 +43,7 @@ our $opt_r; # Gutenprint version
 our $opt_i; # Interactive
 our $opt_f; # Force upgrade
 our $opt_l; # Language
+our $opt_x; # Allow update across major.minor version
 
 my $debug = 0;
 my $verbose = 0;   # Verbose output
@@ -212,6 +213,7 @@ sub HELP_MESSAGE($;$$$) {
     print $fh "  -r version  Use PPD files for Gutenprint major.minor version.\n";
     print $fh "  -f          Ignore new PPD file safety checks.\n";
     print $fh "  -i          Prompt (interactively) for each PPD file.\n";
+    print $fh "  -x          Allow update across major Gutenprint releases.\n";
     print $fh "  -l language Language choice (Gutenprint 5.1 or below).\n";
     print $fh "              Choices: " . join(" ", @languages) . "\n";
     print $fh "              Or -loriginal to preserve original language\n";
@@ -261,6 +263,7 @@ sub parse_options () {
                     "p=s" => \$opt_p,
                     "P=s" => \$opt_P,
                     "v" => \$opt_v,
+		    "x" => \$opt_x,
                     "N" => \$opt_N,
                     "o=s" => \$opt_o,
                     "r=s" => \$opt_r,
@@ -540,14 +543,28 @@ sub update_ppd ($) {
 	return 0;
     }
 
-    my ($ndt, $nopt, $nres, $ndef, $source_data) = get_ppd_data($source_fd, 1, 1, 1, 1, 1);
+    my ($ndt, $nopt, $nres, $ndef, $source_data, $new_fileversion) = get_ppd_data($source_fd, 1, 1, 1, 1, 1);
+    my $new_majversion = $new_fileversion;
+    $new_majversion =~ s/^([[:digit:]]+\.[[:digit:]]).*/$1/;
     if (! defined $ndt) {
 	print "Unable to retrieve PPD file for $ppd_source_filename!\n";
 	close ORIG;
 	return 0;
     }
 
+    # Extract the default values from the original PPD...
+
+    seek(ORIG, 0, 0);
+
+    my ($odt, $oopt, $ores, $odef, $ignore, $old_fileversion) = get_ppd_data(ORIG, 1, 0, 1, 1, 0);
+    my $old_majversion = $old_fileversion;
+    $old_majversion =~ s/^([[:digit:]]+\.[[:digit:]]).*/$1/;
+
     if ($interactive) {
+	if ($old_majversion ne $new_majversion) {
+	    print "WARNING: Current PPD file $ppd_source_filename has different version ($old_majversion)\n";
+	    print "         from new PPD file $new_ppd_filename ($new_majversion).\n";
+	}
 	print "Update PPD $ppd_source_filename from $new_ppd_filename [nyq]? ";
 	my $input = readline(*STDIN);
 	if ($input =~ /^q/i) {
@@ -561,17 +578,16 @@ sub update_ppd ($) {
 	}
     }
 
-    # Extract the default values from the original PPD...
-
-    seek(ORIG, 0, 0);
-
-    my ($odt, $oopt, $ores, $odef) = get_ppd_data(ORIG, 1, 0, 1, 1, 0);
-
     # Close original and temporary files...
 
     close ORIG;
     if (! $server_multicat && ! close $source_fd) {
-	print "Unable to retrieve new PPD file: $!\n";
+	print STDERR "Unable to retrieve new PPD file: $!\n";
+	return -1;
+    }
+
+    if (! $opt_x && !$opt_i && $old_majversion ne $new_majversion) {
+	print STDERR "Skipping $ppd_source_filename: mismatched file versions (old $old_majversion, new $new_majversion); will not update without -x!\n";
 	return -1;
     }
 
@@ -667,7 +683,7 @@ sub update_ppd ($) {
 		print STDOUT "Would update $ppd_source_filename to $ppd_dest_filename using $new_ppd_filename\n";
 	    }
 	}
-	return 0;
+	return -1;
     }
 
     if  (! $reset_defaults) {
@@ -876,6 +892,7 @@ sub get_ppd_data(*$$$$$) {
     my ($fh, $types, $opts, $resolutions, $defaults, $data) = @_;
     my (%options, %defaults, %resolution_map, %default_types);
     my ($fileversion_found) = 0;
+    my ($fileversion) = "";
     my $cur_opt = "";
     my (@optionlist);
     my ($source_data) = "";
@@ -889,7 +906,10 @@ sub get_ppd_data(*$$$$$) {
     if ($resolutions || $types || $opts || $defaults || $data) {
 	while (<$fh>) {
 	    last if $_ eq "*%*%EOFEOF\n";
-	    $fileversion_found = 1 if (/^\*FileVersion:/);
+	    if (/^\*FileVersion:/) {
+		$fileversion_found = 1;	
+		($fileversion) = /^\*FileVersion:\s*"(.*)"$/;
+	    }
 	    $source_data .= $_ if ($data);
 	    chomp;
 	    if (($types || $opts) && m/^\*OpenUI/) {
@@ -920,6 +940,6 @@ sub get_ppd_data(*$$$$$) {
 	    }
 	}
     }
-    return (undef, undef, undef, undef, undef) if (! $fileversion_found);
-    return (\%default_types, \%options, \%resolution_map, \%defaults, $source_data);
+    return (undef, undef, undef, undef, undef, undef) if (! $fileversion_found);
+    return (\%default_types, \%options, \%resolution_map, \%defaults, $source_data, $fileversion);
 }
