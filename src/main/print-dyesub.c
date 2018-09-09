@@ -59,6 +59,10 @@
 #define DYESUB_PORTRAIT  0
 #define DYESUB_LANDSCAPE 1
 
+#define OP_JOB_START 1
+#define OP_JOB_PRINT 2
+#define OP_JOB_END   4
+
 #ifndef MIN
 #  define MIN(a,b)	(((a) < (b)) ? (a) : (b))
 #endif /* !MIN */
@@ -9739,7 +9743,7 @@ dyesub_print_plane(stp_vars_t *v,
  * dyesub_print()
  */
 static int
-dyesub_do_print(stp_vars_t *v, stp_image_t *image)
+dyesub_do_print(stp_vars_t *v, stp_image_t *image, int print_op)
 {
   int i;
   dyesub_print_vars_t pv;
@@ -9998,6 +10002,10 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   /* XXX reuse 'UseLUT' from mitsu70x?  or 'SimpleGamma' ? */
   dyesub_exec(v, caps->adjust_curves, "caps->adjust_curves");
 
+  /* Send out job init if we're in page mode */
+  if (print_op & OP_JOB_START)
+    dyesub_exec(v, caps->job_start_func, "caps->job_start");
+
   /* printer init */
   dyesub_exec(v, caps->printer_init_func, "caps->printer_init");
 
@@ -10018,6 +10026,10 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   /* printer end */
   dyesub_exec(v, caps->printer_end_func, "caps->printer_end");
 
+  /* Job end, if we're in page mode */
+  if (print_op & OP_JOB_END)
+    dyesub_exec(v, caps->job_end_func, "caps->job_end");
+
   if (pv.image_data) {
     dyesub_free_image(&pv, image);
   }
@@ -10032,8 +10044,15 @@ static int
 dyesub_print(const stp_vars_t *v, stp_image_t *image)
 {
   int status;
+  int op = OP_JOB_PRINT;
+
   stp_vars_t *nv = stp_vars_create_copy(v);
-  status = dyesub_do_print(nv, image);
+
+  if (!stp_get_string_parameter(v, "JobMode") ||
+      strcmp(stp_get_string_parameter(v, "JobMode"), "Page") == 0)
+    op = OP_JOB_START | OP_JOB_PRINT | OP_JOB_END;
+
+  status = dyesub_do_print(nv, image, op);
   stp_vars_destroy(nv);
   return status;
 }
@@ -10067,7 +10086,6 @@ dyesub_job_end(const stp_vars_t *v, stp_image_t *image)
 
   return 1;
 }
-
 
 static int dyesub_verify_printer_params(stp_vars_t *v)
 {

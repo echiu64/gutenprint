@@ -518,6 +518,9 @@ stp_start_job(const stp_vars_t *v, stp_image_t *image)
 {
   const stp_printfuncs_t *printfuncs =
     stpi_get_printfuncs(stp_get_printer(v));
+  if (!stp_get_string_parameter(v, "JobMode") ||
+      strcmp(stp_get_string_parameter(v, "JobMode"), "Page") == 0)
+    return 1;
   if (printfuncs->start_job)
     return (printfuncs->start_job)(v, image);
   else
@@ -529,6 +532,9 @@ stp_end_job(const stp_vars_t *v, stp_image_t *image)
 {
   const stp_printfuncs_t *printfuncs =
     stpi_get_printfuncs(stp_get_printer(v));
+  if (!stp_get_string_parameter(v, "JobMode") ||
+      strcmp(stp_get_string_parameter(v, "JobMode"), "Page") == 0)
+    return 1;
   if (printfuncs->end_job)
     return (printfuncs->end_job)(v, image);
   else
