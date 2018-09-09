@@ -907,7 +907,7 @@ sub get_ppd_data(*$$$$$) {
 	while (<$fh>) {
 	    last if $_ eq "*%*%EOFEOF\n";
 	    if (/^\*FileVersion:/) {
-		$fileversion_found = 1;	
+		$fileversion_found = 1;
 		($fileversion) = /^\*FileVersion:\s*"(.*)"$/;
 	    }
 	    $source_data .= $_ if ($data);
