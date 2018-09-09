@@ -81,6 +81,7 @@ extern size_mode_t global_size_mode;
 extern double global_hsize;
 extern double global_vsize;
 extern int global_noblackline;
+extern int global_colorline;
 extern const char *global_image_type;
 extern int global_color_model;
 extern int global_bit_depth;

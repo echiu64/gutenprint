@@ -4581,9 +4581,11 @@ escp2_print(const stp_vars_t *v, stp_image_t *image)
   stp_vars_t *nv = stp_vars_create_copy(v);
   int op = OP_JOB_PRINT;
   int status;
+  /*
   if (!stp_get_string_parameter(v, "JobMode") ||
       strcmp(stp_get_string_parameter(v, "JobMode"), "Page") == 0)
     op = OP_JOB_START | OP_JOB_PRINT | OP_JOB_END;
+  */
   status = escp2_do_print(nv, image, op);
   stp_vars_destroy(nv);
   return status;

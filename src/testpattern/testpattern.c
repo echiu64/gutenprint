@@ -74,6 +74,7 @@ int global_steps;
 int global_halt_on_error = 0;
 double global_ink_limit;
 int global_noblackline;
+int global_colorline;
 int global_printer_width;
 int global_printer_height;
 int global_band_height;
@@ -603,6 +604,50 @@ invert_data(unsigned char *data, size_t byte_depth)
  * Emulate templates with macros -- rlk 20031014
  */
 
+#define FILL_CHANNELS_FUNCTION(T, bits)					\
+static void								\
+fill_channels_##bits(unsigned char *data, size_t len, size_t scount)	\
+{									\
+  int i;								\
+  int c;								\
+  scount = global_channel_depth;					\
+  T *s_data = (T *) data;						\
+  unsigned black_val = global_ink_limit * ((1 << bits) - 1);		\
+  unsigned blocksize = len / scount;					\
+  unsigned blocks = blocksize * scount;					\
+  unsigned extra = len - blocks;					\
+  memset(s_data, 0, sizeof(T) * len * scount);				\
+  for (c = 0; c < scount; c++)						\
+    {									\
+      for (i = 0; i < blocksize; i++)					\
+	{								\
+	  s_data[c] = black_val;					\
+	  s_data += global_channel_depth;				\
+	}								\
+    }									\
+  memset(s_data, 0xff, sizeof(T) * extra *				\
+	 global_channel_depth);						\
+}
+
+FILL_CHANNELS_FUNCTION(unsigned short, 16)
+FILL_CHANNELS_FUNCTION(unsigned char, 8)
+
+static void
+fill_channels(unsigned char *data, size_t len, size_t scount, size_t bytes)
+{
+  switch (bytes)
+    {
+    case 1:
+      fill_channels_8(data, len, scount);
+      break;
+    case 2:
+      fill_channels_16(data, len, scount);
+      break;
+    }
+  if (global_invert_data)
+    invert_data(data, bytes);
+}
+
 #define FILL_BLACK_FUNCTION(T, bits)					\
 static void								\
 fill_black_##bits(unsigned char *data, size_t len, size_t scount)	\
@@ -700,17 +745,22 @@ FILL_BLACK_FUNCTION(unsigned char, 8)
 static void
 fill_black(unsigned char *data, size_t len, size_t scount, size_t bytes)
 {
-  switch (bytes)
+  if (global_colorline)
+    fill_channels(data, len, global_channel_depth, bytes);
+  else
     {
-    case 1:
-      fill_black_8(data, len, scount);
-      break;
-    case 2:
-      fill_black_16(data, len, scount);
-      break;
+      switch (bytes)
+	{
+	case 1:
+	  fill_black_8(data, len, scount);
+	  break;
+	case 2:
+	  fill_black_16(data, len, scount);
+	  break;
+	}
+      if (global_invert_data)
+	invert_data(data, bytes);
     }
-  if (global_invert_data)
-    invert_data(data, bytes);
 }
 
 #define FILL_WHITE_FUNCTION(T, bits)					\

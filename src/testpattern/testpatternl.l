@@ -101,6 +101,7 @@ mm			DBG(MM); return MM;
 hsize			DBG(HSIZE); return HSIZE;
 vsize			DBG(VSIZE); return VSIZE;
 blackline		DBG(BLACKLINE); return BLACKLINE;
+colorline		DBG(COLORLINE); return COLORLINE;
 pattern			DBG(PATTERN); return PATTERN;
 xpattern		DBG(XPATTERN); return XPATTERN;
 image			DBG(IMAGE); return IMAGE;

@@ -112,6 +112,7 @@ find_color(const char *name)
 %token HSIZE
 %token VSIZE
 %token BLACKLINE
+%token COLORLINE
 %token NOSCALE
 %token PATTERN
 %token XPATTERN
@@ -457,6 +458,14 @@ blackline: BLACKLINE tINT
 	}
 ;
 
+colorline: COLORLINE tINT
+	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>colorline %d\n", $2);
+	  global_colorline = ($2 != 0);
+	}
+;
+
 noscale: NOSCALE tINT
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
@@ -632,7 +641,7 @@ end_job: END_JOB
 A_Rule: gamma | channel_gamma | level | channel_level | global_gamma | steps
 	| ink_limit | printer | parameter | density | top | left | hsize
 	| vsize | blackline | noscale | inputspec | page_size | message
-	| output | start_job | end_job | size_mode | round
+	| output | start_job | end_job | size_mode | round | colorline
 ;
 
 Rule: A_Rule SEMI
