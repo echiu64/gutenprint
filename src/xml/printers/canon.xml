@@ -895,7 +895,7 @@
       <printer translate="name" name="Canon MG6700 series" driver="bjc-MG6700-series" manufacturer="Canon" model="8006700" parameters="PIXMA_iP4300_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXUS MG6730" driver="bjc-PIXUS-MG6730" manufacturer="Canon" model="8006700" parameters="PIXMA_iP4300_params">EXPERIMENTAL</printer>
       <!-- Canon MG6800 family -->
-      <printer translate="name" name="Canon MG6800 series" driver="bjc-MG6800-series" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MG6800 series" deviceid="MFG:Canon;MDL:MG6800 series;CMD:BJL,BJRaster3,BSCCe,NCCe,IVEC,IVECPLI;" driver="bjc-MG6800-series" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA MG6810" driver="bjc-PIXMA-MG6810" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA MG6820" driver="bjc-PIXMA-MG6820" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params">EXPERIMENTAL</printer><!-- black model -->
       <printer translate="name" name="Canon PIXMA MG6821" driver="bjc-PIXMA-MG6821" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params">EXPERIMENTAL</printer><!-- silver/black model -->
