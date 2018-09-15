@@ -293,7 +293,8 @@ print_ppd_header(gpFile fp, ppd_type_t ppd_type, int model, const char *driver,
   gpputs(fp, "*% Copyright 1993-2008 by Mike Sweet and Robert Krawitz.\n");
   gpputs(fp, "*% This program is free software; you can redistribute it and/or\n");
   gpputs(fp, "*% modify it under the terms of the GNU General Public License,\n");
-  gpputs(fp, "*% version 2, as published by the Free Software Foundation.\n");
+  gpputs(fp, "*% either version 2, or (at your option) any later version,\n");
+  gpputs(fp, "*% as published by the Free Software Foundation.\n");
   gpputs(fp, "*%\n");
   gpputs(fp, "*% This program is distributed in the hope that it will be useful, but\n");
   gpputs(fp, "*% WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY\n");
@@ -1665,7 +1666,6 @@ write_ppd(
 	    print_group_close(fp, j, k, language, po);
 	}
     }
-  stp_parameter_list_destroy(param_list);
   stp_describe_parameter(v, "ImageType", &desc);
   if (desc.is_active && desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
     {
@@ -1900,8 +1900,6 @@ write_ppd(
 	  gpprintf(fp, "*%s.StpiShrinkOutput %s/%s: \"\"\n", lang, "Crop", _("Crop (preserve dimensions)"));
 	  gpprintf(fp, "*%s.StpiShrinkOutput %s/%s: \"\"\n", lang, "Expand", _("Expand (use maximum page area)"));
 
-	  param_list = stp_get_parameter_list(v);
-
 	  for (j = 0; j <= STP_PARAMETER_CLASS_OUTPUT; j++)
 	    {
 	      for (k = 0; k <= maximum_level; k++)
@@ -1927,7 +1925,6 @@ write_ppd(
 		    }
 		}
 	    }
-	  stp_parameter_list_destroy(param_list);
 	  stp_describe_parameter(v, "ImageType", &desc);
 	  if (desc.is_active && desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
 	    {
@@ -1947,6 +1944,7 @@ write_ppd(
 	}
       po = savepo;
     }
+  stp_parameter_list_destroy(param_list);
   if (has_quality_parameter)
     stp_free(default_resolution);
   stp_string_list_destroy(resolutions);
