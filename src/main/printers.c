@@ -494,6 +494,8 @@ stp_describe_output(const stp_vars_t *v)
 int
 stp_verify(stp_vars_t *v)
 {
+  if (stp_get_verified(v))
+    return 1;
   const stp_printfuncs_t *printfuncs =
     stpi_get_printfuncs(stp_get_printer(v));
   stp_vars_t *nv = stp_vars_create_copy(v);

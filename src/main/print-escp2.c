@@ -2233,6 +2233,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 {
   int		i;
   description->p_type = STP_PARAMETER_TYPE_INVALID;
+  int found = 0;
   if (name == NULL)
     return;
 
@@ -2246,31 +2247,39 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	description->deflt.dbl = float_parameters[i].defval;
 	description->bounds.dbl.upper = float_parameters[i].max;
 	description->bounds.dbl.lower = float_parameters[i].min;
+	found = 1;
 	break;
       }
-  for (i = 0; i < int_parameter_count; i++)
-    if (strcmp(name, int_parameters[i].param.name) == 0)
-      {
-	stp_fill_parameter_settings(description,
-				     &(int_parameters[i].param));
-	description->deflt.integer = int_parameters[i].defval;
-	description->bounds.integer.upper = int_parameters[i].max;
-	description->bounds.integer.lower = int_parameters[i].min;
-	break;
-      }
-
-  for (i = 0; i < the_parameter_count; i++)
-    if (strcmp(name, the_parameters[i].name) == 0)
-      {
-	stp_fill_parameter_settings(description, &(the_parameters[i]));
-	if (description->p_type == STP_PARAMETER_TYPE_INT)
+  if (!found)
+    {
+      for (i = 0; i < int_parameter_count; i++)
+	if (strcmp(name, int_parameters[i].param.name) == 0)
 	  {
-	    description->deflt.integer = 0;
-	    description->bounds.integer.upper = INT_MAX;
-	    description->bounds.integer.lower = INT_MIN;
+	    stp_fill_parameter_settings(description,
+					&(int_parameters[i].param));
+	    description->deflt.integer = int_parameters[i].defval;
+	    description->bounds.integer.upper = int_parameters[i].max;
+	    description->bounds.integer.lower = int_parameters[i].min;
+	found = 1;
+	    break;
 	  }
-	break;
-      }
+    }
+
+  if (!found)
+    {
+      for (i = 0; i < the_parameter_count; i++)
+	if (strcmp(name, the_parameters[i].name) == 0)
+	  {
+	    stp_fill_parameter_settings(description, &(the_parameters[i]));
+	    if (description->p_type == STP_PARAMETER_TYPE_INT)
+	      {
+		description->deflt.integer = 0;
+		description->bounds.integer.upper = INT_MAX;
+		description->bounds.integer.lower = INT_MIN;
+	      }
+	    break;
+	  }
+    }
 
   if (strcmp(name, "AutoMode") == 0)
     {
@@ -2830,9 +2839,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	   strcmp(name, "PaperMediaSize") == 0 ||
 	   strcmp(name, "PlatenGap") == 0)
     {
-      description->is_active = 0;
-      if (stpi_escp2_has_media_feature(v, name))
-	description->is_active = 1;
+      description->is_active = stpi_escp2_has_media_feature(v, name);
     }
   else if (strcmp(name, "BandEnhancement") == 0)
     {
