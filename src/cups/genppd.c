@@ -387,7 +387,29 @@ print_ppd_header_3(gpFile fp, ppd_type_t ppd_type, int model,
   if (strcasecmp(manufacturer, "EPSON") == 0)
     gpputs(fp, "*cupsFilter:	\"application/vnd.cups-command 33 commandtoepson\"\n");
   if (device_id)
-    gpprintf(fp, "*1284DeviceID: \"%s\"\n", device_id);
+    {
+      if (strlen(device_id) > 200)
+	{
+	  char buf[129];
+	  int bytes_left = strlen(device_id);
+	  int offset = 0;
+	  gpputs(fp, "*1284DeviceID: \"");
+	  while (bytes_left > 0)
+	    {
+	      memset(buf, 0, 129);
+	      strncpy(buf, device_id + offset, 128);
+	      gpputs(fp, buf);
+	      if (bytes_left <= 128)
+		gpputs(fp, "\"");
+	      gpputs(fp, "\n");
+	      offset += 128;
+	      bytes_left -= 128;
+	    }
+	  gpputs(fp, "*End\n");
+	}
+      else
+	gpprintf(fp, "*1284DeviceID: \"%s\"\n", device_id);
+    }
   if (!language)
   {
    /*
