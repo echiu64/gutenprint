@@ -597,10 +597,12 @@ declare TOPLOGDIR=${STP_LOG_DIR:-"$ROOT/BuildLogs"}
 declare LOGDIR="$TOPLOGDIR/Log.${SSTAMP// /_}"
 [[ -n $STP_LOG_NO_SUBDIR ]] && LOGDIR=$TOPLOGDIR
 mkdir -p $LOGDIR
-if [[ -z $STP_LOG_NO_SUBDIR && -L $TOPLOGDIR/Current ]] ; then
-    rm -f $TOPLOGDIR/Previous
-    mv $TOPLOGDIR/Current $TOPLOGDIR/Previous
-    rm -f "$TOPLOGDIR/Current"
+if [[ -z $STP_LOG_NO_SUBDIR ]] ; then
+     if [[ -L $TOPLOGDIR/Current ]] ; then
+	 rm -f $TOPLOGDIR/Previous
+	 mv $TOPLOGDIR/Current $TOPLOGDIR/Previous
+	 rm -f "$TOPLOGDIR/Current"
+     fi
     ln -s $(basename "$LOGDIR") "$TOPLOGDIR/Current"
 fi
 declare ARTIFACTDIR="$LOGDIR/Artifacts"
