@@ -26,6 +26,7 @@
 # 0) Ensure that we're in the root directory and have a sane environment
 
 declare GIT=$(type -p git)
+declare -a failed_modules
 
 if [[ ! -s ChangeLog.pre-5.2.11 ]] ; then
     echo "$0 must be run from repository top level"
@@ -472,9 +473,15 @@ function finish {
     status=$1
     etime=$(date_sec)
     msg=completed
-    [[ $status != 0 ]] && msg=FAILED
+    [[ $status != 0 || -n ${failedmodules[*]} ]] && msg=FAILED
     estamp=$(stamp)
     [[ $quiet = 1 ]] && echo
+    if [[ -n ${failedmodules[*]} ]] ; then
+	echo "The following modules failed:" | log "$top_log" -
+	for f in ${failedmodules[@]} ; do
+	    echo "    $f" | log "$top_log" -
+	done
+    fi
     echo "*** Gutenprint release build $msg at $estamp ($(time_delta $STIME $etime))" | log "$top_log" -
     echo "================================================================" | log "$top_log"
     if [[ -n $TRAVIS_MODE ]] ; then
@@ -625,14 +632,14 @@ echo "Parallelism: $STP_PARALLEL" | log "$top_log" -
 [[ -n $("$GIT" status --porcelain -uno) ]] && git_dirty=' (dirty)'
 echo "Git revision: $("$GIT" rev-parse @)$git_dirty" | log "$top_log" -
 
-declare -i status=0
-for f in ${OPERATIONS[@]} ; do
-    DONTRUN_OP=${DONTRUN}${SKIP_OPS[$f]} runit $f
+declare -i runstatus=0
+for op in ${OPERATIONS[@]} ; do
+    DONTRUN_OP=${DONTRUN}${SKIP_OPS[$op]} runit $op
     case "$?" in
-	0) true     ;;
-	1) finish 1 ;;
-	*) status=1 ;;
+	0) true                                            ;;
+	1) failedmodules=($failedmodules $op); finish 1    ;;
+	*) failedmodules=($failedmodules $op); runstatus=1 ;;
     esac
 done
 
-finish $status
+finish $runstatus
