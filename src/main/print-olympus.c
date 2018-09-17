@@ -6609,7 +6609,7 @@ static void dnpds820_printer_start(stp_vars_t *v)
   } else if (!strcmp(pd->pagesize, "A4")) {
     stp_zprintf(v, "41");
   } else if (!strcmp(pd->pagesize, "A4-div2")) {
-    stp_zprintf(v, "43");
+    stp_zprintf(v, "35");
   } else {
     stp_zprintf(v, "00"); /* should not be possible */
   }
