@@ -2015,6 +2015,7 @@ top:
 		INFO("Fast return mode enabled.\n");
 	} else {
 		INFO("Waiting for job to complete...\n");
+		int started = 0;
 
 		while (1) {
 			/* Query status */
@@ -2027,8 +2028,10 @@ top:
 			free(resp);
 
 			/* If we're idle or there's an error..*/
-			if (status == 0)
+			if (status == 0 && started)
 				break;
+			if (status)
+				started = 1;
 			if (status >= 1000) {
 				ERROR("Printer encountered error: %s\n", dnpds40_statuses(status));
 				break;
@@ -3004,7 +3007,7 @@ static const char *dnpds40_prefixes[] = {
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS-series / Citizen C-series",
-	.version = "0.106",
+	.version = "0.107",
 	.uri_prefixes = dnpds40_prefixes,
 	.flags = BACKEND_FLAG_JOBLIST,
 	.cmdline_usage = dnpds40_cmdline,
