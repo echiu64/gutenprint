@@ -78,7 +78,7 @@ const char *mitsu70x_temperatures(uint8_t temp);
 struct mitsud90_fw_resp_single {
 	uint8_t  version[6];
 	uint16_t csum;
-};
+} __attribute__((packed));
 
 struct mitsud90_media_resp {
 	uint8_t  hdr[4];  /* e4 47 44 30 */
@@ -936,7 +936,7 @@ int mitsud90_get_info(struct mitsud90_ctx *ctx)
 	cmdbuf[3] = 0x30;
 	cmdbuf[4] = 0;
 	cmdbuf[5] = 0;
-	cmdbuf[6] = 18;  /* Number of commands */
+	cmdbuf[6] = 19;  /* Number of commands */
 
 	cmdbuf[7] = D90_STATUS_TYPE_MODEL;
 	cmdbuf[8] = 0x02;
@@ -1223,7 +1223,7 @@ static const char *mitsud90_prefixes[] = {
 /* Exported */
 struct dyesub_backend mitsud90_backend = {
 	.name = "Mitsubishi CP-D90DW",
-	.version = "0.11",
+	.version = "0.12",
 	.uri_prefixes = mitsud90_prefixes,
 	.cmdline_arg = mitsud90_cmdline_arg,
 	.cmdline_usage = mitsud90_cmdline,
