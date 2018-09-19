@@ -204,6 +204,7 @@ typedef struct
   int use_lut;
   int sharpen;
   int delay;
+  int deck;
 } mitsu70x_privdata_t;
 
 typedef struct
@@ -4434,6 +4435,43 @@ static const stp_parameter_t mitsu70x_parameters[] =
 };
 #define mitsu70x_parameter_count (sizeof(mitsu70x_parameters) / sizeof(const stp_parameter_t))
 
+static const dyesub_stringitem_t mitsu707_decks[] =
+{
+  { "Auto",  N_ ("Automatic") },
+  { "Lower", N_ ("Lower Deck") },
+  { "Upper", N_ ("Upper Deck") }
+};
+LIST(dyesub_stringlist_t, mitsu707_deck_list, dyesub_stringitem_t, mitsu707_decks);
+
+static const stp_parameter_t mitsu707_parameters[] =
+{
+  {
+    "PrintSpeed", N_("Print Speed"), "Color=No,Category=Advanced Printer Setup",
+    N_("Print Speed"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "UseLUT", N_("Internal Color Correction"), "Color=Yes,Category=Advanced Printer Setup",
+    N_("Use Internal Color Correction"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "Sharpen", N_("Image Sharpening"), "Color=No,Category=Advanced Printer Setup",
+    N_("Sharpening to apply to image (0 is off, 1 is min, 9 is max"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "Deck", N_("Printer Deck"), "Color=No,Category=Advanced Printer Setup",
+    N_("Printer Deck"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+};
+#define mitsu707_parameter_count (sizeof(mitsu707_parameters) / sizeof(const stp_parameter_t))
+
 static int
 mitsu70x_load_parameters(const stp_vars_t *v, const char *name,
 			 stp_parameter_t *description)
@@ -4485,6 +4523,71 @@ mitsu70x_load_parameters(const stp_vars_t *v, const char *name,
   return 1;
 }
 
+static int
+mitsu707_load_parameters(const stp_vars_t *v, const char *name,
+			 stp_parameter_t *description)
+{
+  int	i;
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
+		  				stp_get_model_id(v));
+
+  if (caps->parameter_count && caps->parameters)
+    {
+      for (i = 0; i < caps->parameter_count; i++)
+        if (strcmp(name, caps->parameters[i].name) == 0)
+          {
+	    stp_fill_parameter_settings(description, &(caps->parameters[i]));
+	    break;
+          }
+    }
+
+  if (strcmp(name, "PrintSpeed") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+
+      const dyesub_stringlist_t *mlist = &mitsu70x_quality_list;
+      for (i = 0; i < mlist->n_items; i++)
+        {
+	  const dyesub_stringitem_t *m = &(mlist->item[i]);
+	  stp_string_list_add_string(description->bounds.str,
+				       m->name, m->text); /* Do *not* want this translated, otherwise use gettext(m->text) */
+	}
+      description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "UseLUT") == 0)
+    {
+      description->deflt.boolean = 0;
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "Sharpen") == 0)
+    {
+      description->deflt.integer = 4;
+      description->bounds.integer.lower = 0;
+      description->bounds.integer.upper = 9;
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "Deck") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+
+      const dyesub_stringlist_t *mlist = &mitsu707_deck_list;
+      for (i = 0; i < mlist->n_items; i++)
+        {
+	  const dyesub_stringitem_t *m = &(mlist->item[i]);
+	  stp_string_list_add_string(description->bounds.str,
+				       m->name, m->text); /* Do *not* want this translated, otherwise use gettext(m->text) */
+	}
+      description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
+      description->is_active = 1;
+    }
+  else
+  {
+     return 0;
+  }
+  return 1;
+}
+
 static int mitsu70x_parse_parameters(stp_vars_t *v)
 {
   const char *quality = stp_get_string_parameter(v, "PrintSpeed");
@@ -4503,6 +4606,18 @@ static int mitsu70x_parse_parameters(stp_vars_t *v)
      pd->privdata.m70x.quality = 0;
   } else {
      pd->privdata.m70x.quality = 0;
+  }
+
+  /* For D707 only */
+  pd->privdata.m70x.deck = 0;
+  if (stp_check_string_parameter(v, "Deck", STP_PARAMETER_ACTIVE)) {
+    const char *deck = stp_get_string_parameter(v, "Deck");
+    if (strcmp(deck, "Auto") == 0)
+      pd->privdata.m70x.deck = 0;
+    else if (strcmp(deck, "Lower") == 0)
+      pd->privdata.m70x.deck = 1;
+    else if (strcmp(deck, "Upper") == 0)
+      pd->privdata.m70x.deck = 2;
   }
 
   pd->privdata.m70x.use_lut = stp_get_boolean_parameter(v, "UseLUT");
@@ -4558,7 +4673,7 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
   dyesub_nputc(v, 0x00, 7);
 
   if (model == 0x01) {
-    stp_putc(0x00, v);  /* D70x: 0x00 Auto deck selection, 0x01 for Lower, 0x02 for Upper. */
+    stp_putc(pd->privdata.m70x.deck, v); /* D70x: 0x00 Auto deck selection, 0x01 for Lower, 0x02 for Upper. */
   } else {
     stp_putc(0x01, v); /* All others have a single "lower" deck */
   }
@@ -8248,7 +8363,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     mitsu98xx_load_parameters,
     mitsu98xx_parse_parameters,
   },
-  { /* Mitsubishi CPD70D/CPD707D */
+  { /* Mitsubishi CPD70D */
     4105,
     &bgr_ink_list,
     &res_300dpi_list,
@@ -8478,6 +8593,25 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     mitsu_p93d_parameter_count,
     mitsu_p93d_load_parameters,
     mitsu_p93d_parse_parameters,
+  },
+  { /* Mitsubishi CPD707D */
+    4117,
+    &bgr_ink_list,
+    &res_300dpi_list,
+    &mitsu_cpd70x_page_list,
+    &mitsu_cpd70x_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_WHITE_BORDER | DYESUB_FEATURE_NATIVECOPIES,
+    &mitsu_cpd70x_printer_init, NULL,
+    NULL, NULL,
+    NULL, NULL, /* No block funcs */
+    NULL,
+    &mitsu_cpd70x_overcoat_list, NULL,
+    mitsu_cpd70k60_job_start, NULL,
+    mitsu707_parameters,
+    mitsu707_parameter_count,
+    mitsu707_load_parameters,
+    mitsu70x_parse_parameters,
   },
   { /* Fujifilm ASK-2000/2500 */
     4200,

@@ -158,7 +158,7 @@
       <printer translate="name" name="Mitsubishi CP-D80DW" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CPD80D;CLS:PRINTER;DES:MITSUBISHI_CPD80D" driver="mitsubishi-d80dw" manufacturer="Mitsubishi" model="4107" />
       <printer translate="name" name="Mitsubishi CP-D90DW" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CPD90D;CLS:PRINTER;DES:MITSUBISHI_CPD90D" driver="mitsubishi-d90dw" manufacturer="Mitsubishi" model="4109" />
       <printer translate="name" name="Mitsubishi CP-D70DW" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP60D70D707D;CLS:PRINTER;DES:MITSUBISHI CP60D70D707D" driver="mitsubishi-d70dw" manufacturer="Mitsubishi" model="4105" />
-      <printer translate="name" name="Mitsubishi CP-D707DW" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP60D70D707D;CLS:PRINTER;DES:MITSUBISHI CP60D70D707D" driver="mitsubishi-d707dw" manufacturer="Mitsubishi" model="4105">EXPERIMENTAL</printer>
+      <printer translate="name" name="Mitsubishi CP-D707DW" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP60D70D707D;CLS:PRINTER;DES:MITSUBISHI CP60D70D707D" driver="mitsubishi-d707dw" manufacturer="Mitsubishi" model="4117" />
       <printer translate="name" name="Mitsubishi CP-K60DW-S" driver="mitsubishi-k60dw" manufacturer="Mitsubishi" model="4106" />
       <printer translate="name" name="Mitsubishi P93D" driverid="MFG:MITSUBISHI;CMD:MEL;MDL:P93D;CLS:PRINTER;DES:MITSUBISHI P93D;" driver="mitsubishi-p93d" manufacturer="Mitsubishi" model="4116" />
       <printer translate="name" name="Mitsubishi P95D" driverid="MFG:MITSUBISHI;CMD:MEL;MDL:P95D    ;CLS:PRINTER;DES:MITSUBISHI P95D    ;" driver="mitsubishi-p95d" manufacturer="Mitsubishi" model="4114" />
