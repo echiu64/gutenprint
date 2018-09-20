@@ -1,5 +1,6 @@
-Welcome to Gutenprint 5.3.0-pre2, an initial development release for
-5.3.  Please read these release notes carefully.
+Welcome to Gutenprint 5.3.0, an initial release for Gutenprint 5.3.
+Please read these release notes carefully.  Gutenprint 5.2 is still
+considered the stable release line.
 
 Gutenprint is a suite of printer drivers for UNIX, Linux, and
 Macintosh OS X systems (10.6 and above) that use CUPS as their
@@ -19,7 +20,7 @@ III)  Exceptions and Workarounds
 	A) General Issues
 	B) Printer-Specific Issues
 	C) Build/Installation Issues
-IV)   Overall changes from Gutenprint 5.2.13
+IV)   Overall changes from Gutenprint 5.2
 	A) General User-visible Changes
 	B) New Functionality
 	C) Changes to the Enhanced Print plugin for GIMP
@@ -82,9 +83,9 @@ for building and installing Gutenprint.
 
 II) MAJOR CHANGES FROM PREVIOUS RELEASES
 
-1) This is the initial 5.3 pre-release.  Please refer to the release
-   notes from Gutenprint 5.2.13 and later and the Overall Changes from
-   5.2.13 below.
+1) This is the initial 5.3 release.  While we believe that this
+   release is stable and fully useful, it has not had the level of
+   exposure that Gutenprint 5.2 has had.
 
 2) cups-genppdupdate will by default refuse to upgrade PPD files from
    5.2 (or earlier).  Supply the -x option to force this upgrade, or
@@ -281,13 +282,11 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      Xerox Phaser 8860
      Xerox WorkCentre C2424
 
-     * Many other color laser printers, too numerous to list, have
-       been added based on specification; please report success or
-       failure with any other color laser printer using the Generic
-       PCL Color drivers.  Printers that we know about that may be
-       supported are listed as UNTESTED Automatically Generated.
-       Based on feedback from this pre-release, some or all of these
-       printers may be removed from the list prior to general release.
+   * Many other color laser printers, too numerous to list, have been
+     added based on specification; please report success or failure
+     with any other color laser printer using the Generic PCL Color
+     drivers.  Printers that we know about that may be supported are
+     listed as UNTESTED Automatically Generated.
 
 4) The following BW laser printer has been added:
 
@@ -309,7 +308,7 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      Epson Expression ET-2700 EcoTank ET (UNTESTED)
      Epson Expression ET-2750 EcoTank ET
      Epson Expression ET-2750 EcoTank Business Edition (UNTESTED)
-     Epson Expression XP-15000 Series (PRELIMINARY)
+     Epson Expression XP-15000 Series
 
    The following printers are known not to be supported by any current
    driver; if you are interested in assisting or contributing one of
@@ -586,7 +585,7 @@ C) BUILD/INSTALLATION ISSUES
 
 ================================================================
 
-IV) OVERALL CHANGES FROM 5.2.13 to 5.3
+IV) OVERALL CHANGES FROM 5.2 to 5.3
 
 A) GENERAL USER-VISIBLE CHANGES
 
@@ -610,16 +609,17 @@ A) GENERAL USER-VISIBLE CHANGES
 
    3) Enhanced support and bugfixes for the following printers:
 
-	Fujifilm ASK-300
-	Sony UP-DR150 and UP-DR200
-	Canon SELPHY CP820, CP910, CP1000, and CP1200
-	DNP DS40, DS620, and RX1HS
-	Citizen CW-01 and CY-02
-	Mitusbishi CP-D70DW, CP-D707DW, and CP-D80DW
-	Shinko/Sinfonia S1245
-	Mitsubishi CP9800DW, CP9800DW-S, and CP-9810DW
+      Fujifilm ASK-300
+      Sony UP-DR150 and UP-DR200
+      Canon SELPHY CP820, CP910, CP1000, and CP1200
+      DNP DS40, DS620, and RX1HS
+      Citizen CW-01 and CY-02
+      Mitusbishi CP-D70DW, CP-D707DW, and CP-D80DW
+      Shinko/Sinfonia S1245
+      Mitsubishi CP9800DW, CP9800DW-S, and CP-9810DW
 
    4) Improved the performance of all dye-sublimation printers
+
 
 B) NEW FUNCTIONALITY
 
