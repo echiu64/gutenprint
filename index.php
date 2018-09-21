@@ -13,18 +13,16 @@ require('standard_html_header.php');
 # Please remember to use <P> </P> tags !  ?>
 
 <H4>High quality drivers for Canon, Epson, Lexmark, Sony, Olympus, and
-PCL printers for use with
-<a href="http://www.cups.org">CUPS</A>,
-<a href="http://ghostscript.sourceforge.net">Ghostscript</a>,
-<a href="http://www.linuxprinting.org/foomatic.html">Foomatic</a>, and 
+PCL printers for use with <a href="http://www.cups.org">CUPS</A> and
 <a href="http://www.gimp.org">GIMP</a>.</H4>
 
 <P><B>Gutenprint</B> was formerly called <B>Gimp-Print</B>.
 Gimp-Print 4.2.7 (the last Gimp-Print 4.2 release) is still available
 for distribution, but is no longer supported.  You may install both
-Gimp-Print 4.2.7 and Gutenprint 5.0, 5.1, and/or 5.2 concurrently and
-choose which to use.  We recommend that all users use the latest 5.2
-release; we are not going to do any further 5.0 releases.</p>
+Gimp-Print 4.2.7 and Gutenprint 5.0, 5.1, 5.2, and/or 5.3 concurrently
+and choose which to use.  We recommend that users use either the
+latest 5.2 release or the new 5.3; older versions of Gutenprint are no
+longer supported.</p>
 
 <h2><strong><em><font color=#ff0000>Macintosh OS X
 Users!</font></em></strong></h2>
@@ -34,6 +32,12 @@ href="http://gimp-print.sourceforge.net/MacOSX.php">Gutenprint web
 page for OS X</a> that answers most questions on how to use Gutenprint
 and Gimp-Print with OS X 10.2 "Jaguar" and beyond, and provides direct
 download links.</p>
+
+<H2><font color="#ff0000">Gutenprint 5.3.0 is available!</font></h2>
+
+<P><strong><em><font color="#ff0000">New as of September 20, 2018!</strong></em></font>The Gutenprint project is pleased to announce Gutenprint 5.3.0.  This is the first 5.3 release.  It includes a number of internal changes, including more precise positioning and sizing.  It may be installed alongside Gutenprint 5.2.  It also offers support additional printers; please consult the release notes for specifics.  It is currently available in source form.  This package is available in source form, and also in binary installer form for Macintosh OS X.  <a
+href="https://sourceforge.net/projects/gimp-print/files/gutenprint-5.3/5.3.0/">You
+can read the release notes and download it here</a>.  </p>
 
 <H2><font color="#ff0000">Gutenprint 5.2.14 is available!</font></h2>
 
