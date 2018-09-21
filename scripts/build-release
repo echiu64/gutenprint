@@ -639,8 +639,8 @@ for op in ${OPERATIONS[@]} ; do
     DONTRUN_OP=${DONTRUN}${SKIP_OPS[$op]} runit $op
     case "$?" in
 	0) true                                            ;;
-	1) failedmodules=($failedmodules $op); finish 1    ;;
-	*) failedmodules=($failedmodules $op); runstatus=1 ;;
+	2) failedmodules=($failedmodules $op); runstatus=1 ;;
+	*) failedmodules=($failedmodules $op); finish 1    ;;
     esac
 done
 
