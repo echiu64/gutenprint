@@ -1220,7 +1220,7 @@ echo "    Module directory:                           `eval eval echo $PKGMODULE
 echo "    Install sample images:                      $INSTALL_SAMPLES" |tee -a config.summary
 echo |tee -a config.summary
 echo "  General configuration:" |tee -a config.summary
-echo "    Compiler:                                   $CC" |tee -a config.version
+echo "    Compiler:                                   $CC" |tee -a config.summary
 echo "    Compiler Version:                           `"$CC" -v 2>&1 |grep ' version '`" |tee -a config.summary
 if test x$ac_compiler_gnu = "xyes"; then
     echo "    Compiler options:                           $CFLAGS $GNUCFLAGS" |tee -a config.summary

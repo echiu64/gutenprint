@@ -227,6 +227,9 @@ MAINTAINERCLEANFILES = \
 	$(CLEANMFOUR) \
 	$(CLEANPO)
 
+distclean-local:
+	-rm -f config.summary
+
 EXTRA_DIST = autogen.sh README.package git-version-stamp
 
 .PHONY: deb html install-cups install-gimp snapshot ChangeLog Phony dist-time-check git-version-stamp
