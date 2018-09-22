@@ -563,9 +563,13 @@ static int mitsu9550_attach(void *vctx, struct libusb_device_handle *dev, int ty
 		if (mitsu9550_get_status(ctx, (uint8_t*) &media, 0, 0, 1))
 			return CUPS_BACKEND_FAILED;
 	} else {
+		int media_code = 0x2;
+		if (getenv("MEDIA_CODE"))
+			media_code = atoi(getenv("MEDIA_CODE")) & 0xf;
+
 		media.max = cpu_to_be16(400);
 		media.remain = cpu_to_be16(330);
-		media.type = 0x02;
+		media.type = media_code;
 	}
 
 	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
@@ -1472,7 +1476,7 @@ top:
 		if ((ret = send_data(ctx->dev, ctx->endp_down,
 				     ptr, sizeof(cmd))))
 			return CUPS_BACKEND_FAILED;
-		ptr += sizeof(cmd);
+//		ptr += sizeof(cmd);
 	}
 
 	/* Status loop, run until printer reports completion */
@@ -1715,7 +1719,15 @@ static int mitsu9550_query_markers(void *vctx, struct marker **markers, int *cou
 }
 
 static const char *mitsu9550_prefixes[] = {
-	"mitsu9xxx",
+	"mitsu9xxx", // Family driver, do not nuke.
+	"mitsubishi-9000dw", "mitsubishi-9500dw",
+	"mitsubishi-9550dw", "mitsubishi-9550dw-s",
+	"mitsubishi-9600dw", // "mitsubishi-9600dw-s",
+	"mitsubishi-9800dw", "mitsubishi-9800dw-s",
+	"mitsubishi-9810dw",
+	// extras
+	"mitsubishi-9550d", "mitsubishi-9550dz", "mitsubishi-9800d", "mitsubishi-9800dz", "mitsubishi-9810d",
+	// Backwards compatibility
 	"mitsu9000", "mitsu9500", "mitsu9550", "mitsu9600", "mitsu9800", "mitsu9810",
 	NULL
 };
@@ -1723,7 +1735,7 @@ static const char *mitsu9550_prefixes[] = {
 /* Exported */
 struct dyesub_backend mitsu9550_backend = {
 	.name = "Mitsubishi CP9xxx family",
-	.version = "0.40",
+	.version = "0.41",
 	.uri_prefixes = mitsu9550_prefixes,
 	.cmdline_usage = mitsu9550_cmdline,
 	.cmdline_arg = mitsu9550_cmdline_arg,
@@ -1736,18 +1748,18 @@ struct dyesub_backend mitsu9550_backend = {
 	.query_serno = mitsu9550_query_serno,
 	.query_markers = mitsu9550_query_markers,
 	.devices = {
-		{ USB_VID_MITSU, USB_PID_MITSU_9000AM, P_MITSU_9550, NULL, "mitsu9000"},
-		{ USB_VID_MITSU, USB_PID_MITSU_9000D, P_MITSU_9550, NULL, "mitsu9000"},
-		{ USB_VID_MITSU, USB_PID_MITSU_9500D, P_MITSU_9550, NULL, "mitsu9500"},
-		{ USB_VID_MITSU, USB_PID_MITSU_9550D, P_MITSU_9550, NULL, "mitsu9550"},
-		{ USB_VID_MITSU, USB_PID_MITSU_9550DS, P_MITSU_9550S, NULL, "mitsu9550"},
-		{ USB_VID_MITSU, USB_PID_MITSU_9600D, P_MITSU_9600, NULL, "mitsu9600"},
-//	{ USB_VID_MITSU, USB_PID_MITSU_9600D, P_MITSU_9600S, NULL, "mitsu9600"},
-		{ USB_VID_MITSU, USB_PID_MITSU_9800D, P_MITSU_9800, NULL, "mitsu9800"},
-		{ USB_VID_MITSU, USB_PID_MITSU_9800DS, P_MITSU_9800S, NULL, "mitsu9800"},
-		{ USB_VID_MITSU, USB_PID_MITSU_98__D, P_MITSU_9810, NULL, "mitsu9810"},
-//	{ USB_VID_MITSU, USB_PID_MITSU_9810D, P_MITSU_9810, NULL, "mitsu9810"},
-//	{ USB_VID_MITSU, USB_PID_MITSU_9820DS, P_MITSU_9820S, NULL, "mitsu9820"},  // XXX add "mitsu9820"
+		{ USB_VID_MITSU, USB_PID_MITSU_9000AM, P_MITSU_9550, NULL, "mitsubishi-9000dw"}, // XXX -am instead?
+		{ USB_VID_MITSU, USB_PID_MITSU_9000D, P_MITSU_9550, NULL, "mitsubishi-9000dw"},
+		{ USB_VID_MITSU, USB_PID_MITSU_9500D, P_MITSU_9550, NULL, "mitsubishi-9500dw"},
+		{ USB_VID_MITSU, USB_PID_MITSU_9550D, P_MITSU_9550, NULL, "mitsubishi-9550dw"},
+		{ USB_VID_MITSU, USB_PID_MITSU_9550DS, P_MITSU_9550S, NULL, "mitsubishi-9550dw-s"},
+		{ USB_VID_MITSU, USB_PID_MITSU_9600D, P_MITSU_9600, NULL, "mitsubishi-9600dw"},
+//	{ USB_VID_MITSU, USB_PID_MITSU_9600D, P_MITSU_9600S, NULL, "mitsubishi-9600dw-s"},
+		{ USB_VID_MITSU, USB_PID_MITSU_9800D, P_MITSU_9800, NULL, "mitsubishi-9800dw"},
+		{ USB_VID_MITSU, USB_PID_MITSU_9800DS, P_MITSU_9800S, NULL, "mitsubishi-9800dw-s"},
+		{ USB_VID_MITSU, USB_PID_MITSU_98__D, P_MITSU_9810, NULL, "mitsubishi-9810dw"},
+//	{ USB_VID_MITSU, USB_PID_MITSU_9810D, P_MITSU_9810, NULL, "mitsubishi-9810dw"},
+//	{ USB_VID_MITSU, USB_PID_MITSU_9820DS, P_MITSU_9820S, NULL, "mitsubishi-9820dw-s"},
 		{ 0, 0, 0, NULL, NULL}
 	}
 };

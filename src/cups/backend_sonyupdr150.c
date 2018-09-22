@@ -309,8 +309,11 @@ static int updr150_query_markers(void *vctx, struct marker **markers, int *count
 }
 
 static const char *sonyupdr150_prefixes[] = {
-	"sonyupdr150", "sonyupdr200", "sonyupcr10",
-	"sonyupd895", "sonyupd897", "sonyupd898",
+	"sonyupdr150",  // Family name.
+	"sony-updr150", "sony-updr200", "sony-upcr10",
+	// Backwards compatibility
+	"sonyupdr200", "sonyupcr10",
+//	"sonyupd895", "sonyupd897", "sonyupd898",
 	NULL
 };
 
@@ -325,7 +328,7 @@ static const char *sonyupdr150_prefixes[] = {
 
 struct dyesub_backend updr150_backend = {
 	.name = "Sony UP-DR150/UP-DR200/UP-CR10",
-	.version = "0.25",
+	.version = "0.26",
 	.uri_prefixes = sonyupdr150_prefixes,
 	.cmdline_arg = updr150_cmdline_arg,
 	.init = updr150_init,
@@ -336,9 +339,9 @@ struct dyesub_backend updr150_backend = {
 	.main_loop = updr150_main_loop,
 	.query_markers = updr150_query_markers,
 	.devices = {
-		{ USB_VID_SONY, USB_PID_SONY_UPDR150, P_SONY_UPDR150, NULL, "sonyupdr150"},
-		{ USB_VID_SONY, USB_PID_SONY_UPDR200, P_SONY_UPDR150, NULL, "sonyupdr200"},
-		{ USB_VID_SONY, USB_PID_SONY_UPCR10, P_SONY_UPCR10, NULL, "sonyupcr10"},
+		{ USB_VID_SONY, USB_PID_SONY_UPDR150, P_SONY_UPDR150, NULL, "sony-updr150"},
+		{ USB_VID_SONY, USB_PID_SONY_UPDR200, P_SONY_UPDR150, NULL, "sony-updr200"},
+		{ USB_VID_SONY, USB_PID_SONY_UPCR10, P_SONY_UPCR10, NULL, "sony-upcr10"},
 //		{ USB_VID_SONY, USB_PID_SONY_UPD895MD, P_SONY_UPD89x, NULL, "sonyupd895"},
 //		{ USB_VID_SONY, USB_PID_SONY_UPD897MD, P_SONY_UPD89x, NULL, "sonyupd897"},
 //		{ USB_VID_SONY, USB_PID_SONY_UPD898MD, P_SONY_UPD89x, NULL, "sonyupd898"},

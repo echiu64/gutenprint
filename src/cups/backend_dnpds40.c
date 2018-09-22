@@ -873,12 +873,18 @@ static int dnpds40_attach(void *vctx, struct libusb_device_handle *dev, int type
 			/* Intentional fallthrough */
 		case P_DNP_DS80:
 		case P_DNP_DS820:
-			ctx->media = 510;
+			ctx->media = 510; /* 8x12 */
+			break;
+		case P_DNP_DSRX1:
+			ctx->media = 310; /* 6x8 */
 			break;
 		default:
-			ctx->media = 310;
+			ctx->media = 400; /* 6x9 */
 			break;
 		}
+
+		if (getenv("MEDIA_CODE"))
+			ctx->media = atoi(getenv("MEDIA_CODE"));
 	}
 
 	/* Per-printer options */
@@ -2984,9 +2990,15 @@ static int dnpds40_query_markers(void *vctx, struct marker **markers, int *count
 }
 
 static const char *dnpds40_prefixes[] = {
-	"dnp_citizen",
-	"dnpds40", "dnpds80", "dnpds80dx", "dnpds620", "dnpds820", "dnprx1",
+	"dnp_citizen", "dnpds40",  // Family names, do *not* nuke.
+	"dnp-ds40", "dnp-ds80", "dnp-ds80dx", "dnp-ds620", "dnp-ds820", "dnp-dsrx1",
+	"citizen-cw-01", "citizen-cw-02", "citizen-cx-02",
+	// backwards compatibility
+	"dnpds80", "dnpds80dx", "dnpds620", "dnpds820", "dnprx1",
 	"citizencw01", "citizencw02", "citizencx02",
+	// These are all extras.
+	"citizen-cx", "citizen-cx-w", "citizen-cy", "citizen-cy-02",
+	"citizen-op900", "citizen-op900ii",
 	NULL
 };
 
@@ -3007,7 +3019,7 @@ static const char *dnpds40_prefixes[] = {
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS-series / Citizen C-series",
-	.version = "0.107",
+	.version = "0.109",
 	.uri_prefixes = dnpds40_prefixes,
 	.flags = BACKEND_FLAG_JOBLIST,
 	.cmdline_usage = dnpds40_cmdline,
@@ -3021,15 +3033,15 @@ struct dyesub_backend dnpds40_backend = {
 	.query_serno = dnpds40_query_serno,
 	.query_markers = dnpds40_query_markers,
 	.devices = {
-		{ USB_VID_CITIZEN, USB_PID_DNP_DS40, P_DNP_DS40, NULL, "dnpds40"},  // Also Citizen CX
-		{ USB_VID_CITIZEN, USB_PID_DNP_DS80, P_DNP_DS80, NULL, "dnpds80"},  // Also Citizen CX-W and Mitsubishi CP-3800DW
-		{ USB_VID_CITIZEN, USB_PID_DNP_DSRX1, P_DNP_DSRX1, NULL, "dnpdx1"}, // Also Citizen CY
-		{ USB_VID_DNP, USB_PID_DNP_DS620, P_DNP_DS620, NULL, "dnpds620"},
-		{ USB_VID_CITIZEN, USB_PID_DNP_DS80D, P_DNP_DS80D, NULL, "dnpds80dx"},
-		{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW01, P_CITIZEN_CW01, NULL, "citizencw01"}, // Also OP900 ?
-		{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW02, P_CITIZEN_OP900II, NULL, "citizencw02"}, // Also OP900II
-		{ USB_VID_CITIZEN, USB_PID_CITIZEN_CX02, P_DNP_DS620, NULL, "citizencx02"},
-		{ USB_VID_DNP, USB_PID_DNP_DS820, P_DNP_DS820, NULL, "dnpds820"},
+		{ USB_VID_CITIZEN, USB_PID_DNP_DS40, P_DNP_DS40, NULL, "dnp-ds40"},  // Also Citizen CX
+		{ USB_VID_CITIZEN, USB_PID_DNP_DS80, P_DNP_DS80, NULL, "dnp-ds80"},  // Also Citizen CX-W and Mitsubishi CP-3800DW
+		{ USB_VID_CITIZEN, USB_PID_DNP_DS80D, P_DNP_DS80D, NULL, "dnp-ds80dx"},
+		{ USB_VID_CITIZEN, USB_PID_DNP_DSRX1, P_DNP_DSRX1, NULL, "dnp-dsrx1"}, // Also Citizen CY
+		{ USB_VID_DNP, USB_PID_DNP_DS620, P_DNP_DS620, NULL, "dnp-ds620"},
+		{ USB_VID_DNP, USB_PID_DNP_DS820, P_DNP_DS820, NULL, "dnp-ds820"},
+		{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW01, P_CITIZEN_CW01, NULL, "citizen-cw-01"}, // Also OP900 ?
+		{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW02, P_CITIZEN_OP900II, NULL, "citizen-cw-02"}, // Also OP900II
+		{ USB_VID_CITIZEN, USB_PID_CITIZEN_CX02, P_DNP_DS620, NULL, "citizen-cx-02"},
 		{ 0, 0, 0, NULL, NULL}
 	}
 };

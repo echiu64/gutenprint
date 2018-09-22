@@ -805,7 +805,7 @@ top:
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
 			     job->databuf + sent, job->datalen - sent)))
 		return CUPS_BACKEND_FAILED;
-	sent += (job->datalen - sent);
+//	sent += (job->datalen - sent);
 
 	/* Wait for completion */
 	do {
@@ -1216,6 +1216,8 @@ static int mitsud90_query_markers(void *vctx, struct marker **markers, int *coun
 }
 
 static const char *mitsud90_prefixes[] = {
+	"mitsubishi-d90dw",
+	// backwards compatibility
 	"mitsud90",
 	NULL
 };
@@ -1223,7 +1225,7 @@ static const char *mitsud90_prefixes[] = {
 /* Exported */
 struct dyesub_backend mitsud90_backend = {
 	.name = "Mitsubishi CP-D90DW",
-	.version = "0.12",
+	.version = "0.13",
 	.uri_prefixes = mitsud90_prefixes,
 	.cmdline_arg = mitsud90_cmdline_arg,
 	.cmdline_usage = mitsud90_cmdline,
@@ -1235,7 +1237,7 @@ struct dyesub_backend mitsud90_backend = {
 	.main_loop = mitsud90_main_loop,
 	.query_markers = mitsud90_query_markers,
 	.devices = {
-		{ USB_VID_MITSU, USB_PID_MITSU_D90, P_MITSU_D90, NULL, "mitsud90"},
+		{ USB_VID_MITSU, USB_PID_MITSU_D90, P_MITSU_D90, NULL, "mitsubishi-d90dw"},
 		{ 0, 0, 0, NULL, NULL}
 	}
 };

@@ -1306,7 +1306,11 @@ static int shinkos1245_attach(void *vctx, struct libusb_device_handle *dev, int 
 			return CUPS_BACKEND_FAILED;
 		}
 	} else {
-		ctx->media_8x12 = 1;
+		int media_code = 1;
+		if (getenv("MEDIA_CODE"))
+			media_code = atoi(getenv("MEDIA_CODE"));
+
+		ctx->media_8x12 = media_code;
 		ctx->num_medias = 0;
 	}
 	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
@@ -1684,13 +1688,17 @@ static int shinkos1245_query_markers(void *vctx, struct marker **markers, int *c
 #define USB_PID_SHINKO_S1245 0x0007
 
 static const char *shinkos1245_prefixes[] = {
+	"shinko-chcs1245",
+	// extra
+	"sinfonia-chcs1245",
+	// backwards-compatibility
 	"shinkos1245",
 	NULL
 };
 
 struct dyesub_backend shinkos1245_backend = {
 	.name = "Shinko/Sinfonia CHC-S1245/E1",
-	.version = "0.24",
+	.version = "0.26",
 	.uri_prefixes = shinkos1245_prefixes,
 	.cmdline_usage = shinkos1245_cmdline,
 	.cmdline_arg = shinkos1245_cmdline_arg,
@@ -1703,7 +1711,7 @@ struct dyesub_backend shinkos1245_backend = {
 	.query_serno = shinkos1245_query_serno,
 	.query_markers = shinkos1245_query_markers,
 	.devices = {
-		{ USB_VID_SHINKO, USB_PID_SHINKO_S1245, P_SHINKO_S1245, NULL, "shinkos1245"},
+		{ USB_VID_SHINKO, USB_PID_SHINKO_S1245, P_SHINKO_S1245, NULL, "shinko-chcs1245"},
 		{ 0, 0, 0, NULL, NULL}
 	}
 };

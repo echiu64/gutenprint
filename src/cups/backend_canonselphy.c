@@ -666,6 +666,8 @@ static int canonselphy_attach(void *vctx, struct libusb_device_handle *dev, int 
 			ctx->marker.levelnow = -3; /* Unknown but OK */
 		ctx->marker.name = ctx->printer->pgcode_names? ctx->printer->pgcode_names(rdbuf, ctx->printer) : "Unknown";
 	} else {
+		// XXX handle MEDIA_CODE at some point.
+		// we don't do any error checking here.
 		ctx->marker.name = "Unknown";
 	}
 
@@ -1130,7 +1132,16 @@ static int canonselphy_query_markers(void *vctx, struct marker **markers, int *c
 }
 
 static const char *canonselphy_prefixes[] = {
-	"canonselphy",
+	"canonselphy", // Family name
+	"canon-cp10", "canon-cp100", "canon-cp200", "canon-cp220",
+	"canon-cp300", "canon-cp330", "canon-cp400", "canon-cp500",
+	"canon-cp510", "canon-cp520", "canon-cp530", "canon-cp600",
+	"canon-cp710", "canon-cp720", "canon-cp730", "canon-cp740",
+	"canon-cp750", "canon-cp760", "canon-cp770", "canon-cp780",
+	"canon-cp790", "canon-cp800", "canon-cp810", "canon-cp900",
+	"canon-es1", "canon-es2", "canon-es20", "canon-es3",
+	"canon-es30", "canon-es40",
+	// backwards compatibility
 	"selphycp10", "selphycp100", "selphycp200", "selphycp220",
 	"selphycp300", "selphycp330", "selphycp400", "selphycp500",
 	"selphycp510", "selphycp520", "selphycp530", "selphycp600",
@@ -1144,7 +1155,7 @@ static const char *canonselphy_prefixes[] = {
 
 struct dyesub_backend canonselphy_backend = {
 	.name = "Canon SELPHY CP/ES (legacy)",
-	.version = "0.102",
+	.version = "0.104",
 	.uri_prefixes = canonselphy_prefixes,
 	.cmdline_usage = canonselphy_cmdline,
 	.cmdline_arg = canonselphy_cmdline_arg,
@@ -1156,36 +1167,36 @@ struct dyesub_backend canonselphy_backend = {
 	.main_loop = canonselphy_main_loop,
 	.query_markers = canonselphy_query_markers,
 	.devices = {
-		{ USB_VID_CANON, USB_PID_CANON_CP10, P_CP10, NULL, "selphycp10"},
-		{ USB_VID_CANON, USB_PID_CANON_CP100, P_CP_XXX, NULL, "selphycp100"},
-		{ USB_VID_CANON, USB_PID_CANON_CP200, P_CP_XXX, NULL, "selphycp200"},
-		{ USB_VID_CANON, USB_PID_CANON_CP220, P_CP_XXX, NULL, "selphycp220"},
+		{ USB_VID_CANON, USB_PID_CANON_CP10, P_CP10, NULL, "canon-cp10"},
+		{ USB_VID_CANON, USB_PID_CANON_CP100, P_CP_XXX, NULL, "canon-cp100"},
+		{ USB_VID_CANON, USB_PID_CANON_CP200, P_CP_XXX, NULL, "canon-cp200"},
+		{ USB_VID_CANON, USB_PID_CANON_CP220, P_CP_XXX, NULL, "canon-cp220"},
 		{ USB_VID_CANON, USB_PID_CANON_CP300, P_CP_XXX, NULL, "selpyhcp300"},
-		{ USB_VID_CANON, USB_PID_CANON_CP330, P_CP_XXX, NULL, "selphycp330"},
-		{ USB_VID_CANON, USB_PID_CANON_CP400, P_CP_XXX, NULL, "selphycp400"},
-		{ USB_VID_CANON, USB_PID_CANON_CP500, P_CP_XXX, NULL, "selphycp500"},
-		{ USB_VID_CANON, USB_PID_CANON_CP510, P_CP_XXX, NULL, "selphycp510"},
-		{ USB_VID_CANON, USB_PID_CANON_CP520, P_CP_XXX, NULL, "selphycp520"},
-		{ USB_VID_CANON, USB_PID_CANON_CP530, P_CP_XXX, NULL, "selphycp530"},
-		{ USB_VID_CANON, USB_PID_CANON_CP600, P_CP_XXX, NULL, "selphycp600"},
-		{ USB_VID_CANON, USB_PID_CANON_CP710, P_CP_XXX, NULL, "selphycp710"},
-		{ USB_VID_CANON, USB_PID_CANON_CP720, P_CP_XXX, NULL, "selphycp720"},
-		{ USB_VID_CANON, USB_PID_CANON_CP730, P_CP_XXX, NULL, "selphycp730"},
-		{ USB_VID_CANON, USB_PID_CANON_CP740, P_CP_XXX, NULL, "selphycp740"},
-		{ USB_VID_CANON, USB_PID_CANON_CP750, P_CP_XXX, NULL, "selphycp750"},
-		{ USB_VID_CANON, USB_PID_CANON_CP760, P_CP_XXX, NULL, "selphycp760"},
-		{ USB_VID_CANON, USB_PID_CANON_CP770, P_CP_XXX, NULL, "selphycp770"},
-		{ USB_VID_CANON, USB_PID_CANON_CP780, P_CP_XXX, NULL, "selphycp780"},
-		{ USB_VID_CANON, USB_PID_CANON_CP790, P_CP790, NULL, "selphycp790"},
-		{ USB_VID_CANON, USB_PID_CANON_CP800, P_CP_XXX, NULL, "selphycp800"},
-		{ USB_VID_CANON, USB_PID_CANON_CP810, P_CP_XXX, NULL, "selphycp810"},
-		{ USB_VID_CANON, USB_PID_CANON_CP900, P_CP_XXX, NULL, "selphycp900"},
-		{ USB_VID_CANON, USB_PID_CANON_ES1, P_ES1, NULL, "selphyes1"},
-		{ USB_VID_CANON, USB_PID_CANON_ES2, P_ES2_20, NULL, "selphyes2"},
-		{ USB_VID_CANON, USB_PID_CANON_ES20, P_ES2_20, NULL, "selphyes20"},
-		{ USB_VID_CANON, USB_PID_CANON_ES3, P_ES3_30, NULL, "selphyes3"},
-		{ USB_VID_CANON, USB_PID_CANON_ES30, P_ES3_30, NULL, "selphyes30"},
-		{ USB_VID_CANON, USB_PID_CANON_ES40, P_ES40, NULL, "selphyes40"},
+		{ USB_VID_CANON, USB_PID_CANON_CP330, P_CP_XXX, NULL, "canon-cp330"},
+		{ USB_VID_CANON, USB_PID_CANON_CP400, P_CP_XXX, NULL, "canon-cp400"},
+		{ USB_VID_CANON, USB_PID_CANON_CP500, P_CP_XXX, NULL, "canon-cp500"},
+		{ USB_VID_CANON, USB_PID_CANON_CP510, P_CP_XXX, NULL, "canon-cp510"},
+		{ USB_VID_CANON, USB_PID_CANON_CP520, P_CP_XXX, NULL, "canon-cp520"},
+		{ USB_VID_CANON, USB_PID_CANON_CP530, P_CP_XXX, NULL, "canon-cp530"},
+		{ USB_VID_CANON, USB_PID_CANON_CP600, P_CP_XXX, NULL, "canon-cp600"},
+		{ USB_VID_CANON, USB_PID_CANON_CP710, P_CP_XXX, NULL, "canon-cp710"},
+		{ USB_VID_CANON, USB_PID_CANON_CP720, P_CP_XXX, NULL, "canon-cp720"},
+		{ USB_VID_CANON, USB_PID_CANON_CP730, P_CP_XXX, NULL, "canon-cp730"},
+		{ USB_VID_CANON, USB_PID_CANON_CP740, P_CP_XXX, NULL, "canon-cp740"},
+		{ USB_VID_CANON, USB_PID_CANON_CP750, P_CP_XXX, NULL, "canon-cp750"},
+		{ USB_VID_CANON, USB_PID_CANON_CP760, P_CP_XXX, NULL, "canon-cp760"},
+		{ USB_VID_CANON, USB_PID_CANON_CP770, P_CP_XXX, NULL, "canon-cp770"},
+		{ USB_VID_CANON, USB_PID_CANON_CP780, P_CP_XXX, NULL, "canon-cp780"},
+		{ USB_VID_CANON, USB_PID_CANON_CP790, P_CP790, NULL, "canon-cp790"},
+		{ USB_VID_CANON, USB_PID_CANON_CP800, P_CP_XXX, NULL, "canon-cp800"},
+		{ USB_VID_CANON, USB_PID_CANON_CP810, P_CP_XXX, NULL, "canon-cp810"},
+		{ USB_VID_CANON, USB_PID_CANON_CP900, P_CP_XXX, NULL, "canon-cp900"},
+		{ USB_VID_CANON, USB_PID_CANON_ES1, P_ES1, NULL, "canon-es1"},
+		{ USB_VID_CANON, USB_PID_CANON_ES2, P_ES2_20, NULL, "canon-es2"},
+		{ USB_VID_CANON, USB_PID_CANON_ES20, P_ES2_20, NULL, "canon-es20"},
+		{ USB_VID_CANON, USB_PID_CANON_ES3, P_ES3_30, NULL, "canon-es3"},
+		{ USB_VID_CANON, USB_PID_CANON_ES30, P_ES3_30, NULL, "canon-es30"},
+		{ USB_VID_CANON, USB_PID_CANON_ES40, P_ES40, NULL, "canon-es40"},
 		{ 0, 0, 0, NULL, NULL}
 	}
 };

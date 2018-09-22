@@ -1499,7 +1499,12 @@ static int shinkos6245_attach(void *vctx, struct libusb_device_handle *dev, int 
 			return CUPS_BACKEND_FAILED;
 		}
 	} else {
-		ctx->media.ribbon_code = 0x12;
+		int media_code = 0x12;
+		if (getenv("MEDIA_CODE"))
+			media_code = atoi(getenv("MEDIA_CODE"));
+
+
+		ctx->media.ribbon_code = media_code;
 	}
 
 	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
@@ -1906,13 +1911,17 @@ static int shinkos6245_query_markers(void *vctx, struct marker **markers, int *c
 #define USB_PID_HITI_P910L   0x000E
 
 static const char *shinkos6245_prefixes[] = {
+	"sinfonia-chcs6245", "hiti-p910l",
+	// extras
+	"shinko-chcs6245",
+	// backwards compatibility
 	"shinkos6245", "hitip910",
 	NULL
 };
 
 struct dyesub_backend shinkos6245_backend = {
 	.name = "Shinko/Sinfonia CHC-S6245",
-	.version = "0.12WIP",
+	.version = "0.14WIP",
 	.uri_prefixes = shinkos6245_prefixes,
 	.cmdline_usage = shinkos6245_cmdline,
 	.cmdline_arg = shinkos6245_cmdline_arg,
@@ -1925,8 +1934,8 @@ struct dyesub_backend shinkos6245_backend = {
 	.query_serno = shinkos6245_query_serno,
 	.query_markers = shinkos6245_query_markers,
 	.devices = {
-		{ USB_VID_SHINKO, USB_PID_SHINKO_S6245, P_SHINKO_S6245, NULL, "shinkos6245"},
-		{ USB_VID_HITI, USB_PID_HITI_P910L, P_SHINKO_S6245, NULL, "hitip910"},
+		{ USB_VID_SHINKO, USB_PID_SHINKO_S6245, P_SHINKO_S6245, NULL, "shinfonia-chcs6245"},
+		{ USB_VID_HITI, USB_PID_HITI_P910L, P_SHINKO_S6245, NULL, "hiti-p910l"},
 		{ 0, 0, 0, NULL, NULL}
 	}
 };

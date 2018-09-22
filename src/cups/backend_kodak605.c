@@ -289,7 +289,11 @@ static int kodak605_attach(void *vctx, struct libusb_device_handle *dev, int typ
 			return CUPS_BACKEND_FAILED;
 		}
 	} else {
-		ctx->media->type = KODAK68x0_MEDIA_6R;
+		int media_code = KODAK68x0_MEDIA_6TR2;
+		if (getenv("MEDIA_CODE"))
+			media_code = atoi(getenv("MEDIA_CODE"));
+
+		ctx->media->type = media_code;
 	}
 
 	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
@@ -705,14 +709,15 @@ static int kodak605_query_markers(void *vctx, struct marker **markers, int *coun
 }
 
 static const char *kodak605_prefixes[] = {
-	"kodak605",
+	"kodak605",  // Family driver, do NOT nuke.
+	"kodak-605",
 	NULL,
 };
 
 /* Exported */
 struct dyesub_backend kodak605_backend = {
 	.name = "Kodak 605",
-	.version = "0.31",
+	.version = "0.33",
 	.uri_prefixes = kodak605_prefixes,
 	.cmdline_usage = kodak605_cmdline,
 	.cmdline_arg = kodak605_cmdline_arg,
@@ -724,7 +729,7 @@ struct dyesub_backend kodak605_backend = {
 	.main_loop = kodak605_main_loop,
 	.query_markers = kodak605_query_markers,
 	.devices = {
-		{ USB_VID_KODAK, USB_PID_KODAK_605, P_KODAK_605, "Kodak", "kodaka605"},
+		{ USB_VID_KODAK, USB_PID_KODAK_605, P_KODAK_605, "Kodak", "kodak-605"},
 		{ 0, 0, 0, NULL, NULL}
 	}
 };

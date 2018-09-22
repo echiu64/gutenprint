@@ -790,6 +790,10 @@ static int mitsu70x_attach(void *vctx, struct libusb_device_handle *dev, int typ
 			return CUPS_BACKEND_FAILED;
 		}
 	} else {
+		int media_code = 0xf;
+		if (getenv("MEDIA_CODE"))
+			media_code = atoi(getenv("MEDIA_CODE")) & 0xf;
+
 		resp.upper.mecha_status[0] = MECHA_STATUS_INIT;
 		resp.lower.mecha_status[0] = MECHA_STATUS_INIT;
 		resp.upper.capacity = cpu_to_be16(230);
@@ -798,8 +802,9 @@ static int mitsu70x_attach(void *vctx, struct libusb_device_handle *dev, int typ
 		resp.lower.remain = cpu_to_be16(200);
 		resp.upper.media_brand = 0xff;
 		resp.lower.media_brand = 0xff;
-		resp.upper.media_type = 0x0f;
-		resp.lower.media_type = 0x0f;
+		resp.upper.media_type = media_code;
+		resp.lower.media_type = media_code;
+		resp.dual_deck = 0x80;  /* Make it a dual deck */
 	}
 
 	/* Figure out if we're a D707 with two decks */
@@ -2431,7 +2436,11 @@ static int mitsu70x_query_markers(void *vctx, struct marker **markers, int *coun
 }
 
 static const char *mitsu70x_prefixes[] = {
-	"mitsu70x",
+	"mitsu70x", // Family entry, do not nuke.
+	"mitsubishi-d70dw", "mitsubishi-d80dw", "mitsubishi-k60dw", "kodak-305", "fujifilm-ask-300"
+	// Extras
+	"mitsubishi-d707dw", "mitsubishi-k60dws",
+	// backwards compatibility
 	"mitsud80", "mitsuk60", "kodak305", "fujiask300",
 	NULL,
 };
@@ -2439,7 +2448,7 @@ static const char *mitsu70x_prefixes[] = {
 /* Exported */
 struct dyesub_backend mitsu70x_backend = {
 	.name = "Mitsubishi CP-D70 family",
-	.version = "0.86",
+	.version = "0.88",
 	.uri_prefixes = mitsu70x_prefixes,
 	.flags = BACKEND_FLAG_JOBLIST,
 	.cmdline_usage = mitsu70x_cmdline,
@@ -2453,11 +2462,11 @@ struct dyesub_backend mitsu70x_backend = {
 	.query_serno = mitsu70x_query_serno,
 	.query_markers = mitsu70x_query_markers,
 	.devices = {
-		{ USB_VID_MITSU, USB_PID_MITSU_D70X, P_MITSU_D70X, NULL, "mitsu70x"},
-		{ USB_VID_MITSU, USB_PID_MITSU_K60, P_MITSU_K60, NULL, "mitsuk60"},
-		{ USB_VID_MITSU, USB_PID_MITSU_D80, P_MITSU_D80, NULL, "mitsud80"},
-		{ USB_VID_KODAK, USB_PID_KODAK305, P_KODAK_305, NULL, "kodak305"},
-		{ USB_VID_FUJIFILM, USB_PID_FUJI_ASK300, P_FUJI_ASK300, NULL, "fujiask300"},
+		{ USB_VID_MITSU, USB_PID_MITSU_D70X, P_MITSU_D70X, NULL, "mitsubishi-d70dw"},
+		{ USB_VID_MITSU, USB_PID_MITSU_K60, P_MITSU_K60, NULL, "mitsubishi-k60dw"},
+		{ USB_VID_MITSU, USB_PID_MITSU_D80, P_MITSU_D80, NULL, "mitsubishi-d80dw"},
+		{ USB_VID_KODAK, USB_PID_KODAK305, P_KODAK_305, NULL, "kodak-305"},
+		{ USB_VID_FUJIFILM, USB_PID_FUJI_ASK300, P_FUJI_ASK300, NULL, "fujifilm-ask-300"},
 		{ 0, 0, 0, NULL, NULL}
 	}
 };

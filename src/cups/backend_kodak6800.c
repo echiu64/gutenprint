@@ -1032,7 +1032,11 @@ static int kodak6800_attach(void *vctx, struct libusb_device_handle *dev, int ty
 			return CUPS_BACKEND_FAILED;
 		}
 	} else {
-		ctx->media->type = KODAK68x0_MEDIA_6R;
+		int media_code = KODAK68x0_MEDIA_6TR2;
+		if (getenv("MEDIA_CODE"))
+			media_code = atoi(getenv("MEDIA_CODE"));
+
+		ctx->media->type = media_code;
 	}
 
 	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
@@ -1290,7 +1294,9 @@ static int kodak6800_query_markers(void *vctx, struct marker **markers, int *cou
 }
 
 static const char *kodak6800_prefixes[] = {
-	"kodak68x0",
+	"kodak68x0", // Family driver, do not nuke.
+	"kodak-6800", "kodak-6850",
+	// Backwards-compatibility
 	"kodak6800", "kodak6850",
 	NULL
 };
@@ -1298,7 +1304,7 @@ static const char *kodak6800_prefixes[] = {
 /* Exported */
 struct dyesub_backend kodak6800_backend = {
 	.name = "Kodak 6800/6850",
-	.version = "0.63",
+	.version = "0.65",
 	.uri_prefixes = kodak6800_prefixes,
 	.cmdline_usage = kodak6800_cmdline,
 	.cmdline_arg = kodak6800_cmdline_arg,
@@ -1311,8 +1317,8 @@ struct dyesub_backend kodak6800_backend = {
 	.query_serno = kodak6800_query_serno,
 	.query_markers = kodak6800_query_markers,
 	.devices = {
-		{ USB_VID_KODAK, USB_PID_KODAK_6800, P_KODAK_6800, "Kodak", "kodak6800"},
-		{ USB_VID_KODAK, USB_PID_KODAK_6850, P_KODAK_6850, "Kodak", "kodak6850"},
+		{ USB_VID_KODAK, USB_PID_KODAK_6800, P_KODAK_6800, "Kodak", "kodak-6800"},
+		{ USB_VID_KODAK, USB_PID_KODAK_6850, P_KODAK_6850, "Kodak", "kodak-6850"},
 		{ 0, 0, 0, NULL, NULL}
 	}
 };

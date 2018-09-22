@@ -1943,7 +1943,11 @@ static int shinkos6145_attach(void *vctx, struct libusb_device_handle *dev, int 
 		}
 		memcpy(&ctx->media, resp, sizeof(*resp));
 	} else {
-		ctx->media.ribbon = RIBBON_6x8;
+		int media_code = RIBBON_6x8;
+		if (getenv("MEDIA_CODE"))
+			media_code = atoi(getenv("MEDIA_CODE"));
+
+		ctx->media.ribbon = media_code;
 	}
 
 	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
@@ -2559,13 +2563,17 @@ static int shinkos6145_query_markers(void *vctx, struct marker **markers, int *c
 #define USB_PID_SHINKO_S6145D 0x001E /* Aka CIAAT Brava 21 */
 
 static const char *shinkos6145_prefixes[] = {
+	"sinfonia-chcs6145", "ciaat-brava-21",
+	// extras
+	"shinko-chcs6145",
+	// backwards-compatiblity
 	"shinkos6145", "brava21",
 	NULL
 };
 
 struct dyesub_backend shinkos6145_backend = {
 	.name = "Shinko/Sinfonia CHC-S6145/CS2",
-	.version = "0.28",
+	.version = "0.30",
 	.uri_prefixes = shinkos6145_prefixes,
 	.cmdline_usage = shinkos6145_cmdline,
 	.cmdline_arg = shinkos6145_cmdline_arg,
@@ -2578,8 +2586,8 @@ struct dyesub_backend shinkos6145_backend = {
 	.query_serno = shinkos6145_query_serno,
 	.query_markers = shinkos6145_query_markers,
 	.devices = {
-		{ USB_VID_SHINKO, USB_PID_SHINKO_S6145, P_SHINKO_S6145, NULL, "shinkos6145"},
-		{ USB_VID_SHINKO, USB_PID_SHINKO_S6145D, P_SHINKO_S6145D, NULL, "brava21"},
+		{ USB_VID_SHINKO, USB_PID_SHINKO_S6145, P_SHINKO_S6145, NULL, "sinfonia-chcs6145"},
+		{ USB_VID_SHINKO, USB_PID_SHINKO_S6145D, P_SHINKO_S6145D, NULL, "ciaat-brava-21"},
 		{ 0, 0, 0, NULL, NULL}
 	}
 };

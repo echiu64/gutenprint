@@ -226,6 +226,8 @@ static int selphyneo_attach(void *vctx, struct libusb_device_handle *dev, int ty
 	} else {
 		rdback.data[2] = 0;
 		rdback.data[6] = 0x01;
+		if (getenv("MEDIA_CODE"))
+			rdback.data[6] = atoi(getenv("MEDIA_CODE"));
 	}
 
 	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
@@ -304,6 +306,8 @@ static int selphyneo_read_parse(void *vctx, const void **vjob, int data_fd, int 
 		selphyneo_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
 	}
+
+	// XXX Sanity check job against loaded media?
 
 	/* Allocate a buffer */
 	job->datalen = 0;
@@ -527,14 +531,16 @@ static int selphyneo_query_markers(void *vctx, struct marker **markers, int *cou
 }
 
 static const char *canonselphyneo_prefixes[] = {
-	"canonselphyneo",
+	"canonselphyneo", // Family name
+	"canon-cp820", "canon-cp910", "canon-cp1000", "canon-cp1200", "canon-cp1300",
+	// backwards compatibility
 	"selphycp820", "selphycp910", "selphycp1000", "selphycp1200", "selphycp1300",
 	NULL
 };
 
 struct dyesub_backend canonselphyneo_backend = {
 	.name = "Canon SELPHY CP (new)",
-	.version = "0.18",
+	.version = "0.20",
 	.uri_prefixes = canonselphyneo_prefixes,
 	.cmdline_usage = selphyneo_cmdline,
 	.cmdline_arg = selphyneo_cmdline_arg,
@@ -546,11 +552,11 @@ struct dyesub_backend canonselphyneo_backend = {
 	.main_loop = selphyneo_main_loop,
 	.query_markers = selphyneo_query_markers,
 	.devices = {
-		{ USB_VID_CANON, USB_PID_CANON_CP820, P_CP910, NULL, "selphycp820"},
-		{ USB_VID_CANON, USB_PID_CANON_CP910, P_CP910, NULL, "selphycp910"},
-		{ USB_VID_CANON, USB_PID_CANON_CP1000, P_CP910, NULL, "elphycp1000"},
-		{ USB_VID_CANON, USB_PID_CANON_CP1200, P_CP910, NULL, "selphycp1200"},
-		{ USB_VID_CANON, USB_PID_CANON_CP1300, P_CP910, NULL, "selphycp1300"},
+		{ USB_VID_CANON, USB_PID_CANON_CP820, P_CP910, NULL, "canon-cp820"},
+		{ USB_VID_CANON, USB_PID_CANON_CP910, P_CP910, NULL, "canon-cp910"},
+		{ USB_VID_CANON, USB_PID_CANON_CP1000, P_CP910, NULL, "canon-cp1000"},
+		{ USB_VID_CANON, USB_PID_CANON_CP1200, P_CP910, NULL, "canon-cp1200"},
+		{ USB_VID_CANON, USB_PID_CANON_CP1300, P_CP910, NULL, "canon-cp1300"},
 		{ 0, 0, 0, NULL, NULL}
 	}
 };

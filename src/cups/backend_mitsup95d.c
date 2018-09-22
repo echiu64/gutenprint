@@ -591,7 +591,9 @@ static int mitsup95d_query_markers(void *vctx, struct marker **markers, int *cou
 }
 
 static const char *mitsup95d_prefixes[] = {
-	"mitsup9x",
+	"mitsup9x", // Family driver name
+	"mitsubishi-p95d", "mitsubishi-p93d",
+	// backwards compatibility
 	"mitsup95d", "mitsup93d",
 	NULL
 };
@@ -599,7 +601,7 @@ static const char *mitsup95d_prefixes[] = {
 /* Exported */
 struct dyesub_backend mitsup95d_backend = {
 	.name = "Mitsubishi P93D/P95D",
-	.version = "0.10",
+	.version = "0.11",
 	.uri_prefixes = mitsup95d_prefixes,
 	.cmdline_arg = mitsup95d_cmdline_arg,
 	.cmdline_usage = mitsup95d_cmdline,
@@ -611,8 +613,8 @@ struct dyesub_backend mitsup95d_backend = {
 	.main_loop = mitsup95d_main_loop,
 	.query_markers = mitsup95d_query_markers,
 	.devices = {
-		{ USB_VID_MITSU, USB_PID_MITSU_P93D, P_MITSU_P93D, NULL, "mitsup93d"},
-		{ USB_VID_MITSU, USB_PID_MITSU_P95D, P_MITSU_P95D, NULL, "mitsup95d"},
+		{ USB_VID_MITSU, USB_PID_MITSU_P93D, P_MITSU_P93D, NULL, "mitsubishi-p93d"},
+		{ USB_VID_MITSU, USB_PID_MITSU_P95D, P_MITSU_P95D, NULL, "mitsubishi-p95d"},
 		{ 0, 0, 0, NULL, NULL}
 	}
 };
