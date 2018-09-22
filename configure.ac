@@ -1154,107 +1154,111 @@ AC_OUTPUT
 
 warnings_emitted=0
 echo
-echo "Configuration Summary:"
-echo "------------- --------"
-echo
-echo "If you have any problems, please report the information below to"
-echo "$PACKAGE_BUGREPORT"
-echo
-echo "================================================================"
-echo "  Release: $PACKAGE_STRING generated on $RELEASE_DATE"
-echo
-echo "  Features:"
+echo "Gutenprint Configuration Summary:" |tee -a config.summary
+echo "---------- ------------- --------" |tee -a config.summary
+echo |tee -a config.summary
+echo "If you have any problems, please report the information below to" |tee -a config.summary
+echo "$PACKAGE_BUGREPORT" |tee -a config.summary
+echo |tee -a config.summary
+echo "================================================================" |tee -a config.summary
+echo "  Release: $PACKAGE_STRING generated on $RELEASE_DATE" |tee -a config.summary
+echo "  Generated at `date`" |tee -a config.summary
+echo |tee -a config.summary
+echo "  Features:" |tee -a config.summary
 if test "$BUILD_CUPS" != "no" ; then
-    echo "    Build CUPS:                                 $BUILD_CUPS, installing in $cups_prefix"
-    echo "        Build CUPS 1.2 enhancements:            $BUILD_CUPS_1_2"
-    echo "        Build CUPS PPD files:                   $BUILD_CUPS_PPDS"
+    echo "    Build CUPS:                                 $BUILD_CUPS, installing in $cups_prefix" |tee -a config.summary
+    echo "        Build CUPS 1.2 enhancements:            $BUILD_CUPS_1_2" |tee -a config.summary
+    echo "        Build CUPS PPD files:                   $BUILD_CUPS_PPDS" |tee -a config.summary
     if test "$BUILD_CUPS_PPDS" != "no" ; then
-	echo "            Build translated CUPS PPD files:    $BUILD_TRANSLATED_CUPS_PPDS"
-	echo "                Build global CUPS PPD files:    $BUILD_GLOBALIZED_CUPS_PPDS"
-	echo "            Build simplified CUPS PPD files:    $BUILD_SIMPLIFIED_CUPS_PPDS"
-	echo "            Install CUPS PPDs at top level:     $CUPS_PPDS_AT_TOP_LEVEL"
+	echo "            Build translated CUPS PPD files:    $BUILD_TRANSLATED_CUPS_PPDS" |tee -a config.summary
+	echo "                Build global CUPS PPD files:    $BUILD_GLOBALIZED_CUPS_PPDS" |tee -a config.summary
+	echo "            Build simplified CUPS PPD files:    $BUILD_SIMPLIFIED_CUPS_PPDS" |tee -a config.summary
+	echo "            Install CUPS PPDs at top level:     $CUPS_PPDS_AT_TOP_LEVEL" |tee -a config.summary
     fi
     if test "$BUILD_CUPS_PPDS" != "no" -o "$BUILD_CUPS_1_2" != "no" ; then
-        echo "        Generate PS level 3 CUPS PPD files:     $USE_LEVEL3_PS"
+        echo "        Generate PS level 3 CUPS PPD files:     $USE_LEVEL3_PS" |tee -a config.summary
     fi
-    echo "        Build genppd statically:                $STATIC_GENPPD"
+    echo "        Build genppd statically:                $STATIC_GENPPD" |tee -a config.summary
 
     if test "$STATIC_GENPPD" = "no" ; then
-        echo "            ***WARNING: Use of --disable-static-genppd or --disable-static"
-	echo "                        when building CUPS is very dangerous.  The build may"
-	echo "                        fail when building the PPD files, or may *SILENTLY*"
-	echo "                        build incorrect PPD files or cause other problems."
-	echo "                        Please review the README and release notes carefully!"
+        echo "            ***WARNING: Use of --disable-static-genppd or --disable-static" |tee -a config.summary
+	echo "                        when building CUPS is very dangerous.  The build may" |tee -a config.summary
+	echo "                        fail when building the PPD files, or may *SILENTLY*" |tee -a config.summary
+	echo "                        build incorrect PPD files or cause other problems." |tee -a config.summary
+	echo "                        Please review the README and release notes carefully!" |tee -a config.summary
 	warnings_emitted=1
     fi
-    echo "        Build CUPS dyesub USB backend:          $BUILD_LIBUSB_BACKENDS"
+    echo "        Build CUPS dyesub USB backend:          $BUILD_LIBUSB_BACKENDS" |tee -a config.summary
 else
-    echo "    Build CUPS:                                 $BUILD_CUPS"
+    echo "    Build CUPS:                                 $BUILD_CUPS" |tee -a config.summary
 fi
-echo "    Build EPSON inkjet utility:                 $BUILD_ESCPUTIL"
+echo "    Build EPSON inkjet utility:                 $BUILD_ESCPUTIL" |tee -a config.summary
 if test "$BUILD_GIMP2" != "no" ; then
-    echo "    Build enhanced Print plugin for GIMP:       yes"
+    echo "    Build enhanced Print plugin for GIMP:       yes" |tee -a config.summary
     if test "$BUILD_GIMP2_AS_GUTENPRINT" != "no" ; then
-	echo "        GIMP plugin will be named:              gutenprint"
+	echo "        GIMP plugin will be named:              gutenprint" |tee -a config.summary
     else
-	echo "        GIMP plugin will be named:              print"
+	echo "        GIMP plugin will be named:              print" |tee -a config.summary
     fi
-    echo "        Install plugin(s) in home directory:    $USER_INSTALL"
+    echo "        Install plugin(s) in home directory:    $USER_INSTALL" |tee -a config.summary
 else
-    echo "    Build enhanced Print plugin for GIMP:       no"
+    echo "    Build enhanced Print plugin for GIMP:       no" |tee -a config.summary
 fi
-echo "    Build test programs:                        $BUILD_TEST"
-echo "    Build testpattern generator:                $BUILD_TESTPATTERN"
-echo
-echo "  Installation summary:"
-echo "    Installation prefix:                        $prefix"
+echo "    Build test programs:                        $BUILD_TEST" |tee -a config.summary
+echo "    Build testpattern generator:                $BUILD_TESTPATTERN" |tee -a config.summary
+echo |tee -a config.summary
+echo "  Installation summary:" |tee -a config.summary
+echo "    Installation prefix:                        $prefix" |tee -a config.summary
 # Configure intentionally does not expand exec_prefix to allow make
 # to do so.
-echo "    Exec prefix:                                `eval eval echo $exec_prefix` ($exec_prefix)";
-echo "    Data directory:                             $PACKAGE_DATA_DIR"
-echo "    Library directory:                          `eval eval echo $PACKAGE_LIB_DIR` ($PACKAGE_LIB_DIR)"
-echo "    Executable directory:                       `eval eval echo $PACKAGE_BIN_DIR` ($PACKAGE_BIN_DIR)"
-echo "    XML data directory:                         $PKGXMLDATADIR"
-echo "    Module directory:                           `eval eval echo $PKGMODULEDIR` ($PKGMODULEDIR)"
-echo "    Install sample images:                      $INSTALL_SAMPLES"
-echo
-echo "  General configuration:"
+echo "    Exec prefix:                                `eval eval echo $exec_prefix` ($exec_prefix)" |tee -a config.summary
+echo "    Data directory:                             $PACKAGE_DATA_DIR" |tee -a config.summary
+echo "    Library directory:                          `eval eval echo $PACKAGE_LIB_DIR` ($PACKAGE_LIB_DIR)" |tee -a config.summary
+echo "    Executable directory:                       `eval eval echo $PACKAGE_BIN_DIR` ($PACKAGE_BIN_DIR)" |tee -a config.summary
+echo "    XML data directory:                         $PKGXMLDATADIR" |tee -a config.summary
+echo "    Module directory:                           `eval eval echo $PKGMODULEDIR` ($PKGMODULEDIR)" |tee -a config.summary
+echo "    Install sample images:                      $INSTALL_SAMPLES" |tee -a config.summary
+echo |tee -a config.summary
+echo "  General configuration:" |tee -a config.summary
+echo "    Compiler:                                   $CC" |tee -a config.version
+echo "    Compiler Version:                           `"$CC" -v 2>&1 |grep ' version '`" |tee -a config.summary
 if test x$ac_compiler_gnu = "xyes"; then
-    echo "    Compiler options:                           $CFLAGS $GNUCFLAGS"
+    echo "    Compiler options:                           $CFLAGS $GNUCFLAGS" |tee -a config.summary
 else
-    echo "    Compiler options:                           $CFLAGS"
+    echo "    Compiler options:                           $CFLAGS" |tee -a config.summary
 fi
-echo "    Build static libraries:                     $enable_static"
-echo "    Build shared libraries:                     $enable_shared"
-echo "    Maintainer mode:                            $USE_MAINTAINER_MODE"
-echo "    Use i18n:                                   $USE_NLS"
-echo "    Generate profiling information:             $ENABLE_PROFILE"
-echo "    Generate debugging symbols:                 $ENABLE_DEBUG"
-echo "    Use modules:                                $WITH_MODULES"
+echo "    Build static libraries:                     $enable_static" |tee -a config.summary
+echo "    Build shared libraries:                     $enable_shared" |tee -a config.summary
+echo "    Maintainer mode:                            $USE_MAINTAINER_MODE" |tee -a config.summary
+echo "    Use i18n:                                   $USE_NLS" |tee -a config.summary
+echo "    Generate profiling information:             $ENABLE_PROFILE" |tee -a config.summary
+echo "    Generate debugging symbols:                 $ENABLE_DEBUG" |tee -a config.summary
+echo "    Use modules:                                $WITH_MODULES" |tee -a config.summary
 if test -n "$EXTRA_LIBREADLINE_DEPS" ; then
-    echo "    Use readline libraries:                     $USE_READLINE, extra arguments: $EXTRA_LIBREADLINE_DEPS"
+    echo "    Use readline libraries:                     $USE_READLINE, extra arguments: $EXTRA_LIBREADLINE_DEPS" |tee -a config.summary
 else
-    echo "    Use readline libraries:                     $USE_READLINE"
+    echo "    Use readline libraries:                     $USE_READLINE" |tee -a config.summary
 fi
-echo "    uname -a output:                            `uname -a`"
-echo "================================================================"
+echo "    uname -a output:                            `uname -a`" |tee -a config.summary
+echo "================================================================" |tee -a config.summary
 if test $warnings_emitted -ne 0 ; then
-    echo
-    echo '*** WARNING: Please review the warnings shown above carefully!'
+    echo |tee -a config.summary
+    echo '*** WARNING: Please review the warnings shown above carefully!' |tee -a config.summary
 fi
-echo
+echo |tee -a config.summary
 if test "$BUILD_GIMP2" = "no" -o "$BUILD_CUPS" = "no" ; then
-    echo "VERY IMPORTANT:"
-    echo "If you expect to build the CUPS driver or the enhanced Print plugin for"
-    echo "GIMP, but the output above indicates that that component will not be built,"
-    echo "it almost certainly indicates that development packages required to build"
-    echo "that component are not installed on your system.  Please read the README"
-    echo "file and install the necessary development packages before reporting any"
-    echo "error to the development team.  Depending upon your operating system version,"
-    echo "you may have to install packages from the installation medium or over"
-    echo "the network."
-    echo
+    echo "VERY IMPORTANT:" |tee -a config.summary
+    echo "If you expect to build the CUPS driver or the enhanced Print plugin for" |tee -a config.summary
+    echo "GIMP, but the output above indicates that that component will not be built," |tee -a config.summary
+    echo "it almost certainly indicates that development packages required to build" |tee -a config.summary
+    echo "that component are not installed on your system.  Please read the README" |tee -a config.summary
+    echo "file and install the necessary development packages before reporting any" |tee -a config.summary
+    echo "error to the development team.  Depending upon your operating system version," |tee -a config.summary
+    echo "you may have to install packages from the installation medium or over" |tee -a config.summary
+    echo "the network." |tee -a config.summary
+    echo |tee -a config.summary
 fi
 echo "Finished configuring.  Please review CAREFULLY the configuration summary above."
+echo "This summary is also stored in config.summary"
 echo "Type 'make clean' followed by 'make' to build the package"
 echo "then 'make install' to install it."
