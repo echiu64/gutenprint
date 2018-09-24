@@ -239,16 +239,15 @@ project page</a>, which contains a lot more information about us!</p>
 <H2>What is Gutenprint?</H2>
 
 <P>Gutenprint, formerly named Gimp-Print, is a suite of printer
-drivers that may be used with most common UNIX and Linux print
-spooling systems, including CUPS, lpr, LPRng, or others.  These
-drivers provide high quality printing for UNIX (including Macintosh
-OS X 10.2, 10.3, and 10.4) and Linux systems that in many cases equal
-or exceed proprietary vendor-supplied drivers in quality and
+drivers that may be used with CUPS, the Common UNIX Printing System.
+CUPS is the printing system used by all modern Linux and UNIX systems.
+These drivers provide high quality printing for UNIX (including
+Macintosh OS X 10.2 and later) and Linux systems that in many cases
+equal or exceed proprietary vendor-supplied drivers in quality and
 functionality, and can be used for demanding printing tasks requiring
-flexibility and high quality.  This software package includes an
+flexibility and high quality.  This software package include an
 enhanced Print plugin for the GIMP that replaces the plugin packaged
-with the GIMP, and Ghostscript and CUPS drivers, as well as Foomatic
-data supporting the Ghostscript driver.</P>
+with the GIMP in addition to the CUPS driver.</P>
 
 <p>Gutenprint has been renamed in order to clearly distinguish it
 from the GIMP.  While this package started out as the original Print
@@ -265,19 +264,6 @@ release candidate programs.</P>
 <p>Gutenprint supports only the printer portion of multi-function
 devices (devices that typically include scanning, copying, and fax
 capabilities).  </P>
-
-<p>We recommend that all users who wish to use this package for
-general purpose printing use either CUPS or, if they use another
-printing system or no spooler at all, use Foomatic with the
-Ghostscript driver (both described below), rather than integrating
-the Ghostscript driver with self-made scripts or even manually typing
-in Ghostscript command lines.  It is much simpler to manage with CUPS
-or Foomatic and its PPDs.  CUPS provides an excellent web-based
-interface for easy printer administration, and all CUPS-enabled
-applications (OpenOffice.org, all KDE apps, etc.) and printing
-dialogs (kprinter, xpp, etc.) show all the options in easy to use
-GUIs.  Please visit <A HREF="http://www.cups.org/">http://www.cups.org/</A>
-for information on downloading and installing CUPS.</P>
 
 <p>Gutenprint currently supports over 700 printer models.</P>
 
