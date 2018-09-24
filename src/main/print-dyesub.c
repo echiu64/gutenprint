@@ -1961,7 +1961,6 @@ static void kodak_605_printer_init(stp_vars_t *v)
 
   stp_zfwrite("\x01\x40\x0a\x00\x01", 1, 5, v);
   stp_put16_be(short_to_packed_bcd(pd->copies), v); /* Number of copies in BCD */
-  stp_putc(0x00, v);
   stp_put16_le(pd->w_size, v);
   stp_put16_le(pd->h_size, v);
 
