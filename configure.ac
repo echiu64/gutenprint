@@ -131,6 +131,18 @@ popdef([GUTENPRINT_BINARY_AGE])
 popdef([GUTENPRINTUI2_CURRENT_INTERFACE])
 popdef([GUTENPRINTUI2_BINARY_AGE])
 
+configure_args=
+
+for arg in "$@" ; do
+    if test -n "$configure_args" ; then
+        configure_args="$configure_args "
+    fi
+    if echo "$arg" | grep -q '[\s]' ; then
+        arg="'$arg'"
+    fi
+    configure_args="$configure_args$arg"
+done
+
 AC_SUBST([GUTENPRINT_MAJOR_VERSION])
 AC_SUBST([GUTENPRINT_MINOR_VERSION])
 AC_SUBST([GUTENPRINT_MICRO_VERSION])
@@ -1154,7 +1166,7 @@ AC_OUTPUT
 
 warnings_emitted=0
 echo
-echo "Gutenprint Configuration Summary:" |tee -a config.summary
+echo "Gutenprint Configuration Summary:" |tee config.summary
 echo "---------- ------------- --------" |tee -a config.summary
 echo |tee -a config.summary
 echo "If you have any problems, please report the information below to" |tee -a config.summary
@@ -1162,7 +1174,7 @@ echo "$PACKAGE_BUGREPORT" |tee -a config.summary
 echo |tee -a config.summary
 echo "================================================================" |tee -a config.summary
 echo "  Release: $PACKAGE_STRING generated on $RELEASE_DATE" |tee -a config.summary
-echo "  Generated at `date`" |tee -a config.summary
+echo "  Generated at `date` by $LOGNAME" |tee -a config.summary
 echo |tee -a config.summary
 echo "  Features:" |tee -a config.summary
 if test "$BUILD_CUPS" != "no" ; then
@@ -1170,10 +1182,10 @@ if test "$BUILD_CUPS" != "no" ; then
     echo "        Build CUPS 1.2 enhancements:            $BUILD_CUPS_1_2" |tee -a config.summary
     echo "        Build CUPS PPD files:                   $BUILD_CUPS_PPDS" |tee -a config.summary
     if test "$BUILD_CUPS_PPDS" != "no" ; then
-	echo "            Build translated CUPS PPD files:    $BUILD_TRANSLATED_CUPS_PPDS" |tee -a config.summary
-	echo "                Build global CUPS PPD files:    $BUILD_GLOBALIZED_CUPS_PPDS" |tee -a config.summary
-	echo "            Build simplified CUPS PPD files:    $BUILD_SIMPLIFIED_CUPS_PPDS" |tee -a config.summary
-	echo "            Install CUPS PPDs at top level:     $CUPS_PPDS_AT_TOP_LEVEL" |tee -a config.summary
+        echo "            Build translated CUPS PPD files:    $BUILD_TRANSLATED_CUPS_PPDS" |tee -a config.summary
+        echo "                Build global CUPS PPD files:    $BUILD_GLOBALIZED_CUPS_PPDS" |tee -a config.summary
+        echo "            Build simplified CUPS PPD files:    $BUILD_SIMPLIFIED_CUPS_PPDS" |tee -a config.summary
+        echo "            Install CUPS PPDs at top level:     $CUPS_PPDS_AT_TOP_LEVEL" |tee -a config.summary
     fi
     if test "$BUILD_CUPS_PPDS" != "no" -o "$BUILD_CUPS_1_2" != "no" ; then
         echo "        Generate PS level 3 CUPS PPD files:     $USE_LEVEL3_PS" |tee -a config.summary
@@ -1182,11 +1194,11 @@ if test "$BUILD_CUPS" != "no" ; then
 
     if test "$STATIC_GENPPD" = "no" ; then
         echo "            ***WARNING: Use of --disable-static-genppd or --disable-static" |tee -a config.summary
-	echo "                        when building CUPS is very dangerous.  The build may" |tee -a config.summary
-	echo "                        fail when building the PPD files, or may *SILENTLY*" |tee -a config.summary
-	echo "                        build incorrect PPD files or cause other problems." |tee -a config.summary
-	echo "                        Please review the README and release notes carefully!" |tee -a config.summary
-	warnings_emitted=1
+        echo "                        when building CUPS is very dangerous.  The build may" |tee -a config.summary
+        echo "                        fail when building the PPD files, or may *SILENTLY*" |tee -a config.summary
+        echo "                        build incorrect PPD files or cause other problems." |tee -a config.summary
+        echo "                        Please review the README and release notes carefully!" |tee -a config.summary
+        warnings_emitted=1
     fi
     echo "        Build CUPS dyesub USB backend:          $BUILD_LIBUSB_BACKENDS" |tee -a config.summary
 else
@@ -1196,9 +1208,9 @@ echo "    Build EPSON inkjet utility:                 $BUILD_ESCPUTIL" |tee -a c
 if test "$BUILD_GIMP2" != "no" ; then
     echo "    Build enhanced Print plugin for GIMP:       yes" |tee -a config.summary
     if test "$BUILD_GIMP2_AS_GUTENPRINT" != "no" ; then
-	echo "        GIMP plugin will be named:              gutenprint" |tee -a config.summary
+        echo "        GIMP plugin will be named:              gutenprint" |tee -a config.summary
     else
-	echo "        GIMP plugin will be named:              print" |tee -a config.summary
+        echo "        GIMP plugin will be named:              print" |tee -a config.summary
     fi
     echo "        Install plugin(s) in home directory:    $USER_INSTALL" |tee -a config.summary
 else
@@ -1220,6 +1232,7 @@ echo "    Module directory:                           `eval eval echo $PKGMODULE
 echo "    Install sample images:                      $INSTALL_SAMPLES" |tee -a config.summary
 echo |tee -a config.summary
 echo "  General configuration:" |tee -a config.summary
+echo "    Configure arguments:                        $configure_args" |tee -a config.summary
 echo "    Compiler:                                   $CC" |tee -a config.summary
 echo "    Compiler Version:                           `"$CC" -v 2>&1 |grep ' version '`" |tee -a config.summary
 if test x$ac_compiler_gnu = "xyes"; then
@@ -1242,8 +1255,8 @@ fi
 echo "    uname -a output:                            `uname -a`" |tee -a config.summary
 echo "================================================================" |tee -a config.summary
 if test $warnings_emitted -ne 0 ; then
-    echo |tee -a config.summary
-    echo '*** WARNING: Please review the warnings shown above carefully!' |tee -a config.summary
+    echo
+    echo '*** WARNING: Please review the warnings shown above carefully!'
 fi
 echo |tee -a config.summary
 if test "$BUILD_GIMP2" = "no" -o "$BUILD_CUPS" = "no" ; then
