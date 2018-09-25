@@ -14,19 +14,19 @@ matrix:
   include:
   - name: gcc-4.9
     env:
-      - CC=g++-4.9
+      - CC=gcc-4.9
   - name: gcc-5
     env:
-      - CC=g++-5
+      - CC=gcc-5
   - name: gcc-6
     env:
-      - CC=g++-6
+      - CC=gcc-6
   - name: gcc-7
     env:
-      - CC=g++-7
+      - CC=gcc-7
   - name: gcc-8
     env:
-      - CC=g++-8
+      - CC=gcc-8
   - name: clang-3.8
     env:
       - CC=clang-3.8
@@ -57,11 +57,11 @@ addons:
     - doxygen
     - dvips-fontdata-n2bk
     - flex
-    - gcc-4.9
-    - gcc-5
-    - gcc-6
-    - gcc-7
-    - gcc-8
+    - g++-4.9
+    - g++-5
+    - g++-6
+    - g++-7
+    - g++-8
     - clang-3.8
     - gettext
     - imagemagick
