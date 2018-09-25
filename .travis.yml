@@ -14,28 +14,22 @@ matrix:
   include:
   - name: gcc-4.9
     env:
-      - CC=gcc-4.9
+      - CC=g++-4.9
   - name: gcc-5
     env:
-      - CC=gcc-5
+      - CC=g++-5
   - name: gcc-6
     env:
-      - CC=gcc-6
+      - CC=g++-6
   - name: gcc-7
     env:
-      - CC=gcc-7
+      - CC=g++-7
   - name: gcc-8
     env:
-      - CC=gcc-8
+      - CC=g++-8
   - name: clang-3.8
     env:
       - CC=clang-3.8
-  - name: clang-4.0
-    env:
-      - CC=clang-4.0
-  - name: clang-5.0
-    env:
-      - CC=clang-5.0
 notifications:
   email:
     recipients:
@@ -69,8 +63,6 @@ addons:
     - gcc-7
     - gcc-8
     - clang-3.8
-    - clang-4.0
-    - clang-5.0
     - gettext
     - imagemagick
     - jade
