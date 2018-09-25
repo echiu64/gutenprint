@@ -2,11 +2,6 @@ os: linux
 #language: c
 script: TRAVIS_MODE=1 ./scripts/build-release preflight run_build_fresh run_distcheck_fast run_valgrind_fast
 # Need all history to build change log.
-sources:
-  - ubuntu-toolchain-r-test
-  - llvm-toolchain-precise-3.8
-  - llvm-toolchain-precise-4.0
-  - llvm-toolchain-precise-5.0
 git:
   depth: false
   quiet: true
@@ -15,12 +10,6 @@ matrix:
   - name: gcc-4.9
     env:
       - CC=gcc-4.9
-  - name: gcc-5
-    env:
-      - CC=gcc-5
-  - name: gcc-6
-    env:
-      - CC=gcc-6
   - name: gcc-7
     env:
       - CC=gcc-7
@@ -38,6 +27,9 @@ notifications:
     on_failure: always
 addons:
   apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    - llvm-toolchain-precise-3.8
     packages:
     - autoconf
     - autogen
@@ -58,8 +50,6 @@ addons:
     - dvips-fontdata-n2bk
     - flex
     - g++-4.9
-    - g++-5
-    - g++-6
     - g++-7
     - g++-8
     - clang-3.8
