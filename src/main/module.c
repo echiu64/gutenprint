@@ -393,8 +393,6 @@ static void *stp_dlsym(void *handle,           /* Module */
       full_symbol = NULL;
     }
 
-  full_symbol = (char *) stp_malloc(sizeof(char) * (strlen(module) - 2));
-
   /* "_LTX_" + '\0' - ".so" */
   len = strlen(symbol) + strlen(module) + 3;
   full_symbol = (char *) stp_malloc(sizeof(char) * len);
@@ -426,6 +424,7 @@ static void *stp_dlsym(void *handle,           /* Module */
 
  stp_deprintf(STP_DBG_MODULE, "SYMBOL: %s\n", full_symbol);
 
-  return dlsym(handle, full_symbol);
+ stp_free(tmp);
+ return dlsym(handle, full_symbol);
 }
 #endif
