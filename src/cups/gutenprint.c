@@ -122,7 +122,7 @@ cat_ppd(const char *uri)	/* I - Driver URI */
   const char		*lang = NULL;
   char			*s;
   char			filename[1024],		/* Filename */
-			ppd_location[1024];	/* Installed location */
+			ppd_location[2048];	/* Installed location */
   const char 		*infix = "";
   ppd_type_t 		ppd_type = PPD_STANDARD;
   gpfile		outFD;
