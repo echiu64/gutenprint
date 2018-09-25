@@ -1,6 +1,5 @@
 os: linux
-language: c
-os: linux
+#language: c
 script: TRAVIS_MODE=1 ./scripts/build-release preflight run_build_fresh run_distcheck_fast run_valgrind_fast
 # Need all history to build change log.
 sources:
@@ -64,6 +63,14 @@ addons:
     - doxygen
     - dvips-fontdata-n2bk
     - flex
+    - gcc-4.9
+    - gcc-5
+    - gcc-6
+    - gcc-7
+    - gcc-8
+    - clang-3.8
+    - clang-4.0
+    - clang-5.0
     - gettext
     - imagemagick
     - jade
