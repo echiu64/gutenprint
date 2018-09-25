@@ -1,60 +1,44 @@
+os: linux
 language: c
 os: linux
 script: TRAVIS_MODE=1 ./scripts/build-release preflight run_build_fresh run_distcheck_fast run_valgrind_fast
 # Need all history to build change log.
+sources:
+  - ubuntu-toolchain-r-test
+  - llvm-toolchain-precise-3.8
+  - llvm-toolchain-precise-4.0
+  - llvm-toolchain-precise-5.0
 git:
   depth: false
   quiet: true
 matrix:
   include:
-  - os: linux
-    addons:
-      apt:
-        sources:
-          - ubuntu-toolchain-r-test
-        packages:
-          gcc-4.9
-      env:
-        - MATRIX_EVAL="CC=gcc-4.9"
-  - os: linux
-    addons:
-      apt:
-        sources:
-          - ubuntu-toolchain-r-test
-        packages:
-          gcc-5
-      env:
-        - MATRIX_EVAL="CC=gcc-5"
-  - os: linux
-    addons:
-      apt:
-        sources:
-          - ubuntu-toolchain-r-test
-        packages:
-          gcc-6
-      env:
-        - MATRIX_EVAL="CC=gcc-6"
-  - os: linux
-    addons:
-      apt:
-        sources:
-          - ubuntu-toolchain-r-test
-        packages:
-          gcc-7
-      env:
-        - MATRIX_EVAL="CC=gcc-7"
-  - os: linux
-    addons:
-      apt:
-        sources:
-          - ubuntu-toolchain-r-test
-        packages:
-          gcc-8
-      env:
-        - MATRIX_EVAL="CC=gcc-8"
-  - os: linux
-    compiler:
-      - clang
+  - name: gcc-4.9
+    env:
+      - MATRIX_EVAL="CC=gcc-4.9"
+  - name: gcc-5
+    env:
+      - MATRIX_EVAL="CC=gcc-5"
+  - name: gcc-6
+    env:
+      - MATRIX_EVAL="CC=gcc-6"
+  - name: gcc-7
+    env:
+      - MATRIX_EVAL="CC=gcc-7"
+  - name: gcc-8
+    env:
+      - MATRIX_EVAL="CC=gcc-8"
+  - name: clang-3.8
+    env:
+      - MATRIX_EVAL="CC=clang-3.8"
+  - name: clang-4.0
+    env:
+      - MATRIX_EVAL="CC=clang-4.0"
+  - name: clang-5.0
+    env:
+      - MATRIX_EVAL="CC=clang-5.0"
+before_install:
+  - eval "$(MATRIX_EVAL)"
 notifications:
   email:
     recipients:
