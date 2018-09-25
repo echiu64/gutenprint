@@ -16,6 +16,7 @@ matrix:
   - name: gcc-8
     env:
       - CC=gcc-8
+      - STP_CONFIG_ARGS=--disable-static
   - name: clang-3.8
     env:
       - CC=clang-3.8
@@ -49,9 +50,9 @@ addons:
     - doxygen
     - dvips-fontdata-n2bk
     - flex
-    - g++-4.9
-    - g++-7
-    - g++-8
+    - gcc-4.9
+    - gcc-7
+    - gcc-8
     - clang-3.8
     - gettext
     - imagemagick

@@ -118,7 +118,7 @@ function check_git {
 # Everything else depends on this.
 
 function run_build {
-    ./autogen.sh && make clean && make ${STP_PARALLEL:+-j$STP_PARALLEL} && return 0
+    ./autogen.sh $STP_CONFIG_ARGS && make clean && make ${STP_PARALLEL:+-j$STP_PARALLEL} && return 0
     echo "FATAL error: preliminary build failed!"
     return 1
 }
@@ -126,7 +126,7 @@ function run_build {
 # Same as above, without make clean if we know we're in a clean
 # environment (e. g. CI)
 function run_build_fresh {
-    ./autogen.sh && make ${STP_PARALLEL:+-j$STP_PARALLEL} && return 0
+    ./autogen.sh $STP_CONFIG_ARGS && make ${STP_PARALLEL:+-j$STP_PARALLEL} && return 0
     echo "FATAL error: preliminary build failed!"
     return 1
 }
