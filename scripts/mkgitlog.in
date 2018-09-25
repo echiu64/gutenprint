@@ -34,18 +34,22 @@ my (%addlines);
 my (%removelines);
 my (%filechanges);
 my (%files);
+my (@ignore_files) = (".travis.yml");
 
 my ($state) = 0;
 my ($ostate) = 0;
 my ($firsttime) = 1;
 
 sub print_it {
+    my (@files) = sort keys %files;
+    my (%tmp_files);
+    map {$tmp_files{$_} = 1} @files;
+    map {delete $tmp_files{$_}} @ignore_files;
     if ($curtag ne "") {
 	print "===============================================================================\n";
-	print "Name: $curtag\n\n"
+	print "Name: $curtag\n\n";
     }
-    print "$autline\n";
-    my (@files) = sort keys %files;
+    print "$autline\n" if (keys %tmp_files > 0);
     if ($#files >= 0) {
 	my ($add) = 0;
 	my ($remove) = 0;
@@ -78,10 +82,10 @@ sub print_it {
 	    }
 	    $file_detail .=  ")\n";
 	}
-	print "	Lines: +$add, -$remove\n";
-	print "$file_detail\n";
+	print "	Lines: +$add, -$remove\n" if (keys %tmp_files > 0);
+	print "$file_detail\n" if (keys %tmp_files > 0);
     }
-    print "$curmsg\n";
+    print "$curmsg\n" if (keys %tmp_files > 0);
     $autline = "";
     $curmsg = "";
     $curtag = "";
