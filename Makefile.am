@@ -27,6 +27,7 @@ include $(top_srcdir)/scripts/global.mk
 
 SUBDIRS = include src samples test po man doc scripts
 DISTDIRS = m4 m4extra
+CONFIGSUMMARYDIR=$(pkglibdir)/@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@
 
 docdir = $(datadir)/$(PACKAGE)/doc
 
@@ -48,7 +49,8 @@ install-data-local: NEWS AUTHORS COPYING README
 	$(INSTALL_DATA) $(srcdir)/AUTHORS $(DESTDIR)$(docdir)
 	$(INSTALL_DATA) $(srcdir)/COPYING $(DESTDIR)$(docdir)
 	$(INSTALL_DATA) $(srcdir)/README $(DESTDIR)$(docdir)
-	$(INSTALL_DATA) config.summary $(DESTDIR)$(datadir)/$(PACKAGE)/@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@
+	$(MKDIR_P) $(DESTDIR)$(CONFIGSUMMARYDIR)
+	$(INSTALL_DATA) config.summary $(DESTDIR)$(CONFIGSUMMARYDIR)
 
 # git log is local, so it's fast enough that we don't need to
 # engage in any subterfuge like we did with CVS.  It's really fast
@@ -202,7 +204,7 @@ distclean-local:
 	-rm -f config.summary
 
 uninstall-local:
-	-rm -f $(DESTDIR)$(datadir)/$(PACKAGE)/@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@/config.summary
+	-rm -f $(DESTDIR)$(CONFIGSUMMARYDIR)/config.summary
 
 EXTRA_DIST = autogen.sh README.package git-version-stamp
 
