@@ -114,52 +114,21 @@ MAKEDISTCHECK_PARALLEL=STP_PARALLEL=$(CPUS) $(MAKEDISTCHECK)
 # syntax even if POSIX approves it because it's only present in GNU make 4,
 # but Apple doesn't use that.
 
-check-parallel: scripts/count-cpus
-	$(MAKECHECK_PARALLEL)
+# check-%: is a GNU make extension, so we have to explicitly list the targets
+# of interest.  Bah humbug.
+
+CHECK_TARGETS=check-parallel check-minimal check-fast check-full
+CHECK_VALGRIND_TARGETS=check-valgrind-minimal check-valgrind-fast check-valgrind-full
+
+$(CHECK_TARGETS) $(CHECK_VALGRIND_TARGETS):
+	STP_TEST_PROFILE=`echo $@ |sed -e s/check-// -e s/-/_/g -e s/parallel//` $(MAKECHECK_PARALLEL)
 
 
-check-minimal: scripts/count-cpus
-	STP_TEST_PROFILE=minimal $(MAKECHECK_PARALLEL)
+DISTCHECK_TARGETS=distcheck-parallel distcheck-minimal distcheck-fast distcheck-full
+DISTCHECK_VALGRIND_TARGETS=distcheck-valgrind-minimal distcheck-valgrind-fast distcheck-valgrind-full
 
-check-fast: scripts/count-cpus
-	STP_TEST_PROFILE=fast $(MAKECHECK_PARALLEL)
-
-check-full: scripts/count-cpus
-	STP_TEST_PROFILE=full $(MAKECHECK_PARALLEL)
-
-
-check-valgrind-minimal: scripts/count-cpus
-	STP_TEST_PROFILE=valgrind_minimal $(MAKECHECK_PARALLEL)
-
-check-valgrind-fast: scripts/count-cpus
-	STP_TEST_PROFILE=valgrind_fast $(MAKECHECK_PARALLEL)
-
-check-valgrind: scripts/count-cpus
-	STP_TEST_PROFILE=valgrind $(MAKECHECK_PARALLEL)
-
-
-distcheck-parallel: scripts/count-cpus
-	$(MAKEDISTCHECK_PARALLEL)
-
-
-distcheck-minimal: scripts/count-cpus
-	STP_TEST_PROFILE=minimal $(MAKEDISTCHECK_PARALLEL)
-
-distcheck-fast: scripts/count-cpus
-	STP_TEST_PROFILE=fast $(MAKEDISTCHECK_PARALLEL)
-
-distcheck-full: scripts/count-cpus
-	STP_TEST_PROFILE=full $(MAKEDISTCHECK_PARALLEL)
-
-
-distcheck-valgrind-minimal: scripts/count-cpus
-	STP_TEST_PROFILE=valgrind_minimal $(MAKEDISTCHECK_PARALLEL)
-
-distcheck-valgrind-fast: scripts/count-cpus
-	STP_TEST_PROFILE=valgrind_fast $(MAKEDISTCHECK_PARALLEL)
-
-distcheck-valgrind: scripts/count-cpus
-	STP_TEST_PROFILE=valgrind $(MAKEDISTCHECK_PARALLEL)
+$(DISTCHECK_TARGETS) $(DISTCHECK_VALGRIND_TARGETS):
+	STP_TEST_PROFILE=`echo $@ |sed -e s/distcheck-// -e s/-/_/g -e s/parallel//` $(MAKEDISTCHECK_PARALLEL)
 
 
 checksums: scripts/count-cpus
