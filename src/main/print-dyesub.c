@@ -3183,7 +3183,7 @@ static const stp_parameter_t mitsu_p93d_parameters[] =
   },
   {
     "Sharpen", N_("Image Sharpening"), "Color=No,Category=Advanced Printer Setup",
-    N_("Sharpening to apply to image (1 is soft, 1 is normal, 2 is hard"),
+    N_("Sharpening to apply to image (0 is soft, 1 is normal, 2 is hard"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
