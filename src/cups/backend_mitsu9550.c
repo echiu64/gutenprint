@@ -302,7 +302,7 @@ static int mitsu98xx_fillmatte(struct mitsu9550_printjob *job)
 	int fd, i;
 	uint32_t j, remain;
 
-	DEBUG("Reading %d bytes of matte data from disk (%d/%d)\n", job->cols * job->rows, job->cols, LAMINATE_STRIDE);
+	DEBUG("Reading %d bytes of matte data from disk (%d/%d)\n", job->cols * job->rows * 2, job->cols, LAMINATE_STRIDE);
 	fd = open(MITSU_M98xx_LAMINATE_FILE, O_RDONLY);
 	if (fd < 0) {
 		WARNING("Unable to open matte lamination data file '%s'\n", MITSU_M98xx_LAMINATE_FILE);
@@ -318,8 +318,8 @@ static int mitsu98xx_fillmatte(struct mitsu9550_printjob *job)
 	matte->cmd[3] = 0x10;
 	matte->row_offset = 0;
 	matte->col_offset = 0;
-	matte->cols = job->hdr1.cols;
-	matte->rows = job->hdr1.rows;
+	matte->cols = cpu_to_be16(job->hdr1.cols);
+	matte->rows = cpu_to_be16(job->hdr1.rows);
 	job->datalen += sizeof(struct mitsu9550_plane);
 
 	/* Read in the matte data plane */
@@ -832,8 +832,10 @@ hdr_done:
 			memcpy(job->databuf + job->datalen, buf, 4);
 			job->datalen += 4;
 
-			/* Unless we have a matte plane following, we're done */
-			if (job->hdr1.matte != 0x01)
+			/* Unless we have a raw matte plane following,
+			   we're done */
+			if (job->hdr1.matte != 0x01 ||
+			    !job->is_raw)
 				break;
 			remain = sizeof(buf);
 		} else {
@@ -1199,7 +1201,7 @@ static int mitsu9550_main_loop(void *vctx, const void *vjob) {
 	int i, remain, planelen;
 
 	planelen = job->rows * job->cols * 2;
-	remain = (job->hdr1.matte ? 3 : 4) * (planelen + sizeof(struct mitsu9550_plane)) + sizeof(struct mitsu9550_cmd);
+	remain = (job->hdr1.matte ? 4 : 3) * (planelen + sizeof(struct mitsu9550_plane)) + sizeof(struct mitsu9550_cmd) * (job->hdr1.matte? 2 : 1);
 	newbuf = malloc(remain);
 	if (!newbuf) {
 		ERROR("Memory allocation Failure!\n");
@@ -1735,7 +1737,7 @@ static const char *mitsu9550_prefixes[] = {
 /* Exported */
 struct dyesub_backend mitsu9550_backend = {
 	.name = "Mitsubishi CP9xxx family",
-	.version = "0.41",
+	.version = "0.42",
 	.uri_prefixes = mitsu9550_prefixes,
 	.cmdline_usage = mitsu9550_cmdline,
 	.cmdline_arg = mitsu9550_cmdline_arg,
