@@ -1354,7 +1354,7 @@ void dump_markers(struct marker *markers, int marker_count, int full)
 
 	ATTR("marker-colors=");
 	for (i = 0 ; i < marker_count; i++) {
-		DEBUG2(markers[i].color);
+		DEBUG2("%s", markers[i].color);
 		if ((i+1) < marker_count)
 			DEBUG2(",");
 	}
