@@ -805,6 +805,7 @@ static int mitsu70x_attach(void *vctx, struct libusb_device_handle *dev, int typ
 		resp.upper.media_type = media_code;
 		resp.lower.media_type = media_code;
 		resp.dual_deck = 0x80;  /* Make it a dual deck */
+		resp.vers[0].ver[0] = 0;
 	}
 
 	/* Figure out if we're a D707 with two decks */
@@ -2437,7 +2438,7 @@ static int mitsu70x_query_markers(void *vctx, struct marker **markers, int *coun
 
 static const char *mitsu70x_prefixes[] = {
 	"mitsu70x", // Family entry, do not nuke.
-	"mitsubishi-d70dw", "mitsubishi-d80dw", "mitsubishi-k60dw", "kodak-305", "fujifilm-ask-300"
+	"mitsubishi-d70dw", "mitsubishi-d80dw", "mitsubishi-k60dw", "kodak-305", "fujifilm-ask-300",
 	// Extras
 	"mitsubishi-d707dw", "mitsubishi-k60dws",
 	// backwards compatibility
@@ -2448,7 +2449,7 @@ static const char *mitsu70x_prefixes[] = {
 /* Exported */
 struct dyesub_backend mitsu70x_backend = {
 	.name = "Mitsubishi CP-D70 family",
-	.version = "0.88",
+	.version = "0.89",
 	.uri_prefixes = mitsu70x_prefixes,
 	.flags = BACKEND_FLAG_JOBLIST,
 	.cmdline_usage = mitsu70x_cmdline,
