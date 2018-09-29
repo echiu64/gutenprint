@@ -1372,6 +1372,9 @@ static int dnpds40_read_parse(void *vctx, const void **vjob, int data_fd, int co
 			case 11808:
 				job->dpi = 300;
 				break;
+			case 13146:
+				job->dpi = 334;
+				break;
 			case 23615:
 				job->dpi = 600;
 				break;
@@ -3019,7 +3022,7 @@ static const char *dnpds40_prefixes[] = {
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS-series / Citizen C-series",
-	.version = "0.109",
+	.version = "0.110",
 	.uri_prefixes = dnpds40_prefixes,
 	.flags = BACKEND_FLAG_JOBLIST,
 	.cmdline_usage = dnpds40_cmdline,
@@ -3088,15 +3091,7 @@ static int cw01_read_parse(struct dnpds40_printjob *job, int data_fd,
 	plane_hdr[11] = 0x04;
 
 	/* Okay, generate a new stream into job->databuf! */
-#if 0
-	job->datalen += sprintf((char*)job->databuf + job->datalen,
-				"\033PCNTRL QTY             00000008%07d\r", hdr->copies);
-	job->datalen += sprintf((char*)job->databuf + job->datalen,
-				"\033PCNTRL CUTTER          0000000800000000");
-#else
-	/* QTY is stripped from the stream, and CUTTER is stashed away */
 	job->cutter = 0;
-#endif
 
 	j = 0;
 
