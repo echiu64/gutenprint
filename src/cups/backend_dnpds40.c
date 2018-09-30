@@ -948,7 +948,7 @@ static int dnpds40_attach(void *vctx, struct libusb_device_handle *dev, int type
 		break;
 	case P_DNP_DS620:
 		ctx->native_width = 1920;
-		ctx->max_height = 5480;
+		ctx->max_height = 5604;
 		ctx->correct_count = 1;
 		ctx->supports_counterp = 1;
 		ctx->supports_matte = 1;
@@ -1285,7 +1285,7 @@ static int dnpds40_read_parse(void *vctx, const void **vjob, int data_fd, int co
 			i = read(data_fd, job->databuf + job->datalen + sizeof(struct dnpds40_cmd),
 				 remain);
 			if (i < 0) {
-				ERROR("Data Read Error: %d (%d/%d @%d)\n", i, remain, j, job->datalen);
+				ERROR("Data Read Error: %d (%d/%d @%d/%d)\n", i, remain, j, job->datalen,MAX_PRINTJOB_LEN);
 				dnpds40_cleanup_job(job);
 				return i;
 			}
@@ -3022,7 +3022,7 @@ static const char *dnpds40_prefixes[] = {
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS-series / Citizen C-series",
-	.version = "0.110",
+	.version = "0.111",
 	.uri_prefixes = dnpds40_prefixes,
 	.flags = BACKEND_FLAG_JOBLIST,
 	.cmdline_usage = dnpds40_cmdline,
