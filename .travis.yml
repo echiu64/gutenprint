@@ -14,273 +14,93 @@ matrix:
   - name: gcc-7
     env:
       - CC=gcc-7
-      - STP_BUILD_OPERATIONS='preflight run_build_fresh run_distcheck_fast run_valgrind_fast'
+      - STP_BUILD_OPERATIONS='run_build_fresh run_distcheck_fast run_valgrind_fast'
   - name: gcc-8
     env:
       - CC=gcc-8
       - STP_CONFIG_ARGS=--disable-static
-      - STP_BUILD_OPERATIONS='preflight run_build_fresh run_distcheck_fast run_valgrind_fast'
+      - STP_BUILD_OPERATIONS='run_build_fresh run_distcheck_fast run_valgrind_fast'
   - name: clang-3.8
     env:
       - CC=clang-3.8
-      - STP_BUILD_OPERATIONS='preflight run_build_fresh run_distcheck_fast run_valgrind_fast'
-  - name: checksums_0_43
+      - STP_BUILD_OPERATIONS='run_build_fresh run_distcheck_fast run_valgrind_fast'
+  - name: checksums_0_13
     env:
       - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
       - STP_TEST_ROTOR=0
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
+      - STP_TEST_ROTOR_CIRCUMFERENCE=13
       - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_1_43
+  - name: checksums_1_13
     env:
       - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
       - STP_TEST_ROTOR=1
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
+      - STP_TEST_ROTOR_CIRCUMFERENCE=13
       - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_2_43
+  - name: checksums_2_13
     env:
       - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
       - STP_TEST_ROTOR=2
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
+      - STP_TEST_ROTOR_CIRCUMFERENCE=13
       - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_3_43
+  - name: checksums_3_13
     env:
       - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
       - STP_TEST_ROTOR=3
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
+      - STP_TEST_ROTOR_CIRCUMFERENCE=13
       - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_4_43
+  - name: checksums_4_13
     env:
       - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
       - STP_TEST_ROTOR=4
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
+      - STP_TEST_ROTOR_CIRCUMFERENCE=13
       - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_5_43
+  - name: checksums_5_13
     env:
       - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
       - STP_TEST_ROTOR=5
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
+      - STP_TEST_ROTOR_CIRCUMFERENCE=13
       - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_6_43
+  - name: checksums_6_13
     env:
       - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
       - STP_TEST_ROTOR=6
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
+      - STP_TEST_ROTOR_CIRCUMFERENCE=13
       - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_7_43
+  - name: checksums_7_13
     env:
       - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
       - STP_TEST_ROTOR=7
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
+      - STP_TEST_ROTOR_CIRCUMFERENCE=13
       - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_8_43
+  - name: checksums_8_13
     env:
       - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
       - STP_TEST_ROTOR=8
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
+      - STP_TEST_ROTOR_CIRCUMFERENCE=13
       - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_9_43
+  - name: checksums_9_13
     env:
       - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
       - STP_TEST_ROTOR=9
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
+      - STP_TEST_ROTOR_CIRCUMFERENCE=13
       - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_10_43
+  - name: checksums_10_13
     env:
       - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
       - STP_TEST_ROTOR=10
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
+      - STP_TEST_ROTOR_CIRCUMFERENCE=13
       - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_11_43
+  - name: checksums_11_13
     env:
       - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
       - STP_TEST_ROTOR=11
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
+      - STP_TEST_ROTOR_CIRCUMFERENCE=13
       - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_12_43
+  - name: checksums_12_13
     env:
       - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
       - STP_TEST_ROTOR=12
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_13_43
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=13
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_14_43
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=14
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_15_43
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=15
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_16_43
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=16
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_17_43
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=17
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_18_43
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=18
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_19_43
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=19
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_20_43
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=20
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_21_43
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=21
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_22_43
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=22
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_23_43
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=23
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_24_43
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=24
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_25_43
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=25
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_26_43
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=26
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_27_43
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=27
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_28_43
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=28
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_29_43
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=29
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_30_43
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=30
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_31_43
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=31
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_32_43
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=32
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_33_43
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=33
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_34_43
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=34
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_35_43
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=35
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_36_43
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=36
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_37_43
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=37
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_38_43
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=38
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_39_43
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=39
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_40_43
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=40
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_41_43
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=41
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_42_43
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=42
-      - STP_TEST_ROTOR_CIRCUMFERENCE=43
+      - STP_TEST_ROTOR_CIRCUMFERENCE=13
       - STP_MIN_CHECKSUM_PREFIX=0
 notifications:
   email:
