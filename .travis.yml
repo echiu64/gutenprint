@@ -10,95 +10,112 @@ matrix:
   - name: gcc-4.9
     env:
       - CC=gcc-4.9
+      - STP_PARALLEL=24
       - STP_BUILD_OPERATIONS='preflight run_build_fresh run_distcheck_fast run_valgrind_fast'
   - name: gcc-7
     env:
       - CC=gcc-7
+      - STP_PARALLEL=24
       - STP_BUILD_OPERATIONS='run_build_fresh run_distcheck_fast run_valgrind_fast'
   - name: gcc-8
     env:
       - CC=gcc-8
+      - STP_PARALLEL=24
       - STP_CONFIG_ARGS=--disable-static
       - STP_BUILD_OPERATIONS='run_build_fresh run_distcheck_fast run_valgrind_fast'
   - name: clang-3.8
     env:
       - CC=clang-3.8
+      - STP_PARALLEL=24
       - STP_BUILD_OPERATIONS='run_build_fresh run_distcheck_fast run_valgrind_fast'
   - name: checksums_0_13
     env:
       - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
+      - STP_PARALLEL=24
       - STP_TEST_ROTOR=0
       - STP_TEST_ROTOR_CIRCUMFERENCE=13
       - STP_MIN_CHECKSUM_PREFIX=0
   - name: checksums_1_13
     env:
       - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
+      - STP_PARALLEL=24
       - STP_TEST_ROTOR=1
       - STP_TEST_ROTOR_CIRCUMFERENCE=13
       - STP_MIN_CHECKSUM_PREFIX=0
   - name: checksums_2_13
     env:
       - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
+      - STP_PARALLEL=24
       - STP_TEST_ROTOR=2
       - STP_TEST_ROTOR_CIRCUMFERENCE=13
       - STP_MIN_CHECKSUM_PREFIX=0
   - name: checksums_3_13
     env:
       - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
+      - STP_PARALLEL=24
       - STP_TEST_ROTOR=3
       - STP_TEST_ROTOR_CIRCUMFERENCE=13
       - STP_MIN_CHECKSUM_PREFIX=0
   - name: checksums_4_13
     env:
       - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
+      - STP_PARALLEL=24
       - STP_TEST_ROTOR=4
       - STP_TEST_ROTOR_CIRCUMFERENCE=13
       - STP_MIN_CHECKSUM_PREFIX=0
   - name: checksums_5_13
     env:
       - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
+      - STP_PARALLEL=24
       - STP_TEST_ROTOR=5
       - STP_TEST_ROTOR_CIRCUMFERENCE=13
       - STP_MIN_CHECKSUM_PREFIX=0
   - name: checksums_6_13
     env:
       - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
+      - STP_PARALLEL=24
       - STP_TEST_ROTOR=6
       - STP_TEST_ROTOR_CIRCUMFERENCE=13
       - STP_MIN_CHECKSUM_PREFIX=0
   - name: checksums_7_13
     env:
       - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
+      - STP_PARALLEL=24
       - STP_TEST_ROTOR=7
       - STP_TEST_ROTOR_CIRCUMFERENCE=13
       - STP_MIN_CHECKSUM_PREFIX=0
   - name: checksums_8_13
     env:
       - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
+      - STP_PARALLEL=24
       - STP_TEST_ROTOR=8
       - STP_TEST_ROTOR_CIRCUMFERENCE=13
       - STP_MIN_CHECKSUM_PREFIX=0
   - name: checksums_9_13
     env:
       - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
+      - STP_PARALLEL=24
       - STP_TEST_ROTOR=9
       - STP_TEST_ROTOR_CIRCUMFERENCE=13
       - STP_MIN_CHECKSUM_PREFIX=0
   - name: checksums_10_13
     env:
       - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
+      - STP_PARALLEL=24
       - STP_TEST_ROTOR=10
       - STP_TEST_ROTOR_CIRCUMFERENCE=13
       - STP_MIN_CHECKSUM_PREFIX=0
   - name: checksums_11_13
     env:
       - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
+      - STP_PARALLEL=24
       - STP_TEST_ROTOR=11
       - STP_TEST_ROTOR_CIRCUMFERENCE=13
       - STP_MIN_CHECKSUM_PREFIX=0
   - name: checksums_12_13
     env:
       - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
+      - STP_PARALLEL=24
       - STP_TEST_ROTOR=12
       - STP_TEST_ROTOR_CIRCUMFERENCE=13
       - STP_MIN_CHECKSUM_PREFIX=0
