@@ -29,7 +29,7 @@ fi
 # Linux
 
 if [ "$STP_PARALLEL" -eq 'lscpu' ] ; then
-    lscpu --online --extended | tail -n +2 | wc -l
+    lscpu -p | grep -v '^#' | wc -l
     exit 0
 fi
 

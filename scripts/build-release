@@ -643,7 +643,7 @@ echo "Log Directory: ${LOGDIR#${ROOT}/}" | log_top
 echo "Parallelism: $STP_PARALLEL" | log_top
 echo "uname -a: $(uname -a)" |log_top
 echo "CPU information:" |log_top
-lscpu --online --extended |log_top
+lscpu -p |log_top
 lscpu |log_top
 echo "Memory information:" |log_top
 free |log_top
