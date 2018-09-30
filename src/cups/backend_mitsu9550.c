@@ -1201,7 +1201,7 @@ static int mitsu9550_main_loop(void *vctx, const void *vjob) {
 	int i, remain, planelen;
 
 	planelen = job->rows * job->cols * 2;
-	remain = (job->hdr1.matte ? 4 : 3) * (planelen + sizeof(struct mitsu9550_plane)) + sizeof(struct mitsu9550_cmd) * (job->hdr1.matte? 2 : 1);
+	remain = (job->hdr1.matte ? 4 : 3) * (planelen + sizeof(struct mitsu9550_plane)) + sizeof(struct mitsu9550_cmd) * (job->hdr1.matte? 2 : 1) + LAMINATE_STRIDE * 2;
 	newbuf = malloc(remain);
 	if (!newbuf) {
 		ERROR("Memory allocation Failure!\n");
@@ -1737,7 +1737,7 @@ static const char *mitsu9550_prefixes[] = {
 /* Exported */
 struct dyesub_backend mitsu9550_backend = {
 	.name = "Mitsubishi CP9xxx family",
-	.version = "0.43",
+	.version = "0.44",
 	.uri_prefixes = mitsu9550_prefixes,
 	.cmdline_usage = mitsu9550_cmdline,
 	.cmdline_arg = mitsu9550_cmdline_arg,
