@@ -1256,7 +1256,7 @@ static int mitsu9550_main_loop(void *vctx, const void *vjob) {
 	newlen += planelen;
 
 	/* And finally, the job footer. */
-	memcpy(newbuf + newlen, job->databuf + sizeof(struct mitsu9550_plane) + planelen * 3, sizeof(struct mitsu9550_cmd));
+	memcpy(newbuf + newlen, job->databuf + sizeof(struct mitsu9550_plane) + planelen/2 * 3, sizeof(struct mitsu9550_cmd));
 	newlen += sizeof(struct mitsu9550_cmd);
 
 	/* Clean up, and move pointer to new buffer; */
@@ -1737,7 +1737,7 @@ static const char *mitsu9550_prefixes[] = {
 /* Exported */
 struct dyesub_backend mitsu9550_backend = {
 	.name = "Mitsubishi CP9xxx family",
-	.version = "0.42",
+	.version = "0.43",
 	.uri_prefixes = mitsu9550_prefixes,
 	.cmdline_usage = mitsu9550_cmdline,
 	.cmdline_arg = mitsu9550_cmdline_arg,
