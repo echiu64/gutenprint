@@ -226,8 +226,15 @@ sub find_min_nonunique_prefix(@) {
     my ($last) = shift @sums;
     my ($maxlen) = length $last;
     my ($max_prefix) = 1;
-
+    # To allow (more) safely combining multiple sets of test data
+    if (defined $ENV{"STP_MIN_CHECKSUM_PREFIX"}) {
+	$max_prefix = $ENV{"STP_MIN_CHECKSUM_PREFIX"};
+	if ($max_prefix <= 0) {
+	    return $maxlen;
+	}
+    }
     foreach my $sum (@sums) {
+	next if length $sum <= $max_prefix;
 	foreach my $l ($max_prefix..$maxlen) {
 	    last if (substr($sum, 0, $l) ne substr($last, 0, $l));
 	    $max_prefix++;

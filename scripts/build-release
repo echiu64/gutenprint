@@ -589,6 +589,7 @@ declare -a OPERATIONS=(preflight
 		       save_build_artifacts
 		       finis)
 
+[[ -n $STP_BUILD_OPERATIONS ]] && OPERATIONS=($STP_BUILD_OPERATIONS)
 [[ -n "$@" ]] && OPERATIONS=("$@")
 
 declare HOST=$(uname -n)

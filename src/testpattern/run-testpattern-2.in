@@ -120,7 +120,7 @@ my $round = 0;
 my $print_family = 0;
 my $res_limit = 0;
 my $proc_rotor = 0;
-my $case_no = 0;
+my $case_no = -1;
 my $vg = "libtool --mode=execute valgrind";
 
 my @default_options = ();
@@ -134,6 +134,8 @@ my %min_page_size;
 my %max_page_size;
 my %stp_bools;
 my %rerun_cases;
+my $stp_test_rotor=0;
+my $stp_test_rotor_circumference=1;
 
 if (defined $ENV{"STP_PARALLEL"}) {
     $proc_count = $ENV{"STP_PARALLEL"};
@@ -141,6 +143,11 @@ if (defined $ENV{"STP_PARALLEL"}) {
 	$quiet = 1;
     }
 }
+if (defined $ENV{"STP_TEST_ROTOR"} && defined $ENV{"STP_TEST_ROTOR_CIRCUMFERENCE"}) {
+    $stp_test_rotor=$ENV{"STP_TEST_ROTOR"};
+    $stp_test_rotor_circumference=$ENV{"STP_TEST_ROTOR_CIRCUMFERENCE"};
+}
+
 
 if (defined $ENV{"STP_TEST_FAMILY"}) {
    @families = split(/ +/, $ENV{"STP_TEST_FAMILY"});
@@ -894,6 +901,8 @@ sub do_printer($$) {
 	    foreach $opt (@opts) {
 		@messages = ();
 		@global_messages = ();
+		$case_no++;
+		next if (($case_no % $stp_test_rotor_circumference) != $stp_test_rotor);
 		my ($pname) = $print_family ?
 		    "${models{$printer}}-$families{$printer}" : $printer;
 		if ($first_time) {
@@ -904,7 +913,7 @@ sub do_printer($$) {
 		    }
 		    $first_time = 0;
 		}
-		next if (($case_no++ % $proc_count) != $proc_rotor);
+		next if (($case_no % $proc_count) != $proc_rotor);
 		my ($tp_mode) = "rgb8";
 		@extras = ();
 		@job_extras = ();

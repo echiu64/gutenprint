@@ -98,7 +98,7 @@ while getopts "hvcgsVnO:m:o:p:St:lLXf:N" opt ; do
 	g) valopts='--vgdb=yes --error-exitcode=1' ;;
 	s) single=1 ;;
 	V) verbose=$((verbose+1)) ;;
-	n) make_ppds='' ;;
+	n) make_ppds=0 ;;
 	O) outdir="$OPTARG"; mkdir -p "$outdir" ;;
 	o) cupsargs="$cupsargs $OPTARG" ;;
 	m) md5dir="$OPTARG"; mkdir -p "$md5dir" ;;
@@ -248,7 +248,7 @@ get_ppds() {
     fi
 }
 
-if [[ -n $make_ppds || ! -d ppd/C ]] ; then
+if [[ $make_ppds > 0 || ! -d ppd/C ]] ; then
     rm -rf ppd/C
 ## not all systems can work with gzipped PPDs
     if [[ $skip_simplified == 1 ]] ; then
@@ -465,6 +465,17 @@ if [[ -d ppd/C ]] ; then
 	done
 	files=(${nfiles[@]})
     fi
+    if [[ -n $STP_TEST_ROTOR && -n $STP_TEST_ROTOR_CIRCUMFERENCE ]] ; then
+	count=0
+	nfiles=()
+	for f in ${files[@]} ; do
+	    if (( $count % $STP_TEST_ROTOR_CIRCUMFERENCE == $STP_TEST_ROTOR )) ; then
+		nfiles+=($f)
+	    fi
+	    count=$((count+1))
+	done
+	files=(${nfiles[@]})
+    fi
     (( ${#files[@]} < $jobs )) && jobs=${#files[@]}
     declare -a subproc=($(seq 0 $((jobs-1))))
     # Fire 'em off in the background...
@@ -479,5 +490,5 @@ if [[ -d ppd/C ]] ; then
 fi
 
 [[ -n $tfile ]] && rm -f "$tfile"
-(( $retval == 0 )) && rm -rf ppd/C && rmdir ppd
+(( $retval == 0 && $make_ppds > 0 )) && rm -rf ppd/C && rmdir ppd
 exit $retval
