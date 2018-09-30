@@ -460,6 +460,10 @@ function log {
     log1 "$@" ${BUILD_VERBOSE:+-}
 }
 
+function log_top {
+    log1 "@" "$top_log" -
+}
+
 function time_delta {
     start=$1
     end=$2
@@ -478,12 +482,12 @@ function finish {
     estamp=$(stamp)
     [[ $quiet = 1 ]] && echo
     if [[ -n ${failedmodules[*]} ]] ; then
-	echo "The following modules failed:" | log "$top_log" -
+	echo "The following modules failed:" | log_top
 	for f in ${failedmodules[@]} ; do
-	    echo "    $f" | log "$top_log" -
+	    echo "    $f" | log_top
 	done
     fi
-    echo "*** Gutenprint release build $msg at $estamp ($(time_delta $STIME $etime))" | log "$top_log" -
+    echo "*** Gutenprint release build $msg at $estamp ($(time_delta $STIME $etime))" | log_top
     echo "================================================================" | log "$top_log"
     if [[ -n $TRAVIS_MODE ]] ; then
 	# We really don't want the termination message
@@ -629,16 +633,21 @@ if [[ -n $TRAVIS_MODE ]] ; then
 fi
 
 echo "================================================================" | log "-$top_log"
-echo "*** Gutenprint release build started at $SSTAMP on $HOST" | log "$top_log" -
-echo "Running operations:" | log "$top_log" -
+echo "*** Gutenprint release build started at $SSTAMP on $HOST" | log_top
+echo "Running operations:" | log_top
 for f in ${OPERATIONS[@]} ; do
     echo "    $f"
 done
-echo "Directory: $ROOT" | log "$top_log" -
-echo "Log Directory: ${LOGDIR#${ROOT}/}" | log "$top_log" -
-echo "Parallelism: $STP_PARALLEL" | log "$top_log" -
+echo "Directory: $ROOT" | log_top
+echo "Log Directory: ${LOGDIR#${ROOT}/}" | log_top
+echo "Parallelism: $STP_PARALLEL" | log_top
+echo "uname -a: $(uname -a)" |log_top
+echo "CPU information:" |log_top
+grep 'model name' /proc/cpuinfo |log_top
+echo "Memory information:" |log_top
+free |log_top
 [[ -n $("$GIT" status --porcelain -uno) ]] && git_dirty=' (dirty)'
-echo "Git revision: $("$GIT" rev-parse @)$git_dirty" | log "$top_log" -
+echo "Git revision: $("$GIT" rev-parse @)$git_dirty" | log_top
 
 declare -i runstatus=0
 for op in ${OPERATIONS[@]} ; do
