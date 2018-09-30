@@ -630,6 +630,10 @@ fi
 
 echo "================================================================" | log "-$top_log"
 echo "*** Gutenprint release build started at $SSTAMP on $HOST" | log "$top_log" -
+echo "Running operations:" | log "$top_log" -
+for f in ${OPERATIONS[@]} ; do
+    echo "    $f"
+done
 echo "Directory: $ROOT" | log "$top_log" -
 echo "Log Directory: ${LOGDIR#${ROOT}/}" | log "$top_log" -
 echo "Parallelism: $STP_PARALLEL" | log "$top_log" -
