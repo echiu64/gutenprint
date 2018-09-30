@@ -27,12 +27,6 @@ if [ -n "$STP_PARALLEL" ] ; then
 fi
 
 # Linux
-
-if [ "$STP_PARALLEL" -eq 'lscpu' ] ; then
-    lscpu -p | grep -v '^#' | wc -l
-    exit 0
-fi
-
 nproc=$(type -p nproc)
 if [ -n "$nproc" ] ; then
     nproc
