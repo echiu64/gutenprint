@@ -106,7 +106,8 @@ static void updr150_teardown(void *vctx) {
 	free(ctx);
 }
 
-#define MAX_PRINTJOB_LEN 16736455
+#define MAX_PRINTJOB_LEN (2048*2764*3 + 2048)
+
 static int updr150_read_parse(void *vctx, const void **vjob, int data_fd, int copies) {
 	struct updr150_ctx *ctx = vctx;
 	int len, run = 1;
@@ -173,8 +174,6 @@ static int updr150_read_parse(void *vctx, const void **vjob, int data_fd, int co
 					run = 0;
 				break;
 			case 0xffffffeb:
-			case 0xffffffec:
-			case 0xffffffed:
 			case 0xffffffee:
 			case 0xffffffef:
 			case 0xfffffff5:
@@ -328,7 +327,7 @@ static const char *sonyupdr150_prefixes[] = {
 
 struct dyesub_backend updr150_backend = {
 	.name = "Sony UP-DR150/UP-DR200/UP-CR10",
-	.version = "0.26",
+	.version = "0.27",
 	.uri_prefixes = sonyupdr150_prefixes,
 	.cmdline_arg = updr150_cmdline_arg,
 	.init = updr150_init,
