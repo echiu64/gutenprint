@@ -120,14 +120,14 @@ MAKEDISTCHECK_PARALLEL=STP_PARALLEL=$(CPUS) $(MAKEDISTCHECK)
 # of interest.  Bah humbug.
 
 CHECK_TARGETS=check-parallel check-minimal check-fast check-full
-CHECK_VALGRIND_TARGETS=check-valgrind-minimal check-valgrind-fast check-valgrind-full
+CHECK_VALGRIND_TARGETS=check-valgrind check-valgrind-minimal check-valgrind-fast
 
 $(CHECK_TARGETS) $(CHECK_VALGRIND_TARGETS):
 	STP_TEST_PROFILE=`echo $@ |sed -e s/check-// -e s/-/_/g -e s/parallel//` $(MAKECHECK_PARALLEL)
 
 
 DISTCHECK_TARGETS=distcheck-parallel distcheck-minimal distcheck-fast distcheck-full
-DISTCHECK_VALGRIND_TARGETS=distcheck-valgrind-minimal distcheck-valgrind-fast distcheck-valgrind-full
+DISTCHECK_VALGRIND_TARGETS=distcheck-valgrind distcheck-valgrind-minimal distcheck-valgrind-fast
 
 $(DISTCHECK_TARGETS) $(DISTCHECK_VALGRIND_TARGETS):
 	STP_TEST_PROFILE=`echo $@ |sed -e s/distcheck-// -e s/-/_/g -e s/parallel//` $(MAKEDISTCHECK_PARALLEL)
