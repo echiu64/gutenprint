@@ -28,6 +28,11 @@ fi
 
 # Linux
 
+if [ "$STP_PARALLEL" -eq 'lscpu' ] ; then
+    lscpu --online --extended | tail -n +2 | wc -l
+    exit 0
+fi
+
 nproc=$(type -p nproc)
 if [ -n "$nproc" ] ; then
     nproc

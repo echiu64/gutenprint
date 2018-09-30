@@ -525,7 +525,7 @@ function console_log {
 # Travis times out if there's no output for 10 minutes, but some things
 # go silent for quite a while
 function travis_deadman {
-    while : ; do sleep 60; echo Mark | timestamp | log -; done
+    while : ; do sleep 60; echo Mark $(uptime) | log -; done
 }
 
 function timestamp {
@@ -643,7 +643,8 @@ echo "Log Directory: ${LOGDIR#${ROOT}/}" | log_top
 echo "Parallelism: $STP_PARALLEL" | log_top
 echo "uname -a: $(uname -a)" |log_top
 echo "CPU information:" |log_top
-grep 'model name' /proc/cpuinfo |log_top
+lscpu --online --extended |log_top
+lscpu |log_top
 echo "Memory information:" |log_top
 free |log_top
 [[ -n $("$GIT" status --porcelain -uno) ]] && git_dirty=' (dirty)'
