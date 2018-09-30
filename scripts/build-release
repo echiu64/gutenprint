@@ -73,12 +73,13 @@ function preflight {
 
 function check_git {
     "$GIT" fetch
+    gstatus=0
 
     # Check for uncommitted files.
     if [[ -n $("$GIT" status -uno --porcelain) ]] ; then
 	console_log "*** ERROR: Uncommitted changes in repository:"
 	"$GIT" status -uno | console_log
-	return 2
+	gstatus=2
     fi
 
     # Ensure that the workspace is up to date (git status -uno
@@ -111,7 +112,7 @@ function check_git {
 	    return 2
 	fi
     fi
-    return 0
+    return $gstatus
 }
 
 # Run autogen.sh to ensure that we're using default build settings
