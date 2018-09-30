@@ -3081,7 +3081,7 @@ static void mitsu_p95d_printer_init(stp_vars_t *v)
   /* User Comment */
   stp_putc(0x1b, v);
   stp_putc(0x58, v);
-  stp_zfwrite(pd->privdata.m95d.usercomment, 1, sizeof(pd->privdata.m95d.usercomment), v);
+  stp_zfwrite(pd->privdata.m95d.usercomment, 1, sizeof(pd->privdata.m95d.usercomment) - 6, v);  /* 34 on P95, 40 on P93 */
 }
 
 static void mitsu_p95d_plane_start(stp_vars_t *v)
