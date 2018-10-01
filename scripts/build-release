@@ -525,7 +525,7 @@ function console_log {
 # Travis times out if there's no output for 10 minutes, but some things
 # go silent for quite a while
 function travis_deadman {
-    while : ; do sleep 60; echo Mark $(uptime) | log -; done
+    while : ; do sleep 60; echo -ne '\nMark' $(uptime) | log -; done
 }
 
 function timestamp {
