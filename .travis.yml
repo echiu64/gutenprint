@@ -33,19 +33,19 @@ matrix:
       - STP_MIN_CHECKSUM_PREFIX=0
     addons:
       apt:
-	sources:
-	  - ubuntu-toolchain-r-test
-	packages:
-	  - autoconf
-	  - autogen
-	  - automake
-	  - autopoint
-	  - bison
-	  - bzip2
-	  - flex
-	  - time
-	  - xz-utils
-	  - zpaq
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - autoconf
+          - autogen
+          - automake
+          - autopoint
+          - bison
+          - bzip2
+          - flex
+          - time
+          - xz-utils
+          - zpaq
   - name: checksums_1_7
     env:
       - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
@@ -55,19 +55,19 @@ matrix:
       - STP_MIN_CHECKSUM_PREFIX=0
     addons:
       apt:
-	sources:
-	  - ubuntu-toolchain-r-test
-	packages:
-	  - autoconf
-	  - autogen
-	  - automake
-	  - autopoint
-	  - bison
-	  - bzip2
-	  - flex
-	  - time
-	  - xz-utils
-	  - zpaq
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - autoconf
+          - autogen
+          - automake
+          - autopoint
+          - bison
+          - bzip2
+          - flex
+          - time
+          - xz-utils
+          - zpaq
   - name: checksums_2_7
     env:
       - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
@@ -77,19 +77,19 @@ matrix:
       - STP_MIN_CHECKSUM_PREFIX=0
     addons:
       apt:
-	sources:
-	  - ubuntu-toolchain-r-test
-	packages:
-	  - autoconf
-	  - autogen
-	  - automake
-	  - autopoint
-	  - bison
-	  - bzip2
-	  - flex
-	  - time
-	  - xz-utils
-	  - zpaq
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - autoconf
+          - autogen
+          - automake
+          - autopoint
+          - bison
+          - bzip2
+          - flex
+          - time
+          - xz-utils
+          - zpaq
   - name: checksums_3_7
     env:
       - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
@@ -99,19 +99,19 @@ matrix:
       - STP_MIN_CHECKSUM_PREFIX=0
     addons:
       apt:
-	sources:
-	  - ubuntu-toolchain-r-test
-	packages:
-	  - autoconf
-	  - autogen
-	  - automake
-	  - autopoint
-	  - bison
-	  - bzip2
-	  - flex
-	  - time
-	  - xz-utils
-	  - zpaq
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - autoconf
+          - autogen
+          - automake
+          - autopoint
+          - bison
+          - bzip2
+          - flex
+          - time
+          - xz-utils
+          - zpaq
   - name: checksums_4_7
     env:
       - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
@@ -121,19 +121,19 @@ matrix:
       - STP_MIN_CHECKSUM_PREFIX=0
     addons:
       apt:
-	sources:
-	  - ubuntu-toolchain-r-test
-	packages:
-	  - autoconf
-	  - autogen
-	  - automake
-	  - autopoint
-	  - bison
-	  - bzip2
-	  - flex
-	  - time
-	  - xz-utils
-	  - zpaq
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - autoconf
+          - autogen
+          - automake
+          - autopoint
+          - bison
+          - bzip2
+          - flex
+          - time
+          - xz-utils
+          - zpaq
   - name: checksums_5_7
     env:
       - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
@@ -143,19 +143,19 @@ matrix:
       - STP_MIN_CHECKSUM_PREFIX=0
     addons:
       apt:
-	sources:
-	  - ubuntu-toolchain-r-test
-	packages:
-	  - autoconf
-	  - autogen
-	  - automake
-	  - autopoint
-	  - bison
-	  - bzip2
-	  - flex
-	  - time
-	  - xz-utils
-	  - zpaq
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - autoconf
+          - autogen
+          - automake
+          - autopoint
+          - bison
+          - bzip2
+          - flex
+          - time
+          - xz-utils
+          - zpaq
   - name: checksums_6_7
     env:
       - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
@@ -165,19 +165,19 @@ matrix:
       - STP_MIN_CHECKSUM_PREFIX=0
     addons:
       apt:
-	sources:
-	  - ubuntu-toolchain-r-test
-	packages:
-	  - autoconf
-	  - autogen
-	  - automake
-	  - autopoint
-	  - bison
-	  - bzip2
-	  - flex
-	  - time
-	  - xz-utils
-	  - zpaq
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - autoconf
+          - autogen
+          - automake
+          - autopoint
+          - bison
+          - bzip2
+          - flex
+          - time
+          - xz-utils
+          - zpaq
 notifications:
   email:
     recipients:
