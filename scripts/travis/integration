@@ -1,0 +1,8 @@
+#!/bin/sh
+
+env |sort
+
+CC=$1 \
+  TRAVIS_MODE=1 \
+  STP_CONFIG_ARGS='--without-doc' \
+  ./scripts/build-release run_build_fresh run_distcheck_fast run_valgrind_fast

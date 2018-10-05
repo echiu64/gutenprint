@@ -1,0 +1,7 @@
+#!/bin/sh
+
+env |sort
+CC=gcc-8 \
+  STP_CONFIG_ARGS=--disable-static \
+  TRAVIS_MODE=1 \
+  ./scripts/build-release preflight run_build_fresh run_distcheck_fast

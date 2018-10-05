@@ -8,10 +8,7 @@ git:
 jobs:
   include:
     - stage: smoke test
-      env:
-        - CC=gcc-8
-        - STP_CONFIG_ARGS=--disable-static
-        - STP_BUILD_OPERATIONS='preflight run_build_fresh run_distcheck_fast'
+      script: scripts/travis/smoke
       addons:
         apt:
           sources:
@@ -59,8 +56,8 @@ jobs:
             - time
             - valgrind
             - xz-utils
-            - zpaq
     - stage: "integration tests"
+      script: scripts/travis/integration
       addons:
         apt:
           sources:
@@ -91,28 +88,11 @@ jobs:
             - perl
             - time
             - valgrind
-      env:
-        - STP_CONFIG_ARGS='--without-doc'
-        - STP_BUILD_OPERATIONS='run_build_fresh run_distcheck_fast run_valgrind_fast'
-      include:
-        - name: gcc-4.9
-          env:
-            - CC=gcc-4.9
-        - name: gcc-7
-          env:
-            - CC=gcc-7
-        - name: gcc-8
-          env:
-            - CC=gcc-8
-        - name: clang-3.8
-          env:
-            - CC=clang-3.8
+      script: scripts/travis/integration gcc-4.9
+      script: scripts/travis/integration gcc-7
+      script: scripts/travis/integration gcc-8
+      script: scripts/travis/integration clang-3.8
     - stage: checksums
-      env:
-        - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-        - STP_CONFIG_ARGS='--disable-nls --without-gimp2 --without-doc --without-cups --disable-libgutenprintui2 --disable-escputil'
-        - STP_TEST_ROTOR_CIRCUMFERENCE=7
-        - STP_MIN_CHECKSUM_PREFIX=0
       addons:
         apt:
           sources:
@@ -128,28 +108,13 @@ jobs:
               - time
               - xz-utils
               - zpaq
-      include:
-        - name: checksums_0_7
-          env:
-            STP_TEST_ROTOR=0
-        - name: checksums_1_7
-          env:
-            STP_TEST_ROTOR=1
-        - name: checksums_2_7
-          env:
-            STP_TEST_ROTOR=2
-        - name: checksums_3_7
-          env:
-            STP_TEST_ROTOR=3
-        - name: checksums_4_7
-          env:
-            STP_TEST_ROTOR=4
-        - name: checksums_5_7
-          env:
-            STP_TEST_ROTOR=5
-        - name: checksums_6_7
-          env:
-            STP_TEST_ROTOR=6
+      script: scripts/travis/checksums 0 7
+      script: scripts/travis/checksums 1 7
+      script: scripts/travis/checksums 2 7
+      script: scripts/travis/checksums 3 7
+      script: scripts/travis/checksums 4 7
+      script: scripts/travis/checksums 5 7
+      script: scripts/travis/checksums 6 7
 notifications:
   email:
     recipients:
