@@ -9,105 +9,13 @@ jobs:
   include:
     - stage: smoke test
       script: scripts/travis/smoke
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.8
-          packages:
-            - autoconf
-            - autogen
-            - automake
-            - autopoint
-            - bison
-            - bzip2
-            - cups-filters
-            - cups-filters-core-drivers
-            - cups-client
-            - docbook
-            - docbook-dsssl
-            - docbook-simple
-            - docbook-utils
-            - docbook-xml
-            - docbook-xsl
-            - doxygen
-            - dvips-fontdata-n2bk
-            - flex
-            - gcc-4.9
-            - gcc-7
-            - gcc-8
-            - clang-3.8
-            - gettext
-            - imagemagick
-            - jade
-            - jadetex
-            - libcups2-dev
-            - libcupsimage2-dev
-            - libgimp2.0-dev
-            - libtool
-            - libusb-1.0-0-dev
-            - openjade
-            - pdfjam
-            - perl
-            - sgml-base
-            - sgml-data
-            - sgmltools-lite
-            - texi2html
-            - time
-            - valgrind
-            - xz-utils
     - stage: "integration tests"
       script: scripts/travis/integration
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.8
-          packages:
-            - autoconf
-            - autogen
-            - automake
-            - autopoint
-            - bison
-            - bzip2
-            - cups-filters
-            - cups-filters-core-drivers
-            - cups-client
-            - flex
-            - gcc-4.9
-            - gcc-7
-            - gcc-8
-            - clang-3.8
-            - gettext
-            - libcups2-dev
-            - libcupsimage2-dev
-            - libgimp2.0-dev
-            - libtool
-            - libusb-1.0-0-dev
-            - pdfjam
-            - perl
-            - time
-            - valgrind
       script: scripts/travis/integration gcc-4.9
       script: scripts/travis/integration gcc-7
       script: scripts/travis/integration gcc-8
       script: scripts/travis/integration clang-3.8
     - stage: checksums
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            packages:
-              - autoconf
-              - autogen
-              - automake
-              - autopoint
-              - bison
-              - bzip2
-              - flex
-              - time
-              - xz-utils
-              - zpaq
       script: scripts/travis/checksums 0 7
       script: scripts/travis/checksums 1 7
       script: scripts/travis/checksums 2 7
@@ -115,6 +23,53 @@ jobs:
       script: scripts/travis/checksums 4 7
       script: scripts/travis/checksums 5 7
       script: scripts/travis/checksums 6 7
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-precise-3.8
+    packages:
+      - autoconf
+      - autogen
+      - automake
+      - autopoint
+      - bison
+      - bzip2
+      - cups-filters
+      - cups-filters-core-drivers
+      - cups-client
+      - docbook
+      - docbook-dsssl
+      - docbook-simple
+      - docbook-utils
+      - docbook-xml
+      - docbook-xsl
+      - doxygen
+      - dvips-fontdata-n2bk
+      - flex
+      - gcc-4.9
+      - gcc-7
+      - gcc-8
+      - clang-3.8
+      - gettext
+      - imagemagick
+      - jade
+      - jadetex
+      - libcups2-dev
+      - libcupsimage2-dev
+      - libgimp2.0-dev
+      - libtool
+      - libusb-1.0-0-dev
+      - openjade
+      - pdfjam
+      - perl
+      - sgml-base
+      - sgml-data
+      - sgmltools-lite
+      - texi2html
+      - time
+      - valgrind
+      - xz-utils
 notifications:
   email:
     recipients:
