@@ -188,6 +188,12 @@ function run_valgrind_fast {
     return 2
 }
 
+function run_check_fast {
+    make check-fast && return 0
+    echo "make check-valgrind-fast failed"
+    return 2
+}
+
 # Run make distcheck-fast.
 #
 #    This actually builds the tarball, unpacks the tarball, builds it
