@@ -73,7 +73,7 @@ matrix:
         apt:
           packages:
             - *other_deps
-            - gcc-4.9
+            - gcc-7
     -
       script: scripts/travis/integration gcc-8
       addons:
