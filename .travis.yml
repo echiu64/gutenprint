@@ -40,8 +40,8 @@ matrix:
                 - libcupsimage2-dev
                 - libusb-1.0-0-dev
                 - pdfjam
-              - &gimp_deps
-                - libgimp2.0-dev
+            - &gimp_deps
+              - libgimp2.0-dev
               - valgrind
             - &doc_deps
               - docbook
@@ -63,6 +63,7 @@ matrix:
             - gcc-8
       script: scripts/travis/smoke
     - stage: "integration tests"
+      name: gcc-4.9
       script: scripts/travis/integration gcc-4.9
       addons:
         apt:
@@ -73,6 +74,7 @@ matrix:
             - gcc-4.9
     -
       script: scripts/travis/integration gcc-7
+      name: gcc-7
       addons:
         apt:
           sources:
@@ -82,6 +84,7 @@ matrix:
             - gcc-7
     -
       script: scripts/travis/integration gcc-8
+      name: gcc-8
       addons:
         apt:
           sources:
@@ -91,6 +94,7 @@ matrix:
             - gcc-8
     -
       script: scripts/travis/integration clang-3.8
+      name: clang-3.8
       addons:
         apt:
           sources:
@@ -100,7 +104,7 @@ matrix:
             - clang-3.8
     - stage: checksums
       script: scripts/travis/checksums 0 7
-      addons:
+      addons: &base
         apt:
           sources:
             - *sources
@@ -109,52 +113,27 @@ matrix:
     -
       script: scripts/travis/checksums 1 7
       addons:
-        apt:
-          sources:
-            - *sources
-          packages:
-            - *base_deps
+        *base
     -
       script: scripts/travis/checksums 2 7
       addons:
-        apt:
-          sources:
-            - *sources
-          packages:
-            - *base_deps
+        *base
     -
       script: scripts/travis/checksums 3 7
       addons:
-        apt:
-          sources:
-            - *sources
-          packages:
-            - *base_deps
+        *base
     -
       script: scripts/travis/checksums 4 7
       addons:
-        apt:
-          sources:
-            - *sources
-          packages:
-            - *base_deps
+        *base
     -
       script: scripts/travis/checksums 5 7
       addons:
-        apt:
-          sources:
-            - *sources
-          packages:
-            - *base_deps
+        *base
     -
       script: scripts/travis/checksums 6 7
       addons:
-        apt:
-          sources:
-            - *sources
-          packages:
-            - *base_deps
-
+        *base
 notifications:
   email:
     recipients:
