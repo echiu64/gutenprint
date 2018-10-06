@@ -2,29 +2,7 @@
 
 set -e
 
-sudo -E apt-get -y $(travis_apt_get_options) install \
-  autoconf \
-  autogen \
-  automake \
-  autopoint \
-  bison \
-  bzip2 \
-  flex \
-  $1 \
-  gettext \
-  libcups2-dev \
-  libcupsimage2-dev \
-  libgimp2.0-dev \
-  libtool \
-  libusb-1.0-0-dev \
-  pdfjam \
-  perl \
-  time \
-  valgrind \
-  xz-utils
-
 env |sort
-
 set -x
 CC=$1 \
   TRAVIS_MODE=1 \

@@ -5,37 +5,132 @@ sudo: required
 git:
   depth: false
   quiet: true
-jobs:
-  include:
-    - stage: smoke test
-      script: scripts/travis/smoke
-    - stage: "integration tests"
-      script: scripts/travis/integration gcc-4.9
-    -
-      script: scripts/travis/integration gcc-7
-    -
-      script: scripts/travis/integration gcc-8
-    -
-      script: scripts/travis/integration clang-3.8
-    - stage: checksums
-      script: scripts/travis/checksums 0 7
-    -
-      script: scripts/travis/checksums 1 7
-    -
-      script: scripts/travis/checksums 2 7
-    -
-      script: scripts/travis/checksums 3 7
-    -
-      script: scripts/travis/checksums 4 7
-    -
-      script: scripts/travis/checksums 5 7
-    -
-      script: scripts/travis/checksums 6 7
 addons:
   apt:
     sources:
       - ubuntu-toolchain-r-test
       - llvm-toolchain-precise-3.8
+    deps: &base_deps
+      - autoconf
+      - autogen
+      - automake
+      - autopoint
+      - bzip2
+      - bison
+      - flex
+      - gettext
+      - libtool
+      - perl
+      - time
+      - zpaq
+matrix:
+  include:
+    - stage: smoke test
+      addons:
+        apt:
+          packages:
+            - &other_deps
+              - *base_deps
+              - &cups_deps
+                - cups-filters
+                - cups-filters-core-drivers
+                - cups-client
+                - libcups2-dev
+                - libcupsimage2-dev]
+                - libusb-1.0-0-dev
+                - pdfjam
+              - &gimp_deps
+                - libgimp2.0-dev
+              - valgrind
+            - &doc_deps
+              - docbook
+              - docbook-dsssl
+              - docbook-simple
+              - docbook-utils
+              - docbook-xml
+              - docbook-xsl
+              - doxygen
+              - dvips-fontdata-n2bk
+              - imagemagick
+              - jade
+              - jadetex
+              - openjade
+              - sgml-base
+              - sgml-data
+              - sgmltools-lite
+              - texi2html
+      script: scripts/travis/smoke
+    - stage: "integration tests"
+      script: scripts/travis/integration gcc-4.9
+      addons:
+        apt:
+          packages:
+            - *other_deps
+            - gcc-4.9
+    -
+      script: scripts/travis/integration gcc-7
+      addons:
+        apt:
+          packages:
+            - *other_deps
+            - gcc-4.9
+    -
+      script: scripts/travis/integration gcc-8
+      addons:
+        apt:
+          packages:
+            - *other_deps
+            - gcc-8
+    -
+      script: scripts/travis/integration clang-3.8
+      addons:
+        apt:
+          packages:
+            - *other_deps
+            - clang-3.8
+    - stage: checksums
+      script: scripts/travis/checksums 0 7
+      addons:
+        apt:
+          packages:
+            - *base_deps
+    -
+      script: scripts/travis/checksums 1 7
+      addons:
+        apt:
+          packages:
+            - *base_deps
+    -
+      script: scripts/travis/checksums 2 7
+      addons:
+        apt:
+          packages:
+            - *base_deps
+    -
+      script: scripts/travis/checksums 3 7
+      addons:
+        apt:
+          packages:
+            - *base_deps
+    -
+      script: scripts/travis/checksums 4 7
+      addons:
+        apt:
+          packages:
+            - *base_deps
+    -
+      script: scripts/travis/checksums 5 7
+      addons:
+        apt:
+          packages:
+            - *base_deps
+    -
+      script: scripts/travis/checksums 6 7
+      addons:
+        apt:
+          packages:
+            - *base_deps
+
 notifications:
   email:
     recipients:

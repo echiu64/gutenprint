@@ -2,21 +2,7 @@
 
 set -e
 
-sudo -E apt-get -y $(travis_apt_get_options) install \
-  autoconf \
-  autogen \
-  automake \
-  autopoint \
-  bison \
-  flex \
-  gettext \
-  libtool \
-  pdfjam \
-  time \
-  zpaq
-
 env |sort
-
 set -x
 STP_TEST_ROTOR=$1 \
   STP_TEST_ROTOR_CIRCUMFERENCE=$2 \
