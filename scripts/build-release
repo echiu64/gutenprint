@@ -190,7 +190,7 @@ function run_valgrind_fast {
 
 function run_check_fast {
     make check-fast && return 0
-    echo "make check-valgrind-fast failed"
+    echo "make check-fast failed"
     return 2
 }
 
