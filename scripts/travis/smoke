@@ -2,7 +2,7 @@
 
 set -e
 
-sudo apt-get install -y \
+sudo -E apt-get -y $(travis_apt_get_options) install \
   autoconf \
   autogen \
   automake \
