@@ -4,7 +4,7 @@ language: c
 git:
   depth: false
   quiet: true
-addons: &base
+addons:
   apt:
     sources: &sources
       - ubuntu-toolchain-r-test
@@ -105,31 +105,59 @@ matrix:
     - stage: checksums
       script: scripts/travis/checksums 0 7
       addons:
-        *base
+        apt:
+          sources:
+            *sources
+          deps:
+            *base_deps
     -
       script: scripts/travis/checksums 1 7
       addons:
-        *base
+        apt:
+          sources:
+            *sources
+          deps:
+            *base_deps
     -
       script: scripts/travis/checksums 2 7
       addons:
-        *base
+        apt:
+          sources:
+            *sources
+          deps:
+            *base_deps
     -
       script: scripts/travis/checksums 3 7
       addons:
-        *base
+        apt:
+          sources:
+            *sources
+          deps:
+            *base_deps
     -
       script: scripts/travis/checksums 4 7
       addons:
-        *base
+        apt:
+          sources:
+            *sources
+          deps:
+            *base_deps
     -
       script: scripts/travis/checksums 5 7
       addons:
-        *base
+        apt:
+          sources:
+            *sources
+          deps:
+            *base_deps
     -
       script: scripts/travis/checksums 6 7
       addons:
-        *base
+        apt:
+          sources:
+            *sources
+          deps:
+            *base_deps
 notifications:
   email:
     recipients:
