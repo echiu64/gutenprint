@@ -4,12 +4,12 @@ language: c
 git:
   depth: false
   quiet: true
-addons:
+addons: &base
   apt:
     sources: &sources
       - ubuntu-toolchain-r-test
       - llvm-toolchain-precise-3.8
-    deps: &base_deps
+    packages: &base_deps
       - autoconf
       - autogen
       - automake
@@ -104,60 +104,25 @@ matrix:
             - clang-3.8
     - stage: checksums
       script: scripts/travis/checksums 0 7
-      addons:
-        apt:
-          sources:
-            *sources
-          deps:
-            *base_deps
+      addons: *base
     -
       script: scripts/travis/checksums 1 7
-      addons:
-        apt:
-          sources:
-            *sources
-          deps:
-            *base_deps
+      addons: *base
     -
       script: scripts/travis/checksums 2 7
-      addons:
-        apt:
-          sources:
-            *sources
-          deps:
-            *base_deps
+      addons: *base
     -
       script: scripts/travis/checksums 3 7
-      addons:
-        apt:
-          sources:
-            *sources
-          deps:
-            *base_deps
+      addons: *base
     -
       script: scripts/travis/checksums 4 7
-      addons:
-        apt:
-          sources:
-            *sources
-          deps:
-            *base_deps
+      addons: *base
     -
       script: scripts/travis/checksums 5 7
-      addons:
-        apt:
-          sources:
-            *sources
-          deps:
-            *base_deps
+      addons: *base
     -
       script: scripts/travis/checksums 6 7
-      addons:
-        apt:
-          sources:
-            *sources
-          deps:
-            *base_deps
+      addons: *base
 notifications:
   email:
     recipients:
