@@ -6,7 +6,7 @@ git:
   quiet: true
 addons:
   apt:
-    sources:
+    sources: &sources
       - ubuntu-toolchain-r-test
       - llvm-toolchain-precise-3.8
     deps: &base_deps
@@ -27,6 +27,8 @@ matrix:
     - stage: smoke test
       addons:
         apt:
+          sources:
+            *sources
           packages:
             - &other_deps
               - *base_deps
@@ -64,6 +66,8 @@ matrix:
       script: scripts/travis/integration gcc-4.9
       addons:
         apt:
+          sources:
+           - *sources
           packages:
             - *other_deps
             - gcc-4.9
@@ -71,6 +75,8 @@ matrix:
       script: scripts/travis/integration gcc-7
       addons:
         apt:
+          sources:
+            - *sources
           packages:
             - *other_deps
             - gcc-7
@@ -78,6 +84,8 @@ matrix:
       script: scripts/travis/integration gcc-8
       addons:
         apt:
+          sources:
+            - *sources
           packages:
             - *other_deps
             - gcc-8
@@ -85,6 +93,8 @@ matrix:
       script: scripts/travis/integration clang-3.8
       addons:
         apt:
+          sources:
+            - *sources
           packages:
             - *other_deps
             - clang-3.8
@@ -92,42 +102,56 @@ matrix:
       script: scripts/travis/checksums 0 7
       addons:
         apt:
+          sources:
+            - *sources
           packages:
             - *base_deps
     -
       script: scripts/travis/checksums 1 7
       addons:
         apt:
+          sources:
+            - *sources
           packages:
             - *base_deps
     -
       script: scripts/travis/checksums 2 7
       addons:
         apt:
+          sources:
+            - *sources
           packages:
             - *base_deps
     -
       script: scripts/travis/checksums 3 7
       addons:
         apt:
+          sources:
+            - *sources
           packages:
             - *base_deps
     -
       script: scripts/travis/checksums 4 7
       addons:
         apt:
+          sources:
+            - *sources
           packages:
             - *base_deps
     -
       script: scripts/travis/checksums 5 7
       addons:
         apt:
+          sources:
+            - *sources
           packages:
             - *base_deps
     -
       script: scripts/travis/checksums 6 7
       addons:
         apt:
+          sources:
+            - *sources
           packages:
             - *base_deps
 
