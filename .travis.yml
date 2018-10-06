@@ -35,7 +35,7 @@ matrix:
                 - cups-filters-core-drivers
                 - cups-client
                 - libcups2-dev
-                - libcupsimage2-dev]
+                - libcupsimage2-dev
                 - libusb-1.0-0-dev
                 - pdfjam
               - &gimp_deps
