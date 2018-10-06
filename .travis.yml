@@ -4,7 +4,7 @@ language: c
 git:
   depth: false
   quiet: true
-addons:
+addons: &base
   apt:
     sources: &sources
       - ubuntu-toolchain-r-test
@@ -40,9 +40,9 @@ matrix:
                 - libcupsimage2-dev
                 - libusb-1.0-0-dev
                 - pdfjam
+              - valgrind
             - &gimp_deps
               - libgimp2.0-dev
-              - valgrind
             - &doc_deps
               - docbook
               - docbook-dsssl
@@ -104,12 +104,8 @@ matrix:
             - clang-3.8
     - stage: checksums
       script: scripts/travis/checksums 0 7
-      addons: &base
-        apt:
-          sources:
-            - *sources
-          packages:
-            - *base_deps
+      addons:
+        *base
     -
       script: scripts/travis/checksums 1 7
       addons:
