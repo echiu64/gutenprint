@@ -1,6 +1,6 @@
 os: linux
 language: c
-script: TRAVIS_MODE=1 ./scripts/build-release
+sudo: required
 # Need all history to build change log.
 git:
   depth: false
@@ -36,51 +36,9 @@ addons:
     sources:
       - ubuntu-toolchain-r-test
       - llvm-toolchain-precise-3.8
-    packages:
-      - autoconf
-      - autogen
-      - automake
-      - autopoint
-      - bison
-      - bzip2
-      - cups-filters
-      - cups-filters-core-drivers
-      - cups-client
-      - docbook
-      - docbook-dsssl
-      - docbook-simple
-      - docbook-utils
-      - docbook-xml
-      - docbook-xsl
-      - doxygen
-      - dvips-fontdata-n2bk
-      - flex
-      - gcc-4.9
-      - gcc-7
-      - gcc-8
-      - clang-3.8
-      - gettext
-      - imagemagick
-      - jade
-      - jadetex
-      - libcups2-dev
-      - libcupsimage2-dev
-      - libgimp2.0-dev
-      - libtool
-      - libusb-1.0-0-dev
-      - openjade
-      - pdfjam
-      - perl
-      - sgml-base
-      - sgml-data
-      - sgmltools-lite
-      - texi2html
-      - time
-      - valgrind
-      - xz-utils
 notifications:
   email:
     recipients:
-    - rlk@alum.mit.edu
+      - rlk@alum.mit.edu
     on_success: always
     on_failure: always

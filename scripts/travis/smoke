@@ -1,6 +1,49 @@
 #!/bin/sh
 
+set -e
+
+sudo apt-get install -y \
+  autoconf \
+  autogen \
+  automake \
+  autopoint \
+  bison \
+  bzip2 \
+  cups-filters \
+  cups-filters-core-drivers \
+  cups-client \
+  docbook \
+  docbook-dsssl \
+  docbook-simple \
+  docbook-utils \
+  docbook-xml \
+  docbook-xsl \
+  doxygen \
+  dvips-fontdata-n2bk \
+  flex \
+  gcc-8 \
+  gettext \
+  imagemagick \
+  jade \
+  jadetex \
+  libcups2-dev \
+  libcupsimage2-dev \
+  libgimp2.0-dev \
+  libtool \
+  libusb-1.0-0-dev \
+  openjade \
+  pdfjam \
+  perl \
+  sgml-base \
+  sgml-data \
+  sgmltools-lite \
+  texi2html \
+  time \
+  valgrind \
+  xz-utils
+
 env |sort
+set -x
 CC=gcc-8 \
   STP_CONFIG_ARGS=--disable-static \
   TRAVIS_MODE=1 \

@@ -1,7 +1,31 @@
 #!/bin/sh
 
+set -e
+
+sudo apt-get install -y \
+  autoconf \
+  autogen \
+  automake \
+  autopoint \
+  bison \
+  bzip2 \
+  flex \
+  $1 \
+  gettext \
+  libcups2-dev \
+  libcupsimage2-dev \
+  libgimp2.0-dev \
+  libtool \
+  libusb-1.0-0-dev \
+  pdfjam \
+  perl \
+  time \
+  valgrind \
+  xz-utils
+
 env |sort
 
+set -x
 CC=$1 \
   TRAVIS_MODE=1 \
   STP_CONFIG_ARGS='--without-doc' \
