@@ -58,6 +58,7 @@ matrix:
               - sgml-data
               - sgmltools-lite
               - texi2html
+            - gcc-8
       script: scripts/travis/smoke
     - stage: "integration tests"
       script: scripts/travis/integration gcc-4.9
