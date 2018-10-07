@@ -189,7 +189,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
       break;
     }
   }
-  if (test_rotor_circumference < 1 || test_rotor < 0 || 
+  if (test_rotor_circumference < 1 || test_rotor < 0 ||
       test_rotor >= test_rotor_circumference)
     {
       test_rotor = 0;

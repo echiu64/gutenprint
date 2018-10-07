@@ -116,7 +116,7 @@ while getopts "hvcgsVnO:m:o:p:St:lLXf:N" opt ; do
     esac
 done
 
-if (( $single == 0 && ${STP_TEST_ROTOR_CIRCUMFERENCE:-1} > 1 && 
+if (( $single == 0 && ${STP_TEST_ROTOR_CIRCUMFERENCE:-1} > 1 &&
 	  ${STP_TEST_ROTOR:-0} >= 0 &&
 	  ${STP_TEST_ROTOR:-0} < ${STP_TEST_ROTOR_CIRCUMFERENCE:-1} )) ; then
     extra_genppd_opts="$extra_genppd_opts -R $STP_TEST_ROTOR_CIRCUMFERENCE -r $STP_TEST_ROTOR"
