@@ -30,6 +30,8 @@ fi
 
 STP_TEST_PROFILE=${STP_TEST_PROFILE:-full}
 
+[[ -n $STP_TEST_COMPONENTS && $STP_TEST_COMPONENTS != '*testpattern*' ]] && exit 77
+
 set -e
 
 declare QUIET=${TRAVIS_MODE:+-q}

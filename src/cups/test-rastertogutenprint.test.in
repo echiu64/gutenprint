@@ -29,6 +29,8 @@ fi
 
 STP_TEST_PROFILE=${STP_TEST_PROFILE:-full}
 
+[[ -n $STP_TEST_COMPONENTS && $STP_TEST_COMPONENTS != '*CUPS*' && $STP_TEST_COMPONENTS != '*test-rastertogutenprint*' ]] && exit 77
+
 set -e
 
 declare FASTOPT="-o StpDitherAlgorithm=VeryFast -l -N -o ColorCorrection=Raw"

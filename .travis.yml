@@ -1,122 +1,131 @@
 os: linux
 language: c
-script: TRAVIS_MODE=1 ./scripts/build-release
 # Need all history to build change log.
 git:
   depth: false
   quiet: true
+addons: &base
+  apt:
+    sources: &sources
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-precise-3.8
+    packages: &base_deps
+      - autoconf
+      - autogen
+      - automake
+      - autopoint
+      - bzip2
+      - bison
+      - flex
+      - gettext
+      - libtool
+      - perl
+      - time
+      - zpaq
 matrix:
   include:
-  - name: gcc-4.9
-    env:
-      - CC=gcc-4.9
-      - STP_BUILD_OPERATIONS='preflight run_build_fresh run_distcheck_fast run_valgrind_fast'
-  - name: gcc-7
-    env:
-      - CC=gcc-7
-      - STP_BUILD_OPERATIONS='run_build_fresh run_distcheck_fast run_valgrind_fast'
-  - name: gcc-8
-    env:
-      - CC=gcc-8
-      - STP_CONFIG_ARGS=--disable-static
-      - STP_BUILD_OPERATIONS='run_build_fresh run_distcheck_fast run_valgrind_fast'
-  - name: clang-3.8
-    env:
-      - CC=clang-3.8
-      - STP_BUILD_OPERATIONS='run_build_fresh run_distcheck_fast run_valgrind_fast'
-  - name: checksums_0_7
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=0
-      - STP_TEST_ROTOR_CIRCUMFERENCE=7
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_1_7
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=1
-      - STP_TEST_ROTOR_CIRCUMFERENCE=7
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_2_7
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=2
-      - STP_TEST_ROTOR_CIRCUMFERENCE=7
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_3_7
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=3
-      - STP_TEST_ROTOR_CIRCUMFERENCE=7
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_4_7
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=4
-      - STP_TEST_ROTOR_CIRCUMFERENCE=7
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_5_7
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=5
-      - STP_TEST_ROTOR_CIRCUMFERENCE=7
-      - STP_MIN_CHECKSUM_PREFIX=0
-  - name: checksums_6_7
-    env:
-      - STP_BUILD_OPERATIONS='run_build_fresh run_checksums'
-      - STP_TEST_ROTOR=6
-      - STP_TEST_ROTOR_CIRCUMFERENCE=7
-      - STP_MIN_CHECKSUM_PREFIX=0
+    - stage: smoke test
+      addons:
+        apt:
+          sources:
+            *sources
+          packages:
+            - &other_deps
+              - *base_deps
+              - &cups_deps
+                - cups-filters
+                - cups-filters-core-drivers
+                - cups-client
+                - libcups2-dev
+                - libcupsimage2-dev
+                - libusb-1.0-0-dev
+                - pdfjam
+              - valgrind
+            - &gimp_deps
+              - libgimp2.0-dev
+            - &doc_deps
+              - docbook
+              - docbook-dsssl
+              - docbook-simple
+              - docbook-utils
+              - docbook-xml
+              - docbook-xsl
+              - doxygen
+              - dvips-fontdata-n2bk
+              - imagemagick
+              - jade
+              - jadetex
+              - openjade
+              - sgml-base
+              - sgml-data
+              - sgmltools-lite
+              - texi2html
+            - gcc-8
+      script: scripts/travis/smoke
+    - stage: "integration tests"
+      name: gcc-4.9
+      script: scripts/travis/integration gcc-4.9
+      addons:
+        apt:
+          sources:
+           - *sources
+          packages:
+            - *other_deps
+            - gcc-4.9
+    -
+      script: scripts/travis/integration gcc-7
+      name: gcc-7
+      addons:
+        apt:
+          sources:
+            - *sources
+          packages:
+            - *other_deps
+            - gcc-7
+    -
+      script: scripts/travis/integration gcc-8
+      name: gcc-8
+      addons:
+        apt:
+          sources:
+            - *sources
+          packages:
+            - *other_deps
+            - gcc-8
+    -
+      script: scripts/travis/integration clang-3.8
+      name: clang-3.8
+      addons:
+        apt:
+          sources:
+            - *sources
+          packages:
+            - *other_deps
+            - clang-3.8
+    - stage: checksums
+      script: scripts/travis/checksums 0 7
+      addons: *base
+    -
+      script: scripts/travis/checksums 1 7
+      addons: *base
+    -
+      script: scripts/travis/checksums 2 7
+      addons: *base
+    -
+      script: scripts/travis/checksums 3 7
+      addons: *base
+    -
+      script: scripts/travis/checksums 4 7
+      addons: *base
+    -
+      script: scripts/travis/checksums 5 7
+      addons: *base
+    -
+      script: scripts/travis/checksums 6 7
+      addons: *base
 notifications:
   email:
     recipients:
-    - rlk@alum.mit.edu
+      - rlk@alum.mit.edu
     on_success: always
     on_failure: always
-addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    - llvm-toolchain-precise-3.8
-    packages:
-    - autoconf
-    - autogen
-    - automake
-    - autopoint
-    - bison
-    - bzip2
-    - cups-filters
-    - cups-filters-core-drivers
-    - cups-client
-    - docbook
-    - docbook-dsssl
-    - docbook-simple
-    - docbook-utils
-    - docbook-xml
-    - docbook-xsl
-    - doxygen
-    - dvips-fontdata-n2bk
-    - flex
-    - gcc-4.9
-    - gcc-7
-    - gcc-8
-    - clang-3.8
-    - gettext
-    - imagemagick
-    - jade
-    - jadetex
-    - libcups2-dev
-    - libcupsimage2-dev
-    - libgimp2.0-dev
-    - libtool
-    - libusb-1.0-0-dev
-    - openjade
-    - pdfjam
-    - perl
-    - sgml-base
-    - sgml-data
-    - sgmltools-lite
-    - texi2html
-    - time
-    - valgrind
-    - xz-utils
-    - zpaq

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+env |sort
+set -x
+CC=$1 \
+  TRAVIS_MODE=1 \
+  STP_CONFIG_ARGS='--without-doc --without-gimp2 --disable-libgutenprintui2 --disable-escputil' \
+  ./scripts/build-release run_build_fresh run_check_fast run_valgrind_fast

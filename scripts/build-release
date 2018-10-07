@@ -188,6 +188,12 @@ function run_valgrind_fast {
     return 2
 }
 
+function run_check_fast {
+    make check-fast && return 0
+    echo "make check-fast failed"
+    return 2
+}
+
 # Run make distcheck-fast.
 #
 #    This actually builds the tarball, unpacks the tarball, builds it
@@ -525,7 +531,7 @@ function console_log {
 # Travis times out if there's no output for 10 minutes, but some things
 # go silent for quite a while
 function travis_deadman {
-    while : ; do sleep 60; echo -ne '\nMark' $(uptime) | log -; done
+    while : ; do sleep 60; echo -e '\nMark' $(uptime) | log -; done
 }
 
 function timestamp {

@@ -34,7 +34,10 @@ my (%addlines);
 my (%removelines);
 my (%filechanges);
 my (%files);
-my (@ignore_files) = (".travis.yml");
+my (@ignore_files) = (".travis.yml",
+    "scripts/travis/checksums",
+    "scripts/travis/integration",
+    "scripts/travis/smoke");
 
 my ($state) = 0;
 my ($ostate) = 0;

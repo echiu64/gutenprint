@@ -43,26 +43,32 @@ fi
 
 [[ -z $STP_TEST_SUITE || -z $STP_TEST_PROFILE ]] && STP_TEST_PROFILE=full
 
+[[ -n $STP_TEST_COMPONENTS && $STP_TEST_COMPONENTS != '*CUPS*' && $STP_TEST_COMPONENTS != '*test-ppds*' ]] && exit 77
+
 PPD_DIR=ppdtest
 
 PPD_PARALLEL=200
+
+echo '****************************************************************'
+
+rotor="-R ${STP_TEST_ROTOR_CIRCUMFERENCE:-1} -r ${STP_TEST_ROTOR:-0}"
 
 function test_full() {
     rm -rf "$PPD_DIR"
     echo "GENERATING PPD FILES (all):"
     set -e
-    $DEBUG make "PPD_DIR=$PPD_DIR" EXTRA_GENPPD_OPTS='-b -Z' ppd-clean ppd-global-a ppd-nls-a ppd-nonls-a
+    $DEBUG make "PPD_DIR=$PPD_DIR" EXTRA_GENPPD_OPTS="$rotor -b -Z" ppd-clean ppd-global-a ppd-nls-a ppd-nonls-a
 }
 
 function test_fast() {
     rm -rf "$PPD_DIR"
     echo "GENERATING PPD FILES (fast):"
     set -e
-    $DEBUG make "PPD_DIR=$PPD_DIR" EXTRA_GENPPD_OPTS='-b -Z' ppd-clean ppd-nonls
+    $DEBUG make "PPD_DIR=$PPD_DIR" EXTRA_GENPPD_OPTS="$rotor -b -Z" ppd-clean ppd-nonls
     if [[ -n $STP_TEST_DIST ]] ; then
 	echo "GENERATING PPD FILES (global):"
 	set -e
-	$DEBUG make "PPD_DIR=$PPD_DIR" EXTRA_GENPPD_OPTS='-b -Z -S' ppd-global
+	$DEBUG make "PPD_DIR=$PPD_DIR" EXTRA_GENPPD_OPTS="$rotor -b -Z -S" ppd-global
     fi
     PPD_PARALLEL=20
 }
@@ -71,7 +77,7 @@ function test_minimal() {
     rm -rf "$PPD_DIR"
     echo "GENERATING PPD FILES (minimal):"
     set -e
-    $DEBUG make "PPD_DIR=$PPD_DIR" EXTRA_GENPPD_OPTS='-b -Z -S' ppd-clean ppd-nonls
+    $DEBUG make "PPD_DIR=$PPD_DIR" EXTRA_GENPPD_OPTS="$rotor -b -Z -S" ppd-clean ppd-nonls
     PPD_PARALLEL=20
 }
 

@@ -34,14 +34,14 @@ pkgxmldata_DATA =				\
 	raw.xml
 
 AM_TESTS_ENVIRONMENT=STP_MODULE_PATH=$(top_builddir)/src/main/.libs:$(top_builddir)/src/main STP_DATA_PATH=$(top_srcdir)/src/xml
-TESTS = check_duplicate_printers
+TESTS = check_duplicate_printers.test
 
-noinst_PROGRAMS = check_duplicate_printers
-check_duplicate_printers_SOURCES = check_duplicate_printers.c
-check_duplicate_printers_LDADD = $(GUTENPRINT_LIBS)
+noinst_PROGRAMS = check_duplicate_printers.test
+check_duplicate_printers_test_SOURCES = check_duplicate_printers.test.c
+check_duplicate_printers_test_LDADD = $(GUTENPRINT_LIBS)
 
-xml-stamp: $(pkgxmldata_DATA) Makefile.am check_duplicate_printers
-	$(AM_TESTS_ENVIRONMENT) ./check_duplicate_printers
+xml-stamp: $(pkgxmldata_DATA) Makefile.am check_duplicate_printers.test
+	$(AM_TESTS_ENVIRONMENT) ./check_duplicate_printers.test
 	-rm -f $@ $@.tmp
 	touch $@.tmp
 	for f in $(pkgxmldata_DATA) ; do echo $$f >> $@.tmp; done
