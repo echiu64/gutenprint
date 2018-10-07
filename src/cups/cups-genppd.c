@@ -70,6 +70,8 @@ main(int  argc,			    /* I - Number of command-line arguments */
 				       no color opts = 4 */
   unsigned      parallel = 1;	    /* Generate PPD files in parallel */
   unsigned      rotor = 0;	    /* Rotor for generating PPD files in parallel */
+  unsigned      test_rotor = 0;	    /* Testing (serialized) rotor */
+  unsigned      test_rotor_circumference = 1;    /* Testing (serialized) rotor size */
   pid_t         *subprocesses = NULL;
   int		parent = 1;
 #ifdef HAVE_LIBZ
@@ -88,7 +90,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
 
   for (;;)
   {
-    if ((i = getopt(argc, argv, "23hvqc:p:l:LMVd:saNCbZzS")) == -1)
+    if ((i = getopt(argc, argv, "23hvqc:p:l:LMVd:saNCbZzSr:R:")) == -1)
       break;
 
     switch (i)
@@ -175,12 +177,24 @@ main(int  argc,			    /* I - Number of command-line arguments */
     case 'S':
       skip_duplicate_ppds = 1;
       break;
+    case 'r':
+      test_rotor = atoi(optarg);
+      break;
+    case 'R':
+      test_rotor_circumference = atoi(optarg);
+      break;
     default:
       usage();
       exit(EXIT_FAILURE);
       break;
     }
   }
+  if (test_rotor_circumference < 1 || test_rotor < 0 || 
+      test_rotor >= test_rotor_circumference)
+    {
+      test_rotor = 0;
+      test_rotor_circumference = 1;
+    }
 #ifdef HAVE_LIBZ
   if (use_compression)
     gpext = ".gz";
@@ -280,6 +294,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
     }
   else
     {
+      unsigned test_rotor_current = 0;
       stp_string_list_t *seen_models = NULL;
       if (skip_duplicate_ppds)
 	seen_models = stp_string_list_create();
@@ -299,7 +314,8 @@ main(int  argc,			    /* I - Number of command-line arguments */
 		stp_string_list_add_string_unsafe(seen_models, model_family,
 						  model_family);
 	    }
-
+	  if (test_rotor_current++ % test_rotor_circumference != test_rotor)
+	    continue;
 	  if (i % parallel == rotor && printer)
 	    {
 	      if (! verbose && (i % 100) == 0)
@@ -488,6 +504,9 @@ help(void)
        "  -Z            Don't compress PPD files.\n"
 #endif
        "  -S            Skip PPD files with duplicate model identifiers.\n"
+       "  -R size       Generate every size'th PPD file.\n"
+       "  -r divisor    Generate the PPD files (N % size == divisor).\n"
+       "\n"
        "models:\n"
        "  A list of printer models, either the driver or quoted full name.\n");
 }

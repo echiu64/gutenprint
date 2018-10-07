@@ -37,7 +37,7 @@ declare make_ppds=1
 declare skip_simplified=0
 declare postscript=0
 declare use_explicit_quality=0
-declare extra_genppd_opts=-Z
+declare extra_genppd_opts="-Z"
 declare use_smallest_pagesize=0
 declare cupsargs=''
 declare printers_to_test=''
@@ -115,6 +115,12 @@ while getopts "hvcgsVnO:m:o:p:St:lLXf:N" opt ; do
 	*) echo "Unknown argument $opt"; usage ;;
     esac
 done
+
+if (( $single == 0 && ${STP_TEST_ROTOR_CIRCUMFERENCE:-1} > 1 && 
+	  ${STP_TEST_ROTOR:-0} >= 0 &&
+	  ${STP_TEST_ROTOR:-0} < ${STP_TEST_ROTOR_CIRCUMFERENCE:-1} )) ; then
+    extra_genppd_opts="$extra_genppd_opts -R $STP_TEST_ROTOR_CIRCUMFERENCE -r $STP_TEST_ROTOR"
+fi
 
 case "$valgrind" in
     4)
@@ -465,14 +471,18 @@ if [[ -d ppd/C ]] ; then
 	done
 	files=(${nfiles[@]})
     fi
-    if [[ -n $STP_TEST_ROTOR && -n $STP_TEST_ROTOR_CIRCUMFERENCE ]] ; then
-	count=0
+    # If we're not in -s mode, use PPD file generation to perform
+    # the rotor, to save generation.  If we are using -s, though,
+    # we don't know what PPD files we want when they're generated, so
+    # we can only dedup after the fact.
+    if (( $single != 0 && ${STP_TEST_ROTOR_CIRCUMFERENCE:-1} > 1 &&
+	      ${STP_TEST_ROTOR:-0} >= 0 &&
+	      ${STP_TEST_ROTOR:-0} < ${STP_TEST_ROTOR_CIRCUMFERENCE:-1} )) ; then
 	nfiles=()
-	for f in ${files[@]} ; do
-	    if (( $count % $STP_TEST_ROTOR_CIRCUMFERENCE == $STP_TEST_ROTOR )) ; then
-		nfiles+=($f)
+	for i in $(seq 0 ${#files[@]}) ; do
+	    if (( $i % $STP_TEST_ROTOR_CIRCUMFERENCE == $STP_TEST_ROTOR )) ; then
+		nfiles+=(${files[$i]})
 	    fi
-	    count=$((count+1))
 	done
 	files=(${nfiles[@]})
     fi

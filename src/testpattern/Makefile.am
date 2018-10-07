@@ -48,16 +48,17 @@ endif
 if BUILD_TESTPATTERN
 
 AM_TESTS_ENVIRONMENT=STP_MODULE_PATH=$(top_builddir)/src/main/.libs:$(top_builddir)/src/main STP_DATA_PATH=$(top_srcdir)/src/xml
-run-testpattern-2.check: run-testpattern-2
+run-testpattern-2.test: run-testpattern-2
 
-TESTS = run-testpattern-1 run-testpattern-2.check
+TESTS = run-testpattern-1.test run-testpattern-2.test
+run-testpattern-2.log: run-testpattern-1.log
 
 bin_PROGRAMS = testpattern
 noinst_PROGRAMS = printers printer_options
 noinst_SCRIPTS = run-testpattern-2 compare-checksums compress-checksums \
-	run-testpattern-2.check run-testpattern-1
+	run-testpattern-2.test run-testpattern-1.test
 CSUM_DEPS=testpattern run-testpattern-2 compress-checksums Checksums \
-	run-testpattern-2.check
+	run-testpattern-2.test
 
 # This suffix is *not* static during development!
 CSUM_SUFFIX=`@PKGROOT@/scripts/gversion`
@@ -73,16 +74,16 @@ Checksums:
 	$(MKDIR_P) Checksums
 
 checksums: $(CSUM_DEPS)
-	$(CHECKSUM_ENV) ./run-testpattern-2.check 4>&1 | ./compress-checksums | $(COMPRESS) > "$(CSUM_FILE)@CSUF@"
+	$(CHECKSUM_ENV) ./run-testpattern-2.test 4>&1 | ./compress-checksums | $(COMPRESS) > "$(CSUM_FILE)@CSUF@"
 
 checksums-fast: $(CSUM_DEPS)
-	$(CHECKSUM_ENV) ./run-testpattern-2.check -s 4>&1 | ./compress-checksums | $(COMPRESS) > "$(CSUM_FILE)@CSUF@"
+	$(CHECKSUM_ENV) ./run-testpattern-2.test -s 4>&1 | ./compress-checksums | $(COMPRESS) > "$(CSUM_FILE)@CSUF@"
 
 checksums-release: $(CSUM_DEPS)
 	if [ -n "$$STP_TEST_LOG_PREFIX" ] ; then \
-	  $(CHECKSUM_ENV) ./run-testpattern-2.check 4>&1 | ./compress-checksums | $(COMPRESS) | tee "$${STP_TEST_LOG_PREFIX}checksums_$$$$@CSUF@" > "$(CSUM_RELEASE_FILE)@CSUF@" ; \
+	  $(CHECKSUM_ENV) ./run-testpattern-2.test 4>&1 | ./compress-checksums | $(COMPRESS) | tee "$${STP_TEST_LOG_PREFIX}checksums_$$$$@CSUF@" > "$(CSUM_RELEASE_FILE)@CSUF@" ; \
 	else \
-	  $(CHECKSUM_ENV) ./run-testpattern-2.check 4>&1 | ./compress-checksums | $(COMPRESS) > "$(CSUM_RELEASE_FILE)@CSUF@" ; \
+	  $(CHECKSUM_ENV) ./run-testpattern-2.test 4>&1 | ./compress-checksums | $(COMPRESS) > "$(CSUM_RELEASE_FILE)@CSUF@" ; \
 	fi
 endif
 

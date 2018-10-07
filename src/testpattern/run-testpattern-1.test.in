@@ -30,6 +30,8 @@ fi
 
 retval=0
 
+[[ -n $STP_TEST_COMPONENTS && $STP_TEST_COMPONENTS != '*testpattern*' ]] && exit 77
+
 if [ "$STP_TEST_PROFILE" != full -a -n "$STP_TEST_SUITE" ] ; then
     exit 77
 fi
@@ -301,12 +303,20 @@ if [ -z "$dontrun" -a -n "$output" -a ! -d "$output" ] ; then
     fi
 fi
 
+test_rotor=${STP_TEST_ROTOR:-0}
+test_rotor_circumference=${STP_TEST_ROTOR_CIRCUMFERENCE:-1}
+test_count=-1
+
 print_all_testpatterns() {
     for a in $RawPrintingModes ; do
 	for b in $RawInkTypes ; do
 	    for c in $RawColorCorrections ; do
 		for d in $RawModes ; do
 		    for e in $RawBitDepths ; do
+			test_count=$((test_count+1))
+			if (( $test_count % $test_rotor_circumference != $test_rotor )) ; then
+			    continue
+			fi
 			set_message "Raw $a $b $c $d $e"
 			if [ -n "$output" ] ; then
 			    outstuff="`printf '\n%s\n' \"output \\\"$output/raw-data-8_${a}_${b}_${c}_${d}_${e}\\\";\"`"
@@ -323,6 +333,10 @@ print_all_testpatterns() {
 	    for c in $StandardColorCorrections ; do
 		for d in $StandardModes ; do
 		    for e in $StandardBitDepths ; do
+			test_count=$((test_count+1))
+			if (( $test_count % $test_rotor_circumference != $test_rotor )) ; then
+			    continue
+			fi
 			set_message "R800 $a $b $c $d $e"
 			if [ -n "$output" ] ; then
 			    outstuff="`printf '\n%s\n' \"output \\\"$output/escp2-r800_${a}_${b}_${c}_${d}_${e}\\\";\"`"
@@ -336,6 +350,10 @@ print_all_testpatterns() {
     done
     for a in $StandardColorCorrections ; do
 	for b in $StandardBitDepths ; do
+	    test_count=$((test_count+1))
+	    if (( $test_count % $test_rotor_circumference != $test_rotor )) ; then
+		continue
+	    fi
 	    set_message "R800 Extended Color 8 CMYKRB $a $b"
 	    if [ -n "$output" ] ; then
 		outstuff="`printf '\n%s\n' \"output \\\"$output/escp2-r800_${b}_CMYKRB_${a}_Color\\\";\"`"

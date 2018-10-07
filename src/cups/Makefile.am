@@ -99,11 +99,13 @@ endif
 
 AM_TESTS_ENVIRONMENT=$(STP_ENV)
 test-rastertogutenprint: min-pagesize
-test-rastertogutenprint.check: test-rastertogutenprint
-TESTS= test-ppds test-rastertogutenprint.check
-noinst_SCRIPTS=test-ppds \
+test-rastertogutenprint.test: test-rastertogutenprint
+TESTS= test-ppds.test test-rastertogutenprint.test
+test-rastertogutenprint.log: test-ppds.log
+
+noinst_SCRIPTS=test-ppds.test \
 	test-rastertogutenprint \
-	test-rastertogutenprint.check \
+	test-rastertogutenprint.test \
 	min-pagesize
 endif
 
@@ -222,19 +224,15 @@ install-data-hook:
 	-rmdir `dirname $(DESTDIR)$(pkglibdir)`
 	-rmdir `dirname $(DESTDIR)$(pkgsysconfdir)`
 
-.PHONY: ppd ppd-stamp-pre ppd-stamp-nonls ppd-stamp-nls ppd-stamp-phony \
+.PHONY: ppd-stamp-pre ppd-stamp-nonls ppd-stamp-nls \
 	ppd-catalog-clean ppd-clean $(INSTALL_BLACKLIST)
 
 all-local: $(INSTALL_DATA_LOCAL_DEPS)
 
 ppd: ppd-stamp
 
-ppd-stamp: cups-genppd.@GUTENPRINT_RELEASE_VERSION@ $(top_srcdir)/src/xml/xml-stamp
-	$(MAKE) ppd-stamp-pre
-	$(MAKE) ppd-stamp-phony
+ppd-stamp: cups-genppd.@GUTENPRINT_RELEASE_VERSION@ $(top_srcdir)/src/xml/xml-stamp ppd-stamp-pre $(PPD)
 	touch ppd-stamp
-
-ppd-stamp-phony: $(PPD)
 
 ppd-catalog-clean:
 	$(RM) -rf $(PPD_DIR)catalog
@@ -363,7 +361,7 @@ clean-local: ppd-catalog-clean ppd-clean
 ## Clean
 
 CLEANFILES = ppd-stamp
-DISTCLEANFILES = cups-genppdupdate test-ppds
+DISTCLEANFILES = cups-genppdupdate test-ppds.test
 MAINTAINERCLEANFILES = Makefile.in
 
 EXTRA_DIST = \
