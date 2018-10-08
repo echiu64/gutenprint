@@ -173,6 +173,7 @@ test "$jade_err" -eq 0 && {
   fi
   if [ -z "$jade_version" ] ; then
     echo "Unrecognized jade version:"
+    type -p jade
     jade -v < /dev/null 2>&1
     jade_err=1
   else
@@ -298,6 +299,9 @@ test "$sgmltools_err" -eq 0 && {
       (test "$sgmltools_version_minor" -eq 0 -a "$sgmltools_version_point" -ge 2) ||
       sgmltools_err=1
   else
+    type
+    type -h
+    type -p sgmltools
     echo Could not run `type -p sgmltools`
     sgmltools_err=1
   fi
