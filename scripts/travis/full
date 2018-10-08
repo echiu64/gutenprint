@@ -7,4 +7,4 @@ set -x
 CC=$1 \
   TRAVIS_MODE=1 \
   STP_CONFIG_ARGS='--without-doc --without-gimp2 --disable-libgutenprintui2 --disable-escputil' \
-  ./scripts/build-release run_build_fresh run_minimal run_valgrind run_full
+  ./scripts/build-release run_build_fresh run_check_minimal run_valgrind run_full
