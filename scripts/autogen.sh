@@ -176,6 +176,10 @@ test "$jade_err" -eq 0 && {
     echo ">>>$jade_exists<<<"
     echo "type -p jade:"
     type -p jade
+    echo "type -p ls:"
+    type -p ls
+    echo "type ls:"
+    type ls
     echo "type jade:"
     type jade
     jade -v < /dev/null 2>&1
