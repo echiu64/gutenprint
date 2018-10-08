@@ -162,6 +162,10 @@ jade_err=0
 jade_exists=`type -p jade`
 test -z "$jade_exists" && jade_err=1
 
+echo "type --help:"
+type --help
+
+
 # Proper rev?
 test "$jade_err" -eq 0 && {
 #  echo "Checking for proper revision of jade..."
