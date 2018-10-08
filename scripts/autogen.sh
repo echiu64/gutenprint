@@ -173,6 +173,7 @@ test "$jade_err" -eq 0 && {
   fi
   if [ -z "$jade_version" ] ; then
     echo "Unrecognized jade version:"
+    echo ">>>$jade_exists<<<"
     type -p jade
     jade -v < /dev/null 2>&1
     jade_err=1
