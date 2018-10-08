@@ -171,17 +171,21 @@ test "$jade_err" -eq 0 && {
   if [ -z "$jade_version" ] ; then
     jade_version=`jade -v < /dev/null 2>&1 | grep -i 'jade"* version' | sed 's/"//g' | awk '{print $NF}'`
   fi
+  if [ -z "$jade_version" ] ; then
+    echo "Unrecognized jade version:"
+    jade -v < /dev/null 2>&1
+    jade_err=1
+  else
+    jade_version_major=`echo $jade_version | awk -F. '{print $1}'`
+    jade_version_minor=`echo $jade_version | awk -F. '{print $2}'`
+    jade_version_point=`echo $jade_version | awk -F. '{print $3}'`
 
-  jade_version_major=`echo $jade_version | awk -F. '{print $1}'`
-  jade_version_minor=`echo $jade_version | awk -F. '{print $2}'`
-  jade_version_point=`echo $jade_version | awk -F. '{print $3}'`
+    test "$jade_version_major" -ge 1 || jade_err=1
 
-  test "$jade_version_major" -ge 1 || jade_err=1
-
-  test "$jade_version_minor" -lt 2 || {
-      test "$jade_version_minor" -eq 2 -a "$jade_version_point" -lt 1
-    } && jade_err=1
-
+    test "$jade_version_minor" -lt 2 || {
+	test "$jade_version_minor" -eq 2 -a "$jade_version_point" -lt 1
+      } && jade_err=1
+  fi
 }
 test "$jade_err" -eq 1 && {
   echo " "
@@ -294,17 +298,18 @@ test "$sgmltools_err" -eq 0 && {
       (test "$sgmltools_version_minor" -eq 0 -a "$sgmltools_version_point" -ge 2) ||
       sgmltools_err=1
   else
+    echo Could not run `type -p sgmltools`
     sgmltools_err=1
   fi
+}
 
-  test "$sgmltools_err" -eq 1 && {
-    echo " "
-    echo "***Warning***: You must have \"sgmltools-lite\" version 3.0.2"
-    echo "or newer installed to build the Gutenprint user's guide."
-    echo "Get https://sourceforge.net/projects/sgmltools-lite/files/latest/download"
-    echo "(or a newer version if available)"
-    echo " "
-  }
+test "$sgmltools_err" -eq 1 && {
+  echo " "
+  echo "***Warning***: You must have \"sgmltools-lite\" version 3.0.2"
+  echo "or newer installed to build the Gutenprint user's guide."
+  echo "Get https://sourceforge.net/projects/sgmltools-lite/files/latest/download"
+  echo "(or a newer version if available)"
+  echo " "
 }
 
 # Check for convert
