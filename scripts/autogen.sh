@@ -159,16 +159,8 @@ test -n "$NO_AUTOMAKE" || (aclocal --version) < /dev/null > /dev/null 2>&1 || {
 jade_err=0
 
 # Exists?
-jade_exists=`type -p jade`
-test -z "$jade_exists" && jade_err=1
-
-echo "type ls:"
-type ls
-echo $?
-echo "type sadfasdf"
-type sadfasdf
-echo $?
-
+type jade >/dev/null 2>&1
+test $? -ne 0 && jade_err=1
 
 # Proper rev?
 test "$jade_err" -eq 0 && {
@@ -180,16 +172,6 @@ test "$jade_err" -eq 0 && {
     jade_version=`jade -v < /dev/null 2>&1 | grep -i 'jade"* version' | sed 's/"//g' | awk '{print $NF}'`
   fi
   if [ -z "$jade_version" ] ; then
-    echo "Unrecognized jade version:"
-    echo ">>>$jade_exists<<<"
-    echo "type -p jade:"
-    type -p jade
-    echo "type -p ls:"
-    type -p ls
-    echo "type ls:"
-    type ls
-    echo "type jade:"
-    type jade
     jade -v < /dev/null 2>&1
     jade_err=1
   else
@@ -215,9 +197,8 @@ test "$jade_err" -eq 1 && {
 
 # Check for existence of dvips
 
-dvipsloc=`type -p dvips`
-
-test -z "$dvipsloc" && {
+type dvips >/dev/null 2>&1
+test $? -ne 0 && {
   echo " "
   echo "***Warning***: You must have \"dvips\" installed to"
   echo "build the Gutenprint user's guide."
@@ -226,9 +207,8 @@ test -z "$dvipsloc" && {
 
 # Check for existence of jadetex
 
-jadetexloc=`type -p jadetex`
-
-test -z "$jadetexloc" && {
+type jadetex >/dev/null 2>&1
+test $? -ne 0 && {
   echo " "
   echo "***Warning***: You must have \"jadetex\" version 3.5 or"
   echo "newer installed to build the Gutenprint user's guide."
@@ -241,10 +221,9 @@ test -z "$jadetexloc" && {
 
 openjade_err=0
 
-openjadeloc=`type -p openjade`
-
 # Exists?
-test -z "$openjadeloc" && openjade_err=1
+type jadetex >/dev/null 2>&1
+test $? -ne 0 && openjade_err=1
 
 # Proper rev?
 test "$openjade_err" -eq 0 && {
@@ -271,9 +250,9 @@ test "$openjade_err" -eq 0 && {
   }
 }
 
-db2htmlloc=`type -p db2html`
+type db2html >/dev/null 2>&1
 
-test -z "$db2htmlloc" && {
+test $? -ne 0 && {
   echo " "
   echo "***Warning***: You must have \"db2html\" installed to"
   echo "build the Gutenprint user's guide."
@@ -281,9 +260,9 @@ test -z "$db2htmlloc" && {
   echo " "
 }
 
-db2pdfloc=`type -p db2pdf`
+type db2pdf >/dev/null 2>&1
 
-test -z "$db2pdfloc" && {
+test $? -ne 0 && {
   echo " "
   echo "***Warning***: You must have \"db2pdf\" installed to"
   echo "build the Gutenprint user's guide."
@@ -297,8 +276,8 @@ test -z "$db2pdfloc" && {
 sgmltools_err=0
 
 # Exists?
-sgmltoolsloc=`type -p sgmltools`
-test -z "$sgmltoolsloc" && sgmltools_err=1
+type sgmltools >/dev/null 2>&1
+test $? -ne 0 && sgmltools_err=1
 
 # Proper rev?
 test "$sgmltools_err" -eq 0 && {
@@ -315,10 +294,6 @@ test "$sgmltools_err" -eq 0 && {
       (test "$sgmltools_version_minor" -eq 0 -a "$sgmltools_version_point" -ge 2) ||
       sgmltools_err=1
   else
-    type
-    type -h
-    type -p sgmltools
-    echo Could not run `type -p sgmltools`
     sgmltools_err=1
   fi
 }
@@ -334,8 +309,8 @@ test "$sgmltools_err" -eq 1 && {
 
 # Check for convert
 
-convertloc=`type -p convert`
-test -z "$convertloc" && {
+type convert >/dev/null 2>&1
+test $? -ne 0 && {
   echo " "
   echo "***Warning***: You must have \"convert\" installed to"
   echo "build the Gutenprint user's guide."
