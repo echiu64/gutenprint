@@ -165,8 +165,8 @@ test -z "$jade_exists" && jade_err=1
 echo "type ls:"
 type ls
 echo $?
-echo "type sadf"
-type sadf
+echo "type sadfasdf"
+type sadfasdf
 echo $?
 
 
