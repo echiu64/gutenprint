@@ -5,7 +5,6 @@ set -e
 env |sort
 set -x
 STP_TEST_ROTOR=$1 \
-  STP_TEST_ROTOR_CIRCUMFERENCE=$2 \
   STP_CONFIG_ARGS='--disable-nls --without-gimp2 --without-doc --without-cups --disable-libgutenprintui2 --disable-escputil' \
   TRAVIS_MODE=1 \
   ./scripts/build-release run_build_fresh run_checksums
