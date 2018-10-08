@@ -4,34 +4,28 @@ language: c
 git:
   depth: false
   quiet: true
-addons: &base
-  apt:
-    sources: &sources
-      - ubuntu-toolchain-r-test
-      - llvm-toolchain-precise-3.8
-    packages: &base_deps
-      - autoconf
-      - autogen
-      - automake
-      - autopoint
-      - bzip2
-      - bison
-      - flex
-      - gettext
-      - libtool
-      - perl
-      - time
-      - zpaq
 matrix:
   include:
-    - stage: smoke test
+    - stage: "smoke test"
       addons:
         apt:
-          sources:
-            *sources
+          sources: &sources
+            - ubuntu-toolchain-r-test
           packages:
             - &other_deps
-              - *base_deps
+              - &base_deps
+                - autoconf
+                - autogen
+                - automake
+                - autopoint
+                - bzip2
+                - bison
+                - flex
+                - gettext
+                - libtool
+                - perl
+                - time
+                - zpaq
               - &cups_deps
                 - cups-filters
                 - cups-filters-core-drivers
@@ -99,12 +93,18 @@ matrix:
         apt:
           sources:
             - *sources
+            - llvm-toolchain-precise-3.8
           packages:
             - *other_deps
             - clang-3.8
     - stage: checksums
       script: scripts/travis/checksums 0 7
-      addons: *base
+      addons: &base
+        apt:
+          sources:
+            - *sources
+          packages:
+            - *base_deps
     -
       script: scripts/travis/checksums 1 7
       addons: *base
