@@ -8,7 +8,7 @@ git:
 matrix:
   include:
     - stage: "Smoke test"
-      addons:
+      addons: &smoketest_addons
         apt:
           sources: &sources
             - ubuntu-toolchain-r-test
@@ -59,6 +59,11 @@ matrix:
 
 
     - stage: "Integration tests"
+      name: "Base build"
+      script: scripts/travis/smoke
+      addons: &smoketest_addons
+
+    -
       env: &integration_env
         - STP_TEST_ROTOR_CIRCUMFERENCE=4
       name: gcc-4.9
@@ -143,6 +148,10 @@ matrix:
 
 
     - stage: "Full tests"
+      name: "Base build"
+      script: scripts/travis/smoke
+      addons: &smoketest_addons
+    -
       name: 0 gcc-4.9
       env: &full_env
         - STP_TEST_ROTOR_CIRCUMFERENCE=13
@@ -211,6 +220,7 @@ matrix:
 
 stages:
   - name: "Smoke test"
+    if: 1 = 0
   - name: "Integration tests"
     if: type IN (push, pull_request)
   - name: "Checksums"
