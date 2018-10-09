@@ -64,10 +64,10 @@ matrix:
       addons: *smoketest_addons
 
     -
+      script: scripts/travis/integration gcc-4.9 0
       env: &integration_env
         - STP_TEST_ROTOR_CIRCUMFERENCE=4
       name: gcc-4.9
-      script: scripts/travis/integration gcc-4.9 0
       addons: &gcc-4_9-addons
         apt:
           sources:
@@ -77,7 +77,7 @@ matrix:
             - gcc-4.9
     -
       script: scripts/travis/integration gcc-7 1
-      env: &integration_env
+      env: *integration_env
       name: gcc-7
       addons: &gcc-7-addons
         apt:
@@ -88,7 +88,7 @@ matrix:
             - gcc-7
     -
       script: scripts/travis/integration gcc-8 2
-      env: &integration_env
+      env: *integration_env
       name: gcc-8
       addons: &gcc-8-addons
         apt:
@@ -99,7 +99,7 @@ matrix:
             - gcc-8
     -
       script: scripts/travis/integration clang-3.8 3
-      env: &integration_env
+      env: *integration_env
       name: clang-3.8
       addons: &clang-3_8-addons
         apt:
