@@ -163,7 +163,7 @@ cleanup() {
 }
 
 pdfjam=$(type -p pdfjam)
-[[ -n $pdfjam ]] && postscript=1
+[[ -z $pdfjam ]] && postscript=1
 
 if (( $postscript > 0 )) ; then
     pdftops=$(type -p pdftops)
