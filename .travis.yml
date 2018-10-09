@@ -61,27 +61,29 @@ matrix:
     - stage: "Integration tests"
       env: &integration_env
         - STP_TEST_ROTOR_CIRCUMFERENCE=4
-      name: gcc-7
-      script: scripts/travis/integration gcc-7 3
-      addons: &gcc-7-addons
+      name: gcc-4.9
+      script: scripts/travis/integration gcc-4.9 0
+      addons: &gcc-4_9-addons
         apt:
           sources:
            - *sources
           packages:
             - *other_packages
-            - gcc-7
+            - gcc-4.9
     -
-      script: scripts/travis/integration gcc-4.9 2
-      name: gcc-4.9
-      addons: &gcc-4.9-addons
+      script: scripts/travis/integration gcc-7 1
+      env: &integration_env
+      name: gcc-7
+      addons: &gcc-7-addons
         apt:
           sources:
             - *sources
           packages:
             - *other_packages
-            - gcc-4.9
+            - gcc-7
     -
-      script: scripts/travis/integration gcc-8 1
+      script: scripts/travis/integration gcc-8 2
+      env: &integration_env
       name: gcc-8
       addons: &gcc-8-addons
         apt:
@@ -91,7 +93,8 @@ matrix:
             - *other_packages
             - gcc-8
     -
-      script: scripts/travis/integration clang-3.8 0
+      script: scripts/travis/integration clang-3.8 3
+      env: &integration_env
       name: clang-3.8
       addons: &clang-3_8-addons
         apt:
