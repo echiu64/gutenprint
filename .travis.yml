@@ -140,7 +140,7 @@ matrix:
     - stage: "Full tests"
       name: 0 gcc-4.9
       env: &full_env
-        - STP_TEST_ROTOR_CIRCUMFERENCE=12
+        - STP_TEST_ROTOR_CIRCUMFERENCE=13
       script: scripts/travis/full gcc-4.9 0
       addons: *gcc-4_9-addons
     -
@@ -158,10 +158,6 @@ matrix:
       env: *full_env
       script: scripts/travis/full clang-3.8 3
       addons: *clang-3_8-addons
-    # Deliberately skew the rotor so that if somehow every other
-    # case fails with a particular compiler we have some hope of
-    # catching it.  Most obvious example would be simple vs. full
-    # PPD files.
     -
       name: 4 clang-3.8
       env: *full_env
@@ -201,6 +197,11 @@ matrix:
       name: 11 gcc-7
       env: *full_env
       script: scripts/travis/full gcc-7 11
+      addons: *gcc-7-addons
+    -
+      name: 12 gcc-7
+      env: *full_env
+      script: scripts/travis/full gcc-7 12
       addons: *gcc-7-addons
 
 
