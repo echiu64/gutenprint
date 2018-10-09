@@ -204,6 +204,13 @@ matrix:
       script: scripts/travis/full gcc-7 12
       addons: *gcc-7-addons
 
+stages:
+  - name: "Full tests"
+    if: type = cron
+  - name: "Checksums"
+    if: branch = "master" AND type != cron
+  - name: "Integration tests"
+    if: type IN (push, pull_request)
 
 notifications:
   email:
