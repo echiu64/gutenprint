@@ -648,9 +648,12 @@ echo "================================================================" | log "-
 echo "*** Gutenprint release build started at $SSTAMP on $HOST" | log_top
 echo "Running operations:" | log_top
 for f in ${OPERATIONS[@]} ; do
-    echo "    $f"
+    echo "    $f" | log_top
 done
 echo "Directory: $ROOT" | log_top
+if [[ -n $STP_TEST_ROTOR_CIRCUMFERENCE && -n $STP_TEST_ROTOR ]] ; then
+    echo "Rotor: $STP_TEST_ROTOR / $STP_TEST_ROTOR_CIRCUMFERENCE" | log_top
+fi
 echo "Log Directory: ${LOGDIR#${ROOT}/}" | log_top
 echo "Parallelism: $STP_PARALLEL" | log_top
 echo "uname -a: $(uname -a)" |log_top
