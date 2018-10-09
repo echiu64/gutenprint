@@ -61,7 +61,7 @@ matrix:
     - stage: "Integration tests"
       name: "Base build"
       script: scripts/travis/smoke
-      addons: &smoketest_addons
+      addons: *smoketest_addons
 
     -
       env: &integration_env
