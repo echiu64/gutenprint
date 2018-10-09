@@ -1,49 +1,43 @@
 os: linux
+dist: trusty
 language: c
 # Need all history to build change log.
 git:
   depth: false
   quiet: true
-addons: &base
-  apt:
-    sources: &sources
-      - ubuntu-toolchain-r-test
-      - llvm-toolchain-precise-3.8
-    packages: &base_deps
-      - autoconf
-      - autogen
-      - automake
-      - autopoint
-      - bzip2
-      - bison
-      - flex
-      - gettext
-      - libtool
-      - perl
-      - time
-      - zpaq
 matrix:
   include:
-    - stage: smoke test
+    - stage: "Smoke test"
       addons:
         apt:
-          sources:
-            *sources
+          sources: &sources
+            - ubuntu-toolchain-r-test
           packages:
-            - &other_deps
-              - *base_deps
-              - &cups_deps
+            - &other_packages
+              - &base_packages
+                - autoconf
+                - autogen
+                - automake
+                - autopoint
+                - bzip2
+                - bison
+                - flex
+                - gettext
+                - libtool
+                - perl
+                - time
+                - zpaq
+              - &cups_packages
                 - cups-filters
                 - cups-filters-core-drivers
                 - cups-client
                 - libcups2-dev
                 - libcupsimage2-dev
                 - libusb-1.0-0-dev
-                - pdfjam
               - valgrind
-            - &gimp_deps
+            - &gimp_packages
               - libgimp2.0-dev
-            - &doc_deps
+            - &doc_packages
               - docbook
               - docbook-dsssl
               - docbook-simple
@@ -62,67 +56,155 @@ matrix:
               - texi2html
             - gcc-8
       script: scripts/travis/smoke
-    - stage: "integration tests"
+
+
+    - stage: "Integration tests"
       name: gcc-4.9
       script: scripts/travis/integration gcc-4.9
-      addons:
+      addons: &gcc-4_9-addons
         apt:
           sources:
            - *sources
           packages:
-            - *other_deps
+            - *other_packages
             - gcc-4.9
     -
       script: scripts/travis/integration gcc-7
       name: gcc-7
-      addons:
+      addons: &gcc-7-addons
         apt:
           sources:
             - *sources
           packages:
-            - *other_deps
+            - *other_packages
             - gcc-7
     -
       script: scripts/travis/integration gcc-8
       name: gcc-8
-      addons:
+      addons: &gcc-8-addons
         apt:
           sources:
             - *sources
           packages:
-            - *other_deps
+            - *other_packages
             - gcc-8
     -
       script: scripts/travis/integration clang-3.8
       name: clang-3.8
-      addons:
+      addons: &clang-3_8-addons
+        apt:
+          sources:
+            - *sources
+            - llvm-toolchain-precise-3.8
+          packages:
+            - *other_packages
+            - clang-3.8
+
+
+    - stage: "Checksums"
+      env: &checksum_env
+        - STP_TEST_ROTOR_CIRCUMFERENCE=7
+      script: scripts/travis/checksums 0
+      addons: &checksum_addons
         apt:
           sources:
             - *sources
           packages:
-            - *other_deps
-            - clang-3.8
-    - stage: checksums
-      script: scripts/travis/checksums 0 7
-      addons: *base
+            - *base_packages
     -
-      script: scripts/travis/checksums 1 7
-      addons: *base
+      script: scripts/travis/checksums 1
+      env: *checksum_env
+      addons: *checksum_addons
     -
-      script: scripts/travis/checksums 2 7
-      addons: *base
+      script: scripts/travis/checksums 2
+      env: *checksum_env
+      addons: *checksum_addons
     -
-      script: scripts/travis/checksums 3 7
-      addons: *base
+      script: scripts/travis/checksums 3
+      env: *checksum_env
+      addons: *checksum_addons
     -
-      script: scripts/travis/checksums 4 7
-      addons: *base
+      script: scripts/travis/checksums 4
+      env: *checksum_env
+      addons: *checksum_addons
     -
-      script: scripts/travis/checksums 5 7
-      addons: *base
+      script: scripts/travis/checksums 5
+      env: *checksum_env
+      addons: *checksum_addons
     -
-      script: scripts/travis/checksums 6 7
-      addons: *base
+      script: scripts/travis/checksums 6
+      env: *checksum_env
+      addons: *checksum_addons
+
+
+    - stage: "Full tests"
+      name: 0 gcc-4.9
+      env: &full_env
+        - STP_TEST_ROTOR_CIRCUMFERENCE=13
+      script: scripts/travis/full gcc-4.9 0
+      addons: *gcc-4_9-addons
+    -
+      name: 1 gcc-7
+      env: *full_env
+      script: scripts/travis/full gcc-7 1
+      addons: *gcc-7-addons
+    -
+      name: 2 gcc-8
+      env: *full_env
+      script: scripts/travis/full gcc-8 2
+      addons: *gcc-8-addons
+    -
+      name: 3 clang-3.8
+      env: *full_env
+      script: scripts/travis/full clang-3.8 3
+      addons: *clang-3_8-addons
+    -
+      name: 4 clang-3.8
+      env: *full_env
+      script: scripts/travis/full clang-3.8 4
+      addons: *clang-3_8-addons
+    -
+      name: 5 gcc-4.9
+      env: *full_env
+      script: scripts/travis/full gcc-4.9 5
+      addons: *gcc-4_9-addons
+    -
+      name: 6 gcc-7
+      env: *full_env
+      script: scripts/travis/full gcc-7 6
+      addons: *gcc-7-addons
+    -
+      name: 7 gcc-8
+      env: *full_env
+      script: scripts/travis/full gcc-8 7
+      addons: *gcc-8-addons
+    -
+      name: 8 gcc-8
+      env: *full_env
+      script: scripts/travis/full gcc-8 8
+      addons: *gcc-8-addons
+    -
+      name: 9 clang-3.8
+      env: *full_env
+      script: scripts/travis/full clang-3.8 9
+      addons: *clang-3_8-addons
+    -
+      name: 10 gcc-4.9
+      env: *full_env
+      script: scripts/travis/full gcc-4.9 10
+      addons: *gcc-4_9-addons
+    -
+      name: 11 gcc-7
+      env: *full_env
+      script: scripts/travis/full gcc-7 11
+      addons: *gcc-7-addons
+    -
+      name: 12 gcc-7
+      env: *full_env
+      script: scripts/travis/full gcc-7 12
+      addons: *gcc-7-addons
+
+
 notifications:
   email:
     recipients:

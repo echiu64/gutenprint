@@ -188,6 +188,12 @@ function run_valgrind_fast {
     return 2
 }
 
+function run_check_minimal {
+    make check-minimal && return 0
+    echo "make check-minimal failed"
+    return 2
+}
+
 function run_check_fast {
     make check-fast && return 0
     echo "make check-fast failed"
