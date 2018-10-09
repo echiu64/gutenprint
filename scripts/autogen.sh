@@ -34,13 +34,19 @@ test -f $srcdir/configure.ac && sed "s/XXXRELEASE_DATE=XXX/RELEASE_DATE=\"`date 
 autoreconf -ivf
 
 libtoolv=`libtool --version | head -1 | sed 's,.*[      ]\([0-9][0-9]*\.[0-9][0-9]*\(\.[0-9][0-9]*\)\?\).*[a-z]*\([   ]?.*\|\)$,\1,'`
-libtool_major=`echo $libtoolv | awk -F. '{print $1}'`
-libtool_minor=`echo $libtoolv | awk -F. '{print $2}'`
-libtool_point=`echo $libtoolv | awk -F. '{print $3}'`
+if [ -n "$libtoolv" ] ; then
+  libtool_major=`echo $libtoolv | awk -F. '{print $1}'`
+  libtool_minor=`echo $libtoolv | awk -F. '{print $2}'`
+  libtool_point=`echo $libtoolv | awk -F. '{print $3}'`
+  if [ "$libtool_major" -le 1 -a "$libtool_minor" -lt 5 ] ; then
+    libtool_err=1
+  fi
+else
+  libtool_err=1
+fi
 
-test "$libtool_major" -le 1 && {
-  test "$libtool_minor" -lt 5
-} && {
+
+if [ -n "$libtool_err" ] ; then
   echo
   echo "**Warning**: You should have \`libtool' 1.5 or newer installed to"
   echo "create a Gutenprint distribution.  Earlier versions of libtool do"
@@ -48,7 +54,7 @@ test "$libtool_major" -le 1 && {
   echo "Get ftp://ftp.gnu.org/pub/gnu/libtool/libtool-1.5.tar.gz"
   echo "(or a newer version if it is available)"
   DIE=1
-}
+fi
 
 (autoconf --version) < /dev/null > /dev/null 2>&1 || {
   echo
@@ -99,20 +105,23 @@ grep "^AM_GNU_GETTEXT" $srcdir/configure.ac >/dev/null && {
 ####      right uninstall code.
 
 gettextv=`gettext --version | head -1 | awk '{print $NF}'`
-gettext_major=`echo $gettextv | awk -F. '{print $1}'`
-gettext_minor=`echo $gettextv | awk -F. '{print $2}'`
-gettext_point=`echo $gettextv | awk -F. '{print $3}'`
-
-test "$gettext_major" -eq 0 && {
-  test "$gettext_minor" -lt 16
-} && {
+gettext_err=1
+if [ -n "$gettextv" ] ; then
+  gettext_major=`echo $gettextv | awk -F. '{print $1}'`
+  gettext_minor=`echo $gettextv | awk -F. '{print $2}'`
+  gettext_point=`echo $gettextv | awk -F. '{print $3}'`
+  if [ "$gettext_major" -gt 0 -o "$gettext_minor" -ge 16 ] ; then
+    gettext_err=
+  fi
+fi
+if [ -n "$gettext_err" ] ; then
   echo
   echo "**Warning**: You must have \`gettext' 0.16 or newer installed to"
   echo "create a Gutenprint distribution.  Earlier versions of gettext do"
   echo "not generate the correct 'make uninstall' code."
   echo "Get ftp://ftp.gnu.org/gnu/gettext/gettext-0.16.tar.gz"
   echo "(or a newer version if it is available)"
-}
+fi
 
 (autopoint --version) < /dev/null > /dev/null 2>&1 || {
   echo
@@ -150,39 +159,46 @@ test -n "$NO_AUTOMAKE" || (aclocal --version) < /dev/null > /dev/null 2>&1 || {
 jade_err=0
 
 # Exists?
-jade_exists=`type -p $jade`
-test -z "$jade_exists" && jade_err=1
+type jade >/dev/null 2>&1
+test $? -ne 0 && jade_err=1
 
 # Proper rev?
 test "$jade_err" -eq 0 && {
 #  echo "Checking for proper revision of jade..."
-  jade_version=`jade -v < /dev/null 2>&1 | grep -i "jade version" | awk -F\" '{print $2}'`
+  jade_version=`jade -v < /dev/null 2>&1 | grep -i "jade\"? version" | awk -F\" '{print $2}'`
 
-  jade_version_major=`echo $jade_version | awk -F. '{print $1}'`
-  jade_version_minor=`echo $jade_version | awk -F. '{print $2}'`
-  jade_version_point=`echo $jade_version | awk -F. '{print $3}'`
+  # jade:I: "openjade" version "1.3.2"
+  if [ -z "$jade_version" ] ; then
+    jade_version=`jade -v < /dev/null 2>&1 | grep -i 'jade"* version' | sed 's/"//g' | awk '{print $NF}'`
+  fi
+  if [ -z "$jade_version" ] ; then
+    jade -v < /dev/null 2>&1
+    jade_err=1
+  else
+    jade_version_major=`echo $jade_version | awk -F. '{print $1}'`
+    jade_version_minor=`echo $jade_version | awk -F. '{print $2}'`
+    jade_version_point=`echo $jade_version | awk -F. '{print $3}'`
 
-  test "$jade_version_major" -ge 1 || jade_err=1
+    test "$jade_version_major" -ge 1 || jade_err=1
 
-  test "$jade_version_minor" -lt 2 || {
-      test "$jade_version_minor" -eq 2 -a "$jade_version_point" -lt 1
-    } && jade_err=1
-
-  test "$jade_err" -eq 1 && {
-    echo " "
-    echo "***Warning***: You must have \"Jade\" version 1.2.1 or"
-    echo "newer installed to build the Gutenprint user's guide."
-    echo "Get ftp://ftp.jclark.com/pub/jade/jade-1.2.1.tar.gz"
-    echo "(or a newer version if available)"
-    echo " "
-  }
+    test "$jade_version_minor" -lt 2 || {
+	test "$jade_version_minor" -eq 2 -a "$jade_version_point" -lt 1
+      } && jade_err=1
+  fi
+}
+test "$jade_err" -eq 1 && {
+  echo " "
+  echo "***Warning***: You must have \"Jade\" version 1.2.1 or"
+  echo "newer installed to build the Gutenprint user's guide."
+  echo "Get ftp://ftp.jclark.com/pub/jade/jade-1.2.1.tar.gz"
+  echo "(or a newer version if available)"
+  echo " "
 }
 
 # Check for existence of dvips
 
-dvipsloc=`type -p dvips`
-
-test -z "$dvipsloc" && {
+type dvips >/dev/null 2>&1
+test $? -ne 0 && {
   echo " "
   echo "***Warning***: You must have \"dvips\" installed to"
   echo "build the Gutenprint user's guide."
@@ -191,9 +207,8 @@ test -z "$dvipsloc" && {
 
 # Check for existence of jadetex
 
-jadetexloc=`type -p jadetex`
-
-test -z "$jadetexloc" && {
+type jadetex >/dev/null 2>&1
+test $? -ne 0 && {
   echo " "
   echo "***Warning***: You must have \"jadetex\" version 3.5 or"
   echo "newer installed to build the Gutenprint user's guide."
@@ -206,21 +221,24 @@ test -z "$jadetexloc" && {
 
 openjade_err=0
 
-openjadeloc=`type -p openjade`
-
 # Exists?
-test -z "$openjadeloc" && openjade_err=1
+type jadetex >/dev/null 2>&1
+test $? -ne 0 && openjade_err=1
 
 # Proper rev?
 test "$openjade_err" -eq 0 && {
 #  echo "Checking for proper revision of openjade..."
   openjade_version=`openjade -v < /dev/null 2>&1 | sed 's/"//g' | grep -i "openjade version" $tmp_file | awk -F ' ' '{print $4}'`
-  openjade_version_major=`echo $openjade_version | awk -F. '{print $1}'`
-  openjade_version_minor=`echo $openjade_version | awk -F. '{print $2}'`
-  openjade_version_minor=`echo $openjade_version_minor | awk -F- '{print $1}' | sed -e 's/\([0-9][0-9]*\).*/\1/'`
+  if [ -n "$openjade_version" ] ; then
+    openjade_version_major=`echo $openjade_version | awk -F. '{print $1}'`
+    openjade_version_minor=`echo $openjade_version | awk -F. '{print $2}'`
+    openjade_version_minor=`echo $openjade_version_minor | awk -F- '{print $1}' | sed -e 's/\([0-9][0-9]*\).*/\1/'`
 
-  test "$openjade_version_major" -ge 1 || openjade_err=1
-  test "$openjade_version_minor" -ge 3 || openjade_err=1
+    test "$openjade_version_major" -ge 1 || openjade_err=1
+    test "$openjade_version_minor" -ge 3 || openjade_err=1
+  else
+    openjade_err=1
+  fi
 
   test "$openjade_err" -eq 1 && {
     echo " "
@@ -232,9 +250,9 @@ test "$openjade_err" -eq 0 && {
   }
 }
 
-db2htmlloc=`type -p db2html`
+type db2html >/dev/null 2>&1
 
-test -z "$db2htmlloc" && {
+test $? -ne 0 && {
   echo " "
   echo "***Warning***: You must have \"db2html\" installed to"
   echo "build the Gutenprint user's guide."
@@ -242,9 +260,9 @@ test -z "$db2htmlloc" && {
   echo " "
 }
 
-db2pdfloc=`type -p db2pdf`
+type db2pdf >/dev/null 2>&1
 
-test -z "$db2pdfloc" && {
+test $? -ne 0 && {
   echo " "
   echo "***Warning***: You must have \"db2pdf\" installed to"
   echo "build the Gutenprint user's guide."
@@ -258,37 +276,41 @@ test -z "$db2pdfloc" && {
 sgmltools_err=0
 
 # Exists?
-sgmltoolsloc=`type -p sgmltools`
-test -z "$sgmltoolsloc" && sgmltools_err=1
+type sgmltools >/dev/null 2>&1
+test $? -ne 0 && sgmltools_err=1
 
 # Proper rev?
 test "$sgmltools_err" -eq 0 && {
 #  echo "Checking for proper revision of sgmltools..."
   sgmltools_version=`sgmltools --version | awk '{print $3}'`
 
-  sgmltools_version_major=`echo $sgmltools_version | awk -F. '{print $1}'`
-  sgmltools_version_minor=`echo $sgmltools_version | awk -F. '{print $2}'`
-  sgmltools_version_point=`echo $sgmltools_version | awk -F. '{print $3}'`
+  if [ -n "$sgmltools_version" ] ; then
+    sgmltools_version_major=`echo $sgmltools_version | awk -F. '{print $1}'`
+    sgmltools_version_minor=`echo $sgmltools_version | awk -F. '{print $2}'`
+    sgmltools_version_point=`echo $sgmltools_version | awk -F. '{print $3}'`
 
-  test "$sgmltools_version_major" -ge 3 || sgmltools_err=1
-  test "$sgmltools_version_minor" -gt 0 ||
-    (test "$sgmltools_version_minor" -eq 0 -a "$sgmltools_version_point" -ge 2) ||
+    test "$sgmltools_version_major" -ge 3 || sgmltools_err=1
+    test "$sgmltools_version_minor" -gt 0 ||
+      (test "$sgmltools_version_minor" -eq 0 -a "$sgmltools_version_point" -ge 2) ||
+      sgmltools_err=1
+  else
     sgmltools_err=1
+  fi
+}
 
-  test "$sgmltools_err" -eq 1 && {
-    echo " "
-    echo "***Warning***: You must have \"sgmltools-lite\" version 3.0.2"
-    echo "or newer installed to build the Gutenprint user's guide."
-    echo "Get https://sourceforge.net/projects/sgmltools-lite/files/latest/download"
-    echo "(or a newer version if available)"
-    echo " "
-  }
+test "$sgmltools_err" -eq 1 && {
+  echo " "
+  echo "***Warning***: You must have \"sgmltools-lite\" version 3.0.2"
+  echo "or newer installed to build the Gutenprint user's guide."
+  echo "Get https://sourceforge.net/projects/sgmltools-lite/files/latest/download"
+  echo "(or a newer version if available)"
+  echo " "
 }
 
 # Check for convert
 
-convertloc=`type -p convert`
-test -z "$convertloc" && {
+type convert >/dev/null 2>&1
+test $? -ne 0 && {
   echo " "
   echo "***Warning***: You must have \"convert\" installed to"
   echo "build the Gutenprint user's guide."
