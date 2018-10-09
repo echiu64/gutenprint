@@ -205,12 +205,13 @@ matrix:
       addons: *gcc-7-addons
 
 stages:
-  - name: "Full tests"
-    if: type = cron
-  - name: "Checksums"
-    if: branch = "master" AND type != cron
+  - name: "Smoke test"
   - name: "Integration tests"
     if: type IN (push, pull_request)
+  - name: "Checksums"
+    if: branch = "master" AND type != cron
+  - name: "Full tests"
+    if: type = cron
 
 notifications:
   email:
