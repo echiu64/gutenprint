@@ -50,7 +50,7 @@ function test_minimal() {
 	  -o MediaType -o InputSlot -o FullBleed -o UseGloss \
 	  -o Orientation -o LabelSeparator -o Resolution -T 720 \
 	  "$@" $MIN_PRINTERS
-    runit ./run-testpattern-2 -s $FASTOPT -dColorCorrection=Raw -o - -G 1x1
+    runit ./run-testpattern-2 -s $QUIET $FASTOPT -dColorCorrection=Raw -o - -G 1x1
 }
 
 function test_fast() {
@@ -59,7 +59,7 @@ function test_fast() {
 	  -o MediaType -o InputSlot -o FullBleed -o UseGloss \
 	  -o Orientation -o LabelSeparator -o Resolution -T 720 "$@"
     runit ./run-testpattern-2 $QUIET $FASTOPT -dColorCorrection=Raw -o -
-    runit ./run-testpattern-2 -s $FASTOPT \
+    runit ./run-testpattern-2 -s $QUIET $FASTOPT \
 	  -o TPMode,ColorCorrection,InkType,UseGloss $MIN_PRINTERS
     runit ./run-testpattern-2 -s $QUIET $FASTOPT -o - -G 1x1
 }

@@ -8,7 +8,7 @@ git:
 matrix:
   include:
     - stage: "Smoke test"
-      addons:
+      addons: &smoketest_addons
         apt:
           sources: &sources
             - ubuntu-toolchain-r-test
@@ -59,8 +59,15 @@ matrix:
 
 
     - stage: "Integration tests"
+      name: "Base build"
+      script: scripts/travis/smoke
+      addons: *smoketest_addons
+
+    -
+      script: scripts/travis/integration gcc-4.9 0
+      env: &integration_env
+        - STP_TEST_ROTOR_CIRCUMFERENCE=4
       name: gcc-4.9
-      script: scripts/travis/integration gcc-4.9
       addons: &gcc-4_9-addons
         apt:
           sources:
@@ -69,7 +76,8 @@ matrix:
             - *other_packages
             - gcc-4.9
     -
-      script: scripts/travis/integration gcc-7
+      script: scripts/travis/integration gcc-7 1
+      env: *integration_env
       name: gcc-7
       addons: &gcc-7-addons
         apt:
@@ -79,7 +87,8 @@ matrix:
             - *other_packages
             - gcc-7
     -
-      script: scripts/travis/integration gcc-8
+      script: scripts/travis/integration gcc-8 2
+      env: *integration_env
       name: gcc-8
       addons: &gcc-8-addons
         apt:
@@ -89,7 +98,8 @@ matrix:
             - *other_packages
             - gcc-8
     -
-      script: scripts/travis/integration clang-3.8
+      script: scripts/travis/integration clang-3.8 3
+      env: *integration_env
       name: clang-3.8
       addons: &clang-3_8-addons
         apt:
@@ -138,6 +148,10 @@ matrix:
 
 
     - stage: "Full tests"
+      name: "Base build"
+      script: scripts/travis/smoke
+      addons: &smoketest_addons
+    -
       name: 0 gcc-4.9
       env: &full_env
         - STP_TEST_ROTOR_CIRCUMFERENCE=13
@@ -204,6 +218,15 @@ matrix:
       script: scripts/travis/full gcc-7 12
       addons: *gcc-7-addons
 
+stages:
+  - name: "Smoke test"
+    if: 1 = 0
+  - name: "Integration tests"
+    if: type IN (push, pull_request)
+  - name: "Checksums"
+    if: branch = "master" AND type != cron
+  - name: "Full tests"
+    if: type = cron
 
 notifications:
   email:
