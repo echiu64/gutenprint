@@ -224,7 +224,8 @@ stages:
   - name: "Integration tests"
     if: type IN (push, pull_request)
   - name: "Checksums"
-    if: branch = "master" AND type != cron
+    # Turn this off until we can do something with the output.
+    if: 1 = 0 AND branch = "master" AND type != cron
   - name: "Full tests"
     if: type = cron
 
