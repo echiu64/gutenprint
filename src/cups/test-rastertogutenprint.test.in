@@ -71,7 +71,7 @@ function test_valgrind() {
 
 case "$STP_TEST_PROFILE" in
     full|fast|valgrind|valgrind_minimal|valgrind_fast|minimal)
-	test_$STP_TEST_PROFILE
+	test_"$STP_TEST_PROFILE"
 	;;
     *)
 	exit 77

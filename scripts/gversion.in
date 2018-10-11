@@ -44,6 +44,7 @@ if [ -z "$3" ] ; then
     fi
 
     if [ -f "$root/git-version-stamp" ] ; then
+	# shellcheck disable=SC2006
 	description=`cat "$root/git-version-stamp"`
     else
 	description='(unknown)'
@@ -59,7 +60,8 @@ if [ -z "$description" ] ; then
 fi
 
 xed() {
-    if [[ -n "$PREFIX" ]] ; then
+    if [ -n "$PREFIX" ] ; then
+	# shellcheck disable=SC1117
 	sed -e h -e "s/$/ $PREFIX => /" -e x -e 's/^[^0-9]*-//' "$@" -e H -e x -e "s/\n//"
     else
 	sed -e 's/^[^0-9]*-//' "$@"
@@ -164,9 +166,9 @@ doit() {
 }
 
 case "$description" in
-    -) doit $1 ;;
-    --) PREFIX="$1" doit $1 ;;
-    *) doit $1 <<< $description
+    -) doit "$1" ;;
+    --) PREFIX="$1" doit "$1" ;;
+    *) echo "$description" | doit "$1" ;;
 esac
 
 exit 0

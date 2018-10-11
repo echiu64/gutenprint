@@ -26,7 +26,6 @@
 # 0) Ensure that we're in the root directory and have a sane environment
 
 declare GIT=$(type -p git)
-declare -a failed_modules
 
 if [[ ! -s ChangeLog.pre-5.2.11 ]] ; then
     echo "$0 must be run from repository top level"
@@ -34,7 +33,7 @@ if [[ ! -s ChangeLog.pre-5.2.11 ]] ; then
 fi
 declare ROOT=$(pwd)
 
-STP_PARALLEL=${STP_PARALLEL:-$($ROOT/scripts/count-cpus)}
+STP_PARALLEL=${STP_PARALLEL:-$("$ROOT/scripts/count-cpus")}
 
 if [[ -z $GIT ]] ; then
     echo "Can't find git.  Cannot continue."
@@ -49,12 +48,12 @@ if [[ -z $MAKE ]] ; then
 fi
 
 function pkg_version {
-    $ROOT/scripts/gversion pkg
+    "$ROOT/scripts/gversion" pkg
 }
 
 function pkg_tag {
     declare version=$(pkg_version)
-    echo gutenprint-${version//./_}
+    echo "gutenprint-${version//./_}"
 }
 
 # Clean up any trailing whitespace.
@@ -87,8 +86,8 @@ function check_git {
     # but not behind) and that we don't need to rebase (no merges.
     # Also check that we haven't diverged.
 
-    ahead=$("$GIT" rev-list $("$GIT" rev-parse @{u})..@)
-    behind=$("$GIT" rev-list $("$GIT" rev-parse @)..@{u})
+    ahead=$("$GIT" rev-list "$("$GIT" rev-parse '@{u}')"..@)
+    behind=$("$GIT" rev-list "$("$GIT" rev-parse @)"..'@{u}')
     if [[ -n $ahead && -n $behind ]] ; then
 	# Oops!  Both ahead *and* behind remote.  Really bad news!
 	console_log "*** ERROR: HEAD and remote have diverged!"
@@ -96,18 +95,18 @@ function check_git {
 	return 2
     elif [[ -n $behind ]] ; then
 	# We're behind.  Not good.
-	console_log "*** ERROR: Behind remote by $(wc -w <<< $behind) commits."
+	console_log "*** ERROR: Behind remote by $(wc -w <<< "$behind") commits."
 	return 2
     elif [[ -n $ahead ]] ; then
 	# We're ahead.  That's OK as long as there are no merge commits...
 	merges=0
 	for h in $ahead ; do
-	    parents=$("$GIT" rev-parse $h^@ |wc -w)
-	    (( $parents > 1 )) && merges=$((merges + 1))
+	    parents=$("$GIT" rev-parse "$h^@" |wc -w)
+	    (( parents > 1 )) && merges=$((merges + 1))
 	done
 	console_log "*** Warning: Ahead of remote."
-	if (( $merges > 0 )) ; then
-	    (( $merges != 1 )) && pl=s
+	if (( merges > 0 )) ; then
+	    (( merges != 1 )) && pl=s
 	    console_log "*** ERROR: $merges merge$pl between HEAD and remote"
 	    return 2
 	fi
@@ -119,6 +118,7 @@ function check_git {
 # Everything else depends on this.
 
 function run_build {
+    # shellcheck disable=SC2086
     ./autogen.sh $STP_CONFIG_ARGS && make clean && make ${STP_PARALLEL:+-j$STP_PARALLEL} && return 0
     echo "FATAL error: preliminary build failed!"
     return 1
@@ -127,6 +127,7 @@ function run_build {
 # Same as above, without make clean if we know we're in a clean
 # environment (e. g. CI)
 function run_build_fresh {
+    # shellcheck disable=SC2086
     ./autogen.sh $STP_CONFIG_ARGS && make ${STP_PARALLEL:+-j$STP_PARALLEL} && return 0
     echo "FATAL error: preliminary build failed!"
     return 1
@@ -149,12 +150,11 @@ function check_git_tag {
 function _check_git_builds {
     rev=$("$GIT" rev-parse @)
     cwd=$(pwd)
-    cd $TESTREPO || return 1
-    git clone $cwd .
-    if [[ $? != 0 ]] ; then
-	echo "Unable to clone repo"
+    cd "$TESTREPO" || return 1
+    git clone "$cwd" . || {
+    	echo "Unable to clone repo"
 	return 1
-    fi
+    }
     git checkout "$rev" || return 1
     STP_LOG_NO_SUBDIR=1 STP_LOG_DIR=$STP_TEST_LOG_PREFIX scripts/build-release preflight run_build run_valgrind_minimal run_distcheck_minimal
 }
@@ -164,8 +164,8 @@ function check_git_builds {
     cwd=$(pwd)
     _check_git_builds
     status=$?
-    cd $cwd
-    [[ -d $TESTREPO ]] && rm -rf $TESTREPO
+    cd "$cwd" || return 1
+    [[ -d $TESTREPO ]] && rm -rf "$TESTREPO"
     return $status
 }
 
@@ -339,15 +339,15 @@ function run_checksums() {
 
 function git_prep_release() {
     # .po files might have changed; nothing else should have!
-    if [[ -n $("${GIT}" status -uno --porcelain |egrep -v 'po/.*\.po') ]] ; then
+    if "${GIT}" status -uno --porcelain |grep -q -E -v 'po/.*\.po' ; then
 	console_log "ERROR: Unexpected untracked files:"
-	"${GIT}" status -uno --porcelain |egrep -v 'po/.*\.po' | console_log
+	"${GIT}" status -uno --porcelain |grep -E -v 'po/.*\.po' | console_log
 	return 1
     fi
     # Add any of those changed files.
     ${GIT} add -u || return 1
     # Add the checksums file.
-    ${GIT} add src/testpattern/Checksums/sums.$(pkg_version).zpaq || return 1
+    ${GIT} add "src/testpattern/Checksums/sums.$(pkg_version).zpaq" || return 1
     # Commit this change
     ${GIT} commit -m"Gutenprint $(pkg_version) release" || return 1
     # Apply the tag.  Ideally we should sign the tag too.
@@ -375,14 +375,14 @@ function run_check_minimal {
 
 #  Save away build
 function save_build_artifacts {
-    tarball=gutenprint-$(pkg_version).tar.xz
-    [[ -s $tarball ]] && cp -p $tarball $ARTIFACTDIR
+    tarball="gutenprint-$(pkg_version).tar.xz"
+    [[ -s $tarball ]] && cp -p "$tarball" "$ARTIFACTDIR"
 }
 
 # Final release prep
 
 function finis {
-    STP_DATA_PATH=src/xml test/gen-printer-list > printer-list.$(pkg_version) || return 1
+    STP_DATA_PATH=src/xml test/gen-printer-list > "printer-list.$(pkg_version)" || return 1
     console_log "Remainder to be done manually:"
     console_log
     console_log "  * git push"
@@ -407,44 +407,35 @@ function finis {
 #
 # Unfortunately the shell built-in printf can't specify UTC.
 function stamp {
+    # shellcheck disable=SC2183
     printf '%(%Y-%m-%d.%H:%M:%S%z)T'
 }
 
 function date_sec {
+    # shellcheck disable=SC2183
     printf '%(%s)T'
 }
 
 function report_progress {
     idx=$1
     shift
-    case "$quiet" in
-	1)
-	    declare outst=.
-	    [[ -n "$DONTRUN_OP" ]] && outst=-
-	    echo -n $outst
-	    ;;
-	2)
-	    ;;
-	*)
-	    declare outst="RUNNING[$idx]: "
-	    [[ -n "$DONTRUN_OP" ]] && outst='Skipping:'
-	    echo " >>> $(stamp) $outst $@"
-	    ;;
-    esac
+    declare outst="RUNNING[$idx]: "
+    [[ -n "$DONTRUN_OP" ]] && outst='Skipping:'
+    echo " >>> $(stamp) $outst $*"
 }
 
 # This allows us to log to multiple outputs, including stdout and
 # (where available) file descriptors.  Ideally we'd be able to build a
 # pipeline and eval it, but it's not clear that that's possible.
 function log1 {
-    if [[ $# == 0 || ($# == 1 && $1 == -) ]] ; then
+    if [[ $# -eq 0 || ($# == 1 && $1 == -) ]] ; then
 	cat
     else
 	dest="$1"
 	shift
 	# stdout needs to come last, because we just want to send data
 	# to stdout rather than teeing off or explicitly going to a file.
-	if [[ $dest == - && $# > 0 ]] ; then
+	if [[ $dest == - && $# -gt 0 ]] ; then
 	    # Protect against someone inadvertently specifying - twice!
 	    if [[ $1 == - ]] ; then
 		log1 "$@"
@@ -453,13 +444,13 @@ function log1 {
 	    fi
 	elif [[ $dest == -* ]] ; then
 	    dest=${dest:1}
-	    if [[ $# == 0 ]] ; then
+	    if (( $# == 0 )) ; then
 		cat > "$dest"
 	    else
 		tee "$dest" | log1 "$@"
 	    fi
 	else
-	    if [[ $# == 0 ]] ; then
+	    if (( $# == 0 )) ; then
 		cat >> "$dest"
 	    else
 		tee -a "$dest" | log1 "$@"
@@ -492,13 +483,13 @@ function finish {
     msg=completed
     [[ $status != 0 || -n ${failedmodules[*]} ]] && msg=FAILED
     estamp=$(stamp)
-    [[ $quiet = 1 ]] && echo
-    if [[ -n ${failedmodules[*]} ]] ; then
+    if [[ -n "${failedmodules[*]}" ]] ; then
 	echo "The following modules failed:" | log_top
-	for f in ${failedmodules[@]} ; do
+	for f in "${failedmodules[@]}" ; do
 	    echo "    $f" | log_top
 	done
     fi
+    # shellcheck disable=SC2086
     echo "*** Gutenprint release build $msg at $estamp ($(time_delta $STIME $etime))" | log_top
     echo "================================================================" | log "$top_log"
     if [[ -n $TRAVIS_MODE ]] ; then
@@ -510,7 +501,7 @@ function finish {
 	exec 2>&3
 	exec 3>&-
     fi
-    exit $status
+    exit "$status"
 }
 
 # Log the output to the console as well as the master log file and the
@@ -527,8 +518,8 @@ function finish {
 # format, ugh) and send it to stdout where it gets picked up and timestamped
 # again.
 function console_log {
-    if [[ -n "$@" ]] ; then
-	echo "$@" | log /dev/fd/3 - | timestamp | log - "$top_log" - | cut -c26-
+    if [[ -n "$*" ]] ; then
+	echo "$*" | log /dev/fd/3 - | timestamp | log - "$top_log" - | cut -c26-
     else
 	log /dev/fd/3 - | timestamp | log - "$top_log" - | cut -c26-
     fi
@@ -537,7 +528,7 @@ function console_log {
 # Travis times out if there's no output for 10 minutes, but some things
 # go silent for quite a while
 function travis_deadman {
-    while : ; do sleep 60; echo -e '\nMark' $(uptime) | log -; done
+    while : ; do sleep 60; echo -e '\nMark' "$(uptime)" | log -; done
 }
 
 function timestamp {
@@ -549,10 +540,10 @@ function timestamp {
 # Run one operation.
 function runit {
     cmdname=$1
-    cmd="$@"
-    fcounter=$(printf "%02d" $counter)
+    cmd="$*"
+    fcounter=$(printf "%02d" "$counter")
     local_logdir="$LOGDIR/$fcounter.${cmd// /_/}"
-    mkdir -p $local_logdir
+    mkdir -p "$local_logdir"
     logfile="$local_logdir/Master"
     [[ -n $DONTRUN_OP ]] && logfile=/dev/null
     sstime=$(date_sec)
@@ -567,14 +558,14 @@ function runit {
     else
 	echo "$cmdname SKIPPED" | log "$top_log"
     fi
-    report_progress $fcounter $cmdname
+    report_progress "$fcounter" "$cmdname"
 
     if [[ -z $DONTRUN_OP ]] ; then
 	STP_TEST_LOG_PREFIX="$local_logdir/" $cmd </dev/null 3>&2 2>&1 | timestamp | log "$logfile"
 	status=${PIPESTATUS[0]}
-	(( $status > 0 )) && msg=FAILED
+	(( status > 0 )) && msg=FAILED
 	for f in $local_logdir/* ; do
-	    [[ -f $f && ! -s $f ]] && rm -f $f
+	    [[ -f $f && ! -s $f ]] && rm -f "$f"
 	done
     else
 	msg='(SKIPPED)'
@@ -582,12 +573,13 @@ function runit {
     setime=$(date_sec)
     sestamp=$(stamp)
     if [[ -z $DONTRUN_OP ]] ; then
+	# shellcheck disable=SC2086
 	echo "$cmd $msg at $sestamp ($(time_delta $sstime $setime))" | log "$logfile" "$top_log"
 	echo "----------------------------------------------------------------" | log "$logfile" "$top_log"
     fi
     counter=$((counter+1))
 
-    return $status
+    return "$status"
 }
 
 declare -a OPERATIONS=(preflight
@@ -605,8 +597,9 @@ declare -a OPERATIONS=(preflight
 		       save_build_artifacts
 		       finis)
 
+# shellcheck disable=SC2206
 [[ -n $STP_BUILD_OPERATIONS ]] && OPERATIONS=($STP_BUILD_OPERATIONS)
-[[ -n "$@" ]] && OPERATIONS=("$@")
+[[ -n "$*" ]] && OPERATIONS=("$@")
 
 declare HOST=$(uname -n)
 declare SSTAMP=$(stamp)
@@ -614,17 +607,17 @@ declare STIME=$(date_sec)
 declare TOPLOGDIR=${STP_LOG_DIR:-"$ROOT/BuildLogs"}
 declare LOGDIR="$TOPLOGDIR/Log.${SSTAMP// /_}"
 [[ -n $STP_LOG_NO_SUBDIR ]] && LOGDIR=$TOPLOGDIR
-mkdir -p $LOGDIR
+mkdir -p "$LOGDIR"
 if [[ -z $STP_LOG_NO_SUBDIR ]] ; then
      if [[ -L $TOPLOGDIR/Current ]] ; then
-	 rm -f $TOPLOGDIR/Previous
-	 mv $TOPLOGDIR/Current $TOPLOGDIR/Previous
+	 rm -f "$TOPLOGDIR/Previous"
+	 mv "$TOPLOGDIR/Current" "$TOPLOGDIR/Previous"
 	 rm -f "$TOPLOGDIR/Current"
      fi
-    ln -s $(basename "$LOGDIR") "$TOPLOGDIR/Current"
+    ln -s "$(basename "$LOGDIR")" "$TOPLOGDIR/Current"
 fi
 declare ARTIFACTDIR="$LOGDIR/Artifacts"
-mkdir -p $ARTIFACTDIR
+mkdir -p "$ARTIFACTDIR"
 export ARTIFACTDIR
 
 skip_ops=${STP_BUILD_SKIP//,/ }
@@ -647,7 +640,7 @@ fi
 echo "================================================================" | log "-$top_log"
 echo "*** Gutenprint release build started at $SSTAMP on $HOST" | log_top
 echo "Running operations:" | log_top
-for f in ${OPERATIONS[@]} ; do
+for f in "${OPERATIONS[@]}" ; do
     echo "    $f" | log_top
 done
 echo "Directory: $ROOT" | log_top
@@ -666,12 +659,12 @@ free |log_top
 echo "Git revision: $("$GIT" rev-parse @)$git_dirty" | log_top
 
 declare -i runstatus=0
-for op in ${OPERATIONS[@]} ; do
-    DONTRUN_OP=${DONTRUN}${SKIP_OPS[$op]} runit $op
+for op in "${OPERATIONS[@]}" ; do
+    DONTRUN_OP="${DONTRUN}${SKIP_OPS[$op]}" runit "$op"
     case "$?" in
 	0) true                                            ;;
-	2) failedmodules=($failedmodules $op); runstatus=1 ;;
-	*) failedmodules=($failedmodules $op); finish 1    ;;
+	2) failedmodules=("${failedmodules[@]}" "$op"); runstatus=1 ;;
+	*) failedmodules=("${failedmodules[@]}" "$op"); finish 1    ;;
     esac
 done
 

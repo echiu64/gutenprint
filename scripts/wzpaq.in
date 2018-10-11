@@ -26,11 +26,9 @@ declare FORCE=
 declare KEEP=
 declare SAVE_META=
 declare RECURSE=
-declare STDIN=
 declare STATUS=0
 declare -r PROGNAME=$0
 declare -r BASEDIR=$(pwd)
-declare -r RM=rm
 declare TMP_FILE=
 declare TMP_DIR=
 declare TMP_ARCHIVE=
@@ -54,10 +52,10 @@ usage() {
     echo "  -5   Use maximum compression"
     echo
     echo "With no FILE, or when only FILE is -, read standard input"
-    exit $USTATUS
+    exit "$USTATUS"
 }
 
-while getopts "qvcdhfknNz0123456789" opt ; do
+while getopts "qvcdhfknNrz0123456789" opt ; do
     case "$opt" in
 	q)     VERBOSE=			;;
 	v)     VERBOSE=1		;;
@@ -74,16 +72,16 @@ while getopts "qvcdhfknNz0123456789" opt ; do
 	*)     usage 1			;;
     esac
 done
-shift $(($OPTIND-1))
+shift $((OPTIND-1))
 
 if [[ -n $RECURSE && -n $ZPCAT ]] ; then
     echo "May not combine recursive and output to stdout"
-    usage $0 1
+    usage "$0" 1
 fi
 
 if [[ -n $RECURSE && -z $* ]] ; then
     echo "May not use recursive with no inputs"
-    usage $0 1
+    usage "$0" 1
 fi
 
 declare -a FILES
@@ -103,12 +101,12 @@ build_file_list() {
 		OIFS=$IFS
 		IFS=
 		if [[ -n $DECOMPRESS ]] ; then
-		    for f in $(find "$f" -type f -name '*.zpaq' -print) ; do
-			FILES+=($(g "$f"))
+		    for f1 in $(find "$f" -type f -name '*.zpaq' -print) ; do
+			FILES+=($(g "$f1"))
 		    done
 		else
-		    for f in $(find "$f" -type f \! -name '*.zpaq' -print) ; do
-			FILES+=($(g "$f"))
+		    for f1 in $(find "$f" -type f \! -name '*.zpaq' -print) ; do
+			FILES+=($(g "$f1"))
 		    done
 		fi
 		IFS=$OIFS
@@ -134,13 +132,12 @@ build_file_list() {
 }
 
 if [[ -z $* || $* == '-' ]] ; then
-    STDIN=1
     ZPCAT=1
 else
     build_file_list "$@"
 fi
 
-if [[ -n $ZPCAT && ${#FILES[@]} > 1 ]] ; then
+if [[ -n $ZPCAT && ${#FILES[@]} -gt 1 ]] ; then
     echo "May not compress/decompress more than one file to stdout" 1>&2
     usage 1
 fi
@@ -157,8 +154,8 @@ run_zpaq() {
 
 RM() {
     for f in "$@" ; do
-	if [[ $1 != $TMP_FILE && $1 != $TMP_DIR || $1 != $TMP_ARCHIVE ]] ; then
-	    rm -rf $f
+	if [[ $1 != "$TMP_FILE" && $1 != "$TMP_DIR" && $1 != "$TMP_ARCHIVE" ]] ; then
+	    @RM@ -rf "$f"
 	fi
     done
 }
@@ -166,10 +163,10 @@ RM() {
 do_decompress() {
     FILE="$1"
     DEST="$2"
-    [[ -n $3 && -d $3 ]] && cd $3
-    run_zpaq extract "$FILE" $SAVE_META
-    [[ $? > 0 ]] && STATUS=1
-    if [[ $(wc -l <<< "$(find . -type f -print)") > 1 ]] ; then
+    # shellcheck disable=SC2164
+    [[ -n $3 && -d $3 ]] && cd "$3"
+    run_zpaq extract "$FILE" $SAVE_META || STATUS=1
+    if [[ $(wc -l <<< "$(find . -type f -print)") -gt 1 ]] ; then
 	echo "Multiple file archive $TMP_ARCHIVE, skipping" 1>&2
 	exit 1
     fi
@@ -191,7 +188,8 @@ decompress_file() {
 	# (which may be problematic if the directory is remote and we
 	# spend a lot of time in the temp directory).
 	(do_decompress "$FILE" "$DEST" "$TMP_DIR")
-	if [[ $? > 0 ]] ; then
+	# shellcheck disable=2181
+	if (( $? > 0 )) ; then
 	    STATUS=1
 	elif [[ -z $ZPCAT && ! -n $KEEP ]] ; then
 	    RM "$FILE"
@@ -204,10 +202,9 @@ decompress() {
     if [[ -z ${FILES[*]} ]] ; then
 	# Decompress stdin implies output to stdout
 	ZPCAT=1
-	cat > "$TMP_ARCHIVE"
-	[[ $? == 0 ]] && decompress_file "$TMP_ARCHIVE"
+	cat > "$TMP_ARCHIVE" && decompress_file "$TMP_ARCHIVE"
     else
-	for f in ${FILES[@]} ; do
+	for f in "${FILES[@]}" ; do
 	    declare DEST=
 	    [[ -z $ZPCAT ]] && DEST="${f%.zpaq}"
 	    if [[ -n $DEST && -e $DEST && -z $FORCE ]] ; then
@@ -223,7 +220,7 @@ decompress() {
 do_compress() {
     FILE="$1"
     DEST=$(g "$2")
-    cd "${FILE%/*}"
+    cd "${FILE%/*}" || return 1
     run_zpaq add "$DEST" "${FILE##*/}" $SAVE_META -method "$METHOD"
 }
 
@@ -232,10 +229,8 @@ compress_file() {
     DEST=${2:-${FILE}.zpaq}
     # Make sure that DEST really is empty.
     RM "$DEST"
-    (do_compress "$FILE" "$DEST")
-    if [[ $? > 0 ]] ; then
-	return 1
-    elif [[ -n "$ZPCAT" ]] ; then
+    (do_compress "$FILE" "$DEST") || return 1
+    if [[ -n "$ZPCAT" ]] ; then
 	# zpaq won't send anything to stdout; we have to
 	cat "$DEST"
 	RM "$DEST"
@@ -249,21 +244,18 @@ compress() {
     if [[ -z ${FILES[*]} ]] ; then
 	# Compress stdin implies output to stdout
 	ZPCAT=1
-	cat > "$TMP_FILE"
-	if [[ $? == 0 ]] ; then
-	    compress_file "$TMP_FILE" "$TMP_ARCHIVE"
-	    [[ $? > 0 ]] && STATUS=1
-	fi
+	cat > "$TMP_FILE" && {
+	    compress_file "$TMP_FILE" "$TMP_ARCHIVE" || STATUS=1
+	}
     else
-	for f in ${FILES[@]} ; do
+	for f in "${FILES[@]}" ; do
 	    declare DEST="${f}.zpaq"
 	    [[ -n $ZPCAT ]] && DEST="$TMP_ARCHIVE"
 	    if [[ -z $ZPCAT && -e $DEST && -z $FORCE ]] ; then
 		echo "${DEST#${BASEDIR}/} exists, skipping" 1>&2
 		STATUS=1
 	    else
-		compress_file "$f" "$DEST"
-		[[ $? > 0 ]] && STATUS=1
+		compress_file "$f" "$DEST" || STATUS=1
 	    fi
 	done
     fi
