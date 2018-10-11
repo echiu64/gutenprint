@@ -20,7 +20,7 @@
 old=$1
 new=$2
 
-if [ -z "$old" -o -z "$new" -o ! -d "$old" -o ! -d "$new" ] ; then
+if [ -z "$old" ] || [ -z "$new" ] || [ ! -d "$old" ] || [ ! -d "$new" ] ; then
     echo "Usage: $0 dir1 dir2"
     exit 1
 fi
@@ -31,17 +31,17 @@ files=$(cat |grep 'DitherAlgorithm_Ordered_')
 for x in $files ; do
     f="$old/$x.prn"
     g="$new/$x.prn"
-    if [ -f "$f" -a -f "$g" ] ; then
-	cmp -s $f $g || (
+    if [ -f "$f" ] && [ -f "$g" ] ; then
+	cmp -s "$f" "$g" || (
 	    rm -f old.pnm new.pnm
-	    ../../test/unprint $f > old.pnm 2>/dev/null
-	    ../../test/unprint $g > new.pnm 2>/dev/null
+	    ../../test/unprint "$f" > old.pnm 2>/dev/null
+	    ../../test/unprint "$g" > new.pnm 2>/dev/null
 #	    change=$(compare -metric ae old.pnm new.pnm /dev/null 2>&1)
 #	    echo "$change | " $(perl -e "print $change") "|"
 	    change=$(perl -e "print $(compare -metric ae old.pnm new.pnm /dev/null 2>&1)")
 	    size=$(($(head -2 old.pnm |tail -1 |sed 's/ /*/')))
 	    pct=$(perl -e "printf('%0.4f%%', 100*$change/$size)")
-	    error=$(((32768+(65536*$change))/$size))
+	    error=$(((32768+(65536*change))/size))
 	    printf '%10s %10s %8s %5s %s\n' "$change" "$size" "$pct" "$error" "$x"
 	)
     fi

@@ -51,7 +51,7 @@ function runit() {
 
 case "$STP_TEST_PROFILE" in
     valgrind*)
-	vg="libtool --mode=execute valgrind $valopts"
+	vg="libtool --mode=execute valgrind"
 	valgrind="$vg --num-callers=50 --leak-check=yes --error-limit=no --error-exitcode=1"
 	;;
     *)

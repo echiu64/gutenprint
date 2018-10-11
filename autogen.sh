@@ -1,7 +1,8 @@
 #!/bin/sh
 # Run this to generate all the initial makefiles, etc.
 
-srcdir="`dirname $0`"
+# shellcheck disable=SC2006
+srcdir=`dirname "$0"`
 test -z "$srcdir" && srcdir=.
 
 PKG_NAME="gutenprint"
@@ -21,4 +22,5 @@ if test $# -gt 0 ; then
     esac
 fi
 
+# shellcheck source=./scripts/autogen.sh
 . $srcdir/scripts/autogen.sh

@@ -30,14 +30,12 @@ if [[ -n "$STP_TEST_LOG_PREFIX" ]] ; then
     exec 2>&1
 fi
 
-out_status=0
-
-if [ -z "$srcdir" -o "$srcdir" = "." ] ; then
-    sdir=`pwd`
-elif [ -n "`echo $srcdir |grep '^/'`" ] ; then
+if [[ -z $srcdir || $srcdir = "." ]] ; then
+    sdir=$(pwd)
+elif grep -q '^/' <<< "$srcdir" ; then
     sdir="$srcdir"
 else
-    sdir="`pwd`/$srcdir"
+    sdir="$(pwd)/$srcdir"
 fi
 
 if [ -z "$STP_DATA_PATH" ] ; then
@@ -58,22 +56,22 @@ set_args() {
     while true ; do
 	case "$1" in
 	    -h*|--h*) usage ;;
-	    -v|--valgrind) valopts='--tool=memcheck' ; valcount=`expr $valgrind + 1` ;;
+	    -v|--valgrind) valopts='--tool=memcheck' ; valcount=$((valgrind + 1)) ;;
 	    -c|--cachegrind) valopts='--tool=cachegrind'; valcount=4 ;;
 	    -g|--gdb-attach) valopts='--gdb-attach=yes' ;;
 	    -V|--verbose) quiet= ;;
 	    -q|--quiet) quiet=quiet ;;
-	    --) shift; args="$@"; return ;;
+	    --) shift; args="$*"; return ;;
 	    *) return ;;
 	esac
     shift
     done
 }
 
-set_args `getopt hgvqncV "$@"`
+set_args $(getopt hgvqncV "$@")
 
 case "$valcount" in
-    1) valopts="$valopts -q --num-callers=100 --error-limit=no --leak-check=yes";;
+    1) valopts="$valopts $quiet --num-callers=100 --error-limit=no --leak-check=yes";;
     2) valopts="$valopts --num-callers=100 --error-limit=no --leak-resolution=high --leak-check=yes" ;;
     3) valopts="$valopts --error-limit=no --num-callers=100 --show-reachable=yes --leak-resolution=high --leak-check=yes" ;;
     *) ;;

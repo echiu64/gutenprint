@@ -90,7 +90,7 @@ EOF
 exit 0;
 }
 
-while getopts "hvcgsVnO:m:o:p:St:lLXf:N" opt ; do
+while getopts "hvcgsVnO:m:o:p:PSt:lLXf:N" opt ; do
     case "$opt" in
 	h*) usage ;;
 	v) valgrind=$((valgrind + 1)) ;;
@@ -116,7 +116,7 @@ while getopts "hvcgsVnO:m:o:p:St:lLXf:N" opt ; do
     esac
 done
 
-if (( $single == 0 && ${STP_TEST_ROTOR_CIRCUMFERENCE:-1} > 1 &&
+if (( single == 0 && ${STP_TEST_ROTOR_CIRCUMFERENCE:-1} > 1 &&
 	  ${STP_TEST_ROTOR:-0} >= 0 &&
 	  ${STP_TEST_ROTOR:-0} < ${STP_TEST_ROTOR_CIRCUMFERENCE:-1} )) ; then
     extra_genppd_opts="$extra_genppd_opts -R $STP_TEST_ROTOR_CIRCUMFERENCE -r $STP_TEST_ROTOR"
@@ -151,8 +151,8 @@ if [[ ! -x $cgpdftoraster && ! -x $pdftops && ! -x $gstoraster ]] ; then
 fi
 
 if [[ -x $pstoraster || -x $gstoraster || -x $cgpdftoraster ]] ; then
-    pages="24-$((24 + $npages - 1))"
-    (( $postscript > 0 )) && pages="page-ranges=$pages"
+    pages="24-$((24 + npages - 1))"
+    (( postscript > 0 )) && pages="page-ranges=$pages"
 else
     pages=''
 fi
@@ -165,18 +165,18 @@ cleanup() {
 pdfjam=$(type -p pdfjam)
 [[ -z $pdfjam ]] && postscript=1
 
-if (( $postscript > 0 )) ; then
+if (( postscript > 0 )) ; then
     pdftops=$(type -p pdftops)
 
     if [[ -n $pdftops && ! -x $cgpdftoraster ]] ; then
 	tfile=$(mktemp)
 	trap cleanup 1 2 3 6 14 15 30
-	"$pdftops" -f 24 -l $((24 + $npages - 1)) "$testfile" $tfile
+	"$pdftops" -f 24 -l $((24 + npages - 1)) "$testfile" "$tfile"
     fi
 else
     tfile=$(mktemp)
     trap cleanup 1 2 3 6 14 15 30
-    "$pdfjam" -q "$testfile" "$pages" -o $tfile
+    "$pdfjam" -q "$testfile" "$pages" -o "$tfile"
 fi
 
 case "$verbose" in
@@ -199,10 +199,10 @@ esac
 #cupsargs='PageSize=A8'
 
 get_ppds() {
-    if [[ -n $@ || -n $printers_to_test ]] ; then
+    if [[ -n $* || -n $printers_to_test ]] ; then
 	for f in "$@" $printers_to_test ; do
 	    if [[ -r $f ]] ; then
-		echo $f
+		echo "$f"
 	    elif [[ -r ppd/C/$f ]] ; then
 		echo "ppd/C/$f"
 	    elif [[ -f ppd/C/${f}.ppd ]] ; then
@@ -254,7 +254,7 @@ get_ppds() {
     fi
 }
 
-if [[ $make_ppds > 0 || ! -d ppd/C ]] ; then
+if [[ $make_ppds -gt 0 || ! -d ppd/C ]] ; then
     rm -rf ppd/C
 ## not all systems can work with gzipped PPDs
     if [[ $skip_simplified == 1 ]] ; then
@@ -266,7 +266,7 @@ fi
 
 find_page_size() {
     ppd=$1
-    (( $use_smallest_pagesize == 0 )) && return;
+    (( use_smallest_pagesize == 0 )) && return;
     driver=$(grep '^\*StpDriverName' "$ppd" | sed -e 's/^[^"]*"//' -e 's/"//g')
     pagesize=$(./min-pagesize "$driver")
     [[ -n "$pagesize" ]] && echo "PageSize=$pagesize"
@@ -281,20 +281,20 @@ find_resolution() {
     high_resolution=0
     high_resolution_name=''
     for r in $resolutions ; do
-	res=$(sed -e 's/dpi//' -e 's/x/ \\\* /' -e 's/^\([0-9]*\)$/\1 \\\* \1/' <<< $r)
+	res=$(sed -e 's/dpi//' -e 's/x/ \\\* /' -e 's/^\([0-9]*\)$/\1 \\\* \1/' <<< "$r")
 	resnum=$(eval "expr $res")
-	if (( $resnum > $high_resolution )) ; then
+	if (( resnum > high_resolution )) ; then
 	    high_resolution=$resnum
 	    high_resolution_name=$r
 	fi
-	if (( $resnum < $low_resolution )) ; then
+	if (( resnum < low_resolution )) ; then
 	    low_resolution=$resnum
 	    low_resolution_name=$r
 	fi
     done
-    if (( $use_explicit_quality == 1 )) ; then
+    if (( use_explicit_quality == 1 )) ; then
 	echo "Resolution=$low_resolution_name"
-    elif (( $use_explicit_quality == 2 )) ; then
+    elif (( use_explicit_quality == 2 )) ; then
 	echo "Resolution=$high_resolution_name"
     fi
 
@@ -302,16 +302,16 @@ find_resolution() {
 
 find_quality_preset() {
     ppd=$1
-    if (( $use_explicit_quality == 1 )) ; then
-	for q in ${quality_presets[@]} ; do
+    if (( use_explicit_quality == 1 )) ; then
+	for q in "${quality_presets[@]}" ; do
 	    if grep -q "^\\*StpQuality $q" "$ppd" ; then
 		echo "StpQuality=$q"
 		return
 	    fi
 	done
-    elif (( "$use_explicit_quality" == 2 )) ; then
+    elif (( use_explicit_quality == 2 )) ; then
 	best_quality=''
-	for q in ${quality_presets[@]} ; do
+	for q in "${quality_presets[@]}" ; do
 	    grep -q "^\\*StpQuality $q" "$ppd" && best_quality=$q
 	done
 	[[ -n $best_quality ]] && echo "StpQuality=$best_quality"
@@ -324,11 +324,11 @@ find_quality() {
 	echo "Can't find $ppd!" 1>&2
 	exit 1;
     fi
-    (( "$use_explicit_quality" == 0 )) && return
+    (( use_explicit_quality == 0 )) && return
     if grep -q '\*Resolution' "$ppd" ; then
-	find_resolution $ppd
+	find_resolution "$ppd"
     else
-	find_quality_preset $ppd
+	find_quality_preset "$ppd"
     fi
 }
 
@@ -336,30 +336,30 @@ xgrep() {
     pat=$1
     file=$2
     if [[ $file == *.gz ]] ; then
-	egrep -m1 $pat $file
+	grep -E -m1 "$pat" "$file"
     else
-	zgrep $pat $file
+	zgrep "$pat" "$file"
     fi
 }
 
 runcmd() {
     qualarg=$(find_quality "$PPD")
     sizearg=$(find_page_size "$PPD")
-    a='1 1 1 1'
+    a=(1 1 1 1)
     qarg="$qualarg $sizearg $cupsargs"
     if [[ -x $cgpdftoraster ]] ; then
 	# cgpdftoraster doesn't like arguments.  How rude.
-	$cgpdftoraster $a "" < "$tfile"
+	$cgpdftoraster "${a[@]}" "" < "$tfile"
     elif [[ -f $tfile && -x $gstoraster ]] ; then
-	$gstoraster $a "$qarg" < "$tfile"
+	$gstoraster "${a[@]}" "$qarg" < "$tfile"
     elif [[ -f $tfile ]] ; then
-	$pstops $a $"qarg" < "$tfile"
+	$pstops "${a[@]}" $"qarg" < "$tfile"
     elif [[ -x $pstoraster ]] ; then
-	$pdftops $a "$qarg" < "$tfile" | $pstops $a "$pages$qarg" | $pstoraster
+	$pdftops "${a[@]}" "$qarg" < "$tfile" | $pstops "${a[@]}" "$pages$qarg" | $pstoraster
     elif [[ -x $gstoraster ]] ; then
-	$pdftops $a "$qarg" < "$tfile" | $gstoraster $a "$pages$qarg"
+	$pdftops "${a[@]}" "$qarg" < "$tfile" | $gstoraster "${a[@]}" "$pages$qarg"
     else
-	$imagetoraster $a "$qarg" < calibrate.ppm
+	$imagetoraster "${a[@]}" "$qarg" < calibrate.ppm
     fi
 }
 
@@ -391,7 +391,7 @@ run_rastertogp() {
 	4) $vg $rgpc "$qarg" ;;
 	5) cat ;;
 	6) cat > /dev/null ;;
-	*) $rgp 1 1 1 1 "$qarg"
+	*) $rgpc "$qarg"
     esac
 }
 
@@ -415,13 +415,12 @@ runall() {
     retval=0
     jobno=0
     for f in "$@" ; do
-	if (( $jobno == $rotor )) ; then
-	    runme "$f"
-	    (( $? != 0 )) && retval=1
+	if (( jobno == rotor )) ; then
+	    runme "$f" || retval=1
 	    echo "$output"
 	    grep -q 'ERROR:' <<< "$output" && retval=1
 	fi
-	jobno=$((($jobno+1) % $jobs))
+	jobno=$(((jobno+1) % jobs))
     done
     return $retval
 }
@@ -429,8 +428,8 @@ runall() {
 get_models() {
     re='\*StpDriverModelFamily:	'
     if (( ${#all_models[*]} <= 1 )) ; then
-	declare -a models=($(xargs grep -m1 -H "^$re" <<< $@ | sed "s/:$re/=/"))
-	for m in ${models[@]} ; do
+	declare -a models=($(xargs grep -m1 -H "^$re" <<< "$*" | sed "s/:$re/=/"))
+	for m in "${models[@]}" ; do
 	    model=${m#*=}
 	    file=${m%%=*}
 	    all_models[$file]=$model
@@ -443,62 +442,60 @@ if [[ -d ppd/C ]] ; then
     declare -a files=($(get_ppds "$@"))
     declare -A models
     declare -a nfiles
-    if (( $skip_simplified > 0 )) ; then
-	for f in ${files[@]} ; do
-	    [[ $f != *.sim.ppd* ]] && nfiles+=($f)
+    if (( skip_simplified > 0 )) ; then
+	for f in "${files[@]}" ; do
+	    [[ $f != *.sim.ppd* ]] && nfiles+=("$f")
 	done
-	files=(${nfiles[@]})
+	files=("${nfiles[@]}")
     fi
     if [[ -n $family ]] ; then
-	get_models ${files[@]}
+	get_models "${files[@]}"
 	nfiles=()
-	for f in ${files[@]} ; do
-	    [[ ${all_models[$f]} =~ $family ]] && nfiles+=($f)
+	for f in "${files[@]}" ; do
+	    [[ ${all_models[$f]} =~ $family ]] && nfiles+=("$f")
 	done
-	files=(${nfiles[@]})
+	files=("${nfiles[@]}")
     fi
-    if (( $single != 0 )) ; then
+    if (( single != 0 )) ; then
 	declare -A seen_models
 	nfiles=()
-	get_models ${files[@]}
-	for f in ${files[@]} ; do
+	get_models "${files[@]}"
+	for f in "${files[@]}" ; do
 	    model=${all_models[$f]}
 	    [[ $f == *.sim.ppd ]] && model="${model}_sim"
 	    if [[ -z ${seen_models[$model]} ]] ; then
-		nfiles+=($f)
+		nfiles+=("$f")
 		seen_models[$model]=1
 	    fi
 	done
-	files=(${nfiles[@]})
+	files=("${nfiles[@]}")
     fi
     # If we're not in -s mode, use PPD file generation to perform
     # the rotor, to save generation.  If we are using -s, though,
     # we don't know what PPD files we want when they're generated, so
     # we can only dedup after the fact.
-    if (( $single != 0 && ${STP_TEST_ROTOR_CIRCUMFERENCE:-1} > 1 &&
+    if (( single != 0 && ${STP_TEST_ROTOR_CIRCUMFERENCE:-1} > 1 &&
 	      ${STP_TEST_ROTOR:-0} >= 0 &&
 	      ${STP_TEST_ROTOR:-0} < ${STP_TEST_ROTOR_CIRCUMFERENCE:-1} )) ; then
 	nfiles=()
-	for i in $(seq 0 ${#files[@]}) ; do
-	    if (( $i % $STP_TEST_ROTOR_CIRCUMFERENCE == $STP_TEST_ROTOR )) ; then
-		nfiles+=(${files[$i]})
+	for i in $(seq 0 $((${#files[@]}-1))) ; do
+	    if (( i % STP_TEST_ROTOR_CIRCUMFERENCE == STP_TEST_ROTOR )) ; then
+		nfiles+=("${files[$i]}")
 	    fi
 	done
-	files=(${nfiles[@]})
+	files=("${nfiles[@]}")
     fi
-    (( ${#files[@]} < $jobs )) && jobs=${#files[@]}
-    declare -a subproc=($(seq 0 $((jobs-1))))
+    (( ${#files[@]} < jobs )) && jobs=${#files[@]}
     # Fire 'em off in the background...
-    for i in ${subproc[@]} ; do
-	runall $jobs $i ${files[@]} &
+    for i in $(seq 0 $((jobs-1))) ; do
+	runall "$jobs" "$i" "${files[@]}" &
     done
     # And wait for them to complete.
-    for i in ${subproc[@]} ; do
-	wait -n
-	(( $? != 0 )) && retval=1
+    for i in $(seq 0 $((jobs-1))) ; do
+	wait -n || retval=1
     done
 fi
 
 [[ -n $tfile ]] && rm -f "$tfile"
-(( $retval == 0 && $make_ppds > 0 )) && rm -rf ppd/C && rmdir ppd
-exit $retval
+(( retval == 0 && make_ppds > 0 )) && rm -rf ppd/C && rmdir ppd
+exit "$retval"

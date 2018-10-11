@@ -39,7 +39,7 @@ if [[ -n "$STP_TEST_LOG_PREFIX" ]] ; then
     exec 2>&1
 fi
 
-[[ -n "$STP_TEST_DEBUG" ]] && DEBUG=echo
+DEBUG=${STP_TEST_DEBUG:+echo}
 
 [[ -z $STP_TEST_SUITE || -z $STP_TEST_PROFILE ]] && STP_TEST_PROFILE=full
 
@@ -90,7 +90,7 @@ case "$STP_TEST_PROFILE" in
 esac
 
 if [[ -n "$STP_TEST_DEBUG" ]] ; then
-    echo "Would run $0 $@"
+    echo "Would run $0 $*"
     exit 0
 fi
 
@@ -126,7 +126,7 @@ fi
 # Use this with PPD files with translated numbers (genppd -N)
 # With normal globalized PPD files this will yield hundreds of megabytes
 # of errors.
-echo $failures | xargs cupstestppd -r $cupstestppdopts 2>&1
+echo "$failures" | xargs cupstestppd -r $cupstestppdopts 2>&1
 
 fail_count=`echo "$failures" | wc -l`
 echo "$fail_count/$ppd_count fail"
