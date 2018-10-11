@@ -478,7 +478,7 @@ if [[ -d ppd/C ]] ; then
 	      ${STP_TEST_ROTOR:-0} >= 0 &&
 	      ${STP_TEST_ROTOR:-0} < ${STP_TEST_ROTOR_CIRCUMFERENCE:-1} )) ; then
 	nfiles=()
-	for i in $(seq 0 ${#files[@]}) ; do
+	for i in $(seq 0 $((${#files[@]}-1))) ; do
 	    if (( i % STP_TEST_ROTOR_CIRCUMFERENCE == STP_TEST_ROTOR )) ; then
 		nfiles+=("${files[$i]}")
 	    fi
