@@ -39,8 +39,10 @@ declare -a FASTOPT=("-dDitherAlgorithm=VeryFast" "-dResolution=MIN" "-dPageSize=
 declare MIN_PRINTERS="@MINIMAL_PRINTERS_TO_TEST@"
 
 function runit() {
-    echo "================================================================"
-    echo "$@"
+    if [[ -z $SILENT ]] ; then
+	echo "================================================================"
+	echo "$@"
+    fi
     [[ -z $STP_TEST_DEBUG ]] && "$@"
 }
 
@@ -98,10 +100,10 @@ function test_valgrind() {
 
 function test_checksums() {
     export STP_DEBUG=$(printf "0x%x" $((0x8000000 | ${STP_DEBUG:-0})))
-    runit ./run-testpattern-2 -q -M ':4' "$@"
-    runit ./run-testpattern-2 -F -s -q -M ':4' \
+    SILENT=1 runit ./run-testpattern-2 -q -M ':4' "$@"
+    SILENT=1 runit ./run-testpattern-2 -F -s -q -M ':4' \
 	  -o PageSize,Resolution=MIN,DitherAlgorithm=VeryFast "$@"
-    runit ./run-testpattern-2 -F -s -q -M ':4' "${FASTOPT[@]}" \
+    SILENT=1 runit ./run-testpattern-2 -F -s -q -M ':4' "${FASTOPT[@]}" \
 	  -o TPMode,ColorCorrection,InkType,UseGloss "$@"
 }
 
