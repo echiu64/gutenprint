@@ -519,9 +519,9 @@ function finish {
 # again.
 function console_log {
     if [[ -n "$*" ]] ; then
-	echo "$*" | log /dev/fd/3 - | timestamp | log - "$top_log" - | cut -c26-
+	echo "$*" | log /dev/fd/3 - | timestamp | log - "$top_log" | cut -c26-
     else
-	log /dev/fd/3 - | timestamp | log - "$top_log" - | cut -c26-
+	log /dev/fd/3 - | timestamp | log - "$top_log" | cut -c26-
     fi
 }
 
@@ -561,7 +561,7 @@ function runit {
     report_progress "$fcounter" "$cmdname"
 
     if [[ -z $DONTRUN_OP ]] ; then
-	STP_TEST_LOG_PREFIX="$local_logdir/" $cmd </dev/null 3>&2 2>&1 | timestamp | log "$logfile"
+	STP_TEST_LOG_PREFIX="$local_logdir/" $cmd </dev/null 3>&1 2>&1 | timestamp | log "$logfile"
 	status=${PIPESTATUS[0]}
 	(( status > 0 )) && msg=FAILED
 	for f in $local_logdir/* ; do
