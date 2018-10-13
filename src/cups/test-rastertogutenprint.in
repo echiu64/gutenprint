@@ -40,9 +40,8 @@ declare use_explicit_quality=0
 declare extra_genppd_opts="-Z"
 declare use_smallest_pagesize=0
 declare cupsargs=''
-declare printers_to_test=''
+declare -a printers_to_test
 declare dontrun=0
-declare -a selected_printers_to_test
 
 if [ -n "$STP_TEST_DEBUG" ] ; then
     echo "Would run with single=$single skip_simplified=$skip_simplified extra_genppd_opts=$extra_genppd_opts cupsargs=$cupsargs use_explicit_quality=$use_explicit_quality valopts=$valopts valgrind=$valgrind"
@@ -139,7 +138,7 @@ shift $((OPTIND - 1))
 if (( $# > 0 )) ; then
     single=0
     for i in $(seq 1 $#) ; do
-	(( (i - 1) % $STP_TEST_ROTOR_CIRCUMFERENCE == $STP_TEST_ROTOR )) && selected_printers_to_test+=($1)
+	(( (i - 1) % $STP_TEST_ROTOR_CIRCUMFERENCE == $STP_TEST_ROTOR )) && printers_to_test+=($1)
 	shift
     done
     (( ${#printers_to_test[@]} == 0 )) && exit 77
@@ -150,7 +149,7 @@ fi
 if (( STP_TEST_ROTOR_CIRCUMFERENCE > 1 &&
 	  STP_TEST_ROTOR >= 0 &&
 	  STP_TEST_ROTOR < STP_TEST_ROTOR_CIRCUMFERENCE )) ; then
-    extra_genppd_opts="$extra_genppd_opts -R $STP_TEST_ROTOR_CIRCUMFERENCE -r $STP_TEST_ROTOR ${selected_printers_to_test[*]}"
+    extra_genppd_opts="$extra_genppd_opts -R $STP_TEST_ROTOR_CIRCUMFERENCE -r $STP_TEST_ROTOR"
     STP_TEST_ROTOR=0
     STP_TEST_ROTOR_CIRCUMFERENCE=1
 fi
@@ -219,8 +218,8 @@ esac
 #cupsargs='PageSize=A8'
 
 get_ppds() {
-    if [[ -n $* || -n $printers_to_test ]] ; then
-	for f in "$@" $printers_to_test ; do
+    if [[ -n $* ]] ; then
+	for f in "$@" ; do
 	    if [[ -r $f ]] ; then
 		echo "$f"
 	    elif [[ -r ppd/C/$f ]] ; then
@@ -277,7 +276,7 @@ get_ppds() {
 if [[ $make_ppds -gt 0 || ! -d ppd/C ]] ; then
     rm -rf ppd/C
 ## not all systems can work with gzipped PPDs
-    extra_genppd_opts="$extra_genppd_opts $*"
+    extra_genppd_opts="$extra_genppd_opts ${printers_to_test[*]}"
     if [[ $skip_simplified == 1 ]] ; then
         echo make ppd-nonls EXTRA_GENPPD_OPTS="$extra_genppd_opts"
         make ppd-nonls EXTRA_GENPPD_OPTS="$extra_genppd_opts"
