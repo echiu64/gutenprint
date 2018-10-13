@@ -293,7 +293,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
     }
   else
     {
-      unsigned test_rotor_current = 0;
+      int test_rotor_current = -1;
       stp_string_list_t *seen_models = NULL;
       if (skip_duplicate_ppds)
 	seen_models = stp_string_list_create();
@@ -301,6 +301,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
       for (i = 0; i < stp_printer_model_count(); i++)
 	{
 	  printer = stp_get_printer_by_index(i);
+	  test_rotor_current++;
 	  if (skip_duplicate_ppds)
 	    {
 	      char model_family[128];
@@ -313,7 +314,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
 		stp_string_list_add_string_unsafe(seen_models, model_family,
 						  model_family);
 	    }
-	  if (test_rotor_current++ % test_rotor_circumference != test_rotor)
+	  if (test_rotor_current % test_rotor_circumference != test_rotor)
 	    continue;
 	  if (i % parallel == rotor && printer)
 	    {

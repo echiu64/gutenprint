@@ -56,6 +56,15 @@ static void stpi_printer_freefunc(void *item);
 static const char* stpi_printer_namefunc(const void *item);
 static const char* stpi_printer_long_namefunc(const void *item);
 
+/*
+ * IMPORTANT NOTE ABOUT PRINTER LIST IMPLEMENTATION:
+ * For testing purposes, at a minimum, the list of printers must be
+ * returned in deterministic order.  The Travis run splits up the list
+ * of printers by means of a rotor (each test job gets every Nth printer),
+ * so a given build must preserve ordering if we want to ensure that
+ * all printers are covered.
+ */
+
 static stp_list_t *printer_list = NULL;
 
 struct stp_printer

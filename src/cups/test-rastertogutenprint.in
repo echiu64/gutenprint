@@ -41,6 +41,8 @@ declare extra_genppd_opts="-Z"
 declare use_smallest_pagesize=0
 declare cupsargs=''
 declare printers_to_test=''
+declare dontrun=0
+declare -a selected_printers_to_test
 
 if [ -n "$STP_TEST_DEBUG" ] ; then
     echo "Would run with single=$single skip_simplified=$skip_simplified extra_genppd_opts=$extra_genppd_opts cupsargs=$cupsargs use_explicit_quality=$use_explicit_quality valopts=$valopts valgrind=$valgrind"
@@ -86,11 +88,12 @@ Usage: test-rastertogutenprint [options] [PPD files...]
     -L        Use highest available quality setting
     -X        Don't use explicit quality setting
     -N	      Use the smallest available page size
+    -d	      Don't actually run the command
 EOF
 exit 0;
 }
 
-while getopts "hvcgsVnO:m:o:p:PSt:lLXf:N" opt ; do
+while getopts "hvcgsVnO:m:o:p:PSt:lLXf:Nd" opt ; do
     case "$opt" in
 	h*) usage ;;
 	v) valgrind=$((valgrind + 1)) ;;
@@ -111,16 +114,14 @@ while getopts "hvcgsVnO:m:o:p:PSt:lLXf:N" opt ; do
 	l) use_explicit_quality=1 ;;
 	L) use_explicit_quality=2 ;;
 	N) use_smallest_pagesize=1 ;;
+	d) dontrun=1 ;;
 	\?) usage ;;
 	*) echo "Unknown argument $opt"; usage ;;
     esac
 done
 
-if (( single == 0 && ${STP_TEST_ROTOR_CIRCUMFERENCE:-1} > 1 &&
-	  ${STP_TEST_ROTOR:-0} >= 0 &&
-	  ${STP_TEST_ROTOR:-0} < ${STP_TEST_ROTOR_CIRCUMFERENCE:-1} )) ; then
-    extra_genppd_opts="$extra_genppd_opts -R $STP_TEST_ROTOR_CIRCUMFERENCE -r $STP_TEST_ROTOR"
-fi
+STP_TEST_ROTOR=${STP_TEST_ROTOR:-0}
+STP_TEST_ROTOR_CIRCUMFERENCE=${STP_TEST_ROTOR_CIRCUMFERENCE:-1}
 
 case "$valgrind" in
     4)
@@ -134,6 +135,25 @@ case "$valgrind" in
 esac
 
 shift $((OPTIND - 1))
+
+if (( $# > 0 )) ; then
+    single=0
+    for i in $(seq 1 $#) ; do
+	(( (i - 1) % $STP_TEST_ROTOR_CIRCUMFERENCE == $STP_TEST_ROTOR )) && selected_printers_to_test+=($1)
+	shift
+    done
+    (( ${#printers_to_test[@]} == 0 )) && exit 77
+fi
+
+(( single > 0 )) && extra_genppd_opts="$extra_genppd_opts -S"
+
+if (( STP_TEST_ROTOR_CIRCUMFERENCE > 1 &&
+	  STP_TEST_ROTOR >= 0 &&
+	  STP_TEST_ROTOR < STP_TEST_ROTOR_CIRCUMFERENCE )) ; then
+    extra_genppd_opts="$extra_genppd_opts -R $STP_TEST_ROTOR_CIRCUMFERENCE -r $STP_TEST_ROTOR ${selected_printers_to_test[*]}"
+    STP_TEST_ROTOR=0
+    STP_TEST_ROTOR_CIRCUMFERENCE=1
+fi
 
 version="@GUTENPRINT_RELEASE_VERSION@";
 rgp="./rastertogutenprint.$version"
@@ -257,10 +277,12 @@ get_ppds() {
 if [[ $make_ppds -gt 0 || ! -d ppd/C ]] ; then
     rm -rf ppd/C
 ## not all systems can work with gzipped PPDs
+    extra_genppd_opts="$extra_genppd_opts $*"
     if [[ $skip_simplified == 1 ]] ; then
-        EXTRA_GENPPD_OPTS="$extra_genppd_opts" make ppd-nonls
+        echo make ppd-nonls EXTRA_GENPPD_OPTS="$extra_genppd_opts"
+        make ppd-nonls EXTRA_GENPPD_OPTS="$extra_genppd_opts"
     else
-        EXTRA_GENPPD_OPTS="$extra_genppd_opts" make ppd-nonls-a
+        make ppd-nonls-a EXTRA_GENPPD_OPTS="$extra_genppd_opts"
     fi
 fi
 
@@ -397,13 +419,16 @@ run_rastertogp() {
 
 runme() {
     f="$1"
+    m=${all_models[$f]}
     p=${f#*stp-}
     p=${p/${version}./}
     export PPD=$f
-    if [[ -n $outdir || -n $md5dir ]] ; then
-	output="${p%.ppd*}...$( (runcmd 2>/dev/null | run_rastertogp | do_output) 2>&1 3>&2)"
+    if (( dontrun > 0 )) ; then
+	output="${p%.ppd*} ($m)"
+    elif [[ -n $outdir || -n $md5dir ]] ; then
+	output="${p%.ppd*} ($m)...$( (runcmd 2>/dev/null | run_rastertogp | do_output) 2>&1 3>&2)"
     else
-	output="${p%.ppd*}...$( (runcmd 2>/dev/null | run_rastertogp >/dev/null) 2>&1 3>&2)"
+	output="${p%.ppd*} ($m)...$( (runcmd 2>/dev/null | run_rastertogp >/dev/null) 2>&1 3>&2)"
     fi
     return $?
 }
@@ -439,7 +464,7 @@ get_models() {
 
 retval=0
 if [[ -d ppd/C ]] ; then
-    declare -a files=($(get_ppds "$@"))
+    declare -a files=($(get_ppds))
     declare -A models
     declare -a nfiles
     if (( skip_simplified > 0 )) ; then
@@ -448,8 +473,8 @@ if [[ -d ppd/C ]] ; then
 	done
 	files=("${nfiles[@]}")
     fi
+    get_models "${files[@]}"
     if [[ -n $family ]] ; then
-	get_models "${files[@]}"
 	nfiles=()
 	for f in "${files[@]}" ; do
 	    [[ ${all_models[$f]} =~ $family ]] && nfiles+=("$f")
@@ -466,21 +491,6 @@ if [[ -d ppd/C ]] ; then
 	    if [[ -z ${seen_models[$model]} ]] ; then
 		nfiles+=("$f")
 		seen_models[$model]=1
-	    fi
-	done
-	files=("${nfiles[@]}")
-    fi
-    # If we're not in -s mode, use PPD file generation to perform
-    # the rotor, to save generation.  If we are using -s, though,
-    # we don't know what PPD files we want when they're generated, so
-    # we can only dedup after the fact.
-    if (( single != 0 && ${STP_TEST_ROTOR_CIRCUMFERENCE:-1} > 1 &&
-	      ${STP_TEST_ROTOR:-0} >= 0 &&
-	      ${STP_TEST_ROTOR:-0} < ${STP_TEST_ROTOR_CIRCUMFERENCE:-1} )) ; then
-	nfiles=()
-	for i in $(seq 0 $((${#files[@]}-1))) ; do
-	    if (( i % STP_TEST_ROTOR_CIRCUMFERENCE == STP_TEST_ROTOR )) ; then
-		nfiles+=("${files[$i]}")
 	    fi
 	done
 	files=("${nfiles[@]}")

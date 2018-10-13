@@ -254,60 +254,60 @@ ppd-nonls: cups-genppd.@GUTENPRINT_RELEASE_VERSION@
 	@echo "Non-localized PPDs:"
 	$(MKDIR_P) $(PPD_DIR)/C
 	$(MAKE) ppd-catalog-clean
-	LC_ALL= LANG= LANGUAGE= $(STP_NONLS_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ $(EXTRA_GENPPD_OPTS) -l C -p $(PPD_DIR)/C @WHICH_PPDS@
+	LC_ALL= LANG= LANGUAGE= $(STP_NONLS_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ -l C -p $(PPD_DIR)/C @WHICH_PPDS@ $(EXTRA_GENPPD_OPTS)
 
 ppd-nonls-a: cups-genppd.@GUTENPRINT_RELEASE_VERSION@
 	@echo "Non-localized PPDs (all):"
 	$(MKDIR_P) $(PPD_DIR)/C
 	$(MAKE) ppd-catalog-clean
-	LC_ALL= LANG= LANGUAGE= $(STP_NONLS_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ $(EXTRA_GENPPD_OPTS) -l C -p $(PPD_DIR)/C -a
+	LC_ALL= LANG= LANGUAGE= $(STP_NONLS_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ -l C -p $(PPD_DIR)/C -a $(EXTRA_GENPPD_OPTS)
 
 ppd-nonls-s: cups-genppd.@GUTENPRINT_RELEASE_VERSION@
 	@echo "Non-localized PPDs (simplified):"
 	$(MKDIR_P) $(PPD_DIR)/C
 	$(MAKE) ppd-catalog-clean
-	LC_ALL= LANG= LANGUAGE= $(STP_NONLS_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ $(EXTRA_GENPPD_OPTS) -l C -p $(PPD_DIR)/C -s
+	LC_ALL= LANG= LANGUAGE= $(STP_NONLS_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ -l C -p $(PPD_DIR)/C -s $(EXTRA_GENPPD_OPTS)
 
 ppd-global: cups-genppd.@GUTENPRINT_RELEASE_VERSION@
 	@echo "Global PPDs:"
 	$(MKDIR_P) $(PPD_DIR)/Global
 	$(MAKE) ppd-catalog
-	LC_ALL= LANG= LANGUAGE= $(STP_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ $(EXTRA_GENPPD_OPTS) -p $(PPD_DIR)/Global @WHICH_PPDS@
+	LC_ALL= LANG= LANGUAGE= $(STP_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ -p $(PPD_DIR)/Global @WHICH_PPDS@ $(EXTRA_GENPPD_OPTS)
 	$(MAKE) ppd-catalog-clean
 
 ppd-global-a: cups-genppd.@GUTENPRINT_RELEASE_VERSION@
 	@echo "Global PPDs (all):"
 	$(MKDIR_P) $(PPD_DIR)/Global
 	$(MAKE) ppd-catalog
-	LC_ALL= LANG= LANGUAGE= $(STP_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ $(EXTRA_GENPPD_OPTS) -p $(PPD_DIR)/Global -a
+	LC_ALL= LANG= LANGUAGE= $(STP_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ -p $(PPD_DIR)/Global -a $(EXTRA_GENPPD_OPTS)
 	$(MAKE) ppd-catalog-clean
 
 ppd-global-s: cups-genppd.@GUTENPRINT_RELEASE_VERSION@
 	@echo "Global PPDs (simplified):"
 	$(MKDIR_P) $(PPD_DIR)/Global
 	$(MAKE) ppd-catalog
-	LC_ALL= LANG= LANGUAGE= $(STP_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ $(EXTRA_GENPPD_OPTS) -p $(PPD_DIR)/Global -s
+	LC_ALL= LANG= LANGUAGE= $(STP_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ -p $(PPD_DIR)/Global -s $(EXTRA_GENPPD_OPTS)
 	$(MAKE) ppd-catalog-clean
 
 ppd-global-ln: cups-genppd.@GUTENPRINT_RELEASE_VERSION@
 	@echo "Global PPDs (localized numbers for testing):"
 	$(MKDIR_P) $(PPD_DIR)/Global
 	$(MAKE) ppd-catalog
-	LC_ALL= LANG= LANGUAGE= $(STP_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ $(EXTRA_GENPPD_OPTS) -p $(PPD_DIR)/Global -N @WHICH_PPDS@
+	LC_ALL= LANG= LANGUAGE= $(STP_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ -p $(PPD_DIR)/Global -N @WHICH_PPDS@ $(EXTRA_GENPPD_OPTS)
 	$(MAKE) ppd-catalog-clean
 
 ppd-global-ln-a: cups-genppd.@GUTENPRINT_RELEASE_VERSION@
 	@echo "Global PPDs (all, localized numbers for testing):"
 	$(MKDIR_P) $(PPD_DIR)/Global
 	$(MAKE) ppd-catalog
-	LC_ALL= LANG= LANGUAGE= $(STP_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ $(EXTRA_GENPPD_OPTS) -p $(PPD_DIR)/Global -N -a
+	LC_ALL= LANG= LANGUAGE= $(STP_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ -p $(PPD_DIR)/Global -N -a $(EXTRA_GENPPD_OPTS)
 	$(MAKE) ppd-catalog-clean
 
 ppd-global-ln-s: cups-genppd.@GUTENPRINT_RELEASE_VERSION@
 	@echo "Global PPDs (all, localized numbers for testing):"
 	$(MKDIR_P) $(PPD_DIR)/Global
 	$(MAKE) ppd-catalog
-	LC_ALL= LANG= LANGUAGE= $(STP_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ $(EXTRA_GENPPD_OPTS) -p $(PPD_DIR)/Global -N -s
+	LC_ALL= LANG= LANGUAGE= $(STP_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ -p $(PPD_DIR)/Global -N -s $(EXTRA_GENPPD_OPTS)
 	$(MAKE) ppd-catalog-clean
 
 ppd-nls: cups-genppd.@GUTENPRINT_RELEASE_VERSION@ ppd-nonls
@@ -317,7 +317,7 @@ ppd-nls: cups-genppd.@GUTENPRINT_RELEASE_VERSION@ ppd-nonls
 	for language in `$(STP_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ @WHICH_PPDS@ -L` ; do \
 	  $(MKDIR_P) $(PPD_DIR)/$$language ; \
 	  echo -n "$$language: " ; \
-	  LC_ALL=$$language LANG=$$language LANGUAGE=$$language $(STP_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ $(EXTRA_GENPPD_OPTS) -l $$language -p $(PPD_DIR)/$$language; \
+	  LC_ALL=$$language LANG=$$language LANGUAGE=$$language $(STP_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ -l $$language -p $(PPD_DIR)/$$language $(EXTRA_GENPPD_OPTS); \
 	done
 	$(MAKE) ppd-catalog-clean
 
@@ -328,7 +328,7 @@ ppd-nls-a: cups-genppd.@GUTENPRINT_RELEASE_VERSION@ @WHICH_PPDS@ ppd-nonls
 	for language in `$(STP_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ @WHICH_PPDS@ -L` ; do \
 	  $(MKDIR_P) $(PPD_DIR)/$$language ; \
 	  echo -n "$$language: " ; \
-	  LC_ALL=$$language LANG=$$language LANGUAGE=$$language $(STP_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ $(EXTRA_GENPPD_OPTS) @WHICH_PPDS@ -l $$language -p $(PPD_DIR)/$$language -a; \
+	  LC_ALL=$$language LANG=$$language LANGUAGE=$$language $(STP_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ @WHICH_PPDS@ -l $$language -p $(PPD_DIR)/$$language -a $(EXTRA_GENPPD_OPTS); \
 	done
 	$(MAKE) ppd-catalog-clean
 
@@ -339,7 +339,7 @@ ppd-nls-s: cups-genppd.@GUTENPRINT_RELEASE_VERSION@ @WHICH_PPDS@ ppd-nonls
 	for language in `$(STP_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ @WHICH_PPDS@ -L` ; do \
 	  $(MKDIR_P) $(PPD_DIR)/$$language ; \
 	  echo -n "$$language: " ; \
-	  LC_ALL=$$language LANG=$$language LANGUAGE=$$language $(STP_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ $(EXTRA_GENPPD_OPTS) @WHICH_PPDS@ -l $$language -p $(PPD_DIR)/$$language -s; \
+	  LC_ALL=$$language LANG=$$language LANGUAGE=$$language $(STP_ENV) ./cups-genppd.@GUTENPRINT_RELEASE_VERSION@ @WHICH_PPDS@ -l $$language -p $(PPD_DIR)/$$language -s $(EXTRA_GENPPD_OPTS); \
 	done
 	$(MAKE) ppd-catalog-clean
 
