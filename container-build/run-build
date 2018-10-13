@@ -1,0 +1,39 @@
+#!/bin/sh
+
+declare revision=
+declare mode=full
+declare repo=git://git.code.sf.net/p/gimp-print/source
+
+while getopts 'r:m:p:u:sh' opt ; do
+    case "$opt" in
+	h*) usage ;;
+	r) revision="$OPTARG" ;;
+	u) repo="$OPTARG" ;;
+	m) mode="$OPTARG" ;;
+	p) export STP_PARALLEL="$OPTARG" ;;
+	s) export STP_PARALLEL=1 ;;
+    esac
+done
+
+cd /var/tmp
+git clone $repo gutenprint-build 1>&2
+ls -l gutenprint-build/scripts
+cd gutenprint-build
+(set -e
+if [[ -n $revision ]] ; then
+    git checkout $revision || exit 1
+fi
+git config user.email "rlk@alum.mit.edu"
+git config user.name "Robert Krawitz"
+case "$mode" in
+    full)
+	scripts/build-release
+	;;
+    minimal)
+	scripts/build-release preflight check_git run_build run_valgrind_minimal run_distcheck_minimal save_build_artifacts
+	;;
+    *)
+	echo "Unknown run mode $mode"
+	exit 1
+	;;
+esac) 1>&2
