@@ -35,7 +35,7 @@ matrix:
                 - libcupsimage2-dev
                 - libusb-1.0-0-dev
               - valgrind
-            - &gimp_packages
+              - &gimp_packages
               - libgimp2.0-dev
             - &doc_packages
               - docbook
@@ -59,7 +59,7 @@ matrix:
 
 
     - stage: "Integration tests"
-      name: "Base build"
+      name: "Base build (gcc-8)"
       script: scripts/travis/smoke
       addons: *smoketest_addons
 
@@ -89,7 +89,7 @@ matrix:
     -
       script: scripts/travis/integration clang-5.0 2
       env: *integration_env
-      name: gcc-8
+      name: clang-5.0
       addons: &clang-5_0-addons
         apt:
           sources:
