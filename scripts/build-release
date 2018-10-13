@@ -464,7 +464,7 @@ function log {
 }
 
 function log_top {
-    log1 "@" "$top_log" -
+    log1 "$@" "$top_log" -
 }
 
 function time_delta {
@@ -493,7 +493,7 @@ function finish {
     echo "*** Gutenprint release build $msg at $estamp ($(time_delta $STIME $etime))" | log_top
     echo "================================================================" | log "$top_log"
     if [[ -n $TRAVIS_MODE ]] ; then
-	# We really don't want the termination message
+	# We really don't want the termination message from the deadman
 	exec 3>&2
 	exec 2>/dev/null
 	kill %1
