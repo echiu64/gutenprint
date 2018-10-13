@@ -87,33 +87,34 @@ matrix:
             - *other_packages
             - gcc-7
     -
-      script: scripts/travis/integration gcc-8 2
+      script: scripts/travis/integration clang-5.0 2
       env: *integration_env
       name: gcc-8
-      addons: &gcc-8-addons
+      addons: &clang-5_0-addons
         apt:
           sources:
             - *sources
+            - llvm-toolchain-trusty-5.0
           packages:
             - *other_packages
-            - gcc-8
+            - clang-5.0
     -
-      script: scripts/travis/integration clang-3.8 3
+      script: scripts/travis/integration clang-3.9 3
       env: *integration_env
-      name: clang-3.8
+      name: clang-3.9
       addons: &clang-3_8-addons
         apt:
           sources:
             - *sources
-            - llvm-toolchain-precise-3.8
+            - llvm-toolchain-trusty-3.9
           packages:
             - *other_packages
-            - clang-3.8
+            - clang-3.9
 
 
     - stage: "Checksums"
       env: &checksum_env
-        - STP_TEST_ROTOR_CIRCUMFERENCE=7
+        - STP_TEST_ROTOR_CIRCUMFERENCE=10
       script: scripts/travis/checksums 0
       addons: &checksum_addons
         apt:
@@ -145,16 +146,24 @@ matrix:
       script: scripts/travis/checksums 6
       env: *checksum_env
       addons: *checksum_addons
+    -
+      script: scripts/travis/checksums 7
+      env: *checksum_env
+      addons: *checksum_addons
+    -
+      script: scripts/travis/checksums 8
+      env: *checksum_env
+      addons: *checksum_addons
+    -
+      script: scripts/travis/checksums 9
+      env: *checksum_env
+      addons: *checksum_addons
 
 
     - stage: "Full tests"
-      name: "Base build"
-      script: scripts/travis/smoke
-      addons: &smoketest_addons
-    -
       name: 0 gcc-4.9
       env: &full_env
-        - STP_TEST_ROTOR_CIRCUMFERENCE=13
+        - STP_TEST_ROTOR_CIRCUMFERENCE=15
       script: scripts/travis/full gcc-4.9 0
       addons: *gcc-4_9-addons
     -
@@ -166,17 +175,23 @@ matrix:
       name: 2 gcc-8
       env: *full_env
       script: scripts/travis/full gcc-8 2
-      addons: *gcc-8-addons
+      addons: &gcc-8-addons
+        apt:
+          sources:
+            - *sources
+          packages:
+            - *other_packages
+            - gcc-8
     -
-      name: 3 clang-3.8
+      name: 3 clang-3.9
       env: *full_env
-      script: scripts/travis/full clang-3.8 3
+      script: scripts/travis/full clang-3.9 3
       addons: *clang-3_8-addons
     -
-      name: 4 clang-3.8
+      name: 4 clang-5.0
       env: *full_env
-      script: scripts/travis/full clang-3.8 4
-      addons: *clang-3_8-addons
+      script: scripts/travis/full clang-5.0 4
+      addons: *clang-5_0-addons
     -
       name: 5 gcc-4.9
       env: *full_env
@@ -193,15 +208,15 @@ matrix:
       script: scripts/travis/full gcc-8 7
       addons: *gcc-8-addons
     -
-      name: 8 gcc-8
+      name: 8 clang-3.9
       env: *full_env
-      script: scripts/travis/full gcc-8 8
-      addons: *gcc-8-addons
-    -
-      name: 9 clang-3.8
-      env: *full_env
-      script: scripts/travis/full clang-3.8 9
+      script: scripts/travis/full clang-3.9 8
       addons: *clang-3_8-addons
+    -
+      name: 9 clang-5.0
+      env: *full_env
+      script: scripts/travis/full clang-5.0 9
+      addons: *clang-5_0-addons
     -
       name: 10 gcc-4.9
       env: *full_env
@@ -213,14 +228,24 @@ matrix:
       script: scripts/travis/full gcc-7 11
       addons: *gcc-7-addons
     -
-      name: 12 gcc-7
+      name: 12 gcc-8
       env: *full_env
-      script: scripts/travis/full gcc-7 12
-      addons: *gcc-7-addons
+      script: scripts/travis/full gcc-8 12
+      addons: *gcc-8-addons
+    -
+      name: 13 clang-3.9
+      env: *full_env
+      script: scripts/travis/full clang-3.9 13
+      addons: *clang-3_8-addons
+    -
+      name: 14 clang-5.0
+      env: *full_env
+      script: scripts/travis/full clang-5.0 14
+      addons: *clang-5_0-addons
 
 stages:
   - name: "Smoke test"
-    if: 1 = 0
+    if: type = cron
   - name: "Integration tests"
     if: type IN (push, pull_request)
   - name: "Checksums"
