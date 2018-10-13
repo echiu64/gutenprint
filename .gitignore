@@ -10,20 +10,10 @@
 BuildLogs/**
 
 # Random noise
-*.patch
-*.orig
-*.rej
 tags
 
 # Generated documentation
-*.1
-*.3
-*.7
-*.8
-*.dvi
-*.eps
 *.pdf
-*.ps
 *.tex
 ChangeLog
 
@@ -43,6 +33,7 @@ config.h.in
 config.rpath
 config.status
 config.sub
+config.summary
 configure
 compile
 .deps
@@ -138,10 +129,9 @@ src/cups/min-pagesize
 src/cups/ppd
 src/cups/ppd-stamp
 src/cups/rastertogutenprint.5.*
-src/cups/test-ppds
+src/cups/test-ppds.test
 src/cups/test-rastertogutenprint
-src/cups/test-rastertogutenprint
-src/cups/test-rastertogutenprint.check
+src/cups/test-rastertogutenprint.test
 src/cups/testppd
 src/escputil/escputil
 src/gutenprintui2/gutenprintui2.pc
@@ -160,21 +150,22 @@ src/testpattern/printrcl.c
 src/testpattern/printrcy.c
 src/testpattern/printrcy.h
 src/testpattern/run-testpattern
-src/testpattern/run-testpattern-1
+src/testpattern/run-testpattern-1.test
 src/testpattern/run-testpattern-2
-src/testpattern/run-testpattern-2.check
+src/testpattern/run-testpattern-2.test
 src/testpattern/testpattern
 src/testpattern/testpattern.test
 src/testpattern/testpatternl.c
 src/testpattern/testpatterny.c
 src/testpattern/testpatterny.h
 src/xml/extract-strings
-src/xml/printers/check_duplicate_printers
+src/xml/printers/check_duplicate_printers.test
 src/xml/xmli18n-tmp.h
 test/bjc-unprint
 test/compress-5level.sh
 test/compress-6level.sh
 test/curve
+test/test-curve.test
 test/escp2-unprint
 test/escp2-weavetest
 test/gen-printer-list
@@ -182,8 +173,8 @@ test/parse-bjc
 test/parse-escp2
 test/pcl-unprint
 test/pixma_parse
-test/run-testdither
-test/run-weavetest
+test/run-testdither.test
+test/run-weavetest.test
 test/testdither
 test/uncompress-5level.sh
 test/uncompress-6level.sh
