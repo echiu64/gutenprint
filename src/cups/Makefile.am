@@ -224,15 +224,19 @@ install-data-hook:
 	-rmdir `dirname $(DESTDIR)$(pkglibdir)`
 	-rmdir `dirname $(DESTDIR)$(pkgsysconfdir)`
 
-.PHONY: ppd-stamp-pre ppd-stamp-nonls ppd-stamp-nls \
+.PHONY: ppd ppd-stamp-pre ppd-stamp-nonls ppd-stamp-nls ppd-stamp-phony \
 	ppd-catalog-clean ppd-clean $(INSTALL_BLACKLIST)
 
 all-local: $(INSTALL_DATA_LOCAL_DEPS)
 
 ppd: ppd-stamp
 
-ppd-stamp: cups-genppd.@GUTENPRINT_RELEASE_VERSION@ $(top_srcdir)/src/xml/xml-stamp ppd-stamp-pre $(PPD)
+ppd-stamp: cups-genppd.@GUTENPRINT_RELEASE_VERSION@ $(top_srcdir)/src/xml/xml-stamp ppd-stamp-pre
+	$(MAKE) ppd-stamp-pre
+	$(MAKE) ppd-stamp-phony
 	touch ppd-stamp
+
+ppd-stamp-phony: $(PPD)
 
 ppd-catalog-clean:
 	$(RM) -rf $(PPD_DIR)catalog
