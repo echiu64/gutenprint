@@ -126,7 +126,9 @@ html-stamp: $(MANUAL_SRC_FILES)
 	    $(LN_S) -f $(srcdir)/$$file $$file ; \
 	  done ; \
 	fi
-	$(DB2HTML) gutenprint.xml
+	-$(RM) -rf gutenprint
+	$(MKDIR_P) gutenprint
+	cd gutenprint && $(DB2HTML) ../gutenprint.xml
 	-$(RM) -rf $(HTMLDIR)
 	mv gutenprint $(HTMLDIR)
 	chmod a+rx $(HTMLDIR)
