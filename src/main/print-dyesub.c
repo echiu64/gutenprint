@@ -4843,8 +4843,12 @@ LIST(dyesub_printsize_list_t, mitsu_cpd80_printsize_list, dyesub_printsize_t, mi
 /* Kodak 305 */
 static const dyesub_pagesize_t kodak305_page[] =
 {
+  DEFINE_PAPER_SIMPLE( "B7", "3.5x5", PT1(1076,300), PT1(1568,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER_SIMPLE( "w288h432", "4x6", PT1(1218,300), PT1(1864,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER_SIMPLE( "w288h432-div2", "2x6*2", PT1(1218,300), PT1(1864,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w360h360", "5x5", PT1(1524,300), PT1(1568,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w360h504", "5x7", PT1(1568,300), PT1(2128,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w360h504-div2", "3.5x5*2", PT1(1568,300), PT1(2190,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w432h432", "6x6", PT1(1820,300), PT1(1864,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER_SIMPLE( "w432h576", "6x8", PT1(1864,300), PT1(2422,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w432h576-div2", "4x6*2", PT1(1864,300), PT1(2454,300),	DYESUB_PORTRAIT),
@@ -4854,8 +4858,12 @@ LIST(dyesub_pagesize_list_t, kodak305_page_list, dyesub_pagesize_t, kodak305_pag
 
 static const dyesub_printsize_t kodak305_printsize[] =
 {
+  { "300x300", "B7", 1076, 1568},
   { "300x300", "w288h432", 1218, 1864},
   { "300x300", "w288h432-div2", 1218, 1864},
+  { "300x300", "w360h360", 1524, 1568},
+  { "300x300", "w360h504", 1568, 2128},
+  { "300x300", "w360h504-div2", 1568, 2190},
   { "300x300", "w432h432", 1820, 1864},
   { "300x300", "w432h576", 1864, 2422},
   { "300x300", "w432h576-div2", 1864, 2454},
