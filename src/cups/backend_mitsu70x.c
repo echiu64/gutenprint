@@ -324,8 +324,8 @@ struct mitsu70x_status_deck {
 	uint8_t  media_brand;
 	uint8_t  media_type;
 	uint8_t  rsvd_b[2];
-	uint16_t capacity; /* media capacity */
-	uint16_t remain;   /* media remaining */
+	int16_t  capacity; /* media capacity */
+	int16_t  remain;   /* media remaining */
 	uint8_t  rsvd_c[2];
 	uint8_t  lifetime_prints[4]; /* lifetime prints on deck + 10, in BCD! */
 	uint8_t  rsvd_d[2]; // Unknown
@@ -834,10 +834,11 @@ static int mitsu70x_attach(void *vctx, struct libusb_device_handle *dev, int typ
 	if (ctx->type == P_KODAK_305) {
 		/* Known versions:
 		   v1.02: M 316E81 1433   (Add Ultrafine and matte support)
-		   v1.04: M 316F83 2878   (Add 2x6 strip and support "Triton" media)
+		   v1.04: M 316F83 2878   (Add 2x6 strip and support new "Triton" media)
+		   v3.01: M 443A12 8908   (add 5" media support)
 		*/
-		if (strncmp(resp.vers[0].ver, "316F83", 6) < 0)
-			WARNING("Printer FW out of date. Highly recommend upgrading EK305 to v1.04 or newer!\n");
+		if (strncmp(resp.vers[0].ver, "443A12", 6) < 0)
+			WARNING("Printer FW out of date. Highly recommend upgrading EK305 to v3.01 or newer!\n");
 	} else if (ctx->type == P_MITSU_K60) {
 		/* Known versions:
 		   v1.05: M 316M31 148C   (Add HG media support)
@@ -1722,7 +1723,7 @@ static int mitsu70x_main_loop(void *vctx, const void *vjob)
 
 	int ret;
 	int copies;
-	int deck;
+	int deck, legal, reqdeck;
 
 	struct mitsu70x_printjob *job = (struct mitsu70x_printjob *) vjob; // XXX not clean.
 //	const struct mitsu70x_printjob *job = vjob;
@@ -1734,6 +1735,9 @@ static int mitsu70x_main_loop(void *vctx, const void *vjob)
 
 	copies = job->copies;
 	hdr = (struct mitsu70x_hdr*) job->databuf;
+
+	/* Keep track of deck requested */
+	reqdeck = hdr->deck;
 
 	if (job->raw_format)
 		goto bypass;
@@ -1866,7 +1870,7 @@ top:
 
 	/* First, try to respect requested deck */
 	if (ctx->type == P_MITSU_D70X) {
-		deck = hdr->deck; /* Respect D70 deck choice, 0 is automatic. */
+		deck = reqdeck; /* Respect D70 deck choice, 0 is automatic. */
 	} else {
 		deck = 1; /* All others have one deck only */
 	}
@@ -1902,6 +1906,7 @@ top:
 		      job->decks_ok[0], job->decks_ok[1]);
 
 	/* Okay, we know which decks are _legal_, pick one to use */
+	legal = deck;
 	if (deck & 1) {
 		if (jobstatus.temperature == TEMPERATURE_COOLING) {
 			if (ctx->num_decks == 2)
@@ -1910,7 +1915,8 @@ top:
 				INFO("Printer cooling down...\n");
 			deck &= ~1;
 		} else if (jobstatus.error_status[0]) {
-			ERROR("%s/%s -> %s:  %02x/%02x/%02x\n",
+			ERROR("%s %s/%s -> %s:  %02x/%02x/%02x\n",
+			      ctx->num_decks == 2 ? "LOWER:": "",
 			      mitsu70x_errorclass(jobstatus.error_status),
 			      mitsu70x_errors(jobstatus.error_status),
 			      mitsu70x_errorrecovery(jobstatus.error_status),
@@ -1918,8 +1924,9 @@ top:
 			      jobstatus.error_status[1],
 			      jobstatus.error_status[2]);
 			deck &= ~1;
+			legal &= ~1;  /* Deck is offline! */
 		} else if (jobstatus.mecha_status[0] != MECHA_STATUS_IDLE) {
-			deck = ~1;
+			deck &= ~1;
 		}
 	}
 	if (deck & 2) {
@@ -1935,8 +1942,9 @@ top:
 			      jobstatus.error_status_up[1],
 			      jobstatus.error_status_up[2]);
 			deck &= ~2;
+			legal &= ~2;  /* Deck is offline! */
 		} else if (jobstatus.mecha_status_up[0] != MECHA_STATUS_IDLE) {
-			deck = ~2;
+			deck &= ~2;
 		}
 	}
 
@@ -1951,18 +1959,28 @@ top:
 	if (ctx->num_decks > 1)
 		DEBUG("Deck selected: %d\n", deck);
 
+	/* Great, we have no decks we can currently print this job on.. */
 	if (deck == 0) {
 		/* Halt queue if printer is entirely offline */
 		if (ctx->num_decks == 2) {
-			if (jobstatus.error_status[0] && jobstatus.error_status_up[0])
+			if (jobstatus.error_status[0] && jobstatus.error_status_up[0]) {
+				ERROR("Both decks offline due to errors\n");
 				return CUPS_BACKEND_STOP;
-		// XXX what if we only have one legal deck, and it's unavailable?  We don't want to retry indefinitely here..
+			}
 		} else {
-			if (jobstatus.error_status[0])
+			if (jobstatus.error_status[0]) {
+				ERROR("Printer offline due to errors\n");
 				return CUPS_BACKEND_STOP;
+			}
 		}
 
-		/* No decks available yet, retry */
+		/* Hold job if we have no legal decks for it, but printer is online. */
+		if (!legal) {
+			ERROR("Legal deck for printjob has errors, aborting job");
+			return CUPS_BACKEND_HOLD;
+		}
+
+		/* Legal decks are busy, retry */
 		sleep(1);
 		goto top;
 	}
@@ -2086,7 +2104,7 @@ top:
 			return CUPS_BACKEND_FAILED;
 
 		/* See if we hit a printer error. */
-		if (deck == 0) {
+		if (deck == 1) {
 			if (jobstatus.error_status[0]) {
 				ERROR("%s/%s -> %s:  %02x/%02x/%02x\n",
 				      mitsu70x_errorclass(jobstatus.error_status),
@@ -2095,9 +2113,14 @@ top:
 				      jobstatus.error_status[0],
 				      jobstatus.error_status[1],
 				      jobstatus.error_status[2]);
+
+				/* Retry job on the other deck.. */
+				if (ctx->num_decks == 2)
+					goto top;
+
 				return CUPS_BACKEND_STOP;
 			}
-		} else if (deck == 1) {
+		} else if (deck == 2) {
 			if (jobstatus.error_status_up[0]) {
 				ERROR("UPPER: %s/%s -> %s:  %02x/%02x/%02x\n",
 				      mitsu70x_errorclass(jobstatus.error_status_up),
@@ -2106,6 +2129,11 @@ top:
 				      jobstatus.error_status_up[0],
 				      jobstatus.error_status_up[1],
 				      jobstatus.error_status_up[2]);
+
+				/* Retry job on the other deck.. */
+				if (ctx->num_decks == 2)
+					goto top;
+
 				return CUPS_BACKEND_STOP;
 			}
 		}
@@ -2137,15 +2165,19 @@ top:
 			break;
 		}
 
+		/* See if we can return early, but wait until printing has started! */
+		if (fast_return && copies <= 1 && /* Copies generated by backend! */
+		    jobstatus.job_status[0] == JOB_STATUS0_PRINT &&
+		    jobstatus.job_status[1] > JOB_STATUS1_PRINT_MEDIALOAD)
+		{
+			INFO("Fast return mode enabled.\n");
+			break;
+		}
+
 		/* On a two deck system, try to use the second deck
 		   for additional copies. If we can't use it, we'll block. */
 		if (ctx->num_decks > 1 && copies > 1)
 			break;
-
-		if (fast_return && copies <= 1) { /* Copies generated by backend! */
-			INFO("Fast return mode enabled.\n");
-			break;
-		}
 
 		/* Update cache for the next round */
 		memcpy(last_status, jobstatus.job_status, 4);
@@ -2355,7 +2387,6 @@ static void mitsu70x_cmdline(void)
 	DEBUG("\t\t[ -j ]           # Query job status\n");
 	DEBUG("\t\t[ -w ]           # Wake up printer\n");
 	DEBUG("\t\t[ -W ]           # Wake up printer and wait\n");
-	DEBUG("\t\t[ -f ]           # Use fast return mode\n");
 	DEBUG("\t\t[ -k num ]       # Set standby time (1-60 minutes, 0 disables)\n");
 	DEBUG("\t\t[ -x num ]       # Set USB iSerialNumber Reporting (1 on, 0 off)\n");
 	DEBUG("\t\t[ -X jobid ]     # Abort a printjob\n");}
@@ -2449,7 +2480,7 @@ static const char *mitsu70x_prefixes[] = {
 /* Exported */
 struct dyesub_backend mitsu70x_backend = {
 	.name = "Mitsubishi CP-D70 family",
-	.version = "0.89",
+	.version = "0.94",
 	.uri_prefixes = mitsu70x_prefixes,
 	.flags = BACKEND_FLAG_JOBLIST,
 	.cmdline_usage = mitsu70x_cmdline,
