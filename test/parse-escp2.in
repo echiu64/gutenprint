@@ -626,16 +626,21 @@ sub print_output_data($$$$$$) {
     } elsif ($comptype == 1) {
 	foreach $i (0..$rows-1) {
 	    my ($found_something) = 0;
-	    $dots = $savedots;
+	    $dots = $savedots / 8;
 	    my ($tstuff) = "\n    $i    ";
 	    while ($dots > 0) {
-		fill_buffer(1);
+		if ($total_length - $curoffset < 1) {
+		    fill_buffer(1);
+		}
 		$counter = ord(substr($stuff, $curoffset + 0, 1));
-		increment_curpos(1);
+		$curpos++;
+		$curoffset++;
 		if ($counter <= 127) {
 		    $counter++;
-		    fill_buffer($counter);
-		    if ($opt_v || $opt_V) {
+		    if ($total_length - $curoffset < $counter) {
+			fill_buffer($counter);
+		    }
+		    if ($opt_V || ($opt_v && ! $found_something)) {
 			my $tmp = get_vector_at(0, $counter);
 			if (!($tmp =~ /^[0 ]+$/)) {
 			    $found_something = 1;
@@ -648,11 +653,25 @@ sub print_output_data($$$$$$) {
 			    $tstuff .= $tmp;
 			}
 		    }
-		    increment_curpos($counter);
+		    $curpos += $counter;
+		    $curoffset += $counter;
 		} else {
 		    $counter = 257 - $counter;
-		    fill_buffer(1);
-		    if ($opt_v || $opt_V) {
+		    if ($total_length - $curoffset < 1) {
+			fill_buffer(1);
+		    }
+		    if ($opt_v) {
+			if (! $found_something) {
+			    my $tbyte = get_raw_at(0, 1);
+			    if ($tbyte != 0) {
+				$found_something = 1;
+				$last_row = $i;
+				if ($first_row == -1) {
+				    $first_row = $i;
+				}
+			    }
+			}
+		    } elsif ($opt_V) {
 			$fchar = sprintf "%v02x ", get_raw_at(0, 1);
 			if ($fchar ne "00 ") {
 			    $found_something = 1;
@@ -661,13 +680,12 @@ sub print_output_data($$$$$$) {
 				$first_row = $i;
 			    }
 			}
-		    }
-		    if ($opt_V) {
 			map { $tstuff .= $fchar } (0..$counter - 1);
 		    }
-		    increment_curpos(1);
+		    $curpos++;
+		    $curoffset++;
 		}
-		$dots -= $counter * 8;
+		$dots -= $counter;
 	    }
 	    if ($opt_V && $found_something) {
 		$vstuff .= $tstuff;
