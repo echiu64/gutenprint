@@ -28,7 +28,7 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.89G"
+#define BACKEND_VERSION "0.90G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
@@ -40,6 +40,7 @@
 
 #define USB_SUBCLASS_PRINTER 0x1
 #define USB_INTERFACE_PROTOCOL_BIDIR 0x2
+#define USB_INTERFACE_PROTOCOL_IPP   0x4
 
 /* Global Variables */
 int dyesub_debug = 0;
@@ -51,6 +52,7 @@ int extra_type = -1;
 int copies = 1;
 int test_mode = 0;
 int old_uri = 0;
+int quiet = 0;
 
 static int max_xfer_size = URB_XFER_SIZE;
 static int xfer_timeout = XFER_TIMEOUT;
@@ -435,8 +437,16 @@ static int probe_device(struct libusb_device *device,
 				continue;
 			}
 
-#if 0
-			// Make sure it's a printer class device that supports bidir comms  (XXX Is this always true?)
+#if 1
+			/* Explicitly exclude IPP-over-USB interfaces */
+			if (desc->bDeviceClass == LIBUSB_CLASS_PER_INTERFACE &&
+			    config->interface[iface].altsetting[altset].bInterfaceClass == LIBUSB_CLASS_PRINTER &&
+			    config->interface[iface].altsetting[altset].bInterfaceSubClass == USB_SUBCLASS_PRINTER &&
+			    config->interface[iface].altsetting[altset].bInterfaceProtocol == USB_INTERFACE_PROTOCOL_IPP) {
+				continue;
+			}
+#else
+			// Make sure it's a printer class device that supports bidir comms  (XXX Is this necessarily true?)
 			if (desc->bDeviceClass == LIBUSB_CLASS_PRINTER ||
 			    (desc->bDeviceClass == LIBUSB_CLASS_PER_INTERFACE &&
 			     config->interface[iface].altsetting[altset].bInterfaceClass == LIBUSB_CLASS_PRINTER &&
@@ -848,13 +858,13 @@ void print_help(char *argv0, struct dyesub_backend *backend)
 	if (!backend) {
 		int i;
 		DEBUG("Environment variables:\n");
-		DEBUG(" DYESUB_DEBUG EXTRA_PID EXTRA_VID EXTRA_TYPE BACKEND SERIAL OLD_URI_SCHEME\n");
+		DEBUG(" DYESUB_DEBUG EXTRA_PID EXTRA_VID EXTRA_TYPE BACKEND SERIAL OLD_URI_SCHEME BACKEND_QUIET\n");
 		DEBUG("CUPS Usage:\n");
 		DEBUG("\tDEVICE_URI=someuri %s job user title num-copies options [ filename ]\n", URI_PREFIX);
 		DEBUG("\n");
 		DEBUG("Standalone Usage:\n");
 		DEBUG("\t%s\n", URI_PREFIX);
-		DEBUG("  [ -D ] [ -G ] [ -f ]\n");
+		DEBUG("  [ -D ] [ -G ] [ -f ] [ -v ]\n");
 		DEBUG("  [ backend_specific_args ] \n");
 		DEBUG("  [ -d copies ] \n");
 		DEBUG("  [ - | infile ] \n");
@@ -964,14 +974,9 @@ int main (int argc, char **argv)
 	char *use_serno = NULL;
 	int  printer_type;
 
-	DEBUG("Multi-Call Dye-sublimation CUPS Backend version %s\n",
-	      BACKEND_VERSION);
-	DEBUG("Copyright 2007-2018 Solomon Peachy\n");
-	DEBUG("This free software comes with ABSOLUTELY NO WARRANTY! \n");
-	DEBUG("Licensed under the GNU GPL.  Run with '-G' for more details.\n");
-	DEBUG("\n");
-
-	/* First pass at cmdline parsing */
+	/* Handle environment variables  */
+	if (getenv("BACKEND_QUIET"))
+		quiet = atoi(getenv("BACKEND_QUIET"));
 	if (getenv("DYESUB_DEBUG"))
 		dyesub_debug = atoi(getenv("DYESUB_DEBUG"));
 	if (getenv("EXTRA_PID"))
@@ -997,6 +1002,13 @@ int main (int argc, char **argv)
 		ERROR("Must specify EXTRA_VID, EXTRA_PID in test mode > 1!\n");
 		exit(1);
 	}
+
+	DEBUG("Multi-Call Dye-sublimation CUPS Backend version %s\n",
+	      BACKEND_VERSION);
+	DEBUG("Copyright 2007-2018 Solomon Peachy\n");
+	DEBUG("This free software comes with ABSOLUTELY NO WARRANTY! \n");
+	DEBUG("Licensed under the GNU GPL.  Run with '-G' for more details.\n");
+	DEBUG("\n");
 
 	use_serno = getenv("SERIAL");
 	uri = getenv("DEVICE_URI");  /* CUPS backend mode! */
