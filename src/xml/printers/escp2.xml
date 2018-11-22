@@ -86,6 +86,16 @@
       <printer translate="name" name="Epson Expression ET-2700 EcoTank" driver="escp2-et2700" manufacturer="Epson" model="80" parameters="cx3500_params" />
       <printer translate="name" name="Epson Expression ET-2750 EcoTank" driver="escp2-et2750" manufacturer="Epson" model="80" parameters="cx3500_params" />
       <printer translate="name" name="Epson Expression ET-2750 EcoTank Business Edition" driver="escp2-et2750be" manufacturer="Epson" model="80" parameters="cx3500_params" />
+      <printer translate="name" name="Epson Expression Home XP-240" driver="escp2-xp240" manufacturer="Epson" model="135" parameters="standard_params" />
+      <printer translate="name" name="Epson Expression Home XP-245" driver="escp2-xp245" manufacturer="Epson" model="121" parameters="standard_params" />
+      <printer translate="name" name="Epson Expression Home XP-340" driver="escp2-xp340" manufacturer="Epson" model="135" parameters="standard_params" />
+      <printer translate="name" name="Epson Expression Home XP-344" driver="escp2-xp344" manufacturer="Epson" model="135" parameters="standard_params" />
+      <printer translate="name" name="Epson Expression Home XP-440" driver="escp2-xp440" manufacturer="Epson" model="135" parameters="standard_params" />
+      <printer translate="name" name="Epson Expression Home XP-442" driver="escp2-xp442" manufacturer="Epson" model="135" parameters="standard_params" />
+      <printer translate="name" name="Epson Expression Home XP-820" driver="escp2-xp820" manufacturer="Epson" model="91" parameters="standard_params" />
+      <printer translate="name" name="Epson Expression Photo XP-860" driver="escp2-xp860" manufacturer="Epson" model="134" parameters="standard_params" />
+      <printer translate="name" name="Epson Expression Photo XP-960" driver="escp2-xp960" manufacturer="Epson" model="133" parameters="standard_params" />
+      <printer translate="name" name="Epson Expression Photo XP-8500" driver="escp2-xp8500" manufacturer="Epson" model="134" parameters="standard_params" />
       <printer translate="name" name="Epson XP-15000 Series" deviceid="MFG:EPSON;CMD:ESCPL2,BDC,ESCPR7,END4,GENEP;MDL:XP-15000 Series;CLS:PRINTER;DES:EPSON XP-15000 Series;CID:EpsonRGB;FID:FXN,DPA,WFA,ETA,AFN,DAN,WRA;RID:20;DDS:022500;ELG:1000;SN:583436523031363416" driver="escp2-xp15000" manufacturer="Epson" model="132" parameters="standard_params" />
       <printer translate="name" name="Epson L120" driver="escp2-l120" manufacturer="Epson" model="80" parameters="cx3500_params" />
       <printer translate="name" name="Epson L210" driver="escp2-l210" manufacturer="Epson" model="80" parameters="cx3500_params" />
@@ -649,7 +659,6 @@
       <printer translate="name" name="Epson PX G5600" driver="escp2-pxg5600" manufacturer="Epson" model="98" parameters="standard_params" />
       <printer translate="name" name="Epson PX 7000" driver="escp2-px7000" manufacturer="Epson" model="48" parameters="standard_params" />
       <printer translate="name" name="Epson PX 9000" driver="escp2-px9000" manufacturer="Epson" model="49" parameters="standard_params" />
-      <printer translate="name" name="Epson XP-820" driver="escp2-xp820" manufacturer="Epson" model="91" parameters="standard_params" />
     </family>
   </printdef>
 </gutenprint>
