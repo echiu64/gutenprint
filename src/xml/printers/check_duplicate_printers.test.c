@@ -34,7 +34,7 @@ main(int argc, char **argv)
       if (getenv("BUILD_VERBOSE"))
 	dup2(2, 3);
       (void) snprintf(path, PATH_MAX, "%scheck_duplicate_printers_%d.log", getenv("STP_TEST_LOG_PREFIX"), getpid());
-      stdout = freopen(path, "w", stdout);
+      freopen(path, "w", stdout);
       dup2(1, 2);
     }
   setenv("STP_CHECK_DUPLICATE_PRINTERS", "TRUE", 1);
