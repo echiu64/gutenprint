@@ -234,6 +234,7 @@ typedef struct
   int contrast;
   int sharpen;
   int brightness;
+  char userlut[34];
   char usercomment[40];
   char commentbuf[19];  /* With one extra byte for null termination */
 } mitsu_p95d_privdata_t;
@@ -2787,6 +2788,12 @@ static const stp_parameter_t mitsu_p95d_parameters[] =
     STP_PARAMETER_TYPE_RAW, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_ADVANCED, 0, 1, STP_CHANNEL_NONE, 1, 0
   },
+  {
+    "UserLUT", N_("User LUT"), "Color=No,Category=Advanced Printer Setup",
+    N_("User-specified Lookup Table, must be exactly 34 bytes in long"),
+    STP_PARAMETER_TYPE_RAW, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 0, 1, STP_CHANNEL_NONE, 1, 0
+  },
 };
 #define mitsu_p95d_parameter_count (sizeof(mitsu_p95d_parameters) / sizeof(const stp_parameter_t))
 
@@ -2875,6 +2882,8 @@ mitsu_p95d_load_parameters(const stp_vars_t *v, const char *name,
       description->is_active = 1;
     } else if (strcmp(name, "UserComment") == 0) {
       description->is_active = 1;
+    } else if (strcmp(name, "UserLUT") == 0) {
+      description->is_active = 1;
     }
   else
   {
@@ -2882,6 +2891,8 @@ mitsu_p95d_load_parameters(const stp_vars_t *v, const char *name,
   }
   return 1;
 }
+
+static const char *p95d_lut = "\x00\x12\x01\x5e\x03\x52\x05\xdc\x08\x66\x0a\x96\x0c\x3a\x0d\x70\x0e\x42\x0e\xce\x0f\x32\x0f\x78\x0f\xa0\x0f\xb4\x0f\xc8\x0f\xd8\x0f\xff";  /* Taken from "P95D.lut" dated 2016-05-25 */
 
 static int mitsu_p95d_parse_parameters(stp_vars_t *v)
 {
@@ -2891,12 +2902,21 @@ static int mitsu_p95d_parse_parameters(stp_vars_t *v)
   const char *cutter = stp_get_string_parameter(v, "MediaCut");
   const char *comment = stp_get_string_parameter(v, "Comment");
   const stp_raw_t *usercomment = NULL;
+  const stp_raw_t *userlut = NULL;
 
   /* Sanity check */
   if (stp_check_raw_parameter(v, "UserComment", STP_PARAMETER_ACTIVE)) {
     usercomment = stp_get_raw_parameter(v, "UserComment");
     if (usercomment->bytes > 34) {
       stp_eprintf(v, _("StpUserComment must be between 0 and 34 bytes!\n"));
+      return 0;
+    }
+  }
+
+  if (stp_check_raw_parameter(v, "UserLUT", STP_PARAMETER_ACTIVE)) {
+    userlut = stp_get_raw_parameter(v, "UserLUT");
+    if (usercomment->bytes != 34) {
+      stp_eprintf(v, _("StpUserLUT must be exactly 34 bytes!\n"));
       return 0;
     }
   }
@@ -2991,10 +3011,14 @@ static int mitsu_p95d_parse_parameters(stp_vars_t *v)
     memset(pd->privdata.m95d.usercomment, 0x20, sizeof(pd->privdata.m95d.usercomment));
   }
 
+  if (userlut) {
+    memcpy(pd->privdata.m95d.userlut, userlut->data, userlut->bytes);
+  } else {
+    memcpy(pd->privdata.m95d.userlut, p95d_lut, sizeof(pd->privdata.m95d.userlut));
+  }
+
   return 1;
 }
-
-static const char *p95d_lut = "\x00\x12\x01\x5e\x03\x52\x05\xdc\x08\x66\x0a\x96\x0c\x3a\x0d\x70\x0e\x42\x0e\xce\x0f\x32\x0f\x78\x0f\xa0\x0f\xb4\x0f\xc8\x0f\xd8\x0f\xff";  /* Taken from "P95D.lut" dated 2016-05-25 */
 
 static void mitsu_p95d_printer_init(stp_vars_t *v)
 {
@@ -3077,7 +3101,7 @@ static void mitsu_p95d_printer_init(stp_vars_t *v)
   stp_putc(0x00, v);
 
   if (pd->privdata.m95d.gamma == 0x10) {
-    stp_zfwrite(p95d_lut, 1, sizeof(p95d_lut), v); /* XXX only for K95HG? */
+    stp_zfwrite(pd->privdata.m95d.userlut, 1, sizeof(pd->privdata.m95d.userlut), v); /* XXX only for K95HG? */
   } else {
     dyesub_nputc(v, 0x00, 34);
   }
