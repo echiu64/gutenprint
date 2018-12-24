@@ -114,6 +114,12 @@ stpui_get_thumbnail_data_function(void *image_ID, gint *width, gint *height,
 {
   if (gimp_thumbnail_data)
     g_free(gimp_thumbnail_data);
+  gint x = gimp_image_width(image_ID);
+  gint y = gimp_image_height(image_ID);
+  if (*width > x)
+    *width = x;
+  if (*height > y)
+    *height = y;
   gimp_thumbnail_data =
     gimp_image_get_thumbnail_data(p2gint(image_ID), width, height, bpp);
   return gimp_thumbnail_data;

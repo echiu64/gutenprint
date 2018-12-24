@@ -46,8 +46,8 @@
 static int preview_size_vert = 360;
 static int preview_size_horiz = 300;
 static gdouble minimum_image_percent = 5.0;
-static const int thumbnail_hintw = 128;
-static const int thumbnail_hinth = 128;
+static const int thumbnail_hintw = 1024;
+static const int thumbnail_hinth = 1024;
 
 #define MOVE_CONSTRAIN	   0
 #define MOVE_HORIZONTAL	   1
