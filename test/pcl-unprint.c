@@ -1963,6 +1963,7 @@ int main(int argc, char *argv[])
 	    case PCL_DATA_LAST :
 		if (skip_output == 1) {
 		    print_command(command_index, numeric_arg);
+		    fprintf(stderr, "\n");
 		}
 		else {
 
