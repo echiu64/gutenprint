@@ -61,8 +61,8 @@ function pkg_tag {
 function preflight {
     local trailing_ws="$("$GIT" grep -Il '[	 ]$')"
     if [[ -n $trailing_ws ]] ; then
-	console_log "The following files have trailing whitespace:"
-	console_log "$trailing_ws"
+	console_log <<< "The following files have trailing whitespace:"
+	console_log <<< "$trailing_ws"
 	return 2
     fi
     return 0
@@ -76,7 +76,7 @@ function check_git {
 
     # Check for uncommitted files.
     if [[ -n $("$GIT" status -uno --porcelain) ]] ; then
-	console_log "*** ERROR: Uncommitted changes in repository:"
+	console_log <<<"*** ERROR: Uncommitted changes in repository:"
 	"$GIT" status -uno | console_log
 	gstatus=2
     fi
@@ -90,12 +90,12 @@ function check_git {
     behind=$("$GIT" rev-list "$("$GIT" rev-parse @)"..'@{u}')
     if [[ -n $ahead && -n $behind ]] ; then
 	# Oops!  Both ahead *and* behind remote.  Really bad news!
-	console_log "*** ERROR: HEAD and remote have diverged!"
-	console_log "***        Please merge and rebase all changes!"
+	console_log <<< "*** ERROR: HEAD and remote have diverged!"
+	console_log <<< "***        Please merge and rebase all changes!"
 	return 2
     elif [[ -n $behind ]] ; then
 	# We're behind.  Not good.
-	console_log "*** ERROR: Behind remote by $(wc -w <<< "$behind") commits."
+	console_log <<< "*** ERROR: Behind remote by $(wc -w <<< "$behind") commits."
 	return 2
     elif [[ -n $ahead ]] ; then
 	# We're ahead.  That's OK as long as there are no merge commits...
@@ -104,10 +104,10 @@ function check_git {
 	    parents=$("$GIT" rev-parse "$h^@" |wc -w)
 	    (( parents > 1 )) && merges=$((merges + 1))
 	done
-	console_log "*** Warning: Ahead of remote."
+	console_log <<< "*** Warning: Ahead of remote."
 	if (( merges > 0 )) ; then
 	    (( merges != 1 )) && pl=s
-	    console_log "*** ERROR: $merges merge$pl between HEAD and remote"
+	    console_log <<< "*** ERROR: $merges merge$pl between HEAD and remote"
 	    return 2
 	fi
     fi
@@ -140,7 +140,7 @@ function check_git_tag {
     # Make sure that the tag that we're going to want to apply isn't
     # already present.
     if [[ -n $("$GIT" show-ref "refs/tags/$(pkg_tag)") ]] ; then
-	console_log "*** ERROR: Tag named $(pkg_tag) is already present"
+	console_log <<< "*** ERROR: Tag named $(pkg_tag) is already present"
 	return 2
     fi
     return 0
@@ -340,7 +340,7 @@ function run_checksums() {
 function git_prep_release() {
     # .po files might have changed; nothing else should have!
     if "${GIT}" status -uno --porcelain |grep -q -E -v 'po/.*\.po' ; then
-	console_log "ERROR: Unexpected untracked files:"
+	console_log <<< "ERROR: Unexpected untracked files:"
 	"${GIT}" status -uno --porcelain |grep -E -v 'po/.*\.po' | console_log
 	return 1
     fi
@@ -383,16 +383,18 @@ function save_build_artifacts {
 
 function finis {
     STP_DATA_PATH=src/xml test/gen-printer-list > "printer-list.$(pkg_version)" || return 1
-    console_log "Remainder to be done manually:"
-    console_log
-    console_log "  * git push"
-    console_log
-    console_log "  * Upload the tarball (.xz)"
-    console_log
-    console_log "  * Update the web site"
-    console_log
-    console_log "  * Merge the updated printer list into p_Supported_Printers.php"
-    console_log "    and upload that"
+    console_log <<EOF
+Remainder to be done manually:
+
+  * git push
+
+  * Upload the tarball (.xz)
+
+  * Update the web site
+
+  * Merge the updated printer list into p_Supported_Printers.php
+    and upload that
+EOF
     return 0
 }
 
@@ -484,14 +486,14 @@ function finish {
     [[ $status != 0 || -n ${failedmodules[*]} ]] && msg=FAILED
     estamp=$(stamp)
     if [[ -n "${failedmodules[*]}" ]] ; then
-	echo "The following modules failed:" | log_top
+	log_top <<< "The following modules failed:"
 	for f in "${failedmodules[@]}" ; do
-	    echo "    $f" | log_top
+	    log_top <<< "    $f"
 	done
     fi
     # shellcheck disable=SC2086
-    echo "*** Gutenprint release build $msg at $estamp ($(time_delta $STIME $etime))" | log_top
-    echo "================================================================" | log "$top_log"
+    log_top <<< "*** Gutenprint release build $msg at $estamp ($(time_delta $STIME $etime))"
+     log "$top_log" <<< "================================================================"
     if [[ -n $TRAVIS_MODE ]] ; then
 	# We really don't want the termination message from the deadman
 	exec 3>&2
@@ -518,11 +520,7 @@ function finish {
 # format, ugh) and send it to stdout where it gets picked up and timestamped
 # again.
 function console_log {
-    if [[ -n "$*" ]] ; then
-	echo "$*" | log /dev/fd/3 - | timestamp | log - "$top_log" | cut -c26-
-    else
-	log /dev/fd/3 - | timestamp | log - "$top_log" | cut -c26-
-    fi
+    log /dev/fd/3 - | timestamp | log - "$top_log" | cut -c26-
 }
 
 # Travis times out if there's no output for 10 minutes, but some things
@@ -550,7 +548,7 @@ function runit {
     ssstamp=$(stamp)
     status=0
     msg=completed
-    echo "----------------------------------------------------------------" | log "-$logfile" "$top_log"
+     log "-$logfile" "$top_log" <<< "----------------------------------------------------------------"
     if [[ -z $DONTRUN_OP ]] ; then
 	echo "$cmdname started at $ssstamp" | log "$logfile" "$top_log"
 	echo "Command: $cmd" | log "$logfile" "$top_log"
@@ -561,6 +559,7 @@ function runit {
     report_progress "$fcounter" "$cmdname"
 
     if [[ -z $DONTRUN_OP ]] ; then
+	# Run the command, capturing console output as well as logged output.
 	STP_TEST_LOG_PREFIX="$local_logdir/" $cmd </dev/null 3>&1 2>&1 | timestamp | log "$logfile"
 	status=${PIPESTATUS[0]}
 	(( status > 0 )) && msg=FAILED
@@ -637,26 +636,27 @@ if [[ -n $TRAVIS_MODE ]] ; then
     travis_deadman&
 fi
 
-echo "================================================================" | log "-$top_log"
-echo "*** Gutenprint release build started at $SSTAMP on $HOST" | log_top
-echo "Running operations:" | log_top
+log "-$top_log" <<< "================================================================"
+log_top <<< "*** Gutenprint release build started at $SSTAMP on $HOST"
+log_top <<< "Running operations:"
 for f in "${OPERATIONS[@]}" ; do
-    echo "    $f" | log_top
+    log_top <<< "    $f"
 done
-echo "Directory: $ROOT" | log_top
-if [[ -n $STP_TEST_ROTOR_CIRCUMFERENCE && -n $STP_TEST_ROTOR ]] ; then
-    echo "Rotor: $STP_TEST_ROTOR / $STP_TEST_ROTOR_CIRCUMFERENCE" | log_top
-fi
-echo "Log Directory: ${LOGDIR#${ROOT}/}" | log_top
-echo "Parallelism: $STP_PARALLEL" | log_top
-echo "uname -a: $(uname -a)" |log_top
-echo "CPU information:" |log_top
-lscpu -p |log_top
-lscpu |log_top
-echo "Memory information:" |log_top
-free |log_top
+log_top <<< "Directory: $ROOT"
+[[ -n $STP_TEST_ROTOR_CIRCUMFERENCE && -n $STP_TEST_ROTOR ]] &&
+    log_top <<< "Rotor: $STP_TEST_ROTOR / $STP_TEST_ROTOR_CIRCUMFERENCE"
 [[ -n $("$GIT" status --porcelain -uno) ]] && git_dirty=' (dirty)'
-echo "Git revision: $("$GIT" rev-parse @)$git_dirty" | log_top
+log_top <<EOF
+Log Directory: ${LOGDIR#${ROOT}/}
+Parallelism: $STP_PARALLEL
+uname -a: $(uname -a)
+CPU information:
+$(lscpu -p)
+$(lscpu)
+Memory information:
+$(free)
+Git revision: $("$GIT" rev-parse @)$git_dirty
+EOF
 
 declare -i runstatus=0
 for op in "${OPERATIONS[@]}" ; do
