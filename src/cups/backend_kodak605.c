@@ -590,16 +590,10 @@ static int kodak605_set_tonecurve(struct kodak605_ctx *ctx, char *fname)
 	INFO("Set Tone Curve from '%s'\n", fname);
 
 	/* Read in file */
-	int tc_fd = open(fname, O_RDONLY);
-	if (tc_fd < 0) {
-		ret = -1;
+	if ((ret = dyesub_read_file(fname, data, UPDATE_SIZE, NULL))) {
+		ERROR("Failed to read Tone Curve file\n");
 		goto done;
 	}
-	if (read(tc_fd, data, UPDATE_SIZE) != UPDATE_SIZE) {
-		ret = 4;
-		goto done;
-	}
-	close(tc_fd);
 
 	/* Byteswap data to printer's format */
 	for (ret = 0; ret < (UPDATE_SIZE/2) ; ret++) {
@@ -717,7 +711,7 @@ static const char *kodak605_prefixes[] = {
 /* Exported */
 struct dyesub_backend kodak605_backend = {
 	.name = "Kodak 605",
-	.version = "0.33",
+	.version = "0.34",
 	.uri_prefixes = kodak605_prefixes,
 	.cmdline_usage = kodak605_cmdline,
 	.cmdline_arg = kodak605_cmdline_arg,

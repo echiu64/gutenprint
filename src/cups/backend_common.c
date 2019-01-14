@@ -27,13 +27,12 @@
  */
 
 #include "backend_common.h"
+#include <errno.h>
 
-#define BACKEND_VERSION "0.90G"
+#define BACKEND_VERSION "0.92G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
-
-#define NUM_CLAIM_ATTEMPTS 10
 
 #define URB_XFER_SIZE  (64*1024)
 #define XFER_TIMEOUT    15000
@@ -58,8 +57,8 @@ static int max_xfer_size = URB_XFER_SIZE;
 static int xfer_timeout = XFER_TIMEOUT;
 
 /* Support Functions */
-static int backend_claim_interface(struct libusb_device_handle *dev, int iface,
-				   int num_claim_attempts)
+int backend_claim_interface(struct libusb_device_handle *dev, int iface,
+			    int num_claim_attempts)
 {
 	int ret;
 	do {
@@ -1443,6 +1442,35 @@ minimal:
 		}
 		DEBUG2("\n");
 	}
+}
+
+int dyesub_read_file(char *filename, void *databuf, int datalen,
+		     int *actual_len)
+{
+	int len;
+	int fd = open(filename, O_RDONLY);
+
+	if (fd < 0) {
+		ERROR("Unable to open '%s'\n", filename);
+		return CUPS_BACKEND_FAILED;
+	}
+	len = read(fd, databuf, datalen);
+	if (len < 0) {
+		ERROR("Bad Read! (%d/%d)\n", len, errno);
+		close(fd);
+		return CUPS_BACKEND_FAILED;
+	}
+	if (!actual_len && (datalen != len)) {
+		ERROR("Read mismatch (%d vs %d)\n", len, datalen);
+		close(fd);
+		return CUPS_BACKEND_FAILED;
+	}
+	close(fd);
+
+	if (actual_len)
+		*actual_len = len;
+
+	return CUPS_BACKEND_OK;
 }
 
 uint16_t uint16_to_packed_bcd(uint16_t val)

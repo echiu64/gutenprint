@@ -700,31 +700,20 @@ hdr_done:
 
 	/* Read in CP98xx data tables if necessary */
 	if (ctx->is_98xx && !job->is_raw && !ctx->m98xxdata) {
-		int fd;
-
-		DEBUG("Reading in 98xx data from disk\n");
-		fd = open(MITSU_M98xx_DATATABLE_FILE, O_RDONLY);
-		if (fd < 0) {
-			ERROR("Unable to open 98xx data table file '%s'\n", MITSU_M98xx_DATATABLE_FILE);
-			mitsu9550_cleanup_job(job);
-			return CUPS_BACKEND_FAILED;
-		}
+		int ret;
 		ctx->m98xxdata = malloc(DATATABLE_SIZE);
 		if (!ctx->m98xxdata) {
 			ERROR("Memory allocation Failure!\n");
 			mitsu9550_cleanup_job(job);
 			return CUPS_BACKEND_RETRY_CURRENT;
 		}
-		remain = DATATABLE_SIZE;
-		while (remain) {
-			i = read(fd, ((uint8_t*)ctx->m98xxdata) + (DATATABLE_SIZE - remain), remain);
-			if (i < 0) {
-				mitsu9550_cleanup_job(job);
-				return CUPS_BACKEND_CANCEL;
-			}
-			remain -= i;
+
+		DEBUG("Reading in 98xx data from disk\n");
+		if ((ret = dyesub_read_file(MITSU_M98xx_DATATABLE_FILE, ctx->m98xxdata, DATATABLE_SIZE, NULL))) {
+			ERROR("Unable to read 98xx data table file '%s'\n", MITSU_M98xx_DATATABLE_FILE);
+			free(ctx->m98xxdata);
+			return ret;
 		}
-		close(fd);
 	}
 
 	if (job->is_raw) {
@@ -1737,7 +1726,7 @@ static const char *mitsu9550_prefixes[] = {
 /* Exported */
 struct dyesub_backend mitsu9550_backend = {
 	.name = "Mitsubishi CP9xxx family",
-	.version = "0.44",
+	.version = "0.45",
 	.uri_prefixes = mitsu9550_prefixes,
 	.cmdline_usage = mitsu9550_cmdline,
 	.cmdline_arg = mitsu9550_cmdline_arg,

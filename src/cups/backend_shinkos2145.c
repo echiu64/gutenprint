@@ -1234,16 +1234,11 @@ static int set_tonecurve(struct shinkos2145_ctx *ctx, int target, char *fname)
 	}
 
 	/* Read in file */
-	int tc_fd = open(fname, O_RDONLY);
-	if (tc_fd < 0) {
-		ret = -1;
+	if ((ret = dyesub_read_file(fname, data, UPDATE_SIZE, NULL))) {
+		ERROR("Failed to read Tone Curve file\n");
 		goto done;
 	}
-	if (read(tc_fd, data, UPDATE_SIZE * sizeof(uint16_t)) != (UPDATE_SIZE * sizeof(uint16_t))) {
-		ret = -2;
-		goto done;
-	}
-	close(tc_fd);
+
 	/* Byteswap data to local CPU.. */
 	for (ret = 0; ret < UPDATE_SIZE ; ret++) {
 		data[ret] = be16_to_cpu(data[ret]);
@@ -1288,7 +1283,6 @@ static void shinkos2145_cmdline(void)
 	DEBUG("\t\t[ -c filename ]  # Get user/NV tone curve\n");
 	DEBUG("\t\t[ -C filename ]  # Set user/NV tone curve\n");
 	DEBUG("\t\t[ -e ]           # Query error log\n");
-	DEBUG("\t\t[ -f ]           # Use fast return mode\n");
 	DEBUG("\t\t[ -F ]           # Flash Printer LED\n");
 	DEBUG("\t\t[ -i ]           # Query printer info\n");
 	DEBUG("\t\t[ -l filename ]  # Get current tone curve\n");
@@ -1804,7 +1798,7 @@ static const char *shinkos2145_prefixes[] = {
 
 struct dyesub_backend shinkos2145_backend = {
 	.name = "Shinko/Sinfonia CHC-S2145/S2",
-	.version = "0.55",
+	.version = "0.56",
 	.uri_prefixes = shinkos2145_prefixes,
 	.cmdline_usage = shinkos2145_cmdline,
 	.cmdline_arg = shinkos2145_cmdline_arg,

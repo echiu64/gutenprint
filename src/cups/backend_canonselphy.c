@@ -763,7 +763,7 @@ static int canonselphy_read_parse(void *vctx, const void **vjob, int data_fd, in
 	}
 
 	if (printer_type != ctx->type) {
-		ERROR("Printer/Job mismatch (%d/%d)\n", ctx->type, ctx->printer->type);
+		ERROR("Printer/Job mismatch (%d/%d/%d)\n", ctx->type, ctx->printer->type, printer_type);
 		free(job);
 		return CUPS_BACKEND_CANCEL;
 	}

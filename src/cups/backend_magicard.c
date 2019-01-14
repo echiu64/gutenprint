@@ -552,7 +552,8 @@ static void downscale_and_extract(int gamma, uint32_t pixels,
 	}
 }
 
-#define MAX_PRINTJOB_LEN (1016*672*4) + 1024  /* 1016*672 * 4color */
+#define MAX_HEADERS_LEN 2048
+#define MAX_PRINTJOB_LEN (1016*672*4) + MAX_HEADERS_LEN  /* 1016*672 * 4color */
 #define INITIAL_BUF_LEN 1024
 static int magicard_read_parse(void *vctx, const void **vjob, int data_fd, int copies) {
 	struct magicard_ctx *ctx = vctx;
@@ -629,7 +630,10 @@ static int magicard_read_parse(void *vctx, const void **vjob, int data_fd, int c
 
 	char *ptr;
 	ptr = strtok((char*)initial_buf + ++buf_offset, ",\x1c");
-	while (ptr && *ptr != 0x1c) {
+	while (ptr
+	       && ((ptr - (char*)initial_buf) < INITIAL_BUF_LEN)
+	       && ((ptr - (char*)initial_buf) + strnlen(ptr, INITIAL_BUF_LEN) < INITIAL_BUF_LEN)
+	       && *ptr != 0x1c) {
 		if (!strcmp("X-GP-8", ptr)) {
 			x_gp_8bpp = 1;
 		} else if (!strncmp("TDT", ptr, 3)) {
@@ -655,6 +659,12 @@ static int magicard_read_parse(void *vctx, const void **vjob, int data_fd, int c
 				len_k = atoi(ptr + 3);
 			}
 		} else {
+			/* Safety valve */
+			if (strlen(ptr) + job->datalen > MAX_HEADERS_LEN) {
+				ERROR("headers too long, bogus job!\n");
+				return CUPS_BACKEND_CANCEL;
+			}
+
 			/* Everything else goes in */
 			job->datalen += sprintf((char*)job->databuf + job->datalen, ",%s", ptr);
 		}
@@ -945,7 +955,7 @@ static const char *magicard_prefixes[] = {
 
 struct dyesub_backend magicard_backend = {
 	.name = "Magicard family",
-	.version = "0.15",
+	.version = "0.16",
 	.uri_prefixes = magicard_prefixes,
 	.cmdline_arg = magicard_cmdline_arg,
 	.cmdline_usage = magicard_cmdline,

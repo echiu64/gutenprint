@@ -1091,21 +1091,11 @@ static int set_tonecurve(struct shinkos1245_ctx *ctx, int type, int table, char 
 	}
 	ptr = data;
 
-	/* Open file and read it in */
-	{
-		int tc_fd = open(fname, O_RDONLY);
-		if (tc_fd < 0) {
-			ret = tc_fd;
-			goto done;
-		}
 
-		ret = read(tc_fd, data, TONE_CURVE_SIZE);
-		if (ret < 0) {
-			close(tc_fd);
-			goto done;
-		}
-
-		close(tc_fd);
+	/* Read in file */
+	if ((ret = dyesub_read_file(fname, data, TONE_CURVE_SIZE, NULL))) {
+		ERROR("Failed to read Tone Curve file\n");
+		goto done;
 	}
 
 	/* Issue a tone_write_start */
@@ -1698,7 +1688,7 @@ static const char *shinkos1245_prefixes[] = {
 
 struct dyesub_backend shinkos1245_backend = {
 	.name = "Shinko/Sinfonia CHC-S1245/E1",
-	.version = "0.26",
+	.version = "0.27",
 	.uri_prefixes = shinkos1245_prefixes,
 	.cmdline_usage = shinkos1245_cmdline,
 	.cmdline_arg = shinkos1245_cmdline_arg,

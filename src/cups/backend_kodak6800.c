@@ -775,16 +775,10 @@ static int kodak6800_set_tonecurve(struct kodak6800_ctx *ctx, char *fname)
 	INFO("Set Tone Curve from '%s'\n", fname);
 
 	/* Read in file */
-	int tc_fd = open(fname, O_RDONLY);
-	if (tc_fd < 0) {
-		ret = -1;
+	if ((ret = dyesub_read_file(fname, data, UPDATE_SIZE, NULL))) {
+		ERROR("Failed to read Tone Curve file\n");
 		goto done;
 	}
-	if (read(tc_fd, data, UPDATE_SIZE) != UPDATE_SIZE) {
-	        ret = -2;
-		goto done;
-	}
-	close(tc_fd);
 
 	/* Byteswap data to printer's format */
 	for (ret = 0; ret < (UPDATE_SIZE)/2 ; ret++) {
@@ -1304,7 +1298,7 @@ static const char *kodak6800_prefixes[] = {
 /* Exported */
 struct dyesub_backend kodak6800_backend = {
 	.name = "Kodak 6800/6850",
-	.version = "0.65",
+	.version = "0.66",
 	.uri_prefixes = kodak6800_prefixes,
 	.cmdline_usage = kodak6800_cmdline,
 	.cmdline_arg = kodak6800_cmdline_arg,
