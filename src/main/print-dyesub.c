@@ -8646,12 +8646,12 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Fujifilm ASK-2000/2500 */
     4200,
-    &bgr_ink_list,
+    &ymc_ink_list,
     &res_300dpi_list,
     &fuji_ask2000_page_list,
     &fuji_ask2000_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_PLANE_INTERLACE,
     &fuji_ask2000_printer_init, &fuji_ask2000_printer_end,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
@@ -8662,12 +8662,12 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Fujifilm ASK-4000 */
     4201,
-    &bgr_ink_list,
+    &ymc_ink_list,
     &res_300dpi_list,
     &fuji_ask4000_page_list,
     &fuji_ask4000_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_PLANE_INTERLACE,
     &fuji_ask4000_printer_init, &fuji_ask4000_printer_end,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
