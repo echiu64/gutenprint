@@ -163,7 +163,7 @@
       <printer translate="name" name="Mitsubishi P93D" driverid="MFG:MITSUBISHI;CMD:MEL;MDL:P93D;CLS:PRINTER;DES:MITSUBISHI P93D;" driver="mitsubishi-p93d" manufacturer="Mitsubishi" model="4116" />
       <printer translate="name" name="Mitsubishi P95D" driverid="MFG:MITSUBISHI;CMD:MEL;MDL:P95D    ;CLS:PRINTER;DES:MITSUBISHI P95D    ;" driver="mitsubishi-p95d" manufacturer="Mitsubishi" model="4114" />
       <printer translate="name" name="Nidac Copal DPB-4000"  driver="nidalcopac-dpb-4000" manufacturer="Nidac Copal" model="4201">EXPERIMENTAL</printer>
-      <printer translate="name" name="Nidac Copal DPB-6000"  driver="nidalcopac-dpb-6000" manufacturer="Nidac Copal" model="4200">EXPERIMENTAL</printer>
+      <printer translate="name" name="Nidac Copal DPB-6000"  driver="nidalcopac-dpb-6000" manufacturer="Nidac Copal" model="4200" />
       <printer translate="name" name="Nidac Copal DPB-7000"  driver="nidalcopac-dpb-7000" manufacturer="Nidac Copal" model="4200">EXPERIMENTAL</printer>
       <printer translate="name" name="Shinko CHC-S1245" driver="shinko-chcs1245" manufacturer="Shinko" model="5002" />
       <printer translate="name" name="Shinko CHC-S2145" deviceid="MFG:SHINKO;CMD:SUPCC;MDL:CHC-S2145;CLS:PRINTER;DES:SHINKO CHC-S2145;" driver="shinko-chcs2145" manufacturer="Shinko" model="5001" />
