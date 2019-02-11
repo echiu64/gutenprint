@@ -1,9 +1,6 @@
-Welcome to Gutenprint 5.3.1, an initial release for Gutenprint 5.3.
+Welcome to Gutenprint 5.3.2-pre1, a pre-release of Gutenprint 5.3.2.
 Please read these release notes carefully.  Gutenprint 5.2 is still
 considered the stable release line.
-
-Gutenprint 5.3.0 was withdrawn due to a build failure on some
-configurations.
 
 Gutenprint is a suite of printer drivers for UNIX, Linux, and
 Macintosh OS X systems (10.6 and above) that use CUPS as their
@@ -106,6 +103,14 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
 
      * Sony UP-DR150
      * Sony UP-DR200
+
+  2) The Nidac Copal DPB-6000 is no longer considered experimental.
+
+  3) Many miscellaneous fixes for dyesub printers and the dyesub
+     backend; please see the ChangeLog for details.
+
+  4) The Gutenprint plugin for GIMP displays a higher resolution
+     thumbnail.
 
 
 * Changes from Gutenprint 5.3.0
