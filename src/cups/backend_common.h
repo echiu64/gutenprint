@@ -1,7 +1,7 @@
 /*
  *   CUPS Backend common code
  *
- *   (c) 2013-2018 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2019 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -53,11 +53,30 @@
 #define ERROR( ... ) do { fprintf(stderr, "ERROR: " __VA_ARGS__ ); sleep(1); } while (0)
 
 #if (__BYTE_ORDER == __LITTLE_ENDIAN)
+#define le64_to_cpu(__x) __x
 #define le32_to_cpu(__x) __x
 #define le16_to_cpu(__x) __x
 #define be16_to_cpu(__x) ntohs(__x)
 #define be32_to_cpu(__x) ntohl(__x)
+#define be64_to_cpu(__x) ((__uint64_t)(                         \
+        (((__uint64_t)(__x) & (__uint64_t)0x00000000000000ffULL) << 56) |   \
+        (((__uint64_t)(__x) & (__uint64_t)0x000000000000ff00ULL) << 40) |   \
+        (((__uint64_t)(__x) & (__uint64_t)0x0000000000ff0000ULL) << 24) |   \
+        (((__uint64_t)(__x) & (__uint64_t)0x00000000ff000000ULL) <<  8) |   \
+        (((__uint64_t)(__x) & (__uint64_t)0x000000ff00000000ULL) >>  8) |   \
+        (((__uint64_t)(__x) & (__uint64_t)0x0000ff0000000000ULL) >> 24) |   \
+        (((__uint64_t)(__x) & (__uint64_t)0x00ff000000000000ULL) >> 40) |   \
+        (((__uint64_t)(__x) & (__uint64_t)0xff00000000000000ULL) >> 56)))
 #else
+#define le64_to_cpu(__x) ((__uint64_t)(                         \
+        (((__uint64_t)(__x) & (__uint64_t)0x00000000000000ffULL) << 56) |   \
+        (((__uint64_t)(__x) & (__uint64_t)0x000000000000ff00ULL) << 40) |   \
+        (((__uint64_t)(__x) & (__uint64_t)0x0000000000ff0000ULL) << 24) |   \
+        (((__uint64_t)(__x) & (__uint64_t)0x00000000ff000000ULL) <<  8) |   \
+        (((__uint64_t)(__x) & (__uint64_t)0x000000ff00000000ULL) >>  8) |   \
+        (((__uint64_t)(__x) & (__uint64_t)0x0000ff0000000000ULL) >> 24) |   \
+        (((__uint64_t)(__x) & (__uint64_t)0x00ff000000000000ULL) >> 40) |   \
+        (((__uint64_t)(__x) & (__uint64_t)0xff00000000000000ULL) >> 56)))
 #define le32_to_cpu(x)							\
 	({								\
 		uint32_t __x = (x);					\
@@ -74,6 +93,7 @@
 			(((uint16_t)(__x) & (uint16_t)0x00ff) <<  8) | \
 			(((uint16_t)(__x) & (uint16_t)0xff00) >>  8))); \
 	})
+#define be64_to_cpu(__x) __x
 #define be32_to_cpu(__x) __x
 #define be16_to_cpu(__x) __x
 #endif
@@ -132,7 +152,8 @@ enum {
 	P_DNP_DSRX1 = 41,
 	P_FUJI_ASK300 = 42,
 	P_MAGICARD = 43,
-	P_SONY_UPD89x = 44,
+	P_SONY_UPD895 = 44,
+	P_SONY_UPD897 = 45,
 	P_END,
 };
 

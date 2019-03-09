@@ -4,7 +4,7 @@
  *
  *   Copyright 2003-2006 Michael Mraka (Michael.Mraka@linux.cz)
  *
- *   Copyright 2007-2018 Solomon Peachy (pizza@shaftnet.org)
+ *   Copyright 2007-2019 Solomon Peachy (pizza@shaftnet.org)
  *
  *   The plug-in is based on the code of the RAW plugin for the GIMP of
  *   Michael Sweet (mike@easysw.com) and Robert Krawitz (rlk@alum.mit.edu)
@@ -199,6 +199,17 @@ typedef struct
 
 typedef struct
 {
+  int gamma;
+  int unk_gg;
+  /* below are up-d897 only */
+  int dark;
+  int light;
+  int advance;
+  int sharp;
+} sonymd_privdata_t;
+
+typedef struct
+{
   int quality;
   int overcoat_offset;
   int use_lut;
@@ -290,6 +301,7 @@ typedef struct
    shinko1245_privdata_t s1245;
    mitsu_p95d_privdata_t m95d;
    magicard_privdata_t magicard;
+   sonymd_privdata_t sonymd;
   } privdata;
 } dyesub_privdata_t;
 
@@ -1548,9 +1560,8 @@ static void updr150_200_printer_init_func(stp_vars_t *v, int updr200)
 	      "\xed\xff\xff\xff"
 	      "\x07\x00\x00\x00"
 	      "\x1b\xee\x00\x00\x00\x02\x00"
-	      "\x02\x00\x00\x00"
-	      "\x00", 1, 43, v);
-  stp_putc(pd->copies, v);
+	      "\x02\x00\x00\x00", 1, 42, v);
+  stp_put16_be(pd->copies, v);
 
   if (updr200) { /* UP-DR200-specific! */
     stp_zfwrite("\x07\x00\x00\x00"
@@ -1735,8 +1746,8 @@ static void upcr10_printer_end_func(stp_vars_t *v)
   stp_put16_be(pd->h_size, v);
   stp_zfwrite("\xfa\xff\xff\xff"
 	      "\x09\x00\x00\x00"
-	      "\x1b\xee\x00\x00\x00\x02\x00\x00", 1, 16, v);
-  stp_putc(pd->copies, v);
+	      "\x1b\xee\x00\x00\x00\x02\x00", 1, 15, v);
+  stp_put16_be(pd->copies, v);
   stp_zfwrite("\x07\x00\x00\x00"
 	      "\x1b\x17\x00\x00\x00\x00\x00", 1, 11, v);
   stp_zfwrite("\xf9\xff\xff\xff"
@@ -1744,6 +1755,402 @@ static void upcr10_printer_end_func(stp_vars_t *v)
 	      "\x07\x00\x00\x00"
 		    "\x1b\x17\x00\x00\x00\x00\x00", 1, 19, v);
   stp_zfwrite("\xf7\xff\xff\xff", 1, 4, v);
+}
+
+/* Sony UP-D895/897MD */
+/* Note:  These printers reverse the traditional X and Y axes.  1280 is _always_ the Y axis. */
+static const dyesub_pagesize_t sony_d89x_page[] =
+{
+  DEFINE_PAPER_SIMPLE( "w213h284", "960x1280", PT1(960,325), PT1(1280,325), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w284h284", "1280x1280", PT1(1280,325), PT1(1280,325), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w426h284", "1920x1280", PT1(1920,325), PT1(1280,325), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w852h284", "3840x1280", PT1(3840,325), PT1(1280,325), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w907h284", "4096x1280", PT1(4096,325), PT1(1280,325), DYESUB_PORTRAIT),
+  /* A true "custom" size, printer will cut at the image boundary */
+  DEFINE_PAPER_SIMPLE( "Custom", "Custom", -1, PT1(1280,325), DYESUB_PORTRAIT),
+};
+
+LIST(dyesub_pagesize_list_t, sony_d89x_page_list, dyesub_pagesize_t, sony_d89x_page);
+
+static const dyesub_printsize_t sony_d89x_printsize[] =
+{
+  { "325x325", "w213h284", 960, 1280},
+  { "325x325", "w284h284", 1280, 1280},
+  { "325x325", "w426h284", 1920, 1280},
+  { "325x325", "w852h284", 3840, 1280},
+  { "325x325", "w907h284", 4096, 1280},
+  { "325x325", "Custom", 4096, 1280}, /* Maximum */
+};
+
+LIST(dyesub_printsize_list_t, sony_d89x_printsize_list, dyesub_printsize_t, sony_d89x_printsize);
+
+static const dyesub_stringitem_t sony_upd895_gammas[] =
+{
+  { "Soft", N_ ("Soft") },
+  { "Normal", N_ ("Normal") },
+  { "Hard", N_ ("Hard") },
+};
+LIST(dyesub_stringlist_t, sony_upd895_gamma_list, dyesub_stringitem_t, sony_upd895_gammas);
+
+static const stp_parameter_t sony_upd895_parameters[] =
+{
+  {
+    "SonyGamma", N_("Printer Gamma Correction"), "Color=No,Category=Advanced Printer Setup",
+    N_("Printer Gamma Correction"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+};
+#define sony_upd895_parameter_count (sizeof(sony_upd895_parameters) / sizeof(const stp_parameter_t))
+
+static int
+sony_upd895_load_parameters(const stp_vars_t *v, const char *name,
+			    stp_parameter_t *description)
+{
+  int	i;
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
+		  				stp_get_model_id(v));
+
+  if (caps->parameter_count && caps->parameters)
+    {
+      for (i = 0; i < caps->parameter_count; i++)
+        if (strcmp(name, caps->parameters[i].name) == 0)
+          {
+	    stp_fill_parameter_settings(description, &(caps->parameters[i]));
+	    break;
+          }
+    }
+
+    if (strcmp(name, "SonyGamma") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+
+      const dyesub_stringlist_t *mlist = &sony_upd895_gamma_list;
+      for (i = 0; i < mlist->n_items; i++)
+        {
+	  const dyesub_stringitem_t *m = &(mlist->item[i]);
+	  stp_string_list_add_string(description->bounds.str,
+				       m->name, m->text); /* Do *not* want this translated, otherwise use gettext(m->text) */
+	}
+      description->deflt.str = stp_string_list_param(description->bounds.str, 2)->name;
+      description->is_active = 1;
+    }
+  else
+   {
+     return 0;
+   }
+  return 1;
+}
+
+static int sony_upd895_parse_parameters(stp_vars_t *v)
+{
+  dyesub_privdata_t *pd = get_privdata(v);
+  const char *gamma = stp_get_string_parameter(v, "SonyGamma");
+
+  /* No need to set global params if there's no privdata yet */
+  if (!pd)
+    return 1;
+
+  pd->privdata.sonymd.unk_gg = 0x0; // XXX Likely it is "empty rows"
+
+  pd->privdata.sonymd.dark = 0;
+  pd->privdata.sonymd.light = 0;
+  pd->privdata.sonymd.advance = 0;
+  pd->privdata.sonymd.sharp = 0;
+
+  if (!strcmp(gamma, "Hard")) {
+    pd->privdata.sonymd.gamma = 0x03;
+  } else if (!strcmp(gamma, "Normal")) {
+    pd->privdata.sonymd.gamma = 0x02;
+  } else if (!strcmp(gamma, "Soft")) {
+    pd->privdata.sonymd.gamma = 0x01;
+  } else{
+    pd->privdata.sonymd.gamma = 0x00;
+  }
+}
+
+static void sony_upd89x_printer_init_func(stp_vars_t *v, int is_897)
+{
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  if (is_897)
+    {
+      stp_zfwrite("\x8e\xff\xff\xff\xfc\xff\xff\xff"
+		  "\xfb\xff\xff\xff\xf5\xff\xff\xff"
+		  "\xf1\xff\xff\xff\xf0\xff\xff\xff"
+		  "\xef\xff\xff\xff", 1, 28, v);
+    }
+  else
+  {
+    stp_zfwrite("\x9c\xff\xff\xff"
+		"\x97\xff\xff\xff", 1, 8, v);
+    dyesub_nputc(v, 0x0, 12);
+    stp_put32_be(0xffffffff, v);
+  }
+
+  stp_put32_le(20, v);
+  stp_zfwrite("\x1b\x15\x00\x00\x00\x0d\x00\x00"
+	      "\x00\x00\x00\x01\x00\x00", 1, 14, v);
+  stp_put16_be(pd->privdata.sonymd.unk_gg, v);
+  stp_put16_be(pd->w_size, v);
+  stp_put16_be(pd->h_size, v);
+
+  stp_put32_le(11, v);
+  stp_zfwrite("\x1b\xea\x00\x00\x00\x00", 1, 6, v);
+  stp_put32_be(pd->h_size * pd->w_size, v);
+  stp_putc(0x00, v);
+  stp_put32_le(pd->h_size * pd->w_size, v);
+}
+
+static void sony_upd895_printer_init_func(stp_vars_t *v)
+{
+  sony_upd89x_printer_init_func(v, 0);
+}
+
+static void sony_upd897_printer_init_func(stp_vars_t *v)
+{
+  sony_upd89x_printer_init_func(v, 1);
+}
+
+static void sony_upd89x_printer_end_func(stp_vars_t *v, int is_897)
+{
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  if (is_897)
+    {
+       stp_put32_be(0xeaffffff, v);
+    }
+  else
+    {
+       stp_put32_be(0xffffffff, v);
+    }
+
+  stp_put32_le(9, v);
+  stp_zfwrite("\x1b\xee\x00\x00\x00\x02\x00", 1, 7, v);
+  stp_put16_be(pd->copies, v);
+
+  if (is_897)
+    {
+      stp_put32_be(0xeeffffff, v);
+      stp_put32_be(1, v);
+    }
+
+  stp_put32_le(15, v);
+  stp_zfwrite("\x1b\xe5\x00\x00\x00\x08\x00\x00\x00\x00\x00", 1, 11, v);
+  stp_putc(pd->privdata.sonymd.dark, v);
+  stp_putc(pd->privdata.sonymd.light, v);
+  stp_putc(pd->privdata.sonymd.sharp, v);
+  stp_putc(pd->privdata.sonymd.advance, v);
+
+  if (is_897)
+    {
+      stp_put32_be(0xebffffff, v);
+      stp_put32_be(2, v);  // Sharpness?  02 and 05 seen
+    }
+
+  stp_put32_le(12, v);
+  stp_zfwrite("\x1b\xc0\x00\x00\x00\x05\x00\x02", 1, 8, v);
+  stp_zfwrite("\x00\x00\x01", 1, 3, v);
+  stp_putc(pd->privdata.sonymd.gamma, v);
+
+  if (is_897)
+    {
+      stp_put32_be(0xecffffff, v);
+      stp_put32_be(1, v); // 00 01 02 seen
+    }
+
+  stp_put32_le(17, v);
+  stp_zfwrite("\x1b\xc0\x00\x01\x00\x0a\x00\x02", 1, 8, v);
+  stp_zfwrite("\x01\x00\x06", 1, 3, v);
+  dyesub_nputc(v, 0x0, 6);
+
+  if (is_897)
+    {
+      stp_put32_be(0xedffffff, v);
+      stp_put32_be(0, v);
+    }
+
+  stp_put32_le(18, v);
+  stp_zfwrite("\x1b\xe1\x00\x00\x00\x0b\x00\x00\x08\00", 1, 10, v);
+  stp_put16_be(0x00, v); // XXX GG GG, based on print size.
+  dyesub_nputc(v, 0x0, 2);
+  stp_put16_be(pd->w_size, v);
+  stp_put16_be(pd->h_size, v);
+
+  if (is_897)
+    {
+      stp_put32_be(0xfaffffff, v);
+    }
+
+  stp_put32_le(7, v);
+  stp_zfwrite("\x1b\x0a\x00\x00\x00\x00\x00", 1, 7, v);
+
+  if (is_897)
+    {
+       stp_zfwrite("\xfc\xff\xff\xff"
+		   "\xfd\xff\xff\xff"
+		   "\xff\xff\xff\xff", 1, 12, v);
+       stp_put32_le(7, v);
+       stp_zfwrite("\x1b\x17\x00\x00\x00\x00\x00", 1, 7, v);
+       stp_put32_be(0xf4ffffff, v);
+    }
+  else
+    {
+       stp_zfwrite("\xfd\xff\xff\xff"
+		   "\xf7\xff\xff\xff"
+		   "\xf8\xff\xff\xff", 1, 12, v);
+    }
+
+}
+
+static void sony_upd895_printer_end_func(stp_vars_t *v)
+{
+  sony_upd89x_printer_end_func(v, 0);
+}
+
+static void sony_upd897_printer_end_func(stp_vars_t *v)
+{
+  sony_upd89x_printer_end_func(v, 1);
+}
+
+static const dyesub_stringitem_t sony_upd897_gammas[] =
+{
+  { "Softest", N_ ("Softest") },
+  { "Soft", N_ ("Soft") },
+  { "Normal", N_ ("Normal") },
+  { "Hard", N_ ("Hard") },
+};
+LIST(dyesub_stringlist_t, sony_upd897_gamma_list, dyesub_stringitem_t, sony_upd897_gammas);
+
+static const stp_parameter_t sony_upd897_parameters[] =
+{
+  {
+    "SonyGamma", N_("Printer Gamma Correction"), "Color=No,Category=Advanced Printer Setup",
+    N_("Printer Gamma Correction"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "Sharpen", N_("Image Sharpening"), "Color=No,Category=Advanced Printer Setup",
+    N_("Sharpening to apply to image (0 is off, 14 is max"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "Darkness", N_("Darkness"), "Color=No,Category=Advanced Printer Setup",
+    N_("Printer Image Darkness Adjustment"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "Lightness", N_("Lightness"), "Color=No,Category=Advanced Printer Setup",
+    N_("Printer Image Lightness Adjustment"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "Advance", N_("Advance"), "Color=No,Category=Advanced Printer Setup",
+    N_("Printer Image Advance Adjustment"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+
+};
+#define sony_upd897_parameter_count (sizeof(sony_upd897_parameters) / sizeof(const stp_parameter_t))
+
+static int
+sony_upd897_load_parameters(const stp_vars_t *v, const char *name,
+			    stp_parameter_t *description)
+{
+  int	i;
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
+		  				stp_get_model_id(v));
+
+  if (caps->parameter_count && caps->parameters)
+    {
+      for (i = 0; i < caps->parameter_count; i++)
+        if (strcmp(name, caps->parameters[i].name) == 0)
+          {
+	    stp_fill_parameter_settings(description, &(caps->parameters[i]));
+	    break;
+          }
+    }
+
+    if (strcmp(name, "SonyGamma") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+
+      const dyesub_stringlist_t *mlist = &sony_upd897_gamma_list;
+      for (i = 0; i < mlist->n_items; i++)
+        {
+	  const dyesub_stringitem_t *m = &(mlist->item[i]);
+	  stp_string_list_add_string(description->bounds.str,
+				       m->name, m->text); /* Do *not* want this translated, otherwise use gettext(m->text) */
+	}
+      description->deflt.str = stp_string_list_param(description->bounds.str, 3)->name;
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "Darkness") == 0)
+    {
+      description->deflt.integer = 0;
+      description->bounds.integer.lower = -64;
+      description->bounds.integer.upper = 64;
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "Lightness") == 0)
+    {
+      description->deflt.integer = 0;
+      description->bounds.integer.lower = -64;
+      description->bounds.integer.upper = 64;
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "Advance") == 0)
+    {
+      description->deflt.integer = 0;
+      description->bounds.integer.lower = -32;
+      description->bounds.integer.upper = 32;
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "Sharpen") == 0)
+    {
+      description->deflt.integer = 2;
+      description->bounds.integer.lower = 0;
+      description->bounds.integer.upper = 14;
+      description->is_active = 1;
+    }
+  else
+   {
+     return 0;
+   }
+  return 1;
+}
+
+static int sony_upd897_parse_parameters(stp_vars_t *v)
+{
+  dyesub_privdata_t *pd = get_privdata(v);
+  const char *gamma = stp_get_string_parameter(v, "SonyGamma");
+
+  /* No need to set global params if there's no privdata yet */
+  if (!pd)
+    return 1;
+
+  pd->privdata.sonymd.unk_gg = 0xa2; // XXX Suspect it's empty rows
+  pd->privdata.sonymd.dark = stp_get_int_parameter(v, "Darkness");
+  pd->privdata.sonymd.light = stp_get_int_parameter(v, "Lightness");
+  pd->privdata.sonymd.advance = stp_get_int_parameter(v, "Advance");
+  pd->privdata.sonymd.sharp = stp_get_int_parameter(v, "Sharpen");
+
+  if (!strcmp(gamma, "Hard")) {
+    pd->privdata.sonymd.gamma = 0x03;
+  } else if (!strcmp(gamma, "Normal")) {
+    pd->privdata.sonymd.gamma = 0x02;
+  } else if (!strcmp(gamma, "Soft")) {
+    pd->privdata.sonymd.gamma = 0x01;
+  } else if (!strcmp(gamma, "Softer")) {
+    pd->privdata.sonymd.gamma = 0x04;
+  } else{
+    pd->privdata.sonymd.gamma = 0x00;
+  }
 }
 
 /* Fujifilm CX-400 */
@@ -8097,6 +8504,46 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
+  },
+  { /* Sony UP-D895 Family */
+    2006,
+    &w_ink_list,
+    &res_325dpi_list,
+    &sony_d89x_page_list,
+    &sony_d89x_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_MONOCHROME | DYESUB_FEATURE_NATIVECOPIES,
+    &sony_upd895_printer_init_func, &sony_upd895_printer_end_func,
+    NULL, NULL,
+    NULL, NULL, /* No block funcs */
+    NULL,
+    NULL, NULL,
+    NULL, NULL,
+    sony_upd895_parameters,
+    sony_upd895_parameter_count,
+    sony_upd895_load_parameters,
+    sony_upd895_parse_parameters,
+  },
+  { /* Sony UP-D897 Family */
+    2007,
+    &w_ink_list,
+    &res_325dpi_list,
+    &sony_d89x_page_list,
+    &sony_d89x_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_MONOCHROME | DYESUB_FEATURE_NATIVECOPIES,
+    &sony_upd897_printer_init_func, &sony_upd897_printer_end_func,
+    NULL, NULL,
+    NULL, NULL, /* No block funcs */
+    NULL,
+    NULL, NULL,
+    NULL, NULL,
+    sony_upd897_parameters,
+    sony_upd897_parameter_count,
+    sony_upd897_load_parameters,
+    sony_upd897_parse_parameters,
   },
   { /* Fujifilm Printpix CX-400  */
     3000,
