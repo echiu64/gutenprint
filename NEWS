@@ -101,6 +101,12 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      * Epson Expression Photo XP-8500 (Preliminary)
 
 
+  2) Bugfixes and other enhancements for the following printers:
+
+     * Sony UP-DR150
+     * Sony UP-DR200
+
+
 * Changes from Gutenprint 5.3.0
 
   1) This is the initial 5.3 release.  While we believe that this

@@ -1555,20 +1555,15 @@ static void updr150_200_printer_init_func(stp_vars_t *v, int updr200)
   if (updr200) { /* UP-DR200-specific! */
     stp_zfwrite("\x07\x00\x00\x00"
 		"\x1b\xc0\x00\x03\x00\x05\x00", 1, 11, v);
-  }
-  stp_zfwrite("\x05\x00\x00\x00"
-	      "\x02\x03\x00\x01", 1, 8, v);
+    stp_zfwrite("\x05\x00\x00\x00"
+		"\x02\x03\x00\x01", 1, 8, v);
 
-  /* Multicut mode */
-  if (updr200) {
     if (!strcmp(pd->pagesize,"w288h432-div2") ||
 	!strcmp(pd->pagesize,"w360h504-div2") ||
 	!strcmp(pd->pagesize,"w432h576-div2"))
       stp_putc(0x02, v);
     else
       stp_putc(0x00, v);
-  } else {
-    stp_putc(0x00, v);
   }
 
   stp_zfwrite("\x07\x00\x00\x00"
@@ -1606,8 +1601,10 @@ static void updr150_printer_init_func(stp_vars_t *v)
   updr150_200_printer_init_func(v, 0);
 }
 
-static void updr150_printer_end_func(stp_vars_t *v)
+static void updr150_200_printer_end_func(stp_vars_t *v, int updr200)
 {
+  dyesub_privdata_t *pd = get_privdata(v);
+
   stp_zfwrite("\xeb\xff\xff\xff"
 	      "\xfc\xff\xff\xff"
 	      "\xfa\xff\xff\xff",
@@ -1617,8 +1614,30 @@ static void updr150_printer_end_func(stp_vars_t *v)
 	      "\x07\x00\x00\x00"
 	      "\x1b\x17\x00\x00\x00\x00\x00",
 	      1, 22, v);
+
+  /* Multicut mode */
+  if (updr200) {
+    if (!strcmp(pd->pagesize,"w288h432-div2") ||
+	!strcmp(pd->pagesize,"w360h504-div2") ||
+	!strcmp(pd->pagesize,"w432h576-div2")) {
+      stp_zfwrite("\x07\x00\x00\x00"
+		  "\x1b\xc0\x00\x03\x00\x05\x00", 1, 11, v);
+      stp_zfwrite("\x05\x00\x00\x00"
+		  "\x02\x03\x00\x01\x01", 1, 9, v);
+    }
+  }
   stp_zfwrite("\xf3\xff\xff\xff",
 	      1, 4, v);
+}
+
+static void updr150_printer_end_func(stp_vars_t *v)
+{
+  updr150_200_printer_end_func(v, 0);
+}
+
+static void updr200_printer_end_func(stp_vars_t *v)
+{
+  updr150_200_printer_end_func(v, 1);
 }
 
 /* Sony UP-DR200 */
@@ -8055,7 +8074,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &updr200_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
-    &updr200_printer_init_func, &updr150_printer_end_func,
+    &updr200_printer_init_func, &updr200_printer_end_func,
     NULL, NULL,
     NULL, NULL,
     NULL,
