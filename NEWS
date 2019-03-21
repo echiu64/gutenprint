@@ -254,6 +254,11 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
      Epson Expression ET-2600 EcoTank ET
 
+  2) The following printers have seen bugfixes:
+
+     Sony UP-DR150
+     Sony UP-DR200
+
 * Changes from 5.2.13
 
   1) The PCL driver now supports color laser printers that use PCL 5c
