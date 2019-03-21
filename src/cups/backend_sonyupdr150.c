@@ -180,6 +180,9 @@ static int sony_get_status(struct updr150_ctx *ctx, struct sony_updsts *buf)
 		return CUPS_BACKEND_FAILED;
 #endif
 
+	ctx->stsbuf.max_cols = be16_to_cpu(ctx->stsbuf.max_cols);
+	ctx->stsbuf.max_rows = be16_to_cpu(ctx->stsbuf.max_rows);
+
 	return CUPS_BACKEND_OK;
 }
 
@@ -266,6 +269,7 @@ static int updr150_read_parse(void *vctx, const void **vjob, int data_fd, int co
 				}
 				/* Intentional Fallthrough */
 			case 0xffffffeb:
+			case 0xffffffec:
 			case 0xffffffee:
 			case 0xfffffff5:
 				if(dyesub_debug)
@@ -495,9 +499,6 @@ static int upd895_dump_status(struct updr150_ctx *ctx)
 	if (ret < 0)
 		return CUPS_BACKEND_FAILED;
 
-	ctx->stsbuf.max_cols = be16_to_cpu(ctx->stsbuf.max_cols);
-	ctx->stsbuf.max_rows = be16_to_cpu(ctx->stsbuf.max_rows);
-
 	INFO("Printer status: %s (%02x)\n", upd895_statuses(ctx->stsbuf.sts1), ctx->stsbuf.sts1);
 	if (ctx->stsbuf.printing == 0x0e0 && ctx->stsbuf.sts1 == 0x80)
 		INFO("Remaining copies: %d\n", ctx->stsbuf.remain);
@@ -547,10 +548,10 @@ static int updr150_query_markers(void *vctx, struct marker **markers, int *count
 	if (ctx->stsbuf.sts1 == 0x40 ||
 	    ctx->stsbuf.sts1 == 0x08) {
 		ctx->marker.levelnow = 0;
-		STATE("+media-empty");
+		STATE("+media-empty\n");
 	} else {
 		ctx->marker.levelnow = -3;
-		STATE("-media-empty");
+		STATE("-media-empty\n");
 	}
 
 	return CUPS_BACKEND_OK;
@@ -577,7 +578,7 @@ static const char *sonyupdr150_prefixes[] = {
 
 struct dyesub_backend updr150_backend = {
 	.name = "Sony UP-DR150/UP-DR200/UP-CR10/UP-D895/UP-D897",
-	.version = "0.34",
+	.version = "0.35",
 	.uri_prefixes = sonyupdr150_prefixes,
 	.cmdline_arg = updr150_cmdline_arg,
 	.cmdline_usage = updr150_cmdline,
