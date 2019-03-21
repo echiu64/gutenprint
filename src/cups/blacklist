@@ -150,6 +150,12 @@
 # Sony UP-CR10L
 0x054c 0x0226 blacklist
 
+# Sony UP-D895
+0x054c 0x0049 blacklist
+
+# Sony UP-D897
+0x054c 0x01e7 blacklist
+
 # Mitsubishi CP-D70DW/CP-D707DW
 0x06d3 0x3b30 blacklist
 
