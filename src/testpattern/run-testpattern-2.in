@@ -139,7 +139,9 @@ my $stp_test_rotor_circumference=1;
 
 if (defined $ENV{"STP_PARALLEL"}) {
     $proc_count = $ENV{"STP_PARALLEL"};
-    if ($proc_count > 1) {
+    if ($proc_count < 1) {
+	$proc_count = 1;
+    } elsif ($proc_count > 1) {
 	$quiet = 1;
     }
 }
@@ -913,7 +915,7 @@ sub do_printer($$) {
 		    }
 		    $first_time = 0;
 		}
-		next if (($case_no % $proc_count) != $proc_rotor);
+		next if ($proc_count > 0 && ($case_no % $proc_count) != $proc_rotor);
 		my ($tp_mode) = "rgb8";
 		@extras = ();
 		@job_extras = ();
