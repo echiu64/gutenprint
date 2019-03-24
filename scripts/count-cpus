@@ -28,8 +28,4 @@ fi
 
 # Linux
 nproc=$(type -p nproc)
-if [ -n "$nproc" ] ; then
-    nproc
-else
-    echo 1
-fi
+${nproc:-echo 1}

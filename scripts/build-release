@@ -23,46 +23,46 @@
 # it can find the script directory to get the version without having to be
 # autotool-processed.
 
-# 0) Ensure that we're in the root directory and have a sane environment
+declare -r tred="$(tput setaf 1)$(tput bold)"
+declare -r tyellow="$(tput setaf 3)$(tput bold)"
+declare -r tgreen="$(tput setaf 2)$(tput bold)"
+declare -r tblue=$(tput setaf 4)
+declare -r treset=$(tput sgr0)
+function fatal() {
+    echo "${tred}FATAL: $*${treset}"
+    exit 1
+}
+
+[[ -s ChangeLog.pre-5.2.11 ]] || fatal "$0 must be run from repository top level"
 
 declare GIT=$(type -p git)
-
-if [[ ! -s ChangeLog.pre-5.2.11 ]] ; then
-    echo "$0 must be run from repository top level"
-    exit 1
-fi
-declare ROOT=$(pwd)
-
-STP_PARALLEL=${STP_PARALLEL:-$("$ROOT/scripts/count-cpus")}
-
-if [[ -z $GIT ]] ; then
-    echo "Can't find git.  Cannot continue."
-    exit 1
-fi
+[[ -n $GIT ]] || fatal "Can't find git"
 
 declare MAKE=$(type -p make)
+[[ -n $MAKE ]] || fatal "Can't find make"
 
-if [[ -z $MAKE ]] ; then
-    echo "Can't find make.  Cannot continue."
-    exit 1
-fi
+declare -r ROOT=$(pwd)
+declare tmpfile=/dev/null
+export STP_PARALLEL=${STP_PARALLEL:-$("$ROOT/scripts/count-cpus")}
+declare counter=1
+declare git_dirty=
 
-function pkg_version {
+function pkg_version() {
     "$ROOT/scripts/gversion" pkg
 }
 
-function pkg_tag {
-    declare version=$(pkg_version)
+function pkg_tag() {
+    local version=$(pkg_version)
     echo "gutenprint-${version//./_}"
 }
 
 # Clean up any trailing whitespace.
 
-function preflight {
+function preflight() {
     local trailing_ws="$("$GIT" grep -Il '[	 ]$')"
     if [[ -n $trailing_ws ]] ; then
-	console_log <<< "The following files have trailing whitespace:"
-	console_log <<< "$trailing_ws"
+	console_log "*** ERROR: The following files have trailing whitespace:"
+	console_log "$trailing_ws"
 	return 2
     fi
     return 0
@@ -70,14 +70,14 @@ function preflight {
 
 # Git pre-checks (not version-specific)
 
-function check_git {
+function check_git() {
     "$GIT" fetch
-    gstatus=0
+    local gstatus=0
 
     # Check for uncommitted files.
     if [[ -n $("$GIT" status -uno --porcelain) ]] ; then
-	console_log <<<"*** ERROR: Uncommitted changes in repository:"
-	"$GIT" status -uno | console_log
+	console_log "*** ERROR: Uncommitted changes in repository:"
+	"$GIT" status -uno --porcelain | console_log
 	gstatus=2
     fi
 
@@ -86,28 +86,27 @@ function check_git {
     # but not behind) and that we don't need to rebase (no merges.
     # Also check that we haven't diverged.
 
-    ahead=$("$GIT" rev-list "$("$GIT" rev-parse '@{u}')"..@)
-    behind=$("$GIT" rev-list "$("$GIT" rev-parse @)"..'@{u}')
+    local ahead=$("$GIT" rev-list @{u}..@)
+    local behind=$("$GIT" rev-list @..@{u})
     if [[ -n $ahead && -n $behind ]] ; then
 	# Oops!  Both ahead *and* behind remote.  Really bad news!
-	console_log <<< "*** ERROR: HEAD and remote have diverged!"
-	console_log <<< "***        Please merge and rebase all changes!"
+	console_log "*** ERROR: HEAD and remote have diverged!"
+	console_log "***        Please merge and rebase all changes!"
 	return 2
     elif [[ -n $behind ]] ; then
 	# We're behind.  Not good.
-	console_log <<< "*** ERROR: Behind remote by $(wc -w <<< "$behind") commits."
+	console_log "*** ERROR: Behind remote by $(wc -w <<< "$behind") commits."
 	return 2
     elif [[ -n $ahead ]] ; then
-	# We're ahead.  That's OK as long as there are no merge commits...
-	merges=0
+	# We're ahead.  That's OK as long as there are no merge commits.
+	local merges=0
 	for h in $ahead ; do
-	    parents=$("$GIT" rev-parse "$h^@" |wc -w)
-	    (( parents > 1 )) && merges=$((merges + 1))
+	    (( $("$GIT" rev-parse "$h^@" |wc -w) > 1 )) && merges=$((merges + 1))
 	done
-	console_log <<< "*** Warning: Ahead of remote."
+	console_log "*** Warning: Ahead of remote."
 	if (( merges > 0 )) ; then
 	    (( merges != 1 )) && pl=s
-	    console_log <<< "*** ERROR: $merges merge$pl between HEAD and remote"
+	    console_log "*** ERROR: $merges merge$pl between HEAD and remote"
 	    return 2
 	fi
     fi
@@ -117,54 +116,84 @@ function check_git {
 # Run autogen.sh to ensure that we're using default build settings
 # Everything else depends on this.
 
-function run_build {
-    # shellcheck disable=SC2086
-    ./autogen.sh $STP_CONFIG_ARGS && make clean && make ${STP_PARALLEL:+-j$STP_PARALLEL} && return 0
-    echo "FATAL error: preliminary build failed!"
+function run_target() {
+    make $1 && return 0
+    console_log "*** ERROR: ${3:+$3 }make $1 failed"
+    return ${2:-2}
+}
+
+function run_autogen() {
+    ./autogen.sh $STP_CONFIG_ARGS && return 0
+    console_log "*** FATAL: autogen failed!"
     return 1
+}
+
+function colorize() {
+    sed \
+	-e "s/\*\*\* \(FATAL\|ERROR\):\(.*\)/${tred}*** \1:\2${treset}/" \
+	-e "s/\*\*\* Warning:\(.*\)/${tyellow}*** Warning:\1${treset}/"
+}
+
+
+function run_clean() {
+    run_target clean
+}
+
+function run_build() {
+    run_target "${STP_PARALLEL:+-j$STP_PARALLEL}" 1
 }
 
 # Same as above, without make clean if we know we're in a clean
 # environment (e. g. CI)
-function run_build_fresh {
+function run_build_fresh() {
     # shellcheck disable=SC2086
     ./autogen.sh $STP_CONFIG_ARGS && make ${STP_PARALLEL:+-j$STP_PARALLEL} && return 0
-    echo "FATAL error: preliminary build failed!"
+    console_log "*** FATAL preliminary build failed!"
     return 1
 }
 
 # Git check tag.  This can't be run until after the build, because we
 # don't have the version available until autogen.
 
-function check_git_tag {
+function check_git_tag() {
     # Make sure that the tag that we're going to want to apply isn't
     # already present.
     if [[ -n $("$GIT" show-ref "refs/tags/$(pkg_tag)") ]] ; then
-	console_log <<< "*** ERROR: Tag named $(pkg_tag) is already present"
+	console_log "*** ERROR: Tag named $(pkg_tag) is already present"
 	return 2
     fi
-    return 0
 }
 
 # Check that we can build a clone of this workspace
-function _check_git_builds {
-    rev=$("$GIT" rev-parse @)
-    cwd=$(pwd)
-    cd "$TESTREPO" || return 1
-    git clone "$cwd" . || {
-    	echo "Unable to clone repo"
-	return 1
+function _check_git_builds() {
+    local rev=$("$GIT" rev-parse @)
+    cwd=$(pwd -P)
+    [[ -n $cwd ]] || {
+	console_log "*** ERROR: Can't find directory!"
+	return 2
     }
-    git checkout "$rev" || return 1
-    STP_LOG_NO_SUBDIR=1 STP_LOG_DIR=$STP_TEST_LOG_PREFIX scripts/build-release preflight run_build run_valgrind_minimal run_distcheck_minimal
+    cd "$TESTREPO" || {
+	console_log "*** ERROR: Can't cd to test repo directory $cwd!"
+	return 2
+    }
+    "$GIT" clone "$cwd" . || {
+    	console_log "*** ERROR: Unable to clone repo"
+	return 2
+    }
+    "$GIT" checkout "$rev" || {
+    	console_log "*** ERROR: Unable to check out rev $rev"
+	return 2
+    }
+    STP_LOG_NO_SUBDIR=1 STP_LOG_DIR=$STP_TEST_LOG_PREFIX scripts/build-release preflight run_autogen run_build run_distcheck_minimal || {
+	console_log "*** ERROR: Repo build failed!"
+	return 2
+    }
 }
 
-function check_git_builds {
+function check_git_builds() {
     export TESTREPO=$(mktemp -d)
-    cwd=$(pwd)
-    _check_git_builds
-    status=$?
-    cd "$cwd" || return 1
+    (_check_git_builds)
+    local status=$?
     [[ -d $TESTREPO ]] && rm -rf "$TESTREPO"
     return $status
 }
@@ -176,28 +205,20 @@ function check_git_builds {
 #    printers.  It takes about 30 seconds on my laptop.  Smoketest and
 #    all.
 
-function run_valgrind_minimal {
-    make check-valgrind-minimal && return 0
-    echo "make check-valgrind-minimal failed"
-    return 2
+function run_valgrind_minimal() {
+    run_target check-valgrind-minimal
 }
 
-function run_valgrind_fast {
-    make check-valgrind-fast && return 0
-    echo "make check-valgrind-fast failed"
-    return 2
+function run_valgrind_fast() {
+    run_target check-valgrind-fast
 }
 
-function run_check_minimal {
-    make check-minimal && return 0
-    echo "make check-minimal failed"
-    return 2
+function run_check_minimal() {
+    run_target check-minimal
 }
 
-function run_check_fast {
-    make check-fast && return 0
-    echo "make check-fast failed"
-    return 2
+function run_check_fast() {
+    run_target check-fast
 }
 
 # Run make distcheck-fast.
@@ -252,10 +273,8 @@ function run_check_fast {
 # which isn't too bad for a prerelease smoke test.  The rest of this
 # takes a lot longer.
 
-function run_distcheck_fast {
-    make distcheck-fast && return 0
-    echo "make distcheck-fast failed"
-    return 2
+function run_distcheck_fast() {
+    run_target distcheck-fast
 }
 
 # Run make check-valgrind
@@ -269,10 +288,8 @@ function run_distcheck_fast {
 # things to make their way in.  For CI purposes, if we ever go
 # there, like to find a happy medium.
 
-function run_valgrind {
-    make check-valgrind && return 0
-    echo "make check-valgrind failed"
-    return 2
+function run_valgrind() {
+    run_target check-valgrind
 }
 
 # Run make check-full
@@ -298,10 +315,8 @@ function run_valgrind {
 #    IIRC this takes 60-90 minutes on my laptop, but again, it
 #    parallelizes very well.
 
-function run_full {
-    make check-full && return 0
-    echo "make check-full failed"
-    return 2
+function run_full() {
+    run_target check-full
 }
 
 # Run make checksums-release to generate a new regression file.
@@ -323,15 +338,15 @@ function run_full {
 
 function run_checksums() {
     if make checksums ; then
-	CSUM_FILE="src/testpattern/Checksums/sums.$(pkg_version).zpaq"
-	if [[ ! -f $CSUM_FILE ]] ; then
-	    echo "Can't find new checksums file $CSUM_FILE"
+	local csum_file="src/testpattern/Checksums/sums.$(pkg_version).zpaq"
+	if [[ ! -f $csum_file ]] ; then
+	    console_log "*** ERROR: Can't find new checksums file $csum_file"
 	    return 2
 	fi
-	cp -p "$CSUM_FILE" "$ARTIFACTDIR"
+	cp -p "$csum_file" "$ARTIFACTDIR"
 	return 0
     fi
-    echo "make checksums failed"
+    console_log "*** ERROR: make checksums failed"
     return 2
 }
 
@@ -339,19 +354,19 @@ function run_checksums() {
 
 function git_prep_release() {
     # .po files might have changed; nothing else should have!
-    if "${GIT}" status -uno --porcelain |grep -q -E -v 'po/.*\.po' ; then
-	console_log <<< "ERROR: Unexpected untracked files:"
-	"${GIT}" status -uno --porcelain |grep -E -v 'po/.*\.po' | console_log
+    if "$GIT" status -uno --porcelain |grep -q -E -v 'po/.*\.po' ; then
+	console_log "*** ERROR: Unexpected untracked files:"
+	"$GIT" status -uno --porcelain |grep -E -v 'po/.*\.po' | console_log
 	return 1
     fi
     # Add any of those changed files.
-    ${GIT} add -u || return 1
+    "$GIT" add -u || return 1
     # Add the checksums file.
-    ${GIT} add "src/testpattern/Checksums/sums.$(pkg_version).zpaq" || return 1
+    "$GIT" add "src/testpattern/Checksums/sums.$(pkg_version).zpaq" || return 1
     # Commit this change
-    ${GIT} commit -m"Gutenprint $(pkg_version) release" || return 1
+    "$GIT" commit -m"Gutenprint $(pkg_version) release" || return 1
     # Apply the tag.  Ideally we should sign the tag too.
-    ${GIT} tag -a "$(pkg_tag)" -m "Gutenprint $(pkg_version) release" || return 1
+    "$GIT" tag -a "$(pkg_tag)" -m "Gutenprint $(pkg_version) release" || return 1
 }
 
 # make distcheck-minimal
@@ -361,29 +376,25 @@ function git_prep_release() {
 # A minimal distcheck only takes about a minute; we might as well
 # do a final sanity check.
 
-function run_distcheck_minimal {
-    make distcheck-minimal && return 0
-    echo "Final make distcheck-minimal failed"
-    return 1
+function run_distcheck_minimal() {
+    run_target distcheck-minimal 1 Final
 }
 
-function run_check_minimal {
-    make check-minimal && return 0
-    echo "Final make distcheck-minimal failed"
-    return 2
+function run_check_minimal() {
+    run_target check-minimal
 }
 
 #  Save away build
-function save_build_artifacts {
-    tarball="gutenprint-$(pkg_version).tar.xz"
+function save_build_artifacts() {
+    local tarball="gutenprint-$(pkg_version).tar.xz"
     [[ -s $tarball ]] && cp -p "$tarball" "$ARTIFACTDIR"
 }
 
 # Final release prep
 
-function finis {
+function finis() {
     STP_DATA_PATH=src/xml test/gen-printer-list > "printer-list.$(pkg_version)" || return 1
-    console_log <<EOF
+    console_log <<'EOF'
 Remainder to be done manually:
 
   * git push
@@ -408,110 +419,89 @@ EOF
 # change console_log if the width changes.
 #
 # Unfortunately the shell built-in printf can't specify UTC.
-function stamp {
-    # shellcheck disable=SC2183
-    printf '%(%Y-%m-%d.%H:%M:%S%z)T'
+function stamp() {
+    printf '%(%Y-%m-%dT%H:%M:%S%z)T'
 }
 
-function date_sec {
-    # shellcheck disable=SC2183
+function date_sec() {
     printf '%(%s)T'
 }
 
-function report_progress {
-    idx=$1
+function report_progress() {
+    local outst="RUNNING[$1]: "
     shift
-    declare outst="RUNNING[$idx]: "
-    [[ -n "$DONTRUN_OP" ]] && outst='Skipping:'
-    echo " >>> $(stamp) $outst $*"
+    echo $([[ -z $BUILD_VERBOSE ]] && echo '' -n) ">>> $(stamp) $outst $*"
 }
 
 # This allows us to log to multiple outputs, including stdout and
 # (where available) file descriptors.  Ideally we'd be able to build a
 # pipeline and eval it, but it's not clear that that's possible.
-function log1 {
+function log1() {
     if [[ $# -eq 0 || ($# == 1 && $1 == -) ]] ; then
-	cat
+	exec cat
     else
-	dest="$1"
+	local dest="$1"
 	shift
 	# stdout needs to come last, because we just want to send data
 	# to stdout rather than teeing off or explicitly going to a file.
 	if [[ $dest == - && $# -gt 0 ]] ; then
-	    # Protect against someone inadvertently specifying - twice!
-	    if [[ $1 == - ]] ; then
-		log1 "$@"
-	    else
-		log1 "$@" -
-	    fi
+	    # Protect against someone inadvertently specifying '-' twice!
+	    log1 "$@" $([[ $1 == - ]] || echo -)
 	elif [[ $dest == -* ]] ; then
 	    dest=${dest:1}
 	    if (( $# == 0 )) ; then
-		cat > "$dest"
+		exec cat > "$dest"
+	    elif [[ $* == - ]] ; then
+		exec tee "$dest"
 	    else
-		tee "$dest" | log1 "$@"
+		exec tee "$dest" | log1 "$@"
 	    fi
 	else
 	    if (( $# == 0 )) ; then
-		cat >> "$dest"
+		exec cat >> "$dest"
+	    elif [[ $* == - ]] ; then
+		exec tee -a "$dest"
 	    else
-		tee -a "$dest" | log1 "$@"
+		exec tee -a "$dest" | log1 "$@"
 	    fi
 	fi
     fi
 }
 
-function log {
-    log1 "$@" ${BUILD_VERBOSE:+-}
+function log() {
+    local -a args=()
+    local -i has_stdout=0
+    (log1 "$@" ${BUILD_VERBOSE:+-})
 }
 
-function log_top {
-    log1 "$@" "$top_log" -
+function log_top1() {
+    log "$top_log" -
 }
 
-function time_delta {
-    start=$1
-    end=$2
-    interval=$((end - start))
-    h=$((interval / 3600))
-    m=$(((interval % 3600) / 60))
-    s=$((interval % 60))
-    printf "%d:%02d:%02d" $h $m $s
+function red() {
+    sed -e "s/^/${tred}/" -e "s/$/${treset}/"
 }
 
-function finish {
-    status=$1
-    etime=$(date_sec)
-    msg=completed
-    [[ $status != 0 || -n ${failedmodules[*]} ]] && msg=FAILED
-    estamp=$(stamp)
-    if [[ -n "${failedmodules[*]}" ]] ; then
-	log_top <<< "The following modules failed:"
-	for f in "${failedmodules[@]}" ; do
-	    log_top <<< "    $f"
-	done
+function green() {
+    sed -e "s/^/${green}/" -e "s/$/${treset}/"
+}
+
+function log_top() {
+    if [[ -n "$*" ]] ; then
+	log_top1 <<< "$*"
+    else
+	log_top1
     fi
-    # shellcheck disable=SC2086
-    log_top <<< "*** Gutenprint release build $msg at $estamp ($(time_delta $STIME $etime))"
-     log "$top_log" <<< "================================================================"
-    if [[ -n $TRAVIS_MODE ]] ; then
-	# We really don't want the termination message from the deadman
-	exec 3>&2
-	exec 2>/dev/null
-	kill %1
-	wait %1
-	exec 2>&3
-	exec 3>&-
-    fi
-    exit "$status"
 }
 
 # Log the output to the console as well as the master log file and the
 # per-operation log file.
 #
-# fd#3 (/dev/fd/3 -- let's hope we're building the package on
+# fd#4 (/dev/fd/4 -- let's hope we're building the package on
 #      a system that supports /dev/fd, but linux does)
 #      in the operation gets tied to stderr
+#
+# Note that fd#3 is used by lower levels
 #
 # Then we timestamp the data and send it to the top-level log (which
 # is not normally timestamped).
@@ -519,40 +509,78 @@ function finish {
 # Finally, we remove the existing timestamp (which relies upon the timestamp
 # format, ugh) and send it to stdout where it gets picked up and timestamped
 # again.
-function console_log {
-    log /dev/fd/3 - | timestamp | log - "$top_log" | cut -c26-
+function console_log1() {
+    log /dev/fd/4 - | timestamp | log_top | cut -c26-
+}
+
+function console_log() {
+    if [[ -n "$*" ]] ; then
+	console_log1 <<< "$*"
+    else
+	console_log1
+    fi
+}
+
+function time_delta() {
+    local i=$(($2 - $1))
+    printf "%d:%02d:%02d" $((i / 3600)) $(((i % 3600) / 60)) $((i % 60))
+}
+
+function finish() {
+    local status=$1
+    local etime=$(date_sec)
+    local estamp=$(stamp)
+    [[ -n $tmpfile && -f $tmpfile ]] && {
+	[[ -s $tmpfile ]] && colorize < "$tmpfile"
+	rm -f -- "$tmpfile"
+    }
+    if [[ $status != 0 || -n ${failedmodules[*]} ]] ; then
+	log_top "The following modules failed:"
+	log_top "$(printf "    %s\n" "${failedmodules[@]}")"
+	log_top "*** Gutenprint release build FAILED at $estamp ($(time_delta $stime $etime))" |red
+    else
+	log_top "*** Gutenprint release build completed at $estamp ($(time_delta $stime $etime))" |green
+    fi
+    # shellcheck disable=SC2086
+    log "$top_log" <<< "================================================================"
+    if [[ -n $TRAVIS_MODE ]] ; then
+	# We really don't want the termination message from the deadman
+	exec 3>&2 2>/dev/null
+	kill %travis_deadman
+	wait %travis_deadman
+	exec 2>&3 3>&-
+    fi
+    exit "$status"
 }
 
 # Travis times out if there's no output for 10 minutes, but some things
 # go silent for quite a while
-function travis_deadman {
-    while : ; do sleep 60; echo -e '\nMark' "$(uptime)" | log -; done
+function travis_deadman() {
+    while : ; do sleep 60; echo -e "\n${tblue}Mark $(uptime)${treset}" | log -; done
 }
 
-function timestamp {
-    while read -r ; do
-	echo "$(stamp) $REPLY"
-    done
+function timestamp() {
+    while read -r ; do echo "$(stamp) $REPLY"; done
 }
 
 # Run one operation.
-function runit {
-    cmdname=$1
-    cmd="$*"
-    fcounter=$(printf "%02d" "$counter")
-    local_logdir="$LOGDIR/$fcounter.${cmd// /_/}"
+function runit() {
+    local cmdname=$1
+    local cmd="$*"
+    local fcounter=$(printf "%02d" "$counter")
+    local local_logdir="$logdir/$fcounter.${cmd// /_/}"
     mkdir -p "$local_logdir"
-    logfile="$local_logdir/Master"
+    local logfile="$local_logdir/Master"
     [[ -n $DONTRUN_OP ]] && logfile=/dev/null
-    sstime=$(date_sec)
-    ssstamp=$(stamp)
-    status=0
-    msg=completed
-     log "-$logfile" "$top_log" <<< "----------------------------------------------------------------"
+    local sstime=$(date_sec)
+    local ssstamp=$(stamp)
+    local status=0
+    local msg=completed
+    log "-$logfile" "$top_log" <<< "----------------------------------------------------------------"
     if [[ -z $DONTRUN_OP ]] ; then
 	echo "$cmdname started at $ssstamp" | log "$logfile" "$top_log"
 	echo "Command: $cmd" | log "$logfile" "$top_log"
-	echo "Log file: ${logfile#${LOGDIR}/}" | log "$top_log"
+	echo "Log file: ${logfile#${logdir}/}" | log "$top_log"
     else
 	echo "$cmdname SKIPPED" | log "$top_log"
     fi
@@ -560,31 +588,34 @@ function runit {
 
     if [[ -z $DONTRUN_OP ]] ; then
 	# Run the command, capturing console output as well as logged output.
-	STP_TEST_LOG_PREFIX="$local_logdir/" $cmd </dev/null 3>&1 2>&1 | timestamp | log "$logfile"
+	STP_TEST_LOG_PREFIX="$local_logdir/" $cmd </dev/null 4>"$tmpfile" 3>&1 2>&1 | timestamp | log "$logfile"
 	status=${PIPESTATUS[0]}
 	(( status > 0 )) && msg=FAILED
+	local -a emptyfiles=()
 	for f in $local_logdir/* ; do
-	    [[ -f $f && ! -s $f ]] && rm -f "$f"
+	    [[ -f $f && ! -s $f ]] && emptyfiles+=($f)
 	done
+	[[ -n ${emptyfiles[*]} ]] && rm -f -- "${emptyfiles[@]}"
     else
 	msg='(SKIPPED)'
     fi
-    setime=$(date_sec)
-    sestamp=$(stamp)
+    local setime=$(date_sec)
+    local sestamp=$(stamp)
     if [[ -z $DONTRUN_OP ]] ; then
 	# shellcheck disable=SC2086
 	echo "$cmd $msg at $sestamp ($(time_delta $sstime $setime))" | log "$logfile" "$top_log"
 	echo "----------------------------------------------------------------" | log "$logfile" "$top_log"
     fi
     counter=$((counter+1))
-
     return "$status"
 }
 
 declare -a OPERATIONS=(preflight
 		       check_git
-		       run_build
 		       check_git_tag
+		       run_autogen
+		       run_clean
+		       run_build
 		       check_git_builds
 		       run_valgrind_minimal
 		       run_distcheck_fast
@@ -596,72 +627,96 @@ declare -a OPERATIONS=(preflight
 		       save_build_artifacts
 		       finis)
 
+function get_longest_op() {
+    local longest_op=0
+    local op
+    for op in "${OPERATIONS[@]}" ; do
+	(( ${#op} > longest_op )) && longest_op=${#op}
+    done
+    echo $((longest_op + 2))
+}
+
 # shellcheck disable=SC2206
 [[ -n $STP_BUILD_OPERATIONS ]] && OPERATIONS=($STP_BUILD_OPERATIONS)
 [[ -n "$*" ]] && OPERATIONS=("$@")
 
-declare HOST=$(uname -n)
-declare SSTAMP=$(stamp)
-declare STIME=$(date_sec)
-declare TOPLOGDIR=${STP_LOG_DIR:-"$ROOT/BuildLogs"}
-declare LOGDIR="$TOPLOGDIR/Log.${SSTAMP// /_}"
-[[ -n $STP_LOG_NO_SUBDIR ]] && LOGDIR=$TOPLOGDIR
-mkdir -p "$LOGDIR"
+declare sstamp=$(stamp)
+declare stime=$(date_sec)
+declare toplogdir=${STP_LOG_DIR:-"$ROOT/BuildLogs"}
+declare logdir="$toplogdir/Log.${sstamp// /_}"
+declare top_log="$logdir/00.Master"
+[[ -n $STP_LOG_NO_SUBDIR ]] && logdir=$toplogdir
+mkdir -p "$logdir"
 if [[ -z $STP_LOG_NO_SUBDIR ]] ; then
-     if [[ -L $TOPLOGDIR/Current ]] ; then
-	 rm -f "$TOPLOGDIR/Previous"
-	 mv "$TOPLOGDIR/Current" "$TOPLOGDIR/Previous"
-	 rm -f "$TOPLOGDIR/Current"
+     if [[ -L $toplogdir/Current ]] ; then
+	 rm -f -- "$toplogdir/Previous"
+	 mv "$toplogdir/Current" "$toplogdir/Previous"
+	 rm -f -- "$toplogdir/Current"
      fi
-    ln -s "$(basename "$LOGDIR")" "$TOPLOGDIR/Current"
+    ln -s "${logdir##*/}" "$toplogdir/Current"
 fi
-declare ARTIFACTDIR="$LOGDIR/Artifacts"
+export ARTIFACTDIR="$logdir/Artifacts"
 mkdir -p "$ARTIFACTDIR"
-export ARTIFACTDIR
 
-skip_ops=${STP_BUILD_SKIP//,/ }
-
-declare -A SKIP_OPS
-
-for o in $skip_ops ; do
-    SKIP_OPS[$o]=1
-done
-
-declare counter=1
-declare top_log="$LOGDIR/00.Master"
-declare git_dirty=
-
-if [[ -n $TRAVIS_MODE ]] ; then
-    export BUILD_VERBOSE=1
-    travis_deadman&
-fi
-
-log "-$top_log" <<< "================================================================"
-log_top <<< "*** Gutenprint release build started at $SSTAMP on $HOST"
-log_top <<< "Running operations:"
-for f in "${OPERATIONS[@]}" ; do
-    log_top <<< "    $f"
-done
-log_top <<< "Directory: $ROOT"
-[[ -n $STP_TEST_ROTOR_CIRCUMFERENCE && -n $STP_TEST_ROTOR ]] &&
-    log_top <<< "Rotor: $STP_TEST_ROTOR / $STP_TEST_ROTOR_CIRCUMFERENCE"
 [[ -n $("$GIT" status --porcelain -uno) ]] && git_dirty=' (dirty)'
+log "-$top_log" <<< "================================================================"
+
 log_top <<EOF
-Log Directory: ${LOGDIR#${ROOT}/}
-Parallelism: $STP_PARALLEL
-uname -a: $(uname -a)
+*** Gutenprint release build started at $sstamp on $(uname -n)
+
+Directory:   $ROOT
+Logs:        ${logdir#${ROOT}/}
+Kernel:      $(uname -o) $(uname -rv)
+Revision:    $("$GIT" rev-parse @)$git_dirty
+Parallel:    $STP_PARALLEL
+EOF
+[[ -n $STP_TEST_ROTOR_CIRCUMFERENCE && -n $STP_TEST_ROTOR ]] &&
+    log_top "Rotor:       $STP_TEST_ROTOR / $STP_TEST_ROTOR_CIRCUMFERENCE"
+
+log_top <<EOF
+
 CPU information:
 $(lscpu -p)
 $(lscpu)
+
 Memory information:
 $(free)
-Git revision: $("$GIT" rev-parse @)$git_dirty
+
+Running operations:
+$(printf "    %s\n" "${OPERATIONS[@]}")
 EOF
 
+[[ -n $TRAVIS_MODE ]] && {
+    export BUILD_VERBOSE=1
+    travis_deadman&
+}
+
+declare -A SKIP_OPS
+for o in ${STP_BUILD_SKIP//,/ } ; do SKIP_OPS[$o]=1; done
 declare -i runstatus=0
+declare -i lstatus
+declare -i longest_op=$(get_longest_op)
 for op in "${OPERATIONS[@]}" ; do
+    [[ -z $BUILD_VERBOSE ]] && tmpfile=$(mktemp "stpconsole.XXXXXXXX")
     DONTRUN_OP="${DONTRUN}${SKIP_OPS[$op]}" runit "$op"
-    case "$?" in
+    lstatus=$?
+    [[ -z $BUILD_VERBOSE ]] && {
+	tput bold
+	if (( lstatus)) ; then
+	    tput setaf 1
+	    printf "%$((longest_op - ${#op} ))s FAILED"
+	else
+	    tput setaf 2
+	    printf "%$((longest_op - ${#op} ))s OK"
+	fi
+	tput sgr0
+	echo
+    }
+    [[ -f $tmpfile ]] && {
+	[[ -s $tmpfile ]] && colorize < "$tmpfile"
+	rm -f -- "$tmpfile"
+    }
+    case "$lstatus" in
 	0) true                                            ;;
 	2) failedmodules=("${failedmodules[@]}" "$op"); runstatus=1 ;;
 	*) failedmodules=("${failedmodules[@]}" "$op"); finish 1    ;;
