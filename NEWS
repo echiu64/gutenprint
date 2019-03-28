@@ -112,6 +112,24 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
   4) The Gutenprint plugin for GIMP displays a higher resolution
      thumbnail.
 
+  5) The following models have been added to existing printer series:
+
+     * Canon PIXMA iP2899 (EXPERIMENTAL)
+     * Canon PIXMA G1910 (EXPERIMENTAL)
+     * Canon PIXMA G2910 (EXPERIMENTAL)
+     * Canon PIXMA G2915 (EXPERIMENTAL)
+     * Canon PIXMA G3010 (EXPERIMENTAL)
+     * Canon PIXMA G3910 (EXPERIMENTAL)
+     * Canon PIXMA G3915 (EXPERIMENTAL)
+     * Canon PIXMA G4010 (EXPERIMENTAL)
+     * Canon PIXMA G4902 (EXPERIMENTAL)
+     * Canon PIXMA G4910 (EXPERIMENTAL)
+     * Canon PIXMA G4911 (EXPERIMENTAL)
+     * Canon PIXMA TS3130S (EXPERIMENTAL)
+     * Canon PIXMA TS3190 (EXPERIMENTAL)
+     * Canon PIXMA TS3195 (EXPERIMENTAL)
+     * Canon PIXMA TS5030S (EXPERIMENTAL)
+
 
 * Changes from Gutenprint 5.3.0
 
