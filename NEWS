@@ -103,8 +103,8 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
 
      * Sony UP-DR150
      * Sony UP-DR200
-
-  2) The Nidac Copal DPB-6000 is no longer considered experimental.
+     * Sony UP-CR10L
+     * Nidac Copal DPB-6000
 
   3) Many miscellaneous fixes for dyesub printers and the dyesub
      backend; please see the ChangeLog for details.
@@ -129,7 +129,6 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      * Canon PIXMA TS3190 (EXPERIMENTAL)
      * Canon PIXMA TS3195 (EXPERIMENTAL)
      * Canon PIXMA TS5030S (EXPERIMENTAL)
-
 
 * Changes from Gutenprint 5.3.0
 

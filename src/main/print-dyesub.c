@@ -1694,19 +1694,20 @@ static void updr200_printer_init_func(stp_vars_t *v)
 }
 
 /* Sony UP-CR10L / DNP SL10 */
+/* Note:  This printer reverses the traditional X and Y axes. */
 static const dyesub_pagesize_t upcr10_page[] =
 {
-  DEFINE_PAPER_SIMPLE( "w288h432", "4x6", PT1(1248,300), PT1(1848,300), DYESUB_LANDSCAPE),
-  DEFINE_PAPER_SIMPLE( "B7", "3.5x5", PT1(1100,300), PT1(1536,300), DYESUB_LANDSCAPE),
-  DEFINE_PAPER_SIMPLE( "w360h504", "5x7", PT1(1536,300), PT1(2148,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w288h432", "4x6", PT1(1848,300), PT1(1248,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "B7", "3.5x5", PT1(1536,300), PT1(1100,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w360h504", "5x7", PT1(1536,300), PT1(2148,300), DYESUB_LANDSCAPE),
 };
 
 LIST(dyesub_pagesize_list_t, upcr10_page_list, dyesub_pagesize_t, upcr10_page);
 
 static const dyesub_printsize_t upcr10_printsize[] =
 {
-  { "300x300", "w288h432", 1248, 1848},
-  { "300x300", "B7", 1100, 1536},
+  { "300x300", "w288h432", 1848, 1248},
+  { "300x300", "B7", 1536, 1100},
   { "300x300", "w360h504", 1536, 2148},
 };
 
@@ -1716,11 +1717,23 @@ static void upcr10_printer_init_func(stp_vars_t *v)
 {
   dyesub_privdata_t *pd = get_privdata(v);
 
+  char pg = 0;
+
   stp_zfwrite("\x60\xff\xff\xff"
-	      "\xf8\xff\xff\xff"
-	      "\xfd\xff\xff\xff\x14\x00\x00\x00"
+	      "\xf8\xff\xff\xff", 1, 8, v);
+
+  if (strcmp(pd->pagesize,"B7") == 0)
+    pg = '\xff';
+  else if (strcmp(pd->pagesize,"w288h432") == 0)
+    pg = '\xfe';
+  else if (strcmp(pd->pagesize,"w360h504") == 0)
+    pg = '\xfd';
+
+  stp_putc(pg, v);
+  stp_zfwrite("\xff\xff\xff"
+	      "\x14\x00\x00\x00"
 	      "\x1b\x15\x00\x00\x00\x0d\x00\x00"
-	      "\x00\x00\x00\x07\x00\x00\x00\x00", 1, 32, v);
+	      "\x00\x00\x00\x07\x00\x00\x00\x00", 1, 23, v);
   stp_put16_be(pd->w_size, v);
   stp_put16_be(pd->h_size, v);
   stp_zfwrite("\xfb\xff\xff\xff"
@@ -1738,9 +1751,9 @@ static void upcr10_printer_end_func(stp_vars_t *v)
   stp_zfwrite("\xf3\xff\xff\xff"
 	      "\x0f\x00\x00\x00"
 	      "\x1b\xe5\x00\x00\x00\x08\x00\x00"
-	      "\x00\x00\x00\x00\x00\x0d\x00", 1, 23, v);
+	      "\x00\x00\x00\x00\x00\x00\x00", 1, 23, v);
   stp_zfwrite("\x12\x00\x00\x00\x1b\xe1\x00\x00"
-	      "\x000x0b\x00\x00\x80\x08\x00\x00"
+	      "\x00\x0b\x00\x00\x80\x00\x00\x00"
 	      "\x00\x00", 1, 18, v);
   stp_put16_be(pd->w_size, v);
   stp_put16_be(pd->h_size, v);
@@ -1749,11 +1762,11 @@ static void upcr10_printer_end_func(stp_vars_t *v)
 	      "\x1b\xee\x00\x00\x00\x02\x00", 1, 15, v);
   stp_put16_be(pd->copies, v);
   stp_zfwrite("\x07\x00\x00\x00"
-	      "\x1b\x17\x00\x00\x00\x00\x00", 1, 11, v);
+	      "\x1b\x0a\x00\x00\x00\x00\x00", 1, 11, v);
   stp_zfwrite("\xf9\xff\xff\xff"
 	      "\xfc\xff\xff\xff"
 	      "\x07\x00\x00\x00"
-		    "\x1b\x17\x00\x00\x00\x00\x00", 1, 19, v);
+	      "\x1b\x17\x00\x00\x00\x00\x00", 1, 19, v);
   stp_zfwrite("\xf7\xff\xff\xff", 1, 4, v);
 }
 

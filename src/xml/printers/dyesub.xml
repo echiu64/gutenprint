@@ -180,7 +180,7 @@
       <printer translate="name" name="Sony DPP-EX7" driver="sony-dppex7" manufacturer="Sony" model="2002" />
       <printer translate="name" name="Sony UP-DR100" driver="sony-updr100" manufacturer="Sony" model="2003" />
       <printer translate="name" name="Sony UP-DR200" driver="sony-updr200" manufacturer="Sony" model="2004" />
-      <printer translate="name" name="Sony UP-CR10L" driver="sony-upcr10l" manufacturer="Sony" model="2005">EXPERIMENTAL</printer>
+      <printer translate="name" name="Sony UP-CR10L" driverid="MFG:SONY;MDL:UP-CR10L;DES:Sony UP-CR10L;CMD:SONY-Original;CLS:PRINTER" driver="sony-upcr10l" manufacturer="Sony" model="2005"/>
       <printer translate="name" name="Sony UP-D895" driverid="MFG:SONY;MDL:UP-D895;DES:Sony UP-D895;CMD:SONY-Original;CLS:PRINTER" driver="sony-upd895" manufacturer="Sony" model="2006" />
       <printer translate="name" name="Sony UP-D897" driverid="MFG:SONY;MDL:UP-D897;DES:Sony UP-D897;CMD:SONY-Original;CLS:PRINTER" driver="sony-upd897" manufacturer="Sony" model="2007" />
     </family>
