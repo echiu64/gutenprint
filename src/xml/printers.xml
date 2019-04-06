@@ -3850,7 +3850,7 @@
       <printer translate="name" name="Sony DPP-EX7" driver="sony-dppex7" manufacturer="Sony" model="2002" />
       <printer translate="name" name="Sony UP-DR100" driver="sony-updr100" manufacturer="Sony" model="2003" />
       <printer translate="name" name="Sony UP-DR200" driver="sony-updr200" manufacturer="Sony" model="2004" />
-      <printer translate="name" name="Sony UP-CR10L" driver="sony-upcr10l" manufacturer="Sony" model="2005">EXPERIMENTAL</printer>
+      <printer translate="name" name="Sony UP-CR10L" driverid="MFG:SONY;MDL:UP-CR10L;DES:Sony UP-CR10L;CMD:SONY-Original;CLS:PRINTER" driver="sony-upcr10l" manufacturer="Sony" model="2005"/>
     </family>
     <family name="raw">
       <printer translate="name" name="RAW DATA 16 bit" driver="raw-data-16" manufacturer="" model="0" />
