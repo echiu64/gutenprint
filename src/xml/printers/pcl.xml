@@ -1409,6 +1409,7 @@
       <printer translate="name" name="Samsung ML-7300N" driver="samsung-ml-7300n" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Samsung QL-5100A" driver="samsung-ql-5100a" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Samsung QL-6050" deviceid="MFG:Samsung;MDL:6050;CMD:PCL6;" driver="samsung-ql-6050" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Samsung ProXpress SL-M3820ND" driver="samsung-sl-m3820nd" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Savin 2522" driver="savin-2522" manufacturer="Savin" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Savin 2527" driver="savin-2527" manufacturer="Savin" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Savin 2532" driver="savin-2532" manufacturer="Savin" model="61" parameters="pcl_laser_params" />
