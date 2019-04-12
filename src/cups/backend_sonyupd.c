@@ -1,7 +1,7 @@
 /*
- *   Sony UP-DR150 Photo Printer CUPS backend -- libusb-1.0 version
+ *   Sony UP-D series Photo Printer CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013-2018 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2019 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -36,7 +36,7 @@
 #include <fcntl.h>
 #include <signal.h>
 
-#define BACKEND updr150_backend
+#define BACKEND sonyupd_backend
 
 #include "backend_common.h"
 
@@ -45,21 +45,23 @@
   <-- this struct
 */
 struct sony_updsts {
-	uint8_t  hdr[2];   /* 0x0d 0x00 */
+	uint8_t  len;      /* 0x0d/0x0e (ie number of bytes AFTER this one) */
+	uint8_t  zero1;    /* 0x00 */
 	uint8_t  printing; /* 0xe0 if printing, 0x00 otherwise */
 	uint8_t  remain;   /* Number of remaining pages */
-	uint8_t  zero1;
+	uint8_t  zero2;
 	uint8_t  sts1;     /* primary status */
 	uint8_t  sts2;     /* seconday status */
 	uint8_t  sts3;     /* tertiary status */
-	uint8_t  zero2[2];
+	uint8_t  zero3;    /* seen 0x04 + 0xa0 (ie 1184) on UP-CR10L */
+	uint8_t  zero4;
 	uint16_t max_cols; /* BE */
 	uint16_t max_rows; /* BE */
 	uint8_t  percent;  /* 0-99, if job is printing */
 } __attribute__((packed));
 
 /* Private data structures */
-struct updr150_printjob {
+struct upd_printjob {
 	uint8_t *databuf;
 	int datalen;
 
@@ -69,7 +71,7 @@ struct updr150_printjob {
 	uint32_t imglen;
 };
 
-struct updr150_ctx {
+struct upd_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;
 	uint8_t endp_down;
@@ -83,21 +85,21 @@ struct updr150_ctx {
 };
 
 /* Now for the code */
-static void* updr150_init(void)
+static void* upd_init(void)
 {
-	struct updr150_ctx *ctx = malloc(sizeof(struct updr150_ctx));
+	struct upd_ctx *ctx = malloc(sizeof(struct upd_ctx));
 	if (!ctx) {
 		ERROR("Memory Allocation Failure!");
 		return NULL;
 	}
-	memset(ctx, 0, sizeof(struct updr150_ctx));
+	memset(ctx, 0, sizeof(struct upd_ctx));
 	return ctx;
 }
 
-static int updr150_attach(void *vctx, struct libusb_device_handle *dev, int type,
+static int upd_attach(void *vctx, struct libusb_device_handle *dev, int type,
 			  uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
 {
-	struct updr150_ctx *ctx = vctx;
+	struct upd_ctx *ctx = vctx;
 
 	UNUSED(jobid);
 
@@ -121,9 +123,9 @@ static int updr150_attach(void *vctx, struct libusb_device_handle *dev, int type
 	return CUPS_BACKEND_OK;
 }
 
-static void updr150_cleanup_job(const void *vjob)
+static void upd_cleanup_job(const void *vjob)
 {
-	const struct updr150_printjob *job = vjob;
+	const struct upd_printjob *job = vjob;
 
 	if (job->databuf)
 		free(job->databuf);
@@ -131,8 +133,8 @@ static void updr150_cleanup_job(const void *vjob)
 	free((void*)job);
 }
 
-static void updr150_teardown(void *vctx) {
-	struct updr150_ctx *ctx = vctx;
+static void upd_teardown(void *vctx) {
+	struct upd_ctx *ctx = vctx;
 
 	if (!ctx)
 		return;
@@ -156,7 +158,7 @@ static char* upd895_statuses(uint8_t code)
 	}
 }
 
-static int sony_get_status(struct updr150_ctx *ctx, struct sony_updsts *buf)
+static int sony_get_status(struct upd_ctx *ctx, struct sony_updsts *buf)
 {
 	int ret, num = 0;
 	uint8_t query[7] = { 0x1b, 0xe0, 0, 0, 0, 0x0f, 0 };
@@ -188,14 +190,14 @@ static int sony_get_status(struct updr150_ctx *ctx, struct sony_updsts *buf)
 
 #define MAX_PRINTJOB_LEN (2048*2764*3 + 2048)
 
-static int updr150_read_parse(void *vctx, const void **vjob, int data_fd, int copies) {
-	struct updr150_ctx *ctx = vctx;
+static int upd_read_parse(void *vctx, const void **vjob, int data_fd, int copies) {
+	struct upd_ctx *ctx = vctx;
 	int len, run = 1;
 	uint32_t copies_offset = 0;
 	uint32_t param_offset = 0;
 	uint32_t data_offset = 0;
 
-	struct updr150_printjob *job = NULL;
+	struct upd_printjob *job = NULL;
 
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
@@ -212,7 +214,7 @@ static int updr150_read_parse(void *vctx, const void **vjob, int data_fd, int co
 	job->databuf = malloc(MAX_PRINTJOB_LEN);
 	if (!job->databuf) {
 		ERROR("Memory allocation failure!\n");
-		updr150_cleanup_job(job);
+		upd_cleanup_job(job);
 		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 
@@ -221,7 +223,7 @@ static int updr150_read_parse(void *vctx, const void **vjob, int data_fd, int co
 		int keep = 0;
 		i = read(data_fd, job->databuf + job->datalen, 4);
 		if (i < 0) {
-			updr150_cleanup_job(job);
+			upd_cleanup_job(job);
 			return CUPS_BACKEND_CANCEL;
 		}
 		if (i == 0)
@@ -292,11 +294,18 @@ static int updr150_read_parse(void *vctx, const void **vjob, int data_fd, int co
 		if (keep)
 			job->datalen += sizeof(uint32_t);
 
+		/* Make sure we're not too large */
+		if (job->datalen + len > MAX_PRINTJOB_LEN) {
+			ERROR("Buffer overflow when parsing printjob! (%d+%d)\n",
+			      job->datalen, len);
+			return CUPS_BACKEND_CANCEL;
+		}
+
 		/* Read in the data chunk */
 		while(len > 0) {
 			i = read(data_fd, job->databuf + job->datalen, len);
 			if (i < 0) {
-				updr150_cleanup_job(job);
+				upd_cleanup_job(job);
 				return CUPS_BACKEND_CANCEL;
 			}
 			if (i == 0)
@@ -332,7 +341,7 @@ static int updr150_read_parse(void *vctx, const void **vjob, int data_fd, int co
 		}
 	}
 	if (!job->datalen) {
-		updr150_cleanup_job(job);
+		upd_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
 	}
 
@@ -369,12 +378,12 @@ static int updr150_read_parse(void *vctx, const void **vjob, int data_fd, int co
 	return CUPS_BACKEND_OK;
 }
 
-static int updr150_main_loop(void *vctx, const void *vjob) {
-	struct updr150_ctx *ctx = vctx;
+static int upd_main_loop(void *vctx, const void *vjob) {
+	struct upd_ctx *ctx = vctx;
 	int i, ret;
 	int copies;
 
-	const struct updr150_printjob *job = vjob;
+	const struct upd_printjob *job = vjob;
 
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
@@ -493,7 +502,7 @@ done:
 	return CUPS_BACKEND_OK;
 }
 
-static int upd895_dump_status(struct updr150_ctx *ctx)
+static int upd895_dump_status(struct upd_ctx *ctx)
 {
 	int ret = sony_get_status(ctx, &ctx->stsbuf);
 	if (ret < 0)
@@ -507,14 +516,14 @@ static int upd895_dump_status(struct updr150_ctx *ctx)
 }
 
 
-static void updr150_cmdline(void)
+static void upd_cmdline(void)
 {
-	DEBUG("\t\t[ -s ]           # Query printer status (only UP-D895)\n");
+	DEBUG("\t\t[ -s ]           # Query printer status\n");
 }
 
-static int updr150_cmdline_arg(void *vctx, int argc, char **argv)
+static int upd_cmdline_arg(void *vctx, int argc, char **argv)
 {
-	struct updr150_ctx *ctx = vctx;
+	struct upd_ctx *ctx = vctx;
 	int i, j = 0;
 
 	if (!ctx)
@@ -534,9 +543,9 @@ static int updr150_cmdline_arg(void *vctx, int argc, char **argv)
 	return 0;
 }
 
-static int updr150_query_markers(void *vctx, struct marker **markers, int *count)
+static int upd_query_markers(void *vctx, struct marker **markers, int *count)
 {
-	struct updr150_ctx *ctx = vctx;
+	struct upd_ctx *ctx = vctx;
 	int ret = sony_get_status(ctx, &ctx->stsbuf);
 
 	*markers = &ctx->marker;
@@ -557,12 +566,13 @@ static int updr150_query_markers(void *vctx, struct marker **markers, int *count
 	return CUPS_BACKEND_OK;
 }
 
-static const char *sonyupdr150_prefixes[] = {
-	"sonyupdr150",  // Family name.
+static const char *sonyupd_prefixes[] = {
+	"sonyupd",
 	"sony-updr150", "sony-updr200", "sony-upcr10l",
-	// Backwards compatibility
-	"sonyupdr200", "sonyupcr10",
 	"sony-upd895", "sony-upd897",
+	// Backwards compatibility
+	"sonyupdr150",
+	"sonyupdr200", "sonyupcr10",
 //	"sony-upd898",
 	NULL
 };
@@ -576,19 +586,19 @@ static const char *sonyupdr150_prefixes[] = {
 #define USB_PID_SONY_UPD897  0x01E7
 //#define USB_PID_SONY_UPD898 XXXXX // 0x589a?
 
-struct dyesub_backend updr150_backend = {
-	.name = "Sony UP-DR150/UP-DR200/UP-CR10/UP-D895/UP-D897",
+struct dyesub_backend sonyupd_backend = {
+	.name = "Sony UP-D",
 	.version = "0.35",
-	.uri_prefixes = sonyupdr150_prefixes,
-	.cmdline_arg = updr150_cmdline_arg,
-	.cmdline_usage = updr150_cmdline,
-	.init = updr150_init,
-	.attach = updr150_attach,
-	.teardown = updr150_teardown,
-	.cleanup_job = updr150_cleanup_job,
-	.read_parse = updr150_read_parse,
-	.main_loop = updr150_main_loop,
-	.query_markers = updr150_query_markers,
+	.uri_prefixes = sonyupd_prefixes,
+	.cmdline_arg = upd_cmdline_arg,
+	.cmdline_usage = upd_cmdline,
+	.init = upd_init,
+	.attach = upd_attach,
+	.teardown = upd_teardown,
+	.cleanup_job = upd_cleanup_job,
+	.read_parse = upd_read_parse,
+	.main_loop = upd_main_loop,
+	.query_markers = upd_query_markers,
 	.devices = {
 		{ USB_VID_SONY, USB_PID_SONY_UPDR150, P_SONY_UPDR150, NULL, "sony-updr150"},
 		{ USB_VID_SONY, USB_PID_SONY_UPDR200, P_SONY_UPDR150, NULL, "sony-updr200"},
@@ -690,7 +700,7 @@ struct dyesub_backend updr150_backend = {
    UNKNOWN
 
  <- 1b e5 00 00 00 08 00
- <- 00 00 00 00 00 00 00 01  00
+ <- 00 00 00 00 00 00 00 XX  00  # Seen 01, 12, 0d, etc.
 
    UNKNOWN  (UP-D897)
 
@@ -711,7 +721,6 @@ struct dyesub_backend updr150_backend = {
 
  <- 1b ee 00 00 00 02 00
  <- NN NN                        # Number of copies (BE, 1-???)
-
 
   ************************************************************************
 
