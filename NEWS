@@ -98,9 +98,11 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      * Epson Expression Photo XP-8500 (Preliminary)
      * Sony UP-D895 family
      * Sony UP-D897 family
+     * Sony UP-D898 family (EXPERIMENTAL)
 
   2) Bugfixes and other enhancements for the following printers:
 
+     * Sony UP-DP10
      * Sony UP-DR150
      * Sony UP-DR200
      * Sony UP-CR10L

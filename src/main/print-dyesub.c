@@ -1334,19 +1334,22 @@ static void updp10_printer_init_func(stp_vars_t *v)
 {
   dyesub_privdata_t *pd = get_privdata(v);
 
-  stp_zfwrite("\x98\xff\xff\xff\xff\xff\xff\xff"
-	      "\x09\x00\x00\x00\x1b\xee\x00\x00"
-	      "\x00\x02\x00\x00\x01\x12\x00\x00"
-	      "\x00\x1b\xe1\x00\x00\x00\x0b\x00"
-	      "\x00\x04", 1, 34, v);
+  stp_zfwrite("\x98\xff\xff\xff"
+	      "\xff\xff\xff\xff"
+	      "\x09\x00\x00\x00"
+	      "\x1b\xee\x00\x00"
+	      "\x00\x02\x00", 1, 19, v);
+  stp_put16_be(pd->copies, v);
+  stp_zfwrite("\x12\x00\x00\x00"
+              "\x1b\xe1\x00\x00\x00\x0b\x00\x00\x04", 1, 13, v);
   stp_zfwrite((pd->overcoat->seq).data, 1,
 			(pd->overcoat->seq).bytes, v); /*overcoat pattern*/
   stp_zfwrite("\x00\x00\x00\x00", 1, 4, v);
   stp_put16_be(pd->w_size, v);
   stp_put16_be(pd->h_size, v);
-  stp_zfwrite("\x14\x00\x00\x00\x1b\x15\x00\x00"
-	      "\x00\x0d\x00\x00\x00\x00\x00\x07"
-	      "\x00\x00\x00\x00", 1, 20, v);
+  stp_zfwrite("\x14\x00\x00\x00"
+	      "\x1b\x15\x00\x00\x00\x0d\x00\x00"
+	      "\x00\x00\x00\x07\x00\x00\x00\x00", 1, 20, v);
   stp_put16_be(pd->w_size, v);
   stp_put16_be(pd->h_size, v);
   stp_put32_le(pd->w_size*pd->h_size*3+11, v);
@@ -1357,10 +1360,11 @@ static void updp10_printer_init_func(stp_vars_t *v)
 
 static void updp10_printer_end_func(stp_vars_t *v)
 {
-  stp_zfwrite("\xff\xff\xff\xff\x07\x00\x00\x00"
-	      "\x1b\x0a\x00\x00\x00\x00\x00\xfd"
-	      "\xff\xff\xff\xff\xff\xff\xff"
-	      , 1, 23, v);
+  stp_zfwrite("\xff\xff\xff\xff"
+	      "\x07\x00\x00\x00"
+	      "\x1b\x0a\x00\x00\x00\x00\x00"
+	      "\xfd\xff\xff\xff"
+	      "\xff\xff\xff\xff", 1, 23, v);
 }
 
 static const overcoat_t updp10_overcoat[] =
@@ -2164,6 +2168,159 @@ static int sony_upd897_parse_parameters(stp_vars_t *v)
   } else{
     pd->privdata.sonymd.gamma = 0x00;
   }
+}
+
+/* Sony UP-D898 family */
+static void sony_upd898_printer_init_func(stp_vars_t *v)
+{
+  char hdrbuf[256];
+  char buf[256];
+
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  int  hdrlen;
+
+  /* Generate PJL header */
+  memset(buf, 0, sizeof(buf));
+  hdrlen = snprintf(buf, sizeof(buf),
+		    "\x1b%%-12345X\r\n"
+		    "@PJL JOB NAME=\"Gutenprint\" \r\n"
+		    "@PJL ENTER LANGUAGE=SONY-PDL-DS2\r\n");
+  buf[255] = 0;
+
+  /* Generate block header */
+  memset(hdrbuf, 0, sizeof(hdrbuf));
+  snprintf(hdrbuf, sizeof(hdrbuf), "JOBSIZE=PJL-H,%d,%s,6,0,0,0",
+	   hdrlen, pd->pagesize);
+
+  /* Write block header */
+  stp_zfwrite(hdrbuf, 1, sizeof(hdrbuf), v);
+  /* Write PJL header */
+  stp_zfwrite(buf, 1, hdrlen, v);
+
+  /* Generate payload header */
+  hdrlen = pd->w_size * pd->h_size + 274 + 23;
+  memset(hdrbuf, 0, sizeof(hdrbuf));
+  snprintf(hdrbuf, sizeof(hdrbuf), "JOBSIZE=PDL,%d",
+	   hdrlen);
+  /* Write block header */
+  stp_zfwrite(hdrbuf, 1, sizeof(hdrbuf), v);
+
+  /* Write 274 bytes of payload header */
+  stp_putc(0x00, v);
+  stp_putc(0x00, v);
+  stp_putc(0x01, v);
+  stp_putc(0x00, v);
+  stp_putc(0x00, v);
+  stp_putc(0x10, v);
+  stp_putc(0x0f, v);
+  stp_putc(0x00, v);
+  stp_putc(0x1c, v);
+  dyesub_nputc(v, 0, 7);
+
+  dyesub_nputc(v, 0, 7);
+  stp_putc(pd->copies, v);
+  stp_putc(0x02, v);
+  stp_putc(0x00, v);
+  stp_putc(0x09, v);
+  stp_putc(0x00, v);
+  stp_putc(0x01, v);
+  stp_putc(0x01, v);
+  stp_putc(0x00, v);
+  stp_putc(0x11, v);
+
+  stp_putc(0x01, v);
+  stp_putc(0x08, v);
+  stp_putc(0x00, v);
+  stp_putc(0x1a, v);
+  dyesub_nputc(v, 0, 4);
+  stp_put16_be(pd->w_size, v);  // fixed at 0x500/1280
+  stp_put16_be(pd->h_size, v);
+  stp_putc(0x09, v);
+  stp_putc(0x00, v);
+  stp_putc(0x28, v);
+  stp_putc(0x01, v);
+
+  stp_putc(0x10, v);
+  stp_putc(0xd4, v);
+  stp_putc(0x00, v);
+  stp_putc(0x00, v);
+  stp_putc(0x03, v);
+  stp_putc(0x58, v);
+  stp_put16_be(pd->h_size, v);
+  stp_putc(0x00, v);
+  stp_putc(0x00, v);
+  stp_putc(0x13, v);
+  stp_putc(0x01, v);
+  stp_putc(0x00, v);
+  stp_putc(0x04, v);
+  stp_putc(0x00, v);
+  stp_putc(0x80, v);
+
+  stp_putc(0x00, v);
+  stp_putc(0x23, v);
+  stp_putc(0x00, v);
+  stp_putc(0x0c, v);
+  stp_putc(0x01, v);
+  stp_putc(0x09, v);
+  stp_put16_be(pd->w_size, v);  // fixed at 0x500/1280
+  stp_put16_be(pd->h_size, v);
+  dyesub_nputc(v, 0, 4);
+  stp_putc(0x08, v);
+  stp_putc(0xff, v);
+
+  stp_putc(0x08, v);
+  stp_putc(0x00, v);
+  stp_putc(0x19, v);
+  dyesub_nputc(v, 0, 4);
+  stp_put16_be(pd->w_size, v);  // fixed at 0x500/1280
+  stp_put16_be(pd->h_size, v);
+  stp_putc(0x00, v);
+  stp_putc(0x00, v);
+  stp_putc(0x81, v);
+  stp_putc(0x80, v);
+  stp_putc(0x00, v);
+
+  stp_putc(0x8f, v);
+  stp_putc(0x00, v);
+  stp_putc(0xb8, v);
+  dyesub_nputc(v, 0, 13);
+
+  dyesub_nputc(v, 0, 16 * 9);
+
+  dyesub_nputc(v, 0, 11);
+  stp_putc(0xc0, v);
+  stp_putc(0x00, v);
+  stp_putc(0x82, v);
+  stp_put32_be(pd->w_size* pd->h_size, v);
+}
+
+static void sony_updneo_printer_end_func(stp_vars_t *v)
+{
+  /* write post-payload trailing stuff. */
+  dyesub_nputc(v, '\xff', 16);
+  stp_putc(0x00, v);
+  stp_putc(0x00, v);
+  stp_putc(0x14, v);
+  stp_putc(0x01, v);
+  stp_putc(0x00, v);
+  stp_putc(0x12, v);
+  stp_putc(0x00, v);
+
+  /* Write block header */
+  stp_zfwrite("JOBSIZE=PJL-T,302", 1, 17, v);
+  dyesub_nputc(v, 0, 256-17);
+
+  /* Write block */
+  stp_putc(0x80, v);
+  stp_putc(0x00, v);
+  stp_putc(0x8f, v);
+  stp_putc(0x01, v);
+  stp_putc(0x11, v);
+  dyesub_nputc(v, 0, 276);
+
+  /* And finally, the PJL footer */
+  stp_zfwrite("@PJL EOJ\r\n\\x1b%%-12345X\r\n", 1, 21, v);
 }
 
 /* Fujifilm CX-400 */
@@ -8428,7 +8585,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &updp10_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_BORDERLESS,
+      | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_NATIVECOPIES,
     &updp10_printer_init_func, &updp10_printer_end_func,
     NULL, NULL,
     NULL, NULL,
@@ -8557,6 +8714,23 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     sony_upd897_parameter_count,
     sony_upd897_load_parameters,
     sony_upd897_parse_parameters,
+  },
+  { /* Sony UP-D898 Family */
+    2008,
+    &w_ink_list,
+    &res_325dpi_list,
+    &sony_d89x_page_list,
+    &sony_d89x_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_MONOCHROME | DYESUB_FEATURE_NATIVECOPIES,
+    &sony_upd898_printer_init_func, &sony_updneo_printer_end_func,
+    NULL, NULL,
+    NULL, NULL, /* No block funcs */
+    NULL,
+    NULL, NULL,
+    NULL, NULL,
+    NULL, 0, NULL, NULL,
   },
   { /* Fujifilm Printpix CX-400  */
     3000,

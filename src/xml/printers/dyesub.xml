@@ -183,6 +183,7 @@
       <printer translate="name" name="Sony UP-CR10L" driverid="MFG:SONY;MDL:UP-CR10L;DES:Sony UP-CR10L;CMD:SONY-Original;CLS:PRINTER" driver="sony-upcr10l" manufacturer="Sony" model="2005"/>
       <printer translate="name" name="Sony UP-D895" driverid="MFG:SONY;MDL:UP-D895;DES:Sony UP-D895;CMD:SONY-Original;CLS:PRINTER" driver="sony-upd895" manufacturer="Sony" model="2006" />
       <printer translate="name" name="Sony UP-D897" driverid="MFG:SONY;MDL:UP-D897;DES:Sony UP-D897;CMD:SONY-Original;CLS:PRINTER" driver="sony-upd897" manufacturer="Sony" model="2007" />
+      <printer translate="name" name="Sony UP-D898" driver="sony-upd898" manufacturer="Sony" model="2008">EXPERIMENTAL</printer>
     </family>
   </printdef>
 </gutenprint>
