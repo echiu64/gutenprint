@@ -107,6 +107,7 @@
       <printer translate="name" name="Dai Nippon Printing DS820" driver="dnp-ds820" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DP-DS820;" manufacturer="Dai Nippon Printing" model="6007" />
       <printer translate="name" name="Dai Nippon Printing DSRX1" driver="dnp-dsrx1" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DS-RX1;" manufacturer="Dai Nippon Printing" model="6002" />
       <printer translate="name" name="Dai Nippon Printing SL10" driver="dnp-sl10" manufacturer="Dai Nippon Printing" model="2005">EXPERIMENTAL</printer>
+      <printer translate="name" name="Dai Nippon Printing SL20" driver="dnp-sl20" manufacturer="Dai Nippon Printing" model="2009">EXPERIMENTAL</printer>
       <printer translate="name" name="Fujifilm ASK-300" deviceid="MFG:FUJIFILM;CMD:ASK-300;MDL:ASK Printer;CLS:FUJIFILM USB Printer;DES:FUJIFILM ASK Printer" driver="fujifilm-ask-300" manufacturer="Fujifilm" model="4112" />
       <printer translate="name" name="Fujifilm ASK-2000"  driver="fujifilm-ask-2000" manufacturer="Fujifilm" model="4200">EXPERIMENTAL</printer>
       <printer translate="name" name="Fujifilm ASK-2500"  driver="fujifilm-ask-2500" manufacturer="Fujifilm" model="4200">EXPERIMENTAL</printer>
@@ -184,6 +185,7 @@
       <printer translate="name" name="Sony UP-D895" driverid="MFG:SONY;MDL:UP-D895;DES:Sony UP-D895;CMD:SONY-Original;CLS:PRINTER" driver="sony-upd895" manufacturer="Sony" model="2006" />
       <printer translate="name" name="Sony UP-D897" driverid="MFG:SONY;MDL:UP-D897;DES:Sony UP-D897;CMD:SONY-Original;CLS:PRINTER" driver="sony-upd897" manufacturer="Sony" model="2007" />
       <printer translate="name" name="Sony UP-D898" driver="sony-upd898" manufacturer="Sony" model="2008">EXPERIMENTAL</printer>
+      <printer translate="name" name="Sony UP-CR20L" driver="sony-upcr20l" manufacturer="Sony" model="2009">EXPERIMENTAL</printer>
     </family>
   </printdef>
 </gutenprint>
