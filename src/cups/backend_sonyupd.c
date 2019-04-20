@@ -271,13 +271,13 @@ static int upd_read_parse(void *vctx, const void **vjob, int data_fd, int copies
 				}
 				/* Intentional Fallthrough */
 			case 0xffffffeb:
-			case 0xffffffec:
 			case 0xffffffee:
 			case 0xfffffff5:
 				if(dyesub_debug)
 					DEBUG("Block ID '%08x' (len %d)\n", len, 4);
 				len = 4;
 				break;
+			case 0xffffffec:
 			default:
 				if(dyesub_debug)
 					DEBUG("Block ID '%08x' (len %d)\n", len, 0);
