@@ -186,6 +186,7 @@
       <printer translate="name" name="Sony UP-D897" driverid="MFG:SONY;MDL:UP-D897;DES:Sony UP-D897;CMD:SONY-Original;CLS:PRINTER" driver="sony-upd897" manufacturer="Sony" model="2007" />
       <printer translate="name" name="Sony UP-D898" driver="sony-upd898" manufacturer="Sony" model="2008">EXPERIMENTAL</printer>
       <printer translate="name" name="Sony UP-CR20L" driver="sony-upcr20l" manufacturer="Sony" model="2009">EXPERIMENTAL</printer>
+      <printer translate="name" name="Sony UP-DR80MD" driver="sony-updr80md" manufacturer="Sony" model="2010">EXPERIMENTAL</printer>
     </family>
   </printdef>
 </gutenprint>

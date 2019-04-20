@@ -2295,6 +2295,34 @@ static void sony_upd898_printer_init_func(stp_vars_t *v)
   stp_put32_be(pd->w_size* pd->h_size, v);
 }
 
+static void sony_updneo_printer_end_func(stp_vars_t *v)
+{
+  /* write post-payload trailing stuff. */
+  dyesub_nputc(v, '\xff', 16);
+  stp_putc(0x00, v);
+  stp_putc(0x00, v);
+  stp_putc(0x14, v);
+  stp_putc(0x01, v);
+  stp_putc(0x00, v);
+  stp_putc(0x12, v);
+  stp_putc(0x00, v);
+
+  /* Write block header */
+  stp_zfwrite("JOBSIZE=PJL-T,302", 1, 17, v);
+  dyesub_nputc(v, 0, 256-17);
+
+  /* Write block */
+  stp_putc(0x80, v);
+  stp_putc(0x00, v);
+  stp_putc(0x8f, v);
+  stp_putc(0x01, v);
+  stp_putc(0x11, v);
+  dyesub_nputc(v, 0, 276);
+
+  /* And finally, the PJL footer */
+  stp_zfwrite("@PJL EOJ\r\n\\x1b%%-12345X\r\n", 1, 21, v);
+}
+
 /* Sony UP-CR20 family */
 static const dyesub_pagesize_t upcr20_page[] =
 {
@@ -2507,10 +2535,200 @@ static void sony_upcr20_printer_init_func(stp_vars_t *v)
   stp_put32_be(pd->w_size* pd->h_size * 3, v);
 }
 
-static void sony_updneo_printer_end_func(stp_vars_t *v)
+/* Sony UP-DR80 family */
+static const dyesub_pagesize_t updr80md_page[] =
+{
+  DEFINE_PAPER_SIMPLE( "A4", "A4", PT1(2392,301), PT1(3400,301), DYESUB_PORTRAIT), /* Letter */
+  DEFINE_PAPER_SIMPLE( "Letter", "Letter", PT1(2464,301), PT1(3192,301), DYESUB_PORTRAIT), /* A4 */
+};
+
+LIST(dyesub_pagesize_list_t, updr80md_page_list, dyesub_pagesize_t, updr80md_page);
+
+static const dyesub_printsize_t updr80md_printsize[] =
+{
+  { "301x301", "A4", 2392, 3400},
+  { "301x301", "Letter", 2464, 3192},
+};
+
+LIST(dyesub_printsize_list_t, updr80md_printsize_list, dyesub_printsize_t, updr80md_printsize);
+
+static void sony_updr80md_printer_init_func(stp_vars_t *v)
+{
+  char hdrbuf[256];
+  char buf[256];
+
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  int  hdrlen;
+
+  /* Generate PJL header */
+  memset(buf, 0, sizeof(buf));
+  hdrlen = snprintf(buf, sizeof(buf),
+		    "\x1b%%-12345X\r\n"
+		    "@PJL JOB NAME=\"Gutenprint\" \r\n"
+		    "@PJL ENTER LANGUAGE=SONY-PDL-DS2\r\n");
+  buf[255] = 0;
+
+  /* Generate block header */
+  memset(hdrbuf, 0, sizeof(hdrbuf));
+  snprintf(hdrbuf, sizeof(hdrbuf), "JOBSIZE=PJL-H,%d,%s,4,0,0,0",
+	   hdrlen, pd->pagesize);
+
+  /* Write block header */
+  stp_zfwrite(hdrbuf, 1, sizeof(hdrbuf), v);
+  /* Write PJL header */
+  stp_zfwrite(buf, 1, hdrlen, v);
+
+  /* Generate payload header */
+  hdrlen = pd->w_size * pd->h_size * 3 + 296 + 23;
+  memset(hdrbuf, 0, sizeof(hdrbuf));
+  snprintf(hdrbuf, sizeof(hdrbuf), "JOBSIZE=PDL,%d",
+	   hdrlen);
+  /* Write block header */
+  stp_zfwrite(hdrbuf, 1, sizeof(hdrbuf), v);
+
+  char pg = 0;
+  if (strcmp(pd->pagesize,"Letter") == 0)
+    pg = 0x00;
+  else if (strcmp(pd->pagesize,"A4") == 0)
+    pg = 0x56;
+
+  /* Write 296 bytes of payload header */
+  stp_putc(0x00, v);
+  stp_putc(0x00, v);
+  stp_putc(0x01, v);
+  stp_putc(0x00, v);
+  stp_putc(0x00, v);
+  stp_putc(0x10, v);
+  stp_putc(0x0f, v);
+  stp_putc(0x00, v);
+  stp_putc(0x1c, v);
+  dyesub_nputc(v, 0, 7);
+
+  dyesub_nputc(v, 0, 7);
+  stp_putc(pg, v);
+  stp_putc(0x02, v);
+  stp_putc(0x00, v);
+  stp_putc(0x16, v);
+  stp_putc(0x00, v);
+  stp_putc(0x01, v);
+  stp_putc(0x80, v);
+  stp_putc(0x00, v);
+  stp_putc(0x15, v);
+
+  stp_putc(0x00, v);
+  stp_putc(0x12, v);
+  stp_putc(0x55, v);
+  stp_putc(0x50, v);
+  stp_putc(0x44, v);
+  stp_putc(0x52, v);
+  stp_putc(0x38, v);
+  stp_putc(0x30, v);
+  stp_putc(0x00, v);
+  stp_putc(0x00, v);
+  stp_putc(0x4c, v);
+  stp_putc(0x55, v);
+  stp_putc(0x54, v);
+  stp_putc(0x30, v);    // XXX 30 LUT0, 2f NO LUT
+  stp_putc(0x00, v);
+  stp_putc(0x00, v);
+
+  stp_putc(0x00, v);
+  stp_putc(0x00, v);
+  stp_putc(0x00, v);
+  stp_putc(0x00, v);    // 00 XXX LUT0, ff NO LUT
+  stp_putc(0x02, v);
+  stp_putc(0x00, v);
+  stp_putc(0x09, v);
+  stp_putc(0x00, v);
+  stp_putc(pd->copies, v);
+  stp_putc(0x02, v);
+  stp_putc(0x00, v);
+  stp_putc(0x06, v);
+  stp_putc(0x01, v);
+  stp_putc(0x03, v);
+  stp_putc(0x04, v);
+  stp_putc(0x00, v);
+
+  stp_putc(0x1d, v);
+  stp_putc(0x01, v);
+  stp_putc(0x00, v);
+  stp_putc(0x00, v);
+  stp_putc(0x05, v);
+  stp_putc(0x01, v);
+  stp_putc(0x00, v);
+  stp_putc(0x20, v);
+  stp_putc(0x00, v);
+  stp_putc(0x01, v);
+  stp_putc(0x00, v);
+  stp_putc(0x11, v);
+  stp_putc(0x01, v);
+  stp_putc(0x08, v);
+  stp_putc(0x00, v);
+  stp_putc(0x1a, v);
+
+  dyesub_nputc(v, 0, 4);
+  stp_put16_be(pd->w_size, v);
+  stp_put16_be(pd->h_size, v);
+  stp_putc(0x00, v);
+  stp_putc(0x00, v);
+  stp_putc(0x13, v);
+  stp_putc(0x01, v);
+  stp_putc(0x00, v);
+  stp_putc(0x04, v);
+  stp_putc(0x00, v);
+  stp_putc(0x80, v);
+
+  stp_putc(0x00, v);
+  stp_putc(0x23, v);
+  stp_putc(0x00, v);
+  stp_putc(0x10, v);
+  stp_putc(0x03, v);
+  stp_putc(0x00, v);
+  stp_put16_be(pd->w_size, v);
+  stp_put16_be(pd->h_size, v);
+  dyesub_nputc(v, 0, 4);
+  stp_putc(0x08, v);
+  stp_putc(0x08, v);
+
+  stp_putc(0x08, v);
+  stp_putc(0xff, v);
+  stp_putc(0xff, v);
+  stp_putc(0xff, v);
+  stp_putc(0x01, v);
+  stp_putc(0x00, v);
+  stp_putc(0x17, v);
+  stp_putc(0x00, v);
+  stp_putc(0x08, v);
+  stp_putc(0x00, v);
+  stp_putc(0x19, v);
+  dyesub_nputc(v, 0, 4);
+
+  stp_put16_be(pd->w_size, v);
+  stp_put16_be(pd->h_size, v);
+  stp_putc(0x00, v);
+  stp_putc(0x00, v);
+  stp_putc(0x81, v);
+  stp_putc(0x80, v);
+  stp_putc(0x00, v);
+  stp_putc(0x8f, v);
+  stp_putc(0x00, v);
+  stp_putc(0xa6, v);
+  dyesub_nputc(v, 0, 5);
+
+  dyesub_nputc(v, 0, 16 * 10);
+
+  stp_putc(0x00, v);
+  stp_putc(0xc0, v);
+  stp_putc(0x00, v);
+  stp_putc(0x82, v);
+  stp_put32_be(pd->w_size* pd->h_size * 3, v);
+}
+
+static void sony_updr80md_printer_end_func(stp_vars_t *v)
 {
   /* write post-payload trailing stuff. */
-  dyesub_nputc(v, '\xff', 16);
+//  dyesub_nputc(v, '\xff', 16);
   stp_putc(0x00, v);
   stp_putc(0x00, v);
   stp_putc(0x14, v);
@@ -8957,6 +9175,22 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL,
     &upcr20_overcoat_list, NULL,
+    NULL, NULL,
+    NULL, 0, NULL, NULL,
+  },
+  { /* Sony UP-DR80 series */
+    2010,
+    &rgb_ink_list,
+    &res_301dpi_list,
+    &updr80md_page_list,
+    &updr80md_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    &sony_updr80md_printer_init_func, &sony_updr80md_printer_end_func,
+    NULL, NULL,
+    NULL, NULL,
+    NULL,
+    NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
