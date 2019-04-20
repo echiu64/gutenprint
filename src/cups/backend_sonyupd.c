@@ -278,6 +278,13 @@ static int upd_read_parse(void *vctx, const void **vjob, int data_fd, int copies
 				len = 4;
 				break;
 			case 0xffffffec:
+				if (ctx->type == P_SONY_UPD897) {
+					if(dyesub_debug)
+						DEBUG("Block ID '%08x' (len %d)\n", len, 4);
+					len = 4;
+					break;
+				}
+				/* Intentional Fallthrough */
 			default:
 				if(dyesub_debug)
 					DEBUG("Block ID '%08x' (len %d)\n", len, 0);
