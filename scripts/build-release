@@ -607,9 +607,9 @@ function finish() {
     local etime=$(date_sec)
     local estamp=$(stamp)
     report_step_status
-    if [[ $status != 0 || -n ${failedmodules[*]} ]] ; then
+    if [[ $status != 0 || -n ${failedmodules[*]:-} ]] ; then
 	log_top "The following modules failed:"
-	log_top "$(printf "    %s\n" "${failedmodules[@]}" $currentmodule)"
+	log_top "$(printf "    %s\n" "${failedmodules[@]:-}" $currentmodule)"
 	log_top "*** Gutenprint release build FAILED at $estamp ($(time_delta $stime $etime))" |red
     else
 	log_top "*** Gutenprint release build completed at $estamp ($(time_delta $stime $etime))" |green
@@ -676,7 +676,7 @@ function runit() {
 	for f in $local_logdir/* ; do
 	    [[ -f $f && ! -s $f ]] && emptyfiles+=($f)
 	done
-	[[ -n ${emptyfiles[*]} ]] && rm -f -- "${emptyfiles[@]}"
+	[[ -n ${emptyfiles[*]:-} ]] && rm -f -- "${emptyfiles[@]}"
     else
 	msg='(SKIPPED)'
     fi
@@ -778,17 +778,16 @@ declare -A SKIP_OPS
     for o in ${STP_BUILD_SKIP//,/ } ; do SKIP_OPS[$o]=1; done
 declare -i runstatus=0
 declare -i longest_op=$(get_longest_op)
-declare -i lstatus
+declare -i lstatus=0
 for op in "${OPERATIONS[@]}" ; do
     [[ -z ${BUILD_VERBOSE:-} ]] && tmpfile=$(mktemp "/tmp/stpconsole.XXXXXXXX")
     DONTRUN_OP="${DONTRUN:-}${SKIP_OPS[$op]:-}" runit "$op"
     lstatus=$stepstatus
     report_step_status
     currentmodule=
-    case "$lstatus" in
-	0) :                                                        ;;
-	2) failedmodules=("${failedmodules[@]}" "$op"); runstatus=1 ;;
-	*) failedmodules=("${failedmodules[@]}" "$op"); break       ;;
-    esac
+    (( lstatus > 0 )) && {
+	runstatus=1
+	(( lstatus != 2 )) && break
+    }
 done
 exitstatus=runstatus
