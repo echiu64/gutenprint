@@ -2219,12 +2219,12 @@ static void sony_upd898_printer_init_func(stp_vars_t *v)
   dyesub_nputc(v, 0, 7);
 
   dyesub_nputc(v, 0, 7);
-  stp_putc(pd->copies, v);
+  stp_putc(0x01, v);
   stp_putc(0x02, v);
   stp_putc(0x00, v);
   stp_putc(0x09, v);
   stp_putc(0x00, v);
-  stp_putc(0x01, v);
+  stp_putc(pd->copies, v);
   stp_putc(0x01, v);
   stp_putc(0x00, v);
   stp_putc(0x11, v);
