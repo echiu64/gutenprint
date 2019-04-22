@@ -23,11 +23,21 @@
 # it can find the script directory to get the version without having to be
 # autotool-processed.
 
-declare -r tred="$(tput setaf 1)$(tput bold)"
-declare -r tyellow="$(tput setaf 3)$(tput bold)"
-declare -r tgreen="$(tput setaf 2)$(tput bold)"
-declare -r tblue=$(tput setaf 4)
-declare -r treset=$(tput sgr0)
+function xtput() {
+    [[ -z ${STP_TEST_RECURSIVE:-} ]] && tput "$@"
+}
+
+set -u
+
+declare -r tred="$(xtput setaf 1)$(xtput bold)"
+declare -r tyellow="$(xtput setaf 3)$(xtput bold)"
+declare -r tgreen="$(xtput setaf 2)$(xtput bold)"
+declare -r tblue=$(xtput setaf 4)
+declare -r treset=$(xtput sgr0)
+declare -i exitstatus=1
+declare -i stepstatus=-1
+declare currentmodule=
+declare top_log
 function fatal() {
     echo "${tred}FATAL: $*${treset}"
     exit 1
@@ -118,12 +128,14 @@ function check_git() {
 
 function run_target() {
     make $1 && return 0
+    local lstatus=$?
     console_log "*** ERROR: ${3:+$3 }make $1 failed"
+    (( $lstatus >= 127 )) && return $lstatus
     return ${2:-2}
 }
 
 function run_autogen() {
-    ./autogen.sh $STP_CONFIG_ARGS && return 0
+    ./autogen.sh ${STP_CONFIG_ARGS:-} && return 0
     console_log "*** FATAL: autogen failed!"
     return 1
 }
@@ -147,7 +159,7 @@ function run_build() {
 # environment (e. g. CI)
 function run_build_fresh() {
     # shellcheck disable=SC2086
-    ./autogen.sh $STP_CONFIG_ARGS && make ${STP_PARALLEL:+-j$STP_PARALLEL} && return 0
+    ./autogen.sh ${STP_CONFIG_ARGS:-} && make ${STP_PARALLEL:+-j$STP_PARALLEL} && return 0
     console_log "*** FATAL preliminary build failed!"
     return 1
 }
@@ -164,8 +176,14 @@ function check_git_tag() {
     fi
 }
 
+function _cleanup_test_repo() {
+    [[ -d $TESTREPO ]] && rm -rf "$TESTREPO"
+}
+
 # Check that we can build a clone of this workspace
 function _check_git_builds() {
+    export TESTREPO=$(mktemp -d "/tmp/stpbuild.XXXXXXXX")
+    trap _cleanup_test_repo EXIT SIGHUP SIGINT SIGQUIT SIGTERM
     local rev=$("$GIT" rev-parse @)
     cwd=$(pwd -P)
     [[ -n $cwd ]] || {
@@ -174,28 +192,28 @@ function _check_git_builds() {
     }
     cd "$TESTREPO" || {
 	console_log "*** ERROR: Can't cd to test repo directory $cwd!"
+	(( $? >= 127 )) && return 127
 	return 2
     }
     "$GIT" clone "$cwd" . || {
     	console_log "*** ERROR: Unable to clone repo"
+	(( $? >= 127 )) && return 127
 	return 2
     }
     "$GIT" checkout "$rev" || {
     	console_log "*** ERROR: Unable to check out rev $rev"
+	(( $? >= 127 )) && return 127
 	return 2
     }
-    STP_LOG_NO_SUBDIR=1 STP_LOG_DIR=$STP_TEST_LOG_PREFIX scripts/build-release preflight run_autogen run_build run_distcheck_minimal || {
+    STP_TEST_RECURSIVE=1 STP_LOG_NO_SUBDIR=1 STP_LOG_DIR=$STP_TEST_LOG_PREFIX scripts/build-release preflight run_autogen run_build run_distcheck_minimal || {
 	console_log "*** ERROR: Repo build failed!"
+	(( $? >= 127 )) && return 127
 	return 2
     }
 }
 
 function check_git_builds() {
-    export TESTREPO=$(mktemp -d)
     (_check_git_builds)
-    local status=$?
-    [[ -d $TESTREPO ]] && rm -rf "$TESTREPO"
-    return $status
 }
 
 # Run make valgrind-minimal.
@@ -337,16 +355,20 @@ function run_full() {
 # will run really fast.
 
 function run_checksums() {
-    if make checksums ; then
+    make checksums
+    local lstatus=$?
+    if (( lstatus == 0 )) ; then
 	local csum_file="src/testpattern/Checksums/sums.$(pkg_version).zpaq"
 	if [[ ! -f $csum_file ]] ; then
 	    console_log "*** ERROR: Can't find new checksums file $csum_file"
+	    (( lstatus > 127 )) && return $lstatus
 	    return 2
 	fi
 	cp -p "$csum_file" "$ARTIFACTDIR"
 	return 0
     fi
     console_log "*** ERROR: make checksums failed"
+    (( lstatus > 127 )) && return $lstatus
     return 2
 }
 
@@ -354,17 +376,18 @@ function run_checksums() {
 
 function git_prep_release() {
     # .po files might have changed; nothing else should have!
-    if "$GIT" status -uno --porcelain |grep -q -E -v 'po/.*\.po' ; then
-	console_log "*** ERROR: Unexpected untracked files:"
-	"$GIT" status -uno --porcelain |grep -E -v 'po/.*\.po' | console_log
-	return 1
-    fi
     # Add any of those changed files.
     "$GIT" add -u || return 1
     # Add the checksums file.
     "$GIT" add "src/testpattern/Checksums/sums.$(pkg_version).zpaq" || return 1
     # Commit this change
     "$GIT" commit -m"Gutenprint $(pkg_version) release" || return 1
+    # Shouldn't have anything left after this.
+    if "$GIT" status -uno --porcelain |grep -q -E -v 'po/.*\.po' ; then
+	console_log "*** ERROR: Unexpected untracked files:"
+	"$GIT" status -uno --porcelain |grep -E -v 'po/.*\.po' | console_log
+	return 1
+    fi
     # Apply the tag.  Ideally we should sign the tag too.
     "$GIT" tag -a "$(pkg_tag)" -m "Gutenprint $(pkg_version) release" || return 1
 }
@@ -430,7 +453,7 @@ function date_sec() {
 function report_progress() {
     local outst="RUNNING[$1]: "
     shift
-    echo $([[ -z $BUILD_VERBOSE ]] && echo '' -n) ">>> $(stamp) $outst $*"
+    echo $([[ -z ${BUILD_VERBOSE:-} ]] && echo '' -n) ">>> $(stamp) $outst $*"
 }
 
 # This allows us to log to multiple outputs, including stdout and
@@ -449,14 +472,18 @@ function log1() {
 	    log1 "$@" $([[ $1 == - ]] || echo -)
 	elif [[ $dest == -* ]] ; then
 	    dest=${dest:1}
+	    destdir=${dest%/*}
+	    [[ -n $destdir && ! -d $destdir ]] && mkdir -p "$destdir"
 	    if (( $# == 0 )) ; then
 		exec cat > "$dest"
 	    elif [[ $* == - ]] ; then
-		exec tee "$dest"
+		exec tee $dest
 	    else
-		exec tee "$dest" | log1 "$@"
+		exec tee $dest | log1 "$@"
 	    fi
 	else
+	    destdir=${dest%/*}
+	    [[ -n $destdir && ! -d $destdir ]] && mkdir -p "$destdir"
 	    if (( $# == 0 )) ; then
 		exec cat >> "$dest"
 	    elif [[ $* == - ]] ; then
@@ -483,7 +510,7 @@ function red() {
 }
 
 function green() {
-    sed -e "s/^/${green}/" -e "s/$/${treset}/"
+    sed -e "s/^/${tgreen}/" -e "s/$/${treset}/"
 }
 
 function log_top() {
@@ -510,7 +537,25 @@ function log_top() {
 # format, ugh) and send it to stdout where it gets picked up and timestamped
 # again.
 function console_log1() {
-    log /dev/fd/4 - | timestamp | log_top | cut -c26-
+    if [[ -n ${STP_TEST_RECURSIVE:-} ]] ; then
+	tee >(exec cat 1>&4) >(timestamp | log_top | cut -c26-)
+    else
+	timestamp | log_top - | cut -c26-
+    fi
+}
+
+function console_log_immediate1() {
+    case "${STP_TEST_RECURSIVE:-}" in
+	2)
+	    tee >(exec cat 1>&6) >(exec cat 1>&5) >(exec cat 1>&4) >(timestamp | log_top | cut -c26-)
+	    ;;
+	1)
+	    tee >(exec cat 1>&5) >(exec cat 1>&4) >(timestamp | log_top | cut -c26-)
+	    ;;
+	*)
+	    tee >(exec cat 1>&4) >(timestamp | log_top | cut -c26-)
+	    ;;
+    esac
 }
 
 function console_log() {
@@ -521,35 +566,64 @@ function console_log() {
     fi
 }
 
+function console_log_immediate() {
+    if [[ -n "$*" ]] ; then
+	console_log_immediate1 <<< "$*"
+    else
+	console_log_immediate1
+    fi
+}
+
 function time_delta() {
     local i=$(($2 - $1))
     printf "%d:%02d:%02d" $((i / 3600)) $(((i % 3600) / 60)) $((i % 60))
 }
 
-function finish() {
-    local status=$1
-    local etime=$(date_sec)
-    local estamp=$(stamp)
-    [[ -n $tmpfile && -f $tmpfile ]] && {
+function report_step_status() {
+    (( stepstatus < 0 )) && return
+    [[ -z ${BUILD_VERBOSE:-} ]] && {
+	xtput bold
+	if (( stepstatus)) ; then
+	    xtput setaf 1
+	    declare stfail=FAILED
+	    (( stepstatus >= 127 )) && stfail=INTERRUPTED
+	    printf "%$((longest_op - ${#op} ))s $stfail"
+	else
+	    xtput setaf 2
+	    printf "%$((longest_op - ${#op} ))s OK"
+	fi
+	xtput sgr0
+	echo
+    }
+    [[ -f $tmpfile ]] && {
 	[[ -s $tmpfile ]] && colorize < "$tmpfile"
 	rm -f -- "$tmpfile"
     }
+    stepstatus=-1
+}
+
+function finish() {
+    local status=$exitstatus
+    local etime=$(date_sec)
+    local estamp=$(stamp)
+    report_step_status
     if [[ $status != 0 || -n ${failedmodules[*]} ]] ; then
 	log_top "The following modules failed:"
-	log_top "$(printf "    %s\n" "${failedmodules[@]}")"
+	log_top "$(printf "    %s\n" "${failedmodules[@]}" $currentmodule)"
 	log_top "*** Gutenprint release build FAILED at $estamp ($(time_delta $stime $etime))" |red
     else
 	log_top "*** Gutenprint release build completed at $estamp ($(time_delta $stime $etime))" |green
     fi
     # shellcheck disable=SC2086
     log "$top_log" <<< "================================================================"
-    if [[ -n $TRAVIS_MODE ]] ; then
+    if [[ -n ${TRAVIS_MODE:-} ]] ; then
 	# We really don't want the termination message from the deadman
 	exec 3>&2 2>/dev/null
 	kill %travis_deadman
 	wait %travis_deadman
 	exec 2>&3 3>&-
     fi
+    trap - EXIT
     exit "$status"
 }
 
@@ -571,13 +645,13 @@ function runit() {
     local local_logdir="$logdir/$fcounter.${cmd// /_/}"
     mkdir -p "$local_logdir"
     local logfile="$local_logdir/Master"
-    [[ -n $DONTRUN_OP ]] && logfile=/dev/null
+    [[ -n ${DONTRUN_OP:-} ]] && logfile=/dev/null
     local sstime=$(date_sec)
     local ssstamp=$(stamp)
     local status=0
     local msg=completed
     log "-$logfile" "$top_log" <<< "----------------------------------------------------------------"
-    if [[ -z $DONTRUN_OP ]] ; then
+    if [[ -z ${DONTRUN_OP:-} ]] ; then
 	echo "$cmdname started at $ssstamp" | log "$logfile" "$top_log"
 	echo "Command: $cmd" | log "$logfile" "$top_log"
 	echo "Log file: ${logfile#${logdir}/}" | log "$top_log"
@@ -586,11 +660,18 @@ function runit() {
     fi
     report_progress "$fcounter" "$cmdname"
 
-    if [[ -z $DONTRUN_OP ]] ; then
+    if [[ -z ${DONTRUN_OP:-} ]] ; then
+	#
+	stepstatus=127
+	currentmodule="$cmdname"
 	# Run the command, capturing console output as well as logged output.
-	STP_TEST_LOG_PREFIX="$local_logdir/" $cmd </dev/null 4>"$tmpfile" 3>&1 2>&1 | timestamp | log "$logfile"
-	status=${PIPESTATUS[0]}
-	(( status > 0 )) && msg=FAILED
+	if [[ -n ${STP_TEST_RECURSIVE:-} ]] ; then
+	    STP_TEST_RECURSIVE=2 STP_TEST_LOG_PREFIX="$local_logdir/" $cmd </dev/null 4>"$tmpfile" 6>&5 5>&2 3>&1 2>&1 | timestamp | log "$logfile"
+	else
+	    STP_TEST_RECURSIVE=1 STP_TEST_LOG_PREFIX="$local_logdir/" $cmd </dev/null 4>"$tmpfile" 5>&2 3>&1 2>&1 | timestamp | log "$logfile"
+	fi
+	stepstatus=${PIPESTATUS[0]}
+	(( stepstatus > 0 )) && msg=FAILED
 	local -a emptyfiles=()
 	for f in $local_logdir/* ; do
 	    [[ -f $f && ! -s $f ]] && emptyfiles+=($f)
@@ -601,13 +682,12 @@ function runit() {
     fi
     local setime=$(date_sec)
     local sestamp=$(stamp)
-    if [[ -z $DONTRUN_OP ]] ; then
+    if [[ -z ${DONTRUN_OP:-} ]] ; then
 	# shellcheck disable=SC2086
 	echo "$cmd $msg at $sestamp ($(time_delta $sstime $setime))" | log "$logfile" "$top_log"
 	echo "----------------------------------------------------------------" | log "$logfile" "$top_log"
     fi
     counter=$((counter+1))
-    return "$status"
 }
 
 declare -a OPERATIONS=(preflight
@@ -637,17 +717,19 @@ function get_longest_op() {
 }
 
 # shellcheck disable=SC2206
-[[ -n $STP_BUILD_OPERATIONS ]] && OPERATIONS=($STP_BUILD_OPERATIONS)
+[[ -n ${STP_BUILD_OPERATIONS:-} ]] && OPERATIONS=($STP_BUILD_OPERATIONS)
 [[ -n "$*" ]] && OPERATIONS=("$@")
+
+trap finish EXIT SIGHUP SIGINT SIGQUIT SIGTERM
 
 declare sstamp=$(stamp)
 declare stime=$(date_sec)
 declare toplogdir=${STP_LOG_DIR:-"$ROOT/BuildLogs"}
 declare logdir="$toplogdir/Log.${sstamp// /_}"
-declare top_log="$logdir/00.Master"
-[[ -n $STP_LOG_NO_SUBDIR ]] && logdir=$toplogdir
+[[ -n ${STP_LOG_NO_SUBDIR:-} ]] && logdir=$toplogdir
+top_log="$logdir/00.Master"
 mkdir -p "$logdir"
-if [[ -z $STP_LOG_NO_SUBDIR ]] ; then
+if [[ -z ${STP_LOG_NO_SUBDIR:-} ]] ; then
      if [[ -L $toplogdir/Current ]] ; then
 	 rm -f -- "$toplogdir/Previous"
 	 mv "$toplogdir/Current" "$toplogdir/Previous"
@@ -670,7 +752,7 @@ Kernel:      $(uname -o) $(uname -rv)
 Revision:    $("$GIT" rev-parse @)$git_dirty
 Parallel:    $STP_PARALLEL
 EOF
-[[ -n $STP_TEST_ROTOR_CIRCUMFERENCE && -n $STP_TEST_ROTOR ]] &&
+[[ -n ${STP_TEST_ROTOR_CIRCUMFERENCE:-} && -n ${STP_TEST_ROTOR:-} ]] &&
     log_top "Rotor:       $STP_TEST_ROTOR / $STP_TEST_ROTOR_CIRCUMFERENCE"
 
 log_top <<EOF
@@ -686,41 +768,27 @@ Running operations:
 $(printf "    %s\n" "${OPERATIONS[@]}")
 EOF
 
-[[ -n $TRAVIS_MODE ]] && {
+[[ -n ${TRAVIS_MODE:-} ]] && {
     export BUILD_VERBOSE=1
     travis_deadman&
 }
 
 declare -A SKIP_OPS
-for o in ${STP_BUILD_SKIP//,/ } ; do SKIP_OPS[$o]=1; done
+[[ -n ${STP_BUILD_SKIP:-} ]] &&
+    for o in ${STP_BUILD_SKIP//,/ } ; do SKIP_OPS[$o]=1; done
 declare -i runstatus=0
-declare -i lstatus
 declare -i longest_op=$(get_longest_op)
+declare -i lstatus
 for op in "${OPERATIONS[@]}" ; do
-    [[ -z $BUILD_VERBOSE ]] && tmpfile=$(mktemp "stpconsole.XXXXXXXX")
-    DONTRUN_OP="${DONTRUN}${SKIP_OPS[$op]}" runit "$op"
-    lstatus=$?
-    [[ -z $BUILD_VERBOSE ]] && {
-	tput bold
-	if (( lstatus)) ; then
-	    tput setaf 1
-	    printf "%$((longest_op - ${#op} ))s FAILED"
-	else
-	    tput setaf 2
-	    printf "%$((longest_op - ${#op} ))s OK"
-	fi
-	tput sgr0
-	echo
-    }
-    [[ -f $tmpfile ]] && {
-	[[ -s $tmpfile ]] && colorize < "$tmpfile"
-	rm -f -- "$tmpfile"
-    }
+    [[ -z ${BUILD_VERBOSE:-} ]] && tmpfile=$(mktemp "/tmp/stpconsole.XXXXXXXX")
+    DONTRUN_OP="${DONTRUN:-}${SKIP_OPS[$op]:-}" runit "$op"
+    lstatus=$stepstatus
+    report_step_status
+    currentmodule=
     case "$lstatus" in
-	0) true                                            ;;
+	0) :                                                        ;;
 	2) failedmodules=("${failedmodules[@]}" "$op"); runstatus=1 ;;
-	*) failedmodules=("${failedmodules[@]}" "$op"); finish 1    ;;
+	*) failedmodules=("${failedmodules[@]}" "$op"); break       ;;
     esac
 done
-
-finish $runstatus
+exitstatus=runstatus
