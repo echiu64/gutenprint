@@ -29,14 +29,18 @@ function xtput() {
 
 set -u
 
-declare -r tred="$(xtput setaf 1)$(xtput bold)"
-declare -r tyellow="$(xtput setaf 3)$(xtput bold)"
-declare -r tgreen="$(xtput setaf 2)$(xtput bold)"
+declare -r tbold="$(xtput bold)"
+declare -r tred="$(xtput setaf 1)$tbold"
+declare -r tyellow="$(xtput setaf 3)$tbold"
+declare -r tgreen="$(xtput setaf 2)$tbold"
+declare -r tpurple="$(xtput setaf 5)$tbold"
 declare -r tblue=$(xtput setaf 4)
+declare -r tcyan=$(xtput setaf 6)
 declare -r treset=$(xtput sgr0)
 declare -i exitstatus=1
 declare -i stepstatus=-1
 declare currentmodule=
+declare -a failedmodules=()
 declare top_log
 function fatal() {
     echo "${tred}FATAL: $*${treset}"
@@ -146,7 +150,6 @@ function colorize() {
 	-e "s/\*\*\* Warning:\(.*\)/${tyellow}*** Warning:\1${treset}/"
 }
 
-
 function run_clean() {
     run_target clean
 }
@@ -177,7 +180,7 @@ function check_git_tag() {
 }
 
 function _cleanup_test_repo() {
-    [[ -d $TESTREPO ]] && rm -rf "$TESTREPO"
+    [[ -d $TESTREPO ]] && rm -rf -- "$TESTREPO"
 }
 
 # Check that we can build a clone of this workspace
@@ -417,17 +420,21 @@ function save_build_artifacts() {
 
 function finis() {
     STP_DATA_PATH=src/xml test/gen-printer-list > "printer-list.$(pkg_version)" || return 1
-    console_log <<'EOF'
+    console_log <<EOF
+${tpurple}
+================================================================
 Remainder to be done manually:
 
   * git push
 
-  * Upload the tarball (.xz)
+  * Upload the tarball (${tcyan}gutenprint-$(pkg_version).tar.xz${tpurple})
 
   * Update the web site
 
-  * Merge the updated printer list into p_Supported_Printers.php
-    and upload that
+  * Merge the updated printer list in ${tcyan}printer-list.$(pkg_version)${tpurple}
+    into p_Supported_Printers.php and upload that to the web site
+================================================================
+$treset
 EOF
     return 0
 }
@@ -553,7 +560,7 @@ function console_log_immediate1() {
 	    tee >(exec cat 1>&5) >(exec cat 1>&4) >(timestamp | log_top | cut -c26-)
 	    ;;
 	*)
-	    tee >(exec cat 1>&4) >(timestamp | log_top | cut -c26-)
+	    tee >(exec cat 1>&2) >(timestamp | log_top | cut -c26-)
 	    ;;
     esac
 }
@@ -580,19 +587,26 @@ function time_delta() {
 }
 
 function report_step_status() {
-    (( stepstatus < 0 )) && return
+    (( stepstatus == -1 )) && return
     [[ -z ${BUILD_VERBOSE:-} ]] && {
 	xtput bold
 	if (( stepstatus)) ; then
 	    xtput setaf 1
 	    declare stfail=FAILED
-	    (( stepstatus >= 127 )) && stfail=INTERRUPTED
+	    if (( stepstatus == 126 )) ; then
+		xtput setaf 5
+		stfail="NOT FOUND"
+	    elif (( stepstatus >= 127 )) ; then
+		stfail=INTERRUPTED
+	    fi
 	    printf "%$((longest_op - ${#op} ))s $stfail"
+	    [[ -n $currentmodule ]] && failedmodules+=($currentmodule)
 	else
 	    xtput setaf 2
 	    printf "%$((longest_op - ${#op} ))s OK"
 	fi
 	xtput sgr0
+	currentmodule=
 	echo
     }
     [[ -f $tmpfile ]] && {
@@ -609,7 +623,7 @@ function finish() {
     report_step_status
     if [[ $status != 0 || -n ${failedmodules[*]:-} ]] ; then
 	log_top "The following modules failed:"
-	log_top "$(printf "    %s\n" "${failedmodules[@]:-}" $currentmodule)"
+	log_top "$(printf "    %s\n" "${failedmodules[@]:-}")"
 	log_top "*** Gutenprint release build FAILED at $estamp ($(time_delta $stime $etime))" |red
     else
 	log_top "*** Gutenprint release build completed at $estamp ($(time_delta $stime $etime))" |green
@@ -665,18 +679,26 @@ function runit() {
 	stepstatus=127
 	currentmodule="$cmdname"
 	# Run the command, capturing console output as well as logged output.
-	if [[ -n ${STP_TEST_RECURSIVE:-} ]] ; then
-	    STP_TEST_RECURSIVE=2 STP_TEST_LOG_PREFIX="$local_logdir/" $cmd </dev/null 4>"$tmpfile" 6>&5 5>&2 3>&1 2>&1 | timestamp | log "$logfile"
+	if [[ -z $(type -t $cmdname) ]] ; then
+	    msg="NOT FOUND"
+	    # 126 is also used for "permission denied", which amounts
+	    # to the same thing -- it's something the user should not
+	    # have tried to run.
+	    stepstatus=126
 	else
-	    STP_TEST_RECURSIVE=1 STP_TEST_LOG_PREFIX="$local_logdir/" $cmd </dev/null 4>"$tmpfile" 5>&2 3>&1 2>&1 | timestamp | log "$logfile"
+	    if [[ -n ${STP_TEST_RECURSIVE:-} ]] ; then
+		STP_TEST_RECURSIVE=2 STP_TEST_LOG_PREFIX="$local_logdir/" $cmd </dev/null 4>"$tmpfile" 6>&5 5>&2 3>&1 2>&1 | timestamp | log "$logfile"
+	    else
+		STP_TEST_RECURSIVE=1 STP_TEST_LOG_PREFIX="$local_logdir/" $cmd </dev/null 4>"$tmpfile" 5>&2 3>&1 2>&1 | timestamp | log "$logfile"
+	    fi
+	    stepstatus=${PIPESTATUS[0]}
+	    (( stepstatus > 0 )) && msg=FAILED
 	fi
-	stepstatus=${PIPESTATUS[0]}
-	(( stepstatus > 0 )) && msg=FAILED
 	local -a emptyfiles=()
 	for f in $local_logdir/* ; do
 	    [[ -f $f && ! -s $f ]] && emptyfiles+=($f)
 	done
-	[[ -n ${emptyfiles[*]:-} ]] && rm -f -- "${emptyfiles[@]}"
+	rm -f -- "${emptyfiles[@]}"
     else
 	msg='(SKIPPED)'
     fi
@@ -758,7 +780,7 @@ EOF
 log_top <<EOF
 
 CPU information:
-$(lscpu -p)
+$(lscpu -e)
 $(lscpu)
 
 Memory information:
@@ -784,7 +806,6 @@ for op in "${OPERATIONS[@]}" ; do
     DONTRUN_OP="${DONTRUN:-}${SKIP_OPS[$op]:-}" runit "$op"
     lstatus=$stepstatus
     report_step_status
-    currentmodule=
     (( lstatus > 0 )) && {
 	runstatus=1
 	(( lstatus != 2 )) && break
