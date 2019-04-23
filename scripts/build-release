@@ -698,7 +698,7 @@ function runit() {
 	for f in $local_logdir/* ; do
 	    [[ -f $f && ! -s $f ]] && emptyfiles+=($f)
 	done
-	rm -f -- "${emptyfiles[@]}"
+	[[ -z "${emptyfiles[*]:-}" ]] && rm -f -- "${emptyfiles[@]}"
     else
 	msg='(SKIPPED)'
     fi
@@ -766,7 +766,7 @@ mkdir -p "$ARTIFACTDIR"
 log "-$top_log" <<< "================================================================"
 
 log_top <<EOF
-*** Gutenprint release build started at $sstamp on $(uname -n)
+${tbold}*** Gutenprint release build started at $sstamp on $(uname -n)${treset}
 
 Directory:   $ROOT
 Logs:        ${logdir#${ROOT}/}
