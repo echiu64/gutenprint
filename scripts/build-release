@@ -698,7 +698,7 @@ function runit() {
 	for f in $local_logdir/* ; do
 	    [[ -f $f && ! -s $f ]] && emptyfiles+=($f)
 	done
-	[[ -z "${emptyfiles[*]:-}" ]] && rm -f -- "${emptyfiles[@]}"
+	[[ -n "${emptyfiles[*]:-}" ]] && rm -f -- "${emptyfiles[@]}"
     else
 	msg='(SKIPPED)'
     fi
