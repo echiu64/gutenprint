@@ -250,9 +250,10 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
 * Changes from 5.2.14
 
-  1) The following Epson inkjet printer has been added:
+  1) The following printers have been added:
 
      Epson Expression ET-2600 EcoTank ET
+     Canon SELPHY CP1300
 
   2) The following printers have seen bugfixes:
 
