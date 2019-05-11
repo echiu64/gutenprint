@@ -1473,10 +1473,6 @@ top:
 			break;
 		}
 
-		if (status1.print_status == STATUS_IDLE) {
-			state = S_PRINTER_READY_CMD;
-			break;
-		}
 #if 0 // XXX is this necessary
 		if (status1.state.status1 == STATE_STATUS1_WAIT) {
 			INFO("Printer busy: %s\n",
@@ -1642,7 +1638,7 @@ static int shinkos1245_query_serno(struct libusb_device_handle *dev, uint8_t end
 
 struct dyesub_backend shinkos1245_backend = {
 	.name = "Shinko/Sinfonia CHC-S1245",
-	.version = "0.18",
+	.version = "0.18.1",
 	.uri_prefix = "shinkos1245",
 	.cmdline_usage = shinkos1245_cmdline,
 	.cmdline_arg = shinkos1245_cmdline_arg,

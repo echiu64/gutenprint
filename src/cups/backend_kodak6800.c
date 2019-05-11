@@ -1162,9 +1162,6 @@ static int kodak6800_main_loop(void *vctx, int copies) {
 			return CUPS_BACKEND_FAILED;
 		}
 
-		if (status.status == STATUS_IDLE)
-			break;
-
 		/* make sure we're not colliding with an existing
 		   jobid */
 		while (ctx->jobid == status.b1_jobid ||
@@ -1258,7 +1255,7 @@ static int kodak6800_main_loop(void *vctx, int copies) {
 /* Exported */
 struct dyesub_backend kodak6800_backend = {
 	.name = "Kodak 6800/6850",
-	.version = "0.58",
+	.version = "0.58.1",
 	.uri_prefix = "kodak6800",
 	.cmdline_usage = kodak6800_cmdline,
 	.cmdline_arg = kodak6800_cmdline_arg,
