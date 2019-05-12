@@ -21,5 +21,5 @@ if [[ -n $STP_BUILD_SNAPSHOT ]] ; then
     gv=
     [[ -d .git ]] &&
 	gv=-$(git describe --dirty --always --first-parent --exclude '*')
-    printf '%s%(%Y-%m-%dT%H_%M_%S)T%s' - -1 $gv
+    printf '%s%s%(%Y-%m-%dT%H_%M_%S)T' $gv -
 fi
