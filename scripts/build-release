@@ -60,6 +60,8 @@ declare tmpfile=/dev/null
 export STP_PARALLEL=${STP_PARALLEL:-$("$ROOT/scripts/count-cpus")}
 declare counter=1
 declare git_dirty=
+declare build_type=release
+[[ -n $STP_BUILD_SNAPSHOT ]] && build_type=snapshot
 
 function pkg_version() {
     "$ROOT/scripts/gversion" pkg
@@ -173,6 +175,7 @@ function run_build_fresh() {
 function check_git_tag() {
     # Make sure that the tag that we're going to want to apply isn't
     # already present.
+    [[ -n $STP_BUILD_SNAPSHOT ]] && return 0
     if [[ -n $("$GIT" show-ref "refs/tags/$(pkg_tag)") ]] ; then
 	console_log "*** ERROR: Tag named $(pkg_tag) is already present"
 	return 2
@@ -380,9 +383,16 @@ function run_checksums() {
 function git_prep_release() {
     # .po files might have changed; nothing else should have!
     # Add any of those changed files.
-    "$GIT" add -u || return 1
+    if [[ $build_type == release ]] ; then
+	"$GIT" add -u || return 1
+    else
+	# Don't update the .po files for every snapshot.
+	git checkout -- po
+    fi
     # Add the checksums file.
-    "$GIT" add "src/testpattern/Checksums/sums.$(pkg_version).zpaq" || return 1
+    # TBD whether to do this for snapshots.  The file's not very big,
+    # but it's completely incompressible!
+    "$GIT" add -f "src/testpattern/Checksums/sums.$(pkg_version).zpaq" || return 1
     # Commit this change
     "$GIT" commit -m"Gutenprint $(pkg_version) release" || return 1
     # Shouldn't have anything left after this.
@@ -392,6 +402,8 @@ function git_prep_release() {
 	return 1
     fi
     # Apply the tag.  Ideally we should sign the tag too.
+    # But don't tag snapshot builds.
+    [[ $build_type != release ]] && return 0
     "$GIT" tag -a "$(pkg_tag)" -m "Gutenprint $(pkg_version) release" || return 1
 }
 
@@ -603,7 +615,7 @@ function report_step_status() {
 	fi
 	printf "$stcolor%$((longest_op - ${#op} ))s $ststatus$treset\n"
     }
-    [[ -n $currentmodule ]] && failedmodules+=($currentmodule)
+    [[ -n $currentmodule && $stepstatus -ne 0 ]] && failedmodules+=($currentmodule)
     currentmodule=
     [[ -f $tmpfile ]] && {
 	[[ -s $tmpfile ]] && colorize < "$tmpfile"
@@ -620,9 +632,9 @@ function finish() {
     if [[ $status != 0 || -n ${failedmodules[*]:-} ]] ; then
 	log_top "The following modules failed:"
 	log_top "$(printf "    %s\n" "${failedmodules[@]:-}")"
-	log_top "*** Gutenprint release build FAILED at $estamp ($(time_delta $stime $etime))" |red
+	log_top "*** Gutenprint $build_type build FAILED at $estamp ($(time_delta $stime $etime))" |red
     else
-	log_top "*** Gutenprint release build completed at $estamp ($(time_delta $stime $etime))" |green
+	log_top "*** Gutenprint $build_type build completed at $estamp ($(time_delta $stime $etime))" |green
     fi
     # shellcheck disable=SC2086
     log "$top_log" <<< "================================================================"
@@ -761,7 +773,7 @@ mkdir -p "$ARTIFACTDIR"
 log "-$top_log" <<< "================================================================"
 
 log_top <<EOF
-${tbold}*** Gutenprint release build started at $sstamp on $(uname -n)${treset}
+${tbold}*** Gutenprint $build_type build started at $sstamp on $(uname -n)${treset}
 
 Directory:   $ROOT
 Logs:        ${logdir#${ROOT}/}

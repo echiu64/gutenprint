@@ -57,7 +57,12 @@ install-data-local: NEWS AUTHORS COPYING README
 # when we use a static file from the pre-Git era (since there are no
 # live branches from that time) to save a lot of diffs.
 
-ChangeLog:
+# This isn't really the right spot for these checks.
+# It's perfectly legal to update the change log even if NEWS
+# or configure is out of date.  But it greatly reduces build spew
+# to do it here, and manually updating the changelog is not a
+# normal thing to do.
+ChangeLog: dist-time-check dist-news-check
 	if [ -d .git -a -f ChangeLog.pre-5.2.11 ] ; then \
 	  $(MAKE) -C scripts mkgitlog; \
 	  scripts/mkgitlog -i ChangeLog.pre-5.2.11 -r gutenprint-5_2_11 > ChangeLog; \
@@ -65,13 +70,37 @@ ChangeLog:
 
 dist-time-check:
 	@if [ "$(top_srcdir)/configure" -ot "$(top_srcdir)/configure.ac" ] ; then \
-	  echo "*** configure is out of date (older than configure.ac) -- rerun ./autogen.sh first!"; exit 1; \
+	  echo 1>&2; \
+	  echo "****************************************************************" 1>&2; \
+	  echo "*** configure is out of date (older than configure.ac) -- rerun ./autogen.sh first!" 1>&2; \
+	  echo "****************************************************************" 1>&2; \
+	  echo 1>&2; \
+	  exit 1; \
+	fi
+
+# This would normally be done by AM_INIT_AUTOMAKE.  However,
+# we don't want to do this if we're building a snapshot, because
+# we don't want to update the NEWS file for each snapshot and
+# there's no convenient way I've found to conditionalize the
+# automake options.
+dist-news-check:
+	@if [ "$$STP_BUILD_SNAPSHOT" = "" ] ; then \
+	  case "`sed 15q $(srcdir)/NEWS`" in \
+	    *$(VERSION)*) : ;; \
+	    *) \
+	      echo 1>&2; \
+	      echo "****************************************************************" 1>&2; \
+	      echo "*** NEWS not updated to $(VERSION); not releasing" 1>&2; \
+	      echo "****************************************************************" 1>&2; \
+	      echo 1>&2; \
+	      exit 1; \
+	  esac ; \
 	fi
 
 git-version-stamp:
 	if [ -d .git ] ; then scripts/gversion > /dev/null; fi
 
-dist-hook: dist-time-check git-version-stamp
+dist-hook: dist-time-check dist-news-check git-version-stamp
 	for dir in $(DISTDIRS) ; do \
 	  if test -d $(srcdir)/$$dir ; then \
 	    mkdir $(distdir)/$$dir; \

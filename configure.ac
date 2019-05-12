@@ -76,7 +76,8 @@ pushdef([GUTENPRINT_NAME],              [gutenprint])
 pushdef([GUTENPRINT_MAJOR_VERSION],     [5])
 pushdef([GUTENPRINT_MINOR_VERSION],     [3])
 pushdef([GUTENPRINT_MICRO_VERSION],     [2])
-pushdef([GUTENPRINT_EXTRA_VERSION],     [-pre1])
+dnl Append snapshot ID if STP_BUILD_SNAPSHOT is set
+pushdef([GUTENPRINT_EXTRA_VERSION],     [-pre1[]m4_esyscmd_s(scripts/snapstamp)])
 pushdef([GUTENPRINT_CURRENT_INTERFACE], [11])
 pushdef([GUTENPRINT_BINARY_AGE],        [2])
 pushdef([GUTENPRINTUI2_CURRENT_INTERFACE], [4])
@@ -162,7 +163,8 @@ LDFLAGS="${LDFLAGS:=}"
 LIBS="${LIBS:=}"
 
 dnl Initialize automake stuff.
-AM_INIT_AUTOMAKE(1.9 dist-xz dist-bzip2 no-dist-gzip tar-ustar check-news gnu)
+dnl We use our own NEWS file check, as explained in Makefile.am.
+AM_INIT_AUTOMAKE(1.9 dist-xz dist-bzip2 no-dist-gzip tar-ustar gnu)
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 popdef([GUTENPRINT_NAME])
 popdef([GUTENPRINT_VERSION])
