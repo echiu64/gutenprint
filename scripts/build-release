@@ -61,7 +61,7 @@ export STP_PARALLEL=${STP_PARALLEL:-$("$ROOT/scripts/count-cpus")}
 declare counter=1
 declare git_dirty=
 declare build_type=release
-[[ -n $STP_BUILD_SNAPSHOT ]] && build_type=snapshot
+[[ -n ${STP_BUILD_SNAPSHOT:-} ]] && build_type=snapshot
 
 function pkg_version() {
     "$ROOT/scripts/gversion" pkg
@@ -175,7 +175,7 @@ function run_build_fresh() {
 function check_git_tag() {
     # Make sure that the tag that we're going to want to apply isn't
     # already present.
-    [[ -n $STP_BUILD_SNAPSHOT ]] && return 0
+    [[ $build_type != release ]] && return 0
     if [[ -n $("$GIT" show-ref "refs/tags/$(pkg_tag)") ]] ; then
 	console_log "*** ERROR: Tag named $(pkg_tag) is already present"
 	return 2
