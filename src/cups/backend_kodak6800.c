@@ -1136,12 +1136,13 @@ static int kodak6800_read_parse(void *vctx, const void **vjob, int data_fd, int 
 	}
 
 	uint16_t rows = be16_to_cpu(job->hdr.rows);
+	uint16_t cols = be16_to_cpu(job->hdr.columns);
 	if (rows != 1240 && rows != 2434 && rows != 2140 && !ctx->supports_sub4x6) {
 		ERROR("Printer Firmware does not support non-4x6/8x6/5x7 prints, please upgrade!\n");
 		return CUPS_BACKEND_CANCEL;
 	}
 
-	job->datalen = rows * be16_to_cpu(job->hdr.columns) * 3;
+	job->datalen = rows * cols * 3;
 	job->databuf = malloc(job->datalen);
 	if (!job->databuf) {
 		ERROR("Memory allocation failure!\n");
@@ -1178,22 +1179,23 @@ static int kodak6800_read_parse(void *vctx, const void **vjob, int data_fd, int 
 	}
 
 	/* Some header jiggery */
+	if (cols == 1844)
+		job->hdr.size = 6;
+	else if (cols == 1548)
+		job->hdr.size = 7;
+
 	if (rows == 636) {
 		job->hdr.method = 0x21;
-		job->hdr.size = 6;
 	} else if (rows == 936) {
 		job->hdr.method = 0x23;
-		job->hdr.size = 6;
 	} else if (rows == 1240) {
-		job->hdr.method = 0x00;
-	} else if (rows == 1836) {
-		job->hdr.size = 6;
+		job->hdr.method = 0x01;
+	} else if (rows == 1282) {
+		job->hdr.method = 0x20;
 	} else if (rows == 1882) {
 		job->hdr.method = 0x22;
-		job->hdr.size = 6;
 	} else if (rows == 2490) {
 		job->hdr.method = 0x2;
-		job->hdr.size = 6;
 	}
 
         /* Fix max print count. */
@@ -1227,7 +1229,8 @@ static int kodak6800_main_loop(void *vctx, const void *vjob) {
 	/* Validate against supported media list */
 	for (num = 0 ; num < ctx->media_count; num++) {
 		if (ctx->sizes[num].height == hdr.rows &&
-		    ctx->sizes[num].width == hdr.columns)
+		    ctx->sizes[num].width == hdr.columns &&
+		    ctx->sizes[num].method == hdr.method)
 			break;
 	}
 	if (num == ctx->media_count) {
@@ -1360,7 +1363,7 @@ static const char *kodak6800_prefixes[] = {
 /* Exported */
 struct dyesub_backend kodak6800_backend = {
 	.name = "Kodak 6800/6850",
-	.version = "0.68",
+	.version = "0.69",
 	.uri_prefixes = kodak6800_prefixes,
 	.cmdline_usage = kodak6800_cmdline,
 	.cmdline_arg = kodak6800_cmdline_arg,
