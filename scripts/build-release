@@ -589,26 +589,22 @@ function time_delta() {
 function report_step_status() {
     (( stepstatus == -1 )) && return
     [[ -z ${BUILD_VERBOSE:-} ]] && {
-	xtput bold
+	local ststatus=OK
+	local stcolor="${tgreen}"
 	if (( stepstatus)) ; then
-	    xtput setaf 1
-	    declare stfail=FAILED
+	    ststatus=FAILED
+	    stcolor="${tred}"
 	    if (( stepstatus == 126 )) ; then
-		xtput setaf 5
-		stfail="NOT FOUND"
+		ststatus="NOT FOUND"
+		stcolor="${tpurple}"
 	    elif (( stepstatus >= 127 )) ; then
-		stfail=INTERRUPTED
+		ststatus=INTERRUPTED
 	    fi
-	    printf "%$((longest_op - ${#op} ))s $stfail"
-	    [[ -n $currentmodule ]] && failedmodules+=($currentmodule)
-	else
-	    xtput setaf 2
-	    printf "%$((longest_op - ${#op} ))s OK"
 	fi
-	xtput sgr0
-	currentmodule=
-	echo
+	printf "$stcolor%$((longest_op - ${#op} ))s $ststatus$treset\n"
     }
+    [[ -n $currentmodule ]] && failedmodules+=($currentmodule)
+    currentmodule=
     [[ -f $tmpfile ]] && {
 	[[ -s $tmpfile ]] && colorize < "$tmpfile"
 	rm -f -- "$tmpfile"
@@ -755,7 +751,6 @@ if [[ -z ${STP_LOG_NO_SUBDIR:-} ]] ; then
      if [[ -L $toplogdir/Current ]] ; then
 	 rm -f -- "$toplogdir/Previous"
 	 mv "$toplogdir/Current" "$toplogdir/Previous"
-	 rm -f -- "$toplogdir/Current"
      fi
     ln -s "${logdir##*/}" "$toplogdir/Current"
 fi
