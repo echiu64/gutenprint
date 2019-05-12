@@ -1044,16 +1044,16 @@ static int kodak6800_attach(void *vctx, struct libusb_device_handle *dev, int ty
 		}
 		uint16_t fw = be16_to_cpu(ctx->sts.main_fw);
 		if (ctx->type == P_KODAK_6850) {
-			if ((fw > 800 && fw >= 878) ||
-			    (fw > 600 && fw >= 678)) {
+			if ((fw >= 878) ||
+			    (fw < 800 && fw >= 678)) {
 				ctx->supports_sub4x6 = 1;
 			} else {
 				WARNING("Printer FW out of date, recommend updating for current media and features\n");
 			}
 		} else {
-			if ((fw > 400 && fw >= 459) ||
-			    (fw > 300 && fw >= 359) ||
-			    (fw > 200 && fw >= 259)) {
+			if ((fw >= 459) ||
+			    (fw < 400 && fw >= 359) ||
+			    (fw < 300 && fw >= 259)) {
 				ctx->supports_sub4x6 = 1;
 			} else {
 				WARNING("Printer FW out of date, recommend updating for current media and features\n");
@@ -1178,24 +1178,27 @@ static int kodak6800_read_parse(void *vctx, const void **vjob, int data_fd, int 
 		job->datalen += 1844*2*3;
 	}
 
-	/* Some header jiggery */
-	if (cols == 1844)
-		job->hdr.size = 6;
-	else if (cols == 1548)
-		job->hdr.size = 7;
-
-	if (rows == 636) {
-		job->hdr.method = 0x21;
-	} else if (rows == 936) {
-		job->hdr.method = 0x23;
-	} else if (rows == 1240) {
-		job->hdr.method = 0x01;
-	} else if (rows == 1282) {
-		job->hdr.method = 0x20;
-	} else if (rows == 1882) {
-		job->hdr.method = 0x22;
-	} else if (rows == 2490) {
-		job->hdr.method = 0x2;
+	/* Perform some header re-jiggery */
+	if (job->hdr.size == 0) {
+		if (cols == 1844)
+			job->hdr.size = 6;
+		else if (cols == 1548)
+			job->hdr.size = 7;
+	}
+	if (job->hdr.method == 0) {
+		if (rows == 636) {
+			job->hdr.method = 0x21;
+		} else if (rows == 936) {
+			job->hdr.method = 0x23;
+		} else if (rows == 1240) {
+			job->hdr.method = 0x01;
+		} else if (rows == 1282) {
+			job->hdr.method = 0x20;
+		} else if (rows == 1882) {
+			job->hdr.method = 0x22;
+		} else if (rows == 2490) {
+			job->hdr.method = 0x2;
+		}
 	}
 
         /* Fix max print count. */
@@ -1363,7 +1366,7 @@ static const char *kodak6800_prefixes[] = {
 /* Exported */
 struct dyesub_backend kodak6800_backend = {
 	.name = "Kodak 6800/6850",
-	.version = "0.69",
+	.version = "0.70",
 	.uri_prefixes = kodak6800_prefixes,
 	.cmdline_usage = kodak6800_cmdline,
 	.cmdline_arg = kodak6800_cmdline_arg,
