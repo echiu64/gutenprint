@@ -117,7 +117,7 @@ dist-hook: dist-time-check dist-news-check git-version-stamp
 	$(FIND) $(distdir) -name '*~' -print | xargs $(RM) -rf
 
 snapshot: scripts/gversion git-version-stamp
-	$(MAKE) dist distdir=$(PACKAGE)-`date +"%Y%m%d%H%M%S"`-`scripts/gversion`
+	$(MAKE) dist distdir=$(PACKAGE)-$(VERSION)-`date +"%Y%m%d%H%M%S"`
 
 #################################################################
 #			       TESTING				#
