@@ -17,9 +17,4 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-if [[ -n $STP_BUILD_SNAPSHOT ]] ; then
-    gv=
-    [[ -d .git ]] &&
-	gv=-$(git describe --dirty --always --first-parent --exclude '*')
-    printf '%s%s%(%Y-%m-%dT%H_%M_%S)T' $gv -
-fi
+[[ -n $STP_BUILD_SNAPSHOT && -d .git ]] && git describe --dirty --always --first-parent --exclude '*'
