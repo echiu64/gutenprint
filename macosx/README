@@ -1,5 +1,6 @@
 Building Gutenprint for Mac OS X
 by John Labovitz <johnl@johnlabovitz.com>
+Updated by Steve Letter <sletter1@yahoo.com>`
 
 This guide describes how to build and package Gutenprint for Mac OS X
 versions 10.6 (Snow Leopard) and above. Because Gutenprint supports many now-
@@ -7,7 +8,7 @@ obsolete OS X versions, its build process is fairly complicated. The
 essential steps are:
 
 	- set up development environment
-	- obtain CVS tree
+	- clone git repository
 	- obtain release distribution
 	- build from source
 	- build installer package and final DMG for distribution
@@ -18,8 +19,9 @@ The steps below are listed in order that they need to be completed.
 ================================================================
 Configure machines
 
-A Mac running 10.6 or later is required to build Gutenprint. An optional physical
-or virtual Linux machine is needed for doing a full build from the CVS tree.
+A Mac running 10.6 or later is required to build Gutenprint. An optional 
+physical or virtual Linux machine is needed for doing a full build from 
+the git repository.
 
 
 Operating system
@@ -33,7 +35,8 @@ Xcode
 -----
 
 The development environment needed for the OS X machines is available from
-Apple Downloads, but requires a (free) developer membership to access:
+Apple Downloads, but requires a developer membership to access it as well as 
+the required developer and installer certificates.
 
 	https://developer.apple.com/downloads/index.action
 
@@ -71,7 +74,6 @@ Homebrew, you must install 'pkg-config' (which depends on 'glib').
 
 
 
-
 ================================================================
 Create working directory
 
@@ -87,16 +89,13 @@ directory.
 
 
 ================================================================
-Get Gutenprint CVS tree
+Get Gutenprint from the Repository
 
-The main CVS tree contains the source for this document, as well as
+The git repository contains the source for this document, as well as
 scripts and resources needed to build the final installation packages.
-You will also need the CVS tree if you need to build the release
-tarball from source.
-
-See section 3.1 ('Using CVS') in the file doc/README.maintaining for
-details on checking out the CVS tree. By default, the CVS tree will be
-checked out into the 'print' directory.
+You will also need the cloned repository you need to build the release
+tarball from source. Cloning from GIT documentation can be found using
+Google.
 
 
 ================================================================
@@ -131,10 +130,10 @@ working  directory.
 
 * Option 2: Build release
 
-A release can be built out of the CVS tree. However, due to the autotools not
+A release can be built out of the git image. However, due to the autotools not
 being fully implemented on OS X, this must be done on a physical or
 virtualized Linux development machine is required. To install a Linux VM,
-refer to the file 'macosx/README.vm-environment.markdown' in the CVS tree. To
+refer to the file 'macosx/README.vm-environment.markdown' in the git image. To
 build the tarball, see 'doc/README.maintaining'.
 
 
@@ -148,104 +147,17 @@ working directory.
 
 	https://sourceforge.net/projects/libusb/files/
 
+A version of the libusb source, 1.0.22, is now included in the build.  It 
+includes a pkg-config file that should be used to allow the compilers to 
+find it.
 
-================================================================
-Change directory to 'macosx'
-
-For the OS X build scripts to run properly, you will need to be in
-the 'macosx' directory in the CVS tree.
-
-
-================================================================
-Set up environment
-
-Although the build process does build a new Gutenprint installer, it
-does not yet build the uninstaller packages. Therefore, the scripts
-need access to the old packages to use them as a source. To do this,
-first download the previous version's DMG file, and copy its contents
-to a directory. A convenient place is the parent directory of the CVS
-tree. Then set the GP_OLD_INSTALLER environment variable to the name of
-this directory:
-
-	export GP_OLD_INSTALLER='../../Gutenprint 5.2.9 (dmg)'
-
-Another environment variable that must be set up that describes the
-location of the distribution release:
-
-	export GP_GUTENPRINT_SRC=../../gutenprint-VERSION.tar.bz
-
-where VERSION is replaced by the version you are building.
-
-The location of the libusb release must also be set:
-
-	export GP_LIBUSB_SRC=../../libusb-VERSION.tar.bz
-
-The file 'setup-env.sample' contains sample settings for all required
-environment variables; it can be copied to 'setup-env', modified as
-needed, and sourced into the current shell:
-
-	source setup-env
-
-
-================================================================
-Update release information
-
-Although most information such as documentation is pulled from the
-release, there are a few files that will need to be updated for a new
-OS X release. Relative to the CVS tree, they are:
-
-	macosx/src/gutenprint.pkg.src/Info.plist
-		- update version in CFBundleGetInfoString, CFBundleIdentifier,
-		  and CFBundleShortVersionString keys
-
-	macosx/src/gutenprint.pkg.src/Resources/Welcome.rtfd
-		- update version (in header)
-		- update systems supported (in text)
-
-	macosx/src/gutenprint.pkg.src/Resources/ReadMe.html
-		- update version and release date (in header)
-		- update systems supported
-		- update 'changes' section with most recent changes
-		- add any needed information specific to release
-
-	macosx/src/gutenprint.dmg.src/Contents/Documentation/SourceCode.webloc
-		- update URL to source code (plist file; edit in text editor or Xcode)
-
-	macosx/subversion
-		- set to either empty, or a sub-version that will be appended
-		  to the release version (e.g., a release version of
-		  'gutenprint-5.2.10-pre1' and a sub-version of 'a' will result in a
-		  final version of 'gutenprint-5.2.10-pre1a')
 
 
 ================================================================
 Build from release
 
-Given a release distribution tarball, the 'make-build' script builds
-accordingly:
-
-	./make-build
-
-The results of the builds will be in the 'build' directory, under an 'install'
-subdirectory containing the final files ready for packaging. The 'gutenprint.build.log'
-and 'libusb.build.log' files will contain output of the build process. (This log
-file should be checked for errors, even if the build script doesn't show
-anything.)
+Given a release distribution tarball, the 'makegutenpkg.sh' makes the complete
+distribution dmg.
 
 
-================================================================
-Package installers & uninstallers
 
-Packages are created for the current Gutenprint driver. The uninstaller
-package files are copied from the previous release, as described above.
-
-Build all the installer packages and the final DMG file:
-
-	./make-installer
-
-Note that you will probably need to authenticate once at the beginning of the
-process (to sudo, via the terminal) and again at the end (to hdiutil, via a
-GUI dialog).
-
-This will create a final DMG file called 'gutenprint-VERSION.dmg', which can
-be uploaded to SourceForge as an official OS X release.
