@@ -44,7 +44,7 @@ if test "x$2" != xfast; then
 	# Clean build the software...
 	test -f Makefile && make distclean
 
-	LIBS="-framework IOKit -framework CoreFoundation" ./configure --prefix=/Library/Printers/Gutenprint.printerDriver/Contents/MacOS --datadir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources --datarootdir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources --localedir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources --docdir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources/doc --mandir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources --disable-samples --disable-test --enable-nls-macosx --with-archflags='-mmacosx-version-min=10.6 -Os -arch i386 -arch x86_64 -D_PPD_DEPRECATED=""'
+	LIBS="-framework IOKit -framework CoreFoundation" ./configure --prefix=/Library/Printers/Gutenprint.printerDriver/Contents/MacOS --datadir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources --datarootdir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources --localedir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources --docdir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources/doc --mandir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources --disable-samples --disable-test --enable-nls-macosx --with-archflags='-mmacosx-version-min=10.6 -Os -arch x86_64 -D_PPD_DEPRECATED=""'
 	make
 fi
 
@@ -253,8 +253,12 @@ chmod 755 ~/Desktop/gutenprint-$pkgversion/uninstall-gutenprint.command
 cp -f macosx/scripts/Gutenprint\ Utility\ for\ EPSON\ Inkjet\ Printers.command ~/Desktop/gutenprint-$pkgversion/
 chmod 755 ~/Desktop/gutenprint-$pkgversion/Gutenprint\ Utility\ for\ EPSON\ Inkjet\ Printers.command
 
+cp -f macosx/libusb* ~/Desktop/gutenprint-$pkgversion/
+chmod 755 ~/Desktop/gutenprint-$pkgversion/libusb*
+
 codesign -s "$CODESIGN_IDENTITY" -fv ~/Desktop/gutenprint-$pkgversion/uninstall-gutenprint.command
 codesign -s "$CODESIGN_IDENTITY" -fv ~/Desktop/gutenprint-$pkgversion/Gutenprint\ Utility\ for\ EPSON\ Inkjet\ Printers.command
+codesign -s "$CODESIGN_IDENTITY" -fv ~/Desktop/gutenprint-$pkgversion/libusb*
 
 test -f ~/Desktop/gutenprint-$pkgversion.dmg && rm -f ~/Desktop/gutenprint-$pkgversion.dmg
-hdiutil create -srcfolder ~/Desktop/gutenprint-$pkgversion ~/Desktop/gutenprint-$pkgversion.dmg
+hdiutil create -fs HFS+ -srcfolder ~/Desktop/gutenprint-$pkgversion ~/Desktop/gutenprint-$pkgversion.dmg
