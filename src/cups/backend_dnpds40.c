@@ -611,7 +611,7 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
 		int len = 0;
 
 		/* Query Duplex Media Info */
-		dnpds40_build_cmd(&cmd, "INFO", "CUT_PAPER", 0);
+		dnpds40_build_cmd(&cmd, "INFO", "UNIT_CUT_PAPER", 0);
 
 		resp = dnpds40_resp_cmd(ctx, &cmd, &len);
 		if (resp) {
@@ -2549,7 +2549,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS40/DS80/DSRX1/DS620/DS820",
-	.version = "0.97.1",
+	.version = "0.97.2",
 	.uri_prefix = "dnpds40",
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
