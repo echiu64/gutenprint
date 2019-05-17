@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.2.15-pre1, a pre-release of Gutenprint 5.2.15.
+Welcome to Gutenprint 5.2.15-pre2, a pre-release of Gutenprint 5.2.15.
 Please read these release notes carefully.
 
 Gutenprint is a suite of printer drivers for UNIX, Linux, and
@@ -19,6 +19,7 @@ These release notes contain the following sections:
 I)    General Requirements
 II)   Critical Upgrade Note
 III)  Changes from Previous Releases
+        * Changes from 5.2.14
         * Changes from 5.2.13
         * Changes from 5.2.12
         * Changes from 5.2.11
@@ -261,9 +262,11 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      Sony UP-DR150
      Sony UP-DR200
 
-  2) Miscellaneous fixes for DNP DS80DX, DNP DS820, and Mitsubishi P95D.
+  3) Miscellaneous fixes for DNP DS80DX, DNP DS820, Mitsubishi P95D,
+     Shinko S1245, Sony UP-CR10L, UP-DR150, and UP-DR200, and Kodak
+     68xx series.
 
-  3) The Macintosh uninstaller, which was inadvertently removed from
+  4) The Macintosh uninstaller, which was inadvertently removed from
      5.2.14, has been restored.
 
 

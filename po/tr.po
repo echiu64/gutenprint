@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gutenprint 5.2.10-pre2\n"
 "Report-Msgid-Bugs-To: gimp-print-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2019-02-10 22:12-0500\n"
+"POT-Creation-Date: 2019-05-16 21:47-0400\n"
 "PO-Revision-Date: 2015-10-03 20:18+0200\n"
 "Last-Translator: Mesutcan Kurt <mesutcank@gmail.com>\n"
 "Language-Team: Turkish <gnu-tr-u12a@lists.sourceforge.net>\n"
@@ -146,37 +146,37 @@ msgid "Dither algorithm"
 msgstr "Dither algoritması"
 
 #: src/main/print-canon.c:285 src/main/print-escp2.c:174
-#: src/main/print-lexmark.c:264 src/main/print-olympus.c:8066
+#: src/main/print-lexmark.c:264 src/main/print-olympus.c:8098
 #: src/main/print-pcl.c:1539 src/main/print-ps.c:73 src/main/print-raw.c:101
 msgid "Page Size"
 msgstr "Sayfa Boyutu"
 
 #: src/main/print-canon.c:286 src/main/print-escp2.c:175
-#: src/main/print-lexmark.c:265 src/main/print-olympus.c:8067
+#: src/main/print-lexmark.c:265 src/main/print-olympus.c:8099
 #: src/main/print-pcl.c:1540 src/main/print-ps.c:74 src/main/print-raw.c:102
 msgid "Size of the paper being printed to"
 msgstr "Üzerine baskı yapılan kağıdın boyutu"
 
 #: src/main/print-canon.c:291 src/main/print-escp2.c:180
-#: src/main/print-lexmark.c:270 src/main/print-olympus.c:8072
+#: src/main/print-lexmark.c:270 src/main/print-olympus.c:8104
 #: src/main/print-pcl.c:1545 src/cups/genppd.c:2136 src/cups/genppd.c:2605
 msgid "Media Type"
 msgstr "Kağıt Türü"
 
 #: src/main/print-canon.c:292 src/main/print-escp2.c:181
-#: src/main/print-lexmark.c:271 src/main/print-olympus.c:8073
+#: src/main/print-lexmark.c:271 src/main/print-olympus.c:8105
 #: src/main/print-pcl.c:1546
 msgid "Type of media (plain paper, photo paper, etc.)"
 msgstr "Kağıt türü (düz kağıt, fotoğraf kağıdı, vs)"
 
 #: src/main/print-canon.c:297 src/main/print-escp2.c:186
-#: src/main/print-lexmark.c:276 src/main/print-olympus.c:8078
+#: src/main/print-lexmark.c:276 src/main/print-olympus.c:8110
 #: src/main/print-pcl.c:1551 src/cups/genppd.c:2172 src/cups/genppd.c:2625
 msgid "Media Source"
 msgstr "Kağıt Kaynağı"
 
 #: src/main/print-canon.c:298 src/main/print-escp2.c:187
-#: src/main/print-lexmark.c:277 src/main/print-olympus.c:8079
+#: src/main/print-lexmark.c:277 src/main/print-olympus.c:8111
 #: src/main/print-pcl.c:1552
 msgid "Source (input slot) of the media"
 msgstr "Ortam (çıktı yuvası) kaynağı"
@@ -227,25 +227,25 @@ msgid "CD Vertical Fine Adjustment"
 msgstr "CD çıktıları için dikey ince ayarı"
 
 #: src/main/print-canon.c:339 src/main/print-escp2.c:234
-#: src/main/print-lexmark.c:282 src/main/print-olympus.c:8084
+#: src/main/print-lexmark.c:282 src/main/print-olympus.c:8116
 #: src/main/print-pcl.c:1563 src/cups/genppd.c:2264 src/cups/genppd.c:2660
 msgid "Resolution"
 msgstr "Çözünürlük"
 
 #: src/main/print-canon.c:340 src/main/print-lexmark.c:283
-#: src/main/print-olympus.c:8085
+#: src/main/print-olympus.c:8117
 msgid "Resolution and quality of the print"
 msgstr "Çözünürlük ve baskı kalitesi"
 
 #: src/main/print-canon.c:350 src/main/print-escp2.c:245
-#: src/main/print-lexmark.c:288 src/main/print-olympus.c:8090
+#: src/main/print-lexmark.c:288 src/main/print-olympus.c:8122
 #: src/main/print-pcl.c:1569 src/main/print-raw.c:89
 msgid "Ink Type"
 msgstr "Mürekkep Türü"
 
 #: src/main/print-canon.c:351 src/main/print-escp2.c:246
 #: src/main/print-escp2.c:258 src/main/print-lexmark.c:289
-#: src/main/print-olympus.c:8091 src/main/print-pcl.c:1570
+#: src/main/print-olympus.c:8123 src/main/print-pcl.c:1570
 #: src/main/print-raw.c:90
 msgid "Type of ink in the printer"
 msgstr "Yazıcının içerisindeki mürekkep türü"
@@ -258,13 +258,13 @@ msgid "Ink Channels"
 msgstr "Mürekkep kanalları"
 
 #: src/main/print-canon.c:367 src/main/print-escp2.c:347
-#: src/main/print-lexmark.c:300 src/main/print-olympus.c:8112
+#: src/main/print-lexmark.c:300 src/main/print-olympus.c:8144
 #: src/main/print-pcl.c:1581 src/main/print-ps.c:85 src/main/print-raw.c:95
 msgid "Printing Mode"
 msgstr "Yazdırma Kipi"
 
 #: src/main/print-canon.c:368 src/main/print-escp2.c:348
-#: src/main/print-lexmark.c:301 src/main/print-olympus.c:8113
+#: src/main/print-lexmark.c:301 src/main/print-olympus.c:8145
 #: src/main/print-pcl.c:1582 src/main/print-ps.c:86 src/main/print-raw.c:96
 msgid "Printing Output Mode"
 msgstr "Yazdırma Çıktı Modu"
@@ -278,22 +278,22 @@ msgid "Type of inkset in the printer"
 msgstr "Yazıcıdaki mürekkep türü"
 
 #: src/main/print-canon.c:384 src/main/print-escp2.c:269
-#: src/main/print-olympus.c:8106
+#: src/main/print-olympus.c:8138
 msgid "Borderless"
 msgstr "Kenarsız"
 
 #: src/main/print-canon.c:385 src/main/print-escp2.c:270
-#: src/main/print-olympus.c:8107
+#: src/main/print-olympus.c:8139
 msgid "Print without borders"
 msgstr "Kenarsız yazdır"
 
 #: src/main/print-canon.c:390 src/main/print-escp2.c:192
-#: src/main/print-olympus.c:8118 src/main/print-pcl.c:1587
+#: src/main/print-olympus.c:8150 src/main/print-pcl.c:1587
 msgid "Double-Sided Printing"
 msgstr "Çift Taraflı Yazdırma"
 
 #: src/main/print-canon.c:391 src/main/print-escp2.c:193
-#: src/main/print-olympus.c:8119 src/main/print-pcl.c:1588
+#: src/main/print-olympus.c:8151 src/main/print-pcl.c:1588
 msgid "Duplex/Tumble Setting"
 msgstr "Arkalı önlü/Tek taraflı yazdırma seçeneği"
 
@@ -375,8 +375,8 @@ msgid "Light Yellow Transition"
 msgstr "Açık Sarı Geçişi"
 
 #: src/main/print-canon.c:492 src/main/print-escp2.c:2547
-#: src/main/print-olympus.c:2704 src/main/print-olympus.c:2723
-#: src/main/print-olympus.c:5367 src/main/print-olympus.c:8190
+#: src/main/print-olympus.c:2736 src/main/print-olympus.c:2755
+#: src/main/print-olympus.c:5399 src/main/print-olympus.c:8222
 #: src/main/print-pcl.c:1937 src/xml/xmli18n-tmp.h:3468
 #: src/xml/xmli18n-tmp.h:3473 src/xml/xmli18n-tmp.h:3479
 #: src/xml/xmli18n-tmp.h:3486
@@ -384,11 +384,11 @@ msgid "Off"
 msgstr "Kapalı"
 
 #: src/main/print-canon.c:493 src/main/print-escp2.c:2549
-#: src/main/print-olympus.c:8191 src/main/print-pcl.c:1938
+#: src/main/print-olympus.c:8223 src/main/print-pcl.c:1938
 msgid "Long Edge (Standard)"
 msgstr "Uzun Kenar (Standart)"
 
-#: src/main/print-canon.c:494 src/main/print-olympus.c:8192
+#: src/main/print-canon.c:494 src/main/print-olympus.c:8224
 #: src/main/print-pcl.c:1939
 msgid "Short Edge (Flip)"
 msgstr "Kısa Kenar (Ters)"
@@ -429,7 +429,7 @@ msgid "CD - Custom"
 msgstr "CD - Özel"
 
 #: src/main/print-canon.c:2901 src/main/print-escp2.c:2301
-#: src/main/print-olympus.c:6626 src/cups/genppd.c:1518 src/cups/genppd.c:2393
+#: src/main/print-olympus.c:6658 src/cups/genppd.c:1518 src/cups/genppd.c:2393
 #: src/cups/genppd.c:2592 src/cups/genppd.c:2684
 msgid "Normal"
 msgstr "Normal"
@@ -454,7 +454,7 @@ msgstr ""
 #: src/main/print-canon.c:3117 src/main/print-canon.c:3145
 #: src/main/print-canon.c:3177 src/main/print-canon.c:3181
 #: src/main/print-canon.c:3267 src/main/print-escp2.c:2715
-#: src/main/print-lexmark.c:1294 src/main/print-olympus.c:8438
+#: src/main/print-lexmark.c:1294 src/main/print-olympus.c:8470
 #: src/main/print-pcl.c:2384 src/main/print-ps.c:328 src/main/print-raw.c:150
 #: src/gutenprintui2/panel.c:289
 msgid "Color"
@@ -463,7 +463,7 @@ msgstr "Renk"
 #: src/main/print-canon.c:3093 src/main/print-canon.c:3131
 #: src/main/print-canon.c:3150 src/main/print-canon.c:3157
 #: src/main/print-escp2.c:2717 src/main/print-lexmark.c:1296
-#: src/main/print-olympus.c:8435 src/main/print-pcl.c:2386
+#: src/main/print-olympus.c:8467 src/main/print-pcl.c:2386
 #: src/main/print-ps.c:330 src/main/print-raw.c:152
 msgid "Black and White"
 msgstr "Siyah ve Beyaz"
@@ -556,7 +556,7 @@ msgstr "Her ikisi de"
 msgid "Black"
 msgstr "Siyah"
 
-#: src/main/print-canon.c:3185 src/main/print-olympus.c:3749
+#: src/main/print-canon.c:3185 src/main/print-olympus.c:3781
 #: src/main/print-pcl.c:289 src/main/print-pcl.c:290
 #: src/main/generic-options.c:36 src/xml/xmli18n-tmp.h:3493
 #: src/xml/xmli18n-tmp.h:3499 src/xml/xmli18n-tmp.h:3509
@@ -566,10 +566,10 @@ msgid "Photo"
 msgstr "Fotoğraf"
 
 #: src/main/print-canon.c:3189 src/main/print-olympus.c:412
-#: src/main/print-olympus.c:1851 src/main/print-olympus.c:1971
-#: src/main/print-olympus.c:2104 src/main/print-olympus.c:2365
-#: src/main/print-olympus.c:2483 src/main/print-olympus.c:5571
-#: src/main/print-olympus.c:5687 src/cups/genppd.c:1650 src/cups/genppd.c:1671
+#: src/main/print-olympus.c:1883 src/main/print-olympus.c:2003
+#: src/main/print-olympus.c:2136 src/main/print-olympus.c:2397
+#: src/main/print-olympus.c:2515 src/main/print-olympus.c:5603
+#: src/main/print-olympus.c:5719 src/cups/genppd.c:1650 src/cups/genppd.c:1671
 #: src/cups/genppd.c:1700 src/cups/genppd.c:1733 src/cups/genppd.c:1788
 #: src/cups/genppd.c:1825 src/cups/genppd.c:1862 src/cups/genppd.c:1875
 #: src/cups/genppd.c:1895 src/cups/genppd.c:1917 src/cups/genppd.c:1932
@@ -710,8 +710,8 @@ msgstr "Basit Gama"
 msgid "Do not correct for screen gamma"
 msgstr "Ekran kontrastı için düzeltme"
 
-#: src/main/print-color.c:254 src/main/print-olympus.c:2769
-#: src/main/print-olympus.c:3169
+#: src/main/print-color.c:254 src/main/print-olympus.c:2801
+#: src/main/print-olympus.c:3201
 msgid "Brightness"
 msgstr "Parlaklık"
 
@@ -719,8 +719,8 @@ msgstr "Parlaklık"
 msgid "Brightness of the print"
 msgstr "Baskının parlaklığı"
 
-#: src/main/print-color.c:262 src/main/print-olympus.c:2775
-#: src/main/print-olympus.c:3175
+#: src/main/print-color.c:262 src/main/print-olympus.c:2807
+#: src/main/print-olympus.c:3207
 msgid "Contrast"
 msgstr "Karşıtlık"
 
@@ -1061,7 +1061,7 @@ msgstr "Mavi gamayı düzenle"
 msgid "Adjust the black gamma"
 msgstr "Siyah gamayı düzenle"
 
-#: src/main/print-color.c:352 src/main/print-olympus.c:8147
+#: src/main/print-color.c:352 src/main/print-olympus.c:8179
 msgid "Cyan Balance"
 msgstr "Cam göbeği dengesi"
 
@@ -1069,7 +1069,7 @@ msgstr "Cam göbeği dengesi"
 msgid "Adjust the cyan gray balance"
 msgstr "camgöbeği gri dengesini ayarla"
 
-#: src/main/print-color.c:360 src/main/print-olympus.c:8155
+#: src/main/print-color.c:360 src/main/print-olympus.c:8187
 msgid "Magenta Balance"
 msgstr "Eflatun Dengesi"
 
@@ -1077,7 +1077,7 @@ msgstr "Eflatun Dengesi"
 msgid "Adjust the magenta gray balance"
 msgstr "Kırmızımsı mor ve gri dengesini ayarla"
 
-#: src/main/print-color.c:368 src/main/print-olympus.c:8163
+#: src/main/print-color.c:368 src/main/print-olympus.c:8195
 msgid "Yellow Balance"
 msgstr "Sarı Oranı"
 
@@ -1828,7 +1828,7 @@ msgstr "Elle tam kontrol"
 msgid "Automatic Setting Control"
 msgstr "Otomatik Ayar Denetimi"
 
-#: src/main/print-escp2.c:2472 src/main/print-olympus.c:4898
+#: src/main/print-escp2.c:2472 src/main/print-olympus.c:4930
 #: src/cups/genppd.c:2302 src/cups/genppd.c:2663
 msgid "Automatic"
 msgstr "Otomatik"
@@ -1870,7 +1870,7 @@ msgstr "Kısa Kenar(Çevirme)"
 msgid "This printer does not support raw printer output at depth %d\n"
 msgstr "Bu yazıcı %d derinliğinde ham yazıcı çıktısını desteklemiyor\n"
 
-#: src/main/print-escp2.c:4427 src/main/print-olympus.c:9049
+#: src/main/print-escp2.c:4427 src/main/print-olympus.c:9081
 #: src/main/print-raw.c:241
 msgid "Print options not verified; cannot print.\n"
 msgstr "Yazdırma seçenekleri doğrulanmadı; yazılamıyor.\n"
@@ -2335,20 +2335,20 @@ msgstr "El ile Duraklatma"
 msgid "Manual without Pause"
 msgstr "Elle Duraklatma olmadan"
 
-#: src/main/print-olympus.c:411 src/main/print-olympus.c:1850
-#: src/main/print-olympus.c:1970 src/main/print-olympus.c:2103
-#: src/main/print-olympus.c:2482
+#: src/main/print-olympus.c:411 src/main/print-olympus.c:1882
+#: src/main/print-olympus.c:2002 src/main/print-olympus.c:2135
+#: src/main/print-olympus.c:2514
 msgid "Coated"
 msgstr "Kaplanmış"
 
 #: src/main/print-olympus.c:1272 src/main/print-olympus.c:1331
-#: src/main/print-olympus.c:1435 src/main/print-olympus.c:1628
-#: src/main/print-olympus.c:2005 src/main/print-olympus.c:2363
-#: src/main/print-olympus.c:2411 src/main/print-olympus.c:2475
-#: src/main/print-olympus.c:4187 src/main/print-olympus.c:4428
-#: src/main/print-olympus.c:5231 src/main/print-olympus.c:5356
-#: src/main/print-olympus.c:5569 src/main/print-olympus.c:5688
-#: src/main/print-olympus.c:5858 src/main/print-olympus.c:6334
+#: src/main/print-olympus.c:1435 src/main/print-olympus.c:1647
+#: src/main/print-olympus.c:2037 src/main/print-olympus.c:2395
+#: src/main/print-olympus.c:2443 src/main/print-olympus.c:2507
+#: src/main/print-olympus.c:4219 src/main/print-olympus.c:4460
+#: src/main/print-olympus.c:5263 src/main/print-olympus.c:5388
+#: src/main/print-olympus.c:5601 src/main/print-olympus.c:5720
+#: src/main/print-olympus.c:5890 src/main/print-olympus.c:6366
 msgid "Glossy"
 msgstr "Kuşe"
 
@@ -2358,143 +2358,143 @@ msgid "Texture"
 msgstr "Doku"
 
 #: src/main/print-olympus.c:1333 src/main/print-olympus.c:1437
-#: src/main/print-olympus.c:1629 src/main/print-olympus.c:2011
-#: src/main/print-olympus.c:2476 src/main/print-olympus.c:4186
-#: src/main/print-olympus.c:4429 src/main/print-olympus.c:5233
-#: src/main/print-olympus.c:5358 src/main/print-olympus.c:5570
-#: src/main/print-olympus.c:5689 src/main/print-olympus.c:5859
-#: src/main/print-olympus.c:6335
+#: src/main/print-olympus.c:1648 src/main/print-olympus.c:2043
+#: src/main/print-olympus.c:2508 src/main/print-olympus.c:4218
+#: src/main/print-olympus.c:4461 src/main/print-olympus.c:5265
+#: src/main/print-olympus.c:5390 src/main/print-olympus.c:5602
+#: src/main/print-olympus.c:5721 src/main/print-olympus.c:5891
+#: src/main/print-olympus.c:6367
 msgid "Matte"
 msgstr "Mat"
 
-#: src/main/print-olympus.c:1630
+#: src/main/print-olympus.c:1649
 #, fuzzy
 msgid "Glossy_NoCorr"
 msgstr "Parlak Fotoğraf"
 
-#: src/main/print-olympus.c:1631
+#: src/main/print-olympus.c:1650
 msgid "Matte_NoCorr"
 msgstr ""
 
-#: src/main/print-olympus.c:2006
+#: src/main/print-olympus.c:2038
 msgid "Matte +5"
 msgstr "Mat +5"
 
-#: src/main/print-olympus.c:2007
+#: src/main/print-olympus.c:2039
 msgid "Matte +4"
 msgstr "Mat +4"
 
-#: src/main/print-olympus.c:2008
+#: src/main/print-olympus.c:2040
 msgid "Matte +3"
 msgstr "Mat +3"
 
-#: src/main/print-olympus.c:2009
+#: src/main/print-olympus.c:2041
 msgid "Matte +2"
 msgstr "Mat +2"
 
-#: src/main/print-olympus.c:2010
+#: src/main/print-olympus.c:2042
 msgid "Matte +1"
 msgstr "Mat +1"
 
-#: src/main/print-olympus.c:2012
+#: src/main/print-olympus.c:2044
 msgid "Matte -1"
 msgstr "Mat -1"
 
-#: src/main/print-olympus.c:2013
+#: src/main/print-olympus.c:2045
 msgid "Matte -2"
 msgstr "Mat -2"
 
-#: src/main/print-olympus.c:2014
+#: src/main/print-olympus.c:2046
 msgid "Matte -3"
 msgstr "Mat -3"
 
-#: src/main/print-olympus.c:2015
+#: src/main/print-olympus.c:2047
 msgid "Matte -4"
 msgstr "Mat -4"
 
-#: src/main/print-olympus.c:2016
+#: src/main/print-olympus.c:2048
 msgid "Matte -5"
 msgstr "Mat -5"
 
-#: src/main/print-olympus.c:2112 src/main/print-olympus.c:2491
-#: src/main/print-olympus.c:3181 src/main/print-olympus.c:4458
-#: src/main/print-olympus.c:4919
+#: src/main/print-olympus.c:2144 src/main/print-olympus.c:2523
+#: src/main/print-olympus.c:3213 src/main/print-olympus.c:4490
+#: src/main/print-olympus.c:4951
 #, fuzzy
 msgid "Image Sharpening"
 msgstr "Resim ön izleme"
 
-#: src/main/print-olympus.c:2113
+#: src/main/print-olympus.c:2145
 msgid "Sharpening to apply to image (0 is off, 18 is normal, 24 is max"
 msgstr ""
 
-#: src/main/print-olympus.c:2364 src/main/print-olympus.c:2412
+#: src/main/print-olympus.c:2396 src/main/print-olympus.c:2444
 msgid "Satin"
 msgstr ""
 
-#: src/main/print-olympus.c:2492
+#: src/main/print-olympus.c:2524
 msgid "Sharpening to apply to image (-5 through +5)"
 msgstr ""
 
-#: src/main/print-olympus.c:2497 src/main/print-olympus.c:5381
+#: src/main/print-olympus.c:2529 src/main/print-olympus.c:5413
 #, fuzzy
 msgid "Matte Intensity"
 msgstr "Eflatun Yoğunluğu"
 
-#: src/main/print-olympus.c:2498
+#: src/main/print-olympus.c:2530
 msgid "Strength of matte lamination pattern (-5 through +5)"
 msgstr ""
 
-#: src/main/print-olympus.c:2682 src/main/print-olympus.c:3113
+#: src/main/print-olympus.c:2714 src/main/print-olympus.c:3145
 #, fuzzy
 msgid "Standard (KP61B)"
 msgstr "Standart"
 
-#: src/main/print-olympus.c:2683 src/main/print-olympus.c:3114
+#: src/main/print-olympus.c:2715 src/main/print-olympus.c:3146
 msgid "High Density (KP65HM)"
 msgstr ""
 
-#: src/main/print-olympus.c:2684 src/main/print-olympus.c:3115
+#: src/main/print-olympus.c:2716 src/main/print-olympus.c:3147
 msgid "High Glossy (KP91HG)"
 msgstr ""
 
-#: src/main/print-olympus.c:2685
+#: src/main/print-olympus.c:2717
 msgid "High Glosy (K95HG)"
 msgstr ""
 
-#: src/main/print-olympus.c:2692
+#: src/main/print-olympus.c:2724
 #, fuzzy
 msgid "Printer-Defined Setting"
 msgstr "Yazıcı Ayarları"
 
-#: src/main/print-olympus.c:2693 src/main/print-olympus.c:3122
+#: src/main/print-olympus.c:2725 src/main/print-olympus.c:3154
 msgid "Table 1"
 msgstr ""
 
-#: src/main/print-olympus.c:2694 src/main/print-olympus.c:3123
+#: src/main/print-olympus.c:2726 src/main/print-olympus.c:3155
 msgid "Table 2"
 msgstr ""
 
-#: src/main/print-olympus.c:2695 src/main/print-olympus.c:3124
+#: src/main/print-olympus.c:2727 src/main/print-olympus.c:3156
 msgid "Table 3"
 msgstr ""
 
-#: src/main/print-olympus.c:2696 src/main/print-olympus.c:3125
+#: src/main/print-olympus.c:2728 src/main/print-olympus.c:3157
 msgid "Table 4"
 msgstr ""
 
-#: src/main/print-olympus.c:2697 src/main/print-olympus.c:3126
+#: src/main/print-olympus.c:2729 src/main/print-olympus.c:3158
 msgid "Table 5"
 msgstr ""
 
-#: src/main/print-olympus.c:2698
+#: src/main/print-olympus.c:2730
 msgid "Use LUT"
 msgstr ""
 
-#: src/main/print-olympus.c:2705
+#: src/main/print-olympus.c:2737
 msgid "Low"
 msgstr ""
 
-#: src/main/print-olympus.c:2706 src/main/print-pcl.c:287
+#: src/main/print-olympus.c:2738 src/main/print-pcl.c:287
 #: src/main/generic-options.c:35 src/xml/xmli18n-tmp.h:3492
 #: src/xml/xmli18n-tmp.h:3500 src/xml/xmli18n-tmp.h:3508
 #: src/xml/xmli18n-tmp.h:3517 src/xml/xmli18n-tmp.h:3526
@@ -2502,260 +2502,260 @@ msgstr ""
 msgid "High"
 msgstr "Yüksek"
 
-#: src/main/print-olympus.c:2712
+#: src/main/print-olympus.c:2744
 #, fuzzy
 msgid "Paper Save"
 msgstr "Kağıt Boyutu"
 
-#: src/main/print-olympus.c:2713
+#: src/main/print-olympus.c:2745
 #, fuzzy
 msgid "4mm"
 msgstr "mm"
 
-#: src/main/print-olympus.c:2714
+#: src/main/print-olympus.c:2746
 #, fuzzy
 msgid "5mm"
 msgstr "mm"
 
-#: src/main/print-olympus.c:2715
+#: src/main/print-olympus.c:2747
 #, fuzzy
 msgid "6mm"
 msgstr "mm"
 
-#: src/main/print-olympus.c:2716
+#: src/main/print-olympus.c:2748
 #, fuzzy
 msgid "7mm"
 msgstr "mm"
 
-#: src/main/print-olympus.c:2717
+#: src/main/print-olympus.c:2749
 #, fuzzy
 msgid "8mm"
 msgstr "mm"
 
-#: src/main/print-olympus.c:2724 src/gutenprintui2/panel.c:2072
+#: src/main/print-olympus.c:2756 src/gutenprintui2/panel.c:2072
 msgid "Printer Settings"
 msgstr "Yazıcı Ayarları"
 
-#: src/main/print-olympus.c:2725 src/escputil/escputil.c:1699
+#: src/main/print-olympus.c:2757 src/escputil/escputil.c:1699
 #: src/escputil/escputil.c:1726 src/escputil/escputil.c:1748
 #: src/escputil/escputil.c:1765 src/escputil/escputil.c:1782
 #: src/escputil/escputil.c:1796
 msgid "Date"
 msgstr "Tarih"
 
-#: src/main/print-olympus.c:2726
+#: src/main/print-olympus.c:2758
 msgid "Date and Time"
 msgstr ""
 
-#: src/main/print-olympus.c:2733 src/main/print-olympus.c:2734
-#: src/main/print-olympus.c:3133 src/main/print-olympus.c:3134
+#: src/main/print-olympus.c:2765 src/main/print-olympus.c:2766
+#: src/main/print-olympus.c:3165 src/main/print-olympus.c:3166
 #, fuzzy
 msgid "Printer Gamma Correction"
 msgstr "Yazdırma Yönetimi"
 
-#: src/main/print-olympus.c:2739 src/main/print-olympus.c:2740
-#: src/main/print-olympus.c:3139 src/main/print-olympus.c:3140
+#: src/main/print-olympus.c:2771 src/main/print-olympus.c:2772
+#: src/main/print-olympus.c:3171 src/main/print-olympus.c:3172
 #, fuzzy
 msgid "Printer Buzzer"
 msgstr "Yazıcı Kuyruğu:"
 
-#: src/main/print-olympus.c:2745 src/main/print-olympus.c:2746
+#: src/main/print-olympus.c:2777 src/main/print-olympus.c:2778
 msgid "Media Cut Length"
 msgstr ""
 
-#: src/main/print-olympus.c:2751 src/main/print-olympus.c:2752
-#: src/main/print-olympus.c:3151 src/main/print-olympus.c:3152
+#: src/main/print-olympus.c:2783 src/main/print-olympus.c:2784
+#: src/main/print-olympus.c:3183 src/main/print-olympus.c:3184
 #, fuzzy
 msgid "Generate Comment"
 msgstr "Yazıcı Özellikleri"
 
-#: src/main/print-olympus.c:2757 src/main/print-olympus.c:2758
-#: src/main/print-olympus.c:3157 src/main/print-olympus.c:3158
+#: src/main/print-olympus.c:2789 src/main/print-olympus.c:2790
+#: src/main/print-olympus.c:3189 src/main/print-olympus.c:3190
 msgid "Clear Memory"
 msgstr ""
 
-#: src/main/print-olympus.c:2763 src/main/print-olympus.c:2764
-#: src/main/print-olympus.c:3163 src/main/print-olympus.c:3164
+#: src/main/print-olympus.c:2795 src/main/print-olympus.c:2796
+#: src/main/print-olympus.c:3195 src/main/print-olympus.c:3196
 msgid "Continuous Printing"
 msgstr ""
 
-#: src/main/print-olympus.c:2770 src/main/print-olympus.c:3170
+#: src/main/print-olympus.c:2802 src/main/print-olympus.c:3202
 #, fuzzy
 msgid "Printer Brightness Adjustment"
 msgstr "CD Yatay İnce Ayarı"
 
-#: src/main/print-olympus.c:2776 src/main/print-olympus.c:3176
+#: src/main/print-olympus.c:2808 src/main/print-olympus.c:3208
 #, fuzzy
 msgid "Printer Contrast Adjustment"
 msgstr "Doğrusal Karşıtlık Düzeni"
 
-#: src/main/print-olympus.c:2781 src/main/print-olympus.c:3187
+#: src/main/print-olympus.c:2813 src/main/print-olympus.c:3219
 msgid "User Comment"
 msgstr ""
 
-#: src/main/print-olympus.c:2782
+#: src/main/print-olympus.c:2814
 msgid ""
 "User-specified comment (0-34 characters from 0x20->0x7E), null terminated if "
 "under 34 characters long"
 msgstr ""
 
-#: src/main/print-olympus.c:2895
+#: src/main/print-olympus.c:2927
 #, fuzzy
 msgid "StpUserComment must be between 0 and 34 bytes!\n"
 msgstr "%s, %f ve %f sınırları arasında olmalı\n"
 
-#: src/main/print-olympus.c:3145 src/main/print-olympus.c:3146
+#: src/main/print-olympus.c:3177 src/main/print-olympus.c:3178
 #, fuzzy
 msgid "Paper Saving Mode"
 msgstr "Yazdırma Kipi"
 
-#: src/main/print-olympus.c:3182
+#: src/main/print-olympus.c:3214
 msgid "Sharpening to apply to image (1 is soft, 1 is normal, 2 is hard"
 msgstr ""
 
-#: src/main/print-olympus.c:3188
+#: src/main/print-olympus.c:3220
 msgid ""
 "User-specified comment (0-40 characters from 0x20->0x7E), null terminated if "
 "under 40 characters long"
 msgstr ""
 
-#: src/main/print-olympus.c:3296
+#: src/main/print-olympus.c:3328
 #, fuzzy
 msgid "StpUserComment must be between 0 and 40 bytes!\n"
 msgstr "%s, %f ve %f sınırları arasında olmalı\n"
 
-#: src/main/print-olympus.c:3750
+#: src/main/print-olympus.c:3782
 #, fuzzy
 msgid "High Contrast"
 msgstr "Karşıtlık"
 
-#: src/main/print-olympus.c:3757 src/main/print-olympus.c:3758
+#: src/main/print-olympus.c:3789 src/main/print-olympus.c:3790
 #, fuzzy
 msgid "Printer Contrast"
 msgstr "Yazıcı Özellikleri"
 
-#: src/main/print-olympus.c:3867 src/main/print-olympus.c:4194
-#: src/main/print-olympus.c:4436 src/main/print-olympus.c:4726
-#: src/main/print-olympus.c:4899
+#: src/main/print-olympus.c:3899 src/main/print-olympus.c:4226
+#: src/main/print-olympus.c:4468 src/main/print-olympus.c:4758
+#: src/main/print-olympus.c:4931
 msgid "Fine"
 msgstr ""
 
-#: src/main/print-olympus.c:3868 src/main/print-olympus.c:4195
-#: src/main/print-olympus.c:4437
+#: src/main/print-olympus.c:3900 src/main/print-olympus.c:4227
+#: src/main/print-olympus.c:4469
 #, fuzzy
 msgid "Super Fine"
 msgstr "Süper A0"
 
-#: src/main/print-olympus.c:3869
+#: src/main/print-olympus.c:3901
 msgid "Fine Deep"
 msgstr ""
 
-#: src/main/print-olympus.c:3876 src/main/print-olympus.c:3877
-#: src/main/print-olympus.c:4445 src/main/print-olympus.c:4446
-#: src/main/print-olympus.c:4907 src/main/print-olympus.c:4908
-#: src/main/print-olympus.c:5376 src/main/print-olympus.c:6635
-#: src/main/print-olympus.c:6636
+#: src/main/print-olympus.c:3908 src/main/print-olympus.c:3909
+#: src/main/print-olympus.c:4477 src/main/print-olympus.c:4478
+#: src/main/print-olympus.c:4939 src/main/print-olympus.c:4940
+#: src/main/print-olympus.c:5408 src/main/print-olympus.c:6667
+#: src/main/print-olympus.c:6668
 #, fuzzy
 msgid "Print Speed"
 msgstr "Yazma Yöntemi"
 
-#: src/main/print-olympus.c:4438 src/main/print-olympus.c:4727
-#: src/main/print-olympus.c:4900
+#: src/main/print-olympus.c:4470 src/main/print-olympus.c:4759
+#: src/main/print-olympus.c:4932
 #, fuzzy
 msgid "Ultra Fine"
 msgstr "Mat Kağıt"
 
-#: src/main/print-olympus.c:4452 src/main/print-olympus.c:4913
+#: src/main/print-olympus.c:4484 src/main/print-olympus.c:4945
 #, fuzzy
 msgid "Internal Color Correction"
 msgstr "Renk Düzeltme"
 
-#: src/main/print-olympus.c:4453 src/main/print-olympus.c:4914
+#: src/main/print-olympus.c:4485 src/main/print-olympus.c:4946
 #, fuzzy
 msgid "Use Internal Color Correction"
 msgstr "Renk Düzeltme"
 
-#: src/main/print-olympus.c:4459 src/main/print-olympus.c:4920
+#: src/main/print-olympus.c:4491 src/main/print-olympus.c:4952
 msgid "Sharpening to apply to image (0 is off, 1 is min, 9 is max"
 msgstr ""
 
-#: src/main/print-olympus.c:4925
+#: src/main/print-olympus.c:4957
 msgid "Combo Print Wait Time"
 msgstr ""
 
-#: src/main/print-olympus.c:4926
+#: src/main/print-olympus.c:4958
 msgid "How many seconds to wait for a second print before starting"
 msgstr ""
 
-#: src/main/print-olympus.c:5230 src/main/print-olympus.c:5355
-#: src/main/print-olympus.c:5366 src/main/print-olympus.c:5686
+#: src/main/print-olympus.c:5262 src/main/print-olympus.c:5387
+#: src/main/print-olympus.c:5398 src/main/print-olympus.c:5718
 msgid "Printer Default"
 msgstr "Varsayılan Yazıcı"
 
-#: src/main/print-olympus.c:5232 src/main/print-olympus.c:5357
+#: src/main/print-olympus.c:5264 src/main/print-olympus.c:5389
 #, fuzzy
 msgid "Glossy Fine"
 msgstr "Parlak Film"
 
-#: src/main/print-olympus.c:5234 src/main/print-olympus.c:5359
-#: src/main/print-olympus.c:6336
+#: src/main/print-olympus.c:5266 src/main/print-olympus.c:5391
+#: src/main/print-olympus.c:6368
 #, fuzzy
 msgid "Matte Fine"
 msgstr "Mat Kağıt"
 
-#: src/main/print-olympus.c:5235
+#: src/main/print-olympus.c:5267
 #, fuzzy
 msgid "Extra Glossy"
 msgstr "Kuşe"
 
-#: src/main/print-olympus.c:5236
+#: src/main/print-olympus.c:5268
 #, fuzzy
 msgid "Extra Glossy Fine"
 msgstr "Parlak Film"
 
-#: src/main/print-olympus.c:5368 src/xml/xmli18n-tmp.h:3487
+#: src/main/print-olympus.c:5400 src/xml/xmli18n-tmp.h:3487
 msgid "On"
 msgstr "Açık"
 
-#: src/main/print-olympus.c:5375
+#: src/main/print-olympus.c:5407
 msgid "Dust Removal"
 msgstr ""
 
-#: src/main/print-olympus.c:5382
+#: src/main/print-olympus.c:5414
 msgid "Strength of matte lamination pattern (-25 through +25)"
 msgstr ""
 
-#: src/main/print-olympus.c:6064
+#: src/main/print-olympus.c:6096
 msgid "Illegal print size selected for roll media!\n"
 msgstr ""
 
-#: src/main/print-olympus.c:6092
+#: src/main/print-olympus.c:6124
 #, fuzzy
 msgid "Roll"
 msgstr "Rulo Besleme"
 
-#: src/main/print-olympus.c:6093
+#: src/main/print-olympus.c:6125
 msgid "Sheet"
 msgstr ""
 
-#: src/main/print-olympus.c:6112
+#: src/main/print-olympus.c:6144
 msgid "Duplex not supported on roll media, switching to sheet media!\n"
 msgstr ""
 
-#: src/main/print-olympus.c:6146
+#: src/main/print-olympus.c:6178
 msgid "Illegal print size selected for sheet media!\n"
 msgstr ""
 
-#: src/main/print-olympus.c:6337
+#: src/main/print-olympus.c:6369
 #, fuzzy
 msgid "Matte Luster"
 msgstr "Mat Kağıt"
 
-#: src/main/print-olympus.c:6627
+#: src/main/print-olympus.c:6659
 msgid "Low Speed"
 msgstr ""
 
-#: src/main/print-olympus.c:6628
+#: src/main/print-olympus.c:6660
 #, fuzzy
 msgid "High Density"
 msgstr "Yoğunluk"
@@ -2764,41 +2764,41 @@ msgstr "Yoğunluk"
 #. better durability of output by covering it with transparent
 #. laminate surface. This surface can be of different patterns:
 #. common are matte, glossy or texture.
-#: src/main/print-olympus.c:8100 src/main/print-olympus.c:8101
+#: src/main/print-olympus.c:8132 src/main/print-olympus.c:8133
 msgid "Laminate Pattern"
 msgstr "Laminant Desen"
 
-#: src/main/print-olympus.c:8124
+#: src/main/print-olympus.c:8156
 msgid "Printer Generates Copies Natively"
 msgstr ""
 
-#: src/main/print-olympus.c:8125
+#: src/main/print-olympus.c:8157
 #, fuzzy
 msgid "Printer Generates Copies"
 msgstr "Yazıcı Özellikleri"
 
-#: src/main/print-olympus.c:8147 src/main/print-olympus.c:8155
-#: src/main/print-olympus.c:8163 src/main/print-olympus.c:8171
+#: src/main/print-olympus.c:8179 src/main/print-olympus.c:8187
+#: src/main/print-olympus.c:8195 src/main/print-olympus.c:8203
 msgid "Output Level Adjustment"
 msgstr "Çıktı Seviyesi Ayarlama"
 
-#: src/main/print-olympus.c:8148
+#: src/main/print-olympus.c:8180
 msgid "Adjust the cyan balance"
 msgstr "Camgöbeği denge ayarı"
 
-#: src/main/print-olympus.c:8156
+#: src/main/print-olympus.c:8188
 msgid "Adjust the magenta balance"
 msgstr "Kırmızımsı mor denge ayarı"
 
-#: src/main/print-olympus.c:8164
+#: src/main/print-olympus.c:8196
 msgid "Adjust the yellow balance"
 msgstr "Sarı denge ayarı"
 
-#: src/main/print-olympus.c:8171
+#: src/main/print-olympus.c:8203
 msgid "Black Balance"
 msgstr "Siyah Dengesi"
 
-#: src/main/print-olympus.c:8172
+#: src/main/print-olympus.c:8204
 msgid "Adjust the black balance"
 msgstr "Siyah dengesini ayarla"
 
@@ -22134,404 +22134,409 @@ msgid "Canon SELPHY CP1200"
 msgstr "Canon SELPHY CP400"
 
 #: src/xml/xmli18n-tmp.h:7225
+#, fuzzy
+msgid "Canon SELPHY CP1300"
+msgstr "Canon SELPHY CP400"
+
+#: src/xml/xmli18n-tmp.h:7226
 msgid "Canon SELPHY ES1"
 msgstr "Canon SELPHY ES1"
 
-#: src/xml/xmli18n-tmp.h:7226
+#: src/xml/xmli18n-tmp.h:7227
 msgid "Canon SELPHY ES2"
 msgstr "Canon SELPHY ES2"
 
-#: src/xml/xmli18n-tmp.h:7227
+#: src/xml/xmli18n-tmp.h:7228
 msgid "Canon SELPHY ES3"
 msgstr "Canon SELPHY ES3"
 
-#: src/xml/xmli18n-tmp.h:7228
+#: src/xml/xmli18n-tmp.h:7229
 msgid "Canon SELPHY ES20"
 msgstr "Canon SELPHY ES20"
 
-#: src/xml/xmli18n-tmp.h:7229
+#: src/xml/xmli18n-tmp.h:7230
 msgid "Canon SELPHY ES30"
 msgstr "Canon SELPHY ES30"
 
-#: src/xml/xmli18n-tmp.h:7230
+#: src/xml/xmli18n-tmp.h:7231
 msgid "Canon SELPHY ES40"
 msgstr "Canon SELPHY ES40"
 
-#: src/xml/xmli18n-tmp.h:7231
+#: src/xml/xmli18n-tmp.h:7232
 msgid "CIAAT Brava 21"
 msgstr ""
 
-#: src/xml/xmli18n-tmp.h:7232
+#: src/xml/xmli18n-tmp.h:7233
 msgid "Citizen CX"
 msgstr ""
 
-#: src/xml/xmli18n-tmp.h:7233
+#: src/xml/xmli18n-tmp.h:7234
 #, fuzzy
 msgid "Citizen CX-02"
 msgstr "Citizen ProJet II"
 
-#: src/xml/xmli18n-tmp.h:7234
+#: src/xml/xmli18n-tmp.h:7235
 msgid "Citizen CX-W"
 msgstr ""
 
-#: src/xml/xmli18n-tmp.h:7235
+#: src/xml/xmli18n-tmp.h:7236
 msgid "Citizen CY"
 msgstr ""
 
-#: src/xml/xmli18n-tmp.h:7236
+#: src/xml/xmli18n-tmp.h:7237
 #, fuzzy
 msgid "Citizen CY-02"
 msgstr "Citizen ProJet II"
 
-#: src/xml/xmli18n-tmp.h:7237
+#: src/xml/xmli18n-tmp.h:7238
 msgid "Citizen CW-01"
 msgstr ""
 
-#: src/xml/xmli18n-tmp.h:7238
+#: src/xml/xmli18n-tmp.h:7239
 msgid "Citizen CW-02"
 msgstr ""
 
-#: src/xml/xmli18n-tmp.h:7239
+#: src/xml/xmli18n-tmp.h:7240
 #, fuzzy
 msgid "Citizen OP900"
 msgstr "Citizen ProJet II"
 
-#: src/xml/xmli18n-tmp.h:7240
+#: src/xml/xmli18n-tmp.h:7241
 #, fuzzy
 msgid "Citizen OP900II"
 msgstr "Citizen ProJet II"
 
-#: src/xml/xmli18n-tmp.h:7241
+#: src/xml/xmli18n-tmp.h:7242
 msgid "Dai Nippon Printing DS40"
 msgstr "Dai Nippon Printing DS40"
 
-#: src/xml/xmli18n-tmp.h:7242
-msgid "Dai Nippon Printing DS80"
-msgstr "Dai Nippon Printing DS80"
-
 #: src/xml/xmli18n-tmp.h:7243
-#, fuzzy
-msgid "Dai Nippon Printing DS80DX"
+msgid "Dai Nippon Printing DS80"
 msgstr "Dai Nippon Printing DS80"
 
 #: src/xml/xmli18n-tmp.h:7244
 #, fuzzy
+msgid "Dai Nippon Printing DS80DX"
+msgstr "Dai Nippon Printing DS80"
+
+#: src/xml/xmli18n-tmp.h:7245
+#, fuzzy
 msgid "Dai Nippon Printing DS620"
 msgstr "Dai Nippon Printing DS40"
 
-#: src/xml/xmli18n-tmp.h:7245
+#: src/xml/xmli18n-tmp.h:7246
 #, fuzzy
 msgid "Dai Nippon Printing DS820"
 msgstr "Dai Nippon Printing DS80"
 
-#: src/xml/xmli18n-tmp.h:7246
+#: src/xml/xmli18n-tmp.h:7247
 #, fuzzy
 msgid "Dai Nippon Printing DSRX1"
 msgstr "Dai Nippon Printing DS40"
 
-#: src/xml/xmli18n-tmp.h:7247
+#: src/xml/xmli18n-tmp.h:7248
 #, fuzzy
 msgid "Dai Nippon Printing SL10"
 msgstr "Dai Nippon Printing DS40"
 
-#: src/xml/xmli18n-tmp.h:7248
+#: src/xml/xmli18n-tmp.h:7249
 #, fuzzy
 msgid "Fujifilm ASK-300"
 msgstr "Fujifilm FinePix-NX-500"
 
-#: src/xml/xmli18n-tmp.h:7249
+#: src/xml/xmli18n-tmp.h:7250
 msgid "Fujifilm FinePix-NX-500"
 msgstr "Fujifilm FinePix-NX-500"
 
-#: src/xml/xmli18n-tmp.h:7250
+#: src/xml/xmli18n-tmp.h:7251
 msgid "Fujifilm Printpix-CX-400"
 msgstr "Fujifilm Printpix-CX-400"
 
-#: src/xml/xmli18n-tmp.h:7251
+#: src/xml/xmli18n-tmp.h:7252
 msgid "Fujifilm Printpix-CX-550"
 msgstr "Fujifilm Printpix-CX-550"
 
-#: src/xml/xmli18n-tmp.h:7252
+#: src/xml/xmli18n-tmp.h:7253
 #, fuzzy
 msgid "Kodak 305"
 msgstr "Kodak 605"
 
-#: src/xml/xmli18n-tmp.h:7253
+#: src/xml/xmli18n-tmp.h:7254
 msgid "Kodak 605"
 msgstr "Kodak 605"
 
-#: src/xml/xmli18n-tmp.h:7254
+#: src/xml/xmli18n-tmp.h:7255
 msgid "Kodak 1400"
 msgstr "Kodak 1400"
 
-#: src/xml/xmli18n-tmp.h:7255
+#: src/xml/xmli18n-tmp.h:7256
 msgid "Kodak 6800"
 msgstr "Kodak 6800"
 
-#: src/xml/xmli18n-tmp.h:7256
+#: src/xml/xmli18n-tmp.h:7257
 msgid "Kodak 6850"
 msgstr "Kodak 6850"
 
-#: src/xml/xmli18n-tmp.h:7257
+#: src/xml/xmli18n-tmp.h:7258
 #, fuzzy
 msgid "Kodak 7000"
 msgstr "Kodak 6800"
 
-#: src/xml/xmli18n-tmp.h:7258
+#: src/xml/xmli18n-tmp.h:7259
 #, fuzzy
 msgid "Kodak 7010"
 msgstr "Kodak 6800"
 
-#: src/xml/xmli18n-tmp.h:7259
+#: src/xml/xmli18n-tmp.h:7260
 #, fuzzy
 msgid "Kodak 7015"
 msgstr "Kodak 605"
 
-#: src/xml/xmli18n-tmp.h:7260
+#: src/xml/xmli18n-tmp.h:7261
 msgid "Kodak 805"
 msgstr "Kodak 805"
 
-#: src/xml/xmli18n-tmp.h:7261
+#: src/xml/xmli18n-tmp.h:7262
 msgid "Kodak 8500"
 msgstr "Kodak 8500"
 
-#: src/xml/xmli18n-tmp.h:7262
+#: src/xml/xmli18n-tmp.h:7263
 #, fuzzy
 msgid "Kodak 8800"
 msgstr "Kodak 9810"
 
-#: src/xml/xmli18n-tmp.h:7263
+#: src/xml/xmli18n-tmp.h:7264
 #, fuzzy
 msgid "Kodak 8810"
 msgstr "Kodak 9810"
 
-#: src/xml/xmli18n-tmp.h:7264
+#: src/xml/xmli18n-tmp.h:7265
 msgid "Kodak 9810"
 msgstr "Kodak 9810"
 
-#: src/xml/xmli18n-tmp.h:7265
+#: src/xml/xmli18n-tmp.h:7266
 msgid "Kodak EasyShare-G600-Printer-Dock"
 msgstr "Kodak EasyShare-G600-Printer-Dock"
 
-#: src/xml/xmli18n-tmp.h:7266
+#: src/xml/xmli18n-tmp.h:7267
 msgid "Kodak Easyshare-Printer-Dock"
 msgstr "Kodak Easyshare-Yazıcı-Yuvası"
 
-#: src/xml/xmli18n-tmp.h:7267
+#: src/xml/xmli18n-tmp.h:7268
 msgid "Kodak PD-4000"
 msgstr "Kodak PD-4000"
 
-#: src/xml/xmli18n-tmp.h:7268
+#: src/xml/xmli18n-tmp.h:7269
 msgid "Kodak PD-6000"
 msgstr "Kodak PD-6000"
 
-#: src/xml/xmli18n-tmp.h:7269
+#: src/xml/xmli18n-tmp.h:7270
 msgid "Kodak Photo-Printer"
 msgstr "Kodak Fotoğraf Yazıcısı"
 
-#: src/xml/xmli18n-tmp.h:7270
+#: src/xml/xmli18n-tmp.h:7271
 msgid "Kodak Photo-Printer-500"
 msgstr "Kodak Photo-Printer-500"
 
-#: src/xml/xmli18n-tmp.h:7271
+#: src/xml/xmli18n-tmp.h:7272
 msgid "Kodak Printer-Dock-Plus"
 msgstr "Kodak Printer-Dock-Plus"
 
-#: src/xml/xmli18n-tmp.h:7272
+#: src/xml/xmli18n-tmp.h:7273
 msgid "Kodak Printer-Dock-Plus-S3"
 msgstr "Kodak Printer-Dock-Plus-S3"
 
-#: src/xml/xmli18n-tmp.h:7273
+#: src/xml/xmli18n-tmp.h:7274
 msgid "Mitsubishi CP-3020D"
 msgstr "Mitsubishi CP-3020D"
 
-#: src/xml/xmli18n-tmp.h:7274
+#: src/xml/xmli18n-tmp.h:7275
 msgid "Mitsubishi CP-3020DA"
 msgstr "Mitsubishi CP-3020DA"
 
-#: src/xml/xmli18n-tmp.h:7275
+#: src/xml/xmli18n-tmp.h:7276
 msgid "Mitsubishi CP-3020DAE"
 msgstr "Mitsubishi CP-3020DAE"
 
-#: src/xml/xmli18n-tmp.h:7276
+#: src/xml/xmli18n-tmp.h:7277
 msgid "Mitsubishi CP-3020DE"
 msgstr "Mitsubishi CP-3020DE"
 
-#: src/xml/xmli18n-tmp.h:7277
+#: src/xml/xmli18n-tmp.h:7278
 msgid "Mitsubishi CP-3020DU"
 msgstr "Mitsubishi CP-3020DU"
 
-#: src/xml/xmli18n-tmp.h:7278
+#: src/xml/xmli18n-tmp.h:7279
 #, fuzzy
 msgid "Mitsubishi CP-3800DW"
 msgstr "Mitsubishi CP-3020D"
 
-#: src/xml/xmli18n-tmp.h:7279
+#: src/xml/xmli18n-tmp.h:7280
 #, fuzzy
 msgid "Mitsubishi CP-9500DW"
 msgstr "Mitsubishi CP-9550DW"
 
-#: src/xml/xmli18n-tmp.h:7280
+#: src/xml/xmli18n-tmp.h:7281
 msgid "Mitsubishi CP-9550D"
 msgstr "Mitsubishi CP-9550D"
 
-#: src/xml/xmli18n-tmp.h:7281
-msgid "Mitsubishi CP-9550DW"
-msgstr "Mitsubishi CP-9550DW"
-
 #: src/xml/xmli18n-tmp.h:7282
-#, fuzzy
-msgid "Mitsubishi CP-9550DW-S"
+msgid "Mitsubishi CP-9550DW"
 msgstr "Mitsubishi CP-9550DW"
 
 #: src/xml/xmli18n-tmp.h:7283
 #, fuzzy
+msgid "Mitsubishi CP-9550DW-S"
+msgstr "Mitsubishi CP-9550DW"
+
+#: src/xml/xmli18n-tmp.h:7284
+#, fuzzy
 msgid "Mitsubishi CP-9550DZ"
 msgstr "Mitsubishi CP-9550D"
 
-#: src/xml/xmli18n-tmp.h:7284
+#: src/xml/xmli18n-tmp.h:7285
 #, fuzzy
 msgid "Mitsubishi CP-9600DW"
 msgstr "Mitsubishi CP-9550DW"
 
-#: src/xml/xmli18n-tmp.h:7285
+#: src/xml/xmli18n-tmp.h:7286
 #, fuzzy
 msgid "Mitsubishi CP-9800D"
 msgstr "Mitsubishi CP-9810D"
 
-#: src/xml/xmli18n-tmp.h:7286
+#: src/xml/xmli18n-tmp.h:7287
 #, fuzzy
 msgid "Mitsubishi CP-9800DW"
 msgstr "Mitsubishi CP-9810DW"
 
-#: src/xml/xmli18n-tmp.h:7287
+#: src/xml/xmli18n-tmp.h:7288
 #, fuzzy
 msgid "Mitsubishi CP-9800DW-S"
 msgstr "Mitsubishi CP-9550DW"
 
-#: src/xml/xmli18n-tmp.h:7288
+#: src/xml/xmli18n-tmp.h:7289
 #, fuzzy
 msgid "Mitsubishi CP-9800DZ"
 msgstr "Mitsubishi CP-9810D"
 
-#: src/xml/xmli18n-tmp.h:7289
+#: src/xml/xmli18n-tmp.h:7290
 msgid "Mitsubishi CP-9810D"
 msgstr "Mitsubishi CP-9810D"
 
-#: src/xml/xmli18n-tmp.h:7290
+#: src/xml/xmli18n-tmp.h:7291
 msgid "Mitsubishi CP-9810DW"
 msgstr "Mitsubishi CP-9810DW"
 
-#: src/xml/xmli18n-tmp.h:7291
+#: src/xml/xmli18n-tmp.h:7292
 #, fuzzy
 msgid "Mitsubishi CP-D80DW"
 msgstr "Mitsubishi CP-D70DW"
 
-#: src/xml/xmli18n-tmp.h:7292
+#: src/xml/xmli18n-tmp.h:7293
 #, fuzzy
 msgid "Mitsubishi CP-D90DW"
 msgstr "Mitsubishi CP-D70DW"
 
-#: src/xml/xmli18n-tmp.h:7293
+#: src/xml/xmli18n-tmp.h:7294
 msgid "Mitsubishi CP-D70DW"
 msgstr "Mitsubishi CP-D70DW"
 
-#: src/xml/xmli18n-tmp.h:7294
+#: src/xml/xmli18n-tmp.h:7295
 msgid "Mitsubishi CP-D707DW"
 msgstr "Mitsubishi CP-D707DW"
 
-#: src/xml/xmli18n-tmp.h:7295
+#: src/xml/xmli18n-tmp.h:7296
 #, fuzzy
 msgid "Mitsubishi CP-K60DW-S"
 msgstr "Mitsubishi CP-K60DW"
 
-#: src/xml/xmli18n-tmp.h:7296
+#: src/xml/xmli18n-tmp.h:7297
 #, fuzzy
 msgid "Mitsubishi P93D"
 msgstr "Mitsubishi CP-3020D"
 
-#: src/xml/xmli18n-tmp.h:7297
+#: src/xml/xmli18n-tmp.h:7298
 #, fuzzy
 msgid "Mitsubishi P95D"
 msgstr "Mitsubishi CP-9550D"
 
-#: src/xml/xmli18n-tmp.h:7298
+#: src/xml/xmli18n-tmp.h:7299
 #, fuzzy
 msgid "Shinko CHC-S1245"
 msgstr "Shinko CHC-S2145"
 
-#: src/xml/xmli18n-tmp.h:7299
-msgid "Shinko CHC-S2145"
-msgstr "Shinko CHC-S2145"
-
 #: src/xml/xmli18n-tmp.h:7300
-#, fuzzy
-msgid "Shinko CHC-S6145"
+msgid "Shinko CHC-S2145"
 msgstr "Shinko CHC-S2145"
 
 #: src/xml/xmli18n-tmp.h:7301
 #, fuzzy
-msgid "Shinko CHC-S6245"
+msgid "Shinko CHC-S6145"
 msgstr "Shinko CHC-S2145"
 
 #: src/xml/xmli18n-tmp.h:7302
+#, fuzzy
+msgid "Shinko CHC-S6245"
+msgstr "Shinko CHC-S2145"
+
+#: src/xml/xmli18n-tmp.h:7303
 msgid "Shinko CHC-S9045"
 msgstr "Shinko CHC-S9045"
 
-#: src/xml/xmli18n-tmp.h:7303
+#: src/xml/xmli18n-tmp.h:7304
 #, fuzzy
 msgid "Sinfonia CHC-S1245/E1"
 msgstr "Sinfonia CHC-S2145"
 
-#: src/xml/xmli18n-tmp.h:7304
+#: src/xml/xmli18n-tmp.h:7305
 #, fuzzy
 msgid "Sinfonia CHC-S6145/CS2"
 msgstr "Sinfonia CHC-S2145"
 
-#: src/xml/xmli18n-tmp.h:7305
+#: src/xml/xmli18n-tmp.h:7306
 #, fuzzy
 msgid "Sinfonia CHC-S6245/CE1"
 msgstr "Sinfonia CHC-S2145"
 
-#: src/xml/xmli18n-tmp.h:7306
+#: src/xml/xmli18n-tmp.h:7307
 #, fuzzy
 msgid "Sinfonia S2145/S2"
 msgstr "Sinfonia CHC-S2145"
 
-#: src/xml/xmli18n-tmp.h:7307
+#: src/xml/xmli18n-tmp.h:7308
 msgid "Sony UP-DP10"
 msgstr "Sony UP-DP10"
 
-#: src/xml/xmli18n-tmp.h:7308
+#: src/xml/xmli18n-tmp.h:7309
 msgid "Sony UP-DR150"
 msgstr "Sony UP-DR150"
 
-#: src/xml/xmli18n-tmp.h:7309
+#: src/xml/xmli18n-tmp.h:7310
 msgid "Sony DPP-EX5"
 msgstr "Sony DPP-EX5"
 
-#: src/xml/xmli18n-tmp.h:7310
+#: src/xml/xmli18n-tmp.h:7311
 msgid "Sony DPP-EX7"
 msgstr "Sony DPP-EX7"
 
-#: src/xml/xmli18n-tmp.h:7311
+#: src/xml/xmli18n-tmp.h:7312
 msgid "Sony UP-DR100"
 msgstr "Sony UP-DR100"
 
-#: src/xml/xmli18n-tmp.h:7312
+#: src/xml/xmli18n-tmp.h:7313
 msgid "Sony UP-DR200"
 msgstr "Sony UP-DR200"
 
-#: src/xml/xmli18n-tmp.h:7313
+#: src/xml/xmli18n-tmp.h:7314
 #, fuzzy
 msgid "Sony UP-CR10L"
 msgstr "Sony UP-DR150"
 
-#: src/xml/xmli18n-tmp.h:7314
+#: src/xml/xmli18n-tmp.h:7315
 msgid "RAW DATA 16 bit"
 msgstr "SAF VERİ 16 bit"
 
-#: src/xml/xmli18n-tmp.h:7315
+#: src/xml/xmli18n-tmp.h:7316
 msgid "RAW DATA 8 bit"
 msgstr "SAF VERİ 8 bit"
 

@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.2.15-pre1!  Please read these notes carefully.
+Welcome to Gutenprint 5.2.15-pre2!  Please read these notes carefully.
 
 *** NOTE TO PACKAGERS: Please read the file README.package for issues
     that are of interest to distributors and packagers of Gutenprint.
@@ -112,7 +112,7 @@ A) OVERVIEW
 	gimp-print-devel@lists.sourceforge.net
 
 	================================================================
-	  Release: gutenprint 5.2.14 generated on 06 Apr 2018
+	  Release: gutenprint 5.2.15-pre2 generated on 16 May 2019
 
 	  Features:
 	    Build CUPS:                                 yes, installing in /usr
@@ -140,14 +140,14 @@ A) OVERVIEW
 	  General configuration:
 	    Compiler options:                           -Disfinite=finite  -O6  -Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wwrite-strings -Werror-implicit-function-declaration -Winline -Wformat=2 -finline-limit=131072 -D_POSIX_C_SOURCE=200809L -std=c99 -pedantic -Waggregate-return -Wcast-qual -Wshadow -Wredundant-decls
 	    Build static libraries:                     yes
-	    Build shared libraries:                     no
+	    Build shared libraries:                     yes
 	    Maintainer mode:                            yes
 	    Use i18n:                                   yes
 	    Generate profiling information:             no
 	    Generate debugging symbols:                 no
 	    Use modules:                                static
 	    Use readline libraries:                     yes, extra arguments: -lncurses
-	    uname -a output:                            Linux rlk-mobile.rlk 4.4.92-31-default #1 SMP Sun Oct 22 06:56:24 UTC 2017 (1d80e8a) x86_64 x86_64 x86_64 GNU/Linux
+	    uname -a output:                            Linux dsl092-065-009 4.12.14-lp150.12.58-default #1 SMP Mon Apr 1 15:20:46 UTC 2019 (58fcc15) x86_64 x86_64 x86_64 GNU/Linux
 	================================================================
 
     The CUPS and GIMP components require that the appropriate packages
