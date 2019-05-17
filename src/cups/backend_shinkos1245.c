@@ -1,7 +1,7 @@
 /*
  *   Shinko/Sinfonia CHC-S1245 CUPS backend -- libusb-1.0 version
  *
- *   (c) 2015-2018 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2015-2019 Solomon Peachy <pizza@shaftnet.org>
  *
  *   Low-level documentation was provided by Sinfonia, Inc.  Thank you!
  *
@@ -41,46 +41,7 @@
 #define BACKEND shinkos1245_backend
 
 #include "backend_common.h"
-
-/* Structure of printjob header.  All fields are LITTLE ENDIAN */
-struct s1245_printjob_hdr {
-	uint32_t len1;   /* Fixed at 0x10 */
-	uint32_t model;  /* Equal to the printer model (eg '1245' or '2145' decimal) */
-	uint32_t unk2;   /* Null */
-	uint32_t unk3;   /* Fixed at 0x01 */
-
-	uint32_t len2;   /* Fixed at 0x64 */
-	uint32_t unk5;   /* Null */
-	uint32_t media;  /* Fixed at 0x10 */
-	uint32_t unk6;   /* Null */
-
-	uint32_t method; /* Print Method */
-	uint32_t mode;   /* Print Mode */
-	uint32_t unk7;   /* Null */
-	 int32_t mattedepth; /* 0x7fffffff for glossy, 0x00 +- 25 for matte */
-
-	uint32_t dust;   /* Dust control */
-	uint32_t columns;
-	uint32_t rows;
-	uint32_t copies;
-
-	uint32_t unk10;  /* Null */
-	uint32_t unk11;  /* Null */
-	uint32_t unk12;  /* Null */
-	uint32_t unk13;  /* 0xceffffff */
-
-	uint32_t unk14;  /* Null */
-	uint32_t unk15;  /* 0xceffffff */
-	uint32_t dpi; /* Fixed at '300' (decimal) */
-	uint32_t unk16;  /* 0xceffffff */
-
-	uint32_t unk17;  /* Null */
-	uint32_t unk18;  /* 0xceffffff */
-	uint32_t unk19;  /* Null */
-	uint32_t unk20;  /* Null */
-
-	uint32_t unk21;  /* Null */
-} __attribute__((packed));
+#include "backend_sinfonia.h"
 
 /* Printer data structures */
 struct shinkos1245_cmd_hdr {
@@ -166,127 +127,11 @@ struct shinkos1245_resp_status {
 	uint8_t curve_status;
 } __attribute__((packed));
 
-enum {
-	CMD_CODE_OK = 1,
-	CMD_CODE_BAD = 2,
-};
-
-enum {
-	STATUS_PRINTING = 1,
-	STATUS_IDLE = 2,
-};
-
-enum {
-	STATE_STATUS1_STANDBY = 1,
-	STATE_STATUS1_ERROR = 2,
-	STATE_STATUS1_WAIT = 3,
-};
-
-#define STATE_STANDBY_STATUS2 0x0
-
-enum {
-	WAIT_STATUS2_INIT = 0,
-	WAIT_STATUS2_RIBBON = 1,
-	WAIT_STATUS2_THERMAL = 2,
-	WAIT_STATUS2_OPERATING = 3,
-	WAIT_STATUS2_BUSY = 4,
-};
-
-
-#define ERROR_STATUS2_CTRL_CIRCUIT   (0x80000000)
-#define ERROR_STATUS2_MECHANISM_CTRL (0x40000000)
-#define ERROR_STATUS2_SENSOR         (0x00002000)
-#define ERROR_STATUS2_COVER_OPEN     (0x00001000)
-#define ERROR_STATUS2_TEMP_SENSOR    (0x00000200)
-#define ERROR_STATUS2_PAPER_JAM      (0x00000100)
-#define ERROR_STATUS2_PAPER_EMPTY    (0x00000040)
-#define ERROR_STATUS2_RIBBON_ERR     (0x00000010)
-
-enum {
-	CTRL_CIR_ERROR_EEPROM1  = 0x01,
-	CTRL_CIR_ERROR_EEPROM2  = 0x02,
-	CTRL_CIR_ERROR_DSP      = 0x04,
-	CTRL_CIR_ERROR_CRC_MAIN = 0x06,
-	CTRL_CIR_ERROR_DL_MAIN  = 0x07,
-	CTRL_CIR_ERROR_CRC_DSP  = 0x08,
-	CTRL_CIR_ERROR_DL_DSP   = 0x09,
-	CTRL_CIR_ERROR_ASIC     = 0x0a,
-	CTRL_CIR_ERROR_DRAM     = 0x0b,
-	CTRL_CIR_ERROR_DSPCOMM  = 0x29,
-};
-
-enum {
-	MECH_ERROR_HEAD_UP            = 0x01,
-	MECH_ERROR_HEAD_DOWN          = 0x02,
-	MECH_ERROR_MAIN_PINCH_UP      = 0x03,
-	MECH_ERROR_MAIN_PINCH_DOWN    = 0x04,
-	MECH_ERROR_SUB_PINCH_UP       = 0x05,
-	MECH_ERROR_SUB_PINCH_DOWN     = 0x06,
-	MECH_ERROR_FEEDIN_PINCH_UP    = 0x07,
-	MECH_ERROR_FEEDIN_PINCH_DOWN  = 0x08,
-	MECH_ERROR_FEEDOUT_PINCH_UP   = 0x09,
-	MECH_ERROR_FEEDOUT_PINCH_DOWN = 0x0a,
-	MECH_ERROR_CUTTER_LR          = 0x0b,
-	MECH_ERROR_CUTTER_RL          = 0x0c,
-};
-
-enum {
-	SENSOR_ERROR_CUTTER           = 0x05,
-	SENSOR_ERROR_HEAD_DOWN        = 0x09,
-	SENSOR_ERROR_HEAD_UP          = 0x0a,
-	SENSOR_ERROR_MAIN_PINCH_DOWN  = 0x0b,
-	SENSOR_ERROR_MAIN_PINCH_UP    = 0x0c,
-	SENSOR_ERROR_FEED_PINCH_DOWN  = 0x0d,
-	SENSOR_ERROR_FEED_PINCH_UP    = 0x0e,
-	SENSOR_ERROR_EXIT_PINCH_DOWN  = 0x0f,
-	SENSOR_ERROR_EXIT_PINCH_UP    = 0x10,
-	SENSOR_ERROR_LEFT_CUTTER      = 0x11,
-	SENSOR_ERROR_RIGHT_CUTTER     = 0x12,
-	SENSOR_ERROR_CENTER_CUTTER    = 0x13,
-	SENSOR_ERROR_UPPER_CUTTER     = 0x14,
-	SENSOR_ERROR_PAPER_FEED_COVER = 0x15,
-};
-
-enum {
-	TEMP_SENSOR_ERROR_HEAD_HIGH = 0x01,
-	TEMP_SENSOR_ERROR_HEAD_LOW  = 0x02,
-	TEMP_SENSOR_ERROR_ENV_HIGH  = 0x03,
-	TEMP_SENSOR_ERROR_ENV_LOW   = 0x04,
-};
-
-enum {
-	COVER_OPEN_ERROR_UPPER = 0x01,
-	COVER_OPEN_ERROR_LOWER = 0x02,
-};
-
-enum {
-	PAPER_EMPTY_ERROR = 0x00,
-};
-
-enum {
-	RIBBON_ERROR = 0x00,
-};
-
-enum {
-	CURVE_TABLE_STATUS_INITIAL = 0x00,
-	CURVE_TABLE_STATUS_USERSET = 0x01,
-	CURVE_TABLE_STATUS_CURRENT = 0x02,
-};
-
 /* Query media info */
 struct shinkos1245_cmd_getmedia {
 	struct shinkos1245_cmd_hdr hdr;
 	uint8_t cmd[1];   /* 0x1a/0x2a/0x3a for A/B/C */
 	uint8_t pad[10];
-} __attribute__((packed));
-
-struct shinkos1245_mediadesc {
-	uint8_t  code;  /* Fixed at 0x10 */
-	uint16_t columns; /* BE */
-	uint16_t rows;    /* BE */
-	uint8_t  type;       /* MEDIA_TYPE_* */
-	uint8_t  print_type; /* aka "print method" in the spool file */
-	uint8_t  reserved[3];
 } __attribute__((packed));
 
 #define NUM_MEDIAS 5 /* Maximum per message */
@@ -295,13 +140,9 @@ struct shinkos1245_resp_media {
 	uint8_t  code;
 	uint8_t  reserved[6];
 	uint8_t  count;  /* 1-5? */
-	struct shinkos1245_mediadesc data[NUM_MEDIAS];
+	struct sinfonia_mediainfo_item data[NUM_MEDIAS];
 } __attribute__((packed));
 
-enum {
-	MEDIA_TYPE_UNKNOWN = 0x00,
-	MEDIA_TYPE_PAPER = 0x01,
-};
 
 enum {
 	PRINT_TYPE_STANDARD = 0x00,
@@ -359,7 +200,6 @@ enum {
 	PARAM_TABLE_FINE = 2,
 };
 
-#define TONE_CURVE_SIZE 1536
 #define TONE_CURVE_DATA_BLOCK_SIZE 64
 
 /* Query Model information */
@@ -400,15 +240,9 @@ struct shinkos1245_resp_matte {
 } __attribute__((packed));
 
 #define MATTE_MODE_MATTE 0x00
+#define MAX_MEDIA_ITEMS 15
 
 /* Private data structure */
-struct shinkos1245_printjob {
-	uint8_t *databuf;
-	int datalen;
-
-	int copies;
-};
-
 struct shinkos1245_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;
@@ -417,9 +251,7 @@ struct shinkos1245_ctx {
 
 	uint8_t jobid;
 
-	struct s1245_printjob_hdr hdr;
-
-	struct shinkos1245_mediadesc medias[15];
+	struct sinfonia_mediainfo_item medias[MAX_MEDIA_ITEMS];
 	int num_medias;
 	int media_8x12;
 
@@ -493,6 +325,9 @@ static int shinkos1245_get_status(struct shinkos1245_ctx *ctx,
 		return -99;
 	}
 
+	/* Byteswap important stuff */
+        resp->state.status2 = be32_to_cpu(resp->state.status2);
+
 	return 0;
 }
 
@@ -527,7 +362,7 @@ static int shinkos1245_get_media(struct shinkos1245_ctx *ctx)
 			ctx->medias[ctx->num_medias].columns = be16_to_cpu(resp.data[j].columns);
 			ctx->medias[ctx->num_medias].rows = be16_to_cpu(resp.data[j].rows);
 			ctx->medias[ctx->num_medias].type = resp.data[j].type;
-			ctx->medias[ctx->num_medias].print_type = resp.data[j].print_type;
+			ctx->medias[ctx->num_medias].method = resp.data[j].method;
 			ctx->num_medias++;
 
 			if (ctx->medias[i].rows >= 3636)
@@ -697,153 +532,6 @@ static int shinkos1245_get_matte(struct shinkos1245_ctx *ctx,
 	return 0;
 }
 
-
-/* Structure dumps */
-static char *shinkos1245_status_str(struct shinkos1245_resp_status *resp)
-{
-	switch(resp->state.status1) {
-	case STATE_STATUS1_STANDBY:
-		return "Standby (Ready)";
-	case STATE_STATUS1_WAIT:
-		switch (resp->state.status2) {
-		case WAIT_STATUS2_INIT:
-			return "Wait (Initializing)";
-		case WAIT_STATUS2_RIBBON:
-			return "Wait (Ribbon Winding)";
-		case WAIT_STATUS2_THERMAL:
-			return "Wait (Thermal Protection)";
-		case WAIT_STATUS2_OPERATING:
-			return "Wait (Operating)";
-		case WAIT_STATUS2_BUSY:
-			return "Wait (Busy)";
-		default:
-			return "Wait (Unknown)";
-		}
-	case STATE_STATUS1_ERROR:
-		switch (resp->state.status2) {
-		case ERROR_STATUS2_CTRL_CIRCUIT:
-			switch (resp->state.error) {
-			case CTRL_CIR_ERROR_EEPROM1:
-				return "Error (EEPROM1)";
-			case CTRL_CIR_ERROR_EEPROM2:
-				return "Error (EEPROM2)";
-			case CTRL_CIR_ERROR_DSP:
-				return "Error (DSP)";
-			case CTRL_CIR_ERROR_CRC_MAIN:
-				return "Error (Main CRC)";
-			case CTRL_CIR_ERROR_DL_MAIN:
-				return "Error (Main Download)";
-			case CTRL_CIR_ERROR_CRC_DSP:
-				return "Error (DSP CRC)";
-			case CTRL_CIR_ERROR_DL_DSP:
-				return "Error (DSP Download)";
-			case CTRL_CIR_ERROR_ASIC:
-				return "Error (ASIC)";
-			case CTRL_CIR_ERROR_DRAM:
-				return "Error (DRAM)";
-			case CTRL_CIR_ERROR_DSPCOMM:
-				return "Error (DSP Communincation)";
-			default:
-				return "Error (Unknown Circuit)";
-			}
-		case ERROR_STATUS2_MECHANISM_CTRL:
-			switch (resp->state.error) {
-			case MECH_ERROR_HEAD_UP:
-				return "Error (Head Up Mechanism)";
-			case MECH_ERROR_HEAD_DOWN:
-				return "Error (Head Down Mechanism)";
-			case MECH_ERROR_MAIN_PINCH_UP:
-				return "Error (Main Pinch Up Mechanism)";
-			case MECH_ERROR_MAIN_PINCH_DOWN:
-				return "Error (Main Pinch Down Mechanism)";
-			case MECH_ERROR_SUB_PINCH_UP:
-				return "Error (Sub Pinch Up Mechanism)";
-			case MECH_ERROR_SUB_PINCH_DOWN:
-				return "Error (Sub Pinch Down Mechanism)";
-			case MECH_ERROR_FEEDIN_PINCH_UP:
-				return "Error (Feed-in Pinch Up Mechanism)";
-			case MECH_ERROR_FEEDIN_PINCH_DOWN:
-				return "Error (Feed-in Pinch Down Mechanism)";
-			case MECH_ERROR_FEEDOUT_PINCH_UP:
-				return "Error (Feed-out Pinch Up Mechanism)";
-			case MECH_ERROR_FEEDOUT_PINCH_DOWN:
-				return "Error (Feed-out Pinch Down Mechanism)";
-			case MECH_ERROR_CUTTER_LR:
-				return "Error (Left->Right Cutter)";
-			case MECH_ERROR_CUTTER_RL:
-				return "Error (Right->Left Cutter)";
-			default:
-				return "Error (Unknown Mechanism)";
-			}
-		case ERROR_STATUS2_SENSOR:
-			switch (resp->state.error) {
-			case SENSOR_ERROR_CUTTER:
-				return "Error (Cutter Sensor)";
-			case SENSOR_ERROR_HEAD_DOWN:
-				return "Error (Head Down Sensor)";
-			case SENSOR_ERROR_HEAD_UP:
-				return "Error (Head Up Sensor)";
-			case SENSOR_ERROR_MAIN_PINCH_DOWN:
-				return "Error (Main Pinch Down Sensor)";
-			case SENSOR_ERROR_MAIN_PINCH_UP:
-				return "Error (Main Pinch Up Sensor)";
-			case SENSOR_ERROR_FEED_PINCH_DOWN:
-				return "Error (Feed Pinch Down Sensor)";
-			case SENSOR_ERROR_FEED_PINCH_UP:
-				return "Error (Feed Pinch Up Sensor)";
-			case SENSOR_ERROR_EXIT_PINCH_DOWN:
-				return "Error (Exit Pinch Up Sensor)";
-			case SENSOR_ERROR_EXIT_PINCH_UP:
-				return "Error (Exit Pinch Up Sensor)";
-			case SENSOR_ERROR_LEFT_CUTTER:
-				return "Error (Left Cutter Sensor)";
-			case SENSOR_ERROR_RIGHT_CUTTER:
-				return "Error (Right Cutter Sensor)";
-			case SENSOR_ERROR_CENTER_CUTTER:
-				return "Error (Center Cutter Sensor)";
-			case SENSOR_ERROR_UPPER_CUTTER:
-				return "Error (Upper Cutter Sensor)";
-			case SENSOR_ERROR_PAPER_FEED_COVER:
-				return "Error (Paper Feed Cover)";
-			default:
-				return "Error (Unknown Sensor)";
-			}
-		case ERROR_STATUS2_COVER_OPEN:
-			switch (resp->state.error) {
-			case COVER_OPEN_ERROR_UPPER:
-				return "Error (Upper Cover Open)";
-			case COVER_OPEN_ERROR_LOWER:
-				return "Error (Lower Cover Open)";
-			default:
-				return "Error (Unknown Cover Open)";
-			}
-		case ERROR_STATUS2_TEMP_SENSOR:
-			switch (resp->state.error) {
-			case TEMP_SENSOR_ERROR_HEAD_HIGH:
-				return "Error (Head Temperature High)";
-			case TEMP_SENSOR_ERROR_HEAD_LOW:
-				return "Error (Head Temperature Low)";
-			case TEMP_SENSOR_ERROR_ENV_HIGH:
-				return "Error (Environmental Temperature High)";
-			case TEMP_SENSOR_ERROR_ENV_LOW:
-				return "Error (Environmental Temperature Low)";
-			default:
-				return "Error (Unknown Temperature)";
-			}
-		case ERROR_STATUS2_PAPER_JAM:
-			return "Error (Paper Jam)";
-		case ERROR_STATUS2_PAPER_EMPTY:
-			return "Error (Paper Empty)";
-		case ERROR_STATUS2_RIBBON_ERR:
-			return "Error (Ribbon)";
-		default:
-			return "Error (Unknown)";
-		}
-	default:
-		return "Unknown!";
-	}
-}
-
 static char* shinkos1245_tonecurves(int type, int table)
 {
 	switch (type) {
@@ -897,10 +585,8 @@ static void shinkos1245_dump_status(struct shinkos1245_ctx *ctx,
 	INFO("Printer Status:  %s\n", detail);
 
 	/* Byteswap */
-	sts->state.status2 = be32_to_cpu(sts->state.status2);
-
 	INFO("Printer State: %s # %02x %08x %02x\n",
-	     shinkos1245_status_str(sts),
+	     sinfonia_1x45_status_str(sts->state.status1, sts->state.status2, sts->state.error),
 	     sts->state.status1, sts->state.status2, sts->state.error);
 	INFO("Counters:\n");
 	INFO("\tLifetime     :  %u\n", be32_to_cpu(sts->counters.lifetime));
@@ -944,7 +630,7 @@ static void shinkos1245_dump_status(struct shinkos1245_ctx *ctx,
 	INFO("Tone Curve Status: %s\n", detail);
 }
 
-static void shinkos1245_dump_media(struct shinkos1245_mediadesc *medias,
+static void shinkos1245_dump_media(struct sinfonia_mediainfo_item *medias,
 				   int media_8x12,
 				   int count)
 {
@@ -954,11 +640,12 @@ static void shinkos1245_dump_media(struct shinkos1245_mediadesc *medias,
 	INFO("Supported print sizes: %d\n", count);
 
 	for (i = 0 ; i < count ; i++) {
-		INFO("\t %02x: %04u*%04u (%02x/%02u)\n",
-		     medias[i].print_type,
+		INFO("\t %02d: %04u*%04u (%02x/%02u)\n",
+		     i,
 		     medias[i].columns,
 		     medias[i].rows,
-		     medias[i].type, medias[i].print_type);
+		     medias[i].type,
+		     medias[i].method);
 	}
 }
 
@@ -1313,7 +1000,7 @@ static int shinkos1245_attach(void *vctx, struct libusb_device_handle *dev, int 
 
 static void shinkos1245_cleanup_job(const void *vjob)
 {
-	const struct shinkos1245_printjob *job = vjob;
+	const struct sinfonia_printjob *job = vjob;
 
 	if (job->databuf)
 		free(job->databuf);
@@ -1333,9 +1020,8 @@ static void shinkos1245_teardown(void *vctx) {
 static int shinkos1245_read_parse(void *vctx, const void **vjob, int data_fd, int copies) {
 	struct shinkos1245_ctx *ctx = vctx;
 	int ret;
-	uint8_t tmpbuf[4];
 
-	struct shinkos1245_printjob *job = NULL;
+	struct sinfonia_printjob *job = NULL;
 
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
@@ -1346,88 +1032,18 @@ static int shinkos1245_read_parse(void *vctx, const void **vjob, int data_fd, in
 		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 	memset(job, 0, sizeof(*job));
-	job->copies = copies;
 
-	/* Read in then validate header */
-	ret = read(data_fd, &ctx->hdr, sizeof(ctx->hdr));
-	if (ret < 0) {
-		shinkos1245_cleanup_job(job);
+	/* Common read/parse code */
+	ret = sinfonia_read_parse(data_fd, 1245, job);
+	if (ret) {
+		free(job);
 		return ret;
 	}
-	if (ret != sizeof(ctx->hdr)) {
-		shinkos1245_cleanup_job(job);
-		return CUPS_BACKEND_CANCEL;
-	}
 
-	if (le32_to_cpu(ctx->hdr.len1) != 0x10 ||
-	    le32_to_cpu(ctx->hdr.len2) != 0x64 ||
-	    le32_to_cpu(ctx->hdr.dpi) != 300) {
-		ERROR("Unrecognized header data format!\n");
-		shinkos1245_cleanup_job(job);
-		return CUPS_BACKEND_CANCEL;
-	}
-
-	ctx->hdr.model = le32_to_cpu(ctx->hdr.model);
-
-	if(ctx->hdr.model != 1245) {
-		ERROR("Unrecognized printer (%u)!\n", ctx->hdr.model);
-		shinkos1245_cleanup_job(job);
-		return CUPS_BACKEND_CANCEL;
-	}
-
-	/* Finish byteswapping */
-	ctx->hdr.media = le32_to_cpu(ctx->hdr.media);
-	ctx->hdr.method = le32_to_cpu(ctx->hdr.method);
-	ctx->hdr.mode = le32_to_cpu(ctx->hdr.mode);
-	ctx->hdr.mattedepth = le32_to_cpu(ctx->hdr.mattedepth);
-	ctx->hdr.dust = le32_to_cpu(ctx->hdr.dust);
-	ctx->hdr.columns = le32_to_cpu(ctx->hdr.columns);
-	ctx->hdr.rows = le32_to_cpu(ctx->hdr.rows);
-	ctx->hdr.copies = le32_to_cpu(ctx->hdr.copies);
-
-	/* Allocate space */
-	job->datalen = ctx->hdr.rows * ctx->hdr.columns * 3;
-	job->databuf = malloc(job->datalen);
-	if (!job->databuf) {
-		ERROR("Memory allocation failure!\n");
-		shinkos1245_cleanup_job(job);
-		return CUPS_BACKEND_RETRY_CURRENT;
-	}
-
-	{
-		int remain = job->datalen;
-		uint8_t *ptr = job->databuf;
-		do {
-			ret = read(data_fd, ptr, remain);
-			if (ret < 0) {
-				ERROR("Read failed (%d/%d/%d)\n",
-				      ret, remain, job->datalen);
-				perror("ERROR: Read failed");
-				shinkos1245_cleanup_job(job);
-				return ret;
-			}
-			ptr += ret;
-			remain -= ret;
-		} while (remain);
-	}
-
-	/* Make sure footer is sane too */
-	ret = read(data_fd, tmpbuf, 4);
-	if (ret != 4) {
-		ERROR("Read failed (%d/%d/%d)\n",
-		      ret, 4, 4);
-		perror("ERROR: Read failed");
-		shinkos1245_cleanup_job(job);
-		return ret;
-	}
-	if (tmpbuf[0] != 0x04 ||
-	    tmpbuf[1] != 0x03 ||
-	    tmpbuf[2] != 0x02 ||
-	    tmpbuf[3] != 0x01) {
-		ERROR("Unrecognized footer data format!\n");
-		shinkos1245_cleanup_job(job);
-		return CUPS_BACKEND_FAILED;
-	}
+	if (job->jp.copies > 1)
+		job->copies = job->jp.copies;
+	else
+		job->copies = copies;
 
 	*vjob = job;
 	return CUPS_BACKEND_OK;
@@ -1437,8 +1053,9 @@ static int shinkos1245_main_loop(void *vctx, const void *vjob) {
 	struct shinkos1245_ctx *ctx = vctx;
 	int i, num, last_state = -1, state = S_IDLE;
 	struct shinkos1245_resp_status status1, status2;
+	int copies;
 
-	const struct shinkos1245_printjob *job = vjob;
+	const struct sinfonia_printjob *job = vjob;
 
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
@@ -1449,10 +1066,10 @@ static int shinkos1245_main_loop(void *vctx, const void *vjob) {
 
 	/* Make sure print size is supported */
 	for (i = 0 ; i < ctx->num_medias ; i++) {
-		if (ctx->hdr.media == ctx->medias[i].code &&
-		    ctx->hdr.method == ctx->medias[i].print_type &&
-		    ctx->hdr.rows == ctx->medias[i].rows &&
-		    ctx->hdr.columns == ctx->medias[i].columns)
+		if (job->jp.media == ctx->medias[i].code &&
+		    job->jp.method == ctx->medias[i].method &&
+		    job->jp.rows == ctx->medias[i].rows &&
+		    job->jp.columns == ctx->medias[i].columns)
 			break;
 	}
 	if (i == ctx->num_medias) {
@@ -1501,7 +1118,7 @@ top:
 #if 0 // XXX is this necessary
 		if (status1.state.status1 == STATE_STATUS1_WAIT) {
 			INFO("Printer busy: %s\n",
-			     shinkos1245_status_str(&status1));
+			     sinfonia_1x45_status_str(status1.state.status1, status1.state.status2, status1.state.error));
 			break;
 		}
 #endif
@@ -1528,15 +1145,15 @@ top:
 		struct shinkos1245_cmd_print cmd;
 
 		/* Set matte intensity */
-		if (ctx->hdr.mattedepth != 0x7fffffff) {
+		if (job->jp.mattedepth != 0x7fffffff) {
 			int current = -1;
 			i = shinkos1245_get_matte(ctx, &current);
 			if (i < 0)
-				goto printer_error;
-			if (current != ctx->hdr.mattedepth) {
-				i = shinkos1245_set_matte(ctx, ctx->hdr.mattedepth);
+				goto printer_error2;
+			if (current != job->jp.mattedepth) {
+				i = shinkos1245_set_matte(ctx, job->jp.mattedepth);
 				if (i < 0)
-					goto printer_error;
+					goto printer_error2;
 				if (i > 0) {
 					INFO("Can't set matte intensity when printing in progress...\n");
 					state = S_IDLE;
@@ -1554,16 +1171,17 @@ top:
 
 		cmd.id = ctx->jobid;
 		cmd.count = cpu_to_be16(uint16_to_packed_bcd(copies));
-		cmd.columns = cpu_to_be16(ctx->hdr.columns);
-		cmd.rows = cpu_to_be16(ctx->hdr.rows);
-		cmd.media = ctx->hdr.media;
-		cmd.mode = (ctx->hdr.mode & 0x3f) || ((ctx->hdr.dust & 0x3) << 6);
-		cmd.combo = ctx->hdr.method;
+		cmd.columns = cpu_to_be16(job->jp.columns);
+		cmd.rows = cpu_to_be16(job->jp.rows);
+		cmd.media = job->jp.media;
+		cmd.mode = (job->jp.oc_mode & 0x3f) || ((job->jp.dust & 0x3) << 6);
+		cmd.combo = job->jp.method;
 
 		/* Issue print command */
 		i = shinkos1245_do_cmd(ctx, &cmd, sizeof(cmd),
 				       &status1, sizeof(status1),
 				       &num);
+		status1.state.status2 = be32_to_cpu(status1.state.status2);
 		if (i < 0)
 			goto printer_error;
 
@@ -1614,13 +1232,10 @@ top:
 	return CUPS_BACKEND_OK;
 
 printer_error:
-	/* Byteswap */
-	status1.state.status2 = be32_to_cpu(status1.state.status2);
-
 	ERROR("Printer Error: %s # %02x %08x %02x\n",
-	      shinkos1245_status_str(&status1),
+	      sinfonia_1x45_status_str(status1.state.status1, status1.state.status2, status1.state.error),
 	      status1.state.status1, status1.state.status2, status1.state.error);
-
+printer_error2:
 	return CUPS_BACKEND_FAILED;
 }
 
@@ -1684,7 +1299,7 @@ static const char *shinkos1245_prefixes[] = {
 
 struct dyesub_backend shinkos1245_backend = {
 	.name = "Shinko/Sinfonia CHC-S1245/E1",
-	.version = "0.27.1",
+	.version = "0.30" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = shinkos1245_prefixes,
 	.cmdline_usage = shinkos1245_cmdline,
 	.cmdline_arg = shinkos1245_cmdline_arg,

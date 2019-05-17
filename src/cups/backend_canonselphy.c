@@ -725,8 +725,10 @@ static int canonselphy_read_parse(void *vctx, const void **vjob, int data_fd, in
 	   job contents.  Ignore it if it comes through here.. */
 	i = read(data_fd, rdbuf, 4);
 	if (i != 4) {
-		if (i == 0)
+		if (i == 0) {
+			canonselphy_cleanup_job(job);
 			return CUPS_BACKEND_CANCEL;
+		}
 		ERROR("Read failed (%d/%d)\n", i, 4);
 		perror("ERROR: Read failed");
 		canonselphy_cleanup_job(job);
@@ -743,8 +745,10 @@ static int canonselphy_read_parse(void *vctx, const void **vjob, int data_fd, in
 	/* Read the rest of the header.. */
 	i = read(data_fd, rdbuf + offset, MAX_HEADER - offset);
 	if (i != MAX_HEADER - offset) {
-		if (i == 0)
+		if (i == 0) {
+			canonselphy_cleanup_job(job);
 			return CUPS_BACKEND_CANCEL;
+		}
 		ERROR("Read failed (%d/%d)\n",
 		      i, MAX_HEADER - offset);
 		perror("ERROR: Read failed");
@@ -764,7 +768,7 @@ static int canonselphy_read_parse(void *vctx, const void **vjob, int data_fd, in
 
 	if (printer_type != ctx->type) {
 		ERROR("Printer/Job mismatch (%d/%d/%d)\n", ctx->type, ctx->printer->type, printer_type);
-		free(job);
+		canonselphy_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
 	}
 

@@ -404,7 +404,7 @@ static int upd_read_parse(void *vctx, const void **vjob, int data_fd, int copies
 	/* Sanity check job parameters */
 	if (job->imglen != (uint32_t)(job->rows * job->cols * ctx->native_bpp))
 	{
-		ERROR("Job data length mismatch (%u vs %u)!\n",
+		ERROR("Job data length mismatch (%u vs %d)!\n",
 		      job->imglen, job->rows * job->cols * ctx->native_bpp);
 		return CUPS_BACKEND_CANCEL;
 	}

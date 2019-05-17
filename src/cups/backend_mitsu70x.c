@@ -1297,7 +1297,7 @@ repeat:
 	}
 
 	if (job->lutfname && ctx->lut) {
-		DEBUG("Running print data through LUT\n");
+		DEBUG("Running print data through 3D LUT\n");
 		ctx->DoColorConv(ctx->lut, job->spoolbuf, job->cols, job->rows, job->cols * 3, COLORCONV_BGR);
 	}
 
@@ -2200,6 +2200,7 @@ static void mitsu70x_dump_printerstatus(struct mitsu70x_ctx *ctx,
 					struct mitsu70x_printerstatus_resp *resp)
 {
 	uint32_t i;
+	uint8_t memory = ~resp->memory;
 
 	INFO("Model         : ");
 	for (i = 0 ; i < 6 ; i++) {
@@ -2231,6 +2232,15 @@ static void mitsu70x_dump_printerstatus(struct mitsu70x_ctx *ctx,
 	INFO("Standby Timeout: %d minutes\n", resp->sleeptime);
 	INFO("iSerial Reporting: %s\n", resp->iserial ? "No" : "Yes" );
 	INFO("Power Status: %s\n", resp->power ? "Sleeping" : "Awake");
+	INFO("Available Memory Banks: %s%s%s%s%s%s%s%s\n",
+	     (memory & 0x01) ? "mem8 " : "",
+	     (memory & 0x02) ? "mem7 " : "",
+	     (memory & 0x04) ? "mem6 " : "",
+	     (memory & 0x08) ? "mem5 " : "",
+	     (memory & 0x10) ? "mem4 " : "",
+	     (memory & 0x20) ? "mem3 " : "",
+	     (memory & 0x40) ? "mem2 " : "",
+	     (memory & 0x80) ? "mem1 " : "");
 
 	if (resp->lower.error_status[0]) {
 		INFO("Lower Error Status: %s/%s -> %s\n",
@@ -2325,6 +2335,7 @@ static int mitsu70x_query_jobs(struct mitsu70x_ctx *ctx)
 		}
 		INFO("Temperature: %s\n", mitsu70x_temperatures(jobstatus.temperature));
 	}
+
 	// memory status?
 
 #if 0
@@ -2480,7 +2491,7 @@ static const char *mitsu70x_prefixes[] = {
 /* Exported */
 struct dyesub_backend mitsu70x_backend = {
 	.name = "Mitsubishi CP-D70 family",
-	.version = "0.94",
+	.version = "0.95",
 	.uri_prefixes = mitsu70x_prefixes,
 	.flags = BACKEND_FLAG_JOBLIST,
 	.cmdline_usage = mitsu70x_cmdline,

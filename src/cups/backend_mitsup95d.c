@@ -584,6 +584,13 @@ static int mitsup95d_query_markers(void *vctx, struct marker **markers, int *cou
 		}
 	}
 
+	/* Lot state */
+	if (ctx->marker.levelnow)
+		STATE("-media-empty\n");
+	else
+		STATE("+media-empty\n");
+
+
 	*markers = &ctx->marker;
 	*count = 1;
 
@@ -601,7 +608,7 @@ static const char *mitsup95d_prefixes[] = {
 /* Exported */
 struct dyesub_backend mitsup95d_backend = {
 	.name = "Mitsubishi P93D/P95D",
-	.version = "0.11",
+	.version = "0.12",
 	.uri_prefixes = mitsup95d_prefixes,
 	.cmdline_arg = mitsup95d_cmdline_arg,
 	.cmdline_usage = mitsup95d_cmdline,

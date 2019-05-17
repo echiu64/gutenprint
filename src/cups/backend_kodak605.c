@@ -1,7 +1,7 @@
 /*
  *   Kodak 605 Photo Printer CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013-2018 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2019 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -39,58 +39,31 @@
 #define BACKEND kodak605_backend
 
 #include "backend_common.h"
+#include "backend_sinfonia.h"
 
 #define USB_VID_KODAK       0x040A
 #define USB_PID_KODAK_605   0x402E
 
-/* Command Header */
-struct kodak605_cmd {
-	uint16_t cmd; /* LE */
-	uint16_t len; /* LE, not counting this header */
-} __attribute__((packed));
-
-struct kodak605_sts_hdr {
-	uint8_t  result;    /* RESULT_* */
-        uint8_t  unk_1[5];  /* 00 00 00 00 00 */
-        uint8_t  sts_1;     /* 01/02 */
-        uint8_t  sts_2;     /* 00/61->6b ?? temperature? */
-        uint16_t length;    /* LE, not counting this header */
-} __attribute__((packed));
-
-#define RESULT_SUCCESS 0x01
-#define RESULT_FAIL    0x02
+/* List of confirmed commands */
+//#define SINFONIA_CMD_GETSTATUS  0x0001
+//#define SINFONIA_CMD_MEDIAINFO  0x0002
+//#define SINFONIA_CMD_PRINTJOB   0x4001
+//#define SINFONIA_CMD_UPDATE     0xC004
 
 /* Media structure */
-struct kodak605_medium {
-	uint8_t  index;
-	uint16_t cols;   /* LE */
-	uint16_t rows;   /* LE */
-	uint8_t  type;   /* MEDIA_TYPE_* */
-	uint8_t  unk[4]; /* 00 00 00 00 */
-}  __attribute__((packed));
-
-#define MEDIA_TYPE_UNKNOWN 0x00
-#define MEDIA_TYPE_PAPER   0x01
-
 struct kodak605_media_list {
-	struct kodak605_sts_hdr hdr;
+	struct sinfonia_status_hdr hdr;
 	uint8_t  unk;  /* always seen 02 */
 	uint8_t  type; /* KODAK68x0_MEDIA_* */
 	uint8_t  count;
-	struct kodak605_medium entries[];
+	struct sinfonia_mediainfo_item entries[];
 } __attribute__((packed));
-
-#define KODAK68x0_MEDIA_6R   0x0b // 197-4096
-#define KODAK68x0_MEDIA_UNK  0x03
-#define KODAK68x0_MEDIA_6TR2 0x2c // 396-2941
-#define KODAK68x0_MEDIA_NONE 0x00
-/* 6R: Also seen: 101-0867, 141-9597, 659-9054, 169-6418, DNP 900-060 */
 
 #define MAX_MEDIA_LEN 128
 
 /* Status response */
 struct kodak605_status {
-	struct kodak605_sts_hdr hdr;
+	struct sinfonia_status_hdr hdr;
 /*@10*/	uint32_t ctr_life;  /* Lifetime Prints */
 	uint32_t ctr_maint; /* Prints since last maintenance */
 	uint32_t ctr_media; /* Prints on current media */
@@ -127,41 +100,6 @@ struct kodak605_hdr {
 	uint8_t  laminate; /* 0x02 to laminate, 0x01 for not */
 	uint8_t  mode;     /* Print mode -- 0x00, 0x01 seen */
 } __attribute__((packed));
-
-#define BANK_STATUS_FREE      0x00
-#define BANK_STATUS_XFER      0x01
-#define BANK_STATUS_FULL      0x02
-#define BANK_STATUS_PRINTING  0x12
-
-static char *bank_statuses(uint8_t v)
-{
-        switch (v) {
-        case BANK_STATUS_FREE:
-                return "Free";
-        case BANK_STATUS_XFER:
-                return "Xfer";
-        case BANK_STATUS_FULL:
-                return "Full";
-        case BANK_STATUS_PRINTING:
-                return "Printing";
-        default:
-                return "Unknown";
-        }
-}
-
-static const char *kodak68xx_mediatypes(int type)
-{
-	switch(type) {
-	case KODAK68x0_MEDIA_NONE:
-		return "No media";
-	case KODAK68x0_MEDIA_6R:
-	case KODAK68x0_MEDIA_6TR2:
-		return "Kodak 6R";
-	default:
-		return "Unknown";
-	}
-	return "Unknown";
-}
 
 #define CMDBUF_LEN 4
 
@@ -200,7 +138,7 @@ static int kodak605_get_media(struct kodak605_ctx *ctx, struct kodak605_media_li
 			     cmdbuf, sizeof(cmdbuf))))
 		return ret;
 
-	/* Read in the printer status */
+	/* Read the media response */
 	ret = read_data(ctx->dev, ctx->endp_up,
 			(uint8_t*) media, MAX_MEDIA_LEN, &num);
 	if (ret < 0)
@@ -289,7 +227,7 @@ static int kodak605_attach(void *vctx, struct libusb_device_handle *dev, int typ
 			return CUPS_BACKEND_FAILED;
 		}
 	} else {
-		int media_code = KODAK68x0_MEDIA_6TR2;
+		int media_code = KODAK6_MEDIA_6TR2;
 		if (getenv("MEDIA_CODE"))
 			media_code = atoi(getenv("MEDIA_CODE"));
 
@@ -297,7 +235,7 @@ static int kodak605_attach(void *vctx, struct libusb_device_handle *dev, int typ
 	}
 
 	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
-	ctx->marker.name = kodak68xx_mediatypes(ctx->media->type);
+	ctx->marker.name = kodak6_mediatypes(ctx->media->type);
 	ctx->marker.levelmax = 100; /* Ie percentage */
 	ctx->marker.levelnow = -2;
 
@@ -410,7 +348,7 @@ static int kodak605_main_loop(void *vctx, const void *vjob) {
 	/* Validate against supported media list */
 	for (num = 0 ; num < ctx->media->count; num++) {
 		if (ctx->media->entries[num].rows == hdr.rows &&
-		    ctx->media->entries[num].cols == hdr.columns)
+		    ctx->media->entries[num].columns == hdr.columns)
 			break;
 	}
 	if (num == ctx->media->count) {
@@ -429,7 +367,15 @@ static int kodak605_main_loop(void *vctx, const void *vjob) {
 			dump_markers(&ctx->marker, 1, 0);
 		}
 
-		// XXX check for errors
+		if (sts.hdr.result != RESULT_SUCCESS) {
+			ERROR("Printer Status:  %02x (%s)\n", sts.hdr.status,
+			      sinfonia_status_str(sts.hdr.status));
+			ERROR("Result: %02x Error: %02x (%s) %02x/%02x\n",
+			      sts.hdr.result, sts.hdr.error,
+			      sinfonia_error_str(sts.hdr.error),
+			      sts.hdr.printer_major, sts.hdr.printer_minor);
+			return CUPS_BACKEND_FAILED;
+		}
 
 		/* Make sure we're not colliding with an existing
 		   jobid */
@@ -453,23 +399,37 @@ static int kodak605_main_loop(void *vctx, const void *vjob) {
 	/* Use specified jobid */
 	hdr.jobid = ctx->jobid;
 
-	{
+	do {
 		INFO("Sending image header (internal id %u)\n", ctx->jobid);
 		if ((ret = send_data(ctx->dev, ctx->endp_down,
 				     (uint8_t*)&hdr, sizeof(hdr))))
 			return CUPS_BACKEND_FAILED;
 
-		struct kodak605_sts_hdr resp;
+		struct sinfonia_status_hdr resp;
 		if ((ret = read_data(ctx->dev, ctx->endp_up,
 				     (uint8_t*) &resp, sizeof(resp), &num)))
 			return CUPS_BACKEND_FAILED;
 
 		if (resp.result != RESULT_SUCCESS) {
-			ERROR("Unexpected response from print command (%x)!\n", resp.result);
-			return CUPS_BACKEND_FAILED;
+			if (resp.error == ERROR_BUFFER_FULL) {
+				INFO("Printer Buffers full, retrying\n");
+				sleep(1);
+				continue;
+			} else if ((resp.status & 0xf0) == 0x30 || resp.status == 0x21) {
+				INFO("Printer busy (%02x : %s), retrying\n", resp.status, sinfonia_status_str(resp.status));
+
+			} else {
+				ERROR("Unexpected response from print command!\n");
+				ERROR("Printer Status:  %02x: %s\n", resp.status, sinfonia_status_str(resp.status));
+				ERROR("Result: %02x Error: %02x (%02x %02x)\n",
+				      resp.result, resp.error,
+				      resp.printer_major, resp.printer_minor);
+
+				return CUPS_BACKEND_FAILED;
+			}
 		}
-		// XXX what about resp.sts1 or resp.sts2?
-	}
+		break;
+	} while(1);
 	sleep(1);
 
 	INFO("Sending image data\n");
@@ -489,14 +449,28 @@ static int kodak605_main_loop(void *vctx, const void *vjob) {
 			ctx->marker.levelnow = sts.donor;
 			dump_markers(&ctx->marker, 1, 0);
 		}
-		// XXX check for errors
+
+		if (sts.hdr.result != RESULT_SUCCESS ||
+		    sts.hdr.error == ERROR_PRINTER) {
+			INFO("Printer Status:  %02x (%s)\n", sts.hdr.status,
+			     sinfonia_status_str(sts.hdr.status));
+			INFO("Result: %02x Error: %02x (%s) %02x/%02x\n",
+			     sts.hdr.result, sts.hdr.error,
+			     sinfonia_error_str(sts.hdr.error),
+			     sts.hdr.printer_major, sts.hdr.printer_minor);
+			return CUPS_BACKEND_STOP;
+		}
 
 		/* Wait for completion */
+		if (sts.hdr.status == STATUS_READY)
+			break;
+
+#if 0
 		if (sts.b1_id == ctx->jobid && sts.b1_complete == sts.b1_total)
 			break;
 		if (sts.b2_id == ctx->jobid && sts.b2_complete == sts.b2_total)
 			break;
-
+#endif
 		if (fast_return) {
 			INFO("Fast return mode enabled.\n");
 			break;
@@ -504,17 +478,22 @@ static int kodak605_main_loop(void *vctx, const void *vjob) {
 	} while(1);
 
 	INFO("Print complete\n");
-
 	return CUPS_BACKEND_OK;
 }
 
 static void kodak605_dump_status(struct kodak605_ctx *ctx, struct kodak605_status *sts)
 {
+	INFO("Status: %02x (%s)\n",
+	     sts->hdr.status, sinfonia_status_str(sts->hdr.status));
+	INFO("Error: %02x (%s) %02x/%02x\n",
+	     sts->hdr.error, sinfonia_error_str(sts->hdr.error),
+	     sts->hdr.printer_major, sts->hdr.printer_minor);
+
 	INFO("Bank 1: %s Job %03u @ %03u/%03u\n",
-	     bank_statuses(sts->b1_sts), sts->b1_id,
+	     sinfonia_bank_statuses(sts->b1_sts), sts->b1_id,
 	     le16_to_cpu(sts->b1_complete), le16_to_cpu(sts->b1_total));
 	INFO("Bank 2: %s Job %03u @ %03u/%03u\n",
-	     bank_statuses(sts->b2_sts), sts->b2_id,
+	     sinfonia_bank_statuses(sts->b2_sts), sts->b2_id,
 	     le16_to_cpu(sts->b2_complete), le16_to_cpu(sts->b2_total));
 
 	INFO("Lifetime prints   : %u\n", be32_to_cpu(sts->ctr_life));
@@ -525,8 +504,8 @@ static void kodak605_dump_status(struct kodak605_ctx *ctx, struct kodak605_statu
 		int max;
 
 		switch(ctx->media->type) {
-		case KODAK68x0_MEDIA_6R:
- 		case KODAK68x0_MEDIA_6TR2:
+		case KODAK6_MEDIA_6R:
+		case KODAK6_MEDIA_6TR2:
 			max = 375;
 			break;
 		default:
@@ -544,37 +523,61 @@ static void kodak605_dump_status(struct kodak605_ctx *ctx, struct kodak605_statu
 	INFO("Donor             : %u%%\n", sts->donor);
 }
 
+static int kodak605_get_errorlog(struct kodak605_ctx *ctx)
+{
+	struct sinfonia_cmd_hdr cmd;
+	struct sinfonia_errorlog_resp resp;
+
+	int ret, num = 0;
+	int i;
+
+	/* Initial Request */
+	cmd.cmd = cpu_to_le16(SINFONIA_CMD_ERRORLOG);
+	cmd.len = cpu_to_le16(0);
+
+	if ((ret = send_data(ctx->dev, ctx->endp_down,
+			     (uint8_t*)&cmd, sizeof(cmd))))
+		goto done;
+
+	/* Get response back */
+	ret = read_data(ctx->dev, ctx->endp_up,
+			(uint8_t*) &resp, sizeof(resp), &num);
+	if (ret < 0)
+		goto done;
+
+	if (le16_to_cpu(resp.hdr.payload_len) != (sizeof(struct sinfonia_errorlog_resp) - sizeof(struct sinfonia_status_hdr)))
+		return -2;
+
+	INFO("Stored Error Events: %u entries:\n", resp.count);
+	for (i = 0 ; i < resp.count ; i++) {
+		INFO(" %02d: @ %08u prints : 0x%02x/0x%02x\n", i,
+		     le32_to_cpu(resp.items[i].print_counter),
+		     resp.items[i].major, resp.items[i].minor);
+	}
+
+done:
+	return ret;
+}
+
 static void kodak605_dump_mediainfo(struct kodak605_media_list *media)
 {
 	int i;
 
-        if (media->type == KODAK68x0_MEDIA_NONE) {
+        if (media->type == KODAK6_MEDIA_NONE) {
                 DEBUG("No Media Loaded\n");
                 return;
         }
-
-	switch (media->type) {
-	case KODAK68x0_MEDIA_6R:
-		INFO("Media type: 6R (Kodak 197-4096 or equivalent)\n");
-		break;
-	case KODAK68x0_MEDIA_6TR2:
-		INFO("Media type: 6R (Kodak 396-2941 or equivalent)\n");
-		break;
-	default:
-		INFO("Media type %02x (unknown, please report!)\n", media->type);
-		break;
-	}
+	kodak6_dumpmediacommon(media->type);
 
 	DEBUG("Legal print sizes:\n");
 	for (i = 0 ; i < media->count ; i++) {
 		DEBUG("\t%d: %ux%u\n", i,
-		      le16_to_cpu(media->entries[i].cols),
+		      le16_to_cpu(media->entries[i].columns),
 		      le16_to_cpu(media->entries[i].rows));
 	}
 	DEBUG("\n");
 }
 
-#define UPDATE_SIZE 1536
 static int kodak605_set_tonecurve(struct kodak605_ctx *ctx, char *fname)
 {
 	libusb_device_handle *dev = ctx->dev;
@@ -585,18 +588,18 @@ static int kodak605_set_tonecurve(struct kodak605_ctx *ctx, char *fname)
 	uint8_t respbuf[16];
 	int ret, num = 0;
 
-	uint16_t *data = malloc(UPDATE_SIZE);
+	uint16_t *data = malloc(TONE_CURVE_SIZE);
 
 	INFO("Set Tone Curve from '%s'\n", fname);
 
 	/* Read in file */
-	if ((ret = dyesub_read_file(fname, data, UPDATE_SIZE, NULL))) {
+	if ((ret = dyesub_read_file(fname, data, TONE_CURVE_SIZE, NULL))) {
 		ERROR("Failed to read Tone Curve file\n");
 		goto done;
 	}
 
 	/* Byteswap data to printer's format */
-	for (ret = 0; ret < (UPDATE_SIZE/2) ; ret++) {
+	for (ret = 0; ret < (TONE_CURVE_SIZE/2) ; ret++) {
 		data[ret] = cpu_to_le16(be16_to_cpu(data[ret]));
 	}
 
@@ -642,12 +645,50 @@ static int kodak605_set_tonecurve(struct kodak605_ctx *ctx, char *fname)
 	return ret;
 }
 
+static int kodak605_cancel_job(struct kodak605_ctx *ctx, char *str)
+{
+	struct sinfonia_cancel_cmd cmd;
+	struct sinfonia_status_hdr resp;
+	int ret, num = 0;
+
+	if (!str)
+		return -1;
+
+	/* Send Job Cancel */
+	cmd.id = atoi(str);
+	cmd.hdr.cmd = cpu_to_le16(SINFONIA_CMD_CANCELJOB);
+	cmd.hdr.len = cpu_to_le16(1);
+
+	if ((ret = send_data(ctx->dev, ctx->endp_down,
+			     (uint8_t*)&cmd, sizeof(cmd))))
+		return ret;
+
+	/* Read the media response */
+	ret = read_data(ctx->dev, ctx->endp_up,
+			(uint8_t*) &resp, sizeof(resp), &num);
+	if (ret < 0)
+		return ret;
+
+	if (num < (int)sizeof(resp)) {
+		ERROR("Short Read! (%d/%d)\n", num, (int)sizeof(resp));
+		return CUPS_BACKEND_FAILED;
+	}
+
+        if (resp.result != RESULT_SUCCESS) {
+                ERROR("Unexpected response from job cancel query (%x)!\n", resp.result);
+                return CUPS_BACKEND_FAILED;
+        }
+
+	return 0;
+}
 
 static void kodak605_cmdline(void)
 {
 	DEBUG("\t\t[ -C filename ]  # Set tone curve\n");
+	DEBUG("\t\t[ -e ]           # Query error log\n");
 	DEBUG("\t\t[ -m ]           # Query media\n");
 	DEBUG("\t\t[ -s ]           # Query status\n");
+	DEBUG("\t\t[ -X jobid ]     # Cancel job\n");
 }
 
 static int kodak605_cmdline_arg(void *vctx, int argc, char **argv)
@@ -658,11 +699,14 @@ static int kodak605_cmdline_arg(void *vctx, int argc, char **argv)
 	if (!ctx)
 		return -1;
 
-	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "C:ms")) >= 0) {
+	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "C:emsX:")) >= 0) {
 		switch(i) {
 		GETOPT_PROCESS_GLOBAL
 		case 'C':
 			j = kodak605_set_tonecurve(ctx, optarg);
+			break;
+		case 'e':
+			j = kodak605_get_errorlog(ctx);
 			break;
 		case 'm':
 			kodak605_dump_mediainfo(ctx->media);
@@ -673,6 +717,9 @@ static int kodak605_cmdline_arg(void *vctx, int argc, char **argv)
 			j = kodak605_get_status(ctx, &sts);
 			if (!j)
 				kodak605_dump_status(ctx, &sts);
+			break;
+		case 'X':
+			j = kodak605_cancel_job(ctx, optarg);
 			break;
 		}
 		default:
@@ -711,7 +758,7 @@ static const char *kodak605_prefixes[] = {
 /* Exported */
 struct dyesub_backend kodak605_backend = {
 	.name = "Kodak 605",
-	.version = "0.34",
+	.version = "0.38" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = kodak605_prefixes,
 	.cmdline_usage = kodak605_cmdline,
 	.cmdline_arg = kodak605_cmdline_arg,

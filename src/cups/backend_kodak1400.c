@@ -1,7 +1,7 @@
 /*
  *   Kodak Professional 1400/805 CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013-2018 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2019 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -154,7 +154,7 @@ static int send_plane(struct kodak1400_ctx *ctx,
 	return 0;
 }
 
-#define UPDATE_SIZE 1552
+#define TONE_CURVE_SIZE 1552
 static int kodak1400_set_tonecurve(struct kodak1400_ctx *ctx, char *fname)
 {
 	libusb_device_handle *dev = ctx->dev;
@@ -167,7 +167,7 @@ static int kodak1400_set_tonecurve(struct kodak1400_ctx *ctx, char *fname)
 
 	INFO("Set Tone Curve from '%s'\n", fname);
 
-	uint16_t *data = malloc(UPDATE_SIZE);
+	uint16_t *data = malloc(TONE_CURVE_SIZE);
 
 	if (!data) {
 		ERROR("Memory Allocation Failure!\n");
@@ -175,17 +175,17 @@ static int kodak1400_set_tonecurve(struct kodak1400_ctx *ctx, char *fname)
 	}
 
 	/* Read in file */
-	if ((ret = dyesub_read_file(fname, data, UPDATE_SIZE, NULL))) {
+	if ((ret = dyesub_read_file(fname, data, TONE_CURVE_SIZE, NULL))) {
 		ERROR("Failed to read Tone Curve file\n");
 		goto done;
 	}
 
 	/* Byteswap data to printer's format */
-	for (ret = 0; ret < (UPDATE_SIZE-16)/2 ; ret++) {
+	for (ret = 0; ret < (TONE_CURVE_SIZE-16)/2 ; ret++) {
 		data[ret] = cpu_to_le16(be16_to_cpu(data[ret]));
 	}
 	/* Null-terminate */
-	memset(data + (UPDATE_SIZE-16)/2, 0, 16);
+	memset(data + (TONE_CURVE_SIZE-16)/2, 0, 16);
 
 	/* Clear tables */
 	memset(cmdbuf, 0, sizeof(cmdbuf));
@@ -220,14 +220,14 @@ static int kodak1400_set_tonecurve(struct kodak1400_ctx *ctx, char *fname)
 	cmdbuf[2] = 0x02;
 	cmdbuf[3] = 0x03;
 	cmdbuf[4] = 0x06;
-	cmdbuf[5] = 0x10;   /* 06 10 == UPDATE_SIZE */
+	cmdbuf[5] = 0x10;   /* 06 10 == TONE_CURVE_SIZE */
 	if ((ret = send_data(dev, endp_down,
 			     cmdbuf, 6)))
 		goto done;
 
 	/* Send the payload over */
 	if ((ret = send_data(dev, endp_down,
-			     (uint8_t *) data, UPDATE_SIZE)))
+			     (uint8_t *) data, TONE_CURVE_SIZE)))
 		goto done;
 
 	/* get the response */

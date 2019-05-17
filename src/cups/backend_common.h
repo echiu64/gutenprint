@@ -240,7 +240,8 @@ extern int fast_return;
 extern int extra_vid;
 extern int extra_pid;
 extern int extra_type;
-extern int copies;
+extern int ncopies;
+extern int collate;
 extern int test_mode;
 extern int quiet;
 
@@ -269,7 +270,7 @@ extern struct dyesub_backend BACKEND;
 #define GETOPT_LIST_GLOBAL "d:DfGhv"
 #define GETOPT_PROCESS_GLOBAL \
 			case 'd': \
-				copies = atoi(optarg); \
+				ncopies = atoi(optarg); \
 				break; \
 			case 'D': \
 				dyesub_debug++; \

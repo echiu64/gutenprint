@@ -853,6 +853,7 @@ static int magicard_read_parse(void *vctx, const void **vjob, int data_fd, int c
 static int magicard_main_loop(void *vctx, const void *vjob) {
 	struct magicard_ctx *ctx = vctx;
 	int ret;
+	int copies;
 
 	const struct magicard_printjob *job = vjob;
 
