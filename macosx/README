@@ -19,8 +19,8 @@ The steps below are listed in order that they need to be completed.
 ================================================================
 Configure machines
 
-A Mac running 10.6 or later is required to build Gutenprint. An optional 
-physical or virtual Linux machine is needed for doing a full build from 
+A Mac running 10.6 or later is required to build Gutenprint. An optional
+physical or virtual Linux machine is needed for doing a full build from
 the git repository.
 
 
@@ -35,7 +35,7 @@ Xcode
 -----
 
 The development environment needed for the OS X machines is available from
-Apple Downloads, but requires a developer membership to access it as well as 
+Apple Downloads, but requires a developer membership to access it as well as
 the required developer and installer certificates.
 
 	https://developer.apple.com/downloads/index.action
@@ -147,8 +147,8 @@ working directory.
 
 	https://sourceforge.net/projects/libusb/files/
 
-A version of the libusb source, 1.0.22, is now included in the build.  It 
-includes a pkg-config file that should be used to allow the compilers to 
+A version of the libusb source, 1.0.22, is now included in the build.  It
+includes a pkg-config file that should be used to allow the compilers to
 find it.
 
 
@@ -158,6 +158,3 @@ Build from release
 
 Given a release distribution tarball, the 'makegutenpkg.sh' makes the complete
 distribution dmg.
-
-
-
