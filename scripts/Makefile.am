@@ -24,6 +24,9 @@ include $(top_srcdir)/scripts/global.mk
 ## Variables
 
 # The autotools-installed scripts /should/ be automatically distributed.
+# build-release needs to be in the tarball because it's run during
+# make distcheck, although it's not intended to be used outside
+# of the development sandbox
 EXTRA_DIST = \
 	autogen.sh \
 	build-release \
@@ -47,7 +50,7 @@ noinst_SCRIPTS= \
 
 MAINTAINERCLEANFILES = \
 	Makefile.in \
-	build-release \
-	count-cpus \
+	gversion \
 	mkgitlog \
+	test-gversion \
 	wzpaq
