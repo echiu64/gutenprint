@@ -63,6 +63,8 @@ declare git_dirty=
 declare build_type=release
 [[ -n ${STP_BUILD_SNAPSHOT:-} ]] && build_type=snapshot
 
+# This can't simply be a constant because scripts/gversion might
+# not exist (or may be incorrect) prior to autogen being run.
 function pkg_version() {
     "$ROOT/scripts/gversion" pkg
 }
@@ -122,7 +124,7 @@ function check_git() {
 	console_log "*** Warning: Ahead of remote."
 	if (( merges > 0 )) ; then
 	    (( merges != 1 )) && pl=s
-	    console_log "*** ERROR: $merges merge$pl between HEAD and remote"
+	    console_log "*** ERROR: $merges merge${pl:-} between HEAD and remote"
 	    return 2
 	fi
     fi
