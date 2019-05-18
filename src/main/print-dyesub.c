@@ -7378,11 +7378,13 @@ static int dnpds80dx_parse_parameters(stp_vars_t *v)
   dyesub_privdata_t *pd = get_privdata(v);
   int multicut = 0;
   int nocutwaste;
+  int pagenum;
 
   pagesize = stp_get_string_parameter(v, "PageSize");
   duplex_mode = stp_get_string_parameter(v, "Duplex");
   media = dyesub_get_mediatype(v);
   nocutwaste = stp_get_boolean_parameter(v, "NoCutWaste");
+  pagenum = stp_get_int_parameter(v, "PageNumber");
 
   if (!strcmp(media->name, "Roll")) {
     if (strcmp(duplex_mode, "None") && strcmp(duplex_mode, "Standard")) {
@@ -7431,7 +7433,7 @@ static int dnpds80dx_parse_parameters(stp_vars_t *v)
   /* Add correct offset to multicut mode based on duplex state */
   if (!strcmp(duplex_mode, "None") || !strcmp(duplex_mode, "Standard"))
      multicut += 100; /* Simplex */
-  else if (pd->page_number & 1)
+  else if (pagenum & 1)
      multicut += 300; /* Duplex, back */
   else
      multicut += 200; /* Duplex, front */
