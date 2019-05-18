@@ -370,7 +370,6 @@ MAINTAINERCLEANFILES = Makefile.in
 
 EXTRA_DIST = \
 	COPYING \
-	README \
 	blacklist \
 	calibrate.ppm \
 	command.txt \
