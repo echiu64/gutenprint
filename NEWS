@@ -105,12 +105,13 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
 
   2) Bugfixes and other enhancements for the following printers:
 
+     * DNP DS80DX
+     * DNP DS-SL10 (EXPERIMENTAL)
+     * Nidac Copal DPB-6000
      * Sony UP-DP10
      * Sony UP-DR150
      * Sony UP-DR200
      * Sony UP-CR10L
-     * DNP DS-SL10 (EXPERIMENTAL)L
-     * Nidac Copal DPB-6000
 
   3) Many miscellaneous fixes for dyesub printers and the dyesub
      backend; please see the ChangeLog for details.
