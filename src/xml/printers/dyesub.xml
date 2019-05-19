@@ -102,7 +102,7 @@
       <printer translate="name" name="Citizen OP900II" driver="citizen-op900ii" manufacturer="Citizen" model="6000" />
       <printer translate="name" name="Dai Nippon Printing DS40" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DS40;" driver="dnp-ds40" manufacturer="Dai Nippon Printing" model="6000" />
       <printer translate="name" name="Dai Nippon Printing DS80" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DS80;" driver="dnp-ds80" manufacturer="Dai Nippon Printing" model="6001" />
-      <printer translate="name" name="Dai Nippon Printing DS80DX" driver="dnp-ds80dx" manufacturer="Dai Nippon Printing" model="6006">EXPERIMENTAL</printer>
+      <printer translate="name" name="Dai Nippon Printing DS80DX" driver="dnp-ds80dx" manufacturer="Dai Nippon Printing" model="6006" />
       <printer translate="name" name="Dai Nippon Printing DS620" driver="dnp-ds620" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DP-DS620;" manufacturer="Dai Nippon Printing" model="6003" />
       <printer translate="name" name="Dai Nippon Printing DS820" driver="dnp-ds820" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DP-DS820;" manufacturer="Dai Nippon Printing" model="6007" />
       <printer translate="name" name="Dai Nippon Printing DSRX1" driver="dnp-dsrx1" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DS-RX1;" manufacturer="Dai Nippon Printing" model="6002" />
