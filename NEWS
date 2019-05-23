@@ -106,6 +106,7 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
 
   2) The following new printers have been added:
 
+     * DNP DS-SL20 (EXPERIMENTAL)
      * Epson Expression Home XP-240 (EXPERIMENTAL)
      * Epson Expression Home XP-245 (EXPERIMENTAL)
      * Epson Expression Home XP-340 (EXPERIMENTAL)
@@ -115,18 +116,20 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      * Epson Expression Photo XP-860 (Preliminary)
      * Epson Expression Photo XP-960 (Preliminary)
      * Epson Expression Photo XP-8500 (Preliminary)
+     * Sinfonia CHC-S2245/S3 (EXPERIMENTAL)
      * Sony UP-D895 family
      * Sony UP-D897 family
      * Sony UP-D898 family (EXPERIMENTAL)
      * Sony UP-CR20L (EXPERIMENTAL)
      * Sony UP-DR80MD (EXPERIMENTAL)
-     * DNP DS-SL20 (EXPERIMENTAL)
 
   3) Bugfixes and other enhancements for the following printers:
 
      * DNP DS80DX
      * DNP DS-SL10 (EXPERIMENTAL)
      * Nidac Copal DPB-6000
+     * Kodak 7000/7010/7015
+     * Kodak 8810
      * Sony UP-DP10
      * Sony UP-DR150
      * Sony UP-DR200

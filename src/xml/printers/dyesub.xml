@@ -172,9 +172,10 @@
       <printer translate="name" name="Shinko CHC-S6245" driver="shinko-chcs6245" manufacturer="Shinko" model="5003">EXPERIMENTAL</printer>
       <printer translate="name" name="Shinko CHC-S9045" driver="shinko-chcs9045" manufacturer="Shinko" model="5000" />
       <printer translate="name" name="Sinfonia CHC-S1245/E1" driver="sinfonia-chcs1245" manufacturer="Sinfonia" model="5002" />
+      <printer translate="name" name="Sinfonia CHC-S2145/S2" driver="sinfonia-chcs2145" manufacturer="Sinfonia" model="5001" />
+      <printer translate="name" name="Sinfonia CHC-S2245/S2" driver="sinfonia-chcs2245" manufacturer="Sinfonia" model="5006">EXPERIMENTAL</printer>
       <printer translate="name" name="Sinfonia CHC-S6145/CS2" deviceid="MFG:SINFONIA;CMD:SUPCC;MDL:CHC-S6145;CLS:PRINTER;DES:Thermal Dye Photo Printer;" driver="sinfonia-chcs6145" manufacturer="Sinfonia" model="5004" />
       <printer translate="name" name="Sinfonia CHC-S6245/CE1" driver="sinfonia-chcs6245" manufacturer="Sinfonia" model="5003">EXPERIMENTAL</printer>
-      <printer translate="name" name="Sinfonia S2145/S2" driver="sinfonia-chcs2145" manufacturer="Sinfonia" model="5001" />
       <printer translate="name" name="Sony UP-DP10" driver="sony-updp10" manufacturer="Sony" model="2000" />
       <printer translate="name" name="Sony UP-DR150" deviceid="MFG:Sony;MDL:UP-DR150;DES:Sony UP-DR150;CMD:SONY-Original;CLS:PRINTER" driver="sony-updr150" manufacturer="Sony" model="2001" />
       <printer translate="name" name="Sony DPP-EX5" driver="sony-dppex5" manufacturer="Sony" model="2002" />

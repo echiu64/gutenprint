@@ -6974,6 +6974,88 @@ static void shinko_chcs6145_printer_init(stp_vars_t *v)
 #endif
 }
 
+static void shinko_chcs2245_printer_init(stp_vars_t *v)
+{
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  int media = 0;
+
+  if (strcmp(pd->pagesize,"w288h432") == 0)
+    media = 0x00;
+  else if (strcmp(pd->pagesize,"w288h432-div2") == 0)
+    media = 0x00;
+  else if (strcmp(pd->pagesize,"w360h360") == 0)
+    media = 0x08;
+  else if (strcmp(pd->pagesize,"w360h504") == 0)
+    media = 0x03;
+  else if (strcmp(pd->pagesize,"w432h432") == 0)
+    media = 0x06;
+  else if (strcmp(pd->pagesize,"w432h576") == 0)
+    media = 0x06;
+  else if (strcmp(pd->pagesize,"w144h432") == 0)
+    media = 0x07;
+  else if (strcmp(pd->pagesize,"w432h576-w432h432_w432h144") == 0)
+    media = 0x06;
+  else if (strcmp(pd->pagesize,"w432h576-div2") == 0)
+    media = 0x06;
+  else if (strcmp(pd->pagesize,"w432h648") == 0)
+    media = 0x05;
+
+  stp_put32_le(0x10, v);
+  stp_put32_le(2245, v);  /* Printer Model */
+  if (!strcmp(pd->pagesize,"w360h360") ||
+      !strcmp(pd->pagesize,"w360h504"))
+	  stp_put32_le(0x02, v); /* 5" media */
+  else
+	  stp_put32_le(0x03, v); /* 6" media */
+  stp_put32_le(0x01, v);
+
+  stp_put32_le(0x64, v);
+  stp_put32_le(0x00, v);
+  stp_put32_le(media, v);  /* Media Type */
+  stp_put32_le(0x00, v);
+
+  if (strcmp(pd->pagesize,"w432h576-w432h432_w432h144") == 0) {
+    stp_put32_le(0x05, v);
+  } else if (strcmp(pd->pagesize,"w288h432-div2") == 0) {
+    stp_put32_le(0x04, v);
+  } else if (strcmp(pd->pagesize,"w432h576-div2") == 0) {
+    stp_put32_le(0x02, v);
+  } else {
+    stp_put32_le(0x00, v);
+  }
+  stp_put32_le(0x00, v);  /* XXX quality; 00 == default, 0x01 == std */
+  stp_zfwrite((pd->overcoat->seq).data, 1,
+	      (pd->overcoat->seq).bytes, v); /* Lamination */
+  stp_put32_le(0x00, v);
+
+  stp_put32_le(0x00, v);
+  stp_put32_le(pd->w_size, v); /* Columns */
+  stp_put32_le(pd->h_size, v); /* Rows */
+  stp_put32_le(pd->copies, v); /* Copies */
+
+  stp_put32_le(0x00, v);
+  stp_put32_le(0x00, v);
+  stp_put32_le(0x00, v);
+  stp_put32_le(0xffffffce, v);
+
+  stp_put32_le(0x00, v);
+  stp_put32_le(0xffffffce, v);
+  stp_put32_le(pd->w_dpi, v);  /* Dots Per Inch */
+  stp_put32_le(0xffffffce, v);
+
+  stp_put32_le(0x00, v);
+  stp_put32_le(0xffffffce, v);
+  stp_put32_le(0x00, v);
+  stp_put32_le(0x00, v);
+
+#ifdef S6145_YMC
+  stp_put32_le(0x01, v);
+#else
+  stp_put32_le(0x00, v);
+#endif
+}
+
 /* Ciaat Brava 21 */
 static const dyesub_pagesize_t ciaat_brava21_page[] =
 {
@@ -9948,6 +10030,29 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
 #endif
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
     &shinko_chcs6145_printer_init, &shinko_chcs2145_printer_end,
+    NULL, NULL,  /* No planes */
+    NULL, NULL,  /* No blocks */
+    NULL,
+    &shinko_chcs6145_overcoat_list, NULL,
+    NULL, NULL,
+    NULL, 0, NULL, NULL,
+  },
+  { /* Shinko/Sinfonia CHC-S2245 */
+    5006,
+#ifdef S6145_YMC
+    &ymc_ink_list,
+#else
+    &rgb_ink_list,
+#endif
+    &res_300dpi_list,
+    &shinko_chcs6145_page_list,
+    &shinko_chcs6145_printsize_list,
+    SHRT_MAX,
+#ifdef S6145_YMC
+    DYESUB_FEATURE_PLANE_INTERLACE |
+#endif
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    &shinko_chcs2245_printer_init, &shinko_chcs2145_printer_end,
     NULL, NULL,  /* No planes */
     NULL, NULL,  /* No blocks */
     NULL,
