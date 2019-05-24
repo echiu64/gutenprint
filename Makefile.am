@@ -25,11 +25,15 @@ include $(top_srcdir)/scripts/global.mk
 
 ## Variables
 
+BUILT_SOURCES = src/xml/xmli18n-tmp.h
 SUBDIRS = include src samples test po man doc scripts
 DISTDIRS = m4 m4extra
 CONFIGSUMMARYDIR=$(pkglibdir)/@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@
 
 docdir = $(datadir)/$(PACKAGE)/doc
+
+src/xml/xmli18n-tmp.h:
+	make -C src/xml
 
 ## Rules
 
@@ -187,11 +191,11 @@ CLEANPO = \
 	po/Makevars.template \
 	po/quot.sed \
 	po/remove-potcdate.sin \
-	po/Rules-quot
+	po/Rules-quot \
+	po/*~
 
 CLEANFILES = .noupdate
 
-# We have nowhere in po to put a maintainerclean rule.
 MAINTAINERCLEANFILES = \
 	ABOUT-NLS \
 	ChangeLog \
