@@ -50,6 +50,13 @@ else
   libtool_err=1
 fi
 
+if [ -z "`type -p glib-mkenums`" ] ; then
+  echo
+  echo "**Error**: You must have \`glib2-mkenums' installed to create a"
+  echo "Gutenprint distribution.  This is usually distributed in the"
+  echo "glib2-devel, glib2-dev, or similar package."
+  DIE=1
+fi
 
 if [ -n "$libtool_err" ] ; then
   echo
