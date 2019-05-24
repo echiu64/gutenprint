@@ -173,34 +173,13 @@ sanity: scripts/build-release scripts/count-cpus
 
 ## Clean
 
-CLEANSCRIPTS = \
-	scripts/depcomp \
-	scripts/install-sh \
-	scripts/ltconfig \
-	scripts/mdate-sh \
-	scripts/missing \
-	scripts/mkinstalldirs
-
 CLEANMFOUR = \
-	m4/codeset.m4 \
-	m4/gettext.m4 \
-	m4/glibc21.m4 \
-	m4/iconv.m4 \
-	m4/intdiv0.m4 \
-	m4/inttypes_h.m4 \
-	m4/inttypes.m4 \
-	m4/inttypes-pri.m4 \
-	m4/isc-posix.m4 \
-	m4/lcmessage.m4 \
-	m4/lib-ld.m4 \
-	m4/lib-link.m4 \
-	m4/lib-prefix.m4 \
-	m4/progtest.m4 \
-	m4/stdint_h.m4 \
-	m4/uintmax_t.m4 \
-	m4/ulonglong.m4
+	m4/*
 
 CLEANPO = \
+	po/ChangeLog \
+	po/gutenprint.pot \
+	po/Makefile.in.in \
 	po/boldquot.sed \
 	po/en@boldquot.header \
 	po/en@quot.header \
@@ -212,12 +191,15 @@ CLEANPO = \
 
 CLEANFILES = .noupdate
 
+# We have nowhere in po to put a maintainerclean rule.
 MAINTAINERCLEANFILES = \
 	ABOUT-NLS \
 	ChangeLog \
 	INSTALL \
 	aclocal.m4 \
 	config.h.in \
+	config.h.in~ \
+	config.rpath \
 	configure \
 	Makefile.in \
 	stamp-h.in \
@@ -225,7 +207,6 @@ MAINTAINERCLEANFILES = \
 	stamp-h2.in \
 	stamp-h3.in \
 	stamp-h4.in \
-	$(CLEANSCRIPTS) \
 	$(CLEANMFOUR) \
 	$(CLEANPO)
 

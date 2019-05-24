@@ -28,8 +28,9 @@ pkgmoduledir = $(pkglibdir)/@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION
 
 ## Programs
 
-if BUILD_MODULES
-pkgmodule_LTLIBRARIES = \
+# So we can maintainerclean these files even if
+# modules aren't (currently) in use.
+pkg_libraries = \
 	color-traditional.la \
 	print-canon.la \
 	print-escp2.la \
@@ -39,6 +40,10 @@ pkgmodule_LTLIBRARIES = \
 	print-ps.la \
 	print-dyesub.la \
 	print-raw.la
+
+if BUILD_MODULES
+pkgmodule_LTLIBRARIES = \
+	$(pkg_libraries)
 endif
 
 color_traditional_la_SOURCES = \
@@ -170,6 +175,6 @@ pkgconfigdata_DATA = gutenprint.pc
 
 ## Clean
 
-MAINTAINERCLEANFILES = Makefile.in
+MAINTAINERCLEANFILES = Makefile.in $(pkg_libraries)
 
 EXTRA_DIST = libgutenprint.sym

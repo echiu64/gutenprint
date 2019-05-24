@@ -38,3 +38,4 @@ dist-hook: xml-stamp
 CLEANFILES = xmli18n-tmp.h xml-stamp xml-stamp.tmp
 
 EXTRA_DIST = $(pkgxmldata_DATA)
+MAINTAINERCLEANFILES = Makefile.in

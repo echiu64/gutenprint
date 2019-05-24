@@ -50,7 +50,20 @@ noinst_SCRIPTS= \
 
 MAINTAINERCLEANFILES = \
 	Makefile.in \
+	compile \
+	config.guess \
+	config.rpath \
+	config.sub \
+	depcomp \
 	gversion \
+	install-sh \
+	ltconfig \
+	ltmain.sh \
+	mdate-sh \
+	missing \
 	mkgitlog \
+	mkinstalldirs \
+	test-driver \
 	test-gversion \
-	wzpaq
+	wzpaq \
+	ylwrap
