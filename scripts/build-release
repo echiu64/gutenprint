@@ -24,7 +24,7 @@
 # autotool-processed.
 
 function xtput() {
-    [[ -z ${STP_TEST_RECURSIVE:-} ]] && tput "$@"
+    [[ -z ${STP_TEST_RECURSIVE:-} && -n ${TERM:-} ]] && tput "$@"
 }
 
 set -u
