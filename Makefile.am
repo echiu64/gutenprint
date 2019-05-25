@@ -25,6 +25,7 @@ include $(top_srcdir)/scripts/global.mk
 
 ## Variables
 
+BUILT_SOURCES = src/xml/xmli18n-tmp.h
 SUBDIRS = include src samples test po man doc scripts
 DISTDIRS = m4 m4extra
 CONFIGSUMMARYDIR=$(pkglibdir)/@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@
