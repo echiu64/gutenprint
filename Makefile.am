@@ -25,7 +25,6 @@ include $(top_srcdir)/scripts/global.mk
 
 ## Variables
 
-BUILT_SOURCES = src/xml/xmli18n-tmp.h
 SUBDIRS = include src samples test po man doc scripts
 DISTDIRS = m4 m4extra
 CONFIGSUMMARYDIR=$(pkglibdir)/@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@
@@ -33,7 +32,7 @@ CONFIGSUMMARYDIR=$(pkglibdir)/@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSI
 docdir = $(datadir)/$(PACKAGE)/doc
 
 src/xml/xmli18n-tmp.h:
-	make -C src/xml
+	$(MAKE) -C src/xml
 
 ## Rules
 
@@ -71,6 +70,8 @@ ChangeLog: dist-time-check dist-news-check
 	  $(MAKE) -C scripts mkgitlog; \
 	  scripts/mkgitlog -i ChangeLog.pre-5.2.11 -r gutenprint-5_2_11 > ChangeLog; \
 	fi
+
+dist: src/xml/xmli18n-tmp.h
 
 dist-time-check:
 	@if [ "$(top_srcdir)/configure" -ot "$(top_srcdir)/configure.ac" ] ; then \
@@ -130,8 +131,8 @@ snapshot: scripts/gversion git-version-stamp
 CPUS=`scripts/count-cpus`
 
 # STP_PROFILE=full
-MAKECHECK=STP_TEST_SUITE=1 /usr/bin/time make -k -s -j$(CPUS) DISTCHECK_CONFIGURE_FLAGS=NO_PKGCONFIG_PATHS=1 check
-MAKEDISTCHECK=STP_TEST_SUITE=1 STP_TEST_DIST=1 /usr/bin/time make -k -s -j$(CPUS) DISTCHECK_CONFIGURE_FLAGS=NO_PKGCONFIG_PATHS=1 distcheck
+MAKECHECK=STP_TEST_SUITE=1 /usr/bin/time $(MAKE) -k -s -j$(CPUS) DISTCHECK_CONFIGURE_FLAGS=NO_PKGCONFIG_PATHS=1 check
+MAKEDISTCHECK=STP_TEST_SUITE=1 STP_TEST_DIST=1 /usr/bin/time $(MAKE) -k -s -j$(CPUS) DISTCHECK_CONFIGURE_FLAGS=NO_PKGCONFIG_PATHS=1 distcheck
 MAKECHECK_PARALLEL=STP_PARALLEL=$(CPUS) $(MAKECHECK)
 MAKEDISTCHECK_PARALLEL=STP_PARALLEL=$(CPUS) $(MAKEDISTCHECK)
 
@@ -167,7 +168,7 @@ $(DISTCHECK_TARGETS) $(DISTCHECK_VALGRIND_TARGETS):
 
 
 checksums: scripts/count-cpus
-	STP_PARALLEL=$(CPUS) make -C src/testpattern checksums-release
+	STP_PARALLEL=$(CPUS) $(MAKE) -j$(CPUS) -C src/testpattern checksums-release
 
 build-release: scripts/build-release scripts/count-cpus
 	STP_PARALLEL=$(CPUS) /usr/bin/time scripts/build-release
@@ -205,6 +206,7 @@ MAINTAINERCLEANFILES = \
 	config.h.in~ \
 	config.rpath \
 	configure \
+	git-version-stamp \
 	Makefile.in \
 	stamp-h.in \
 	stamp-h1.in \
