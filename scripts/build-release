@@ -387,17 +387,17 @@ function git_prep_release() {
     # Add any of those changed files.
     if [[ $build_type == release ]] ; then
 	"$GIT" add -u || return 1
+	# Add the checksums file.
+	# TBD whether to do this for snapshots.  The file's not very big,
+	# but it's completely incompressible!
+	"$GIT" add -f "src/testpattern/Checksums/sums.$(pkg_version).zpaq" || return 1
+	# Commit this change
+	"$GIT" commit -m"Gutenprint $(pkg_version) release" || return 1
     else
 	# Don't update the .po files for every snapshot.
 	echo "Cleaning up .po files"
 	"$GIT" checkout -- po
     fi
-    # Add the checksums file.
-    # TBD whether to do this for snapshots.  The file's not very big,
-    # but it's completely incompressible!
-    "$GIT" add -f "src/testpattern/Checksums/sums.$(pkg_version).zpaq" || return 1
-    # Commit this change
-    "$GIT" commit -m"Gutenprint $(pkg_version) release" || return 1
     # Shouldn't have anything left after this.
     if "$GIT" status -uno --porcelain |grep -q -E -v 'po/.*\.po' ; then
 	console_log "*** ERROR: Unexpected untracked files:"
