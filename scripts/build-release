@@ -389,7 +389,8 @@ function git_prep_release() {
 	"$GIT" add -u || return 1
     else
 	# Don't update the .po files for every snapshot.
-	git checkout -- po
+	echo "Cleaning up .po files"
+	"$GIT" checkout -- po
     fi
     # Add the checksums file.
     # TBD whether to do this for snapshots.  The file's not very big,
