@@ -142,6 +142,10 @@ function run_target() {
     return ${2:-2}
 }
 
+function run_maintainer_clean() {
+    [[ -f Makefile ]] && run_target maintainer-clean
+}
+
 function run_autogen() {
     ./autogen.sh ${STP_CONFIG_ARGS:-} && return 0
     console_log "*** FATAL: autogen failed!"
@@ -733,6 +737,7 @@ function runit() {
 declare -a OPERATIONS=(preflight
 		       check_git
 		       check_git_tag
+		       run_maintainer_clean
 		       run_autogen
 		       run_clean
 		       run_build

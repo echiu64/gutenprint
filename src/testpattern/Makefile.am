@@ -63,7 +63,7 @@ CSUM_DEPS=testpattern run-testpattern-2 compress-checksums Checksums \
 # This suffix is *not* static during development!
 CSUM_SUFFIX=`@PKGROOT@/scripts/gversion pkg`
 CSUM_RELEASE_SUFFIX=@GUTENPRINT_VERSION@
-CSUM_FILE=Checksums/sums.$(SPREFIX)$(CSUM_SUFFIX)
+CSUM_FILE=Checksums/sums.gutenprint-$(SPREFIX)$(CSUM_SUFFIX)
 CSUM_RELEASE_FILE=Checksums/sums.$(CSUM_RELEASE_SUFFIX)
 
 .PHONY: checksums checksums-release
