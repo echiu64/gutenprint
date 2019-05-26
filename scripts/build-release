@@ -143,7 +143,11 @@ function run_target() {
 }
 
 function run_maintainer_clean() {
-    [[ -f Makefile ]] && run_target maintainer-clean
+    if [[ -f Makefile ]] ; then
+	run_target maintainer-clean
+    else
+	return 0
+    fi
 }
 
 function run_autogen() {
