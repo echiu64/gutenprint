@@ -756,8 +756,8 @@ declare -a OPERATIONS=(preflight
 		       run_valgrind
 		       run_full
 		       run_checksums
-		       git_prep_release
 		       run_distcheck_minimal
+		       git_prep_release
 		       save_build_artifacts
 		       finis)
 
