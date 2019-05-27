@@ -435,8 +435,13 @@ function run_check_minimal() {
 
 #  Save away build
 function save_build_artifacts() {
-    local tarball="gutenprint-$(pkg_version).tar.xz"
-    [[ -s $tarball ]] && cp -p "$tarball" "$ARTIFACTDIR"
+    local tarball="$(pkg_version).tar.xz"
+    if [[ -s $tarball ]] ; then
+	cp -p "$tarball" "$ARTIFACTDIR"
+    else
+	echo "Cannot find $tarball"
+	return 1
+    fi
 }
 
 # Final release prep
