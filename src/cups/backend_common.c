@@ -29,7 +29,7 @@
 #include "backend_common.h"
 #include <errno.h>
 
-#define BACKEND_VERSION "0.93G"
+#define BACKEND_VERSION "0.94G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
@@ -666,7 +666,16 @@ abort:
 	return found;
 }
 
+void generic_teardown(void *vctx)
+{
+	if (!vctx)
+		return;
+
+	free(vctx);
+}
+
 extern struct dyesub_backend sonyupd_backend;
+extern struct dyesub_backend sonyupdneo_backend;
 extern struct dyesub_backend kodak6800_backend;
 extern struct dyesub_backend kodak605_backend;
 extern struct dyesub_backend kodak1400_backend;
@@ -1228,7 +1237,13 @@ bypass:
 
 	if (!fname) {
 		if (uri)
-			fprintf(stderr, "ERROR: No input file specified\n");
+			ERROR("ERROR: No input file specified\n");
+		goto done_claimed;
+	}
+
+	if (ncopies < 1) {
+		ERROR("ERROR: need to have at least 1 copy!\n");
+		ret = CUPS_BACKEND_FAILED;
 		goto done_claimed;
 	}
 
@@ -1238,7 +1253,7 @@ bypass:
 		if (data_fd < 0) {
 			perror("ERROR:Can't open input file");
 			ret = CUPS_BACKEND_FAILED;
-			goto done;
+			goto done_claimed;
 		}
 	}
 
@@ -1254,7 +1269,7 @@ bypass:
 	if (i < 0) {
 		perror("ERROR:Can't open input");
 		ret = CUPS_BACKEND_FAILED;
-		goto done;
+		goto done_claimed;
 	}
 
 	/* Ignore SIGPIPE */
@@ -1345,7 +1360,10 @@ done_close:
 done:
 
 	if (backend && backend_ctx) {
-		backend->teardown(backend_ctx);
+		if (backend->teardown)
+			backend->teardown(backend_ctx);
+		else
+			generic_teardown(backend_ctx);
 //		STATE("-org.gutenprint-attached-to-device");
 	}
 

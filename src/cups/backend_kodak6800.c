@@ -102,13 +102,6 @@ struct kodak68x0_media_readback {
 #define CMDBUF_LEN 17
 
 /* Private data structure */
-struct kodak6800_printjob {
-	struct kodak6800_hdr hdr;
-	uint8_t *databuf;
-	int datalen;
-	int copies;
-};
-
 struct kodak6800_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;
@@ -200,13 +193,16 @@ static int kodak6800_get_mediainfo(struct kodak6800_ctx *ctx)
 		/* Issue command and get response */
 		if ((ret = kodak6800_do_cmd(ctx, req, sizeof(req),
 					    media, MAX_MEDIA_LEN,
-					    &num)))
+					    &num))) {
+			free(media);
 			return ret;
+		}
 
 		/* Validate proper response */
 		if (media->hdr != CMD_CODE_OK ||
 		    media->null[0] != 0x00) {
 			ERROR("Unexpected response from media query!\n");
+			free(media);
 			return CUPS_BACKEND_STOP;
 		}
 		ctx->media_type = media->type;
@@ -784,6 +780,7 @@ static int kodak6800_attach(void *vctx, struct libusb_device_handle *dev, int ty
 			media_code = atoi(getenv("MEDIA_CODE"));
 
 		ctx->media_type = media_code;
+		ctx->supports_sub4x6 = 1;
 	}
 
 	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
@@ -794,30 +791,12 @@ static int kodak6800_attach(void *vctx, struct libusb_device_handle *dev, int ty
 	return CUPS_BACKEND_OK;
 }
 
-static void kodak6800_cleanup_job(const void *vjob)
-{
-	const struct kodak6800_printjob *job = vjob;
-
-	if (job->databuf)
-		free(job->databuf);
-
-	free((void*)job);
-}
-
-static void kodak6800_teardown(void *vctx) {
-	struct kodak6800_ctx *ctx = vctx;
-
-	if (!ctx)
-		return;
-
-	free(ctx);
-}
-
 static int kodak6800_read_parse(void *vctx, const void **vjob, int data_fd, int copies) {
 	struct kodak6800_ctx *ctx = vctx;
 	int ret;
 
-	struct kodak6800_printjob *job = NULL;
+	struct kodak6800_hdr hdr;
+	struct sinfonia_printjob *job = NULL;
 
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
@@ -830,28 +809,33 @@ static int kodak6800_read_parse(void *vctx, const void **vjob, int data_fd, int 
 	memset(job, 0, sizeof(*job));
 
 	/* Read in then validate header */
-	ret = read(data_fd, &job->hdr, sizeof(job->hdr));
-	if (ret < 0 || ret != sizeof(job->hdr)) {
-		if (ret == 0)
+	ret = read(data_fd, &hdr, sizeof(hdr));
+	if (ret < 0 || ret != sizeof(hdr)) {
+		if (ret == 0) {
+			sinfonia_cleanup_job(job);
 			return CUPS_BACKEND_CANCEL;
+		}
 		ERROR("Read failed (%d/%d/%d)\n",
-		      ret, 0, (int)sizeof(job->hdr));
+		      ret, 0, (int)sizeof(hdr));
 		perror("ERROR: Read failed");
+		sinfonia_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
 	}
-	if (job->hdr.hdr[0] != 0x03 ||
-	    job->hdr.hdr[1] != 0x1b ||
-	    job->hdr.hdr[2] != 0x43 ||
-	    job->hdr.hdr[3] != 0x48 ||
-	    job->hdr.hdr[4] != 0x43) {
+	if (hdr.hdr[0] != 0x03 ||
+	    hdr.hdr[1] != 0x1b ||
+	    hdr.hdr[2] != 0x43 ||
+	    hdr.hdr[3] != 0x48 ||
+	    hdr.hdr[4] != 0x43) {
 		ERROR("Unrecognized data format!\n");
+		sinfonia_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
 	}
 
-	uint16_t rows = be16_to_cpu(job->hdr.rows);
-	uint16_t cols = be16_to_cpu(job->hdr.columns);
+	uint16_t rows = be16_to_cpu(hdr.rows);
+	uint16_t cols = be16_to_cpu(hdr.columns);
 	if (rows != 1240 && rows != 2434 && rows != 2140 && !ctx->supports_sub4x6) {
 		ERROR("Printer Firmware does not support non-4x6/8x6/5x7 prints, please upgrade!\n");
+		sinfonia_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
 	}
 
@@ -859,11 +843,12 @@ static int kodak6800_read_parse(void *vctx, const void **vjob, int data_fd, int 
 	job->databuf = malloc(job->datalen);
 	if (!job->databuf) {
 		ERROR("Memory allocation failure!\n");
+		sinfonia_cleanup_job(job);
 		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 
 	/* Windows driver only sends 634 rows of data, work around */
-	if (rows == 636 && job->hdr.size == 6 && job->hdr.method == 0) {
+	if (rows == 636 && hdr.size == 6 && hdr.method == 0) {
 		rows = 634;
 		job->datalen -= 1844*2*3;
 	}
@@ -878,6 +863,7 @@ static int kodak6800_read_parse(void *vctx, const void **vjob, int data_fd, int 
 				ERROR("Read failed (%d/%d/%d)\n",
 				      ret, remain, job->datalen);
 				perror("ERROR: Read failed");
+				sinfonia_cleanup_job(job);
 				return CUPS_BACKEND_CANCEL;
 			}
 			ptr += ret;
@@ -892,35 +878,40 @@ static int kodak6800_read_parse(void *vctx, const void **vjob, int data_fd, int 
 	}
 
 	/* Perform some header re-jiggery */
-	if (job->hdr.size == 0) {
+	if (hdr.size == 0) {
 		if (cols == 1844)
-			job->hdr.size = 6;
+			hdr.size = 6;
 		else if (cols == 1548)
-			job->hdr.size = 7;
+			hdr.size = 7;
 	}
-	if (job->hdr.method == 0) {
+	if (hdr.method == 0) {
 		if (rows == 636) {
-			job->hdr.method = 0x21;
+			hdr.method = 0x21;
 		} else if (rows == 936) {
-			job->hdr.method = 0x23;
+			hdr.method = 0x23;
 		} else if (rows == 1240) {
-			job->hdr.method = 0x01;
+			hdr.method = 0x01;
 		} else if (rows == 1282) {
-			job->hdr.method = 0x20;
+			hdr.method = 0x20;
 		} else if (rows == 1882) {
-			job->hdr.method = 0x22;
+			hdr.method = 0x22;
 		} else if (rows == 2490) {
-			job->hdr.method = 0x2;
+			hdr.method = 0x2;
 		}
 	}
 
-        /* Fix max print count. */
-        if (copies > 9999) // XXX test against remaining media
-                copies = 9999;
+	hdr.copies = be16_to_cpu(hdr.copies);
+	hdr.copies = packed_bcd_to_uint32((char*)&hdr.copies, 2);
+	if (hdr.copies > 1)
+		copies = hdr.copies;
 
-	/* Printer handles generating copies.. */
-	if (le16_to_cpu(job->hdr.copies) < copies)
-		job->hdr.copies = cpu_to_be16(uint16_to_packed_bcd(copies));
+	/* Fill out job structure */
+	job->jp.copies = copies;
+	job->jp.rows = rows;
+	job->jp.columns = cols;
+	job->jp.media = hdr.size;
+	job->jp.oc_mode = hdr.laminate;
+	job->jp.method = hdr.method;
 
 	*vjob = job;
 
@@ -931,22 +922,22 @@ static int kodak6800_main_loop(void *vctx, const void *vjob) {
 	struct kodak6800_ctx *ctx = vctx;
 
 	int num, ret;
+	int copies;
 
-	const struct kodak6800_printjob *job = vjob;
+	const struct sinfonia_printjob *job = vjob;
 
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
 	if (!job)
 		return CUPS_BACKEND_FAILED;
 
-	struct kodak6800_hdr hdr;
-	memcpy(&hdr, &job->hdr, sizeof(hdr));
+	copies = job->jp.copies;
 
 	/* Validate against supported media list */
 	for (num = 0 ; num < ctx->media_count; num++) {
-		if (ctx->sizes[num].rows == hdr.rows &&
-		    ctx->sizes[num].columns == hdr.columns &&
-		    ctx->sizes[num].method == hdr.method)
+		if (ctx->sizes[num].rows == job->jp.rows &&
+		    ctx->sizes[num].columns == job->jp.columns &&
+		    ctx->sizes[num].method == job->jp.method)
 			break;
 	}
 	if (num == ctx->media_count) {
@@ -997,7 +988,26 @@ static int kodak6800_main_loop(void *vctx, const void *vjob) {
 			return ret;
 	}
 
+        /* Fix max print count. */
+        if (copies > 9999)
+                copies = 9999;
+
+	/* Fill out printjob header */
+	struct kodak6800_hdr hdr;
+	hdr.hdr[0] = 0x03;
+	hdr.hdr[1] = 0x1b;
+	hdr.hdr[2] = 0x43;
+	hdr.hdr[3] = 0x48;
+	hdr.hdr[4] = 0x43;
+	hdr.hdr[5] = 0x0a;
+	hdr.hdr[6] = 0x00;
 	hdr.jobid = ctx->jobid;
+	hdr.copies = cpu_to_be16(uint16_to_packed_bcd(copies));
+	hdr.columns = cpu_to_le16(job->jp.columns);
+	hdr.rows = cpu_to_le16(job->jp.rows);
+	hdr.size = job->jp.media;
+	hdr.laminate = job->jp.oc_mode;
+	hdr.method = job->jp.method;
 
 	INFO("Sending Print Job (internal id %u)\n", ctx->jobid);
 	if ((ret = kodak6800_do_cmd(ctx, (uint8_t*) &hdr, sizeof(hdr),
@@ -1079,14 +1089,13 @@ static const char *kodak6800_prefixes[] = {
 /* Exported */
 struct dyesub_backend kodak6800_backend = {
 	.name = "Kodak 6800/6850",
-	.version = "0.70" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.71" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = kodak6800_prefixes,
 	.cmdline_usage = kodak6800_cmdline,
 	.cmdline_arg = kodak6800_cmdline_arg,
 	.init = kodak6800_init,
 	.attach = kodak6800_attach,
-	.teardown = kodak6800_teardown,
-	.cleanup_job = kodak6800_cleanup_job,
+	.cleanup_job = sinfonia_cleanup_job,
 	.read_parse = kodak6800_read_parse,
 	.main_loop = kodak6800_main_loop,
 	.query_serno = kodak6800_query_serno,

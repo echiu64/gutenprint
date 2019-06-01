@@ -559,15 +559,6 @@ static void mitsud90_cleanup_job(const void *vjob)
 	free((void*)job);
 }
 
-static void mitsud90_teardown(void *vctx) {
-	struct mitsud90_ctx *ctx = vctx;
-
-	if (!ctx)
-		return;
-
-	free(ctx);
-}
-
 static int mitsud90_read_parse(void *vctx, const void **vjob, int data_fd, int copies) {
 	struct mitsud90_ctx *ctx = vctx;
 	int i, remain;
@@ -1232,7 +1223,6 @@ struct dyesub_backend mitsud90_backend = {
 	.init = mitsud90_init,
 	.attach = mitsud90_attach,
 	.cleanup_job = mitsud90_cleanup_job,
-	.teardown = mitsud90_teardown,
 	.read_parse = mitsud90_read_parse,
 	.main_loop = mitsud90_main_loop,
 	.query_markers = mitsud90_query_markers,

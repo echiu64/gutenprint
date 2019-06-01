@@ -251,15 +251,6 @@ static void selphyneo_cleanup_job(const void *vjob) {
 	free((void*)job);
 }
 
-static void selphyneo_teardown(void *vctx) {
-	struct selphyneo_ctx *ctx = vctx;
-
-	if (!ctx)
-		return;
-
-	free(ctx);
-}
-
 static int selphyneo_read_parse(void *vctx, const void **vjob, int data_fd, int copies)
 {
 	struct selphyneo_ctx *ctx = vctx;
@@ -547,7 +538,6 @@ struct dyesub_backend canonselphyneo_backend = {
 	.init = selphyneo_init,
 	.attach = selphyneo_attach,
 	.cleanup_job = selphyneo_cleanup_job,
-	.teardown = selphyneo_teardown,
 	.read_parse = selphyneo_read_parse,
 	.main_loop = selphyneo_main_loop,
 	.query_markers = selphyneo_query_markers,

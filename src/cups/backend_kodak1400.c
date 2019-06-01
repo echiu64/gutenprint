@@ -328,15 +328,6 @@ static void kodak1400_cleanup_job(const void *vjob)
 	free((void*)job);
 }
 
-static void kodak1400_teardown(void *vctx) {
-	struct kodak1400_ctx *ctx = vctx;
-
-	if (!ctx)
-		return;
-
-	free(ctx);
-}
-
 static int kodak1400_read_parse(void *vctx, const void **vjob, int data_fd, int copies) {
 	struct kodak1400_ctx *ctx = vctx;
 	int i, ret;
@@ -661,7 +652,6 @@ struct dyesub_backend kodak1400_backend = {
 	.cmdline_arg = kodak1400_cmdline_arg,
 	.init = kodak1400_init,
 	.attach = kodak1400_attach,
-	.teardown = kodak1400_teardown,
 	.cleanup_job = kodak1400_cleanup_job,
 	.read_parse = kodak1400_read_parse,
 	.main_loop = kodak1400_main_loop,

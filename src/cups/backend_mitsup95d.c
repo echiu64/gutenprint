@@ -169,15 +169,6 @@ static void mitsup95d_cleanup_job(const void *vjob)
 	free((void*)job);
 }
 
-static void mitsup95d_teardown(void *vctx) {
-	struct mitsup95d_ctx *ctx = vctx;
-
-	if (!ctx)
-		return;
-
-	free(ctx);
-}
-
 static int mitsup95d_read_parse(void *vctx, const void **vjob, int data_fd, int copies) {
 	struct mitsup95d_ctx *ctx = vctx;
 	uint8_t buf[2];  /* Enough to read in any header */
@@ -614,7 +605,6 @@ struct dyesub_backend mitsup95d_backend = {
 	.cmdline_usage = mitsup95d_cmdline,
 	.init = mitsup95d_init,
 	.attach = mitsup95d_attach,
-	.teardown = mitsup95d_teardown,
 	.cleanup_job = mitsup95d_cleanup_job,
 	.read_parse = mitsup95d_read_parse,
 	.main_loop = mitsup95d_main_loop,

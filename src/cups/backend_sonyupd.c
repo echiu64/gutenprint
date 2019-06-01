@@ -144,15 +144,6 @@ static void upd_cleanup_job(const void *vjob)
 	free((void*)job);
 }
 
-static void upd_teardown(void *vctx) {
-	struct upd_ctx *ctx = vctx;
-
-	if (!ctx)
-		return;
-
-	free(ctx);
-}
-
 // UP-DR200
 // 2UPC-R203  3.5x5  (770)
 // 2UPC-R204  4x6    (700)
@@ -406,6 +397,7 @@ static int upd_read_parse(void *vctx, const void **vjob, int data_fd, int copies
 	{
 		ERROR("Job data length mismatch (%u vs %d)!\n",
 		      job->imglen, job->rows * job->cols * ctx->native_bpp);
+		upd_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
 	}
 
@@ -629,7 +621,6 @@ struct dyesub_backend sonyupd_backend = {
 	.cmdline_usage = upd_cmdline,
 	.init = upd_init,
 	.attach = upd_attach,
-	.teardown = upd_teardown,
 	.cleanup_job = upd_cleanup_job,
 	.read_parse = upd_read_parse,
 	.main_loop = upd_main_loop,
@@ -746,7 +737,11 @@ struct dyesub_backend sonyupd_backend = {
  <- 1b ea 00 00 00 00 ZZ ZZ ZZ ZZ 00  # ZZ is BIG ENDIAN
  <- [ ZZ ZZ ZZ ZZ bytes of data ]
 
-   UNKNOWN  (UPDR series)
+   UNKNOWN CMD (UP-DR and UP-D)
+
+ <- 1b ed 00 00 00 00 00
+
+   UNKNOWN (UPDR series)
 
  <- 1b ef 00 00 00 06 00
  -> 05 00 00 00 00 22
@@ -755,6 +750,11 @@ struct dyesub_backend sonyupd_backend = {
 
  <- 1b ee 00 00 00 02 00
  <- NN NN                        # Number of copies (BE, 1-???)
+
+   UNKNOWN (UPDR series)
+
+ <- 1b f5 00 00 00 02 00
+ <- ?? ??
 
   ************************************************************************
 

@@ -154,6 +154,14 @@ enum {
 	P_MAGICARD = 43,
 	P_SONY_UPD895 = 44,
 	P_SONY_UPD897 = 45,
+	P_SONY_UPD898 = 46,
+	P_SONY_UPCR20L = 47,
+	P_SONY_UPDR80 = 48,
+	P_KODAK_8810 = 49,
+	P_KODAK_7000 = 50,
+	P_KODAK_701X = 51,
+	P_KODAK_6900 = 52,
+	P_SHINKO_S2245 = 53,
 	P_END,
 };
 
@@ -221,6 +229,8 @@ int dyesub_read_file(char *filename, void *databuf, int datalen,
 
 uint16_t uint16_to_packed_bcd(uint16_t val);
 uint32_t packed_bcd_to_uint32(char *in, int len);
+
+void generic_teardown(void *vctx);
 
 /* USB enumeration and attachment */
 #define NUM_CLAIM_ATTEMPTS 10

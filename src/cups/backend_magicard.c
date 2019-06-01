@@ -475,15 +475,6 @@ static void magicard_cleanup_job(const void *vjob)
 	free((void*)job);
 }
 
-static void magicard_teardown(void *vctx) {
-	struct magicard_ctx *ctx = vctx;
-
-	if (!ctx)
-		return;
-
-	free(ctx);
-}
-
 static void downscale_and_extract(int gamma, uint32_t pixels,
 				  uint8_t *y_i, uint8_t *m_i, uint8_t *c_i,
 				  uint8_t *y_o, uint8_t *m_o, uint8_t *c_o, uint8_t *k_o)
@@ -662,6 +653,7 @@ static int magicard_read_parse(void *vctx, const void **vjob, int data_fd, int c
 			/* Safety valve */
 			if (strlen(ptr) + job->datalen > MAX_HEADERS_LEN) {
 				ERROR("headers too long, bogus job!\n");
+				magicard_cleanup_job(job);
 				return CUPS_BACKEND_CANCEL;
 			}
 
@@ -962,7 +954,6 @@ struct dyesub_backend magicard_backend = {
 	.cmdline_usage = magicard_cmdline,
 	.init = magicard_init,
 	.attach = magicard_attach,
-	.teardown = magicard_teardown,
 	.cleanup_job = magicard_cleanup_job,
 	.read_parse = magicard_read_parse,
 	.main_loop = magicard_main_loop,

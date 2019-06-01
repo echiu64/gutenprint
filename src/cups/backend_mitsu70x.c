@@ -2514,7 +2514,7 @@ struct dyesub_backend mitsu70x_backend = {
 	}
 };
 
-/* Mitsubish CP-D70DW/D707DW/K60DW-S/D80DW, Kodak 305, Fuji ASK-300
+/* Mitsubish CP-D70DW/D707DW/K60DW-S/D80DW, Kodak 305, Fujifilm ASK-300
    data format:
 
    Spool file consists of two headers followed by three image planes

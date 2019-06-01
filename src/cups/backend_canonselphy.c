@@ -691,15 +691,6 @@ static void canonselphy_cleanup_job(const void *vjob) {
 	free((void*)job);
 }
 
-static void canonselphy_teardown(void *vctx) {
-	struct canonselphy_ctx *ctx = vctx;
-
-	if (!ctx)
-		return;
-
-	free(ctx);
-}
-
 static int canonselphy_read_parse(void *vctx, const void **vjob, int data_fd, int copies)
 {
 	struct canonselphy_ctx *ctx = vctx;
@@ -1165,7 +1156,6 @@ struct dyesub_backend canonselphy_backend = {
 	.cmdline_arg = canonselphy_cmdline_arg,
 	.init = canonselphy_init,
 	.attach = canonselphy_attach,
-	.teardown = canonselphy_teardown,
 	.read_parse = canonselphy_read_parse,
 	.cleanup_job = canonselphy_cleanup_job,
 	.main_loop = canonselphy_main_loop,

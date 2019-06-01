@@ -150,6 +150,536 @@ int sinfonia_read_parse(int data_fd, uint32_t model,
 	return CUPS_BACKEND_OK;
 }
 
+int sinfonia_raw10_read_parse(int data_fd, struct sinfonia_printjob *job)
+{
+	struct sinfonia_printcmd10_hdr hdr;
+	int ret;
+
+	/* Read in header */
+	ret = read(data_fd, &hdr, sizeof(hdr));
+	if (ret < 0 || ret != sizeof(hdr)) {
+		if (ret == 0)
+			return CUPS_BACKEND_CANCEL;
+		ERROR("Read failed (%d/%d/%d)\n",
+		      ret, 0, (int)sizeof(hdr));
+		perror("ERROR: Read failed");
+		return CUPS_BACKEND_CANCEL;
+	}
+	/* Validate header */
+	if (le16_to_cpu(hdr.hdr.cmd) != 0x4001 ||
+	    le16_to_cpu(hdr.hdr.len) != 10) {
+		ERROR("Unrecognized data format!\n");
+		return CUPS_BACKEND_CANCEL;
+	}
+	job->jp.copies = le16_to_cpu(hdr.copies);
+	job->jp.rows = le16_to_cpu(hdr.rows);
+	job->jp.columns = le16_to_cpu(hdr.columns);
+	job->jp.media = hdr.media;
+	job->jp.oc_mode = hdr.oc_mode;
+	job->jp.method = hdr.method;
+
+	/* Allocate buffer */
+	job->datalen = job->jp.rows * job->jp.columns * 3;
+	job->databuf = malloc(job->datalen);
+	if (!job->databuf) {
+		ERROR("Memory allocation failure!\n");
+		return CUPS_BACKEND_RETRY_CURRENT;
+	}
+
+	{
+		int remain = job->datalen;
+		uint8_t *ptr = job->databuf;
+		do {
+			ret = read(data_fd, ptr, remain);
+			if (ret < 0) {
+				ERROR("Read failed (%d/%d/%d)\n",
+				      ret, remain, job->datalen);
+				perror("ERROR: Read failed");
+				return CUPS_BACKEND_CANCEL;
+			}
+			ptr += ret;
+			remain -= ret;
+		} while (remain);
+	}
+
+	return CUPS_BACKEND_OK;
+}
+
+int sinfonia_raw18_read_parse(int data_fd, struct sinfonia_printjob *job)
+{
+	struct sinfonia_printcmd18_hdr hdr;
+	int ret;
+
+	/* Read in header */
+	ret = read(data_fd, &hdr, sizeof(hdr));
+	if (ret < 0 || ret != sizeof(hdr)) {
+		if (ret == 0)
+			return CUPS_BACKEND_CANCEL;
+		ERROR("Read failed (%d/%d/%d)\n",
+		      ret, 0, (int)sizeof(hdr));
+		perror("ERROR: Read failed");
+		return CUPS_BACKEND_CANCEL;
+	}
+	/* Validate header */
+	if (le16_to_cpu(hdr.hdr.cmd) != SINFONIA_CMD_PRINTJOB ||
+	    le16_to_cpu(hdr.hdr.len) != 18) {
+		ERROR("Unrecognized data format!\n");
+		return CUPS_BACKEND_CANCEL;
+	}
+	job->jp.copies = le16_to_cpu(hdr.copies);
+	job->jp.rows = le16_to_cpu(hdr.rows);
+	job->jp.columns = le16_to_cpu(hdr.columns);
+	job->jp.media = hdr.media;
+	job->jp.oc_mode = hdr.oc_mode;
+	job->jp.method = hdr.method;
+
+	/* Allocate buffer */
+	job->datalen = job->jp.rows * job->jp.columns * 3;
+	job->databuf = malloc(job->datalen);
+	if (!job->databuf) {
+		ERROR("Memory allocation failure!\n");
+		return CUPS_BACKEND_RETRY_CURRENT;
+	}
+
+	{
+		int remain = job->datalen;
+		uint8_t *ptr = job->databuf;
+		do {
+			ret = read(data_fd, ptr, remain);
+			if (ret < 0) {
+				ERROR("Read failed (%d/%d/%d)\n",
+				      ret, remain, job->datalen);
+				perror("ERROR: Read failed");
+				return CUPS_BACKEND_CANCEL;
+			}
+			ptr += ret;
+			remain -= ret;
+		} while (remain);
+	}
+
+	return CUPS_BACKEND_OK;
+}
+
+int sinfonia_raw28_read_parse(int data_fd, struct sinfonia_printjob *job)
+{
+	struct sinfonia_printcmd28_hdr hdr;
+	int ret;
+
+	/* Read in header */
+	ret = read(data_fd, &hdr, sizeof(hdr));
+	if (ret < 0 || ret != sizeof(hdr)) {
+		if (ret == 0)
+			return CUPS_BACKEND_CANCEL;
+		ERROR("Read failed (%d/%d/%d)\n",
+		      ret, 0, (int)sizeof(hdr));
+		perror("ERROR: Read failed");
+		return CUPS_BACKEND_CANCEL;
+	}
+	/* Validate header */
+	if (le16_to_cpu(hdr.hdr.cmd) != SINFONIA_CMD_PRINTJOB ||
+	    le16_to_cpu(hdr.hdr.len) != 28) {
+		ERROR("Unrecognized data format!\n");
+		return CUPS_BACKEND_CANCEL;
+	}
+	job->jp.copies = le16_to_cpu(hdr.copies);
+	job->jp.rows = le16_to_cpu(hdr.rows);
+	job->jp.columns = le16_to_cpu(hdr.columns);
+	job->jp.media = hdr.media;
+	job->jp.oc_mode = hdr.options & 0x03;
+	job->jp.quality = hdr.options & 0x08;
+	job->jp.method = hdr.method;
+
+	/* Allocate buffer */
+	job->datalen = job->jp.rows * job->jp.columns * 3;
+	job->databuf = malloc(job->datalen);
+	if (!job->databuf) {
+		ERROR("Memory allocation failure!\n");
+		return CUPS_BACKEND_RETRY_CURRENT;
+	}
+
+	{
+		int remain = job->datalen;
+		uint8_t *ptr = job->databuf;
+		do {
+			ret = read(data_fd, ptr, remain);
+			if (ret < 0) {
+				ERROR("Read failed (%d/%d/%d)\n",
+				      ret, remain, job->datalen);
+				perror("ERROR: Read failed");
+				return CUPS_BACKEND_CANCEL;
+			}
+			ptr += ret;
+			remain -= ret;
+		} while (remain);
+	}
+
+	return CUPS_BACKEND_OK;
+}
+
+void sinfonia_cleanup_job(const void *vjob)
+{
+	const struct sinfonia_printjob *job = vjob;
+
+	if (job->databuf)
+		free(job->databuf);
+
+	free((void*)job);
+}
+
+int sinfonia_docmd(struct sinfonia_usbdev *usbh,
+		   uint8_t *cmd, int cmdlen,
+		   uint8_t *resp, int resplen,
+		   int *num)
+{
+	libusb_device_handle *dev = usbh->dev;
+	uint8_t endp_up = usbh->endp_up;
+	uint8_t endp_down = usbh->endp_down;
+	int ret;
+
+	struct sinfonia_cmd_hdr *cmdhdr =  (struct sinfonia_cmd_hdr *) cmd;
+	struct sinfonia_status_hdr *resphdr = (struct sinfonia_status_hdr *)resp;
+
+	if ((ret = send_data(dev, endp_down,
+			     cmd, cmdlen))) {
+		goto fail;
+	}
+
+	ret = read_data(dev, endp_up,
+			(uint8_t *)resp, resplen, num);
+
+	if (ret < 0)
+		goto fail;
+
+	if (resphdr->result != RESULT_SUCCESS) {
+		INFO("Printer Status:  %02x (%s)\n", resphdr->status,
+		     sinfonia_status_str(resphdr->status));
+		INFO(" Result: 0x%02x  Error: 0x%02x (0x%02x/0x%02x = %s)\n",
+		     resphdr->result, resphdr->error, resphdr->printer_major,
+		     resphdr->printer_minor, usbh->error_codes(resphdr->printer_major, resphdr->printer_minor));
+		goto fail;
+	}
+
+	return 0;
+fail:
+	ERROR("Failed to execute %s command\n", sinfonia_cmd_names(cmdhdr->cmd));
+	return ret;
+}
+
+int sinfonia_flashled(struct sinfonia_usbdev *usbh)
+{
+	struct sinfonia_cmd_hdr cmd;
+	struct sinfonia_status_hdr resp;
+	int ret, num = 0;
+
+	cmd.cmd = cpu_to_le16(SINFONIA_CMD_FLASHLED);
+	cmd.len = cpu_to_le16(0);
+
+	if ((ret = sinfonia_docmd(usbh,
+				  (uint8_t*)&cmd, sizeof(cmd),
+				  (uint8_t*)&resp, sizeof(resp),
+				  &num)) < 0) {
+		return ret;
+	}
+
+	return 0;
+}
+
+int sinfonia_canceljob(struct sinfonia_usbdev *usbh, int id)
+{
+	struct sinfonia_cancel_cmd cmd;
+	struct sinfonia_status_hdr resp;
+	int ret, num = 0;
+
+	cmd.id = id;
+
+	cmd.hdr.cmd = cpu_to_le16(SINFONIA_CMD_CANCELJOB);
+	cmd.hdr.len = cpu_to_le16(1);
+
+	if ((ret = sinfonia_docmd(usbh,
+				  (uint8_t*)&cmd, sizeof(cmd),
+				  (uint8_t*)&resp, sizeof(resp),
+				  &num)) < 0) {
+		return ret;
+	}
+
+	return 0;
+}
+
+int sinfonia_getparam(struct sinfonia_usbdev *usbh, int target, uint32_t *param)
+{
+	struct sinfonia_getparam_cmd cmd;
+	struct sinfonia_getparam_resp resp;
+	int ret, num = 0;
+
+	/* Set up command */
+	cmd.target = target;
+
+	cmd.hdr.cmd = cpu_to_le16(SINFONIA_CMD_GETPARAM);
+	cmd.hdr.len = cpu_to_le16(sizeof(struct sinfonia_getparam_cmd)-sizeof(cmd.hdr));
+
+	if ((ret = sinfonia_docmd(usbh,
+				  (uint8_t*)&cmd, sizeof(cmd),
+				  (uint8_t*)&resp, sizeof(resp),
+				  &num)) < 0) {
+	}
+	*param = le32_to_cpu(resp.param);
+
+	return ret;
+}
+
+int sinfonia_setparam(struct sinfonia_usbdev *usbh, int target, uint32_t param)
+{
+	struct sinfonia_setparam_cmd cmd;
+	struct sinfonia_status_hdr resp;
+	int ret, num = 0;
+
+	/* Set up command */
+	cmd.target = target;
+	cmd.param = cpu_to_le32(param);
+
+	cmd.hdr.cmd = cpu_to_le16(SINFONIA_CMD_SETPARAM);
+	cmd.hdr.len = cpu_to_le16(sizeof(struct sinfonia_setparam_cmd)-sizeof(cmd.hdr));
+
+	if ((ret = sinfonia_docmd(usbh,
+				  (uint8_t*)&cmd, sizeof(cmd),
+				  (uint8_t*)&resp, sizeof(resp),
+				  &num)) < 0) {
+	}
+
+	return ret;
+}
+
+int sinfonia_getfwinfo(struct sinfonia_usbdev *usbh)
+{
+	struct sinfonia_fwinfo_cmd  cmd;
+	struct sinfonia_fwinfo_resp resp;
+	int num = 0;
+	int i;
+
+	cmd.hdr.cmd = cpu_to_le16(SINFONIA_CMD_FWINFO);
+	cmd.hdr.len = cpu_to_le16(1);
+
+	resp.hdr.payload_len = 0;
+
+	INFO("FW Information:\n");
+
+	for (i = FWINFO_TARGET_MAIN_BOOT ; i <= FWINFO_TARGET_PRINT_TABLES ; i++) {
+		int ret;
+		cmd.target = i;
+
+		if ((ret = sinfonia_docmd(usbh,
+					  (uint8_t*)&cmd, sizeof(cmd),
+					  (uint8_t*)&resp, sizeof(resp),
+					  &num)) < 0) {
+			continue;
+		}
+
+		if (le16_to_cpu(resp.hdr.payload_len) != (sizeof(struct sinfonia_fwinfo_resp) - sizeof(struct sinfonia_status_hdr)))
+			continue;
+
+		INFO(" %s\t ver %02x.%02x\n", sinfonia_fwinfo_targets(i),
+		     resp.major, resp.minor);
+#if 0
+		INFO("  name:    '%s'\n", resp.name);
+		INFO("  type:    '%s'\n", resp.type);
+		INFO("  date:    '%s'\n", resp.date);
+		INFO("  version: %02x.%02x (CRC %04x)\n", resp.major, resp.minor,
+		     le16_to_cpu(resp.checksum));
+#endif
+	}
+	return 0;
+}
+
+int sinfonia_geterrorlog(struct sinfonia_usbdev *usbh)
+{
+	struct sinfonia_cmd_hdr cmd;
+	struct sinfonia_errorlog_resp resp;
+	int ret, num = 0;
+	int i;
+
+	cmd.cmd = cpu_to_le16(SINFONIA_CMD_ERRORLOG);
+	cmd.len = cpu_to_le16(0);
+
+	resp.hdr.payload_len = 0;
+
+	if ((ret = sinfonia_docmd(usbh,
+				  (uint8_t*)&cmd, sizeof(cmd),
+				  (uint8_t*)&resp, sizeof(resp),
+				  &num)) < 0) {
+		return ret;
+	}
+
+	if (le16_to_cpu(resp.hdr.payload_len) != (sizeof(struct sinfonia_errorlog_resp) - sizeof(struct sinfonia_status_hdr)))
+		return -2;
+
+	INFO("Stored Error Events: %u entries:\n", resp.count);
+	for (i = 0 ; i < resp.count ; i++) {
+		INFO(" %02d: @ %08u prints : 0x%02x/0x%02x (%s)\n", i,
+		     le32_to_cpu(resp.items[i].print_counter),
+		     resp.items[i].major, resp.items[i].minor,
+		     usbh->error_codes(resp.items[i].major, resp.items[i].minor));
+	}
+	return 0;
+}
+
+int sinfonia_resetcurve(struct sinfonia_usbdev *usbh, int target, int id)
+{
+	struct sinfonia_reset_cmd cmd;
+	struct sinfonia_status_hdr resp;
+	int ret, num = 0;
+
+	cmd.target = target;
+	cmd.curveid = id;
+	cmd.hdr.cmd = cpu_to_le16(SINFONIA_CMD_RESET);
+	cmd.hdr.len = cpu_to_le16(2);
+
+	if ((ret = sinfonia_docmd(usbh,
+				  (uint8_t*)&cmd, sizeof(cmd),
+				  (uint8_t*)&resp, sizeof(resp),
+				  &num)) < 0) {
+		return ret;
+	}
+
+	return 0;
+}
+
+int sinfonia_gettonecurve(struct sinfonia_usbdev *usbh, int type, char *fname)
+{
+	struct sinfonia_readtone_cmd cmd;
+	struct sinfonia_readtone_resp resp;
+	int ret, num = 0;
+
+	uint8_t *data;
+	uint16_t curves[TONE_CURVE_SIZE] = { 0 };
+
+	int i,j;
+
+	cmd.target = type;
+	cmd.curveid = TONE_CURVE_ID;
+
+	cmd.hdr.cmd = cpu_to_le16(SINFONIA_CMD_READTONE);
+	cmd.hdr.len = cpu_to_le16(1);
+
+	resp.hdr.payload_len = 0;
+
+	INFO("Dump %s Tone Curve to '%s'\n", sinfonia_tonecurve_statuses(type), fname);
+
+	if ((ret = sinfonia_docmd(usbh,
+				  (uint8_t*)&cmd, sizeof(cmd),
+				  (uint8_t*)&resp, sizeof(resp),
+				  &num)) < 0) {
+		return ret;
+	}
+
+	if (le16_to_cpu(resp.hdr.payload_len) != (sizeof(struct sinfonia_readtone_resp) - sizeof(struct sinfonia_status_hdr)))
+		return -2;
+
+	resp.total_size = le16_to_cpu(resp.total_size);
+
+	data = malloc(resp.total_size * 2);
+	if (!data) {
+		ERROR("Memory Allocation Failure!\n");
+		return -1;
+	}
+
+	i = 0;
+	while (i < resp.total_size) {
+		ret = read_data(usbh->dev, usbh->endp_up,
+				data + i,
+				resp.total_size * 2 - i,
+				&num);
+		if (ret < 0)
+			goto done;
+		i += num;
+	}
+
+	i = j = 0;
+	while (i < resp.total_size) {
+		memcpy(curves + j, data + i+2, data[i+1]);
+		j += data[i+1] / 2;
+		i += data[i+1] + 2;
+	}
+
+	/* Open file and write it out */
+	{
+		int tc_fd = open(fname, O_WRONLY|O_CREAT, S_IRUSR|S_IWUSR);
+		if (tc_fd < 0) {
+			ret = -1;
+			goto done;
+		}
+
+		for (i = 0 ; i < TONE_CURVE_SIZE; i++) {
+			/* Byteswap appropriately */
+			curves[i] = cpu_to_be16(le16_to_cpu(curves[i]));
+		}
+		write(tc_fd, curves, TONE_CURVE_SIZE * sizeof(uint16_t));
+		close(tc_fd);
+	}
+
+done:
+	free(data);
+	return ret;
+}
+
+int sinfonia_settonecurve(struct sinfonia_usbdev *usbh, int target, char *fname)
+{
+	struct sinfonia_update_cmd cmd;
+	struct sinfonia_status_hdr resp;
+	int ret, num = 0;
+
+	INFO("Set %s Tone Curve from '%s'\n", sinfonia_update_targets(target), fname);
+
+	uint16_t *data = malloc(TONE_CURVE_SIZE * sizeof(uint16_t));
+	if (!data) {
+		ERROR("Memory Allocation Failure!\n");
+		return -1;
+	}
+
+	/* Read in file */
+	if ((ret = dyesub_read_file(fname, data, TONE_CURVE_SIZE * sizeof(uint16_t), NULL))) {
+		ERROR("Failed to read Tone Curve file\n");
+		goto done;
+	}
+
+	/* Byteswap data to local CPU.. */
+	for (ret = 0; ret < TONE_CURVE_SIZE ; ret++) {
+		data[ret] = be16_to_cpu(data[ret]);
+	}
+
+	/* Set up command */
+	cmd.target = target;
+	cmd.curve_id = TONE_CURVE_ID;
+	cmd.reserved[0] = cmd.reserved[1] = cmd.reserved[2] = 0;
+	cmd.reset = 0;
+	cmd.size = cpu_to_le32(TONE_CURVE_SIZE * sizeof(uint16_t));
+
+	cmd.hdr.cmd = cpu_to_le16(SINFONIA_CMD_UPDATE);
+	cmd.hdr.len = cpu_to_le16(sizeof(struct sinfonia_update_cmd)-sizeof(cmd.hdr));
+
+	/* Byteswap data to format printer is expecting.. */
+	for (ret = 0; ret < TONE_CURVE_SIZE ; ret++) {
+		data[ret] = cpu_to_le16(data[ret]);
+	}
+
+	if ((ret = sinfonia_docmd(usbh,
+				  (uint8_t*)&cmd, sizeof(cmd),
+				  (uint8_t*)&resp, sizeof(resp),
+				  &num)) < 0) {
+		return ret;
+	}
+
+	/* Sent transfer */
+	if ((ret = send_data(usbh->dev, usbh->endp_down,
+			     (uint8_t *) data, TONE_CURVE_SIZE * sizeof(uint16_t)))) {
+		goto done;
+	}
+
+done:
+	free(data);
+
+	return ret;
+}
+
 const char *sinfonia_update_targets (uint8_t v) {
 	switch (v) {
 	case UPDATE_TARGET_USER:
@@ -239,6 +769,34 @@ const char *sinfonia_print_methods (uint8_t v) {
 		return "Double";
 	default:
 		return "Unknown";
+	}
+}
+
+const char *sinfonia_print_modes(uint8_t v) {
+	switch (v) {
+	case PRINT_MODE_NO_OC:
+		return "No Overcoat";
+	case PRINT_MODE_GLOSSY:
+		return "Glossy";
+	case PRINT_MODE_MATTE:
+		return "Matte";
+	default:
+		return "Unknown";
+	}
+}
+
+const char *sinfonia_fwinfo_targets (uint8_t v) {
+	switch (v) {
+	case FWINFO_TARGET_MAIN_BOOT:
+		return "Main Boot   ";
+	case FWINFO_TARGET_MAIN_APP:
+		return "Main App    ";
+	case FWINFO_TARGET_DSP:
+		return "DSP         ";
+	case FWINFO_TARGET_PRINT_TABLES:
+		return "Print Tables";
+	default:
+		return "Unknown     ";
 	}
 }
 
@@ -413,7 +971,9 @@ const char *kodak6_mediatypes(int type)
 		return "No media";
 	case KODAK6_MEDIA_6R:
 	case KODAK6_MEDIA_6TR2:
+	case KODAK7_MEDIA_6R:
 		return "Kodak 6R";
+
 	default:
 		return "Unknown";
 	}

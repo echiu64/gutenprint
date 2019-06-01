@@ -53,17 +53,6 @@ enum {
 };
 
 /* Structs for printer */
-struct s2145_print_cmd {
-	struct sinfonia_cmd_hdr hdr;
-	uint8_t  id;
-	uint16_t count;
-	uint16_t columns;
-	uint16_t rows;
-	uint8_t  media;
-	uint8_t  mode;
-	uint8_t  method;
-} __attribute__((packed));
-
 static int print_counts (uint8_t v) {
 	switch (v) {
 	case CODE_4x6:
@@ -81,6 +70,7 @@ static int print_counts (uint8_t v) {
 	}
 }
 
+#if 0
 #define PRINT_MODE_DEFAULT      0x01
 #define PRINT_MODE_STD_GLOSSY   0x02
 #define PRINT_MODE_FINE_GLOSSY  0x03
@@ -89,12 +79,11 @@ static int print_counts (uint8_t v) {
 #define PRINT_MODE_STD_EGLOSSY  0x06
 #define PRINT_MODE_FINE_EGLOSSY 0x07
 
-#if 0
-static char *print_modes(uint8_t v) {
+static char *s2145_print_modes(uint8_t v) {
 	switch (v) {
 	case PRINT_MODE_DEFAULT:
 		return "Default";
-s	case PRINT_MODE_STD_GLOSSY:
+	case PRINT_MODE_STD_GLOSSY:
 		return "Std Glossy";
 	case PRINT_MODE_FINE_GLOSSY:
 		return "Fine Glossy";
@@ -175,7 +164,7 @@ struct s2145_setunique_cmd {
 	uint8_t  data[23];  /* Not necessarily all used. */
 } __attribute__((packed));
 
-static char *error_codes(uint8_t major, uint8_t minor)
+static const char *error_codes(uint8_t major, uint8_t minor)
 {
 	switch(major) {
 	case 0x01: /* "Controller Error" */
@@ -419,59 +408,14 @@ struct s2145_getunique_resp {
 
 /* Private data structure */
 struct shinkos2145_ctx {
-	struct libusb_device_handle *dev;
-	uint8_t endp_up;
-	uint8_t endp_down;
+	struct sinfonia_usbdev dev;
 
 	uint8_t jobid;
-
-	int type;
 
 	struct s2145_mediainfo_resp media;
 	struct marker marker;
 	int media_code;
 };
-
-static int s2145_do_cmd(struct shinkos2145_ctx *ctx,
-			uint8_t *cmd, int cmdlen,
-			uint8_t *resp, int resplen,
-			int *num)
-{
-	int ret;
-	struct sinfonia_status_hdr *resphdr = (struct sinfonia_status_hdr *)resp;
-	struct sinfonia_cmd_hdr *cmdhdr =  (struct sinfonia_cmd_hdr *) cmd;
-
-	libusb_device_handle *dev = ctx->dev;
-	uint8_t endp_up = ctx->endp_up;
-	uint8_t endp_down = ctx->endp_down;
-
-	if ((ret = send_data(dev, endp_down,
-			     cmd, cmdlen)))
-		goto fail;
-
-	ret = read_data(dev, endp_up,
-			resp, resplen, num);
-
-	if (ret < 0)
-		goto fail;
-
-	if (resphdr->result != RESULT_SUCCESS) {
-		INFO("Printer Status:  %02x (%s)\n", resphdr->status,
-		     sinfonia_status_str(resphdr->status));
-		INFO(" Result: 0x%02x  Error: 0x%02x (0x%02x/0x%02x = %s)\n",
-		     resphdr->result, resphdr->error, resphdr->printer_major,
-		     resphdr->printer_minor, error_codes(resphdr->printer_major, resphdr->printer_minor));
-		goto fail;
-	}
-
-	return 0;
-fail:
-	ERROR("Failed to execute %s command\n", sinfonia_cmd_names(cmdhdr->cmd));
-	if (ret < 0)
-		return ret;
-	else
-		return -99;
-}
 
 static int get_status(struct shinkos2145_ctx *ctx)
 {
@@ -482,7 +426,7 @@ static int get_status(struct shinkos2145_ctx *ctx)
 	cmd.cmd = cpu_to_le16(SINFONIA_CMD_GETSTATUS);
 	cmd.len = cpu_to_le16(0);
 
-	if ((ret = s2145_do_cmd(ctx,
+	if ((ret = sinfonia_docmd(&ctx->dev,
 				(uint8_t*)&cmd, sizeof(cmd),
 				(uint8_t*)&resp, sizeof(resp),
 				&num)) < 0) {
@@ -545,7 +489,7 @@ static int get_fwinfo(struct shinkos2145_ctx *ctx)
 		int ret;
 		cmd.target = i;
 
-		if ((ret = s2145_do_cmd(ctx,
+		if ((ret = sinfonia_docmd(&ctx->dev,
 					(uint8_t*)&cmd, sizeof(cmd),
 					(uint8_t*)&resp, sizeof(resp),
 					&num)) < 0) {
@@ -564,36 +508,6 @@ static int get_fwinfo(struct shinkos2145_ctx *ctx)
 		INFO("  version: %02x.%02x (CRC %04x)\n", resp.major, resp.minor,
 		     le16_to_cpu(resp.checksum));
 #endif
-	}
-	return 0;
-}
-
-static int get_errorlog(struct shinkos2145_ctx *ctx)
-{
-	struct sinfonia_cmd_hdr cmd;
-	struct sinfonia_errorlog_resp resp;
-	int ret, num = 0;
-	int i;
-
-	cmd.cmd = cpu_to_le16(SINFONIA_CMD_ERRORLOG);
-	cmd.len = cpu_to_le16(0);
-
-	if ((ret = s2145_do_cmd(ctx,
-				(uint8_t*)&cmd, sizeof(cmd),
-				(uint8_t*)&resp, sizeof(resp),
-				&num)) < 0) {
-		return ret;
-	}
-
-	if (le16_to_cpu(resp.hdr.payload_len) != (sizeof(struct sinfonia_errorlog_resp) - sizeof(struct sinfonia_status_hdr)))
-		return -2;
-
-	INFO("Stored Error Events: %u entries:\n", resp.count);
-	for (i = 0 ; i < resp.count ; i++) {
-		INFO(" %02d: @ %08u prints : 0x%02x/0x%02x (%s)\n", i,
-		     le32_to_cpu(resp.items[i].print_counter),
-		     resp.items[i].major, resp.items[i].minor,
-		     error_codes(resp.items[i].major, resp.items[i].minor));
 	}
 	return 0;
 }
@@ -623,7 +537,7 @@ static int get_user_string(struct shinkos2145_ctx *ctx)
 	cmd.cmd = cpu_to_le16(SINFONIA_CMD_GETUNIQUE);
 	cmd.len = cpu_to_le16(0);
 
-	if ((ret = s2145_do_cmd(ctx,
+	if ((ret = sinfonia_docmd(&ctx->dev,
 				(uint8_t*)&cmd, sizeof(cmd),
 				(uint8_t*)&resp, sizeof(resp),
 				&num)) < 0) {
@@ -658,51 +572,8 @@ static int set_user_string(struct shinkos2145_ctx *ctx, char *str)
 	cmd.hdr.cmd = cpu_to_le16(SINFONIA_CMD_SETUNIQUE);
 	cmd.hdr.len = cpu_to_le16(cmd.len + 1);
 
-	if ((ret = s2145_do_cmd(ctx,
+	if ((ret = sinfonia_docmd(&ctx->dev,
 				(uint8_t*)&cmd, cmd.len + 1 + sizeof(cmd.hdr),
-				(uint8_t*)&resp, sizeof(resp),
-				&num)) < 0) {
-		return ret;
-	}
-
-	return 0;
-}
-
-static int cancel_job(struct shinkos2145_ctx *ctx, char *str)
-{
-	struct sinfonia_cancel_cmd cmd;
-	struct sinfonia_status_hdr resp;
-	int ret, num = 0;
-
-	if (!str)
-		return -1;
-
-	cmd.id = atoi(str);
-
-	cmd.hdr.cmd = cpu_to_le16(SINFONIA_CMD_CANCELJOB);
-	cmd.hdr.len = cpu_to_le16(1);
-
-	if ((ret = s2145_do_cmd(ctx,
-				(uint8_t*)&cmd, sizeof(cmd),
-				(uint8_t*)&resp, sizeof(resp),
-				&num)) < 0) {
-		return ret;
-	}
-
-	return 0;
-}
-
-static int flash_led(struct shinkos2145_ctx *ctx)
-{
-	struct sinfonia_cmd_hdr cmd;
-	struct sinfonia_status_hdr resp;
-	int ret, num = 0;
-
-	cmd.cmd = cpu_to_le16(SINFONIA_CMD_FLASHLED);
-	cmd.len = cpu_to_le16(0);
-
-	if ((ret = s2145_do_cmd(ctx,
-				(uint8_t*)&cmd, sizeof(cmd),
 				(uint8_t*)&resp, sizeof(resp),
 				&num)) < 0) {
 		return ret;
@@ -723,7 +594,7 @@ static int reset_curve(struct shinkos2145_ctx *ctx, int target)
 	cmd.hdr.cmd = cpu_to_le16(SINFONIA_CMD_RESET);
 	cmd.hdr.len = cpu_to_le16(1);
 
-	if ((ret = s2145_do_cmd(ctx,
+	if ((ret = sinfonia_docmd(&ctx->dev,
 				(uint8_t*)&cmd, sizeof(cmd),
 				(uint8_t*)&resp, sizeof(resp),
 				&num)) < 0) {
@@ -744,7 +615,7 @@ static int button_set(struct shinkos2145_ctx *ctx, int enable)
 
 	cmd.enabled = enable;
 
-	if ((ret = s2145_do_cmd(ctx,
+	if ((ret = sinfonia_docmd(&ctx->dev,
 				(uint8_t*)&cmd, sizeof(cmd),
 				(uint8_t*)&cmd, sizeof(resp),
 				&num)) < 0) {
@@ -772,7 +643,7 @@ static int get_tonecurve(struct shinkos2145_ctx *ctx, int type, char *fname)
 
 	INFO("Dump %s Tone Curve to '%s'\n", sinfonia_tonecurve_statuses(type), fname);
 
-	if ((ret = s2145_do_cmd(ctx,
+	if ((ret = sinfonia_docmd(&ctx->dev,
 				(uint8_t*)&cmd, sizeof(cmd),
 				(uint8_t*)&resp, sizeof(resp),
 				&num)) < 0) {
@@ -790,7 +661,7 @@ static int get_tonecurve(struct shinkos2145_ctx *ctx, int type, char *fname)
 
 	i = 0;
 	while (i < resp.total_size) {
-		ret = read_data(ctx->dev, ctx->endp_up,
+		ret = read_data(ctx->dev.dev, ctx->dev.endp_up,
 				data + i,
 				resp.total_size * 2 - i,
 				&num);
@@ -873,7 +744,7 @@ static int set_tonecurve(struct shinkos2145_ctx *ctx, int target, char *fname)
 		data[ret] = cpu_to_le16(data[ret]);
 	}
 
-	if ((ret = s2145_do_cmd(ctx,
+	if ((ret = sinfonia_docmd(&ctx->dev,
 				(uint8_t*)&cmd, sizeof(cmd),
 				(uint8_t*)&resp, sizeof(resp),
 				&num)) < 0) {
@@ -881,7 +752,7 @@ static int set_tonecurve(struct shinkos2145_ctx *ctx, int target, char *fname)
 	}
 
 	/* Sent transfer */
-	if ((ret = send_data(ctx->dev, ctx->endp_down,
+	if ((ret = send_data(ctx->dev.dev, ctx->dev.endp_down,
 			     (uint8_t *) data, TONE_CURVE_SIZE * sizeof(uint16_t)))) {
 		goto done;
 	}
@@ -937,10 +808,10 @@ int shinkos2145_cmdline_arg(void *vctx, int argc, char **argv)
 			j = set_tonecurve(ctx, TONECURVE_USER, optarg);
 			break;
 		case 'e':
-			j = get_errorlog(ctx);
+			j = sinfonia_geterrorlog(&ctx->dev);
 			break;
 		case 'F':
-			j = flash_led(ctx);
+			j = sinfonia_flashled(&ctx->dev);
 			break;
 		case 'i':
 			j = get_fwinfo(ctx);
@@ -970,7 +841,7 @@ int shinkos2145_cmdline_arg(void *vctx, int argc, char **argv)
 			j = set_user_string(ctx, optarg);
 			break;
 		case 'X':
-			j = cancel_job(ctx, optarg);
+			j = sinfonia_canceljob(&ctx->dev, atoi(optarg));
 			break;
 		default:
 			break;  /* Ignore completely */
@@ -1001,10 +872,11 @@ static int shinkos2145_attach(void *vctx, struct libusb_device_handle *dev, int 
 {
 	struct shinkos2145_ctx *ctx = vctx;
 
-	ctx->dev = dev;
-	ctx->endp_up = endp_up;
-	ctx->endp_down = endp_down;
-	ctx->type = type;
+	ctx->dev.dev = dev;
+	ctx->dev.endp_up = endp_up;
+	ctx->dev.endp_down = endp_down;
+	ctx->dev.type = type;
+	ctx->dev.error_codes = &error_codes;
 
 	/* Ensure jobid is sane */
 	ctx->jobid = (jobid & 0x7f);
@@ -1021,7 +893,7 @@ static int shinkos2145_attach(void *vctx, struct libusb_device_handle *dev, int 
 		cmd.cmd = cpu_to_le16(SINFONIA_CMD_MEDIAINFO);
 		cmd.len = cpu_to_le16(0);
 
-		if (s2145_do_cmd(ctx,
+		if (sinfonia_docmd(&ctx->dev,
 				 (uint8_t*)&cmd, sizeof(cmd),
 				 (uint8_t*)&ctx->media, sizeof(ctx->media),
 				 &num)) {
@@ -1056,25 +928,6 @@ static int shinkos2145_attach(void *vctx, struct libusb_device_handle *dev, int 
 	ctx->marker.levelnow = -2;
 
 	return CUPS_BACKEND_OK;
-}
-
-static void shinkos2145_cleanup_job(const void *vjob)
-{
-	const struct sinfonia_printjob *job = vjob;
-
-	if (job->databuf)
-		free(job->databuf);
-
-	free((void*)job);
-}
-
-static void shinkos2145_teardown(void *vctx) {
-	struct shinkos2145_ctx *ctx = vctx;
-
-	if (!ctx)
-		return;
-
-	free(ctx);
 }
 
 static int shinkos2145_read_parse(void *vctx, const void **vjob, int data_fd, int copies) {
@@ -1145,7 +998,7 @@ top:
 	cmd.cmd = cpu_to_le16(SINFONIA_CMD_GETSTATUS);
 	cmd.len = cpu_to_le16(0);
 
-	if ((ret = s2145_do_cmd(ctx,
+	if ((ret = sinfonia_docmd(&ctx->dev,
 				(uint8_t*)&cmd, sizeof(cmd),
 				(uint8_t*)&sts, sizeof(sts),
 				&num)) < 0) {
@@ -1196,7 +1049,7 @@ top:
 
 		break;
 	case S_PRINTER_READY_CMD: {
-		struct s2145_print_cmd print;
+		struct sinfonia_printcmd10_hdr print;
 
 		INFO("Sending print job (internal id %u)\n", ctx->jobid);
 
@@ -1204,15 +1057,15 @@ top:
 		print.hdr.cmd = cpu_to_le16(SINFONIA_CMD_PRINTJOB);
 		print.hdr.len = cpu_to_le16(sizeof(print) - sizeof(print.hdr));
 
-		print.id = ctx->jobid;
-		print.count = cpu_to_le16(job->copies);
+		print.jobid = ctx->jobid;
+		print.copies = cpu_to_le16(job->copies);
 		print.columns = cpu_to_le16(job->jp.columns);
 		print.rows = cpu_to_le16(job->jp.rows);
 		print.media = job->jp.media;
-		print.mode = job->jp.oc_mode;
+		print.oc_mode = job->jp.oc_mode;
 		print.method = job->jp.method;
 
-		if ((ret = s2145_do_cmd(ctx,
+		if ((ret = sinfonia_docmd(&ctx->dev,
 					(uint8_t*)&print, sizeof(print),
 					(uint8_t*)&sts, sizeof(sts),
 					&num)) < 0) {
@@ -1231,7 +1084,7 @@ top:
 		}
 
 		INFO("Sending image data to printer\n");
-		if ((ret = send_data(ctx->dev, ctx->endp_down,
+		if ((ret = send_data(ctx->dev.dev, ctx->dev.endp_down,
 				     job->databuf, job->datalen)))
 			return CUPS_BACKEND_FAILED;
 
@@ -1288,7 +1141,7 @@ static int shinkos2145_query_serno(struct libusb_device_handle *dev, uint8_t end
 	struct s2145_getunique_resp resp;
 	int ret, num = 0;
 
-	struct shinkos2145_ctx ctx = {
+	struct sinfonia_usbdev sdev = {
 		.dev = dev,
 		.endp_up = endp_up,
 		.endp_down = endp_down,
@@ -1297,10 +1150,10 @@ static int shinkos2145_query_serno(struct libusb_device_handle *dev, uint8_t end
 	cmd.cmd = cpu_to_le16(SINFONIA_CMD_GETUNIQUE);
 	cmd.len = cpu_to_le16(0);
 
-	if ((ret = s2145_do_cmd(&ctx,
-				(uint8_t*)&cmd, sizeof(cmd),
-				(uint8_t*)&resp, sizeof(resp),
-				&num)) < 0) {
+	if ((ret = sinfonia_docmd(&sdev,
+				  (uint8_t*)&cmd, sizeof(cmd),
+				  (uint8_t*)&resp, sizeof(resp),
+				  &num)) < 0) {
 		return ret;
 	}
 
@@ -1323,7 +1176,7 @@ static int shinkos2145_query_markers(void *vctx, struct marker **markers, int *c
 	cmd.cmd = cpu_to_le16(SINFONIA_CMD_GETSTATUS);
 	cmd.len = cpu_to_le16(0);
 
-	if (s2145_do_cmd(ctx,
+	if (sinfonia_docmd(&ctx->dev,
 			 (uint8_t*)&cmd, sizeof(cmd),
 			 (uint8_t*)&sts, sizeof(sts),
 			 &num)) {
@@ -1353,14 +1206,13 @@ static const char *shinkos2145_prefixes[] = {
 
 struct dyesub_backend shinkos2145_backend = {
 	.name = "Shinko/Sinfonia CHC-S2145/S2",
-	.version = "0.60" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.61" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = shinkos2145_prefixes,
 	.cmdline_usage = shinkos2145_cmdline,
 	.cmdline_arg = shinkos2145_cmdline_arg,
 	.init = shinkos2145_init,
 	.attach = shinkos2145_attach,
-	.teardown = shinkos2145_teardown,
-	.cleanup_job = shinkos2145_cleanup_job,
+	.cleanup_job = sinfonia_cleanup_job,
 	.read_parse = shinkos2145_read_parse,
 	.main_loop = shinkos2145_main_loop,
 	.query_serno = shinkos2145_query_serno,
