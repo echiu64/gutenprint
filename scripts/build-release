@@ -24,7 +24,7 @@
 # autotool-processed.
 
 function xtput() {
-    [[ -z ${STP_TEST_RECURSIVE:-} && -n ${TERM:-} ]] && tput "$@"
+    [[ -z ${STP_TEST_RECURSIVE:-} && -n ${TERM:-} && ${TERM:-} != dumb ]] && tput "$@"
 }
 
 set -u
@@ -805,10 +805,18 @@ Kernel:      $(uname -o) $(uname -rv)
 Revision:    $("$GIT" rev-parse @)$git_dirty
 Parallel:    $STP_PARALLEL
 EOF
+
 [[ -n ${STP_TEST_ROTOR_CIRCUMFERENCE:-} && -n ${STP_TEST_ROTOR:-} ]] &&
     log_top "Rotor:       $STP_TEST_ROTOR / $STP_TEST_ROTOR_CIRCUMFERENCE"
 
+# Or we could just do "env" here, but having them sorted makes it
+# easier to read.  Variables containing '%%' are functions
 log_top <<EOF
+
+Environment:
+$(while read var ; do
+    echo "    $var=$(eval echo \$$var)"
+done <<< $(env |grep '^[^= ]\+=' |grep -v '%%' | sed 's/=.*//' |sort))
 
 CPU information:
 $(lscpu -e)
