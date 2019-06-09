@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gutenprint-20110308\n"
 "Report-Msgid-Bugs-To: gimp-print-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2019-05-16 21:47-0400\n"
+"POT-Creation-Date: 2019-06-09 16:01-0400\n"
 "PO-Revision-Date: 2011-10-19 19:25+0900\n"
 "Last-Translator: Yasuaki Taniguchi <yasuakit@gmail.com>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
@@ -143,37 +143,37 @@ msgid "Dither algorithm"
 msgstr "ディザリング方式"
 
 #: src/main/print-canon.c:285 src/main/print-escp2.c:174
-#: src/main/print-lexmark.c:264 src/main/print-olympus.c:8098
+#: src/main/print-lexmark.c:264 src/main/print-olympus.c:8100
 #: src/main/print-pcl.c:1539 src/main/print-ps.c:73 src/main/print-raw.c:101
 msgid "Page Size"
 msgstr ""
 
 #: src/main/print-canon.c:286 src/main/print-escp2.c:175
-#: src/main/print-lexmark.c:265 src/main/print-olympus.c:8099
+#: src/main/print-lexmark.c:265 src/main/print-olympus.c:8101
 #: src/main/print-pcl.c:1540 src/main/print-ps.c:74 src/main/print-raw.c:102
 msgid "Size of the paper being printed to"
 msgstr "印刷する用紙サイズ"
 
 #: src/main/print-canon.c:291 src/main/print-escp2.c:180
-#: src/main/print-lexmark.c:270 src/main/print-olympus.c:8104
+#: src/main/print-lexmark.c:270 src/main/print-olympus.c:8106
 #: src/main/print-pcl.c:1545 src/cups/genppd.c:2136 src/cups/genppd.c:2605
 msgid "Media Type"
 msgstr "用紙の種類"
 
 #: src/main/print-canon.c:292 src/main/print-escp2.c:181
-#: src/main/print-lexmark.c:271 src/main/print-olympus.c:8105
+#: src/main/print-lexmark.c:271 src/main/print-olympus.c:8107
 #: src/main/print-pcl.c:1546
 msgid "Type of media (plain paper, photo paper, etc.)"
 msgstr "メディアの種類 (普通紙、写真用紙、その他)"
 
 #: src/main/print-canon.c:297 src/main/print-escp2.c:186
-#: src/main/print-lexmark.c:276 src/main/print-olympus.c:8110
+#: src/main/print-lexmark.c:276 src/main/print-olympus.c:8112
 #: src/main/print-pcl.c:1551 src/cups/genppd.c:2172 src/cups/genppd.c:2625
 msgid "Media Source"
 msgstr "給紙方法"
 
 #: src/main/print-canon.c:298 src/main/print-escp2.c:187
-#: src/main/print-lexmark.c:277 src/main/print-olympus.c:8111
+#: src/main/print-lexmark.c:277 src/main/print-olympus.c:8113
 #: src/main/print-pcl.c:1552
 #, fuzzy
 msgid "Source (input slot) of the media"
@@ -226,25 +226,25 @@ msgid "CD Vertical Fine Adjustment"
 msgstr "CD の縦方向を微調整"
 
 #: src/main/print-canon.c:339 src/main/print-escp2.c:234
-#: src/main/print-lexmark.c:282 src/main/print-olympus.c:8116
+#: src/main/print-lexmark.c:282 src/main/print-olympus.c:8118
 #: src/main/print-pcl.c:1563 src/cups/genppd.c:2264 src/cups/genppd.c:2660
 msgid "Resolution"
 msgstr "解像度"
 
 #: src/main/print-canon.c:340 src/main/print-lexmark.c:283
-#: src/main/print-olympus.c:8117
+#: src/main/print-olympus.c:8119
 msgid "Resolution and quality of the print"
 msgstr "印刷時の解像度と品質です。"
 
 #: src/main/print-canon.c:350 src/main/print-escp2.c:245
-#: src/main/print-lexmark.c:288 src/main/print-olympus.c:8122
+#: src/main/print-lexmark.c:288 src/main/print-olympus.c:8124
 #: src/main/print-pcl.c:1569 src/main/print-raw.c:89
 msgid "Ink Type"
 msgstr "インクの種類"
 
 #: src/main/print-canon.c:351 src/main/print-escp2.c:246
 #: src/main/print-escp2.c:258 src/main/print-lexmark.c:289
-#: src/main/print-olympus.c:8123 src/main/print-pcl.c:1570
+#: src/main/print-olympus.c:8125 src/main/print-pcl.c:1570
 #: src/main/print-raw.c:90
 msgid "Type of ink in the printer"
 msgstr "印刷時のインクの種類です。"
@@ -257,14 +257,14 @@ msgid "Ink Channels"
 msgstr ""
 
 #: src/main/print-canon.c:367 src/main/print-escp2.c:347
-#: src/main/print-lexmark.c:300 src/main/print-olympus.c:8144
+#: src/main/print-lexmark.c:300 src/main/print-olympus.c:8146
 #: src/main/print-pcl.c:1581 src/main/print-ps.c:85 src/main/print-raw.c:95
 #, fuzzy
 msgid "Printing Mode"
 msgstr "プリンタの型式:"
 
 #: src/main/print-canon.c:368 src/main/print-escp2.c:348
-#: src/main/print-lexmark.c:301 src/main/print-olympus.c:8145
+#: src/main/print-lexmark.c:301 src/main/print-olympus.c:8147
 #: src/main/print-pcl.c:1582 src/main/print-ps.c:86 src/main/print-raw.c:96
 msgid "Printing Output Mode"
 msgstr "印刷出力モード"
@@ -280,22 +280,22 @@ msgid "Type of inkset in the printer"
 msgstr "印刷時のインクの種類です。"
 
 #: src/main/print-canon.c:384 src/main/print-escp2.c:269
-#: src/main/print-olympus.c:8138
+#: src/main/print-olympus.c:8140
 msgid "Borderless"
 msgstr "枠なし"
 
 #: src/main/print-canon.c:385 src/main/print-escp2.c:270
-#: src/main/print-olympus.c:8139
+#: src/main/print-olympus.c:8141
 msgid "Print without borders"
 msgstr "フチなし印刷"
 
 #: src/main/print-canon.c:390 src/main/print-escp2.c:192
-#: src/main/print-olympus.c:8150 src/main/print-pcl.c:1587
+#: src/main/print-olympus.c:8152 src/main/print-pcl.c:1587
 msgid "Double-Sided Printing"
 msgstr "両面印刷"
 
 #: src/main/print-canon.c:391 src/main/print-escp2.c:193
-#: src/main/print-olympus.c:8151 src/main/print-pcl.c:1588
+#: src/main/print-olympus.c:8153 src/main/print-pcl.c:1588
 msgid "Duplex/Tumble Setting"
 msgstr ""
 
@@ -381,7 +381,7 @@ msgstr "明るいシアン"
 
 #: src/main/print-canon.c:492 src/main/print-escp2.c:2547
 #: src/main/print-olympus.c:2736 src/main/print-olympus.c:2755
-#: src/main/print-olympus.c:5399 src/main/print-olympus.c:8222
+#: src/main/print-olympus.c:5399 src/main/print-olympus.c:8224
 #: src/main/print-pcl.c:1937 src/xml/xmli18n-tmp.h:3468
 #: src/xml/xmli18n-tmp.h:3473 src/xml/xmli18n-tmp.h:3479
 #: src/xml/xmli18n-tmp.h:3486
@@ -389,11 +389,11 @@ msgid "Off"
 msgstr ""
 
 #: src/main/print-canon.c:493 src/main/print-escp2.c:2549
-#: src/main/print-olympus.c:8223 src/main/print-pcl.c:1938
+#: src/main/print-olympus.c:8225 src/main/print-pcl.c:1938
 msgid "Long Edge (Standard)"
 msgstr "長辺 (標準)"
 
-#: src/main/print-canon.c:494 src/main/print-olympus.c:8224
+#: src/main/print-canon.c:494 src/main/print-olympus.c:8226
 #: src/main/print-pcl.c:1939
 msgid "Short Edge (Flip)"
 msgstr "短辺 (反転)"
@@ -435,7 +435,7 @@ msgid "CD - Custom"
 msgstr "カスタム"
 
 #: src/main/print-canon.c:2901 src/main/print-escp2.c:2301
-#: src/main/print-olympus.c:6658 src/cups/genppd.c:1518 src/cups/genppd.c:2393
+#: src/main/print-olympus.c:6660 src/cups/genppd.c:1518 src/cups/genppd.c:2393
 #: src/cups/genppd.c:2592 src/cups/genppd.c:2684
 msgid "Normal"
 msgstr ""
@@ -463,7 +463,7 @@ msgstr "背面トレイ"
 #: src/main/print-canon.c:3117 src/main/print-canon.c:3145
 #: src/main/print-canon.c:3177 src/main/print-canon.c:3181
 #: src/main/print-canon.c:3267 src/main/print-escp2.c:2715
-#: src/main/print-lexmark.c:1294 src/main/print-olympus.c:8470
+#: src/main/print-lexmark.c:1294 src/main/print-olympus.c:8472
 #: src/main/print-pcl.c:2384 src/main/print-ps.c:328 src/main/print-raw.c:150
 #: src/gutenprintui2/panel.c:289
 msgid "Color"
@@ -472,7 +472,7 @@ msgstr "カラー"
 #: src/main/print-canon.c:3093 src/main/print-canon.c:3131
 #: src/main/print-canon.c:3150 src/main/print-canon.c:3157
 #: src/main/print-escp2.c:2717 src/main/print-lexmark.c:1296
-#: src/main/print-olympus.c:8467 src/main/print-pcl.c:2386
+#: src/main/print-olympus.c:8469 src/main/print-pcl.c:2386
 #: src/main/print-ps.c:330 src/main/print-raw.c:152
 #, fuzzy
 msgid "Black and White"
@@ -1083,7 +1083,7 @@ msgstr "青のガンマ値を調整"
 msgid "Adjust the black gamma"
 msgstr "黒のガンマ値を調整"
 
-#: src/main/print-color.c:352 src/main/print-olympus.c:8179
+#: src/main/print-color.c:352 src/main/print-olympus.c:8181
 msgid "Cyan Balance"
 msgstr "シアンバランス"
 
@@ -1091,7 +1091,7 @@ msgstr "シアンバランス"
 msgid "Adjust the cyan gray balance"
 msgstr "シアンのグレーバランスを調整"
 
-#: src/main/print-color.c:360 src/main/print-olympus.c:8187
+#: src/main/print-color.c:360 src/main/print-olympus.c:8189
 msgid "Magenta Balance"
 msgstr "マゼンタのバランス"
 
@@ -1099,7 +1099,7 @@ msgstr "マゼンタのバランス"
 msgid "Adjust the magenta gray balance"
 msgstr "マゼンタのグレーバランスを調整"
 
-#: src/main/print-color.c:368 src/main/print-olympus.c:8195
+#: src/main/print-color.c:368 src/main/print-olympus.c:8197
 msgid "Yellow Balance"
 msgstr "イエローのバランス"
 
@@ -1931,7 +1931,7 @@ msgstr ""
 msgid "This printer does not support raw printer output at depth %d\n"
 msgstr "プリンターはカラー印刷をサポートしていません\n"
 
-#: src/main/print-escp2.c:4427 src/main/print-olympus.c:9081
+#: src/main/print-escp2.c:4427 src/main/print-olympus.c:9083
 #: src/main/print-raw.c:241
 msgid "Print options not verified; cannot print.\n"
 msgstr "印刷オプションが確認できないので印刷できません。\n"
@@ -2409,7 +2409,7 @@ msgstr "コート紙"
 #: src/main/print-olympus.c:4219 src/main/print-olympus.c:4460
 #: src/main/print-olympus.c:5263 src/main/print-olympus.c:5388
 #: src/main/print-olympus.c:5601 src/main/print-olympus.c:5720
-#: src/main/print-olympus.c:5890 src/main/print-olympus.c:6366
+#: src/main/print-olympus.c:5890 src/main/print-olympus.c:6368
 #, fuzzy
 msgid "Glossy"
 msgstr "光沢付きフイルム"
@@ -2425,7 +2425,7 @@ msgstr ""
 #: src/main/print-olympus.c:4461 src/main/print-olympus.c:5265
 #: src/main/print-olympus.c:5390 src/main/print-olympus.c:5602
 #: src/main/print-olympus.c:5721 src/main/print-olympus.c:5891
-#: src/main/print-olympus.c:6367
+#: src/main/print-olympus.c:6369
 #, fuzzy
 msgid "Matte"
 msgstr "マット用紙"
@@ -2725,8 +2725,8 @@ msgstr ""
 #: src/main/print-olympus.c:3908 src/main/print-olympus.c:3909
 #: src/main/print-olympus.c:4477 src/main/print-olympus.c:4478
 #: src/main/print-olympus.c:4939 src/main/print-olympus.c:4940
-#: src/main/print-olympus.c:5408 src/main/print-olympus.c:6667
-#: src/main/print-olympus.c:6668
+#: src/main/print-olympus.c:5408 src/main/print-olympus.c:6669
+#: src/main/print-olympus.c:6670
 #, fuzzy
 msgid "Print Speed"
 msgstr "印刷方式"
@@ -2771,7 +2771,7 @@ msgid "Glossy Fine"
 msgstr "光沢付きフイルム"
 
 #: src/main/print-olympus.c:5266 src/main/print-olympus.c:5391
-#: src/main/print-olympus.c:6368
+#: src/main/print-olympus.c:6370
 #, fuzzy
 msgid "Matte Fine"
 msgstr "マット用紙"
@@ -2811,24 +2811,24 @@ msgstr "ロール式給紙"
 msgid "Sheet"
 msgstr ""
 
-#: src/main/print-olympus.c:6144
+#: src/main/print-olympus.c:6146
 msgid "Duplex not supported on roll media, switching to sheet media!\n"
 msgstr ""
 
-#: src/main/print-olympus.c:6178
+#: src/main/print-olympus.c:6180
 msgid "Illegal print size selected for sheet media!\n"
 msgstr ""
 
-#: src/main/print-olympus.c:6369
+#: src/main/print-olympus.c:6371
 #, fuzzy
 msgid "Matte Luster"
 msgstr "マット用紙"
 
-#: src/main/print-olympus.c:6659
+#: src/main/print-olympus.c:6661
 msgid "Low Speed"
 msgstr ""
 
-#: src/main/print-olympus.c:6660
+#: src/main/print-olympus.c:6662
 #, fuzzy
 msgid "High Density"
 msgstr "濃度"
@@ -2837,41 +2837,41 @@ msgstr "濃度"
 #. better durability of output by covering it with transparent
 #. laminate surface. This surface can be of different patterns:
 #. common are matte, glossy or texture.
-#: src/main/print-olympus.c:8132 src/main/print-olympus.c:8133
+#: src/main/print-olympus.c:8134 src/main/print-olympus.c:8135
 msgid "Laminate Pattern"
 msgstr ""
 
-#: src/main/print-olympus.c:8156
+#: src/main/print-olympus.c:8158
 msgid "Printer Generates Copies Natively"
 msgstr ""
 
-#: src/main/print-olympus.c:8157
+#: src/main/print-olympus.c:8159
 #, fuzzy
 msgid "Printer Generates Copies"
 msgstr "プリンターの設定"
 
-#: src/main/print-olympus.c:8179 src/main/print-olympus.c:8187
-#: src/main/print-olympus.c:8195 src/main/print-olympus.c:8203
+#: src/main/print-olympus.c:8181 src/main/print-olympus.c:8189
+#: src/main/print-olympus.c:8197 src/main/print-olympus.c:8205
 msgid "Output Level Adjustment"
 msgstr "出力レベル調整"
 
-#: src/main/print-olympus.c:8180
+#: src/main/print-olympus.c:8182
 msgid "Adjust the cyan balance"
 msgstr "シアンのバランスを調整"
 
-#: src/main/print-olympus.c:8188
+#: src/main/print-olympus.c:8190
 msgid "Adjust the magenta balance"
 msgstr "マゼンタのバランスを調整"
 
-#: src/main/print-olympus.c:8196
+#: src/main/print-olympus.c:8198
 msgid "Adjust the yellow balance"
 msgstr "黄色のバランスを調整"
 
-#: src/main/print-olympus.c:8203
+#: src/main/print-olympus.c:8205
 msgid "Black Balance"
 msgstr "黒色のバランス"
 
-#: src/main/print-olympus.c:8204
+#: src/main/print-olympus.c:8206
 msgid "Adjust the black balance"
 msgstr "黒色のバランスを調整"
 
