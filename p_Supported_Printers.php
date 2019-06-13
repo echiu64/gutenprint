@@ -17,8 +17,8 @@ of them.  We will fill in this list as we verify successful operation
 of these printers.  You can help by testing this with your own printer
 and reporting the results!</p>
 
-<table summary="Supported printers for Gutenrint 5.2.14">
-<caption style="font-size:135%;margin-bottom:0.50em;"><b>Gutenprint 5.2.14</b></caption>
+<table summary="Supported printers for Gutenrint 5.2.15">
+<caption style="font-size:135%;margin-bottom:0.50em;"><b>Gutenprint 5.2.15</b></caption>
 <tr><td>Canon BJ-30</td><td>bjc-30</td><td></td></tr>
 <tr><td>Canon BJC-50</td><td>bjc-50</td><td></td></tr>
 <tr><td>Canon BJC-55</td><td>bjc-55</td><td></td></tr>
@@ -3428,6 +3428,7 @@ and reporting the results!</p>
 <tr><td>Canon SELPHY CP910</td><td>canon-cp910</td><td></td></tr>
 <tr><td>Canon SELPHY CP1000</td><td>canon-cp1000</td><td></td></tr>
 <tr><td>Canon SELPHY CP1200</td><td>canon-cp1200</td><td></td></tr>
+<tr><td>Canon SELPHY CP1300</td><td>canon-cp1300</td><td></td></tr>
 <tr><td>Canon SELPHY ES1</td><td>canon-es1</td><td></td></tr>
 <tr><td>Canon SELPHY ES2</td><td>canon-es2</td><td></td></tr>
 <tr><td>Canon SELPHY ES3</td><td>canon-es3</td><td></td></tr>

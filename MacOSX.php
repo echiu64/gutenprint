@@ -130,9 +130,9 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 		<h2> Headlines </h2>
 
 		<p>
-			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.15-pre1 is released!</span>
+			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.15 is released!</span>
 			<br>
-			<a href="MacOSX.php#5.2.15-pre1">March 23, 2019</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.15-pre1, a pre-release of Gutenprint 5.2.15.  This release fixes a problem with dye sublimation printers not functioning, restores the uninstaller, and should fix some other issues on OS X.  As of this release, this package is 64-bit only.<b>NOTE: Users of many dye sublimation printers must follow a special installation procedure.  Please read the release notes very carefully!</b>  See the <a href="MacOSX.php#5.2.15-pre1">Release notes</a> for more detail.  See the <b>Downloads</b> section for download links.
+			<a href="MacOSX.php#5.2.15-pre1">June 12, 2019</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.15, the final planned release of Gutenprint 5.2.  Future releases will be based on Gutenprint 5.3.  This release fixes a problem with dye sublimation printers not functioning, restores the uninstaller, and should fix some other issues on OS X.  As of this release, this package is 64-bit only.<b>NOTE: Users of many dye sublimation printers must follow a special installation procedure.  Please read the release notes very carefully!</b>  See the <a href="MacOSX.php#5.2.15">Release notes</a> for more detail.  See the <b>Downloads</b> section for download links.
 		</p>
 		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.14 is released!</span>
@@ -196,12 +196,12 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Downloads</h2>
 		<p>
-			<b>Gutenprint 5.2.15-pre1</b>
+			<b>Gutenprint 5.2.15</b>
 			<br>
-			<span style="background-color:#d0ffff;"><a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.15-pre1/gutenprint-5.2.15-pre1.dmg/download">gutenprint-5.2.15-pre1.dmg</a></span>&nbsp;&nbsp;(6.1 MB)
+			<span style="background-color:#d0ffff;"><a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.15/gutenprint-5.2.15.dmg/download">gutenprint-5.2.15.dmg</a></span>&nbsp;&nbsp;(6.1 MB)
 		</p>
 		<p>
-The Gutenprint project is pleased to announce Gutenprint 5.2.15-pre1, a pre-release of Gutenprint 5.2.15.  The package is now 64-bit only, and requires 10.6 (Snow Leopard) or higher.&nbsp;&nbsp;(<a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.15-pre1/gutenprint-5.2.15-pre1.tar.bz2/download">source code</a>)
+The Gutenprint project is pleased to announce Gutenprint 5.2.15, the last planned release of Gutenprint 5.2.  Future releases will be based on Gutenprint 5.3.  The package is now 64-bit only, and requires 10.6 (Snow Leopard) or higher.&nbsp;&nbsp;(<a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.15/gutenprint-5.2.15.tar.bz2/download">source code</a>)
 </p>
 
 		<p>
@@ -321,19 +321,19 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.10, a stable releas
 <hr>
 <h3> News Items </h3>
 <!-- Yuk.  Have to use tables to get news item head formatting as it was before. Gecko browsers will not float text properly. Even IE Mac 5.2.3 does this right -->
-<a name="5.2.15-pre1"></a>
+<a name="5.2.15"></a>
 <table cellpadding="0" bgcolor="#d0d0d0" width="60%">
 	<tr>
 		<td align="left">
-			<b>Gutenprint 5.2.15-pre1</b>
+			<b>Gutenprint 5.2.15</b>
 		</td>
 		<td align="right">
-			<b>2019-03-23</b>
+			<b>2019-06-12</b>
 		</td>
 	</tr>
 </table>
 <p>
-<b>Gutenprint 5.2.15-pre1</b> is a pre-release of Gutenprint 5.2.15.    This release fixes a problem with dye sublimation printers not functioning, restores the uninstaller, and should fix some other issues on OS X.  As of this release, this package is 64-bit only.  <b>NOTE: Users of many dye sublimation printers must follow a special installation procedure.  Please read the release notes very carefully!</b>
+<b>Gutenprint 5.2.15</b> is the last planned release of Gutenprint 5.2; future releases will be based on 5.3.  This release fixes a problem with dye sublimation printers not functioning, restores the uninstaller, and should fix some other issues on OS X.  As of this release, this package is 64-bit only.  <b>NOTE: Users of many dye sublimation printers must follow a special installation procedure.  Please read the release notes very carefully!</b>
 <ol style="margin-top:0.25em; list-style-type:decimal;">
 
 	<li> Fix some important outstanding bugs in the OS X package</li>
