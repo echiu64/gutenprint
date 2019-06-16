@@ -18,7 +18,7 @@ fi
 
 if test -d m4 ; then
   rm -rf m4
-elif -e m4 ; then
+elif test -e m4 ; then
   echo "**Error**: A file \`m4local' exists and is not a directory."
   echo "Please remove it."
   exit 1

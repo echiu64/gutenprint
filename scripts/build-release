@@ -29,6 +29,8 @@ function xtput() {
 
 set -u
 
+# shellcheck disable=SC2155
+{
 declare -r tbold="$(xtput bold)"
 declare -r tred="$(xtput setaf 1)$tbold"
 declare -r tyellow="$(xtput setaf 3)$tbold"
@@ -37,6 +39,7 @@ declare -r tpurple="$(xtput setaf 5)$tbold"
 declare -r tblue=$(xtput setaf 4)
 declare -r tcyan=$(xtput setaf 6)
 declare -r treset=$(xtput sgr0)
+}
 declare -i exitstatus=1
 declare -i stepstatus=-1
 declare currentmodule=
@@ -49,12 +52,15 @@ function fatal() {
 
 [[ -s ChangeLog.pre-5.2.11 ]] || fatal "$0 must be run from repository top level"
 
+# shellcheck disable=SC2155
 declare GIT=$(type -p git)
 [[ -n $GIT ]] || fatal "Can't find git"
 
+# shellcheck disable=SC2155
 declare MAKE=$(type -p make)
 [[ -n $MAKE ]] || fatal "Can't find make"
 
+# shellcheck disable=SC2155
 declare -r ROOT=$(pwd)
 declare tmpfile=/dev/null
 export STP_PARALLEL=${STP_PARALLEL:-$("$ROOT/scripts/count-cpus")}
@@ -70,6 +76,7 @@ function pkg_version() {
 }
 
 function pkg_tag() {
+    # shellcheck disable=SC2155
     local version=$(pkg_version)
     echo "gutenprint-${version//./_}"
 }
@@ -77,6 +84,7 @@ function pkg_tag() {
 # Clean up any trailing whitespace.
 
 function preflight() {
+    # shellcheck disable=SC2155
     local trailing_ws="$("$GIT" grep -Il '[	 ]$')"
     if [[ -n $trailing_ws ]] ; then
 	console_log "*** ERROR: The following files have trailing whitespace:"
@@ -104,8 +112,10 @@ function check_git() {
     # but not behind) and that we don't need to rebase (no merges.
     # Also check that we haven't diverged.
 
-    local ahead=$("$GIT" rev-list @{u}..@)
-    local behind=$("$GIT" rev-list @..@{u})
+    # shellcheck disable=SC2155
+    local ahead=$("$GIT" rev-list '@{u}..@')
+    # shellcheck disable=SC2155
+    local behind=$("$GIT" rev-list '@..@{u}')
     if [[ -n $ahead && -n $behind ]] ; then
 	# Oops!  Both ahead *and* behind remote.  Really bad news!
 	console_log "*** ERROR: HEAD and remote have diverged!"
@@ -135,11 +145,11 @@ function check_git() {
 # Everything else depends on this.
 
 function run_target() {
-    make $1 && return 0
+    make "$1" && return 0
     local lstatus=$?
     console_log "*** ERROR: ${3:+$3 }make $1 failed"
-    (( $lstatus >= 127 )) && return $lstatus
-    return ${2:-2}
+    (( lstatus >= 127 )) && return $lstatus
+    return "${2:-2}"
 }
 
 function run_maintainer_clean() {
@@ -151,6 +161,7 @@ function run_maintainer_clean() {
 }
 
 function run_autogen() {
+    # shellcheck disable=SC2086
     ./autogen.sh ${STP_CONFIG_ARGS:-} && return 0
     console_log "*** FATAL: autogen failed!"
     return 1
@@ -198,8 +209,10 @@ function _cleanup_test_repo() {
 
 # Check that we can build a clone of this workspace
 function _check_git_builds() {
+    # shellcheck disable=SC2155
     export TESTREPO=$(mktemp -d "/tmp/stpbuild.XXXXXXXX")
     trap _cleanup_test_repo EXIT SIGHUP SIGINT SIGQUIT SIGTERM
+    # shellcheck disable=SC2155
     local rev=$("$GIT" rev-parse @)
     cwd=$(pwd -P)
     [[ -n $cwd ]] || {
@@ -374,6 +387,7 @@ function run_checksums() {
     make checksums
     local lstatus=$?
     if (( lstatus == 0 )) ; then
+	# shellcheck disable=SC2155
 	local csum_file="src/testpattern/Checksums/sums.$(pkg_version).zpaq"
 	if [[ ! -f $csum_file ]] ; then
 	    console_log "*** ERROR: Can't find new checksums file $csum_file"
@@ -435,6 +449,7 @@ function run_check_minimal() {
 
 #  Save away build
 function save_build_artifacts() {
+    # shellcheck disable=SC2155
     local tarball="$(pkg_version).tar.xz"
     if [[ -s $tarball ]] ; then
 	cp -p "$tarball" "$ARTIFACTDIR"
@@ -485,16 +500,17 @@ EOF
 #
 # Unfortunately the shell built-in printf can't specify UTC.
 function stamp() {
-    printf '%(%Y-%m-%dT%H:%M:%S%z)T'
+    printf '%(%Y-%m-%dT%H:%M:%S%z)T' -1
 }
 
 function date_sec() {
-    printf '%(%s)T'
+    printf '%(%s)T' -1
 }
 
 function report_progress() {
     local outst="RUNNING[$1]: "
     shift
+    # shellcheck disable=SC2046
     echo $([[ -z ${BUILD_VERBOSE:-} ]] && echo '' -n) ">>> $(stamp) $outst $*"
 }
 
@@ -511,6 +527,7 @@ function log1() {
 	# to stdout rather than teeing off or explicitly going to a file.
 	if [[ $dest == - && $# -gt 0 ]] ; then
 	    # Protect against someone inadvertently specifying '-' twice!
+	    # shellcheck disable=SC2046
 	    log1 "$@" $([[ $1 == - ]] || echo -)
 	elif [[ $dest == -* ]] ; then
 	    dest=${dest:1}
@@ -519,9 +536,9 @@ function log1() {
 	    if (( $# == 0 )) ; then
 		exec cat > "$dest"
 	    elif [[ $* == - ]] ; then
-		exec tee $dest
+		exec tee "$dest"
 	    else
-		exec tee $dest | log1 "$@"
+		exec tee "$dest" | log1 "$@"
 	    fi
 	else
 	    destdir=${dest%/*}
@@ -538,8 +555,6 @@ function log1() {
 }
 
 function log() {
-    local -a args=()
-    local -i has_stdout=0
     (log1 "$@" ${BUILD_VERBOSE:+-})
 }
 
@@ -638,7 +653,7 @@ function report_step_status() {
 	fi
 	printf "$stcolor%$((longest_op - ${#op} ))s $ststatus$treset\n"
     }
-    [[ -n $currentmodule && $stepstatus -ne 0 ]] && failedmodules+=($currentmodule)
+    [[ -n $currentmodule && $stepstatus -ne 0 ]] && failedmodules+=("$currentmodule")
     currentmodule=
     [[ -f $tmpfile ]] && {
 	[[ -s $tmpfile ]] && colorize < "$tmpfile"
@@ -647,6 +662,7 @@ function report_step_status() {
     stepstatus=-1
 }
 
+# shellcheck disable=SC2155
 function finish() {
     local status=$exitstatus
     local etime=$(date_sec)
@@ -655,11 +671,10 @@ function finish() {
     if [[ $status != 0 || -n ${failedmodules[*]:-} ]] ; then
 	log_top "The following modules failed:"
 	log_top "$(printf "    %s\n" "${failedmodules[@]:-}")"
-	log_top "*** Gutenprint $build_type build FAILED at $estamp ($(time_delta $stime $etime))" |red
+	log_top "*** Gutenprint $build_type build FAILED at $estamp ($(time_delta "$stime" "$etime"))" |red
     else
-	log_top "*** Gutenprint $build_type build completed at $estamp ($(time_delta $stime $etime))" |green
+	log_top "*** Gutenprint $build_type build completed at $estamp ($(time_delta "$stime" "$etime"))" |green
     fi
-    # shellcheck disable=SC2086
     log "$top_log" <<< "================================================================"
     if [[ -n ${TRAVIS_MODE:-} ]] ; then
 	# We really don't want the termination message from the deadman
@@ -683,6 +698,7 @@ function timestamp() {
 }
 
 # Run one operation.
+# shellcheck disable=SC2155
 function runit() {
     local cmdname=$1
     local cmd="$*"
@@ -710,7 +726,7 @@ function runit() {
 	stepstatus=127
 	currentmodule="$cmdname"
 	# Run the command, capturing console output as well as logged output.
-	if [[ -z $(type -t $cmdname) ]] ; then
+	if [[ -z $(type -t "$cmdname") ]] ; then
 	    msg="NOT FOUND"
 	    # 126 is also used for "permission denied", which amounts
 	    # to the same thing -- it's something the user should not
@@ -726,8 +742,8 @@ function runit() {
 	    (( stepstatus > 0 )) && msg=FAILED
 	fi
 	local -a emptyfiles=()
-	for f in $local_logdir/* ; do
-	    [[ -f $f && ! -s $f ]] && emptyfiles+=($f)
+	for f in "$local_logdir"/* ; do
+	    [[ -f $f && ! -s $f ]] && emptyfiles+=("$f")
 	done
 	[[ -n "${emptyfiles[*]:-}" ]] && rm -f -- "${emptyfiles[@]}"
     else
@@ -736,8 +752,7 @@ function runit() {
     local setime=$(date_sec)
     local sestamp=$(stamp)
     if [[ -z ${DONTRUN_OP:-} ]] ; then
-	# shellcheck disable=SC2086
-	echo "$cmd $msg at $sestamp ($(time_delta $sstime $setime))" | log "$logfile" "$top_log"
+	echo "$cmd $msg at $sestamp ($(time_delta "$sstime" "$setime"))" | log "$logfile" "$top_log"
 	echo "----------------------------------------------------------------" | log "$logfile" "$top_log"
     fi
     counter=$((counter+1))
@@ -776,8 +791,11 @@ function get_longest_op() {
 
 trap finish EXIT SIGHUP SIGINT SIGQUIT SIGTERM
 
+# shellcheck disable=SC2155
+{
 declare sstamp=$(stamp)
 declare stime=$(date_sec)
+}
 declare toplogdir=${STP_LOG_DIR:-"$ROOT/BuildLogs"}
 declare logdir="$toplogdir/Log.${sstamp// /_}"
 [[ -n ${STP_LOG_NO_SUBDIR:-} ]] && logdir=$toplogdir
@@ -814,9 +832,9 @@ EOF
 log_top <<EOF
 
 Environment:
-$(while read var ; do
-    echo "    $var=$(eval echo \$$var)"
-done <<< $(env |grep '^[^= ]\+=' |grep -v '%%' | sed 's/=.*//' |sort))
+$(while read -r var ; do
+    echo "    $var=$(eval echo "\$$var")"
+done <<< "$(env |grep '^[^= ]\+=' |grep -v '%%' | sed 's/=.*//' |sort)")
 
 CPU information:
 $(lscpu -e)
@@ -838,6 +856,7 @@ declare -A SKIP_OPS
 [[ -n ${STP_BUILD_SKIP:-} ]] &&
     for o in ${STP_BUILD_SKIP//,/ } ; do SKIP_OPS[$o]=1; done
 declare -i runstatus=0
+# shellcheck disable=SC2155
 declare -i longest_op=$(get_longest_op)
 declare -i lstatus=0
 for op in "${OPERATIONS[@]}" ; do
@@ -850,4 +869,4 @@ for op in "${OPERATIONS[@]}" ; do
 	(( lstatus != 2 )) && break
     }
 done
-exitstatus=runstatus
+exitstatus="$runstatus"
