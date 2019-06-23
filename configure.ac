@@ -270,7 +270,7 @@ STP_ARG_WITH_DETAILED(
   [BUILD_CUPS],
   [(automatic)],
   [
-    yes) 
+    yes)
          if test "$FOUND_CUPS_CONFIG" == "yes" ; then
 	   [BUILD_CUPS]="yes"
 	   AC_MSG_RESULT([yes])
