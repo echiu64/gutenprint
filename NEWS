@@ -85,7 +85,26 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
 
 * Changes from Gutenprint 5.3.1
 
-  1) The following new printers have been added:
+  1) Gutenprint will fail to configure if the necessary CUPS
+     development packages are not installed.  This is to protect users
+     against attempting to install newer versions of Gutenprint
+     without installing the CUPS development package.  This results in
+     an installation that does not work with CUPS, which has created
+     confusion in the past.
+
+     Normally, you should install the CUPS development package, which
+     on most systems is "cups-devel", "cups-dev", or similar, using
+     your operating system's package manager.
+
+     If you really want to install Gutenprint without CUPS, you may
+     run configure with "--without-cups".  This may be useful if you
+     intend to use only the Gutenprint plugin for GIMP, or you intend
+     to use the Gutenprint library to support a custom printing
+     solution that does not involve CUPS.  However, for most users,
+     simply running configure --without-cups is not the correct course
+     of action.
+
+  2) The following new printers have been added:
 
      * Epson Expression Home XP-240 (EXPERIMENTAL)
      * Epson Expression Home XP-245 (EXPERIMENTAL)
@@ -103,7 +122,7 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      * Sony UP-DR80MD (EXPERIMENTAL)
      * DNP DS-SL20 (EXPERIMENTAL)
 
-  2) Bugfixes and other enhancements for the following printers:
+  3) Bugfixes and other enhancements for the following printers:
 
      * DNP DS80DX
      * DNP DS-SL10 (EXPERIMENTAL)
@@ -113,13 +132,13 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      * Sony UP-DR200
      * Sony UP-CR10L
 
-  3) Many miscellaneous fixes for dyesub printers and the dyesub
+  4) Many miscellaneous fixes for dyesub printers and the dyesub
      backend; please see the ChangeLog for details.
 
-  4) The Gutenprint plugin for GIMP displays a higher resolution
+  5) The Gutenprint plugin for GIMP displays a higher resolution
      thumbnail.
 
-  5) The following models have been added to existing printer series:
+  6) The following models have been added to existing printer series:
 
      * Canon PIXMA iP2899 (EXPERIMENTAL)
      * Canon PIXMA G1910 (EXPERIMENTAL)

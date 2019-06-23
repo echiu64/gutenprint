@@ -207,21 +207,30 @@ C) CUPS
     supports the CUPS 1.2 enhancements, including dynamic PPD file
     generation.
 
-    Gutenprint will normally detect the presence of CUPS on your
-    system and will attempt to build the CUPS driver if it finds CUPS
-    installed.  If your distribution separates the CUPS installation
-    into development and runtime packages, you must install the CUPS
-    development package (cups-devel or similar).  You may need to
-    install other development packages depending upon how your
-    distribution has built CUPS.  The list of packages varies, but
-    commonly development packages for TIFF (libtiff-devel), JPEG
-    (jpeg-devel or libjpeg-devel), PNG (libpng-devel), OpenSSL
-    (openssl-devel), and libc (glibc-devel or libc-devel) will be
-    required.  Failure to install these packages will lead to errors
-    when the package is compiled.  The errors will typically look like
-    this; the important error is "cups/cups.h: No such file or
-    directory" (other ".h" files may also be missing, depending upon
-    the missing packages):
+    Gutenprint will fail to configure if the necessary CUPS
+    development packages are not installed.  This is to protect users
+    against attempting to install newer versions of Gutenprint without
+    installing the CUPS development package.  This results in an
+    installation that does not work with CUPS, which has created
+    confusion in the past.
+
+    Normally, you should install the CUPS development package, which
+    on most systems is "cups-devel", "cups-dev", or similar, using
+    your operating system's package manager.
+
+    If you really want to install Gutenprint without CUPS, you may run
+    configure with "--without-cups".  This may be useful if you intend
+    to use only the Gutenprint plugin for GIMP, or you intend to use
+    the Gutenprint library to support a custom printing solution that
+    does not involve CUPS.  However, for most users, simply running
+    configure --without-cups is not the correct course of action.
+
+    If Gutenprint thinks it has detected a correct installation of
+    CUPS, but that installation is in fact not correct, you will get
+    errors when you compile the package.  The errors will typically
+    look like this; the important error is "cups/cups.h: No such file
+    or directory" (other ".h" files may also be missing, depending
+    upon the missing packages):
 
 	make[3]: Entering directory `/opt/gutenprint/gutenprint-5.3.0-pre2/src/cups'
 	gcc -DHAVE_CONFIG_H -I. -I../..  -I../../include -I../../include
@@ -384,28 +393,22 @@ C) CUPS
     Following installation of the package with "make install", you
     must restart CUPS to permit CUPS to see the new PPD files.  The
     exact command to restart CUPS varies; it is typically something
-    like /etc/init.d/cups restart, /etc/software/init.d/cups restart,
-    /etc/rc.d/cups restart, /usr/sbin/rccups, or even
-    /etc/rc.d/init.d/cups restart.  Your system may have a different
-    way to restart the CUPS server.  OS X (10.5), for example, uses
-    the following command:
-
-    sudo /System/Library/StartupItems/PrintingServices/PrintingServices.sh restart
+    like systemctl restart cups (which will be the case on most modern
+    Linux systems), /etc/init.d/cups restart,
+    /etc/software/init.d/cups restart, /etc/rc.d/cups restart,
+    /usr/sbin/rccups, or even /etc/rc.d/init.d/cups restart.
 
     You may optionally choose to update your existing PPD files using
     the command cups-genppdupdate, after which you should restart CUPS
     as described above.  We strongly recommend use of this update
     procedure, which is fast and simple.  This script will
-    automatically update Gutenprint PPD files from earlier versions
-    (5.0, 5.1, 5.2, or 5. release or prerelease).  This script will only
-    update PPD files from earlier versions of Gutenprint; it will not
-    update Gimp-Print 4.2 PPD files or PPD files from other drivers.
-    However, you may install Gutenprint 5.3 alongside Gimp-Print 4.2,
-    and use both Gimp-Print 4.2 and Gutenprint 5.3 drivers
-    concurrently in separate printer queues.  Therefore, you need not
-    convert a workflow based on Gimp-Print 4.2 right away, but can
-    gradually convert or even permanently use both drivers for
-    different printer queues.
+    automatically update Gutenprint PPD files from earlier versions of
+    Gutenprint 5.3.  It will not at present automatically upgrade PPD
+    files from Gutenprint 5.0, 5.1, or 5.2; if you want to do so, you
+    need to run cups-genppdupdate -x.  This allows you to continue
+    running older versions of Gutenprint concurrently with Gutenprint
+    5.3.  This script cannot update PPD files from Gimp-Print 4.2 or
+    non-Gutenprint PPD files.
 
     The following options to configure are available for compiling the
     Gutenprint driver for CUPS:
