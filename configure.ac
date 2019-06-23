@@ -243,12 +243,24 @@ AS_IF([test "x$with_cups_config" != "xsystem"], [
   ], [
     AC_PATH_TOOL(CUPS_CONFIG, [cups-config])
     AS_IF([test -z "$CUPS_CONFIG"], [
-      BUILD_CUPS=no
+      FOUND_CUPS_CONFIG=no
    ],
    [
-      BUILD_CUPS=yes
+      FOUND_CUPS_CONFIG=yes
    ])
 ])
+
+missing_cups_error="
+
+******* ERROR ******
+You do not have the necessary software installed to build the CUPS driver.
+This is most likely not what you want, as the resulting installation will
+not be usable as part of a normal printing system.  If you are certain
+that this is what you want, please run configure with --without-cups.
+Otherwise, please read the README and install the necessary development
+package, most likely named 'cups-devel', and re-run configure.
+
+"
 
 STP_ARG_WITH_DETAILED(
   [cups],
@@ -258,7 +270,15 @@ STP_ARG_WITH_DETAILED(
   [BUILD_CUPS],
   [(automatic)],
   [
-    yes) [BUILD_CUPS]="yes" ; AC_MSG_RESULT([yes]) ; cups_prefix="/usr" ;;
+    yes) 
+         if test "$FOUND_CUPS_CONFIG" == "yes" ; then
+	   [BUILD_CUPS]="yes"
+	   AC_MSG_RESULT([yes])
+	   cups_prefix="/usr"
+	 else
+	   AC_MSG_ERROR([$missing_cups_error])
+	 fi
+	 ;;
     no) [BUILD_CUPS]="no" ; AC_MSG_RESULT([no]) ; cups_prefix="/usr" ;;
     *) if test -d ${withval} ; then
          [BUILD_CUPS]="yes"
@@ -269,7 +289,12 @@ STP_ARG_WITH_DETAILED(
          AC_MSG_ERROR([${withval}: no such directory for --with-cups])
        fi ;;
   ],[
-     cups_prefix="${prefix}"
+     if test "$FOUND_CUPS_CONFIG" == "yes" ; then
+       cups_prefix="${prefix}"
+       [BUILD_CUPS]="yes"
+     else
+       AC_MSG_ERROR([$missing_cups_error])
+     fi
   ])
 
 dnl GNU gettext checks.
