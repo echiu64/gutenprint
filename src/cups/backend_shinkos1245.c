@@ -1151,7 +1151,7 @@ top:
 		cmd.cmd[1] = 0x00;
 
 		cmd.id = ctx->jobid;
-		cmd.count = cpu_to_be16(uint16_to_packed_bcd(copies));
+		cmd.count = uint16_to_packed_bcd(copies);
 		cmd.columns = cpu_to_be16(job->jp.columns);
 		cmd.rows = cpu_to_be16(job->jp.rows);
 		cmd.media = job->jp.media;
@@ -1280,7 +1280,7 @@ static const char *shinkos1245_prefixes[] = {
 
 struct dyesub_backend shinkos1245_backend = {
 	.name = "Shinko/Sinfonia CHC-S1245/E1",
-	.version = "0.30" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.31" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = shinkos1245_prefixes,
 	.cmdline_usage = shinkos1245_cmdline,
 	.cmdline_arg = shinkos1245_cmdline_arg,

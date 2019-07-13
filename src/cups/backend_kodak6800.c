@@ -157,8 +157,8 @@ static void kodak68x0_dump_mediainfo(struct sinfonia_mediainfo_item *sizes,
 	INFO("Legal print sizes:\n");
 	for (i = 0 ; i < media_count ; i++) {
 		INFO("\t%d: %dx%d (%02x)\n", i,
-		     be16_to_cpu(sizes[i].columns),
-		     be16_to_cpu(sizes[i].rows),
+		     sizes[i].columns,
+		     sizes[i].rows,
 		     sizes[i].method);
 	}
 	INFO("\n");
@@ -209,6 +209,8 @@ static int kodak6800_get_mediainfo(struct kodak6800_ctx *ctx)
 
 		for (i = 0; i < media->count ; i++) {
 			memcpy(&ctx->sizes[ctx->media_count], &media->sizes[i], sizeof(struct sinfonia_mediainfo_item));
+			ctx->sizes[ctx->media_count].rows = be16_to_cpu(ctx->sizes[ctx->media_count].rows);
+			ctx->sizes[ctx->media_count].columns = be16_to_cpu(ctx->sizes[ctx->media_count].columns);
 			ctx->media_count++;
 		}
 		if (i < 6)
@@ -1002,9 +1004,9 @@ static int kodak6800_main_loop(void *vctx, const void *vjob) {
 	hdr.hdr[5] = 0x0a;
 	hdr.hdr[6] = 0x00;
 	hdr.jobid = ctx->jobid;
-	hdr.copies = cpu_to_be16(uint16_to_packed_bcd(copies));
-	hdr.columns = cpu_to_le16(job->jp.columns);
-	hdr.rows = cpu_to_le16(job->jp.rows);
+	hdr.copies = uint16_to_packed_bcd(copies);
+	hdr.columns = cpu_to_be16(job->jp.columns);
+	hdr.rows = cpu_to_be16(job->jp.rows);
 	hdr.size = job->jp.media;
 	hdr.laminate = job->jp.oc_mode;
 	hdr.method = job->jp.method;
@@ -1089,7 +1091,7 @@ static const char *kodak6800_prefixes[] = {
 /* Exported */
 struct dyesub_backend kodak6800_backend = {
 	.name = "Kodak 6800/6850",
-	.version = "0.71" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.72" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = kodak6800_prefixes,
 	.cmdline_usage = kodak6800_cmdline,
 	.cmdline_arg = kodak6800_cmdline_arg,
