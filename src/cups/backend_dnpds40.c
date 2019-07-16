@@ -1,7 +1,7 @@
 /*
  *   Citizen / DNP Photo Printer CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013-2018 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2019 Solomon Peachy <pizza@shaftnet.org>
  *
  *   Development of this backend was sponsored by:
  *
@@ -178,7 +178,6 @@ struct dnpds40_cmd {
 #define MULTICUT_A4       41
 #define MULTICUT_A4x5X2   43
 
-
 #define MULTICUT_S_SIMPLEX  100
 #define MULTICUT_S_FRONT    200
 #define MULTICUT_S_BACK     300
@@ -198,30 +197,12 @@ struct dnpds40_cmd {
 
 #define min(__x, __y) ((__x) < (__y)) ? __x : __y
 
-/* Legacy CW-01 spool file support */
-struct cw01_spool_hdr {
-	uint8_t  type; /* 0x00 -> 0x06 */
-	uint8_t  res; /* vertical resolution; 0x00 == 334dpi, 0x01 == 600dpi */
-	uint8_t  copies; /* number of prints */
-	uint8_t  null0;
-	uint32_t plane_len; /* LE */
-	uint8_t  null1[4];
-};
+/* Legacy spool file support */
+static int legacy_cw01_read_parse(struct dnpds40_printjob *job, int data_fd, int read_data);
+static int legacy_dnp_read_parse(struct dnpds40_printjob *job, int data_fd, int read_data);
+static int legacy_dnp620_read_parse(struct dnpds40_printjob *job, int data_fd, int read_data);
+static int legacy_dnp820_read_parse(struct dnpds40_printjob *job, int data_fd, int read_data);
 
-#define DPI_334 0
-#define DPI_600 1
-
-#define TYPE_DSC  0
-#define TYPE_L    1
-#define TYPE_PC   2
-#define TYPE_2DSC 3
-#define TYPE_3L   4
-#define TYPE_A5   5
-#define TYPE_A6   6
-/* Legacy CW-01 spool file support */
-
-static int cw01_read_parse(struct dnpds40_printjob *job, int data_fd,
-			   struct cw01_spool_hdr *hdr, int read_data);
 static void dnpds40_cleanup_job(const void *vjob);
 static int dnpds40_query_markers(void *vctx, struct marker **markers, int *count);
 
@@ -1290,29 +1271,36 @@ static int dnpds40_read_parse(void *vctx, const void **vjob, int data_fd, int co
 			return CUPS_BACKEND_CANCEL;
 		}
 
-		if (job->databuf[job->datalen + 0] != 0x1b ||
-		    job->databuf[job->datalen + 1] != 0x50) {
-			struct cw01_spool_hdr hdr;
-			/* See if it's the "classic" CW01 header */
-			memcpy(&hdr, job->databuf + job->datalen, sizeof(hdr));
-			hdr.plane_len = le32_to_cpu(hdr.plane_len);
-
-			if (hdr.type > 0x06 ||
-			    hdr.res > 0x01 ||
-			    hdr.null1[0] || hdr.null1[1] || hdr.null1[2] || hdr.null1[3]) {
-				ERROR("Unrecognized header data format @%d!\n", job->datalen);
-				dnpds40_cleanup_job(job);
-			} else {
-				job->dpi = (hdr.res == DPI_600) ? 600 : 334;
-				i = cw01_read_parse(job, data_fd, &hdr, i);
-				if (i == CUPS_BACKEND_OK)
-					goto parsed;
-				else {
-					dnpds40_cleanup_job(job);
-					return i;
+		/* Special case handling for beginning of job */
+		if (job->datalen == 0) {
+			/* See if job lacks the standard ESC-P start sequence */
+			if (job->databuf[job->datalen + 0] != 0x1b ||
+			    job->databuf[job->datalen + 1] != 0x50) {
+				switch(ctx->type) {
+				case P_CITIZEN_CW01:
+					i = legacy_cw01_read_parse(job, data_fd, i);
+					break;
+				case P_DNP_DS620:
+					i = legacy_dnp620_read_parse(job, data_fd, i);
+					break;
+				case P_DNP_DS820:
+					i = legacy_dnp820_read_parse(job, data_fd, i);
+					break;
+				case P_DNP_DSRX1:
+				case P_DNP_DS40:
+				case P_DNP_DS80:
+				case P_DNP_DS80D:
+				default:
+					i = legacy_dnp_read_parse(job, data_fd, i);
+					break;
 				}
+
+				if (i == CUPS_BACKEND_OK) {
+					goto parsed;
+				}
+				dnpds40_cleanup_job(job);
+				return i;
 			}
-			return CUPS_BACKEND_CANCEL;
 		}
 
 		/* Parse out length of data chunk, if any */
@@ -1416,6 +1404,7 @@ static int dnpds40_read_parse(void *vctx, const void **vjob, int data_fd, int co
 				job->dpi = 334;
 				break;
 			case 23615:
+			case 23616:
 				job->dpi = 600;
 				break;
 			default:
@@ -1482,7 +1471,7 @@ parsed:
 	/* And sanity-check whatever value is there */
 	if (job->printspeed == 0 && job->dpi == 600) {
 		job->printspeed = 1;
-	} else if (job->printspeed == 1 && job->dpi == 300) {
+	} else if (job->printspeed >= 1 && job->dpi == 300) {
 		job->printspeed = 0;
 	}
 
@@ -3081,7 +3070,7 @@ static const char *dnpds40_prefixes[] = {
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS-series / Citizen C-series",
-	.version = "0.114",
+	.version = "0.117",
 	.uri_prefixes = dnpds40_prefixes,
 	.flags = BACKEND_FLAG_JOBLIST,
 	.cmdline_usage = dnpds40_cmdline,
@@ -3108,25 +3097,29 @@ struct dyesub_backend dnpds40_backend = {
 	}
 };
 
-/* Legacy CW-01 spool file support */
-
-static int cw01_read_parse(struct dnpds40_printjob *job, int data_fd,
-			   struct cw01_spool_hdr *hdr, int read_data)
+/* Windows spool file support */
+static int legacy_spool_helper(struct dnpds40_printjob *job, int data_fd,
+			       int read_data, int hdrlen, uint32_t plane_len,
+			       int parse_dpi)
 {
+	uint8_t *buf;
+	uint8_t bmp_hdr[14];
 	int i, remain;
 	uint32_t j;
-	uint8_t *buf;
-	uint8_t plane_hdr[14];
 
-	remain = hdr->plane_len * 3;
+	/* Allocate a temp processing buffer */
+	remain = plane_len * 3;
 	buf = malloc(remain);
 	if (!buf) {
 		ERROR("Memory allocation failure!\n");
 		return CUPS_BACKEND_RETRY_CURRENT;
 	}
-	j = read_data - sizeof(*hdr);
-	memcpy(buf, job->databuf, j);
+
+	/* Copy over the post-jobhdr crap into our processing buffer */
+	j = read_data - hdrlen;
+	memcpy(buf, job->databuf + hdrlen, j);
 	remain -= j;
+
 	/* Read in the remaining spool data */
 	while (remain) {
 		i = read(data_fd, buf + j, remain);
@@ -3140,50 +3133,67 @@ static int cw01_read_parse(struct dnpds40_printjob *job, int data_fd,
 		j += i;
 	}
 
-	/* Generate plane header (same for all planes) */
-	j = cpu_to_le32(hdr->plane_len) + 24;
-	memset(plane_hdr, 0, sizeof(plane_hdr));
-	plane_hdr[0] = 0x42;
-	plane_hdr[1] = 0x4d;
-	memcpy(plane_hdr + 2, &j, sizeof(j));
-	plane_hdr[10] = 0x40;
-	plane_hdr[11] = 0x04;
+	if (parse_dpi) {
+		/* Parse out Y DPI */
+		memcpy(&j, buf + 28, sizeof(j));
+		j = le32_to_cpu(j);
+		switch(j) {
+		case 11808:
+			job->dpi = 300;
+			break;
+		case 23615:
+		case 23616:
+			job->dpi = 600;
+			break;
+		default:
+			ERROR("Unrecognized printjob resolution (%u ppm)\n", j);
+			free(buf);
+			return CUPS_BACKEND_CANCEL;
+		}
+	}
 
-	/* Okay, generate a new stream into job->databuf! */
-	job->cutter = 0;
+	/* Generate bitmap file header (same for all planes) */
+	j = cpu_to_le32(plane_len + 24);
+	memset(bmp_hdr, 0, sizeof(bmp_hdr));
+	bmp_hdr[0] = 0x42;
+	bmp_hdr[1] = 0x4d;
+	memcpy(bmp_hdr + 2, &j, sizeof(j));
+	bmp_hdr[10] = 0x40;
+	bmp_hdr[11] = 0x04;
 
+	/* Set up planes */
 	j = 0;
 
 	/* Y plane */
 	job->datalen += sprintf((char*)job->databuf + job->datalen,
-				"\033PIMAGE YPLANE          %08u", hdr->plane_len + 24);
-	memcpy(job->databuf + job->datalen, plane_hdr, sizeof(plane_hdr));
-	job->datalen += sizeof(plane_hdr);
-	memcpy(job->databuf + job->datalen, buf + j, hdr->plane_len);
-	job->datalen += hdr->plane_len;
-	j += hdr->plane_len;
+				"\033PIMAGE YPLANE          %08u", plane_len + 24);
+	memcpy(job->databuf + job->datalen, bmp_hdr, sizeof(bmp_hdr));
+	job->datalen += sizeof(bmp_hdr);
+	memcpy(job->databuf + job->datalen, buf + j, plane_len);
+	job->datalen += plane_len;
+	j += plane_len;
 	memset(job->databuf + job->datalen, 0, 10);
 	job->datalen += 10;
 
 	/* M plane */
 	job->datalen += sprintf((char*)job->databuf + job->datalen,
-				"\033PIMAGE MPLANE          %08u", hdr->plane_len + 24);
-	memcpy(job->databuf + job->datalen, plane_hdr, sizeof(plane_hdr));
-	job->datalen += sizeof(plane_hdr);
-	memcpy(job->databuf + job->datalen, buf + j, hdr->plane_len);
-	job->datalen += hdr->plane_len;
-	j += hdr->plane_len;
+				"\033PIMAGE MPLANE          %08u", plane_len + 24);
+	memcpy(job->databuf + job->datalen, bmp_hdr, sizeof(bmp_hdr));
+	job->datalen += sizeof(bmp_hdr);
+	memcpy(job->databuf + job->datalen, buf + j, plane_len);
+	job->datalen += plane_len;
+	j += plane_len;
 	memset(job->databuf + job->datalen, 0, 10);
 	job->datalen += 10;
 
 	/* C plane */
 	job->datalen += sprintf((char*)job->databuf + job->datalen,
-				"\033PIMAGE CPLANE          %08u", hdr->plane_len + 24);
-	memcpy(job->databuf + job->datalen, plane_hdr, sizeof(plane_hdr));
-	job->datalen += sizeof(plane_hdr);
-	memcpy(job->databuf + job->datalen, buf + j, hdr->plane_len);
-	job->datalen += hdr->plane_len;
-	j += hdr->plane_len;
+				"\033PIMAGE CPLANE          %08u", plane_len + 24);
+	memcpy(job->databuf + job->datalen, bmp_hdr, sizeof(bmp_hdr));
+	job->datalen += sizeof(bmp_hdr);
+	memcpy(job->databuf + job->datalen, buf + j, plane_len);
+	job->datalen += plane_len;
+	j += plane_len;
 	memset(job->databuf + job->datalen, 0, 10);
 	job->datalen += 10;
 
@@ -3197,6 +3207,183 @@ static int cw01_read_parse(struct dnpds40_printjob *job, int data_fd,
 	return CUPS_BACKEND_OK;
 }
 
+struct cw01_spool_hdr {
+	uint8_t  type; /* TYPE_??? */
+	uint8_t  res; /* DPI_??? */
+	uint8_t  copies; /* number of prints */
+	uint8_t  null0;
+	uint32_t plane_len; /* LE */
+	uint8_t  null1[4];
+};
+
+#define DPI_334 0
+#define DPI_600 1
+
+#define TYPE_DSC  0
+#define TYPE_L    1
+#define TYPE_PC   2
+#define TYPE_2DSC 3
+#define TYPE_3L   4
+#define TYPE_A5   5
+#define TYPE_A6   6
+
+static int legacy_cw01_read_parse(struct dnpds40_printjob *job, int data_fd, int read_data)
+{
+	struct cw01_spool_hdr hdr;
+	uint32_t plane_len;
+
+	/* get original header out of structure */
+	memcpy(&hdr, job->databuf + job->datalen, sizeof(hdr));
+
+	/* Early parsing and sanity checking */
+	plane_len = le32_to_cpu(hdr.plane_len);
+
+	if (hdr.type > TYPE_A6 ||
+	    hdr.res > DPI_600 ||
+	    hdr.null1[0] || hdr.null1[1] || hdr.null1[2] || hdr.null1[3]) {
+		ERROR("Unrecognized header data format @%d!\n", job->datalen);
+		return CUPS_BACKEND_CANCEL;
+	}
+	job->dpi = (hdr.res == DPI_600) ? 600 : 334;
+	job->cutter = 0;
+
+	return legacy_spool_helper(job, data_fd, read_data,
+				   sizeof(hdr), plane_len, 0);
+}
+
+struct rx1_spool_hdr {
+	uint8_t  type; /* equals MULTICUT_?? - 1 */
+	uint8_t  null0;
+	uint8_t  copies; /* number of copies, always fixed at 01.. */
+	uint8_t  null1;
+	uint32_t plane_len; /* LE */
+        uint8_t  flags; /* combination of FLAG_?? */
+	uint8_t  null2[3];
+};
+
+#define FLAG_MATTE     0x02
+#define FLAG_NORETRY   0x08
+#define FLAG_2INCH     0x10
+
+static int legacy_dnp_read_parse(struct dnpds40_printjob *job, int data_fd, int read_data)
+{
+	struct rx1_spool_hdr hdr;
+	uint32_t plane_len;
+
+	/* get original header out of structure */
+	memcpy(&hdr, job->databuf + job->datalen, sizeof(hdr));
+
+	/* Early parsing and sanity checking */
+	plane_len = le32_to_cpu(hdr.plane_len);
+
+	if (hdr.type >= MULTICUT_A4x5X2 ||
+	    hdr.null2[0] || hdr.null2[1] || hdr.null2[2]) {
+		ERROR("Unrecognized header data format @%d!\n", job->datalen);
+		return CUPS_BACKEND_CANCEL;
+	}
+
+	/* Don't bother with FW version checks for legacy stuff */
+	job->multicut = hdr.type + 1;
+	job->matte = (hdr.flags & FLAG_MATTE) ? 1 : 0;
+	job->cutter = (hdr.flags & FLAG_2INCH) ? 120 : 0;
+
+	return legacy_spool_helper(job, data_fd, read_data,
+				   sizeof(hdr), plane_len, 1);
+}
+
+struct ds620_spool_hdr {
+	uint8_t  type; /* MULTICUT_?? -1, but >0x90 is a flag for rewind */
+	uint8_t  copies; /* Always fixed at 01..*/
+	uint8_t  null0[2];
+	uint8_t  quality;  /* 0x02 is HQ, 0x00 is HS.  Equivalent to DPI. */
+	uint8_t  unk[3];   /* Always 00 01 00 */
+	uint32_t plane_len; /* LE */
+	uint8_t  flags; /* FLAG_?? */
+	uint8_t  null1[3];
+};
+#define FLAG_LUSTER    0x04
+#define FLAG_FINEMATTE 0x06
+
+static int legacy_dnp620_read_parse(struct dnpds40_printjob *job, int data_fd, int read_data)
+{
+	struct ds620_spool_hdr hdr;
+	uint32_t plane_len;
+
+	/* get original header out of structure */
+	memcpy(&hdr, job->databuf + job->datalen, sizeof(hdr));
+
+	/* Early parsing and sanity checking */
+	plane_len = le32_to_cpu(hdr.plane_len);
+
+	/* Used to signify rewind request.  Backend handles automatically. */
+	if (hdr.type > 0x90)
+		hdr.type -= 0x90;
+
+	if (hdr.type > MULTICUT_A4x5X2 ||
+	    hdr.null1[0] || hdr.null1[1] || hdr.null1[2]) {
+		ERROR("Unrecognized header data format @%d!\n", job->datalen);
+		return CUPS_BACKEND_CANCEL;
+	}
+
+	/* Don't bother with FW version checks for legacy stuff */
+	job->multicut = hdr.type + 1;
+	if ((hdr.flags & FLAG_FINEMATTE) == FLAG_FINEMATTE)
+		job->matte = 21;
+	else if (hdr.flags & FLAG_LUSTER)
+		job->matte = 22;
+	else if (hdr.flags & FLAG_MATTE)
+		job->matte = 1;
+
+	job->cutter = (hdr.flags & FLAG_2INCH) ? 120 : 0;
+
+	return legacy_spool_helper(job, data_fd, read_data,
+				   sizeof(hdr), plane_len, 1);
+}
+
+#define FLAG_820_HD     0x80
+#define FLAG_820_RETRY  0x20
+#define FLAG_820_LUSTER 0x06
+#define FLAG_820_FMATTE 0x04
+#define FLAG_820_MATTE  0x02
+
+static int legacy_dnp820_read_parse(struct dnpds40_printjob *job, int data_fd, int read_data)
+{
+	struct ds620_spool_hdr hdr;
+	uint32_t plane_len;
+
+	/* get original header out of structure */
+	memcpy(&hdr, job->databuf + job->datalen, sizeof(hdr));
+
+	/* Early parsing and sanity checking */
+	plane_len = le32_to_cpu(hdr.plane_len);
+
+	/* Used to signify rewind request.  Backend handles automatically. */
+	if (hdr.type > 0x90)
+		hdr.type -= 0x90;
+
+	if (hdr.type > MULTICUT_A4x5X2 ||
+	    hdr.null1[0] || hdr.null1[1] || hdr.null1[2]) {
+		ERROR("Unrecognized header data format @%d!\n", job->datalen);
+		return CUPS_BACKEND_CANCEL;
+	}
+
+	/* Don't bother with FW version checks for legacy stuff */
+	job->multicut = hdr.type + 1;
+	if ((hdr.flags & FLAG_820_FMATTE) == FLAG_820_FMATTE)
+		job->matte = 21;
+	else if (hdr.flags & FLAG_820_LUSTER)
+		job->matte = 22;
+	else if (hdr.flags & FLAG_820_MATTE)
+		job->matte = 1;
+
+	if (hdr.flags & FLAG_820_HD)
+		job->printspeed = 3;
+
+	return legacy_spool_helper(job, data_fd, read_data,
+				   sizeof(hdr), plane_len, 1);
+}
+
+
 /*
 
 Basic spool file format for CW01
@@ -3205,11 +3392,11 @@ TT RR NN 00 XX XX XX XX  00 00 00 00              <- FILE header.
 
   NN          : copies (0x01 or more)
   RR          : resolution; 0 == 334 dpi, 1 == 600dpi
-  TT          : type 0x02 == 4x6, 0x01 == 5x3.5
+  TT          : type 0x02 == 4x6, 0x01 == 5x3.5, 0x06 = 6x9
   XX XX XX XX : plane length (LE)
                 plane length * 3 + 12 == file length.
 
-Followed by three planes, each with this header:
+Followed by three planes, each with this 40b header:
 
 28 00 00 00 00 08 00 00  RR RR 00 00 01 00 08 00
 00 00 00 00 00 00 00 00  5a 33 00 00 YY YY 00 00
