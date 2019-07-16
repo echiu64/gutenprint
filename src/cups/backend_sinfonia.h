@@ -21,13 +21,13 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- *          [http://www.gnu.org/licenses/gpl-2.0.html]
+ *          [http://www.gnu.org/licenses/gpl-3.0.html]
  *
- *   SPDX-License-Identifier: GPL-2.0+
+ *   SPDX-License-Identifier: GPL-3.0+
  *
  */
 
-#define LIBSINFONIA_VER "0.05"
+#define LIBSINFONIA_VER "0.06"
 
 #define SINFONIA_HDR1_LEN 0x10
 #define SINFONIA_HDR2_LEN 0x64

@@ -476,7 +476,7 @@ static int kodak6800_get_tonecurve(struct kodak6800_ctx *ctx, char *fname)
 		for (i = 0 ; i < 768; i++) {
 			/* Byteswap appropriately */
 			data[i] = cpu_to_be16(le16_to_cpu(data[i]));
-			write(tc_fd, &data[i], sizeof(uint16_t));
+			ret = write(tc_fd, &data[i], sizeof(uint16_t));
 		}
 		close(tc_fd);
 	}
@@ -1091,7 +1091,7 @@ static const char *kodak6800_prefixes[] = {
 /* Exported */
 struct dyesub_backend kodak6800_backend = {
 	.name = "Kodak 6800/6850",
-	.version = "0.72" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.73" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = kodak6800_prefixes,
 	.cmdline_usage = kodak6800_cmdline,
 	.cmdline_arg = kodak6800_cmdline_arg,

@@ -612,7 +612,7 @@ int sinfonia_gettonecurve(struct sinfonia_usbdev *usbh, int type, char *fname)
 			/* Byteswap appropriately */
 			curves[i] = cpu_to_be16(le16_to_cpu(curves[i]));
 		}
-		write(tc_fd, curves, TONE_CURVE_SIZE * sizeof(uint16_t));
+		ret = write(tc_fd, curves, TONE_CURVE_SIZE * sizeof(uint16_t));
 		close(tc_fd);
 	}
 

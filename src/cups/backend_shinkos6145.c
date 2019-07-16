@@ -737,7 +737,7 @@ static int shinkos6145_dump_corrdata(struct shinkos6145_ctx *ctx, char *fname)
 			return fd;
 		}
 
-		write(fd, ctx->corrdata, sizeof(struct shinkos6145_correctionparam));
+		ret = write(fd, ctx->corrdata, sizeof(struct shinkos6145_correctionparam));
 		close(fd);
 	}
 
@@ -767,7 +767,7 @@ static int shinkos6145_dump_eeprom(struct shinkos6145_ctx *ctx, char *fname)
 			return fd;
 		}
 
-		write(fd, ctx->eeprom, ctx->eepromlen);
+		ret = write(fd, ctx->eeprom, ctx->eepromlen);
 		close(fd);
 	}
 
@@ -1573,7 +1573,7 @@ static const char *shinkos6145_prefixes[] = {
 
 struct dyesub_backend shinkos6145_backend = {
 	.name = "Shinko/Sinfonia CHC-S6145/CS2/S2245/S3",
-	.version = "0.37" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.38" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = shinkos6145_prefixes,
 	.cmdline_usage = shinkos6145_cmdline,
 	.cmdline_arg = shinkos6145_cmdline_arg,
