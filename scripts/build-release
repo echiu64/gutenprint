@@ -24,7 +24,9 @@
 # autotool-processed.
 
 function xtput() {
-    [[ -z ${STP_TEST_RECURSIVE:-} && -n ${TERM:-} && ${TERM:-} != dumb ]] && tput "$@"
+    if [[ -z ${STP_TEST_RECURSIVE:-} && -n ${TERM:-} && ${TERM:-} != dumb ]] ; then
+	tput "$@"
+    fi
 }
 
 set -u
@@ -50,11 +52,16 @@ function fatal() {
     exit 1
 }
 
-[[ -s ChangeLog.pre-5.2.11 ]] || fatal "$0 must be run from repository top level"
-
 # shellcheck disable=SC2155
 declare GIT=$(type -p git)
 [[ -n $GIT ]] || fatal "Can't find git"
+
+"$GIT" rev-parse --show-toplevel >/dev/null 2>&1 || fatal "Current directory is not a git workspace"
+declare rootdir
+rootdir="$("$GIT" rev-parse --show-toplevel 2>/dev/null)"
+[[ -n $rootdir ]] || fatal "Can't find workspace root"
+cd "$rootdir" || fatal "Can't cd to workspace root ($rootdir)"
+[[ -s ChangeLog.pre-5.2.11 ]] || fatal "$rootdir does not appear to be a Gutenprint tree"
 
 # shellcheck disable=SC2155
 declare MAKE=$(type -p make)
@@ -185,7 +192,7 @@ function run_build() {
 # environment (e. g. CI)
 function run_build_fresh() {
     # shellcheck disable=SC2086
-    ./autogen.sh ${STP_CONFIG_ARGS:-} && make ${STP_PARALLEL:+-j$STP_PARALLEL} && return 0
+    ./autogen.sh ${STP_CONFIG_ARGS:-} && make "${STP_PARALLEL:+-j$STP_PARALLEL}" && return 0
     console_log "*** FATAL preliminary build failed!"
     return 1
 }
@@ -204,7 +211,9 @@ function check_git_tag() {
 }
 
 function _cleanup_test_repo() {
-    [[ -d $TESTREPO ]] && rm -rf -- "$TESTREPO"
+    if [[ -d $TESTREPO ]] ; then
+	rm -rf -- "$TESTREPO"
+    fi
 }
 
 # Check that we can build a clone of this workspace
@@ -234,7 +243,7 @@ function _check_git_builds() {
 	(( $? >= 127 )) && return 127
 	return 2
     }
-    STP_TEST_RECURSIVE=1 STP_LOG_NO_SUBDIR=1 STP_LOG_DIR=$STP_TEST_LOG_PREFIX scripts/build-release preflight run_autogen run_build run_distcheck_minimal || {
+    STP_TEST_RECURSIVE=$((${STP_TEST_RECURSIVE?-0}+1)) STP_LOG_NO_SUBDIR=1 STP_LOG_DIR=$STP_TEST_LOG_PREFIX scripts/build-release preflight run_autogen run_build run_distcheck_minimal || {
 	console_log "*** ERROR: Repo build failed!"
 	(( $? >= 127 )) && return 127
 	return 2
@@ -602,7 +611,7 @@ function console_log1() {
 }
 
 function console_log_immediate1() {
-    case "${STP_TEST_RECURSIVE:-}" in
+    case "${STP_TEST_RECURSIVE:-0}" in
 	2)
 	    tee >(exec cat 1>&6) >(exec cat 1>&5) >(exec cat 1>&4) >(timestamp | log_top | cut -c26-)
 	    ;;
@@ -632,7 +641,7 @@ function console_log_immediate() {
 }
 
 function time_delta() {
-    local i=$(($2 - $1))
+    local -i i=$((${2:-0} - ${1:-0}))
     printf "%d:%02d:%02d" $((i / 3600)) $(((i % 3600) / 60)) $((i % 60))
 }
 
@@ -655,10 +664,10 @@ function report_step_status() {
     }
     [[ -n $currentmodule && $stepstatus -ne 0 ]] && failedmodules+=("$currentmodule")
     currentmodule=
-    [[ -f $tmpfile ]] && {
+    if [[ -f $tmpfile ]] ; then
 	[[ -s $tmpfile ]] && colorize < "$tmpfile"
 	rm -f -- "$tmpfile"
-    }
+    fi
     stepstatus=-1
 }
 
@@ -847,10 +856,10 @@ Running operations:
 $(printf "    %s\n" "${OPERATIONS[@]}")
 EOF
 
-[[ -n ${TRAVIS_MODE:-} ]] && {
+if [[ -n ${TRAVIS_MODE:-} ]] ; then
     export BUILD_VERBOSE=1
     travis_deadman&
-}
+fi
 
 declare -A SKIP_OPS
 [[ -n ${STP_BUILD_SKIP:-} ]] &&
@@ -864,9 +873,9 @@ for op in "${OPERATIONS[@]}" ; do
     DONTRUN_OP="${DONTRUN:-}${SKIP_OPS[$op]:-}" runit "$op"
     lstatus=$stepstatus
     report_step_status
-    (( lstatus > 0 )) && {
+    if (( lstatus > 0 )) ; then
 	runstatus=1
 	(( lstatus != 2 )) && break
-    }
+    fi
 done
 exitstatus="$runstatus"

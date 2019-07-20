@@ -1,4 +1,4 @@
-#!@BASH@
+#!@BASHREAL@
 
 # Wrap zpaq as a more generic compression utility
 #
@@ -101,13 +101,13 @@ build_file_list() {
 		OIFS=$IFS
 		IFS=
 		if [[ -n $DECOMPRESS ]] ; then
-		    for f1 in $(find "$f" -type f -name '*.zpaq' -print) ; do
-			FILES+=($(g "$f1"))
-		    done
+		    while read -r FILE ; do
+			FILES+=("$(g "$f1")")
+		    done <<< "$(find "$f" -type f -name '*.zpaq' -print)"
 		else
-		    for f1 in $(find "$f" -type f \! -name '*.zpaq' -print) ; do
-			FILES+=($(g "$f1"))
-		    done
+		    while read -r FILE ; do
+			FILES+=("$(g "$f1")")
+		    done <<< "$(find "$f" -type f \! -name '*.zpaq' -print)"
 		fi
 		IFS=$OIFS
 	    else
@@ -122,7 +122,7 @@ build_file_list() {
 		echo "$f: is a zpaq archive, skipping" 1>&2
 		STATUS=1
 	    else
-		FILES+=($(g "$f"))
+		FILES+=("$(g "$f")")
 	    fi
 	else
 	    echo "$f: not a plain file, skipping" 1>&2
@@ -191,7 +191,7 @@ decompress_file() {
 	# shellcheck disable=2181
 	if (( $? > 0 )) ; then
 	    STATUS=1
-	elif [[ -z $ZPCAT && ! -n $KEEP ]] ; then
+	elif [[ -z $ZPCAT && -z $KEEP ]] ; then
 	    RM "$FILE"
 	fi
     fi
