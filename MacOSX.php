@@ -132,7 +132,7 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.15 is released!</span>
 			<br>
-			<a href="MacOSX.php#5.2.15-pre1">June 12, 2019</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.15, the final planned release of Gutenprint 5.2.  Future releases will be based on Gutenprint 5.3.  This release fixes a problem with dye sublimation printers not functioning, restores the uninstaller, and should fix some other issues on OS X.  As of this release, this package is 64-bit only.<b>NOTE: Users of many dye sublimation printers must follow a special installation procedure.  Please read the release notes very carefully!</b>  See the <a href="MacOSX.php#5.2.15">Release notes</a> for more detail.  See the <b>Downloads</b> section for download links.
+			<a href="MacOSX.php#5.2.15">June 12, 2019</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.15, the final planned release of Gutenprint 5.2.  Future releases will be based on Gutenprint 5.3.  This release fixes a problem with dye sublimation printers not functioning, restores the uninstaller, and should fix some other issues on OS X.  As of this release, this package is 64-bit only.<b>NOTE: Users of many dye sublimation printers must follow a special installation procedure.  Please read the release notes very carefully!</b>  See the <a href="MacOSX.php#5.2.15">Release notes</a> for more detail.  See the <b>Downloads</b> section for download links.
 		</p>
 		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.14 is released!</span>
