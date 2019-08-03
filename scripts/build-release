@@ -842,8 +842,8 @@ log_top <<EOF
 
 Environment:
 $(while read -r var ; do
-    echo "    $var=$(eval echo "\$$var")"
-done <<< "$(env |grep '^[^= ]\+=' |grep -v '%%' | sed 's/=.*//' |sort)")
+    eval "echo '    '$var=\${$var@Q}"
+done <<< "$(compgen -e)")
 
 CPU information:
 $(lscpu -e)
