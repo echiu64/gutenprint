@@ -44,6 +44,8 @@
 
 #include "backend_common.h"
 
+#include <time.h>
+
 /* Private data structure */
 struct dnpds40_printjob {
 	size_t jobsize;
@@ -127,6 +129,7 @@ struct dnpds40_ctx {
 	int supports_printspeed;
 	int supports_lowspeed;
 	int supports_highdensity;
+	int supports_systime;
 	int supports_mediaclassrfid;
 	int supports_gamma;
 };
@@ -181,6 +184,13 @@ struct dnpds40_cmd {
 #define MULTICUT_A4       41
 #define MULTICUT_A4x5X2   43
 
+#define MULTICUT_4x4      47
+#define MULTICUT_4x6      48
+#define MULTICUT_4x8      49
+#define MULTICUT_4_5x4_5  50
+#define MULTICUT_4_5x6    51
+#define MULTICUT_4_5x8    52
+
 #define MULTICUT_S_SIMPLEX  100
 #define MULTICUT_S_FRONT    200
 #define MULTICUT_S_BACK     300
@@ -207,6 +217,7 @@ static int legacy_cw01_read_parse(struct dnpds40_printjob *job, int data_fd, int
 static int legacy_dnp_read_parse(struct dnpds40_printjob *job, int data_fd, int read_data);
 static int legacy_dnp620_read_parse(struct dnpds40_printjob *job, int data_fd, int read_data);
 static int legacy_dnp820_read_parse(struct dnpds40_printjob *job, int data_fd, int read_data);
+static int legacy_qw410_read_parse(struct dnpds40_printjob *job, int data_fd, int read_data);
 
 static void dnpds40_cleanup_job(const void *vjob);
 static int dnpds40_query_markers(void *vctx, struct marker **markers, int *count);
@@ -393,7 +404,7 @@ static void dnpds40_build_cmd(struct dnpds40_cmd *cmd, const char *arg1, const c
 	memcpy(cmd->arg1, arg1, min(strlen(arg1), sizeof(cmd->arg1)));
 	memcpy(cmd->arg2, arg2, min(strlen(arg2), sizeof(cmd->arg2)));
 	if (arg3_len) {
-		char buf[11];
+		char buf[11];  /* Extra padding to shut up GCC 10 */
 		snprintf(buf, sizeof(buf), "%08u", arg3_len);
 		memcpy(cmd->arg3, buf, 8);
 	}
@@ -425,6 +436,7 @@ static const char *dnpds40_printer_type(int type, int mfg)
 	case P_DNP_DSRX1: return mfg == 1 ? "CY" : "DSRX1";
 	case P_DNP_DS620: return mfg == 1 ? "CX-02" : "DS620";
 	case P_DNP_DS820: return type == 1 ? "CX-02W" : "DS820";
+	case P_DNP_QW410: return mfg == 1 ? "CZ-01" : "QW410";
 	case P_CITIZEN_CW01: return "CW01";
 	case P_CITIZEN_OP900II: return "CW-02 / OP900ii";
 	default: break;
@@ -437,6 +449,10 @@ static const char *dnpds40_media_types(int media)
 	switch (media) {
 	case 100: return "UNKNOWN100"; // seen in driver dumps
 	case 110: return "UNKNOWN110"; // seen in driver dumps
+	case 150: return "4x6 (PC)";
+	case 151: return "4x8";
+	case 160: return "4.5x6";
+	case 161: return "4.5x8";
 	case 200: return "5x3.5 (L)";
 	case 210: return "5x7 (2L)";
 	case 300: return "6x4 (PC)";
@@ -469,6 +485,7 @@ static const char *rfid_media_subtypes(int media)
 {
 	switch (media) {
 	case 1: return "SD";
+	case 2: return "PD";
 	case 3: return "PP";
 	default:
 		break;
@@ -596,6 +613,7 @@ static const char *dnpds40_statuses(int status)
 	case 1500: return "Paper Definition Error";
 	case 1600: return "Data Error";
 	case 2000: return "Head Voltage Error";
+	case 2010: return "USB Power Supply Error";
 	case 2100: return "Head Position Error";
 	case 2200: return "Power Supply Fan Error";
 	case 2300: return "Cutter Error";
@@ -808,7 +826,7 @@ static int dnpds40_attach(void *vctx, struct libusb_device_handle *dev, int type
 	ctx->type = type;
 	ctx->iface = iface;
 
-	/* All current models support 600dpi */
+	/* Nearly all models support 600dpi */
 	ctx->supports_600dpi = 1;
 
 	if (test_mode < TEST_MODE_NOATTACH) {
@@ -836,6 +854,10 @@ static int dnpds40_attach(void *vctx, struct libusb_device_handle *dev, int type
 		} else {
 			return CUPS_BACKEND_FAILED;
 		}
+	} else {
+		ctx->ver_major = 3;
+		ctx->ver_minor = 0;
+		ctx->version = strdup("UNKNOWN");
 	}
 
 	/* Per-printer options */
@@ -952,9 +974,30 @@ static int dnpds40_attach(void *vctx, struct libusb_device_handle *dev, int type
 		ctx->supports_lowspeed = 1;
 		ctx->supports_highdensity = 1;
 		ctx->supports_ctrld_ext = 1;
+		ctx->supports_mediaoffset = 1;
 		ctx->supports_mediaclassrfid = 1;
 		if (FW_VER_CHECK(0,50))
 			ctx->supports_gamma = 1;
+		break;
+	case P_DNP_QW410:
+		ctx->native_width = 1408;
+		ctx->max_height = 2436;
+		ctx->correct_count = 1;
+		ctx->supports_600dpi = 0;
+		ctx->supports_counterp = 1;
+		ctx->supports_matte = 1;
+		ctx->supports_fullcut = 1;
+		ctx->supports_mqty_default = 1;
+		ctx->supports_keepmode = 1;
+		ctx->supports_iserial = 1;
+		ctx->supports_adv_fullcut = 1;
+		ctx->supports_advmatte = 1;
+		ctx->supports_printspeed = 1;
+		ctx->supports_lowspeed = 1;
+		ctx->supports_ctrld_ext = 1;
+		ctx->supports_mediaoffset = 1;
+		ctx->supports_mediaclassrfid = 1;
+		ctx->supports_systime = 1;
 		break;
 	default:
 		ERROR("Unknown printer type %d\n", ctx->type);
@@ -992,10 +1035,11 @@ static int dnpds40_attach(void *vctx, struct libusb_device_handle *dev, int type
 
 			ctx->media = atoi(tmp);
 
-			/* Subtract out the "mark" type */
-			if (ctx->media & 1)
-				ctx->media--;
-
+			if (ctx->type != P_DNP_QW410) {
+				/* Subtract out the "mark" type */
+				if (ctx->media & 1)
+					ctx->media--;
+			}
 			free(resp);
 		} else {
 			return CUPS_BACKEND_FAILED;
@@ -1050,9 +1094,6 @@ static int dnpds40_attach(void *vctx, struct libusb_device_handle *dev, int type
 #endif
 		}
 	} else {
-		ctx->ver_major = 3;
-		ctx->ver_minor = 0;
-		ctx->version = strdup("UNKNOWN");
 		switch(ctx->type) {
 		case P_DNP_DS80D:
 			ctx->duplex_media = 200;
@@ -1088,7 +1129,6 @@ static int dnpds40_attach(void *vctx, struct libusb_device_handle *dev, int type
 		}
 	}
 #endif
-
 	if (test_mode < TEST_MODE_NOATTACH && ctx->supports_mediaoffset) {
 		/* Get Media Offset */
 		struct dnpds40_cmd cmd;
@@ -1252,10 +1292,39 @@ static int dnpds40_attach(void *vctx, struct libusb_device_handle *dev, int type
 				break;
 			}
 			break;
+		case P_DNP_QW410:
+			switch (ctx->media) {
+			case 150: // 4x6
+			case 160: // 4.5x6
+				ctx->media_count_new = 150;
+				break;
+			case 151: // 4x8
+			case 161: // 4.5x8
+				ctx->media_count_new = 110;
+				break;
+			default:
+				ctx->media_count_new = 0;
+				break;
+			}
+			break;
 		default:
 			ctx->media_count_new = 0;
 			break;
 		}
+	}
+
+	if (test_mode < TEST_MODE_NOATTACH && ctx->supports_systime) {
+		/* Set Printer Time */
+		struct dnpds40_cmd cmd;
+		char buf[16];
+		struct tm *tm;
+
+                time_t now = time(NULL);
+		tm = localtime(&now);
+		strftime(buf, sizeof(buf), "%Y%m%d%H%M%S\r", tm); /* YYYYMMDDHHMMSS\n\0 */
+		dnpds40_build_cmd(&cmd, "CNTRL", "SET_SYS_TIME", 0);
+		if ((dnpds40_do_cmd(ctx, &cmd, (uint8_t*) buf, sizeof(buf))) != 0)
+			return CUPS_BACKEND_FAILED;
 	}
 
 	/* Fill out marker message */
@@ -1390,6 +1459,9 @@ static int dnpds40_read_parse(void *vctx, const void **vjob, int data_fd, int co
 			if (job->databuf[job->datalen + 0] != 0x1b ||
 			    job->databuf[job->datalen + 1] != 0x50) {
 				switch(ctx->type) {
+				case P_DNP_QW410:
+					i = legacy_qw410_read_parse(job, data_fd, i);
+					break;
 				case P_CITIZEN_CW01:
 					i = legacy_cw01_read_parse(job, data_fd, i);
 					break;
@@ -1578,6 +1650,11 @@ parsed:
 		job->matte = 1;
 	}
 
+	/* QW410 only supports 0 and 3, supposedly. */
+	if (ctx->type == P_DNP_QW410 && job->printspeed > 1) {
+		job->printspeed = 3;
+	}
+
 	/* Pick a sane default value for printspeed if not specified */
 	if (job->printspeed == -1 || job->printspeed > 3)
 	{
@@ -1699,6 +1776,40 @@ parsed:
 
 	if (job->multicut < 100) {
 		switch(ctx->media) {
+		case 150: // 4x6, QW410
+			if (job->multicut != MULTICUT_4x4 &&
+			    job->multicut != MULTICUT_4x6) {
+				ERROR("Incorrect media for job loaded (%u vs %u)\n", ctx->media, job->multicut);
+				dnpds40_cleanup_job(job);
+				return CUPS_BACKEND_CANCEL;
+			}
+			break;
+		case 151: // 4x8, QW410
+			if (job->multicut != MULTICUT_4x4 &&
+			    job->multicut != MULTICUT_4x6 &&
+			    job->multicut != MULTICUT_4x8) {
+				ERROR("Incorrect media for job loaded (%u vs %u)\n", ctx->media, job->multicut);
+				dnpds40_cleanup_job(job);
+				return CUPS_BACKEND_CANCEL;
+			}
+			break;
+		case 160: // 4.5x6, QW410
+			if (job->multicut != MULTICUT_4_5x4_5 &&
+			    job->multicut != MULTICUT_4_5x6) {
+				ERROR("Incorrect media for job loaded (%u vs %u)\n", ctx->media, job->multicut);
+				dnpds40_cleanup_job(job);
+				return CUPS_BACKEND_CANCEL;
+			}
+			break;
+		case 161: // 4.5x8, QW410
+			if (job->multicut != MULTICUT_4_5x4_5 &&
+			    job->multicut != MULTICUT_4_5x6 &&
+			    job->multicut != MULTICUT_4_5x8) {
+				ERROR("Incorrect media for job loaded (%u vs %u)\n", ctx->media, job->multicut);
+				dnpds40_cleanup_job(job);
+				return CUPS_BACKEND_CANCEL;
+			}
+			break;
 		case 200: //"5x3.5 (L)"
 			if (job->multicut != MULTICUT_5x3_5) {
 				ERROR("Incorrect media for job loaded (%u vs %u)\n", ctx->media, job->multicut);
@@ -2285,6 +2396,8 @@ static int dnpds40_get_sensors(struct dnpds40_ctx *ctx)
 			INFO("Color Sensor Green : %s\n", val);
 		} else if (!strcmp("CSB", tok)) {
 			INFO("Color Sensor Blue  : %s\n", val);
+		} else if (!strcmp("DC5", tok)) {
+			INFO("USB Supply Voltage : %s\n", val);
 		} else {
 			INFO("Unknown Sensor: '%s' '%s'\n",
 			     tok, val);
@@ -2299,11 +2412,11 @@ static int dnpds40_get_sensors(struct dnpds40_ctx *ctx)
 static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 {
 	struct dnpds40_cmd cmd;
+	uint8_t *resp;
+	int len = 0;
 	int cwd_extra = 0;
 	int cwd_index = 1;
 	uint8_t cwd_buf[5];
-	uint8_t *resp;
-	int len = 0;
 
 	INFO("Model: %s\n", dnpds40_printer_type(ctx->type, ctx->mfg));
 
@@ -2582,7 +2695,10 @@ CWD_TOP:
 	}
 
 	if (cwd_extra && cwd_index == 1) {
-		cwd_index = 3;
+		if (ctx->type == P_DNP_QW410)
+			cwd_index = 2;
+		else
+			cwd_index = 3;
 		goto CWD_TOP;
 	}
 
@@ -3285,15 +3401,17 @@ static const char *dnpds40_prefixes[] = {
 #define USB_PID_CITIZEN_CW02 0x0006 // Also OP900II
 #define USB_PID_CITIZEN_CX02 0x000A
 #define USB_PID_CITIZEN_CX02W 0x000B
+#define USB_PID_CITIZEN_CZ01 0x000C
 
 #define USB_VID_DNP       0x1452
 #define USB_PID_DNP_DS620 0x8b01
 #define USB_PID_DNP_DS820 0x9001
+#define USB_PID_DNP_QW410 0x9201
 
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS-series / Citizen C-series",
-	.version = "0.132",
+	.version = "0.133",
 	.uri_prefixes = dnpds40_prefixes,
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
@@ -3320,12 +3438,14 @@ struct dyesub_backend dnpds40_backend = {
 		{ USB_VID_CITIZEN, USB_PID_DNP_DSRX1, P_DNP_DSRX1, NULL, "citizen-cy-02"}, /* Duplicate */
 		{ USB_VID_DNP, USB_PID_DNP_DS620, P_DNP_DS620, NULL, "dnp-ds620"},
 		{ USB_VID_DNP, USB_PID_DNP_DS820, P_DNP_DS820, NULL, "dnp-ds820"},
+		{ USB_VID_DNP, USB_PID_DNP_QW410, P_DNP_QW410, NULL, "dnp-qw410"},
 		{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW01, P_CITIZEN_CW01, NULL, "citizen-cw-01"},
 		{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW01, P_CITIZEN_CW01, NULL, "citizen-op900"}, /* Duplicate */
 		{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW02, P_CITIZEN_OP900II, NULL, "citizen-cw-02"},
 		{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW02, P_CITIZEN_OP900II, NULL, "citizen-op900ii"}, /* Duplicate */
 		{ USB_VID_CITIZEN, USB_PID_CITIZEN_CX02, P_DNP_DS620, NULL, "citizen-cx-02"},
 		{ USB_VID_CITIZEN, USB_PID_CITIZEN_CX02W, P_DNP_DS820, NULL, "citizen-cx-02w"},
+		{ USB_VID_CITIZEN, USB_PID_CITIZEN_CZ01, P_DNP_QW410, NULL, "citizen-cz-01"},
 		{ 0, 0, 0, NULL, NULL}
 	}
 };
@@ -3629,6 +3749,50 @@ static int legacy_dnp820_read_parse(struct dnpds40_printjob *job, int data_fd, i
 				   sizeof(hdr), plane_len, 1);
 }
 
+struct qw410_spool_hdr {
+	uint8_t  type; /* MULTICUT_?? -1 */
+	uint8_t  null0[5];
+	uint16_t copies; /* LE, 01 or bigger */
+
+	uint32_t plane_len; /* LE */
+	uint8_t  matte;
+	uint8_t  null1[3];
+
+	uint8_t  unk;  /* always 01 */
+	uint8_t  null2[3];
+	uint8_t  cut2;
+	uint8_t  null3[3];
+
+	uint8_t  hd;
+	uint8_t  null4[7];
+} __attribute__((packed));
+
+static int legacy_qw410_read_parse(struct dnpds40_printjob *job, int data_fd, int read_data)
+{
+	struct qw410_spool_hdr hdr;
+	uint32_t plane_len;
+
+	/* get original header out of structure */
+	memcpy(&hdr, job->databuf + job->datalen, sizeof(hdr));
+
+	/* Early parsing and sanity checking */
+	plane_len = le32_to_cpu(hdr.plane_len);
+
+	if (hdr.type < MULTICUT_4x4 || hdr.type > MULTICUT_4_5x8 ||
+	    hdr.null0[0] || hdr.null0[1] || hdr.null0[2]) {
+		ERROR("Unrecognized header data format @%d!\n", job->datalen);
+		return CUPS_BACKEND_CANCEL;
+	}
+
+	/* Don't bother with FW version checks for legacy stuff */
+	job->multicut = hdr.type + 1;
+	job->matte = hdr.matte;
+	job->cutter = (hdr.cut2) ? 120 : 0;
+	job->printspeed = (hdr.hd) ? 3 : 0;
+
+	return legacy_spool_helper(job, data_fd, read_data,
+				   sizeof(hdr), plane_len, 1);
+}
 
 /*
 

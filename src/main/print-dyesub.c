@@ -192,7 +192,8 @@ typedef struct
 {
   int multicut;
   int nocutwaste;
-  const char *print_speed; /* DS820 only */
+  int decurl;  /* QW410 only */
+  const char *print_speed; /* DS820 & QW410 only */
 } dnp_privdata_t;
 
 typedef struct
@@ -8208,6 +8209,242 @@ static int ds820_parse_parameters(stp_vars_t *v)
   return 1;
 }
 
+/* DNP QW410 */
+
+static const overcoat_t dnp_qw410_overcoat[] =
+{
+  {"Glossy",  N_("Glossy"),  {3, "000"}},
+  {"Matte", N_("Matte"), {3, "001"}},
+  {"PartialMatte", N_("Partial Matte"), {3, "101"}},
+};
+
+LIST(overcoat_list_t, dnp_qw410_overcoat_list, overcoat_t, dnp_qw410_overcoat);
+
+/* Imaging area is wider than print size, we always must supply the
+   printer with the full imaging width. */
+static const dyesub_pagesize_t dnp_qw410_page[] =
+{
+  DEFINE_PAPER( "w288h288", "4x4", PT1(1236,300), PT1(1408,300), 0, 0, PT(71,300), PT(71,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER( "w288h288-div2", "2x4*2", PT1(1236,300), PT1(1408,300), 0, 0, PT(71,300), PT(71,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER( "w288h216", "4x3", PT1(1836,300), PT1(1408,300), PT(900,300), 0, PT(71,300), PT(71,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER( "w288h288_w288h144", "4x4+4x2", PT1(1408,300), PT1(1836,300), PT(71,300), PT(71,300), 0, 0, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "w288h432", "4x6", PT1(1408,300), PT1(1836,300), PT(71,300), PT(71,300), 0, 0, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "w288h432-div2", "4x3*2", PT1(1408,300), PT1(1836,300), PT(71,300), PT(71,300), 0, 0, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "w288h432-div3", "2x4*3", PT1(1408,300), PT1(1836,300), PT(71,300), PT(71,300), 0, 0, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "w288h576", "4x8", PT1(1408,300), PT1(2436,300), PT(71,300), PT(71,300), 0, 0, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "w288h432_w288h144", "4x6+4x2", PT1(1408,300), PT1(2436,300), PT(71,300), PT(71,300), 0, 0, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "w288h432-div2_w288h144", "4x3*2+4x2", PT1(1408,300), PT1(2436,300), PT(71,300), PT(71,300), 0, 0, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "w288h576-div2", "4x4*2", PT1(1408,300), PT1(2436,300), PT(71,300), PT(71,300), 0, 0, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "w288h576-div4", "2x4*4", PT1(1408,300), PT1(2436,300), PT(71,300), PT(71,300), 0, 0, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "w324h216", "4.5x3", PT1(1836,300), PT1(1408,300), PT(900,300), 0, 0, 0, DYESUB_LANDSCAPE),
+  DEFINE_PAPER( "w324h288", "4.5x4", PT1(1836,300), PT1(1408,300), PT(600,300), 0, 0, 0, DYESUB_LANDSCAPE),
+  DEFINE_PAPER( "w324h324", "4.5x4.5", PT1(1386,300), PT1(1408,300), 0, 0, 0, 0, DYESUB_LANDSCAPE),
+  DEFINE_PAPER( "w324h432", "4.5x6", PT1(1408,300), PT1(1836,300), 0, 0, 0, 0, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "w324h432-div2", "4.5x3*2", PT1(1408,300), PT1(1836,300), 0, 0, 0, 0, DYESUB_PORTRAIT),
+  // XXX 4.5x4.5 + 4.5x2 / 4.5x3 / 4.5x3.5 ?
+  DEFINE_PAPER( "w324h432-div3", "4.5x2*3", PT1(1408,300), PT1(1836,300), 0, 0, 0, 0, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "w324h576", "4.5x8", PT1(1408,300), PT1(2436,300), 0, 0, 0, 0, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "w324h576-div2", "4.5x4*2", PT1(1408,300), PT1(2436,300), 0, 0, 0, 0, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "w324h576-div4", "4.5x2*4", PT1(1408,300), PT1(2436,300), 0, 0, 0, 0, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "w324h432_w324h144", "4.5x6+4.5x2", PT1(1408,300), PT1(2436,300), 0, 0, 0, 0, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "w324h432-div2_w324h144", "4.5x3*2+4.5x2", PT1(1408,300), PT1(2436,300), 0, 0, 0, 0, DYESUB_PORTRAIT),
+};
+
+LIST(dyesub_pagesize_list_t, dnp_qw410_page_list, dyesub_pagesize_t, dnp_qw410_page);
+
+static const dyesub_printsize_t dnp_qw410_printsize[] =
+{
+  { "300x300", "w288h288", 1236, 1408},
+  { "300x300", "w288h288-div2", 1236, 1408},
+  { "300x300", "w288h288_w288h144", 1408, 1836},
+  { "300x300", "w288h216", 1836, 1408},
+  { "300x300", "w288h432", 1408, 1836},
+  { "300x300", "w288h432-div2", 1408, 1836},
+  { "300x300", "w288h432-div3", 1408, 1836},
+  { "300x300", "w288h576", 1408, 2436},
+  { "300x300", "w288h432_w288h144", 1408, 2436},
+  { "300x300", "w288h432-div2_w288h144", 1408, 2436},
+  { "300x300", "w288h576-div2", 1408, 2436},
+  { "300x300", "w288h576-div4", 1408, 2436},
+  { "300x300", "w324h216", 1836, 1408},
+  { "300x300", "w324h288", 1836, 1408},
+  { "300x300", "w324h324", 1386, 1408},
+  { "300x300", "w324h432", 1408, 1836},
+  { "300x300", "w324h432-div2", 1408, 1836},
+  { "300x300", "w324h432-div3", 1408, 1836},
+  { "300x300", "w324h576", 1408, 2436},
+  { "300x300", "w324h576-div2", 1408, 2436},
+  { "300x300", "w324h576-div4", 1408, 2436},
+  { "300x300", "w324h432_w324h144", 1408, 2436},
+  { "300x300", "w324h432-div2_w324h144", 1408, 2436},
+};
+
+LIST(dyesub_printsize_list_t, dnp_qw410_printsize_list, dyesub_printsize_t, dnp_qw410_printsize);
+
+static void dnp_qw410_printer_start(stp_vars_t *v)
+{
+  dyesub_privdata_t *pd = get_privdata(v);
+  int trim = 0; /* XXX add another parameter to control this.  0 or 22 for intermediate scrap on qw410. */
+  int cut1 = 0, cut2 = 0, cut3 = 0, cut4 = 0;
+  int multicut = 0;
+
+  /* Common code */
+  dnp_printer_start_common(v);
+
+  if (!strcmp(pd->pagesize, "w288h216") || !strcmp(pd->pagesize, "w324h216")) {
+    cut1 = 30;
+  } else if (!strcmp(pd->pagesize, "w324h288")) {
+    cut1 = 40;
+  } else if (!strcmp(pd->pagesize, "w288h288-div2")) {
+    cut1 = cut2 = 20;
+  } else if (!strcmp(pd->pagesize, "w288h432-div2") || !strcmp(pd->pagesize, "w324h432-div2")) {
+    cut1 = cut2 = 30;
+  } else if (!strcmp(pd->pagesize, "w288h576-div2") || !strcmp(pd->pagesize, "w324h576-div2")) {
+    cut1 = cut2 = 40;
+  } else if (!strcmp(pd->pagesize, "w288h432-div3") || !strcmp(pd->pagesize, "w324h432-div3")) {
+    cut1 = cut2 = cut3 = 20;
+  } else if (!strcmp(pd->pagesize, "w288h576-div4") || !strcmp(pd->pagesize, "w324h576-div4")) {
+    cut1 = cut2 = cut3 = cut4 = 20;
+  } else if (!strcmp(pd->pagesize, "w288h288_w288h144")) {
+    cut1 = 40;
+    cut2 = 20;
+  } else if (!strcmp(pd->pagesize, "w288h432_w288h144") || !strcmp(pd->pagesize, "w324h432_w324h144")) {
+    cut1 = 60;
+    cut2 = 20;
+  } else if (!strcmp(pd->pagesize, "w288h432-div2_w288h144") || !strcmp(pd->pagesize, "w324h432-div2_w324h144")) {
+    cut1 = 30;
+    cut2 = 30;
+    cut3 = 20;
+  }
+  /* Cutter */
+  stp_zprintf(v, "\033PCNTRL CUTTER          00000008%08d", pd->privdata.dnp.nocutwaste ? 1 : 0);
+
+  if (cut1) {
+    stp_zprintf(v, "\033PCNTRL FULL_CUTTER_SET 00000016");
+    stp_zprintf(v, "%03d%03d%03d%03d%03d\r", cut1, cut2, cut3, cut4, trim);
+  }
+
+  /* Configure multi-cut/page size */
+
+  if (!strcmp(pd->pagesize, "w288h288") || !strcmp(pd->pagesize, "w288h288-div2")) {
+    multicut = 47;
+  } else if (!strcmp(pd->pagesize, "w288h432") || !strcmp(pd->pagesize, "w288h216") || !strcmp(pd->pagesize, "w288h432-div2") || !strcmp(pd->pagesize, "w288h432-div3")) {
+    multicut = 48;
+  } else if (!strcmp(pd->pagesize, "w288h576") || !strcmp(pd->pagesize, "w288h576-div2") || !strcmp(pd->pagesize, "w288h576-div4") || !strcmp(pd->pagesize, "w288h432_w288h144") || !strcmp(pd->pagesize, "w288h432-div2_w288h144") ) {
+    multicut = 49;
+  } else if (!strcmp(pd->pagesize, "w324h324")) {
+    multicut = 50;
+  } else if (!strcmp(pd->pagesize, "w324h432") || !strcmp(pd->pagesize, "w324h216") || !strcmp(pd->pagesize, "w324h288") || !strcmp(pd->pagesize, "w324h432-div2") || !strcmp(pd->pagesize, "w324h432-div3")) {
+    multicut = 51;
+  } else if (!strcmp(pd->pagesize, "w324h576") || !strcmp(pd->pagesize, "w324h576-div2") || !strcmp(pd->pagesize, "w324h576-div4") || !strcmp(pd->pagesize, "w324h432_w324h144") || !strcmp(pd->pagesize, "w324h432-div2_w324h144")) {
+    multicut = 52;
+  }
+
+  stp_zprintf(v, "\033PIMAGE MULTICUT        00000008000000%02d", multicut);
+
+  if (!strcmp(pd->privdata.dnp.print_speed, "LowSpeed")) {
+    stp_zprintf(v, "\033PCNTRL PRINTSPEED      0000000800000020");
+  }
+
+  stp_zprintf(v, "\033PCNTRL DECURL          00000012%02d00000000%02d", pd->privdata.dnp.decurl, pd->privdata.dnp.decurl);
+
+}
+
+static const dyesub_stringitem_t dnp_qw410_print_speeds[] =
+{
+  { "Normal",      N_ ("Normal") },
+  { "LowSpeed", N_ ("Low Speed") }
+};
+LIST(dyesub_stringlist_t, dnp_qw410_printspeeds_list, dyesub_stringitem_t, dnp_qw410_print_speeds);
+
+static const stp_parameter_t qw410_parameters[] =
+{
+  {
+    "PrintSpeed", N_("Print Speed"), "Color=No,Category=Advanced Printer Setup",
+    N_("Print Speed"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "NoCutWaste", N_("No Cut-Paper Waste"), "Color=No,Category=Advanced Printer Setup",
+    N_("No Cut-Paper Waste"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 0, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "DeCurl", N_("De-Curl Control"), "Color=No,Category=Advanced Printer Setup",
+    N_("De-Curl Control"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 0, STP_CHANNEL_NONE, 1, 0
+  },
+};
+#define qw410_parameter_count (sizeof(qw410_parameters) / sizeof(const stp_parameter_t))
+
+static int
+qw410_load_parameters(const stp_vars_t *v, const char *name,
+			 stp_parameter_t *description)
+{
+  int	i;
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
+		  				stp_get_model_id(v));
+
+  if (caps->parameter_count && caps->parameters)
+    {
+      for (i = 0; i < caps->parameter_count; i++)
+        if (strcmp(name, caps->parameters[i].name) == 0)
+          {
+	    stp_fill_parameter_settings(description, &(caps->parameters[i]));
+	    break;
+          }
+    }
+
+  if (strcmp(name, "PrintSpeed") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+
+      const dyesub_stringlist_t *mlist = &dnp_qw410_printspeeds_list;
+      for (i = 0; i < mlist->n_items; i++)
+        {
+	  const dyesub_stringitem_t *m = &(mlist->item[i]);
+	  stp_string_list_add_string(description->bounds.str,
+				       m->name, m->text); /* Do *not* want this translated, otherwise use gettext(m->text) */
+	}
+      description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "NoCutWaste") == 0)
+    {
+      description->is_active = 1;
+      description->deflt.boolean = 0;
+    }
+  else if (strcmp(name, "DeCurl") == 0)
+    {
+      description->is_active = 1;
+      description->deflt.boolean = 1;
+    }
+  else
+  {
+     return 0;
+  }
+  return 1;
+}
+
+static int qw410_parse_parameters(stp_vars_t *v)
+{
+  dyesub_privdata_t *pd = get_privdata(v);
+  const char *print_speed = stp_get_string_parameter(v, "PrintSpeed");
+  int nocutwaste = stp_get_boolean_parameter(v, "NoCutWaste");
+  int decurl = stp_get_boolean_parameter(v, "DeCurl");
+
+  if (pd) {
+    pd->privdata.dnp.print_speed = print_speed;
+    pd->privdata.dnp.nocutwaste = nocutwaste;
+    pd->privdata.dnp.decurl = decurl;
+  }
+
+  return 1;
+}
+
 /* Citizen CW-01 */
 static const dyesub_resolution_t res_citizen_cw01_dpi[] =
 {
@@ -10504,6 +10741,25 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     ds820_parameter_count,
     ds820_load_parameters,
     ds820_parse_parameters,
+  },
+  { /* Dai Nippon Printing QW410 */
+    6008,
+    &bgr_ink_list,
+    &res_300dpi_list,
+    &dnp_qw410_page_list,
+    &dnp_qw410_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_WHITE_BORDER
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_NATIVECOPIES ,
+    &dnp_qw410_printer_start, &dnpds40_printer_end,
+    &dnpds40_plane_init, NULL,
+    NULL, NULL,
+    &dnp_qw410_overcoat_list, NULL,
+    NULL, NULL,
+    qw410_parameters,
+    qw410_parameter_count,
+    qw410_load_parameters,
+    qw410_parse_parameters,
   },
   { /* HiTi P520L/P525L */
     6500,
