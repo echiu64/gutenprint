@@ -1529,7 +1529,7 @@ static int shinkos6145_query_markers(void *vctx, struct marker **markers, int *c
 {
 	struct shinkos6145_ctx *ctx = vctx;
 	struct sinfonia_cmd_hdr cmd;
-	struct s6145_status_resp *sts;
+	struct s6145_status_resp sts;
 	int num;
 
 	/* Query Status */
@@ -1543,7 +1543,7 @@ static int shinkos6145_query_markers(void *vctx, struct marker **markers, int *c
 		return CUPS_BACKEND_FAILED;
 	}
 
-	ctx->marker.levelnow = le32_to_cpu(sts->count_ribbon_left);
+	ctx->marker.levelnow = le32_to_cpu(sts.count_ribbon_left);
 
 	*markers = &ctx->marker;
 	*count = 1;
@@ -1573,7 +1573,7 @@ static const char *shinkos6145_prefixes[] = {
 
 struct dyesub_backend shinkos6145_backend = {
 	.name = "Shinko/Sinfonia CHC-S6145/CS2/S2245/S3",
-	.version = "0.38" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.39" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = shinkos6145_prefixes,
 	.cmdline_usage = shinkos6145_cmdline,
 	.cmdline_arg = shinkos6145_cmdline_arg,
