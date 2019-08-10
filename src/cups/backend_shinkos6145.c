@@ -1034,7 +1034,7 @@ static int shinkos6145_attach(void *vctx, struct libusb_device_handle *dev, int 
 
 		if (sinfonia_docmd(&ctx->dev,
 				   (uint8_t*)&cmd, sizeof(cmd),
-				   (uint8_t*)&ctx->media, sizeof(&ctx->media),
+				   (uint8_t*)&ctx->media, sizeof(ctx->media),
 				   &num)) {
 			return CUPS_BACKEND_FAILED;
 		}
@@ -1573,7 +1573,7 @@ static const char *shinkos6145_prefixes[] = {
 
 struct dyesub_backend shinkos6145_backend = {
 	.name = "Shinko/Sinfonia CHC-S6145/CS2/S2245/S3",
-	.version = "0.39" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.40" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = shinkos6145_prefixes,
 	.cmdline_usage = shinkos6145_cmdline,
 	.cmdline_arg = shinkos6145_cmdline_arg,
