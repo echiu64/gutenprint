@@ -812,6 +812,7 @@ const char *sinfonia_print_codes (uint8_t v, int eightinch) {
 		case CODE_8x10:
 			return "8x10";
 		case CODE_8x12:
+		case CODE_8x12K:
 			return "8x12";
 		case CODE_8x4:
 			return "8x4";

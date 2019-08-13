@@ -58,7 +58,9 @@ struct s6245_print_cmd {
 	uint16_t count;
 	uint16_t columns;
 	uint16_t rows;
-	uint8_t  reserved[8]; // columns and rows repeated, then nulls
+	uint16_t columns2;
+	uint16_t rows2;
+	uint8_t  reserved[4];
 	uint8_t  mode;
 	uint8_t  method;
 	uint8_t  reserved2;
@@ -356,6 +358,8 @@ struct s6245_mediainfo_resp {
 #define RIBBON_8x10 0x11
 #define RIBBON_8x12 0x12
 
+#define RIBBON_8x12K 0x04  /* EK8810 */
+
 static const char *ribbon_sizes (uint8_t v) {
 	switch (v) {
 	case RIBBON_NONE:
@@ -363,6 +367,7 @@ static const char *ribbon_sizes (uint8_t v) {
 	case RIBBON_8x10:
 		return "8x10";
 	case RIBBON_8x12:
+	case RIBBON_8x12K:
 		return "8x12";
 	default:
 		return "Unknown";
@@ -590,7 +595,11 @@ int shinkos6245_cmdline_arg(void *vctx, int argc, char **argv)
 			j = sinfonia_settonecurve(&ctx->dev, TONECURVE_USER, optarg);
 			break;
 		case 'e':
-			j = get_errorlog(ctx);
+			if (ctx->dev.type == P_KODAK_8810) {
+				j = sinfonia_geterrorlog(&ctx->dev);
+			} else {
+				j = get_errorlog(ctx);
+			}
 			break;
 		case 'F':
 			j = sinfonia_flashled(&ctx->dev);
@@ -757,7 +766,7 @@ static int shinkos6245_main_loop(void *vctx, const void *vjob) {
 	int ret, num;
 	uint8_t cmdbuf[CMDBUF_LEN];
 
-	int i, last_state = -1, state = S_IDLE;
+	int last_state = -1, state = S_IDLE;
 	uint8_t mcut;
 	int copies;
 
@@ -791,6 +800,8 @@ static int shinkos6245_main_loop(void *vctx, const void *vjob) {
 	}
 	// XXX what about mcut |= PRINT_METHOD_DISABLE_ERR;
 
+#if 0
+	int i;
 	/* Validate print sizes */
 	for (i = 0; i < ctx->media.count ; i++) {
 		/* Look for matching media */
@@ -802,9 +813,18 @@ static int shinkos6245_main_loop(void *vctx, const void *vjob) {
 		ERROR("Incorrect media loaded for print!\n");
 		return CUPS_BACKEND_HOLD;
 	}
+#else
+	if (ctx->media.ribbon_code != RIBBON_8x12 &&
+	    ctx->media.ribbon_code != RIBBON_8x12K &&
+	    job->jp.rows > 3024) {
+		ERROR("Incorrect media loaded for print!\n");
+		return CUPS_BACKEND_HOLD;
+	}
+
+#endif
 
 	/* Send Set Time */
-	{
+	if (ctx->dev.type != P_KODAK_8810) {
 		struct s6245_settime_cmd *settime = (struct s6245_settime_cmd *)cmdbuf;
 		time_t now = time(NULL);
 		struct tm *cur = localtime(&now);
@@ -903,11 +923,10 @@ top:
 		memset(cmdbuf, 0, CMDBUF_LEN);
 		print->hdr.cmd = cpu_to_le16(SINFONIA_CMD_PRINTJOB);
 		print->hdr.len = cpu_to_le16(sizeof (*print) - sizeof(*cmd));
-
 		print->id = ctx->jobid;
 		print->count = cpu_to_le16(copies);
-		print->columns = cpu_to_le16(job->jp.columns);
-		print->rows = cpu_to_le16(job->jp.rows);
+		print->columns = print->columns2 = cpu_to_le16(job->jp.columns);
+		print->rows = print->rows2 = cpu_to_le16(job->jp.rows);
 		print->mode = job->jp.oc_mode;
 		print->method = mcut;
 
@@ -1043,8 +1062,8 @@ static const char *shinkos6245_prefixes[] = {
 };
 
 struct dyesub_backend shinkos6245_backend = {
-	.name = "Shinko/Sinfonia CHC-S6245",
-	.version = "0.20WIP" " (lib " LIBSINFONIA_VER ")",
+	.name = "Sinfonia CHC-S6245 / Kodak 8810",
+	.version = "0.21" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = shinkos6245_prefixes,
 	.cmdline_usage = shinkos6245_cmdline,
 	.cmdline_arg = shinkos6245_cmdline_arg,

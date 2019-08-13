@@ -21,13 +21,13 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- *          [http://www.gnu.org/licenses/gpl-3.0.html]
+ *          [http://www.gnu.org/licenses/gpl-2.0.html]
  *
- *   SPDX-License-Identifier: GPL-3.0+
+ *   SPDX-License-Identifier: GPL-2.0+
  *
  */
 
-#define LIBSINFONIA_VER "0.07"
+#define LIBSINFONIA_VER "0.08"
 
 #define SINFONIA_HDR1_LEN 0x10
 #define SINFONIA_HDR2_LEN 0x64
@@ -45,7 +45,7 @@ struct sinfonia_job_param {
 
 	uint32_t quality;
 
-	int       mattedepth;
+	int      mattedepth;
 	uint32_t dust;
 
 	uint32_t ext_flags;
@@ -326,9 +326,9 @@ struct sinfonia_printcmd18_hdr {
 	uint16_t columns;
 	uint16_t rows;
 	uint8_t  reserved[8]; // columns and rows repeated, then nulls
-	uint8_t  media;
 	uint8_t  oc_mode;
 	uint8_t  method;
+	uint8_t  media; // reserved?
 } __attribute__((packed));
 
 struct sinfonia_printcmd28_hdr {
@@ -362,6 +362,9 @@ struct sinfonia_printcmd28_hdr {
 #define CODE_8x5_2   0x31
 #define CODE_8x6_2   0x32
 #define CODE_8x4_3   0x40
+
+#define CODE_8x12K   0x02  /* Kodak 8810 */
+
 
 #define CODE_89x60mm 0x10
 #define CODE_89x59mm 0x11

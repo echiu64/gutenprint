@@ -3431,6 +3431,9 @@ static void kodak_9810_plane_init(stp_vars_t *v)
 static const dyesub_pagesize_t kodak_8810_page[] =
 {
   DEFINE_PAPER_SIMPLE( "w288h576", "8x4", PT1(1208,300), PT1(2464,300), DYESUB_LANDSCAPE),
+//  DEFINE_PAPER_SIMPLE( "w360h576", "8x5", PT1(1508,300), PT1(2464,300), DYESUB_LANDSCAPE).
+//  DEFINE_PAPER_SIMPLE( "w432h576", "8x6", PT1(1808,300), PT1(2464,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w576h576", "8x8", PT1(2408,300), PT1(2464,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER_SIMPLE( "c8x10", "8x10", PT1(2464,300), PT1(3024,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "A4", "203x297mm", PT1(2464,300), PT1(3531,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w576h864", "8x12", PT1(2464,300), PT1(3624,300), DYESUB_PORTRAIT),
@@ -3440,6 +3443,9 @@ LIST(dyesub_pagesize_list_t, kodak_8810_page_list, dyesub_pagesize_t, kodak_8810
 static const dyesub_printsize_t kodak_8810_printsize[] =
 {
   { "300x300", "w288h576", 1208, 2464},
+//  { "300x300", "w360h576", 1508, 2464},
+//  { "300x300", "w432h576", 1808, 2464},
+  { "300x300", "w576h576", 2408, 2464},
   { "300x300", "c8x10", 2464, 3024},
   { "300x300", "A4", 2464, 3531},
   { "300x300", "w576h864", 2464, 3624},
@@ -3449,9 +3455,8 @@ LIST(dyesub_printsize_list_t, kodak_8810_printsize_list, dyesub_printsize_t, kod
 
 static const overcoat_t kodak_8810_overcoat[] =
 {
-  {"Glossy", N_("Glossy"), {1, "\x03"}},
-  {"Satin",  N_("Satin"),  {1, "\x02"}},
-  {"None",  N_("None"),  {1, "\x01"}},
+  {"Glossy", N_("Glossy"), {1, "\x02"}},
+  {"Satin",  N_("Satin"),  {1, "\x03"}},
 };
 
 LIST(overcoat_list_t, kodak_8810_overcoat_list, overcoat_t, kodak_8810_overcoat);
@@ -9504,13 +9509,12 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Kodak 8810 */
     4007,
-    &bgr_ink_list,
+    &rgb_ink_list,
     &res_300dpi_list,
     &kodak_8810_page_list,
     &kodak_8810_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
     &kodak_8810_printer_init, NULL,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
