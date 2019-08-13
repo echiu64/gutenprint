@@ -44,7 +44,8 @@
 #define USB_VID_KODAK       0x040A
 #define USB_PID_KODAK_605   0x402E
 #define USB_PID_KODAK_7000  0x4035
-#define USB_PID_KODAK_701X  0x4037
+#define USB_PID_KODAK_7010  0x4037
+#define USB_PID_KODAK_7015  0x4038
 
 /* List of confirmed commands */
 //#define SINFONIA_CMD_GETSTATUS  0x0001
@@ -285,16 +286,21 @@ static int kodak605_get_media(struct kodak605_ctx *ctx, struct kodak605_media_li
 {
 	struct sinfonia_cmd_hdr cmd;
 
-	int ret, num = 0;
+	int i, ret, num = 0;
 
 	cmd.cmd = cpu_to_le16(SINFONIA_CMD_MEDIAINFO);
 	cmd.len = cpu_to_le16(0);
 
-	if ((ret =sinfonia_docmd(&ctx->dev,
-				 (uint8_t*)&cmd, sizeof(cmd),
-				 (uint8_t*)media, MAX_MEDIA_LEN,
-				 &num))) {
+	if ((ret = sinfonia_docmd(&ctx->dev,
+				  (uint8_t*)&cmd, sizeof(cmd),
+				  (uint8_t*)media, MAX_MEDIA_LEN,
+				  &num))) {
 		return ret;
+	}
+
+	for (i = 0 ; i < media->count; i++) {
+		media->entries[i].rows = le16_to_cpu(media->entries[i].rows);
+		media->entries[i].columns = le16_to_cpu(media->entries[i].columns);
 	}
 
 	return 0;
@@ -622,9 +628,10 @@ static void kodak605_dump_mediainfo(struct kodak605_media_list *media)
 
 	DEBUG("Legal print sizes:\n");
 	for (i = 0 ; i < media->count ; i++) {
-		DEBUG("\t%d: %ux%u\n", i,
-		      le16_to_cpu(media->entries[i].columns),
-		      le16_to_cpu(media->entries[i].rows));
+		DEBUG("\t%d: %ux%u (%x)\n", i,
+		      media->entries[i].columns,
+		      media->entries[i].rows,
+		      media->entries[i].code);
 	}
 	DEBUG("\n");
 }
@@ -726,14 +733,14 @@ static int kodak605_query_markers(void *vctx, struct marker **markers, int *coun
 
 static const char *kodak605_prefixes[] = {
 	"kodak605",  // Family driver, do NOT nuke.
-	"kodak-605", "kodak-7000", "kodak-7010", "kodak-7015", "kodak-701x", "kodak-7xxx",
+	"kodak-605", "kodak-7000", "kodak-7010", "kodak-7015",
 	NULL,
 };
 
 /* Exported */
 struct dyesub_backend kodak605_backend = {
 	.name = "Kodak 605/70xx",
-	.version = "0.42" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.44" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = kodak605_prefixes,
 	.cmdline_usage = kodak605_cmdline,
 	.cmdline_arg = kodak605_cmdline_arg,
@@ -746,7 +753,8 @@ struct dyesub_backend kodak605_backend = {
 	.devices = {
 		{ USB_VID_KODAK, USB_PID_KODAK_605, P_KODAK_605, "Kodak", "kodak-605"},
 		{ USB_VID_KODAK, USB_PID_KODAK_7000, P_KODAK_7000, "Kodak", "kodak-7000"},
-		{ USB_VID_KODAK, USB_PID_KODAK_701X, P_KODAK_701X, "Kodak", "kodak-701x"},
+		{ USB_VID_KODAK, USB_PID_KODAK_7010, P_KODAK_701X, "Kodak", "kodak-7010"},
+		{ USB_VID_KODAK, USB_PID_KODAK_7015, P_KODAK_701X, "Kodak", "kodak-7015"},
 		{ 0, 0, 0, NULL, NULL}
 	}
 };

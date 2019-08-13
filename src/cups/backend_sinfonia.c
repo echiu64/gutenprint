@@ -463,7 +463,7 @@ int sinfonia_getfwinfo(struct sinfonia_usbdev *usbh)
 
 	INFO("FW Information:\n");
 
-	for (i = FWINFO_TARGET_MAIN_BOOT ; i <= FWINFO_TARGET_PRINT_TABLES ; i++) {
+	for (i = FWINFO_TARGET_MAIN_BOOT ; i <= FWINFO_TARGET_PRINT_TABLES2 ; i++) {
 		int ret;
 		cmd.target = i;
 
@@ -473,6 +473,9 @@ int sinfonia_getfwinfo(struct sinfonia_usbdev *usbh)
 					  &num)) < 0) {
 			continue;
 		}
+
+		if (resp.major == 0)
+			continue;
 
 		if (le16_to_cpu(resp.hdr.payload_len) != (sizeof(struct sinfonia_fwinfo_resp) - sizeof(struct sinfonia_status_hdr)))
 			continue;
@@ -791,10 +794,13 @@ const char *sinfonia_fwinfo_targets (uint8_t v) {
 		return "Main Boot   ";
 	case FWINFO_TARGET_MAIN_APP:
 		return "Main App    ";
+	case FWINFO_TARGET_PRINT_TABLES:
+	case FWINFO_TARGET_PRINT_TABLES2:  // Seen on EK70xx
+		return "Print Tables";
 	case FWINFO_TARGET_DSP:
 		return "DSP         ";
-	case FWINFO_TARGET_PRINT_TABLES:
-		return "Print Tables";
+	case FWINFO_TARGET_USB:
+		return "USB         ";
 	default:
 		return "Unknown     ";
 	}
@@ -953,6 +959,8 @@ const char *sinfonia_cmd_names(uint16_t v) {
 		return "Set EEPROM Backup Parameter";
 	case SINFONIA_CMD_SETTIME:
 		return "Time Setting";
+	case SINFONIA_CMD_DIAGNOSTIC:
+		return "Diagnostic";
 	case SINFONIA_CMD_FWINFO:
 		return "Get Firmware Info";
 	case SINFONIA_CMD_UPDATE:
@@ -988,6 +996,9 @@ void kodak6_dumpmediacommon(int type)
 		break;
 	case KODAK6_MEDIA_6TR2:
 		INFO("Media type: 6R (Kodak 396-2941 or equivalent)\n");
+		break;
+	case KODAK7_MEDIA_6R:
+		INFO("Media type: 6R (Kodak 659-9047 or equivalent)\n");
 		break;
 	default:
 		INFO("Media type %02x (unknown, please report!)\n", type);

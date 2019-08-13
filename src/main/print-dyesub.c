@@ -3481,6 +3481,7 @@ static void kodak_8810_printer_init(stp_vars_t *v)
 static const dyesub_pagesize_t kodak_7000_page[] =
 {
   DEFINE_PAPER_SIMPLE( "w288h432", "4x6", PT1(1240,300), PT1(1844,300), DYESUB_LANDSCAPE), /* 4x6 */
+  DEFINE_PAPER_SIMPLE( "w432h432", "6x6", PT1(1836,300), PT1(1844,300), DYESUB_LANDSCAPE), /* 4x6 */
   DEFINE_PAPER_SIMPLE( "w432h576", "6x8", PT1(1844,300), PT1(2434,300), DYESUB_PORTRAIT), /* 6x8 */
 };
 
@@ -3489,6 +3490,7 @@ LIST(dyesub_pagesize_list_t, kodak_7000_page_list, dyesub_pagesize_t, kodak_7000
 static const dyesub_printsize_t kodak_7000_printsize[] =
 {
   { "300x300", "w288h432", 1240, 1844},
+  { "300x300", "w432h432", 1836, 1844},
   { "300x300", "w432h576", 1844, 2434},
 };
 
@@ -3512,6 +3514,8 @@ static void kodak_70xx_printer_init(stp_vars_t *v)
 
   if (!strcmp(pd->pagesize,"w288h432"))
 	  stp_putc(0x01, v);
+  else if (!strcmp(pd->pagesize,"w432h432"))
+	  stp_putc(0x0e, v);
   else if (!strcmp(pd->pagesize,"w432h576"))
 	  stp_putc(0x03, v);
   else if (!strcmp(pd->pagesize,"w360h504"))
@@ -9517,13 +9521,12 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Kodak 7000/7010 */
     4008,
-    &bgr_ink_list,
+    &rgb_ink_list,
     &res_300dpi_list,
     &kodak_7000_page_list,
     &kodak_7000_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
     &kodak_70xx_printer_init, NULL,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
@@ -9534,13 +9537,12 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Kodak 7015 */
     4009,
-    &bgr_ink_list,
+    &rgb_ink_list,
     &res_300dpi_list,
     &kodak_7015_page_list,
     &kodak_7015_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
     &kodak_70xx_printer_init, NULL,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
