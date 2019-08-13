@@ -41,7 +41,7 @@
 #define inline __inline__
 #endif
 
-//#define S6145_YMC
+#define S6145_YMC  /* Generate YMC data for S6145 family */
 
 #define DYESUB_FEATURE_NONE		 0x00000000
 #define DYESUB_FEATURE_FULL_WIDTH	 0x00000001
