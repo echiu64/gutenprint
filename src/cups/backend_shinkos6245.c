@@ -58,8 +58,8 @@ struct s6245_print_cmd {
 	uint16_t count;
 	uint16_t columns;
 	uint16_t rows;
-	uint16_t columns2;
-	uint16_t rows2;
+	uint16_t columns2; /* These are necessary for EK8810 */
+	uint16_t rows2;    /*                                */
 	uint8_t  reserved[4];
 	uint8_t  mode;
 	uint8_t  method;
@@ -358,6 +358,7 @@ struct s6245_mediainfo_resp {
 #define RIBBON_8x10 0x11
 #define RIBBON_8x12 0x12
 
+#define RIBBON_8x10K 0x03  /* XXX GUESS - EK8810 */
 #define RIBBON_8x12K 0x04  /* EK8810 */
 
 static const char *ribbon_sizes (uint8_t v) {
@@ -365,6 +366,7 @@ static const char *ribbon_sizes (uint8_t v) {
 	case RIBBON_NONE:
 		return "None";
 	case RIBBON_8x10:
+	case RIBBON_8x10K:
 		return "8x10";
 	case RIBBON_8x12:
 	case RIBBON_8x12K:
@@ -380,6 +382,10 @@ static int ribbon_counts (uint8_t v) {
 		return 120;
 	case RIBBON_8x12:
 		return 100;
+	case RIBBON_8x10K:
+		return 250;
+	case RIBBON_8x12K:
+		return 250;
 	default:
 		return 120;
 	}
@@ -468,6 +474,7 @@ static int get_status(struct shinkos6245_ctx *ctx)
 	INFO("\tPrint Head:\t\t%08u\n", le32_to_cpu(resp.count_head));
 	INFO(" Cutter Actuations:\t%08u\n", le32_to_cpu(resp.count_cutter));
 	INFO(" Ribbon Remaining:\t%8u%%\n", le32_to_cpu(resp.count_ribbon_left));
+	INFO(" Prints Remaining:\t%8u\n", ribbon_counts(ctx->media.ribbon_code) - le32_to_cpu(resp.count_paper));
 	INFO("Bank 1: 0x%02x (%s) Job %03u @ %03u/%03u (%03u remaining)\n",
 	     resp.bank1_status, sinfonia_bank_statuses(resp.bank1_status),
 	     resp.bank1_printid,
@@ -484,7 +491,11 @@ static int get_status(struct shinkos6245_ctx *ctx)
 
 	INFO("Tonecurve Status: 0x%02x (%s)\n", resp.tonecurve_status, sinfonia_tonecurve_statuses(resp.tonecurve_status));
 
+
 	/* Query Extended counters */
+	if (ctx->dev.type == P_KODAK_8810)
+		return 0; /* Kodak 8810 returns 12 bytes of garbage. */
+
 	cmd.cmd = cpu_to_le16(SINFONIA_CMD_EXTCOUNTER);
 	cmd.len = cpu_to_le16(0);
 
@@ -494,8 +505,8 @@ static int get_status(struct shinkos6245_ctx *ctx)
 				  &num)) < 0) {
 		return ret;
 	}
-	// XXX breaks on Kodak 8810!
-	if (le16_to_cpu(resp2.hdr.payload_len) != (sizeof(struct sinfonia_getextcounter_resp) - sizeof(struct sinfonia_status_hdr)))
+
+	if (le16_to_cpu(resp2.hdr.payload_len) < 12)
 		return 0;
 
 	INFO("Lifetime Distance: %08u inches\n", le32_to_cpu(resp2.lifetime_distance));
@@ -718,7 +729,7 @@ static int shinkos6245_attach(void *vctx, struct libusb_device_handle *dev, int 
 
 	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
 	ctx->marker.name = ribbon_sizes(ctx->media.ribbon_code);
-	ctx->marker.levelmax = ribbon_counts(ctx->media.ribbon_code);
+	ctx->marker.levelmax = 100;
 	ctx->marker.levelnow = -2;
 
 	return CUPS_BACKEND_OK;
@@ -941,7 +952,7 @@ top:
 			if (resp.error == ERROR_BUFFER_FULL) {
 				INFO("Printer Buffers full, retrying\n");
 				break;
-			} else if ((resp.status & 0xf0) == 0x30 || sts.hdr.status == 0x21) {
+			} else if ((resp.status & 0xf0) == 0x30 || sts.hdr.status == ERROR_BUFFER_FULL) {
 				INFO("Printer busy (%s), retrying\n", sinfonia_status_str(sts.hdr.status));
 				break;
 			} else if (resp.status != ERROR_NONE)
@@ -1063,7 +1074,7 @@ static const char *shinkos6245_prefixes[] = {
 
 struct dyesub_backend shinkos6245_backend = {
 	.name = "Sinfonia CHC-S6245 / Kodak 8810",
-	.version = "0.21" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.22" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = shinkos6245_prefixes,
 	.cmdline_usage = shinkos6245_cmdline,
 	.cmdline_arg = shinkos6245_cmdline_arg,
@@ -1105,6 +1116,16 @@ struct dyesub_backend shinkos6245_backend = {
 
   Spool file is the print_cmd_hdr (22 bytes) followed by RGB-packed data.
 
-  NOTE:  NOT YET HANDLED by backend.
+  01 40 0a 00                    Fixed header
+  XX                             Job ID
+  CC CC                          Number of copies (1-???)
+  WW WW                          Number of columns
+  HH HH                          Number of rows
+  WW WW                          Number of columns
+  HH HH                          Number of rows
+  00 00 00 00                    Reserved/Unknown
+  LL                             Laminate, 0x02/0x03 (on/satin)
+  MM                             Print Method
+  00                             Reserved/Unknown
 
 */

@@ -74,12 +74,12 @@ struct kodak605_status {
 	uint32_t ctr_head;  /* Prints on current head */
 /*@30*/	uint8_t  donor;     /* Donor Percentage remaining */
 /*@31*/	uint8_t  null_1[7]; /* 00 00 00 00 00 00 00 */
-/*@38*/	uint8_t  b1_id;     /* 00/01/02 */
+/*@38*/	uint8_t  b1_id;     /* jobid */
 	uint16_t b1_remain;
 	uint16_t b1_complete;
 	uint16_t b1_total;
 /*@45*/	uint8_t  b1_sts;    /* See BANK_STATUS_* */
-	uint8_t  b2_id;     /* 00/01/02 */
+	uint8_t  b2_id;     /* jobid */
 	uint16_t b2_remain;
 	uint16_t b2_complete;
 	uint16_t b2_total;
@@ -474,58 +474,54 @@ static int kodak605_main_loop(void *vctx, const void *vjob) {
 		sleep(1);
 	}
 
-	do {
-		struct sinfonia_printcmd10_hdr hdr;
-		struct sinfonia_status_hdr resp;
+	/* Send print job */
+	struct sinfonia_printcmd10_hdr hdr;
 
-		INFO("Sending print job (internal id %u)\n", ctx->jobid);
-		/* Set up header */
-		hdr.hdr.cmd = cpu_to_le16(SINFONIA_CMD_PRINTJOB);
-		hdr.hdr.len = cpu_to_le16(10);
-		hdr.jobid = ctx->jobid;
-		hdr.rows = cpu_to_le16(job->jp.rows);
-		hdr.columns = cpu_to_le16(job->jp.columns);
-		hdr.copies = cpu_to_le16(job->jp.copies);
-		hdr.media = job->jp.media;
-		hdr.oc_mode = job->jp.oc_mode;
-		hdr.method = job->jp.method;
+	INFO("Sending print job (internal id %u)\n", ctx->jobid);
 
-		if ((ret = sinfonia_docmd(&ctx->dev,
-					  (uint8_t*)&hdr, sizeof(hdr),
-					  (uint8_t*)&resp, sizeof(resp),
-					  &num)) < 0) {
-			return ret;
+	/* Set up header */
+	hdr.hdr.cmd = cpu_to_le16(SINFONIA_CMD_PRINTJOB);
+	hdr.hdr.len = cpu_to_le16(10);
+	hdr.jobid = ctx->jobid;
+	hdr.rows = cpu_to_le16(job->jp.rows);
+	hdr.columns = cpu_to_le16(job->jp.columns);
+	hdr.copies = cpu_to_le16(job->jp.copies);
+	hdr.media = job->jp.media;
+	hdr.oc_mode = job->jp.oc_mode;
+	hdr.method = job->jp.method;
+
+retry_print:
+	if ((ret = sinfonia_docmd(&ctx->dev,
+				  (uint8_t*)&hdr, sizeof(hdr),
+				  (uint8_t*)&sts.hdr, sizeof(sts.hdr),
+				  &num)) < 0) {
+		return ret;
+	}
+
+	if (sts.hdr.result != RESULT_SUCCESS) {
+		if (sts.hdr.error == ERROR_BUFFER_FULL) {
+			INFO("Printer Buffers full, retrying\n");
+			sleep(1);
+			goto retry_print;
+		} else if ((sts.hdr.status & 0xf0) == 0x30 || sts.hdr.status == ERROR_BUFFER_FULL) {
+			INFO("Printer busy (%02x : %s), retrying\n", sts.hdr.status, sinfonia_status_str(sts.hdr.status));
+
+		} else {
+			ERROR("Unexpected response from print command!\n");
+			ERROR("Printer Status:  %02x: %s\n", sts.hdr.status, sinfonia_status_str(sts.hdr.status));
+			ERROR("Result: %02x Error: %02x (%02x %02x = %s)\n",
+			      sts.hdr.result, sts.hdr.error,
+			      sts.hdr.printer_major, sts.hdr.printer_minor,
+			      error_codes(sts.hdr.printer_major, sts.hdr.printer_minor));
+
+			return CUPS_BACKEND_FAILED;
 		}
-
-		if (resp.result != RESULT_SUCCESS) {
-			if (resp.error == ERROR_BUFFER_FULL) {
-				INFO("Printer Buffers full, retrying\n");
-				sleep(1);
-				continue;
-			} else if ((resp.status & 0xf0) == 0x30 || resp.status == 0x21) {
-				INFO("Printer busy (%02x : %s), retrying\n", resp.status, sinfonia_status_str(resp.status));
-
-			} else {
-				ERROR("Unexpected response from print command!\n");
-				ERROR("Printer Status:  %02x: %s\n", resp.status, sinfonia_status_str(resp.status));
-				ERROR("Result: %02x Error: %02x (%02x %02x = %s)\n",
-				      resp.result, resp.error,
-				      resp.printer_major, resp.printer_minor,
-				      error_codes(resp.printer_major, resp.printer_minor));
-
-				return CUPS_BACKEND_FAILED;
-			}
-		}
-		break;
-	} while(1);
-	sleep(1);
+	}
 
 	INFO("Sending image data\n");
 	if ((ret = send_data(ctx->dev.dev, ctx->dev.endp_down,
 			     job->databuf, job->datalen)))
 		return CUPS_BACKEND_FAILED;
-
-	INFO("Image data sent\n");
 
 	INFO("Waiting for printer to acknowledge completion\n");
 	do {
@@ -538,10 +534,11 @@ static int kodak605_main_loop(void *vctx, const void *vjob) {
 			dump_markers(&ctx->marker, 1, 0);
 		}
 
+		INFO("Printer Status:  %02x (%s)\n", sts.hdr.status,
+		     sinfonia_status_str(sts.hdr.status));
+
 		if (sts.hdr.result != RESULT_SUCCESS ||
 		    sts.hdr.error == ERROR_PRINTER) {
-			INFO("Printer Status:  %02x (%s)\n", sts.hdr.status,
-			     sinfonia_status_str(sts.hdr.status));
 			INFO("Result: %02x Error: %02x (%s) %02x/%02x = %s\n",
 			     sts.hdr.result, sts.hdr.error,
 			     sinfonia_error_str(sts.hdr.error),
@@ -551,15 +548,14 @@ static int kodak605_main_loop(void *vctx, const void *vjob) {
 		}
 
 		/* Wait for completion */
-		if (sts.hdr.status == STATUS_READY)
-			break;
-
-#if 0
 		if (sts.b1_id == ctx->jobid && sts.b1_complete == sts.b1_total)
 			break;
 		if (sts.b2_id == ctx->jobid && sts.b2_complete == sts.b2_total)
 			break;
-#endif
+
+		if (sts.hdr.status == STATUS_READY)
+			break;
+
 		if (fast_return) {
 			INFO("Fast return mode enabled.\n");
 			break;
@@ -607,9 +603,9 @@ static void kodak605_dump_status(struct kodak605_ctx *ctx, struct kodak605_statu
 		}
 
 		if (max) {
-			INFO("\t  Remaining   : %u\n", max - le32_to_cpu(sts->ctr_media));
+			INFO("\t  Remaining     : %u\n", max - le32_to_cpu(sts->ctr_media));
 		} else {
-			INFO("\t  Remaining   : Unknown\n");
+			INFO("\t  Remaining     : Unknown\n");
 		}
 	}
 
@@ -740,7 +736,7 @@ static const char *kodak605_prefixes[] = {
 /* Exported */
 struct dyesub_backend kodak605_backend = {
 	.name = "Kodak 605/70xx",
-	.version = "0.44" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.45" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = kodak605_prefixes,
 	.cmdline_usage = kodak605_cmdline,
 	.cmdline_arg = kodak605_cmdline_arg,
