@@ -3482,6 +3482,78 @@ static void kodak_8810_printer_init(stp_vars_t *v)
   stp_putc(0x00, v); /* Reserved */
 }
 
+/* Kodak 6900 */
+static const dyesub_pagesize_t kodak_6900_page[] =
+{
+  DEFINE_PAPER_SIMPLE( "w144h432",	"2x6", PT1(636,300), PT1(1844,300),  DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w216h432",	"3x6", PT1(936,300), PT1(1844,300),  DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w288h432",	"4x6", PT1(1236,300), PT1(1844,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w432h432",	"6x6", PT1(1836,300), PT1(1844,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w432h576",	"6x8", PT1(1844,300), PT1(2436,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "B7",          "3.5x5", PT1(1086,300), PT1(1548,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w360h504",	"5x7", PT1(1548,300), PT1(2136,300), DYESUB_PORTRAIT),
+};
+
+LIST(dyesub_pagesize_list_t, kodak_6900_page_list, dyesub_pagesize_t, kodak_6900_page);
+
+static const dyesub_printsize_t kodak_6900_printsize[] =
+{
+  { "300x300", "w144h432", 636, 1844},
+  { "300x300", "w216h432", 636, 1844},
+  { "300x300", "w288h432", 1236, 1844},
+  { "300x300", "w432h432", 1836, 1844},
+  { "300x300", "w432h576", 1844, 2436},
+  { "300x300", "B7", 1086, 2140},
+  { "300x300", "w360h504", 1548, 2140},
+};
+
+LIST(dyesub_printsize_list_t, kodak_6900_printsize_list, dyesub_printsize_t, kodak_6900_printsize);
+
+static const overcoat_t kodak_6900_overcoat[] =
+{
+  {"Glossy", N_("Glossy"), {1, "\x01"}},
+  {"Satin",  N_("Satin"),  {1, "\x02"}},
+};
+
+LIST(overcoat_list_t, kodak_6900_overcoat_list, overcoat_t, kodak_6900_overcoat);
+
+static void kodak_6900_printer_init(stp_vars_t *v)
+{
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  stp_zfwrite("\x01\x40\x1c\x00", 1, 4, v); /* Header */
+  stp_putc(0, v); /* Job ID */
+  stp_put16_le(pd->copies, v); /* Copies */
+  stp_put16_le(pd->w_size, v); /* Columns */
+  stp_put16_le(pd->h_size, v); /* Rows */
+
+  int media = 0;
+  int overcoat = ((const char*)((pd->overcoat->seq).data))[0];
+
+  if (strcmp(pd->pagesize,"w144h432") == 0)
+    media = 0x02;
+  else if (strcmp(pd->pagesize,"w216h432") == 0)
+    media = 0x02;
+  else if (strcmp(pd->pagesize,"w288h432") == 0)
+    media = 0x04;
+  else if (strcmp(pd->pagesize,"B7") == 0)
+    media = 0x01;
+  else if (strcmp(pd->pagesize,"w360h504") == 0)
+    media = 0x01;
+  else if (strcmp(pd->pagesize,"w432h432") == 0)
+    media = 0x00;
+  else if (strcmp(pd->pagesize,"w432h576") == 0)
+    media = 0x00;
+  else
+    media = 0x04;
+
+  stp_putc(media, v);  /* Media Type */
+  dyesub_nputc(v, 0, 7);  /* Reserved */
+  stp_putc(overcoat, v);  /* Options XXX QUALITY */
+  stp_putc(0, v);         /* Method XXX Multicut? */
+  dyesub_nputc(v, 0, 11); /* Reserved */
+}
+
 /* Kodak 7000/7010 */
 static const dyesub_pagesize_t kodak_7000_page[] =
 {
@@ -3500,13 +3572,6 @@ static const dyesub_printsize_t kodak_7000_printsize[] =
 };
 
 LIST(dyesub_printsize_list_t, kodak_7000_printsize_list, dyesub_printsize_t, kodak_7000_printsize);
-static const overcoat_t kodak_7000_overcoat[] =
-{
-  {"Glossy", N_("Glossy"), {1, "\x02"}},
-  {"Satin",  N_("Satin"),  {1, "\x03"}},
-};
-
-LIST(overcoat_list_t, kodak_7000_overcoat_list, overcoat_t, kodak_7000_overcoat);
 
 static void kodak_70xx_printer_init(stp_vars_t *v)
 {
@@ -9517,7 +9582,23 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL, /* No block funcs */
     NULL,
-    &kodak_7000_overcoat_list, NULL,
+    &kodak_8810_overcoat_list, NULL,
+    NULL, NULL,
+    NULL, 0, NULL, NULL,
+  },
+  { /* Kodak 6900 */
+    4010,
+    &rgb_ink_list,
+    &res_300dpi_list,
+    &kodak_6900_page_list,
+    &kodak_6900_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    &kodak_6900_printer_init, NULL,
+    NULL, NULL,  /* No planes */
+    NULL, NULL,  /* No blocks */
+    NULL,
+    &kodak_6900_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
@@ -9533,7 +9614,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL, /* No block funcs */
     NULL,
-    &kodak_7000_overcoat_list, NULL,
+    &kodak_8810_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
