@@ -44,7 +44,7 @@ if test "x$2" != xfast; then
 	# Clean build the software...
 	test -f Makefile && make distclean
 
-	LIBS="-framework IOKit -framework CoreFoundation" ./configure --prefix=/Library/Printers/Gutenprint.printerDriver/Contents/MacOS --datadir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources --datarootdir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources --localedir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources --docdir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources/doc --mandir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources --disable-samples --disable-test --enable-nls-macosx --with-archflags='-mmacosx-version-min=10.6 -Os -arch x86_64 -D_PPD_DEPRECATED=""'
+	PACKAGE_VERSION=$pkgversion PACKAGE_STRING="gutenprint $pkgversion" LIBS="-framework IOKit -framework CoreFoundation" ./configure --prefix=/Library/Printers/Gutenprint.printerDriver/Contents/MacOS --datadir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources --datarootdir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources --localedir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources --docdir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources/doc --mandir=/Library/Printers/Gutenprint.printerDriver/Contents/Resources --disable-samples --disable-test --enable-nls-macosx --with-archflags='-mmacosx-version-min=10.6 -Os -arch x86_64 -D_PPD_DEPRECATED=""'
 	make
 fi
 
@@ -69,11 +69,11 @@ mv $pkgroot/Library/Printers/Gutenprint.printerDriver/Contents/MacOS/sbin/* "$pk
 rm -rf "$pkgroot/Library/Printers/Gutenprint.printerDriver/Contents/MacOS/sbin"
 
 # Move backend, filters, and driver interface to driver bundle
-mv "$pkgroot/usr/libexec/cups/backend/gutenprint52+usb" "$pkgroot/Library/Printers/Gutenprint.printerDriver/Contents/MacOS"
+mv "$pkgroot/usr/libexec/cups/backend/gutenprint53+usb" "$pkgroot/Library/Printers/Gutenprint.printerDriver/Contents/MacOS"
 
-mv "$pkgroot/usr/libexec/cups/driver/gutenprint.5.2" "$pkgroot/Library/Printers/Gutenprint.printerDriver/Contents/MacOS"
+mv "$pkgroot/usr/libexec/cups/driver/gutenprint.5.3" "$pkgroot/Library/Printers/Gutenprint.printerDriver/Contents/MacOS"
 
-for file in commandtocanon commandtoepson rastertogutenprint.5.2; do
+for file in commandtocanon commandtoepson rastertogutenprint.5.3; do
 	mv "$pkgroot/usr/libexec/cups/filter/$file" "$pkgroot/Library/Printers/Gutenprint.printerDriver/Contents/MacOS"
 done
 
@@ -115,7 +115,7 @@ cat >"$pkgroot/Library/Printers/Gutenprint.printerDriver/Contents/Info.plist" <<
 EOF
 
 # Sign the driver bundle...
-for file in commandtocanon commandtoepson cups-genppd.5.2 cups-genppdupdate escputil gutenprint.5.2 gutenprint52+usb lib/libgutenprint.2.dylib rastertogutenprint.5.2; do
+for file in commandtocanon commandtoepson cups-genppd.5.3 cups-genppdupdate escputil gutenprint.5.3 gutenprint53+usb lib/libgutenprint.2.dylib rastertogutenprint.5.3; do
 	codesign -s "$CODESIGN_IDENTITY" -fv "$pkgroot/Library/Printers/Gutenprint.printerDriver/Contents/MacOS/$file"
 done
 
@@ -199,20 +199,20 @@ cat >"${pkgroot}-scripts/postinstall" <<EOF
 #!/bin/sh
 
 # Create symbolic links...
-ln -sf /Library/Printers/Gutenprint.printerDriver/Contents/MacOS/gutenprint52+usb /usr/libexec/cups/backend
+ln -sf /Library/Printers/Gutenprint.printerDriver/Contents/MacOS/gutenprint53+usb /usr/libexec/cups/backend
 
-ln -sf /Library/Printers/Gutenprint.printerDriver/Contents/MacOS/gutenprint.5.2 /usr/libexec/cups/driver
+ln -sf /Library/Printers/Gutenprint.printerDriver/Contents/MacOS/gutenprint.5.3 /usr/libexec/cups/driver
 
 ln -sf /Library/Printers/Gutenprint.printerDriver/Contents/MacOS/commandtocanon /usr/libexec/cups/filter
 ln -sf /Library/Printers/Gutenprint.printerDriver/Contents/MacOS/commandtoepson /usr/libexec/cups/filter
-ln -sf /Library/Printers/Gutenprint.printerDriver/Contents/MacOS/rastertogutenprint.5.2 /usr/libexec/cups/filter
+ln -sf /Library/Printers/Gutenprint.printerDriver/Contents/MacOS/rastertogutenprint.5.3 /usr/libexec/cups/filter
 
 test -d /usr/local/bin || mkdir -p /usr/local/bin
 ln -sf /Library/Printers/Gutenprint.printerDriver/Contents/MacOS/escputil /usr/local/bin
 
 # Run cups-genppdupdate to update any Gutenprint PPD files...
 echo Updating Gutenprint printer queues...
-/Library/Printers/Gutenprint.printerDriver/Contents/MacOS/cups-genppdupdate
+/Library/Printers/Gutenprint.printerDriver/Contents/MacOS/cups-genppdupdate -x
 EOF
 chmod +x "${pkgroot}-scripts/postinstall"
 
@@ -253,7 +253,7 @@ chmod 755 ~/Desktop/gutenprint-$pkgversion/uninstall-gutenprint.command
 cp -f macosx/scripts/Gutenprint\ Utility\ for\ EPSON\ Inkjet\ Printers.command ~/Desktop/gutenprint-$pkgversion/
 chmod 755 ~/Desktop/gutenprint-$pkgversion/Gutenprint\ Utility\ for\ EPSON\ Inkjet\ Printers.command
 
-cp -f macosx/libusb* ~/Desktop/gutenprint-$pkgversion/
+cp -f ~/Library/Caches/Homebrew/libusb* ~/Desktop/gutenprint-$pkgversion/
 chmod 755 ~/Desktop/gutenprint-$pkgversion/libusb*
 
 codesign -s "$CODESIGN_IDENTITY" -fv ~/Desktop/gutenprint-$pkgversion/uninstall-gutenprint.command
