@@ -7302,12 +7302,8 @@ static void dnpds40_printer_start(stp_vars_t *v)
 	     !strcmp(pd->pagesize, "w432h576-div4")) {
     stp_zprintf(v, "\033PCNTRL CUTTER          00000008");
     stp_zprintf(v, "00000120");
-  } else if (pd->privdata.dnp.nocutwaste) {
-    stp_zprintf(v, "\033PCNTRL CUTTER          00000008");
-    stp_zprintf(v, "00000001");
   } else {
-    stp_zprintf(v, "\033PCNTRL CUTTER          00000008");
-    stp_zprintf(v, "00000000");
+    stp_zprintf(v, "\033PCNTRL CUTTER          00000008%08d", pd->privdata.dnp.nocutwaste ? 1 : 0);
   }
 
   /* Configure multi-cut/page size */
@@ -7507,11 +7503,7 @@ static void dnpds80_printer_start(stp_vars_t *v)
   dnp_printer_start_common(v);
 
   /* Set cutter option to "normal" */
-  stp_zprintf(v, "\033PCNTRL CUTTER          00000008");
-  if (pd->privdata.dnp.nocutwaste)
-    stp_zprintf(v, "00000001");
-  else
-    stp_zprintf(v, "00000000");
+  stp_zprintf(v, "\033PCNTRL CUTTER          00000008%08d", pd->privdata.dnp.nocutwaste ? 1 : 0);
 
   /* Configure multi-cut/page size */
   stp_zprintf(v, "\033PIMAGE MULTICUT        00000008%08d", pd->privdata.dnp.multicut);
@@ -7733,10 +7725,8 @@ static void dnpdsrx1_printer_start(stp_vars_t *v)
     stp_zprintf(v, "00000120");
   } else if (!strcmp(pd->pagesize, "w432h576-div4")) {
     stp_zprintf(v, "00000120");
-  } else if (pd->privdata.dnp.nocutwaste) {
-    stp_zprintf(v, "00000001");
   } else {
-    stp_zprintf(v, "00000000");
+    stp_zprintf(v, "\033PCNTRL CUTTER          00000008%08d", pd->privdata.dnp.nocutwaste ? 1 : 0);
   }
 
   /* Configure multi-cut/page size */
