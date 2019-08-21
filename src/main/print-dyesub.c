@@ -7775,70 +7775,58 @@ LIST(dyesub_printsize_list_t, dnpds620_printsize_list, dyesub_printsize_t, dnpds
 static void dnpds620_printer_start(stp_vars_t *v)
 {
   dyesub_privdata_t *pd = get_privdata(v);
+  int trim = 0; /* XXX add another parameter to control this.  0 or 12-22 for intermediate scrap on fw >= 1.20. */
+  int cut1 = 0, cut2 = 0, cut3 = 0, cut4 = 0;
+  int multicut = 0;
 
   /* Common code */
   dnp_printer_start_common(v);
 
   /* Multicut when 8x6 media is in use */
-  if (!strcmp(pd->pagesize, "w432h576") ||
-      !strcmp(pd->pagesize, "w432h648")) {
-    stp_zprintf(v, "\033PCNTRL FULL_CUTTER_SET 00000016");
-    stp_zprintf(v, "0000000000000000");
-  } else if (!strcmp(pd->pagesize, "w432h576-div4")) {
-    stp_zprintf(v, "\033PCNTRL FULL_CUTTER_SET 00000016");
-    stp_zprintf(v, "0200200200200000");
+  if (!strcmp(pd->pagesize, "w432h576-div4")) {
+    cut1 = cut2 = cut3 = cut4 = 20;
   } else if (!strcmp(pd->pagesize, "w432h576-w432h432_w432h144")) {
-    stp_zprintf(v, "\033PCNTRL FULL_CUTTER_SET 00000016");
-    stp_zprintf(v, "0600200000000000");
+    cut1 = 60;
+    cut2 = 20;
   } else if (!strcmp(pd->pagesize, "w360h504-w360h360_w360h144")) {
-    stp_zprintf(v, "\033PCNTRL FULL_CUTTER_SET 00000016");
-    stp_zprintf(v, "050020000000000\r");
+    cut1 = 50;
+    cut2 = 20;
   } else if (!strcmp(pd->pagesize, "w288h432-div2")) {
-    stp_zprintf(v, "\033PCNTRL CUTTER          00000008");
-    stp_zprintf(v, "00000120");
-  } else if (pd->privdata.dnp.nocutwaste) {
-    stp_zprintf(v, "\033PCNTRL CUTTER          00000008");
-    stp_zprintf(v, "00000001");
-  } else {
-    stp_zprintf(v, "\033PCNTRL CUTTER          00000008");
-    stp_zprintf(v, "00000000");
+    cut1 = cut2 = 20;
+  }
+
+  /* Cutter */
+  stp_zprintf(v, "\033PCNTRL CUTTER          00000008%08d", pd->privdata.dnp.nocutwaste ? 1 : 0);
+  if (cut1) {
+    stp_zprintf(v, "\033PCNTRL FULL_CUTTER_SET 00000016");
+    stp_zprintf(v, "%03d%03d%03d%03d%03d\r", cut1, cut2, cut3, cut4, trim);
   }
 
   /* Configure multi-cut/page size */
-  stp_zprintf(v, "\033PIMAGE MULTICUT        00000008000000");
   if (!strcmp(pd->pagesize, "B7")) {
-    stp_zprintf(v, "01");
-  } else if (!strcmp(pd->pagesize, "w288h432")) {
-    stp_zprintf(v, "02");
-  } else if (!strcmp(pd->pagesize, "w288h432-div2")) {
-    stp_zprintf(v, "02");
+    multicut = 1;
+  } else if (!strcmp(pd->pagesize, "w288h432") || !strcmp(pd->pagesize, "w288h432-div2")) {
+    multicut = 2;
   } else if (!strcmp(pd->pagesize, "w324h432")) {
-    stp_zprintf(v, "30");
+    multicut = 30;
   } else if (!strcmp(pd->pagesize, "w360h360")) {
-    stp_zprintf(v, "29");
-  } else if (!strcmp(pd->pagesize, "w360h504")) {
-    stp_zprintf(v, "03");
-  } else if (!strcmp(pd->pagesize, "w360h504-w360h360_w360h144")) {
-    stp_zprintf(v, "03");
+    multicut = 29;
+  } else if (!strcmp(pd->pagesize, "w360h504") || !strcmp(pd->pagesize, "w360h504-w360h360_w360h144")) {
+    multicut = 3;
   } else if (!strcmp(pd->pagesize, "w360h504-div2")) {
-    stp_zprintf(v, "22");
+    multicut = 22;
   } else if (!strcmp(pd->pagesize, "w432h432")) {
-    stp_zprintf(v, "27");
-  } else if (!strcmp(pd->pagesize, "w432h576")) {
-    stp_zprintf(v, "04");
-  } else if (!strcmp(pd->pagesize, "w432h576-w432h432_w432h144")) {
-    stp_zprintf(v, "04");
-  } else if (!strcmp(pd->pagesize, "w432h576-div4")) {
-    stp_zprintf(v, "04");
+    multicut = 27;
+  } else if (!strcmp(pd->pagesize, "w432h576") || !strcmp(pd->pagesize, "w432h576-w432h432_w432h144") || !strcmp(pd->pagesize, "w432h576-div4")) {
+    multicut = 4;
   } else if (!strcmp(pd->pagesize, "w432h576-div2")) {
-    stp_zprintf(v, "12");
+    multicut = 12;
   } else if (!strcmp(pd->pagesize, "w432h648")) {
-    stp_zprintf(v, "05");
+    multicut = 5;
   } else if (!strcmp(pd->pagesize, "w432h648-div2")) {
-    stp_zprintf(v, "31");
-  } else {
-    stp_zprintf(v, "00"); /* Should be impossible */
+    multicut = 31;
   }
+  stp_zprintf(v, "\033PIMAGE MULTICUT        00000008000000%02d", multicut);
 }
 
 /* Dai Nippon Printing DS820 */
@@ -7943,13 +7931,7 @@ static void dnpds820_printer_start(stp_vars_t *v)
   dnp_printer_start_common(v);
 
   /* No-cut waste */
-  if (pd->privdata.dnp.nocutwaste) {
-    stp_zprintf(v, "\033PCNTRL CUTTER          00000008");
-    stp_zprintf(v, "00000001");
-  } else {
-    stp_zprintf(v, "\033PCNTRL CUTTER          00000008");
-    stp_zprintf(v, "00000000");
-  }
+  stp_zprintf(v, "\033PCNTRL CUTTER          00000008%08d", pd->privdata.dnp.nocutwaste ? 1 : 0);
 
   /* Configure multi-cut/page size */
   stp_zprintf(v, "\033PIMAGE MULTICUT        00000008000000");
