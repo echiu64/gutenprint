@@ -1,6 +1,6 @@
-Welcome to Gutenprint 5.3.2-pre1, a pre-release of Gutenprint 5.3.2.
-Please read these release notes carefully.  Gutenprint 5.2 is still
-considered the stable release line.
+Welcome to Gutenprint 5.3.3!  Please read these release notes
+carefully.  Gutenprint 5.2 is still considered the stable release
+line.
 
 Gutenprint is a suite of printer drivers for UNIX, Linux, and
 Macintosh OS X systems (10.6 and above) that use CUPS as their
@@ -83,7 +83,7 @@ for building and installing Gutenprint.
 
 II) MAJOR CHANGES FROM PREVIOUS RELEASES
 
-* Changes from Gutenprint 5.3.1
+* Changes from Gutenprint 5.3.3 (Gutenprint 5.3.2 was not released)
 
   1) Gutenprint will fail to configure if the necessary CUPS
      development packages are not installed.  This is to protect users

@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.3.2-pre1!  Please read these notes carefully.
+Welcome to Gutenprint 5.3.3!  Please read these notes carefully.
 
 *** NOTE TO PACKAGERS: Please read the file README.package for issues
     that are of interest to distributors and packagers of Gutenprint.
@@ -14,9 +14,6 @@ I) INTRODUCTION
     printers.  It also includes an enhanced Print plug-in for GIMP
     that replaces the print plug-in packaged with the GIMP
     distribution.
-
-    Gutenprint 5.3.0-pre2 is the first development release in the new
-    5.3 release train.
 
     Gutenprint was renamed from its original name of Gimp-Print in
     order to clearly distinguish it from GIMP.  While this package
@@ -113,7 +110,8 @@ A) OVERVIEW
 	gimp-print-devel@lists.sourceforge.net
 
 	================================================================
-	  Release: gutenprint 5.3.1 generated on 21 Sep 2018
+	  Release: gutenprint 5.3.3 generated on 25 Aug 2019
+	  Generated at Sun Aug 25 11:11:14 EDT 2019 by rlk
 
 	  Features:
 	    Build CUPS:                                 yes, installing in /usr
@@ -140,7 +138,10 @@ A) OVERVIEW
 	    Install sample images:                      yes
 
 	  General configuration:
-	    Compiler options:                           -Disfinite=finite  -O3  -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wwrite-strings -Werror-implicit-function-declaration -Winline -Wformat=2 -finline-limit=131072 -D_POSIX_C_SOURCE=200809L -std=c99 -pedantic -Waggregate-return -Wcast-qual -Wshadow -Wredundant-decls
+	    Configure arguments:                        --enable-maintainer-mode
+	    Compiler:                                   gcc
+	    Compiler Version:                           gcc version 7.4.1 20190725 [gcc-7-branch revision 273795] (SUSE Linux)
+	    Compiler options:                           -Disfinite=finite  -O3  -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wwrite-strings -Werror-implicit-function-declaration -Winline -Wformat=2 -finline-limit=131072 -Wformat -Werror=format-security -Wmissing-prototypes -D_POSIX_C_SOURCE=200809L -std=c99 -pedantic -Waggregate-return -Wcast-qual -Wshadow -Wredundant-decls
 	    Build static libraries:                     yes
 	    Build shared libraries:                     yes
 	    Maintainer mode:                            yes
@@ -149,7 +150,7 @@ A) OVERVIEW
 	    Generate debugging symbols:                 no
 	    Use modules:                                static
 	    Use readline libraries:                     yes, extra arguments: -lncurses
-	    uname -a output:                            Linux rlk-mobile.rlk 4.12.14-lp150.12.16-default #1 SMP Tue Aug 14 17:51:27 UTC 2018 (28574e6) x86_64 x86_64 x86_64 GNU/Linux
+	    uname -a output:                            Linux dsl092-065-009 4.12.14-lp151.28.13-default #1 SMP Wed Aug 7 07:20:16 UTC 2019 (0c09ad2) x86_64 x86_64 x86_64 GNU/Linux
 	================================================================
 
 
