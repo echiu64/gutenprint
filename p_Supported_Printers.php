@@ -17,8 +17,8 @@ of them.  We will fill in this list as we verify successful operation
 of these printers.  You can help by testing this with your own printer
 and reporting the results!</p>
 
-<table summary="Supported printers for Gutenrint 5.2.15">
-<caption style="font-size:135%;margin-bottom:0.50em;"><b>Gutenprint 5.2.15</b></caption>
+<table summary="Supported printers for Gutenrint 5.3.3">
+<caption style="font-size:135%;margin-bottom:0.50em;"><b>Gutenprint 5.3.3</b></caption>
 <tr><td>Canon BJ-30</td><td>bjc-30</td><td></td></tr>
 <tr><td>Canon BJC-50</td><td>bjc-50</td><td></td></tr>
 <tr><td>Canon BJC-55</td><td>bjc-55</td><td></td></tr>
@@ -104,6 +104,7 @@ and reporting the results!</p>
 <tr><td>Canon PIXMA iP2872</td><td>bjc-PIXMA-iP2872</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA iP2880</td><td>bjc-PIXMA-iP2880</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA iP2890</td><td>bjc-PIXMA-iP2890</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA iP2899</td><td>bjc-PIXMA-iP2899</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA iP3000</td><td>bjc-PIXMA-iP3000</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA iP3100</td><td>bjc-PIXMA-iP3100</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXUS iP3100</td><td>bjc-PIXUS-iP3100</td><td>EXPERIMENTAL</td></tr>
@@ -974,6 +975,7 @@ and reporting the results!</p>
 <tr><td>Canon PIXMA G1500</td><td>bjc-PIXMA-G1500</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA G1800</td><td>bjc-PIXMA-G1800</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA G1900</td><td>bjc-PIXMA-G1900</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G1910</td><td>bjc-PIXMA-G1910</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon G2000 series</td><td>bjc-G2000-series</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA G2000</td><td>bjc-PIXMA-G2000</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA G2002</td><td>bjc-PIXMA-G2002</td><td>EXPERIMENTAL</td></tr>
@@ -984,8 +986,11 @@ and reporting the results!</p>
 <tr><td>Canon PIXMA G2600</td><td>bjc-PIXMA-G2600</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA G2800</td><td>bjc-PIXMA-G2800</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA G2900</td><td>bjc-PIXMA-G2900</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G2910</td><td>bjc-PIXMA-G2910</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G2915</td><td>bjc-PIXMA-G2915</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon G3000 series</td><td>bjc-G3000-series</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA G3000</td><td>bjc-PIXMA-G3000</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G3010</td><td>bjc-PIXMA-G3010</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA G3100</td><td>bjc-PIXMA-G3100</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA G3200</td><td>bjc-PIXMA-G3200</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA G3400</td><td>bjc-PIXMA-G3400</td><td>EXPERIMENTAL</td></tr>
@@ -993,8 +998,11 @@ and reporting the results!</p>
 <tr><td>Canon PIXMA G3600</td><td>bjc-PIXMA-G3600</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA G3800</td><td>bjc-PIXMA-G3800</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA G3900</td><td>bjc-PIXMA-G3900</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G3910</td><td>bjc-PIXMA-G3910</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G3915</td><td>bjc-PIXMA-G3915</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon G4000 series</td><td>bjc-G4000-series</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA G4000</td><td>bjc-PIXMA-G4000</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G4010</td><td>bjc-PIXMA-G4010</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA G4100</td><td>bjc-PIXMA-G4100</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA G4200</td><td>bjc-PIXMA-G4200</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA G4400</td><td>bjc-PIXMA-G4400</td><td>EXPERIMENTAL</td></tr>
@@ -1002,13 +1010,26 @@ and reporting the results!</p>
 <tr><td>Canon PIXMA G4600</td><td>bjc-PIXMA-G4600</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA G4800</td><td>bjc-PIXMA-G4800</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA G4900</td><td>bjc-PIXMA-G4900</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G4902</td><td>bjc-PIXMA-G4902</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G4910</td><td>bjc-PIXMA-G4910</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA G4911</td><td>bjc-PIXMA-G4911</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA P200</td><td>bjc-PIXMA-P200</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon TS3100 series</td><td>bjc-TS3100-series</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS3110</td><td>bjc-PIXMA-TS3110</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS3120</td><td>bjc-PIXMA-TS3120</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS3130</td><td>bjc-PIXMA-TS3130</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS3130S</td><td>bjc-PIXMA-TS3130S</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS3140</td><td>bjc-PIXMA-TS3140</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS3150</td><td>bjc-PIXMA-TS3150</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS3160</td><td>bjc-PIXMA-TS3160</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA TS3170</td><td>bjc-PIXMA-TS3170</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS3190</td><td>bjc-PIXMA-TS3190</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS3195</td><td>bjc-PIXMA-TS3195</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon TS5000 series</td><td>bjc-TS5000-series</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA TS5010</td><td>bjc-PIXMA-TS5010</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA TS5020</td><td>bjc-PIXMA-TS5020</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA TS5030</td><td>bjc-PIXMA-TS5030</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA TS5030S</td><td>bjc-PIXMA-TS5030S</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA TS5040</td><td>bjc-PIXMA-TS5040</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA TS5050</td><td>bjc-PIXMA-TS5050</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA TS5051</td><td>bjc-PIXMA-TS5051</td><td>EXPERIMENTAL</td></tr>
@@ -1199,11 +1220,38 @@ and reporting the results!</p>
 <tr><td>Epson B-500DN</td><td>escp2-b500dn</td><td></td></tr>
 <tr><td>Epson B-508DN</td><td>escp2-b508dn</td><td></td></tr>
 <tr><td>Epson B-510DN</td><td>escp2-b510dn</td><td></td></tr>
+<tr><td>Epson Expression ET-2550 EcoTank</td><td>escp2-et2550</td><td></td></tr>
+<tr><td>Epson Expression ET-2600 EcoTank</td><td>escp2-et2600</td><td></td></tr>
+<tr><td>Epson Expression ET-2650 EcoTank</td><td>escp2-et2650</td><td></td></tr>
+<tr><td>Epson Expression ET-2700 EcoTank</td><td>escp2-et2700</td><td></td></tr>
+<tr><td>Epson Expression ET-2750 EcoTank</td><td>escp2-et2750</td><td></td></tr>
+<tr><td>Epson Expression ET-2750 EcoTank Business Edition</td><td>escp2-et2750be</td><td></td></tr>
+<tr><td>Epson Expression Home XP-240</td><td>escp2-xp240</td><td></td></tr>
+<tr><td>Epson Expression Home XP-245</td><td>escp2-xp245</td><td></td></tr>
+<tr><td>Epson Expression Home XP-340</td><td>escp2-xp340</td><td></td></tr>
+<tr><td>Epson Expression Home XP-344</td><td>escp2-xp344</td><td></td></tr>
+<tr><td>Epson Expression Home XP-440</td><td>escp2-xp440</td><td></td></tr>
+<tr><td>Epson Expression Home XP-442</td><td>escp2-xp442</td><td></td></tr>
+<tr><td>Epson Expression Home XP-820</td><td>escp2-xp820</td><td></td></tr>
+<tr><td>Epson Expression Photo XP-860</td><td>escp2-xp860</td><td></td></tr>
+<tr><td>Epson Expression Photo XP-960</td><td>escp2-xp960</td><td></td></tr>
+<tr><td>Epson Expression Photo XP-8500</td><td>escp2-xp8500</td><td></td></tr>
+<tr><td>Epson XP-15000 Series</td><td>escp2-xp15000</td><td></td></tr>
 <tr><td>Epson L120</td><td>escp2-l120</td><td></td></tr>
+<tr><td>Epson L130</td><td>escp2-l130</td><td></td></tr>
 <tr><td>Epson L210</td><td>escp2-l210</td><td></td></tr>
 <tr><td>Epson L310</td><td>escp2-l310</td><td></td></tr>
 <tr><td>Epson L1300</td><td>escp2-l1300</td><td></td></tr>
 <tr><td>Epson L1800</td><td>escp2-l1800</td><td></td></tr>
+<tr><td>Epson SC-P400 Series</td><td>escp2-p400-s</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Epson SC-P600 Series</td><td>escp2-p600-s</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Epson SC-P800 Series</td><td>escp2-p800-s</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Epson SC-P6000 Series</td><td>escp2-p6000-s</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Epson SC-P7000 Series</td><td>escp2-p7000-s</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Epson SC-P8000 Series</td><td>escp2-p8000-s</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Epson SC-P9000 Series</td><td>escp2-p9000-s</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Epson SC-P10000 Series</td><td>escp2-p10000-s</td><td>EXPERIMENTAL; only three levels of gray supported</td></tr>
+<tr><td>Epson SC-P20000 Series</td><td>escp2-p20000-s</td><td>EXPERIMENTAL; only three levels of gray supported</td></tr>
 <tr><td>Epson Stylus C20</td><td>escp2-c20</td><td></td></tr>
 <tr><td>Epson Stylus C20SX</td><td>escp2-c20sx</td><td></td></tr>
 <tr><td>Epson Stylus C20UX</td><td>escp2-c20ux</td><td></td></tr>
@@ -1574,7 +1622,7 @@ and reporting the results!</p>
 <tr><td>Epson Stylus XP100</td><td>escp2-xp100</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Epson SureColor P400</td><td>escp2-p400</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Epson SureColor P600</td><td>escp2-p600</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Epson SureColor P800</td><td>escp2-p800</td><td></td></tr>
+<tr><td>Epson SureColor P800</td><td>escp2-p800</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Epson SureColor P6000</td><td>escp2-p6000</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Epson SureColor P7000</td><td>escp2-p7000</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Epson SureColor P7000 Commercial Edition</td><td>escp2-p7000c</td><td>EXPERIMENTAL; violet ink not supported</td></tr>
@@ -1747,7 +1795,6 @@ and reporting the results!</p>
 <tr><td>Epson PX G5600</td><td>escp2-pxg5600</td><td></td></tr>
 <tr><td>Epson PX 7000</td><td>escp2-px7000</td><td></td></tr>
 <tr><td>Epson PX 9000</td><td>escp2-px9000</td><td></td></tr>
-<tr><td>Epson XP-820</td><td>escp2-xp820</td><td></td></tr>
 <tr><td>Apollo P-2100</td><td>pcl-apollo-p2100</td><td></td></tr>
 <tr><td>Apollo P-2150</td><td>pcl-apollo-p2150</td><td></td></tr>
 <tr><td>Apollo P-2200</td><td>pcl-apollo-p2200</td><td></td></tr>
@@ -3104,6 +3151,7 @@ and reporting the results!</p>
 <tr><td>Samsung ML-7300N</td><td>samsung-ml-7300n</td><td></td></tr>
 <tr><td>Samsung QL-5100A</td><td>samsung-ql-5100a</td><td></td></tr>
 <tr><td>Samsung QL-6050</td><td>samsung-ql-6050</td><td></td></tr>
+<tr><td>Samsung ProXpress SL-M3820ND</td><td>samsung-sl-m3820nd</td><td></td></tr>
 <tr><td>Savin 2522</td><td>savin-2522</td><td></td></tr>
 <tr><td>Savin 2527</td><td>savin-2527</td><td></td></tr>
 <tr><td>Savin 2532</td><td>savin-2532</td><td></td></tr>
@@ -3436,21 +3484,27 @@ and reporting the results!</p>
 <tr><td>Canon SELPHY ES30</td><td>canon-es30</td><td></td></tr>
 <tr><td>Canon SELPHY ES40</td><td>canon-es40</td><td></td></tr>
 <tr><td>CIAAT Brava 21</td><td>ciaat-brava-21</td><td></td></tr>
+<tr><td>Citizen CW-01</td><td>citizen-cw-01</td><td></td></tr>
+<tr><td>Citizen CW-02</td><td>citizen-cw-02</td><td></td></tr>
 <tr><td>Citizen CX</td><td>citizen-cx</td><td></td></tr>
+<tr><td>Citizen CX-02</td><td>citizen-cx-02</td><td></td></tr>
 <tr><td>Citizen CX-W</td><td>citizen-cx-w</td><td></td></tr>
 <tr><td>Citizen CY</td><td>citizen-cy</td><td></td></tr>
-<tr><td>Citizen CW-01</td><td>citizen-cw-01</td><td></td></tr>
+<tr><td>Citizen CY-02</td><td>citizen-cy-02</td><td></td></tr>
 <tr><td>Citizen OP900</td><td>citizen-op900</td><td></td></tr>
-<tr><td>Citizen CW-02</td><td>citizen-cw-02</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Citizen OP900II</td><td>citizen-op900ii</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Citizen OP900II</td><td>citizen-op900ii</td><td></td></tr>
 <tr><td>Dai Nippon Printing DS40</td><td>dnp-ds40</td><td></td></tr>
 <tr><td>Dai Nippon Printing DS80</td><td>dnp-ds80</td><td></td></tr>
-<tr><td>Dai Nippon Printing DS80DX</td><td>dnp-ds80dx</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Dai Nippon Printing DS80DX</td><td>dnp-ds80dx</td><td></td></tr>
 <tr><td>Dai Nippon Printing DS620</td><td>dnp-ds620</td><td></td></tr>
 <tr><td>Dai Nippon Printing DS820</td><td>dnp-ds820</td><td></td></tr>
 <tr><td>Dai Nippon Printing DSRX1</td><td>dnp-dsrx1</td><td></td></tr>
 <tr><td>Dai Nippon Printing SL10</td><td>dnp-sl10</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Dai Nippon Printing SL20</td><td>dnp-sl20</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Fujifilm ASK-300</td><td>fujifilm-ask-300</td><td></td></tr>
+<tr><td>Fujifilm ASK-2000</td><td>fujifilm-ask-2000</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Fujifilm ASK-2500</td><td>fujifilm-ask-2500</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Fujifilm ASK-4000</td><td>fujifilm-ask-4000</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Fujifilm FinePix-NX-500</td><td>fujifilm-nx500</td><td></td></tr>
 <tr><td>Fujifilm Printpix-CX-400</td><td>fujifilm-cx400</td><td></td></tr>
 <tr><td>Fujifilm Printpix-CX-550</td><td>fujifilm-cx550</td><td></td></tr>
@@ -3459,13 +3513,13 @@ and reporting the results!</p>
 <tr><td>Kodak 1400</td><td>kodak-1400</td><td></td></tr>
 <tr><td>Kodak 6800</td><td>kodak-6800</td><td></td></tr>
 <tr><td>Kodak 6850</td><td>kodak-6850</td><td></td></tr>
-<tr><td>Kodak 7000</td><td>kodak-7000</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kodak 7000</td><td>kodak-7000</td><td></td></tr>
 <tr><td>Kodak 7010</td><td>kodak-7010</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Kodak 7015</td><td>kodak-7015</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Kodak 805</td><td>kodak-805</td><td></td></tr>
 <tr><td>Kodak 8500</td><td>kodak-8500</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Kodak 8800</td><td>kodak-8800</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Kodak 8810</td><td>kodak-8810</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Kodak 8810</td><td>kodak-8810</td><td></td></tr>
 <tr><td>Kodak 9810</td><td>kodak-9810</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Kodak EasyShare-G600-Printer-Dock</td><td>kodak-g600-dock</td><td></td></tr>
 <tr><td>Kodak Easyshare-Printer-Dock</td><td>kodak-dock</td><td></td></tr>
@@ -3475,6 +3529,8 @@ and reporting the results!</p>
 <tr><td>Kodak Photo-Printer-500</td><td>kodak-photo-printer-500</td><td></td></tr>
 <tr><td>Kodak Printer-Dock-Plus</td><td>kodak-dock-plus</td><td></td></tr>
 <tr><td>Kodak Printer-Dock-Plus-S3</td><td>kodak-dock-plus-s3</td><td></td></tr>
+<tr><td>Magicard Tango 2E</td><td>magicard-tango-2e</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Magicard Rio 2E</td><td>magicard-rio-2e</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Mitsubishi CP-3020D</td><td>mitsubishi-3020d</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Mitsubishi CP-3020DA</td><td>mitsubishi-3020da</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Mitsubishi CP-3020DAE</td><td>mitsubishi-3020dae</td><td>EXPERIMENTAL</td></tr>
@@ -3494,28 +3550,37 @@ and reporting the results!</p>
 <tr><td>Mitsubishi CP-9810D</td><td>mitsubishi-9810d</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Mitsubishi CP-9810DW</td><td>mitsubishi-9810dw</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Mitsubishi CP-D80DW</td><td>mitsubishi-d80dw</td><td></td></tr>
-<tr><td>Mitsubishi CP-D90DW</td><td>mitsubishi-d90dw</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Mitsubishi CP-D90DW</td><td>mitsubishi-d90dw</td><td></td></tr>
 <tr><td>Mitsubishi CP-D70DW</td><td>mitsubishi-d70dw</td><td></td></tr>
-<tr><td>Mitsubishi CP-D707DW</td><td>mitsubishi-d707dw</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Mitsubishi CP-D707DW</td><td>mitsubishi-d707dw</td><td></td></tr>
 <tr><td>Mitsubishi CP-K60DW-S</td><td>mitsubishi-k60dw</td><td></td></tr>
 <tr><td>Mitsubishi P93D</td><td>mitsubishi-p93d</td><td></td></tr>
 <tr><td>Mitsubishi P95D</td><td>mitsubishi-p95d</td><td></td></tr>
+<tr><td>Nidac Copal DPB-4000</td><td>nidalcopac-dpb-4000</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Nidac Copal DPB-6000</td><td>nidalcopac-dpb-6000</td><td></td></tr>
+<tr><td>Nidac Copal DPB-7000</td><td>nidalcopac-dpb-7000</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Shinko CHC-S1245</td><td>shinko-chcs1245</td><td></td></tr>
 <tr><td>Shinko CHC-S2145</td><td>shinko-chcs2145</td><td></td></tr>
 <tr><td>Shinko CHC-S6145</td><td>shinko-chcs6145</td><td></td></tr>
 <tr><td>Shinko CHC-S6245</td><td>shinko-chcs6245</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Shinko CHC-S9045</td><td>shinko-chcs9045</td><td></td></tr>
 <tr><td>Sinfonia CHC-S1245/E1</td><td>sinfonia-chcs1245</td><td></td></tr>
+<tr><td>Sinfonia CHC-S2145/S2</td><td>sinfonia-chcs2145</td><td></td></tr>
+<tr><td>Sinfonia CHC-S2245/S2</td><td>sinfonia-chcs2245</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Sinfonia CHC-S6145/CS2</td><td>sinfonia-chcs6145</td><td></td></tr>
 <tr><td>Sinfonia CHC-S6245/CE1</td><td>sinfonia-chcs6245</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Sinfonia S2145/S2</td><td>sinfonia-chcs2145</td><td></td></tr>
 <tr><td>Sony UP-DP10</td><td>sony-updp10</td><td></td></tr>
 <tr><td>Sony UP-DR150</td><td>sony-updr150</td><td></td></tr>
 <tr><td>Sony DPP-EX5</td><td>sony-dppex5</td><td></td></tr>
 <tr><td>Sony DPP-EX7</td><td>sony-dppex7</td><td></td></tr>
 <tr><td>Sony UP-DR100</td><td>sony-updr100</td><td></td></tr>
 <tr><td>Sony UP-DR200</td><td>sony-updr200</td><td></td></tr>
-<tr><td>Sony UP-CR10L</td><td>sony-upcr10l</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Sony UP-CR10L</td><td>sony-upcr10l</td><td></td></tr>
+<tr><td>Sony UP-D895</td><td>sony-upd895</td><td></td></tr>
+<tr><td>Sony UP-D897</td><td>sony-upd897</td><td></td></tr>
+<tr><td>Sony UP-D898</td><td>sony-upd898</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Sony UP-CR20L</td><td>sony-upcr20l</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Sony UP-DR80MD</td><td>sony-updr80md</td><td>EXPERIMENTAL</td></tr>
 </table>
 
 
