@@ -82,10 +82,14 @@ function pkg_version() {
     "$ROOT/scripts/gversion" pkg
 }
 
+function version() {
+    "$ROOT/scripts/gversion" full-version
+}
+
 function pkg_tag() {
     # shellcheck disable=SC2155
     local version=$(pkg_version)
-    echo "gutenprint-${version//./_}"
+    echo "${version//./_}"
 }
 
 # Clean up any trailing whitespace.
@@ -473,13 +477,42 @@ function save_build_artifacts() {
 function finis() {
     local extra_verbiage=
     [[ $build_type == release ]] && {
-	STP_DATA_PATH=src/xml test/gen-printer-list > "printer-list.$(pkg_version)" || return 1
+	local printer_list_data
+	printer_list_data=$(STP_DATA_PATH=src/xml test/gen-printer-list) || return 1
+	cat > "printer-list.$(version)" <<EOF
+<?
+require('functions.php');
+###############################################
+##    Set title of this page here    ##########
+$title = 'Gutenprint Supported Printers';
+###############################################
+###############################################
+require('standard_html_header.php');
+
+
+### Content Below  ###
+# Please remember to use <P> </P> tags !  ?>
+
+<p>Please note that many of these drivers are currently under
+development, and we do not necessarily have full specifications on all
+of them.  We will fill in this list as we verify successful operation
+of these printers.  You can help by testing this with your own printer
+and reporting the results!</p>
+
+<table summary="Supported printers for Gutenprint $version">
+<caption style="font-size:135%;margin-bottom:0.50em;"><b>Gutenprint $version</b></caption>
+$printer_list_data
+</table>
+
+
+<?require('standard_html_footer.php');?>
+EOF
 	extra_verbiage=$(cat <<EOF
 
   * Update the web site
 
-  * Merge the updated printer list in ${tcyan}printer-list.$(pkg_version)${tpurple}
-    into p_Supported_Printers.php and upload that to the web site
+  * Copy the updated printer list in ${tcyan}printer-list.$(version)${tpurple}
+    to p_Supported_Printers.php and upload that to the web site.
 EOF
 )
 }
@@ -490,7 +523,9 @@ Remainder to be done manually:
 
   * git push
 
-  * Upload the tarball (${tcyan}gutenprint-$(pkg_version).tar.xz${tpurple})
+  * git push --tags
+
+  * Upload the tarball (${tcyan}$(pkg_version).tar.xz${tpurple})
 $extra_verbiage
 ================================================================
 $treset
