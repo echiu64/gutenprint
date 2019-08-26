@@ -52,7 +52,7 @@ if [ -z "$3" ] ; then
 
     if [ -f "$root/git-version-stamp" ] ; then
 	# shellcheck disable=SC2006
-	description=`cat "$root/git-version-stamp"`
+	description=$(cat "$root/git-version-stamp")
     else
 	description='(unknown)'
     fi
