@@ -817,6 +817,7 @@ declare -a OPERATIONS=(preflight
 		       run_checksums
 		       run_distcheck_minimal
 		       git_prep_release
+		       run_distcheck_minimal
 		       save_build_artifacts
 		       finis)
 
