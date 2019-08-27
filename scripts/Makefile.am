@@ -32,11 +32,11 @@ EXTRA_DIST = \
 	build-release \
 	count-cpus \
 	global.mk \
-	gversion \
+	gversion.in \
 	snapstamp \
-	test-gversion \
-	mkgitlog \
-	wzpaq
+	test-gversion.in \
+	mkgitlog.in \
+	wzpaq.in
 
 noinst_SCRIPTS= \
 	build-release \
