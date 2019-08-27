@@ -484,7 +484,7 @@ function finis() {
 require('functions.php');
 ###############################################
 ##    Set title of this page here    ##########
-$title = 'Gutenprint Supported Printers';
+\$title = 'Gutenprint Supported Printers';
 ###############################################
 ###############################################
 require('standard_html_header.php');
