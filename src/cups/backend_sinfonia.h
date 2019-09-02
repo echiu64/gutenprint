@@ -325,7 +325,9 @@ struct sinfonia_printcmd18_hdr {
 	uint16_t copies;
 	uint16_t columns;
 	uint16_t rows;
-	uint8_t  reserved[8]; // columns and rows repeated, then nulls
+	uint16_t columns2;
+	uint16_t rows2;
+	uint8_t  reserved[4]; // then nulls
 	uint8_t  oc_mode;
 	uint8_t  method;
 	uint8_t  media; // reserved?
@@ -452,6 +454,17 @@ void kodak6_dumpmediacommon(int type);
 #define RESULT_FAIL    0x02
 
 /* ********** Below are for the old S1145 (EK68xx) and S1245 only! */
+
+enum {
+	TONE_TABLE_STANDARD = 0,
+	TONE_TABLE_USER = 1,
+	TONE_TABLE_CURRENT = 2,
+};
+enum {
+	PARAM_TABLE_NONE = 0,
+	PARAM_TABLE_STANDARD = 1,
+	PARAM_TABLE_FINE = 2,
+};
 
 enum {
 	CMD_CODE_OK = 1,

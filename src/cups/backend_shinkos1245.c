@@ -190,16 +190,6 @@ struct shinkos1245_cmd_tone {
 	};
 } __attribute__((packed));
 
-enum {
-	TONE_TABLE_STANDARD = 0,
-	TONE_TABLE_USER = 1,
-	TONE_TABLE_CURRENT = 2,
-};
-enum {
-	PARAM_TABLE_STANDARD = 1,
-	PARAM_TABLE_FINE = 2,
-};
-
 #define TONE_CURVE_DATA_BLOCK_SIZE 64
 
 /* Query Model information */
