@@ -78,19 +78,25 @@ struct kodak605_status {
 	uint16_t b1_remain;
 	uint16_t b1_complete;
 	uint16_t b1_total;
-/*@45*/	uint8_t  b1_sts;    /* See BANK_STATUS_* */
-	uint8_t  b2_id;     /* jobid */
+	uint8_t  b1_sts;    /* See BANK_STATUS_* */
+/*@46*/	uint8_t  b2_id;     /* jobid */
 	uint16_t b2_remain;
 	uint16_t b2_complete;
 	uint16_t b2_total;
-/*@53*/	uint8_t  b2_sts;    /* see BANK_STATUS_* */
-/*@54*/	uint8_t  id;        /* current job id ( 00/01/02 seen ) */
-/*@55*/ uint16_t remain;    /* in current job */
-/*@57*/	uint16_t complete;  /* in current job */
-/*@59*/	uint16_t total;     /* in current job */
-/*@61*/	uint8_t  null_2[9]; /* 00 00 00 00 00 00 00 00 00 */
-/*@70*/	uint8_t  unk_12[6]; /* 01 00 00 00 00 00 (605) 01 01 01 01 00 00 (EK7000) */
-/*@76*/	uint8_t  unk_13[1]; // EK7000-series only?
+	uint8_t  b2_sts;    /* see BANK_STATUS_* */
+/*@54*/	uint8_t  b3_id;     /* jobid */
+	uint16_t b3_remain;
+	uint16_t b3_complete;
+	uint16_t b3_total;
+	uint8_t  b3_sts;    /* see BANK_STATUS_* */
+/*@62*/	uint8_t  b4_id;     /* jobid */
+	uint16_t b4_remain;
+	uint16_t b4_complete;
+	uint16_t b4_total;
+	uint8_t  b4_sts;    /* see BANK_STATUS_* */
+/*@70*/	uint8_t  unk[4];  /* XXX EK605 has 01/00/00/00, EK7000 has 01/01/01/01 */
+/*@74*/	uint8_t  null_2[2]; /* 00 00 */
+/*@76*/	uint8_t  null_3[1]; /* EK7000 only */
 } __attribute__((packed));
 
 #define CMDBUF_LEN 4
@@ -433,7 +439,14 @@ static int kodak605_main_loop(void *vctx, const void *vjob) {
 		return CUPS_BACKEND_HOLD;
 	}
 
-	INFO("Waiting for printer idle\n");
+	/* > 4x6 jobs need two banks */
+	int banks_needed;
+	if (job->jp.rows > 1240)
+		banks_needed = 2;
+	else
+		banks_needed = 1;
+
+	INFO("Waiting for printer idle (%d banks needed)\n", banks_needed);
 
 	while(1) {
 		if ((ret = kodak605_get_status(ctx, &sts)))
@@ -458,16 +471,27 @@ static int kodak605_main_loop(void *vctx, const void *vjob) {
 		/* Make sure we're not colliding with an existing
 		   jobid */
 		while (ctx->jobid == sts.b1_id ||
-		       ctx->jobid == sts.b2_id) {
+		       ctx->jobid == sts.b2_id ||
+		       ctx->jobid == sts.b3_id ||
+		       ctx->jobid == sts.b4_id) {
 			ctx->jobid++;
 			ctx->jobid &= 0x7f;
 			if (!ctx->jobid)
 				ctx->jobid++;
 		}
 
-		/* Wait for a free buffer */
-		if (sts.b1_sts == BANK_STATUS_FREE ||
-		    sts.b2_sts == BANK_STATUS_FREE) {
+		int banks_free = 0;
+		if (sts.b1_sts == BANK_STATUS_FREE)
+			banks_free++;
+		if (sts.b2_sts == BANK_STATUS_FREE)
+			banks_free++;
+		if (sts.b3_sts == BANK_STATUS_FREE)
+			banks_free++;
+		if (sts.b4_sts == BANK_STATUS_FREE)
+			banks_free++;
+
+		/* Do we have enough free buffers? */
+		if (banks_free < banks_needed) {
 			break;
 		}
 
@@ -552,6 +576,10 @@ retry_print:
 			break;
 		if (sts.b2_id == ctx->jobid && sts.b2_complete == sts.b2_total)
 			break;
+		if (sts.b3_id == ctx->jobid && sts.b3_complete == sts.b3_total)
+			break;
+		if (sts.b4_id == ctx->jobid && sts.b4_complete == sts.b4_total)
+			break;
 
 		if (sts.hdr.status == STATUS_READY)
 			break;
@@ -575,12 +603,18 @@ static void kodak605_dump_status(struct kodak605_ctx *ctx, struct kodak605_statu
 	     sts->hdr.printer_major, sts->hdr.printer_minor,
 	     error_codes(sts->hdr.printer_major, sts->hdr.printer_minor));
 
-	INFO("Bank 1: %s Job %03u @ %03u/%03u\n",
+	INFO("Bank 1: %s - Job %03u @ %03u/%03u\n",
 	     sinfonia_bank_statuses(sts->b1_sts), sts->b1_id,
 	     le16_to_cpu(sts->b1_complete), le16_to_cpu(sts->b1_total));
-	INFO("Bank 2: %s Job %03u @ %03u/%03u\n",
+	INFO("Bank 2: %s - Job %03u @ %03u/%03u\n",
 	     sinfonia_bank_statuses(sts->b2_sts), sts->b2_id,
 	     le16_to_cpu(sts->b2_complete), le16_to_cpu(sts->b2_total));
+	INFO("Bank 3: %s - Job %03u @ %03u/%03u\n",
+	     sinfonia_bank_statuses(sts->b3_sts), sts->b3_id,
+	     le16_to_cpu(sts->b3_complete), le16_to_cpu(sts->b3_total));
+	INFO("Bank 4: %s - Job %03u @ %03u/%03u\n",
+	     sinfonia_bank_statuses(sts->b4_sts), sts->b4_id,
+	     le16_to_cpu(sts->b4_complete), le16_to_cpu(sts->b4_total));
 
 	INFO("Lifetime prints   : %u\n", le32_to_cpu(sts->ctr_life));
 	INFO("Cutter actuations : %u\n", le32_to_cpu(sts->ctr_cut));
@@ -736,7 +770,7 @@ static const char *kodak605_prefixes[] = {
 /* Exported */
 struct dyesub_backend kodak605_backend = {
 	.name = "Kodak 605/70xx",
-	.version = "0.45" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.46" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = kodak605_prefixes,
 	.cmdline_usage = kodak605_cmdline,
 	.cmdline_arg = kodak605_cmdline_arg,
