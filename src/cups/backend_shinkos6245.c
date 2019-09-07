@@ -99,7 +99,7 @@ struct s6245_errorlog_cmd {
 	uint16_t index;  /* 0 is latest */
 } __attribute__((packed));
 
-static const char *error_codes(uint8_t major, uint8_t minor)
+static const char *s6245_error_codes(uint8_t major, uint8_t minor)
 {
 	switch(major) {
 	case 0x01: /* "Controller Error" */
@@ -314,6 +314,225 @@ static const char *error_codes(uint8_t major, uint8_t minor)
 	}
 }
 
+/* XXX these are generally assumed to be the same as S6245, but
+   at least the "user error" category is known to be different. */
+static const char *ek8810_error_codes(uint8_t major, uint8_t minor)
+{
+	switch(major) {
+	case 0x01: /* "Controller Error" */
+		switch(minor) {
+		case 0x01:
+			return "Controller: EEPROM Write Timeout";
+		case 0x09:
+			return "Controller: DSP FW Boot";
+		case 0x0A:
+			return "Controller: Invalid Print Parameter Table";
+		case 0x0B:
+			return "Controller: DSP FW Mismatch";
+		case 0x0C:
+			return "Controller: Print Parameter Table Mismatch";
+		case 0x0D:
+			return "Controller: FPGA Configuration Failed";
+		case 0x0F:
+			return "Controller: Main FW Checksum";
+		case 0x10:
+			return "Controller: Flash Write Failed";
+		case 0x11:
+			return "Controller: DSP Checksum";
+		case 0x12:
+			return "Controller: DSP FW Write Failed";
+		case 0x13:
+			return "Controller: Print Parameter Table Checksum";
+		case 0x14:
+			return "Controller: Print Parameter Table Write Failed";
+		case 0x15:
+			return "Controller: User Tone Curve Write Failed";
+		case 0x16:
+			return "Controller: MSP Communication";
+		case 0x17:
+			return "Controller: THV Autotuning";
+		case 0x18:
+			return "Controller: THV Value Out of Range";
+		case 0x19:
+			return "Controller: Thermal Head";
+		case 0x1B:
+			return "Controller: DSP Communication";
+		case 0x1C:
+			return "Controller: DSP DMA Failed";
+		default:
+			return "Controller: Unknown";
+		}
+	case 0x02: /* "Mechanical Error" */
+		switch (minor) {
+		case 0x01:
+			return "Mechanical: Pinch Head Home";
+		case 0x02:
+			return "Mechanical: Pinch Head (position 1)";
+		case 0x03:
+			return "Mechanical: Pinch Head (position 2)";
+		case 0x04:
+			return "Mechanical: Pinch Head (position 3)";
+		case 0x0B:
+			return "Mechanical: Cutter (Right)";
+		case 0x0C:
+			return "Mechanical: Cutter (Left)";
+		default:
+			return "Mechanical: Unknown";
+		}
+	case 0x03: /* "Sensor Error" */
+		switch (minor) {
+		case 0x01:
+			return "Sensor: Head Up";
+		case 0x02:
+			return "Sensor: Head Down";
+		case 0x0B:
+			return "Sensor: Cutter Left";
+		case 0x0C:
+			return "Sensor: Cutter Right";
+		case 0x0D:
+			return "Sensor: Cutter Left+Right";
+		case 0x15:
+			return "Sensor: Head Up Unstable";
+		case 0x16:
+			return "Sensor: Head Down Unstable";
+		case 0x17:
+			return "Sensor: Cutter Left Unstable";
+		case 0x18:
+			return "Sensor: Cutter Right Unstable";
+		case 0x19:
+			return "Sensor: Cover Open Unstable";
+		case 0x1E:
+			return "Sensor: Ribbon Mark (Cyan)";
+		case 0x1F:
+			return "Sensor: Ribbon Mark (OC)";
+		default:
+			return "Sensor: Unknown";
+		}
+	case 0x04: /* "Temperature Sensor Error" */
+		switch (minor) {
+		case 0x01:
+			return "Temp Sensor: Thermal Head Low";
+		case 0x02:
+			return "Temp Sensor: Thermal Head High";
+		case 0x05:
+			return "Temp Sensor: Environment Low";
+		case 0x06:
+			return "Temp Sensor: Environment High";
+		case 0x07:
+			return "Temp Sensor: Preheat";
+		case 0x08:
+			return "Temp Sensor: Thermal Protect";
+		default:
+			return "Temp Sensor: Unknown";
+		}
+	case 0x5: /* "Paper Jam" */
+		switch (minor) {
+		case 0x01:
+			return "Paper Jam: Loading Paper Top On";
+		case 0x02:
+			return "Paper Jam: Loading Print Position On";
+		case 0x03:
+			return "Paper Jam: Loading Print Position Off";
+		case 0x04:
+			return "Paper Jam: Loading Paper Top Off";
+		case 0x05:
+			return "Paper Jam: Loading Cut Print Position Off";
+		case 0x0C:
+			return "Paper Jam: Initializing Print Position Off";
+		case 0x0D:
+			return "Paper Jam: Initializing Print Position On";
+		case 0x15:
+			return "Paper Jam: Printing Print Position Off";
+		case 0x16:
+			return "Paper Jam: Printing Paper Top On";
+		case 0x17:
+			return "Paper Jam: Printing Paper Top Off";
+		case 0x1F:
+			return "Paper Jam: Precut Print Position Off";
+		case 0x20:
+			return "Paper Jam: Precut Print Position On";
+
+		case 0x29:
+			return "Paper Jam: Printing Paper Top On";
+		case 0x2A:
+			return "Paper Jam: Printing Pre-Yellow Print Position Off";
+		case 0x2B:
+			return "Paper Jam: Printing Yellow Print Position Off";
+		case 0x2C:
+			return "Paper Jam: Printing Yellow Print Position On";
+		case 0x2D:
+			return "Paper Jam: Printing Pre-Magenta Print Position Off";
+		case 0x2E:
+			return "Paper Jam: Printing Magenta Print Position On";
+		case 0x2F:
+			return "Paper Jam: Printing Magenta Print Position Off";
+		case 0x30:
+			return "Paper Jam: Printing Pre-Cyan Print Position Off";
+		case 0x31:
+			return "Paper Jam: Printing Cyan Print Position On";
+		case 0x32:
+			return "Paper Jam: Printing Cyan Print Position Off";
+		case 0x33:
+			return "Paper Jam: Printing Pre-OC Print Position Off";
+		case 0x34:
+			return "Paper Jam: Printing OC Print Position On";
+		case 0x35:
+			return "Paper Jam: Printing OC Print Position Off";
+		case 0x36:
+			return "Paper Jam: Cut Print Position Off";
+		case 0x37:
+			return "Paper Jam: Home Position Off";
+		case 0x38:
+			return "Paper Jam: Paper Top Off";
+		case 0x39:
+			return "Paper Jam: Print Position On";
+
+		case 0x51:
+			return "Paper Jam: Paper Empty On, Top On, Position On";
+		case 0x52:
+			return "Paper Jam: Paper Empty On, Top On, Position Off";
+		case 0x53:
+			return "Paper Jam: Paper Empty On, Top Off, Print Position On";
+		case 0x54:
+			return "Paper Jam: Paper Empty On, Top Of, Position Off";
+		case 0x55:
+			return "Paper Jam: Paper Empty Off, Top On, Position On";
+		case 0x56:
+			return "Paper Jam: Paper Empty Off, Top On, Position Off";
+		case 0x57:
+			return "Paper Jam: Paper Empty Off, Top Off, Position On";
+		case 0x60:
+			return "Paper Jam: Cutter Right";
+		case 0x61:
+			return "Paper Jam: Cutter Left";
+
+		default:
+			return "Paper Jam: Unknown";
+		}
+	case 0x06: /* User/Error */
+		switch (minor) {
+		case 0x01:
+			return "Front Cover Open";
+		case 0x02:
+			return "Paper Cover Open";
+		case 0x03:
+			return "Incorrect Ribbon";
+		case 0x05:
+			return "No Ribbon";
+		case 0x06:
+			return "Paper Empty";
+		case 0x08: // guess?
+			return "No Paper";
+		case 0x0C: // guess?
+			return "Paper End";
+		default:
+			return "Unknown";
+		}
+	default:
+		return "Unknown";
+	}
+}
+
 struct s6245_status_resp {
 	struct sinfonia_status_hdr hdr;
 	uint32_t count_lifetime;
@@ -462,7 +681,7 @@ static int get_status(struct shinkos6245_ctx *ctx)
 		     resp.hdr.error,
 		     sinfonia_error_str(resp.hdr.error),
 		     resp.hdr.printer_major,
-		     resp.hdr.printer_minor, error_codes(resp.hdr.printer_major, resp.hdr.printer_minor));
+		     resp.hdr.printer_minor, ctx->dev.error_codes(resp.hdr.printer_major, resp.hdr.printer_minor));
 	}
 	if (le16_to_cpu(resp.hdr.payload_len) != (sizeof(struct s6245_status_resp) - sizeof(struct sinfonia_status_hdr)))
 		return 0;
@@ -546,7 +765,7 @@ static int get_errorlog(struct shinkos6245_ctx *ctx)
 		     resp.time_hour, resp.time_min, resp.time_sec,
 		     le32_to_cpu(resp.print_counter),
 		     resp.error_major, resp.error_minor,
-		     error_codes(resp.error_major, resp.error_minor));
+		     ctx->dev.error_codes(resp.error_major, resp.error_minor));
 		INFO("  Temp: %02u/%02u Hum: %02u\n",
 		     resp.printer_thermistor, resp.head_thermistor, resp.printer_humidity);
 	} while (++i < le16_to_cpu(resp.error_count));
@@ -692,7 +911,11 @@ static int shinkos6245_attach(void *vctx, struct libusb_device_handle *dev, int 
 	ctx->dev.endp_up = endp_up;
 	ctx->dev.endp_down = endp_down;
 	ctx->dev.type = type;
-	ctx->dev.error_codes = &error_codes;
+
+	if (type == P_KODAK_8810)
+		ctx->dev.error_codes = &ek8810_error_codes;
+	else
+		ctx->dev.error_codes = &s6245_error_codes;
 
 	/* Ensure jobid is sane */
 	ctx->jobid = jobid & 0x7f;
@@ -778,7 +1001,6 @@ static int shinkos6245_main_loop(void *vctx, const void *vjob) {
 	uint8_t cmdbuf[CMDBUF_LEN];
 
 	int last_state = -1, state = S_IDLE;
-	uint8_t mcut;
 	int copies;
 
 	struct sinfonia_cmd_hdr *cmd = (struct sinfonia_cmd_hdr *) cmdbuf;;
@@ -801,13 +1023,14 @@ static int shinkos6245_main_loop(void *vctx, const void *vjob) {
 	case CODE_8x4_2:
 	case CODE_8x5_2:
 	case CODE_8x6_2:
-		mcut = PRINT_METHOD_COMBO_2;
+		job->jp.method = PRINT_METHOD_COMBO_2;
 		break;
 	case CODE_8x4_3:
-		mcut = PRINT_METHOD_COMBO_3;
+		job->jp.method = PRINT_METHOD_COMBO_3;
 		break;
 	default:
-		mcut = PRINT_METHOD_STD;
+		job->jp.method = PRINT_METHOD_STD;
+		break;
 	}
 	// XXX what about mcut |= PRINT_METHOD_DISABLE_ERR;
 
@@ -939,7 +1162,8 @@ top:
 		print->columns = print->columns2 = cpu_to_le16(job->jp.columns);
 		print->rows = print->rows2 = cpu_to_le16(job->jp.rows);
 		print->mode = job->jp.oc_mode;
-		print->method = mcut;
+		print->method = job->jp.method;
+		print->reserved2 = job->jp.media;
 
 		if ((ret = sinfonia_docmd(&ctx->dev,
 					  cmdbuf, sizeof(*print),
@@ -955,7 +1179,7 @@ top:
 			} else if ((resp.status & 0xf0) == 0x30 || sts.hdr.status == ERROR_BUFFER_FULL) {
 				INFO("Printer busy (%s), retrying\n", sinfonia_status_str(sts.hdr.status));
 				break;
-			} else if (resp.status != ERROR_NONE)
+			} else if (resp.status != ERROR_NONE || resp.error == ERROR_INVALID_PARAM)
 				goto printer_error;
 		}
 
@@ -994,7 +1218,7 @@ printer_error:
 	      sts.hdr.status,
 	      sinfonia_status_str(sts.hdr.status),
 	      sts.hdr.printer_major, sts.hdr.printer_minor,
-	      error_codes(sts.hdr.printer_major, sts.hdr.printer_minor));
+	      ctx->dev.error_codes(sts.hdr.printer_major, sts.hdr.printer_minor));
 fail:
 	return CUPS_BACKEND_FAILED;
 }
@@ -1074,7 +1298,7 @@ static const char *shinkos6245_prefixes[] = {
 
 struct dyesub_backend shinkos6245_backend = {
 	.name = "Sinfonia CHC-S6245 / Kodak 8810",
-	.version = "0.22" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.24" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = shinkos6245_prefixes,
 	.cmdline_usage = shinkos6245_cmdline,
 	.cmdline_arg = shinkos6245_cmdline_arg,

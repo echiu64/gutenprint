@@ -3431,24 +3431,32 @@ static void kodak_9810_plane_init(stp_vars_t *v)
 static const dyesub_pagesize_t kodak_8810_page[] =
 {
   DEFINE_PAPER_SIMPLE( "w288h576", "8x4", PT1(1208,300), PT1(2464,300), DYESUB_LANDSCAPE),
-//  DEFINE_PAPER_SIMPLE( "w360h576", "8x5", PT1(1508,300), PT1(2464,300), DYESUB_LANDSCAPE).
-//  DEFINE_PAPER_SIMPLE( "w432h576", "8x6", PT1(1808,300), PT1(2464,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w360h576", "8x5", PT1(1508,300), PT1(2464,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w432h576", "8x6", PT1(1808,300), PT1(2464,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER_SIMPLE( "w576h576", "8x8", PT1(2408,300), PT1(2464,300), DYESUB_LANDSCAPE),
+//  DEFINE_PAPER_SIMPLE( "w576h576-div2", "8x4*2", PT1(2464,300), PT1(2494,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "c8x10", "8x10", PT1(2464,300), PT1(3024,300), DYESUB_PORTRAIT),
+//  DEFINE_PAPER_SIMPLE( "c8x10-div2", "8x5*2", PT1(2464,300), PT1(3094,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "A4", "203x297mm", PT1(2464,300), PT1(3531,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w576h864", "8x12", PT1(2464,300), PT1(3624,300), DYESUB_PORTRAIT),
+//  DEFINE_PAPER_SIMPLE( "w576h864-div2", "8x6*2", PT1(2464,300), PT1(3694,300), DYESUB_PORTRAIT),
+//  DEFINE_PAPER_SIMPLE( "w576h864-div3", "8x4*3", PT1(2464,300), PT1(3742,300), DYESUB_PORTRAIT),
 };
 LIST(dyesub_pagesize_list_t, kodak_8810_page_list, dyesub_pagesize_t, kodak_8810_page);
 
 static const dyesub_printsize_t kodak_8810_printsize[] =
 {
   { "300x300", "w288h576", 1208, 2464},
-//  { "300x300", "w360h576", 1508, 2464},
-//  { "300x300", "w432h576", 1808, 2464},
+  { "300x300", "w360h576", 1508, 2464},
+  { "300x300", "w432h576", 1808, 2464},
   { "300x300", "w576h576", 2408, 2464},
+//  { "300x300", "w576h576-div2", 2464, 2494},
   { "300x300", "c8x10", 2464, 3024},
+//  { "300x300", "c8x10-div2", 2464, 3094},
   { "300x300", "A4", 2464, 3531},
   { "300x300", "w576h864", 2464, 3624},
+//  { "300x300", "w576h864-div2", 2464, 3694},
+//  { "300x300", "w576h864-div3", 2464, 3742},
 };
 
 LIST(dyesub_printsize_list_t, kodak_8810_printsize_list, dyesub_printsize_t, kodak_8810_printsize);
@@ -3464,6 +3472,26 @@ LIST(overcoat_list_t, kodak_8810_overcoat_list, overcoat_t, kodak_8810_overcoat)
 static void kodak_8810_printer_init(stp_vars_t *v)
 {
   dyesub_privdata_t *pd = get_privdata(v);
+  char method;
+  char media;
+
+  /* NOTE:  These multicut sizes are broken. */
+  if (strcmp(pd->pagesize,"w576h576-div2") == 0) {
+	  method = 2;
+	  media = 0x30;
+  } else if (strcmp(pd->pagesize,"c8x10-div2") == 0) {
+	  method = 2;
+	  media = 0x31;
+  } else if (strcmp(pd->pagesize,"w576h864-div2") == 0) {
+	  method = 2;
+	  media = 0x32;
+  } else if (strcmp(pd->pagesize,"w576h864-div3") == 0) {
+	  method = 3;
+	  media = 0x40;
+  } else {
+	  method = 0;
+	  media = 0;
+  }
 
   stp_putc(0x01, v);
   stp_putc(0x40, v);
@@ -3478,8 +3506,8 @@ static void kodak_8810_printer_init(stp_vars_t *v)
   dyesub_nputc(v, 0, 4);
   stp_zfwrite((pd->overcoat->seq).data, 1,
 	      (pd->overcoat->seq).bytes, v);
-  stp_putc(0x00, v); /* Method -- 00 is normal, 02 is x2, 03 is x3 */
-  stp_putc(0x00, v); /* Reserved */
+  stp_putc(method, v); /* Method -- 00 is normal, 02 is x2, 03 is x3 */
+  stp_putc(media, v); /* Reserved? */
 }
 
 /* Kodak 6900 */
