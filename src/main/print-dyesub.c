@@ -7748,11 +7748,8 @@ static void dnpdsrx1_printer_start(stp_vars_t *v)
   dnp_printer_start_common(v);
 
   /* Set cutter option to "normal" */
-  stp_zprintf(v, "\033PCNTRL CUTTER          00000008");
-  if (!strcmp(pd->pagesize, "w288h432-div2")) {
-    stp_zprintf(v, "00000120");
-  } else if (!strcmp(pd->pagesize, "w432h576-div4")) {
-    stp_zprintf(v, "00000120");
+  if (!strcmp(pd->pagesize, "w288h432-div2") || !strcmp(pd->pagesize, "w432h576-div4")) {
+    stp_zprintf(v, "\033PCNTRL CUTTER          0000000800000120");
   } else {
     stp_zprintf(v, "\033PCNTRL CUTTER          00000008%08d", pd->privdata.dnp.nocutwaste ? 1 : 0);
   }
