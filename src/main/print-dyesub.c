@@ -3440,7 +3440,7 @@ static const dyesub_pagesize_t kodak_8810_page[] =
   DEFINE_PAPER_SIMPLE( "A4", "203x297mm", PT1(2464,300), PT1(3531,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w576h864", "8x12", PT1(2464,300), PT1(3624,300), DYESUB_PORTRAIT),
 //  DEFINE_PAPER_SIMPLE( "w576h864-div2", "8x6*2", PT1(2464,300), PT1(3694,300), DYESUB_PORTRAIT),
-//  DEFINE_PAPER_SIMPLE( "w576h864-div3", "8x4*3", PT1(2464,300), PT1(3742,300), DYESUB_PORTRAIT),
+//  DEFINE_PAPER_SIMPLE( "w576h864-div3", "8x4*3", PT1(2464,300), PT1(3752,300), DYESUB_PORTRAIT),
 };
 LIST(dyesub_pagesize_list_t, kodak_8810_page_list, dyesub_pagesize_t, kodak_8810_page);
 
@@ -3456,7 +3456,7 @@ static const dyesub_printsize_t kodak_8810_printsize[] =
   { "300x300", "A4", 2464, 3531},
   { "300x300", "w576h864", 2464, 3624},
 //  { "300x300", "w576h864-div2", 2464, 3694},
-//  { "300x300", "w576h864-div3", 2464, 3742},
+//  { "300x300", "w576h864-div3", 2464, 3752},
 };
 
 LIST(dyesub_printsize_list_t, kodak_8810_printsize_list, dyesub_printsize_t, kodak_8810_printsize);
@@ -6856,7 +6856,7 @@ static const dyesub_pagesize_t shinko_chcs6245_page[] =
   DEFINE_PAPER_SIMPLE( "c8x10-div2", "8x5*2", PT1(2464,300), PT1(3094,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w576h864", "8x12", PT1(2464,300), PT1(3636,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w576h864-div2", "8x6*2", PT1(2464,300), PT1(3694,300), DYESUB_PORTRAIT),
-  DEFINE_PAPER_SIMPLE( "w576h864-div3", "8x4*3", PT1(2464,300), PT1(3742,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w576h864-div3", "8x4*3", PT1(2464,300), PT1(3752,300), DYESUB_PORTRAIT),
 };
 
 LIST(dyesub_pagesize_list_t, shinko_chcs6245_page_list, dyesub_pagesize_t, shinko_chcs6245_page);
@@ -6872,7 +6872,7 @@ static const dyesub_printsize_t shinko_chcs6245_printsize[] =
   { "300x300", "c8x10-div2", 2464, 3094},
   { "300x300", "w576h864", 2464, 3636},
   { "300x300", "w576h864-div2", 2464, 3694},
-  { "300x300", "w576h864-div3", 2464, 3742},
+  { "300x300", "w576h864-div3", 2464, 3752},
 };
 
 LIST(dyesub_printsize_list_t, shinko_chcs6245_printsize_list, dyesub_printsize_t, shinko_chcs6245_printsize);
