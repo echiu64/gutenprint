@@ -1194,6 +1194,8 @@ static int mitsu9550_main_loop(void *vctx, const void *vjob) {
 	}
 
 	DEBUG("Applying 8bpp->12bpp Gamma Correction\n");
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Waddress-of-packed-member"
 	/* For B/Y plane */
 	memcpy(newbuf + newlen, job->databuf, sizeof(struct mitsu9550_plane));
 	newbuf[newlen + 3] = 0x10;  /* ie 16bpp data */
@@ -1226,6 +1228,7 @@ static int mitsu9550_main_loop(void *vctx, const void *vjob) {
 			  table->GNMrc,
 			  planelen / 2);
 	newlen += planelen;
+#pragma GCC diagnostic pop
 
 	/* And finally, the job footer. */
 	memcpy(newbuf + newlen, job->databuf + sizeof(struct mitsu9550_plane) + planelen/2 * 3, sizeof(struct mitsu9550_cmd));
@@ -1708,7 +1711,7 @@ static const char *mitsu9550_prefixes[] = {
 /* Exported */
 struct dyesub_backend mitsu9550_backend = {
 	.name = "Mitsubishi CP9xxx family",
-	.version = "0.47",
+	.version = "0.48",
 	.uri_prefixes = mitsu9550_prefixes,
 	.cmdline_usage = mitsu9550_cmdline,
 	.cmdline_arg = mitsu9550_cmdline_arg,
@@ -1978,5 +1981,9 @@ struct dyesub_backend mitsu9550_backend = {
     00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00 ::          20 01 00 [9550S w/ ignore failures on]
     00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00 ::          70 01 01 [9550]
     00 00
+
+  [[ Unknown command, seen in driver as esc_q ]]
+
+ -> 1b 51
 
  */
