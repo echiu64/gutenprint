@@ -162,8 +162,8 @@
       <printer translate="name" name="Mitsubishi CP-D70DW" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP60D70D707D;CLS:PRINTER;DES:MITSUBISHI CP60D70D707D" driver="mitsubishi-d70dw" manufacturer="Mitsubishi" model="4105" />
       <printer translate="name" name="Mitsubishi CP-D707DW" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP60D70D707D;CLS:PRINTER;DES:MITSUBISHI CP60D70D707D" driver="mitsubishi-d707dw" manufacturer="Mitsubishi" model="4117" />
       <printer translate="name" name="Mitsubishi CP-K60DW-S" driver="mitsubishi-k60dw" manufacturer="Mitsubishi" model="4106" />
-      <printer translate="name" name="Mitsubishi P93D" driverid="MFG:MITSUBISHI;CMD:MEL;MDL:P93D;CLS:PRINTER;DES:MITSUBISHI P93D;" driver="mitsubishi-p93d" manufacturer="Mitsubishi" model="4116" />
-      <printer translate="name" name="Mitsubishi P95D" driverid="MFG:MITSUBISHI;CMD:MEL;MDL:P95D    ;CLS:PRINTER;DES:MITSUBISHI P95D    ;" driver="mitsubishi-p95d" manufacturer="Mitsubishi" model="4114" />
+      <printer translate="name" name="Mitsubishi P93D" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:P93D;CLS:PRINTER;DES:MITSUBISHI P93D;" driver="mitsubishi-p93d" manufacturer="Mitsubishi" model="4116" />
+      <printer translate="name" name="Mitsubishi P95D" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:P95D    ;CLS:PRINTER;DES:MITSUBISHI P95D    ;" driver="mitsubishi-p95d" manufacturer="Mitsubishi" model="4114" />
       <printer translate="name" name="Nidac Copal DPB-4000"  driver="nidalcopac-dpb-4000" manufacturer="Nidac Copal" model="4201">EXPERIMENTAL</printer>
       <printer translate="name" name="Nidac Copal DPB-6000"  driver="nidalcopac-dpb-6000" manufacturer="Nidac Copal" model="4200" />
       <printer translate="name" name="Nidac Copal DPB-7000"  driver="nidalcopac-dpb-7000" manufacturer="Nidac Copal" model="4200">EXPERIMENTAL</printer>
@@ -183,9 +183,9 @@
       <printer translate="name" name="Sony DPP-EX7" driver="sony-dppex7" manufacturer="Sony" model="2002" />
       <printer translate="name" name="Sony UP-DR100" driver="sony-updr100" manufacturer="Sony" model="2003" />
       <printer translate="name" name="Sony UP-DR200" driver="sony-updr200" manufacturer="Sony" model="2004" />
-      <printer translate="name" name="Sony UP-CR10L" driverid="MFG:SONY;MDL:UP-CR10L;DES:Sony UP-CR10L;CMD:SONY-Original;CLS:PRINTER" driver="sony-upcr10l" manufacturer="Sony" model="2005"/>
-      <printer translate="name" name="Sony UP-D895" driverid="MFG:SONY;MDL:UP-D895;DES:Sony UP-D895;CMD:SONY-Original;CLS:PRINTER" driver="sony-upd895" manufacturer="Sony" model="2006" />
-      <printer translate="name" name="Sony UP-D897" driverid="MFG:SONY;MDL:UP-D897;DES:Sony UP-D897;CMD:SONY-Original;CLS:PRINTER" driver="sony-upd897" manufacturer="Sony" model="2007" />
+      <printer translate="name" name="Sony UP-CR10L" deviceid="MFG:SONY;MDL:UP-CR10L;DES:Sony UP-CR10L;CMD:SONY-Original;CLS:PRINTER" driver="sony-upcr10l" manufacturer="Sony" model="2005"/>
+      <printer translate="name" name="Sony UP-D895" deviceid="MFG:SONY;MDL:UP-D895;DES:Sony UP-D895;CMD:SONY-Original;CLS:PRINTER" driver="sony-upd895" manufacturer="Sony" model="2006" />
+      <printer translate="name" name="Sony UP-D897" deviceid="MFG:SONY;MDL:UP-D897;DES:Sony UP-D897;CMD:SONY-Original;CLS:PRINTER" driver="sony-upd897" manufacturer="Sony" model="2007" />
       <printer translate="name" name="Sony UP-D898" driver="sony-upd898" manufacturer="Sony" model="2008">EXPERIMENTAL</printer>
       <printer translate="name" name="Sony UP-CR20L" driver="sony-upcr20l" manufacturer="Sony" model="2009">EXPERIMENTAL</printer>
       <printer translate="name" name="Sony UP-DR80MD" driver="sony-updr80md" manufacturer="Sony" model="2010">EXPERIMENTAL</printer>
