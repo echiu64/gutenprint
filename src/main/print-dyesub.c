@@ -43,6 +43,21 @@
 
 #define S6145_YMC  /* Generate YMC data for S6145 family */
 
+/* XXX FIXME: Curves have been effectively disabled since a commit in
+   Sep 2006.  They were also all set up prior to the AppGammaScale
+   adjustment, so they no longer yield the expected output.
+
+   Also, there is no good way to alter these builtin curves; they
+   should be moved to external files.
+
+   Finally, they have usability problems as they are only applied if
+   the user has not already suppliled one as an option.  This is not
+   immediately evident.
+*/
+#define DISABLE_LEGACY_CURVES
+
+//#define USE_WRONG_APPGAMMA_BY_DEFAULT
+
 #define DYESUB_FEATURE_NONE		 0x00000000
 #define DYESUB_FEATURE_FULL_WIDTH	 0x00000001
 #define DYESUB_FEATURE_FULL_HEIGHT	 0x00000002
@@ -513,9 +528,11 @@ static const char p200_adj_any[] =
 
 static void p200_adjust_curves(stp_vars_t *v)
 {
+#ifndef DISABLE_LEGACY_CURVES
   dyesub_adjust_curve(v, p200_adj_any, "CyanCurve");
   dyesub_adjust_curve(v, p200_adj_any, "MagentaCurve");
   dyesub_adjust_curve(v, p200_adj_any, "YellowCurve");
+#endif
 }
 
 /* Olympus P-300 series */
@@ -619,9 +636,11 @@ static const char p300_adj_yellow[] =
 
 static void p300_adjust_curves(stp_vars_t *v)
 {
+#ifndef DISABLE_LEGACY_CURVES
   dyesub_adjust_curve(v, p300_adj_cyan, "CyanCurve");
   dyesub_adjust_curve(v, p300_adj_magenta, "MagentaCurve");
   dyesub_adjust_curve(v, p300_adj_yellow, "YellowCurve");
+#endif
 }
 
 /* Olympus P-400 series */
@@ -750,9 +769,11 @@ static const char p400_adj_yellow[] =
 
 static void p400_adjust_curves(stp_vars_t *v)
 {
+#ifndef DISABLE_LEGACY_CURVES
   dyesub_adjust_curve(v, p400_adj_cyan, "CyanCurve");
   dyesub_adjust_curve(v, p400_adj_magenta, "MagentaCurve");
   dyesub_adjust_curve(v, p400_adj_yellow, "YellowCurve");
+#endif
 }
 
 /* Olympus P-440 series */
@@ -1029,9 +1050,11 @@ static const char cpx00_adj_yellow[] =
 
 static void cpx00_adjust_curves(stp_vars_t *v)
 {
+#ifndef DISABLE_LEGACY_CURVES
   dyesub_adjust_curve(v, cpx00_adj_cyan, "CyanCurve");
   dyesub_adjust_curve(v, cpx00_adj_magenta, "MagentaCurve");
   dyesub_adjust_curve(v, cpx00_adj_yellow, "YellowCurve");
+#endif
 }
 
 /* Canon CP-220 series */
@@ -1420,9 +1443,11 @@ static const char updp10_adj_yellow[] =
 
 static void updp10_adjust_curves(stp_vars_t *v)
 {
+#ifndef DISABLE_LEGACY_CURVES
   dyesub_adjust_curve(v, updp10_adj_cyan, "CyanCurve");
   dyesub_adjust_curve(v, updp10_adj_magenta, "MagentaCurve");
   dyesub_adjust_curve(v, updp10_adj_yellow, "YellowCurve");
+#endif
 }
 
 /* Sony UP-DR100 */
@@ -10392,6 +10417,12 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_INTERNAL, 1, 0, STP_CHANNEL_NONE, 0, 1
   },
+  {
+    "LegacyDyesubGamma", N_("Use legacy dyesub gamma curve"), "Color=Yes,Category=Advanced Printer Setup",
+    N_("Use legacy dyesub gamma curve"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 0, STP_CHANNEL_NONE, 1, 0
+  },
 };
 
 static int the_parameter_count =
@@ -10738,6 +10769,15 @@ dyesub_parameters(const stp_vars_t *v, const char *name,
     {
       description->deflt.boolean = dyesub_feature(caps, DYESUB_FEATURE_NATIVECOPIES);
       description->is_active = 1;
+    }
+  else if (strcmp(name, "LegacyDyesubGamma") == 0)
+    {
+#ifdef USE_WRONG_APPGAMMA_BY_DEFAULT
+	description->deflt.boolean = 0;
+#else
+	description->deflt.boolean = 1;
+#endif
+        description->is_active = 1;
     }
   else
     description->is_active = 0;
@@ -11096,11 +11136,7 @@ dyesub_render_pixel_u8(unsigned short *src, char *dest,
 		       int plane)
 {
   /* Scale down to output bit depth */
-#if 0
-  *dest = src[plane] >> 8; // XXX does this make more sense than division?
-#else
   *dest = src[plane] / 257;
-#endif
 }
 
 static void
@@ -11406,8 +11442,12 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image, int print_op)
   for (i = 0; i < pv.ink_channels; i++)
     stp_channel_add(v, i, 0, 1.0);
 
+  dyesub_exec(v, caps->adjust_curves, "caps->adjust_curves");
+
+  stp_set_float_parameter(v, "AppGammaScale",
+	stp_get_boolean_parameter(v, "LegacyDyesubGamma") ? 4.0 : 1.0);
+
   pv.out_channels = stp_color_init(v, image, 256);
-  stp_set_float_parameter(v, "AppGammaScale", 1.0);
 
   /* If there's a mismatch in channels, that is ALWAYS a problem */
   if (pv.out_channels != pv.ink_channels)
@@ -11418,6 +11458,7 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image, int print_op)
       stp_free(pd);
       return 2;
     }
+
 
   pv.image_data = dyesub_read_image(v, &pv, image);
   if (ink_type)
@@ -11516,10 +11557,6 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image, int print_op)
   pd->w_size = pv.prnw_px;
   pd->h_size = pv.prnh_px;
   pd->print_mode = pv.print_mode;
-
-  /* FIXME:  Provide a way of disabling/altering these curves */
-  /* XXX reuse 'UseLUT' from mitsu70x?  or 'SimpleGamma' ? */
-  dyesub_exec(v, caps->adjust_curves, "caps->adjust_curves");
 
   /* Send out job init if we're in page mode */
   if (print_op & OP_JOB_START)
