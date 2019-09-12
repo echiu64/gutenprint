@@ -1195,7 +1195,9 @@ static int mitsu9550_main_loop(void *vctx, const void *vjob) {
 
 	DEBUG("Applying 8bpp->12bpp Gamma Correction\n");
 #pragma GCC diagnostic push
+#if (defined(__GNUC__) && (__GNUC__ >= 9))
 #pragma GCC diagnostic ignored "-Waddress-of-packed-member"
+#endif
 	/* For B/Y plane */
 	memcpy(newbuf + newlen, job->databuf, sizeof(struct mitsu9550_plane));
 	newbuf[newlen + 3] = 0x10;  /* ie 16bpp data */
