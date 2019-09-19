@@ -43,19 +43,6 @@
 
 #define S6145_YMC  /* Generate YMC data for S6145 family */
 
-/* XXX FIXME: Curves have been effectively disabled since a commit in
-   Sep 2006.  They were also all set up prior to the AppGammaScale
-   adjustment, so they no longer yield the expected output.
-
-   Also, there is no good way to alter these builtin curves; they
-   should be moved to external files.
-
-   Finally, they have usability problems as they are only applied if
-   the user has not already suppliled one as an option.  This is not
-   immediately evident.
-*/
-#define DISABLE_LEGACY_CURVES
-
 //#define USE_WRONG_APPGAMMA_BY_DEFAULT
 
 #define DYESUB_FEATURE_NONE		 0x00000000
@@ -352,7 +339,6 @@ typedef struct /* printer specific parameters */
   void (*plane_end_func)(stp_vars_t *);
   void (*block_init_func)(stp_vars_t *);
   void (*block_end_func)(stp_vars_t *);
-  void (*adjust_curves)(stp_vars_t *);
   const overcoat_list_t *overcoat;
   const dyesub_media_list_t *media;
   void (*job_start_func)(stp_vars_t *);
@@ -512,29 +498,6 @@ static void p200_printer_end_func(stp_vars_t *v)
   stp_zprintf(v, "P000001\1");
 }
 
-static const char p200_adj_any[] =
-  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-  "<gutenprint>\n"
-  "<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
-  "<sequence count=\"33\" lower-bound=\"0\" upper-bound=\"1\">\n"
-  "0.000000 0.039216 0.078431 0.117647 0.152941 0.192157 0.231373 0.266667\n"
-  "0.301961 0.341176 0.376471 0.411765 0.447059 0.482353 0.513725 0.549020\n"
-  "0.580392 0.615686 0.647059 0.678431 0.709804 0.741176 0.768627 0.796078\n"
-  "0.827451 0.854902 0.878431 0.905882 0.929412 0.949020 0.972549 0.988235\n"
-  "1.000000\n"
-  "</sequence>\n"
-  "</curve>\n"
-  "</gutenprint>\n";
-
-static void p200_adjust_curves(stp_vars_t *v)
-{
-#ifndef DISABLE_LEGACY_CURVES
-  dyesub_adjust_curve(v, p200_adj_any, "CyanCurve");
-  dyesub_adjust_curve(v, p200_adj_any, "MagentaCurve");
-  dyesub_adjust_curve(v, p200_adj_any, "YellowCurve");
-#endif
-}
-
 /* Olympus P-300 series */
 static const dyesub_resolution_t p300_res[] =
 {
@@ -593,54 +556,6 @@ static void p300_block_init_func(stp_vars_t *v)
   stp_dprintf(STP_DBG_DYESUB, v, "dyesub: p300_block_init_func: %d-%dx%d-%d\n",
 	pd->block_min_w, pd->block_max_w,
 	pd->block_min_h, pd->block_max_h);
-}
-
-static const char p300_adj_cyan[] =
-  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-  "<gutenprint>\n"
-  "<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
-  "<sequence count=\"32\" lower-bound=\"0\" upper-bound=\"1\">\n"
-  "0.078431 0.211765 0.250980 0.282353 0.309804 0.333333 0.352941 0.368627\n"
-  "0.388235 0.403922 0.427451 0.443137 0.458824 0.478431 0.498039 0.513725\n"
-  "0.529412 0.545098 0.556863 0.576471 0.592157 0.611765 0.627451 0.647059\n"
-  "0.666667 0.682353 0.701961 0.713725 0.725490 0.729412 0.733333 0.737255\n"
-  "</sequence>\n"
-  "</curve>\n"
-  "</gutenprint>\n";
-
-static const char p300_adj_magenta[] =
-  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-  "<gutenprint>\n"
-  "<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
-  "<sequence count=\"32\" lower-bound=\"0\" upper-bound=\"1\">\n"
-  "0.047059 0.211765 0.250980 0.278431 0.305882 0.333333 0.349020 0.364706\n"
-  "0.380392 0.396078 0.415686 0.435294 0.450980 0.466667 0.482353 0.498039\n"
-  "0.513725 0.525490 0.541176 0.556863 0.572549 0.592157 0.611765 0.631373\n"
-  "0.650980 0.670588 0.694118 0.705882 0.721569 0.741176 0.745098 0.756863\n"
-  "</sequence>\n"
-  "</curve>\n"
-  "</gutenprint>\n";
-
-static const char p300_adj_yellow[] =
-  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-  "<gutenprint>\n"
-  "<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
-  "<sequence count=\"32\" lower-bound=\"0\" upper-bound=\"1\">\n"
-  "0.047059 0.117647 0.203922 0.250980 0.274510 0.301961 0.321569 0.337255\n"
-  "0.352941 0.364706 0.380392 0.396078 0.407843 0.423529 0.439216 0.450980\n"
-  "0.466667 0.482353 0.498039 0.513725 0.533333 0.552941 0.572549 0.596078\n"
-  "0.615686 0.635294 0.650980 0.666667 0.682353 0.690196 0.701961 0.713725\n"
-  "</sequence>\n"
-  "</curve>\n"
-  "</gutenprint>\n";
-
-static void p300_adjust_curves(stp_vars_t *v)
-{
-#ifndef DISABLE_LEGACY_CURVES
-  dyesub_adjust_curve(v, p300_adj_cyan, "CyanCurve");
-  dyesub_adjust_curve(v, p300_adj_magenta, "MagentaCurve");
-  dyesub_adjust_curve(v, p300_adj_yellow, "YellowCurve");
-#endif
 }
 
 /* Olympus P-400 series */
@@ -726,54 +641,6 @@ static void p400_block_init_func(stp_vars_t *v)
       stp_put16_be(pd->block_max_h - pd->block_min_h + 1, v);
     }
   dyesub_nputc(v, '\0', 53);
-}
-
-static const char p400_adj_cyan[] =
-  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-  "<gutenprint>\n"
-  "<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
-  "<sequence count=\"32\" lower-bound=\"0\" upper-bound=\"1\">\n"
-  "0.003922 0.031373 0.058824 0.090196 0.125490 0.156863 0.184314 0.219608\n"
-  "0.250980 0.278431 0.309804 0.341176 0.376471 0.403922 0.439216 0.470588\n"
-  "0.498039 0.517647 0.533333 0.545098 0.564706 0.576471 0.596078 0.615686\n"
-  "0.627451 0.647059 0.658824 0.678431 0.690196 0.705882 0.721569 0.737255\n"
-  "</sequence>\n"
-  "</curve>\n"
-  "</gutenprint>\n";
-
-static const char p400_adj_magenta[] =
-  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-  "<gutenprint>\n"
-  "<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
-  "<sequence count=\"32\" lower-bound=\"0\" upper-bound=\"1\">\n"
-  "0.003922 0.031373 0.062745 0.098039 0.125490 0.156863 0.188235 0.215686\n"
-  "0.250980 0.282353 0.309804 0.345098 0.376471 0.407843 0.439216 0.470588\n"
-  "0.501961 0.521569 0.549020 0.572549 0.592157 0.619608 0.643137 0.662745\n"
-  "0.682353 0.713725 0.737255 0.756863 0.784314 0.807843 0.827451 0.850980\n"
-  "</sequence>\n"
-  "</curve>\n"
-  "</gutenprint>\n";
-
-static const char p400_adj_yellow[] =
-  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-  "<gutenprint>\n"
-  "<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
-  "<sequence count=\"32\" lower-bound=\"0\" upper-bound=\"1\">\n"
-  "0.003922 0.027451 0.054902 0.090196 0.121569 0.156863 0.184314 0.215686\n"
-  "0.250980 0.282353 0.309804 0.345098 0.372549 0.400000 0.435294 0.466667\n"
-  "0.498039 0.525490 0.552941 0.580392 0.607843 0.631373 0.658824 0.678431\n"
-  "0.698039 0.725490 0.760784 0.784314 0.811765 0.839216 0.866667 0.890196\n"
-  "</sequence>\n"
-  "</curve>\n"
-  "</gutenprint>\n";
-
-static void p400_adjust_curves(stp_vars_t *v)
-{
-#ifndef DISABLE_LEGACY_CURVES
-  dyesub_adjust_curve(v, p400_adj_cyan, "CyanCurve");
-  dyesub_adjust_curve(v, p400_adj_magenta, "MagentaCurve");
-  dyesub_adjust_curve(v, p400_adj_yellow, "YellowCurve");
-#endif
 }
 
 /* Olympus P-440 series */
@@ -1007,54 +874,6 @@ static void cpx00_plane_init_func(stp_vars_t *v)
   stp_putc('\0', v);
   stp_put32_le(pd->w_size * pd->h_size, v);
   dyesub_nputc(v, '\0', 4);
-}
-
-static const char cpx00_adj_cyan[] =
-  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-  "<gutenprint>\n"
-  "<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
-  "<sequence count=\"32\" lower-bound=\"0\" upper-bound=\"1\">\n"
-  "0.000000 0.035294 0.070588 0.101961 0.117647 0.168627 0.180392 0.227451\n"
-  "0.258824 0.286275 0.317647 0.341176 0.376471 0.411765 0.427451 0.478431\n"
-  "0.505882 0.541176 0.576471 0.611765 0.654902 0.678431 0.705882 0.737255\n"
-  "0.764706 0.792157 0.811765 0.839216 0.862745 0.894118 0.909804 0.925490\n"
-  "</sequence>\n"
-  "</curve>\n"
-  "</gutenprint>\n";
-
-static const char cpx00_adj_magenta[] =
-  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-  "<gutenprint>\n"
-  "<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
-  "<sequence count=\"32\" lower-bound=\"0\" upper-bound=\"1\">\n"
-  "0.011765 0.019608 0.035294 0.047059 0.054902 0.101961 0.133333 0.156863\n"
-  "0.192157 0.235294 0.274510 0.321569 0.360784 0.403922 0.443137 0.482353\n"
-  "0.521569 0.549020 0.584314 0.619608 0.658824 0.705882 0.749020 0.792157\n"
-  "0.831373 0.890196 0.933333 0.964706 0.988235 0.992157 0.992157 0.996078\n"
-  "</sequence>\n"
-  "</curve>\n"
-  "</gutenprint>\n";
-
-static const char cpx00_adj_yellow[] =
-  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-  "<gutenprint>\n"
-  "<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
-  "<sequence count=\"32\" lower-bound=\"0\" upper-bound=\"1\">\n"
-  "0.003922 0.015686 0.015686 0.023529 0.027451 0.054902 0.094118 0.129412\n"
-  "0.180392 0.219608 0.250980 0.286275 0.317647 0.341176 0.388235 0.427451\n"
-  "0.470588 0.509804 0.552941 0.596078 0.627451 0.682353 0.768627 0.796078\n"
-  "0.890196 0.921569 0.949020 0.968627 0.984314 0.992157 0.992157 1.000000\n"
-  "</sequence>\n"
-  "</curve>\n"
-  "</gutenprint>\n";
-
-static void cpx00_adjust_curves(stp_vars_t *v)
-{
-#ifndef DISABLE_LEGACY_CURVES
-  dyesub_adjust_curve(v, cpx00_adj_cyan, "CyanCurve");
-  dyesub_adjust_curve(v, cpx00_adj_magenta, "MagentaCurve");
-  dyesub_adjust_curve(v, cpx00_adj_yellow, "YellowCurve");
-#endif
 }
 
 /* Canon CP-220 series */
@@ -1398,57 +1217,6 @@ static const overcoat_t updp10_overcoat[] =
 };
 
 LIST(overcoat_list_t, updp10_overcoat_list, overcoat_t, updp10_overcoat);
-
-static const char updp10_adj_cyan[] =
-  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-  "<gutenprint>\n"
-  "<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
-  "<sequence count=\"33\" lower-bound=\"0\" upper-bound=\"1\">\n"
-  "0.113725 0.188235 0.247059 0.286275 0.317647 0.345098 0.368627 0.384314\n"
-  "0.400000 0.407843 0.423529 0.439216 0.450980 0.466667 0.482353 0.498039\n"
-  "0.509804 0.525490 0.545098 0.560784 0.580392 0.596078 0.619608 0.643137\n"
-  "0.662745 0.686275 0.709804 0.729412 0.756863 0.780392 0.811765 0.843137\n"
-  "1.000000\n"
-  "</sequence>\n"
-  "</curve>\n"
-  "</gutenprint>\n";
-
-static const char updp10_adj_magenta[] =
-  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-  "<gutenprint>\n"
-  "<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
-  "<sequence count=\"33\" lower-bound=\"0\" upper-bound=\"1\">\n"
-  "0.105882 0.211765 0.286275 0.333333 0.364706 0.388235 0.403922 0.415686\n"
-  "0.427451 0.439216 0.450980 0.462745 0.478431 0.494118 0.505882 0.521569\n"
-  "0.537255 0.552941 0.568627 0.584314 0.600000 0.619608 0.643137 0.662745\n"
-  "0.682353 0.709804 0.733333 0.760784 0.792157 0.823529 0.858824 0.890196\n"
-  "1.000000\n"
-  "</sequence>\n"
-  "</curve>\n"
-  "</gutenprint>\n";
-
-static const char updp10_adj_yellow[] =
-  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-  "<gutenprint>\n"
-  "<curve wrap=\"nowrap\" type=\"spline\" gamma=\"0\">\n"
-  "<sequence count=\"33\" lower-bound=\"0\" upper-bound=\"1\">\n"
-  "0.101961 0.160784 0.196078 0.227451 0.243137 0.254902 0.266667 0.286275\n"
-  "0.309804 0.337255 0.368627 0.396078 0.423529 0.443137 0.462745 0.478431\n"
-  "0.501961 0.517647 0.537255 0.556863 0.576471 0.596078 0.619608 0.643137\n"
-  "0.666667 0.690196 0.709804 0.737255 0.760784 0.780392 0.796078 0.803922\n"
-  "1.000000\n"
-  "</sequence>\n"
-  "</curve>\n"
-  "</gutenprint>\n";
-
-static void updp10_adjust_curves(stp_vars_t *v)
-{
-#ifndef DISABLE_LEGACY_CURVES
-  dyesub_adjust_curve(v, updp10_adj_cyan, "CyanCurve");
-  dyesub_adjust_curve(v, updp10_adj_magenta, "MagentaCurve");
-  dyesub_adjust_curve(v, updp10_adj_yellow, "YellowCurve");
-#endif
-}
 
 /* Sony UP-DR100 */
 static const dyesub_pagesize_t updr100_page[] =
@@ -8947,7 +8715,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &p10_printer_init_func, &p10_printer_end_func,
     NULL, NULL,
     &p10_block_init_func, NULL,
-    NULL,
     &p10_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -8964,7 +8731,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &p200_printer_init_func, &p200_printer_end_func,
     &p200_plane_init_func, NULL,
     NULL, NULL,
-    &p200_adjust_curves,
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -8981,7 +8747,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &p300_printer_init_func, NULL,
     NULL, &p300_plane_end_func,
     &p300_block_init_func, NULL,
-    &p300_adjust_curves,
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -8998,7 +8763,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &p400_printer_init_func, NULL,
     &p400_plane_init_func, &p400_plane_end_func,
     &p400_block_init_func, NULL,
-    &p400_adjust_curves,
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9014,7 +8778,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &p440_printer_init_func, &p440_printer_end_func,
     NULL, NULL,
     &p440_block_init_func, &p440_block_end_func,
-    NULL,
     &p10_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9030,7 +8793,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &ps100_printer_init_func, &ps100_printer_end_func,
     NULL, NULL,
     NULL, NULL,
-    NULL,
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9048,7 +8810,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &cp10_printer_init_func, NULL,
     &cpx00_plane_init_func, NULL,
     NULL, NULL,
-    &cpx00_adjust_curves,
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9066,7 +8827,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &cpx00_printer_init_func, NULL,
     &cpx00_plane_init_func, NULL,
     NULL, NULL,
-    &cpx00_adjust_curves,
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9087,7 +8847,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &cpx00_printer_init_func, NULL,
     &cpx00_plane_init_func, NULL,
     NULL, NULL,
-    cpx00_adjust_curves,
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9105,7 +8864,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &es1_printer_init_func, NULL,
     &es1_plane_init_func, NULL,
     NULL, NULL,
-    cpx00_adjust_curves,
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9123,7 +8881,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &es2_printer_init_func, NULL,
     &es2_plane_init_func, NULL,
     NULL, NULL,
-    cpx00_adjust_curves,
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9141,7 +8898,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &es3_printer_init_func, &es3_printer_end_func,
     &es2_plane_init_func, NULL,
     NULL, NULL,
-    cpx00_adjust_curves,
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9159,7 +8915,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &es40_printer_init_func, &es3_printer_end_func,
     &es2_plane_init_func, NULL,
     NULL, NULL,
-    cpx00_adjust_curves,
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9177,7 +8932,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &cp790_printer_init_func, &es3_printer_end_func,
     &es2_plane_init_func, NULL,
     NULL, NULL,
-    cpx00_adjust_curves,
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9195,7 +8949,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &cpx00_printer_init_func, NULL,
     &cpx00_plane_init_func, NULL,
     NULL, NULL,
-    cpx00_adjust_curves,
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9213,7 +8966,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &cpx00_printer_init_func, &cp900_printer_end_func,
     &cpx00_plane_init_func, NULL,
     NULL, NULL,
-    cpx00_adjust_curves,
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9231,7 +8983,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &cp910_printer_init_func, NULL,
     NULL, NULL,
     NULL, NULL,
-    cpx00_adjust_curves,
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9248,7 +8999,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &updp10_printer_init_func, &updp10_printer_end_func,
     NULL, NULL,
     NULL, NULL,
-    updp10_adjust_curves,
     &updp10_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9264,7 +9014,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &updr150_printer_init_func, &updr150_printer_end_func,
     NULL, NULL,
     NULL, NULL,
-    NULL,
     &updp10_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9281,7 +9030,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &dppex5_printer_init, &dppex5_printer_end,
     NULL, NULL,
     &dppex5_block_init, NULL,
-    NULL,
     &dppex5_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9297,7 +9045,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &updr100_printer_init_func, &updr100_printer_end_func,
     NULL, NULL,
     NULL, NULL,
-    NULL,
     &updr100_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9313,7 +9060,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &updr200_printer_init_func, &updr200_printer_end_func,
     NULL, NULL,
     NULL, NULL,
-    NULL,
     &updr200_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9329,7 +9075,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &upcr10_printer_init_func, &upcr10_printer_end_func,
     NULL, NULL,
     NULL, NULL,
-    NULL,
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9346,7 +9091,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &sony_upd895_printer_init_func, &sony_upd895_printer_end_func,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
-    NULL,
     NULL, NULL,
     NULL, NULL,
     sony_upd895_parameters,
@@ -9366,7 +9110,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &sony_upd897_printer_init_func, &sony_upd897_printer_end_func,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
-    NULL,
     NULL, NULL,
     NULL, NULL,
     sony_upd897_parameters,
@@ -9386,7 +9129,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &sony_upd898_printer_init_func, &sony_updneo_printer_end_func,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
-    NULL,
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9402,7 +9144,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &sony_upcr20_printer_init_func, &sony_updneo_printer_end_func,
     NULL, NULL,
     NULL, NULL,
-    NULL,
     &upcr20_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9418,7 +9159,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &sony_updr80md_printer_init_func, &sony_updr80md_printer_end_func,
     NULL, NULL,
     NULL, NULL,
-    NULL,
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9435,7 +9175,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &cx400_printer_init_func, NULL,
     NULL, NULL,
     NULL, NULL,
-    NULL,
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9452,7 +9191,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &cx400_printer_init_func, NULL,
     NULL, NULL,
     NULL, NULL,
-    NULL,
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9468,7 +9206,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &nx500_printer_init_func, NULL,
     NULL, NULL,
     NULL, NULL,
-    NULL,
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9485,7 +9222,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak_dock_printer_init, NULL,
     &kodak_dock_plane_init, NULL,
     NULL, NULL,
-    NULL,
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9501,7 +9237,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak_68xx_printer_init, NULL,
     NULL, NULL, /* No plane funcs */
     NULL, NULL, /* No block funcs */
-    NULL,
     &kodak_6800_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9517,7 +9252,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak_68xx_printer_init, NULL,
     NULL, NULL, /* No plane funcs */
     NULL, NULL, /* No block funcs */
-    NULL,
     &kodak_6800_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9533,7 +9267,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak_605_printer_init, NULL,
     NULL, NULL, /* No plane funcs */
     NULL, NULL, /* No block funcs */
-    NULL,
     &kodak_605_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9551,7 +9284,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak_1400_printer_init, NULL,
     NULL, NULL,
     NULL, NULL,
-    NULL,
     &kodak_6800_overcoat_list, &kodak_1400_media_list,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9569,7 +9301,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak_805_printer_init, NULL,
     NULL, NULL, /* No plane funcs */
     NULL, NULL, /* No block funcs */
-    NULL,
     &kodak_6800_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9586,7 +9317,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak_9810_printer_init, &kodak_9810_printer_end,
     &kodak_9810_plane_init, NULL,
     NULL, NULL, /* No block funcs */
-    NULL,
     &kodak_9810_overcoat_list, NULL,
     NULL, NULL,
     kodak_9810_parameters,
@@ -9605,7 +9335,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak_8810_printer_init, NULL,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
-    NULL,
     &kodak_8810_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9621,7 +9350,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak_70xx_printer_init, NULL,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
-    NULL,
     &kodak_8810_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9637,7 +9365,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak_6900_printer_init, NULL,
     NULL, NULL,  /* No planes */
     NULL, NULL,  /* No blocks */
-    NULL,
     &kodak_6900_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9653,7 +9380,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak_70xx_printer_init, NULL,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
-    NULL,
     &kodak_8810_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9669,7 +9395,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak_8500_printer_init, &kodak_8500_printer_end,
     NULL, NULL, /* No plane funcs */
     NULL, NULL, /* No block funcs */
-    NULL,
     &kodak_8500_overcoat_list, &kodak_8500_media_list,
     NULL, NULL,
     kodak_8500_parameters,
@@ -9689,7 +9414,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cp3020d_printer_init, &mitsu_cp3020d_printer_end,
     &mitsu_cp3020d_plane_init, &mitsu_cp3020d_plane_end,
     NULL, NULL, /* No block funcs */
-    NULL,
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9706,7 +9430,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cp3020da_printer_init, &mitsu_cp3020da_printer_end,
     &mitsu_cp3020da_plane_init, NULL,
     NULL, NULL, /* No block funcs */
-    NULL,
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9723,7 +9446,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cp9550_printer_init, &mitsu_cp9550_printer_end,
     &mitsu_cp3020da_plane_init, NULL,
     NULL, NULL, /* No block funcs */
-    NULL,
     NULL, NULL,
     NULL, NULL,
     mitsu9550_parameters,
@@ -9743,7 +9465,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cp9810_printer_init, &mitsu_cp9810_printer_end,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
-    NULL,
     &mitsu_cp9810_overcoat_list, NULL,
     NULL, NULL,
     mitsu98xx_parameters,
@@ -9762,7 +9483,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cpd70x_printer_init, NULL,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
-    NULL,
     &mitsu_cpd70x_overcoat_list, NULL,
     mitsu_cpd70k60_job_start, NULL,
     mitsu70x_parameters,
@@ -9781,7 +9501,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cpk60_printer_init, NULL,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
-    NULL,
     &mitsu_cpd70x_overcoat_list, NULL,
     mitsu_cpd70k60_job_start, NULL,
     mitsu70x_parameters,
@@ -9800,7 +9519,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cpd70x_printer_init, NULL,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
-    NULL,
     &mitsu_cpd70x_overcoat_list, NULL,
     mitsu_cpd70k60_job_start, NULL,
     mitsu70x_parameters,
@@ -9819,7 +9537,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak305_printer_init, NULL,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
-    NULL,
     &mitsu_cpd70x_overcoat_list, NULL,
     mitsu_cpd70k60_job_start, NULL,
     mitsu70x_parameters,
@@ -9838,7 +9555,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cpd90_printer_init, NULL,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
-    NULL,
     &mitsu_cpd70x_overcoat_list, NULL,
     NULL, mitsu_cpd90_job_end,
     mitsu_d90_parameters,
@@ -9858,7 +9574,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cp9600_printer_init, &mitsu_cp9600_printer_end,
     &mitsu_cp3020da_plane_init, NULL,
     NULL, NULL, /* No block funcs */
-    NULL,
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -9875,7 +9590,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cp9550_printer_init, &mitsu_cp9550s_printer_end,
     &mitsu_cp3020da_plane_init, NULL,
     NULL, NULL, /* No block funcs */
-    NULL,
     NULL, NULL,
     NULL, NULL,
     mitsu9550_parameters,
@@ -9894,7 +9608,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &fuji_ask300_printer_init, NULL,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
-    NULL,
     &mitsu_cpd70x_overcoat_list, NULL,
     mitsu_cpd70k60_job_start, NULL,
     mitsu70x_parameters,
@@ -9914,7 +9627,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cp9800_printer_init, &mitsu_cp9810_printer_end,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
-    NULL,
     NULL, NULL,
     NULL, NULL,
     mitsu98xx_parameters,
@@ -9934,7 +9646,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_p95d_printer_init, &mitsu_p95d_printer_end,
     &mitsu_p95d_plane_start, NULL,
     NULL, NULL, /* No block funcs */
-    NULL,
     NULL, &mitsu_p95d_media_list,
     NULL, NULL,
     mitsu_p95d_parameters,
@@ -9954,7 +9665,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cp9500_printer_init, &mitsu_cp9500_printer_end,
     &mitsu_cp3020da_plane_init, NULL,
     NULL, NULL, /* No block funcs */
-    NULL,
     NULL, NULL,
     NULL, NULL,
     mitsu9500_parameters,
@@ -9974,7 +9684,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_p93d_printer_init, &mitsu_p95d_printer_end,
     &mitsu_p95d_plane_start, NULL,
     NULL, NULL, /* No block funcs */
-    NULL,
     NULL, &mitsu_p93d_media_list,
     NULL, NULL,
     mitsu_p93d_parameters,
@@ -9993,7 +9702,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cpd70x_printer_init, NULL,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
-    NULL,
     &mitsu_cpd70x_overcoat_list, NULL,
     mitsu_cpd70k60_job_start, NULL,
     mitsu707_parameters,
@@ -10012,7 +9720,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &fuji_ask2000_printer_init, &fuji_ask2000_printer_end,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
-    NULL,
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -10028,7 +9735,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &fuji_ask4000_printer_init, &fuji_ask4000_printer_end,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
-    NULL,
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -10044,7 +9750,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &shinko_chcs9045_printer_init, NULL,
     NULL, NULL,
     NULL, NULL,
-    NULL,
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -10060,7 +9765,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &shinko_chcs2145_printer_init, &shinko_chcs2145_printer_end,
     NULL, NULL,  /* No planes */
     NULL, NULL,  /* No blocks */
-    NULL,
     &shinko_chcs2145_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -10076,7 +9780,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &shinko_chcs1245_printer_init, &shinko_chcs2145_printer_end,
     NULL, NULL,  /* No planes */
     NULL, NULL,  /* No blocks */
-    NULL,
     &shinko_chcs1245_overcoat_list, NULL,
     NULL, NULL,
     shinko_chcs1245_parameters,
@@ -10095,7 +9798,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &shinko_chcs6245_printer_init, &shinko_chcs2145_printer_end,
     NULL, NULL,  /* No planes */
     NULL, NULL,  /* No blocks */
-    NULL,
     &shinko_chcs6245_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -10118,7 +9820,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &shinko_chcs6145_printer_init, &shinko_chcs2145_printer_end,
     NULL, NULL,  /* No planes */
     NULL, NULL,  /* No blocks */
-    NULL,
     &shinko_chcs6145_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -10141,7 +9842,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &shinko_chcs6145_printer_init, &shinko_chcs2145_printer_end,
     NULL, NULL,  /* No planes */
     NULL, NULL,  /* No blocks */
-    NULL,
     &shinko_chcs6145_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -10164,7 +9864,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &shinko_chcs2245_printer_init, &shinko_chcs2145_printer_end,
     NULL, NULL,  /* No planes */
     NULL, NULL,  /* No blocks */
-    NULL,
     &shinko_chcs6145_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -10181,7 +9880,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &dnpds40_printer_start, &dnpds40_printer_end,
     &dnpds40_plane_init, NULL,
     NULL, NULL,
-    NULL,
     &dnpds40_overcoat_list, NULL,
     NULL, NULL,
     ds40_parameters,
@@ -10201,8 +9899,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &dnpds80_printer_start, &dnpds40_printer_end,
     &dnpds40_plane_init, NULL,
     NULL, NULL,
-    NULL,
-    &dnpds40_overcoat_list, NULL,
+     &dnpds40_overcoat_list, NULL,
     NULL, NULL,
     ds40_parameters,
     ds40_parameter_count,
@@ -10221,7 +9918,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &dnpdsrx1_printer_start, &dnpds40_printer_end,
     &dnpds40_plane_init, NULL,
     NULL, NULL,
-    NULL,
     &dnpds40_overcoat_list, NULL,
     NULL, NULL,
     ds40_parameters,
@@ -10241,7 +9937,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &dnpds620_printer_start, &dnpds40_printer_end,
     &dnpds40_plane_init, NULL,
     NULL, NULL,
-    NULL,
     &dnpds620_overcoat_list, NULL,
     NULL, NULL,
     ds40_parameters,
@@ -10261,7 +9956,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &citizen_cw01_printer_start, &dnpds40_printer_end,
     &dnpds40_plane_init, NULL,
     NULL, NULL,
-    NULL,
     NULL, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
@@ -10278,7 +9972,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &dnpds80_printer_start, &dnpds40_printer_end,
     &dnpds40_plane_init, NULL,
     NULL, NULL,
-    NULL,
     &dnpds40_overcoat_list, &dnpds80dx_media_list,
     NULL, NULL,
     ds40_parameters,
@@ -10298,7 +9991,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &dnpds820_printer_start, &dnpds40_printer_end,
     &dnpds40_plane_init, NULL,
     NULL, NULL,
-    NULL,
     &dnpds620_overcoat_list, NULL,
     NULL, NULL,
     ds820_parameters,
@@ -10318,7 +10010,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &magicard_printer_init, &magicard_printer_end,
     NULL, magicard_plane_end,
     NULL, NULL,
-    NULL,
     &magicard_overcoat_list, NULL,
     NULL, NULL,
     magicard_parameters,
@@ -10338,7 +10029,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &magicard_printer_init, &magicard_printer_end,
     NULL, magicard_plane_end,
     NULL, NULL,
-    NULL,
     &magicard_overcoat_list, NULL,
     NULL, NULL,
     magicard_parameters,
@@ -11441,8 +11131,6 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image, int print_op)
   stp_channel_reset(v);
   for (i = 0; i < pv.ink_channels; i++)
     stp_channel_add(v, i, 0, 1.0);
-
-  dyesub_exec(v, caps->adjust_curves, "caps->adjust_curves");
 
   stp_set_float_parameter(v, "AppGammaScale",
 	stp_get_boolean_parameter(v, "LegacyDyesubGamma") ? 4.0 : 1.0);
