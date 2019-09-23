@@ -2968,15 +2968,18 @@ static void kodak_805_printer_init(stp_vars_t *v)
 static const dyesub_pagesize_t kodak_9810_page[] =
 {
   DEFINE_PAPER_SIMPLE( "c8x10", "8x10", PT1(2464,300), PT1(3024,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "c8x10-div2", "8x5*2", PT1(2464,300), PT1(3024,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w576h864", "8x12", PT1(2464,300), PT1(3624,300), DYESUB_PORTRAIT),
-// XXX add in 8x10-div2 and 8x12-div2 sizes!
+  DEFINE_PAPER_SIMPLE( "w576h864-div2", "8x6*2", PT1(2464,300), PT1(3624,300), DYESUB_PORTRAIT),
 };
 LIST(dyesub_pagesize_list_t, kodak_9810_page_list, dyesub_pagesize_t, kodak_9810_page);
 
 static const dyesub_printsize_t kodak_9810_printsize[] =
 {
   { "300x300", "c8x10", 2464, 3024},
+  { "300x300", "c8x10-div2", 2464, 3024},
   { "300x300", "w576h864", 2464, 3624},
+  { "300x300", "w576h864-div2", 2464, 3624},
 };
 
 LIST(dyesub_printsize_list_t, kodak_9810_printsize_list, dyesub_printsize_t, kodak_9810_printsize);
@@ -3162,36 +3165,32 @@ static void kodak_9810_printer_init(stp_vars_t *v)
   dyesub_nputc(v, 0x00, 4);
   stp_put32_be(0, v);
 
-  /* Cut list -- seems to be list of be16 row offsets for cuts. */
+  /* Cut list -- A list of be16 row offsets for cuts. */
   stp_putc(0x1b, v);
   stp_zfwrite("FlsCutList         ", 1, 19, v);
   dyesub_nputc(v, 0x00, 4);
-  stp_put32_be(4, v);
 
-  /* Cut at start/end of sheet */
-  if (pd->h_size == 3624) {
-    stp_zfwrite("\x00\x0c\x0e\x1c", 1, 4, v);
-  } else {
-    stp_zfwrite("\x00\x0c\x0b\xc4", 1, 4, v);
+  if (strcmp(pd->pagesize,"c8x10") == 0) {
+	  stp_put32_be(4, v);
+	  stp_zfwrite("\x00\x0c\x0b\xc4", 1, 4, v);
+  } else if (strcmp(pd->pagesize,"c8x10-div2") == 0) {
+	  stp_put32_be(6, v);
+	  stp_zfwrite("\x00\x0c\x05\xe8\x0b\xc4", 1, 6, v);
+	  /* XXX double slug
+	     stp_put32_be(8, v);
+	     stp_zfwrite("\x00\x0c\x05\xd5\x05\xfb\x0b\xc4", 1, 6, v);
+	  */
+  } else if (strcmp(pd->pagesize,"w576h864") == 0) {
+	  stp_put32_be(4, v);
+	  stp_zfwrite("\x00\x0c\x0e\x1c", 1, 4, v);
+  } else if (strcmp(pd->pagesize,"w576h864-div2") == 0) {
+	  stp_put32_be(6, v);
+	  stp_zfwrite("\x00\x0c\x07\x14\x0e\x1c", 1, 6, v);
+	  /* XXX double slug
+	     stp_put32_be(8, v);
+	     stp_zfwrite("\x00\x0c\x07\x01\x07\x27\x0e\x1c", 1, 6, v);
+	  */
   }
-
-#if 0  /* Additional Known Cut lists */
-  /* Single cut, down the center */
-  stp_put32_be(6, v);
-  if (pd->h_size == 3624) {
-    stp_zfwrite("\x00\x0c\x07\x14\x0e\x1c", 1, 6, v);
-  } else {
-    stp_zfwrite("\x00\x0c\x05\xe8\x0b\xc4", 1, 6, v);
-  }
-  /* Double-Slug Cut, down the center */
-  stp_put32_be(8, v);
-  if (pd->h_size == 3624) {
-    stp_zfwrite("\x00\x0c\x07\x01\x07\x27\x0e\x1c", 1, 6, v);
-  } else {
-    stp_zfwrite("\x00\x0c\x05\xd5\x05\xfb\x0b\xc4", 1, 6, v);
-  }
-#endif
-
 }
 
 static void kodak_9810_printer_end(stp_vars_t *v)
