@@ -993,8 +993,9 @@ int mitsud90_get_info(struct mitsud90_ctx *ctx)
 		DEBUG2(" %02x", resp.x65[num]);
 	}
 	DEBUG2("\n");
-	INFO("TYPE_1e: %82x\n", resp.x82);
-	INFO("TYPE_1e: %83x\n", resp.x83);
+	INFO("TYPE_82: %02x\n", resp.x82);
+	INFO("TYPE_83: %02x\n", resp.x83);
+	INFO("TYPE_84: %02x\n", resp.x84);
 
 	/* XXX Dump iSerial, sleep time settings */
 	// XXX what about resume, wait time, "cut limit" ?
@@ -1216,7 +1217,7 @@ static const char *mitsud90_prefixes[] = {
 /* Exported */
 struct dyesub_backend mitsud90_backend = {
 	.name = "Mitsubishi CP-D90DW",
-	.version = "0.13",
+	.version = "0.14",
 	.uri_prefixes = mitsud90_prefixes,
 	.cmdline_arg = mitsud90_cmdline_arg,
 	.cmdline_usage = mitsud90_cmdline,
