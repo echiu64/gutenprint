@@ -86,6 +86,9 @@ struct dnpds40_ctx {
 
 	/* State */
 	uint32_t media;
+	uint32_t media_subtype;
+
+	char     media_text[32];
 	uint32_t duplex_media;
 	int      duplex_media_status;
 	uint16_t media_count_new;
@@ -443,8 +446,8 @@ static const char *dnpds40_media_types(int media)
 static const char *dnpds620_media_extension_code(int media)
 {
 	switch (media) {
-	case 00: return "Normal Paper";
-	case 01: return "Sticky Paper";
+	case  0: return "Normal Paper";
+	case  1: return "Sticky Paper";
 	case 99: return "Unknown Paper";
 	default:
 		break;
@@ -456,8 +459,8 @@ static const char *dnpds620_media_extension_code(int media)
 static const char *dnpds820_media_subtypes(int media)
 {
 	switch (media) {
-	case 0001: return "SD";
-	case 0003: return "PP";
+	case 1: return "SD";
+	case 3: return "PP";
 	default:
 		break;
 	}
@@ -853,6 +856,18 @@ static int dnpds40_attach(void *vctx, struct libusb_device_handle *dev, int type
 			return CUPS_BACKEND_FAILED;
 		}
 
+		/* Try to figure out media subtype */
+		if (ctx->type == P_DNP_DS820) {
+			dnpds40_build_cmd(&cmd, "INFO", "MEDIA_CLASS_RFID", 0);
+			resp = dnpds40_resp_cmd(ctx, &cmd, &len);
+			if (!resp)
+				return CUPS_BACKEND_FAILED;
+
+			dnpds40_cleanup_string((char*)resp, len);
+			ctx->media_subtype = atoi((char*)resp);
+			free(resp);
+		}
+
 		if (ctx->type == P_DNP_DS80D) {
 			if (dnpds80dx_query_paper(ctx))
 				return CUPS_BACKEND_FAILED;
@@ -1157,12 +1172,60 @@ static int dnpds40_attach(void *vctx, struct libusb_device_handle *dev, int type
 				break;
 			}
 			break;
+		case P_DNP_DS620:
+			switch (ctx->media) {
+			case 200: // L
+				ctx->media_count_new = 420;
+				break;
+			case 210: // 2L
+				ctx->media_count_new = 230;
+				break;
+			case 300: // PC
+				ctx->media_count_new = 400;
+				break;
+			case 310: // A5
+				ctx->media_count_new = 200;
+				break;
+			case 400: // A5W
+				ctx->media_count_new = 180;
+				break;
+			default:
+				ctx->media_count_new = 0;
+				break;
+			}
+			break;
+		case P_DNP_DS820:
+			ctx->media_subtype = 1;
+			switch (ctx->media) {
+			case 500: // 8x10
+				ctx->media_count_new = 260; // ???
+				break;
+			case 510: // 8x12
+				ctx->media_count_new = 220; // ???
+				break;
+			case 600: // A4
+				ctx->media_count_new = 220; // ???
+				break;
+			default:
+				ctx->media_count_new = 0;
+				break;
+			}
+			break;
 		default:
 			ctx->media_count_new = 0;
 			break;
 		}
 	}
 
+	/* Fill out marker message */
+	if (ctx->type == P_DNP_DS820) {
+		snprintf(ctx->media_text, sizeof(ctx->media_text),
+			 "%s %s", dnpds40_media_types(ctx->media),
+			 dnpds820_media_subtypes(ctx->media_subtype));
+	} else {
+		snprintf(ctx->media_text, sizeof(ctx->media_text),
+			 "%s", dnpds40_media_types(ctx->media));
+	}
 	/* Fill out marker structure */
 	ctx->marker[0].color = "#00FFFF#FF00FF#FFFF00";
 	ctx->marker[0].name = dnpds40_media_types(ctx->media);
@@ -2606,16 +2669,7 @@ static int dnpds40_get_status(struct dnpds40_ctx *ctx)
 
 	/* Try to figure out media subtype */
 	if (ctx->type == P_DNP_DS820) {
-		int type;
-		dnpds40_build_cmd(&cmd, "INFO", "MEDIA_CLASS_RFID", 0);
-		resp = dnpds40_resp_cmd(ctx, &cmd, &len);
-		if (!resp)
-			return CUPS_BACKEND_FAILED;
-
-		dnpds40_cleanup_string((char*)resp, len);
-		type = atoi((char*)resp);
-		INFO("Media Subtype: %s\n", dnpds820_media_subtypes(type));
-		free(resp);
+		INFO("Media Subtype: %s\n", dnpds820_media_subtypes(ctx->media_subtype));
 	}
 
 	/* Report Cut Media */
@@ -3070,7 +3124,7 @@ static const char *dnpds40_prefixes[] = {
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS-series / Citizen C-series",
-	.version = "0.117",
+	.version = "0.118",
 	.uri_prefixes = dnpds40_prefixes,
 	.flags = BACKEND_FLAG_JOBLIST,
 	.cmdline_usage = dnpds40_cmdline,
