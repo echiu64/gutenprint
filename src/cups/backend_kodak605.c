@@ -47,12 +47,6 @@
 #define USB_PID_KODAK_7010  0x4037
 #define USB_PID_KODAK_7015  0x4038
 
-/* List of confirmed commands */
-//#define SINFONIA_CMD_GETSTATUS  0x0001
-//#define SINFONIA_CMD_MEDIAINFO  0x0002
-//#define SINFONIA_CMD_PRINTJOB   0x4001
-//#define SINFONIA_CMD_UPDATE     0xC004
-
 /* Media structure */
 struct kodak605_media_list {
 	struct sinfonia_status_hdr hdr;
@@ -62,7 +56,7 @@ struct kodak605_media_list {
 	struct sinfonia_mediainfo_item entries[];
 } __attribute__((packed));
 
-#define MAX_MEDIA_LEN 128
+#define MAX_MEDIA_LEN (sizeof(struct kodak605_media_list) + sizeof(struct sinfonia_mediainfo_item) * 10)
 
 /* Status response */
 struct kodak605_status {
@@ -99,7 +93,59 @@ struct kodak605_status {
 /*@76*/	uint8_t  null_3[1]; /* EK7000 only */
 } __attribute__((packed));
 
-#define CMDBUF_LEN 4
+static const struct sinfonia_param ek7000_params[] =
+{
+	{ 0x01, "Unknown_01" }, // 00000001
+	{ 0x11, "Unknown_11" }, // 00000001
+	{ 0x12, "Matte Gloss" }, // 00000069
+	{ 0x13, "Matte Degloss Black" }, // 000000c3
+	{ 0x14, "Matte Degloss White" }, // 000000cd
+	{ 0x21, "Exit Speed With Sorter 4x6" }, // 000003e8
+	{ 0x22, "Exit Speed With Sorter 8x6" }, // 0000041a
+	{ 0x23, "Exit Speed With Backprinting" }, // 00000152
+	{ 0x24, "Exit Speed Without PPAC 4x6" }, // 0000044c
+	{ 0x25, "Exit Speed Without PPAC 8x6" }, // 0000044c
+
+	{ 0x2f, "Unknown_2f" }, // 00000320
+	{ 0x41, "Unknown_41" }, // 0000006d
+	{ 0x42, "Unknown_42" }, // 00000051
+	{ 0x43, "Unknown_43" }, // 0000003b
+	{ 0x44, "Unknown_44" }, // 00000082
+	{ 0x45, "Unknown_45" }, // 00000000
+	{ 0x46, "Unknown_46" }, // 00000000
+	{ 0x47, "Unknown_47" }, // 00000028
+	{ 0x48, "Unknown_48" }, // 00000002
+	{ 0x81, "Unknown_81" }, // ffffffff
+
+	{ 0x82, "Unknown_82" }, // fffffffe
+	{ 0x83, "Unknown_83" }, // ffffffee
+	{ 0x84, "Unknown_84" }, // 00000001
+	{ 0x91, "Unknown_91" }, // 0000006c
+	{ 0x92, "Unknown_92" }, // 00000077
+	{ 0x93, "Unknown_93" }, // 00000067
+	{ 0x94, "Unknown_94" }, // 00000076
+	{ 0xa0, "Unknown_a0" }, // 00000005
+	{ 0xa1, "Unknown_a1" }, // 00000000
+	{ 0xa2, "Unknown_a2" }, // 00000010
+
+	{ 0xa3, "Unknown_a3" }, // 0000003b
+	{ 0xa4, "Unknown_a4" }, // 0000003b
+	{ 0xa5, "Thermal Protect Lamination" }, // 0000003e
+	{ 0xa6, "Unknown_a6" }, // 00000001
+	{ 0xa7, "Unknown_a7" }, // 00000014
+	{ 0xa8, "Unknown_a8" }, // 00000001
+	{ 0xa9, "Unknown_a9" }, // ffffffff
+	{ 0xc1, "Unknown_c1" }, // 00000002
+	{ 0xc2, "Unknown_c2" }, // 000000c8
+	{ 0xc3, "Unknown_c3" }, // 000000c8
+
+	{ 0xc4, "Unknown_c4" }, // 00000200
+	{ 0xf1, "Unknown_f1" }, // 00000068
+	{ 0xf2, "Unknown_f2" }, // 00000068
+	{ 0xf3, "Unknown_f3" }, // 00000094
+	{ 0xf4, "Unknown_f4" }, // 00000068
+};
+#define ek7000_params_num (sizeof(ek7000_params) / sizeof(struct sinfonia_param))
 
 /* Private data structure */
 struct kodak605_ctx {
@@ -288,30 +334,6 @@ static const char *error_codes(uint8_t major, uint8_t minor)
 	}
 }
 
-static int kodak605_get_media(struct kodak605_ctx *ctx, struct kodak605_media_list *media)
-{
-	struct sinfonia_cmd_hdr cmd;
-
-	int i, ret, num = 0;
-
-	cmd.cmd = cpu_to_le16(SINFONIA_CMD_MEDIAINFO);
-	cmd.len = cpu_to_le16(0);
-
-	if ((ret = sinfonia_docmd(&ctx->dev,
-				  (uint8_t*)&cmd, sizeof(cmd),
-				  (uint8_t*)media, MAX_MEDIA_LEN,
-				  &num))) {
-		return ret;
-	}
-
-	for (i = 0 ; i < media->count; i++) {
-		media->entries[i].rows = le16_to_cpu(media->entries[i].rows);
-		media->entries[i].columns = le16_to_cpu(media->entries[i].columns);
-	}
-
-	return 0;
-}
-
 static int kodak605_get_status(struct kodak605_ctx *ctx, struct kodak605_status *sts)
 {
 	struct sinfonia_cmd_hdr cmd;
@@ -323,11 +345,11 @@ static int kodak605_get_status(struct kodak605_ctx *ctx, struct kodak605_status 
 
 	if ((ret = sinfonia_docmd(&ctx->dev,
 				  (uint8_t*)&cmd, sizeof(cmd),
-				  (uint8_t*)sts, sizeof(*sts), &num)) < 0) {
+				  (uint8_t*)sts, sizeof(*sts), &num))) {
 		return ret;
 	}
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static void *kodak605_init(void)
@@ -355,6 +377,11 @@ static int kodak605_attach(void *vctx, struct libusb_device_handle *dev, int typ
 	ctx->dev.type = type;
 	ctx->dev.error_codes = &error_codes;
 
+	if (ctx->dev.type != P_KODAK_605) {
+		ctx->dev.params = ek7000_params;
+		ctx->dev.params_count = ek7000_params_num;
+	}
+
 	/* Make sure jobid is sane */
 	ctx->jobid = jobid & 0x7f;
 	if (!ctx->jobid)
@@ -362,10 +389,10 @@ static int kodak605_attach(void *vctx, struct libusb_device_handle *dev, int typ
 
 	if (test_mode < TEST_MODE_NOATTACH) {
 		/* Query media info */
-		if (kodak605_get_media(ctx, ctx->media)) {
-			ERROR("Can't query media\n");
-			return CUPS_BACKEND_FAILED;
-		}
+		int ret = sinfonia_query_media(&ctx->dev,
+					       ctx->media);
+		if (ret)
+			return ret;
 	} else {
 		int media_code = KODAK6_MEDIA_6TR2;
 		if (getenv("MEDIA_CODE"))
@@ -420,6 +447,7 @@ static int kodak605_main_loop(void *vctx, const void *vjob) {
 	struct kodak605_status sts;
 
 	int num, ret;
+	int offset = 0;
 
 	const struct sinfonia_printjob *job = vjob;
 
@@ -498,6 +526,43 @@ static int kodak605_main_loop(void *vctx, const void *vjob) {
 		sleep(1);
 	}
 
+	/* Send backprint */
+	if (job->jp.ext_flags & EXT_FLAG_BACKPRINT && offset == 0) {
+		struct kodak701x_backprint bp;
+		INFO("Sending backprint text..\n");
+		bp.hdr.cmd = cpu_to_le16(SINFONIA_CMD_BACKPRINT);
+		bp.hdr.len = cpu_to_le16(sizeof(bp) - sizeof(bp.hdr));
+
+		/* Line 1 */
+		bp.unk_0 = job->databuf[offset + 0];
+		memset(bp.null, 0, sizeof(bp.null));
+		bp.unk_1 = job->databuf[offset + 1];
+		memcpy(bp.text, &job->databuf[offset + 2], sizeof(bp.text));
+
+		if ((ret = sinfonia_docmd(&ctx->dev,
+					  (uint8_t*)&bp, sizeof(bp),
+					  (uint8_t*)&sts.hdr, sizeof(sts.hdr),
+					  &num))) {
+			return ret;
+		}
+		offset += 44;
+
+		/* Line 2 */
+		bp.unk_0 = job->databuf[offset + 0];
+		memset(bp.null, 0, sizeof(bp.null));
+		bp.unk_1 = job->databuf[offset + 1];
+		memcpy(bp.text, &job->databuf[offset + 2], sizeof(bp.text));
+
+		if ((ret = sinfonia_docmd(&ctx->dev,
+					  (uint8_t*)&bp, sizeof(bp),
+					  (uint8_t*)&sts.hdr, sizeof(sts.hdr),
+					  &num))) {
+			return ret;
+		}
+		offset += 44;
+		// XXX sanity check backpriny parameters..
+	}
+
 	/* Send print job */
 	struct sinfonia_printcmd10_hdr hdr;
 
@@ -518,7 +583,7 @@ retry_print:
 	if ((ret = sinfonia_docmd(&ctx->dev,
 				  (uint8_t*)&hdr, sizeof(hdr),
 				  (uint8_t*)&sts.hdr, sizeof(sts.hdr),
-				  &num)) < 0) {
+				  &num))) {
 		return ret;
 	}
 
@@ -544,7 +609,7 @@ retry_print:
 
 	INFO("Sending image data\n");
 	if ((ret = send_data(ctx->dev.dev, ctx->dev.endp_down,
-			     job->databuf, job->datalen)))
+			     job->databuf + offset, job->datalen - offset)))
 		return CUPS_BACKEND_FAILED;
 
 	INFO("Waiting for printer to acknowledge completion\n");
@@ -621,20 +686,7 @@ static void kodak605_dump_status(struct kodak605_ctx *ctx, struct kodak605_statu
 	INFO("Head prints       : %u\n", le32_to_cpu(sts->ctr_head));
 	INFO("Media prints      : %u\n", le32_to_cpu(sts->ctr_media));
 	{
-		int max;
-
-		switch(ctx->media->type) {
-		case KODAK6_MEDIA_6R:
-		case KODAK6_MEDIA_6TR2:
-			max = 375;
-			break;
-		case KODAK7_MEDIA_6R:
-			max = 570;
-			break;
-		default:
-			max = 0;
-			break;
-		}
+		int max = kodak6_mediamax(ctx->media->type);
 
 		if (max) {
 			INFO("\t  Remaining     : %u\n", max - le32_to_cpu(sts->ctr_media));
@@ -668,6 +720,7 @@ static void kodak605_dump_mediainfo(struct kodak605_media_list *media)
 
 static void kodak605_cmdline(void)
 {
+	DEBUG("\t\t[ -b 0|1 ]       # Disable/Enable control panel\n");
 	DEBUG("\t\t[ -c filename ]  # Get user/NV tone curve\n");
 	DEBUG("\t\t[ -C filename ]  # Set tone curve\n");
 	DEBUG("\t\t[ -e ]           # Query error log\n");
@@ -680,6 +733,7 @@ static void kodak605_cmdline(void)
 	DEBUG("\t\t[ -R ]           # Reset printer to factory defaults\n");
 	DEBUG("\t\t[ -s ]           # Query status\n");
 	DEBUG("\t\t[ -X jobid ]     # Cancel job\n");
+//	DEBUG("\t\t[ -Z 0|1 ]       # Dump all parameters\n");
 }
 
 static int kodak605_cmdline_arg(void *vctx, int argc, char **argv)
@@ -690,14 +744,22 @@ static int kodak605_cmdline_arg(void *vctx, int argc, char **argv)
 	if (!ctx)
 		return -1;
 
-	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "c:C:eFil:L:mrRsX:")) >= 0) {
+	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "b:c:C:eFil:L:mrRsX:Z:")) >= 0) {
 		switch(i) {
 		GETOPT_PROCESS_GLOBAL
+		case 'b':
+			if (optarg[0] == '1')
+				j = sinfonia_button_set(&ctx->dev, BUTTON_ENABLED);
+			else if (optarg[0] == '0')
+				j = sinfonia_button_set(&ctx->dev, BUTTON_DISABLED);
+			else
+				return -1;
+			break;
 		case 'c':
 			j = sinfonia_gettonecurve(&ctx->dev, TONECURVE_USER, optarg);
 			break;
 		case 'C':
-			j = sinfonia_settonecurve(&ctx->dev, TONECURVE_USER, optarg);
+			j = sinfonia_settonecurve(&ctx->dev, UPDATE_TARGET_TONE_USER, optarg);
 			break;
 		case 'e':
 			j = sinfonia_geterrorlog(&ctx->dev);
@@ -712,7 +774,7 @@ static int kodak605_cmdline_arg(void *vctx, int argc, char **argv)
 			j = sinfonia_gettonecurve(&ctx->dev, TONECURVE_CURRENT, optarg);
 			break;
 		case 'L':
-			j = sinfonia_settonecurve(&ctx->dev, TONECURVE_CURRENT, optarg);
+			j = sinfonia_settonecurve(&ctx->dev, UPDATE_TARGET_TONE_CURRENT, optarg);
 			break;
 		case 'm':
 			kodak605_dump_mediainfo(ctx->media);
@@ -730,10 +792,13 @@ static int kodak605_cmdline_arg(void *vctx, int argc, char **argv)
 			if (!j)
 				kodak605_dump_status(ctx, &sts);
 			break;
+		}
 		case 'X':
 			j = sinfonia_canceljob(&ctx->dev, atoi(optarg));
 			break;
-		}
+		case 'Z':
+			j = sinfonia_dumpallparams(&ctx->dev, atoi(optarg));
+			break;
 		default:
 			break;  /* Ignore completely */
 		}
@@ -741,7 +806,7 @@ static int kodak605_cmdline_arg(void *vctx, int argc, char **argv)
 		if (j) return j;
 	}
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static int kodak605_query_markers(void *vctx, struct marker **markers, int *count)
@@ -770,7 +835,7 @@ static const char *kodak605_prefixes[] = {
 /* Exported */
 struct dyesub_backend kodak605_backend = {
 	.name = "Kodak 605/70xx",
-	.version = "0.46" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.51" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = kodak605_prefixes,
 	.cmdline_usage = kodak605_cmdline,
 	.cmdline_arg = kodak605_cmdline_arg,

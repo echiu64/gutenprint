@@ -66,9 +66,79 @@ struct s6245_print_cmd {
 	uint8_t  reserved2;
 } __attribute__((packed));
 
+static const struct sinfonia_param ek8810_params[] =
+{
+	{ 0x01, "Unknown_01" }, // 00000001
+	{ 0x11, "Unknown_11" }, // 00000001
+	{ 0x12, "? Matte Gloss" }, // 00000069
+	{ 0x13, "? Matte Degloss Black" }, // 000000c3
+	{ 0x14, "? Matte Degloss White" }, // 000000cd
+	{ 0x21, "Unknown_21" }, // 000003e8
+	{ 0x22, "Unknown_22" }, // 0000041a
+	{ 0x23, "Unknown_23" }, // 00000152
+	{ 0x24, "Unknown_24" }, // 0000044c
+	{ 0x25, "Unknown_25" }, // 0000044c
+
+	{ 0x2f, "Unknown_2f" }, // 00000320
+	{ 0x41, "Unknown_41" }, // 0000005d
+	{ 0x42, "Unknown_42" }, // 00000048
+	{ 0x43, "Unknown_43" }, // 0000007c
+	{ 0x44, "Unknown_44" }, // 00000088
+	{ 0x45, "Unknown_45" }, // 00000000
+	{ 0x46, "Unknown_46" }, // 00000002
+	{ 0x47, "Unknown_47" }, // 00000063
+	{ 0x48, "Unknown_48" }, // 00000008
+	{ 0x61, "Unknown_61" }, // 00000050
+
+	{ 0x62, "Unknown_62" }, // 00000031
+	{ 0x63, "Unknown_63" }, // 00000030
+	{ 0x64, "Unknown_64" }, // 00000030
+	{ 0x81, "Unknown_81" }, // ffffffff
+	{ 0x82, "Unknown_82" }, // fffffff9
+	{ 0x83, "Unknown_83" }, // fffffffc
+	{ 0x84, "Unknown_84" }, // 00000002
+	{ 0x8a, "Unknown_8a" }, // 00000005
+	{ 0x8b, "Unknown_8b" }, // 00000005
+	{ 0x8c, "Unknown_8c" }, // 00000000
+
+	{ 0x8d, "Unknown_8d" }, // 00000000
+	{ 0x91, "Unknown_91" }, // 0000007e
+	{ 0x92, "Unknown_92" }, // 0000007d
+	{ 0x93, "Unknown_93" }, // 00000077
+	{ 0xa0, "Unknown_a0" }, // 00000005
+	{ 0xa1, "Unknown_a1" }, // 00000000
+	{ 0xa2, "Unknown_a2" }, // 00000008
+	{ 0xa3, "Unknown_a3" }, // 00000030
+	{ 0xa4, "Unknown_a4" }, // 00000030
+	{ 0xa5, "? Thermal Protect Lamination" }, // 00000046
+
+	{ 0xa6, "Unknown_a6" }, // 00000001
+	{ 0xa7, "Unknown_a7" }, // 00000014
+	{ 0xa8, "Unknown_a8" }, // 00000001
+	{ 0xa9, "Unknown_a9" }, // ffffffff
+	{ 0xc1, "Unknown_c1" }, // 00000002
+	{ 0xc2, "Unknown_c2" }, // 000000c8
+	{ 0xc3, "Unknown_c3" }, // 000000c8
+	{ 0xc4, "Unknown_c4" }, // 000004d0
+	{ 0xf1, "Unknown_f1" }, // 00000022
+	{ 0xf2, "Unknown_f2" }, // 00000022
+
+	{ 0xf3, "Unknown_f3" }, // 00000047
+	{ 0xf4, "Unknown_f4" }, // 00000022
+};
+#define ek8810_params_num (sizeof(ek8810_params) / sizeof(struct sinfonia_param))
+
 #define PARAM_DRIVER_MODE  0x3e
 #define PARAM_PAPER_MODE   0x3f
 #define PARAM_SLEEP_TIME   0x54
+
+static const struct sinfonia_param s6245_params[] =
+{
+	{ PARAM_DRIVER_MODE, "Driver Mode/Wizard" },
+	{ PARAM_PAPER_MODE,  "Paper Load Mode" },
+	{ PARAM_SLEEP_TIME,  "Sleep Time" },
+};
+#define s6245_params_num (sizeof(s6245_params) / sizeof(struct sinfonia_param))
 
 #define PARAM_DRIVER_WIZOFF 0x00000000
 #define PARAM_DRIVER_WIZON  0x00000001
@@ -565,20 +635,12 @@ struct s6245_geteeprom_resp {
 	uint8_t data[256];
 } __attribute__((packed));
 
-struct s6245_mediainfo_resp {
-	struct sinfonia_status_hdr hdr;
-	uint8_t ribbon_code;
-	uint8_t reserved;
-	uint8_t count;
-	struct sinfonia_mediainfo_item items[10];  /* Not all necessarily used */
-} __attribute__((packed));
-
 #define RIBBON_NONE 0x00
 #define RIBBON_8x10 0x11
 #define RIBBON_8x12 0x12
 
-#define RIBBON_8x10K 0x03  /* XXX GUESS - EK8810 */
-#define RIBBON_8x12K 0x04  /* EK8810 */
+#define RIBBON_8x10K 0x03  /* XXX GUESS - EK8810 (129-4966/109-9787) */
+#define RIBBON_8x12K 0x04  /* EK8810 (127-7268/115-6413 or equiv) */
 
 static const char *ribbon_sizes (uint8_t v) {
 	switch (v) {
@@ -602,7 +664,7 @@ static int ribbon_counts (uint8_t v) {
 	case RIBBON_8x12:
 		return 100;
 	case RIBBON_8x10K:
-		return 250;
+		return 300;
 	case RIBBON_8x12K:
 		return 250;
 	default:
@@ -650,7 +712,7 @@ struct shinkos6245_ctx {
 
 	struct marker marker;
 
-	struct s6245_mediainfo_resp media;
+	struct sinfonia_6x45_mediainfo_resp media;
 };
 
 #define CMDBUF_LEN sizeof(struct s6245_print_cmd)
@@ -668,7 +730,7 @@ static int get_status(struct shinkos6245_ctx *ctx)
 	if ((ret = sinfonia_docmd(&ctx->dev,
 				  (uint8_t*)&cmd, sizeof(cmd),
 				  (uint8_t*) &resp, sizeof(resp),
-				  &num)) < 0) {
+				  &num))) {
 		return ret;
 	}
 
@@ -683,8 +745,10 @@ static int get_status(struct shinkos6245_ctx *ctx)
 		     resp.hdr.printer_major,
 		     resp.hdr.printer_minor, ctx->dev.error_codes(resp.hdr.printer_major, resp.hdr.printer_minor));
 	}
+
+	/* Sanity checking */
 	if (le16_to_cpu(resp.hdr.payload_len) != (sizeof(struct s6245_status_resp) - sizeof(struct sinfonia_status_hdr)))
-		return 0;
+		return CUPS_BACKEND_OK;
 
 	INFO(" Print Counts:\n");
 	INFO("\tSince Paper Changed:\t%08u\n", le32_to_cpu(resp.count_paper));
@@ -713,7 +777,7 @@ static int get_status(struct shinkos6245_ctx *ctx)
 
 	/* Query Extended counters */
 	if (ctx->dev.type == P_KODAK_8810)
-		return 0; /* Kodak 8810 returns 12 bytes of garbage. */
+		return CUPS_BACKEND_OK; /* Kodak 8810 returns 12 bytes of garbage. */
 
 	cmd.cmd = cpu_to_le16(SINFONIA_CMD_EXTCOUNTER);
 	cmd.len = cpu_to_le16(0);
@@ -721,18 +785,18 @@ static int get_status(struct shinkos6245_ctx *ctx)
 	if ((ret = sinfonia_docmd(&ctx->dev,
 				  (uint8_t*)&cmd, sizeof(cmd),
 				  (uint8_t*)&resp2, sizeof(resp2),
-				  &num)) < 0) {
+				  &num))) {
 		return ret;
 	}
 
 	if (le16_to_cpu(resp2.hdr.payload_len) < 12)
-		return 0;
+		return CUPS_BACKEND_OK;
 
 	INFO("Lifetime Distance: %08u inches\n", le32_to_cpu(resp2.lifetime_distance));
 	INFO("Maintenance Distance: %08u inches\n", le32_to_cpu(resp2.maint_distance));
 	INFO("Head Distance: %08u inches\n", le32_to_cpu(resp2.head_distance));
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static int get_errorlog(struct shinkos6245_ctx *ctx)
@@ -752,7 +816,7 @@ static int get_errorlog(struct shinkos6245_ctx *ctx)
 		if ((ret = sinfonia_docmd(&ctx->dev,
 					  (uint8_t*)&cmd, sizeof(cmd),
 					  (uint8_t*)&resp, sizeof(resp),
-					  &num)) < 0) {
+					  &num))) {
 			return ret;
 		}
 
@@ -770,10 +834,10 @@ static int get_errorlog(struct shinkos6245_ctx *ctx)
 		     resp.printer_thermistor, resp.head_thermistor, resp.printer_humidity);
 	} while (++i < le16_to_cpu(resp.error_count));
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
-static void dump_mediainfo(struct s6245_mediainfo_resp *resp)
+static void dump_mediainfo(struct sinfonia_6x45_mediainfo_resp *resp)
 {
 	int i;
 
@@ -792,6 +856,7 @@ static void dump_mediainfo(struct s6245_mediainfo_resp *resp)
 
 static void shinkos6245_cmdline(void)
 {
+	DEBUG("\t\t[ -b 0|1 ]       # Disable/Enable control panel\n");
 	DEBUG("\t\t[ -c filename ]  # Get user/NV tone curve\n");
 	DEBUG("\t\t[ -C filename ]  # Set user/NV tone curve\n");
 	DEBUG("\t\t[ -e ]           # Query error log\n");
@@ -805,6 +870,7 @@ static void shinkos6245_cmdline(void)
 	DEBUG("\t\t[ -R ]           # Reset printer to factory defaults\n");
 	DEBUG("\t\t[ -s ]           # Query status\n");
 	DEBUG("\t\t[ -X jobid ]     # Abort a printjob\n");
+//	DEBUG("\t\t[ -Z ]           # Dump all parameters\n");
 }
 
 int shinkos6245_cmdline_arg(void *vctx, int argc, char **argv)
@@ -815,14 +881,24 @@ int shinkos6245_cmdline_arg(void *vctx, int argc, char **argv)
 	if (!ctx)
 		return -1;
 
-	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "c:C:eFik:l:L:mrR:sX:")) >= 0) {
+	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "b:c:C:eFik:l:L:mrR:sX:Z:")) >= 0) {
 		switch(i) {
 		GETOPT_PROCESS_GLOBAL
+		case 'b':
+			if (ctx->dev.type != P_KODAK_8810)
+				return -1;
+			else if (optarg[0] == '1')
+				j = sinfonia_button_set(&ctx->dev, BUTTON_ENABLED);
+			else if (optarg[0] == '0')
+				j = sinfonia_button_set(&ctx->dev, BUTTON_DISABLED);
+			else
+				return -1;
+			break;
 		case 'c':
 			j = sinfonia_gettonecurve(&ctx->dev, TONECURVE_USER, optarg);
 			break;
 		case 'C':
-			j = sinfonia_settonecurve(&ctx->dev, TONECURVE_USER, optarg);
+			j = sinfonia_settonecurve(&ctx->dev, UPDATE_TARGET_TONE_USER, optarg);
 			break;
 		case 'e':
 			if (ctx->dev.type == P_KODAK_8810) {
@@ -861,7 +937,7 @@ int shinkos6245_cmdline_arg(void *vctx, int argc, char **argv)
 			j = sinfonia_gettonecurve(&ctx->dev, TONECURVE_CURRENT, optarg);
 			break;
 		case 'L':
-			j = sinfonia_settonecurve(&ctx->dev, TONECURVE_CURRENT, optarg);
+			j = sinfonia_settonecurve(&ctx->dev, UPDATE_TARGET_TONE_CURRENT, optarg);
 			break;
 		case 'm':
 			dump_mediainfo(&ctx->media);
@@ -878,6 +954,9 @@ int shinkos6245_cmdline_arg(void *vctx, int argc, char **argv)
 		case 'X':
 			j = sinfonia_canceljob(&ctx->dev, atoi(optarg));
 			break;
+		case 'Z':
+			j = sinfonia_dumpallparams(&ctx->dev, atoi(optarg));
+			break;
 		default:
 			break;  /* Ignore completely */
 		}
@@ -885,7 +964,7 @@ int shinkos6245_cmdline_arg(void *vctx, int argc, char **argv)
 		if (j) return j;
 	}
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static void *shinkos6245_init(void)
@@ -905,17 +984,20 @@ static int shinkos6245_attach(void *vctx, struct libusb_device_handle *dev, int 
 {
 	struct shinkos6245_ctx *ctx = vctx;
 
-	int num;
-
 	ctx->dev.dev = dev;
 	ctx->dev.endp_up = endp_up;
 	ctx->dev.endp_down = endp_down;
 	ctx->dev.type = type;
 
-	if (type == P_KODAK_8810)
+	if (type == P_KODAK_8810) {
 		ctx->dev.error_codes = &ek8810_error_codes;
-	else
+		ctx->dev.params = ek8810_params;
+		ctx->dev.params_count = ek8810_params_num;
+	} else {
 		ctx->dev.error_codes = &s6245_error_codes;
+		ctx->dev.params = s6245_params;
+		ctx->dev.params_count = s6245_params_num;
+	}
 
 	/* Ensure jobid is sane */
 	ctx->jobid = jobid & 0x7f;
@@ -924,24 +1006,10 @@ static int shinkos6245_attach(void *vctx, struct libusb_device_handle *dev, int 
 
 	/* Query Media */
 	if (test_mode < TEST_MODE_NOATTACH) {
-		struct sinfonia_cmd_hdr cmd;
-		cmd.cmd = cpu_to_le16(SINFONIA_CMD_MEDIAINFO);
-		cmd.len = cpu_to_le16(0);
-
-		if (sinfonia_docmd(&ctx->dev,
-				   (uint8_t*)&cmd, sizeof(cmd),
-				   (uint8_t*)&ctx->media, sizeof(ctx->media),
-				   &num)) {
-			return CUPS_BACKEND_FAILED;
-		}
-
-		/* Byteswap media descriptor.. */
-		int i;
-		for (i = 0 ; i < ctx->media.count ; i++) {
-			ctx->media.items[i].columns = le16_to_cpu(ctx->media.items[i].columns);
-			ctx->media.items[i].rows = le16_to_cpu(ctx->media.items[i].rows);
-		}
-
+		int ret = sinfonia_query_media(&ctx->dev,
+					       &ctx->media);
+		if (ret)
+			return ret;
 	} else {
 		int media_code = RIBBON_8x12;
 		if (getenv("MEDIA_CODE"))
@@ -994,6 +1062,62 @@ static int shinkos6245_read_parse(void *vctx, const void **vjob, int data_fd, in
 	return CUPS_BACKEND_OK;
 }
 
+static struct kodak8810_cutlist cutlist_8x4x2 = {
+	.entries = 3,
+	.cut[0] = cpu_to_le32(12),
+	.cut[1] = cpu_to_le32(2408/2),
+	.cut[2] = cpu_to_le32(2408-12),
+};
+static struct kodak8810_cutlist cutlist_8x4x2_d = {
+	.entries = 4,
+	.cut[0] = cpu_to_le32(12),
+	.cut[1] = cpu_to_le32(2408/2 - 38/2),
+	.cut[2] = cpu_to_le32(2408/2 + 38/2),
+	.cut[3] = cpu_to_le32(2408-12),
+};
+static struct kodak8810_cutlist cutlist_8x5x2 = {
+	.entries = 3,
+	.cut[0] = cpu_to_le32(12),
+	.cut[1] = cpu_to_le32(3024/2),
+	.cut[2] = cpu_to_le32(3024-12),
+};
+static struct kodak8810_cutlist cutlist_8x5x2_d = {
+	.entries = 4,
+	.cut[0] = cpu_to_le32(12),
+	.cut[1] = cpu_to_le32(3024/2 - 38/2),
+	.cut[2] = cpu_to_le32(3024/2 + 38/2),
+	.cut[3] = cpu_to_le32(3024-12),
+};
+static struct kodak8810_cutlist cutlist_8x6x2 = {
+	.entries = 3,
+	.cut[0] = cpu_to_le32(12),
+	.cut[1] = cpu_to_le32(3624/2),
+	.cut[2] = cpu_to_le32(3624-12),
+};
+static struct kodak8810_cutlist cutlist_8x6x2_d = {
+	.entries = 4,
+	.cut[0] = cpu_to_le32(12),
+	.cut[1] = cpu_to_le32(3624/2 - 38/2),
+	.cut[2] = cpu_to_le32(3624/2 + 38/2),
+	.cut[3] = cpu_to_le32(3624-12),
+};
+static struct kodak8810_cutlist cutlist_8x4x3 = {
+	.entries = 4,
+	.cut[0] = cpu_to_le32(12),
+	.cut[1] = cpu_to_le32(3624/3),
+	.cut[2] = cpu_to_le32(3624/3 + 3624/3),
+	.cut[3] = 3624,
+};
+static struct kodak8810_cutlist cutlist_8x4x3_d = {
+	.entries = 6,
+	.cut[0] = cpu_to_le32(12),
+	.cut[1] = cpu_to_le32(3624/3 - 38/2),
+	.cut[2] = cpu_to_le32(3624/3 + 38/2),
+	.cut[3] = cpu_to_le32(3624/3 + 3624/3 - 38/2),
+	.cut[4] = cpu_to_le32(3624/3 + 3624/3 + 38/2),
+	.cut[5] = 3624,
+};
+
 static int shinkos6245_main_loop(void *vctx, const void *vjob) {
 	struct shinkos6245_ctx *ctx = vctx;
 
@@ -1009,6 +1133,7 @@ static int shinkos6245_main_loop(void *vctx, const void *vjob) {
 	struct sinfonia_status_hdr resp;
 
 	struct sinfonia_printjob *job = (struct sinfonia_printjob*) vjob;
+	struct kodak8810_cutlist *cutlist = NULL;
 
 	copies = job->copies;
 
@@ -1034,7 +1159,39 @@ static int shinkos6245_main_loop(void *vctx, const void *vjob) {
 	}
 	// XXX what about mcut |= PRINT_METHOD_DISABLE_ERR;
 
-#if 0
+	/* EK8810 uses special "cutlist" */
+	if (ctx->dev.type == P_KODAK_8810) {
+		switch (job->jp.media) {
+		case CODE_8x4_2:
+			if (job->jp.ext_flags & EXT_FLAG_DOUBLESLUG)
+				cutlist = &cutlist_8x4x2_d;
+			else
+				cutlist = &cutlist_8x4x2;
+			break;
+		case CODE_8x5_2:
+			if (job->jp.ext_flags & EXT_FLAG_DOUBLESLUG)
+				cutlist = &cutlist_8x5x2_d;
+			else
+				cutlist = &cutlist_8x5x2;
+			break;
+		case CODE_8x6_2:
+			if (job->jp.ext_flags & EXT_FLAG_DOUBLESLUG)
+				cutlist = &cutlist_8x6x2_d;
+			else
+				cutlist = &cutlist_8x6x2;
+			break;
+		case CODE_8x4_3:
+			if (job->jp.ext_flags & EXT_FLAG_DOUBLESLUG)
+				cutlist = &cutlist_8x4x3_d;
+			else
+				cutlist = &cutlist_8x4x3;
+			break;
+		default:
+			break;
+		}
+	}
+
+#if 0  /* Doesn't work on EK8810.  Not sure about S6245 */
 	int i;
 	/* Validate print sizes */
 	for (i = 0; i < ctx->media.count ; i++) {
@@ -1077,7 +1234,7 @@ static int shinkos6245_main_loop(void *vctx, const void *vjob) {
 		if ((ret = sinfonia_docmd(&ctx->dev,
 					  cmdbuf, sizeof(*settime),
 					  (uint8_t*)&resp, sizeof(resp),
-					  &num)) < 0) {
+					  &num))) {
 			return CUPS_BACKEND_FAILED;
 		}
 		if (resp.result != RESULT_SUCCESS) {
@@ -1102,7 +1259,7 @@ top:
 	if ((ret = sinfonia_docmd(&ctx->dev,
 				  cmdbuf, sizeof(*cmd),
 				  (uint8_t*)&sts, sizeof(sts),
-				  &num)) < 0) {
+				  &num))) {
 		return CUPS_BACKEND_FAILED;
 	}
 
@@ -1152,6 +1309,21 @@ top:
 	case S_PRINTER_READY_CMD:
 		// XXX send "get eeprom backup command"
 
+		if (ctx->dev.type == P_KODAK_8810 && cutlist) {
+			cutlist->hdr.cmd = cpu_to_le16(SINFONIA_CMD_SETCUTLIST);
+			cutlist->hdr.len = cpu_to_le16(sizeof(*cutlist) - sizeof(cutlist->hdr));
+
+			if ((ret = sinfonia_docmd(&ctx->dev,
+						  (uint8_t*)cutlist, sizeof(*cutlist),
+						  (uint8_t*)&resp, sizeof(resp),
+						  &num))) {
+				return CUPS_BACKEND_FAILED;
+			}
+			if (resp.result != RESULT_SUCCESS) {
+				goto printer_error;
+			}
+		}
+
 		INFO("Sending print job (internal id %u)\n", ctx->jobid);
 
 		memset(cmdbuf, 0, CMDBUF_LEN);
@@ -1163,12 +1335,12 @@ top:
 		print->rows = print->rows2 = cpu_to_le16(job->jp.rows);
 		print->mode = job->jp.oc_mode;
 		print->method = job->jp.method;
-		print->reserved2 = job->jp.media;
+//		print->reserved2 = job->jp.media;  /* Ignored */
 
 		if ((ret = sinfonia_docmd(&ctx->dev,
 					  cmdbuf, sizeof(*print),
 					  (uint8_t*)&resp, sizeof(resp),
-					  &num)) < 0) {
+					  &num))) {
 			return ret;
 		}
 
@@ -1223,36 +1395,6 @@ fail:
 	return CUPS_BACKEND_FAILED;
 }
 
-static int shinkos6245_query_serno(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, char *buf, int buf_len)
-{
-	struct sinfonia_cmd_hdr cmd;
-	struct sinfonia_getserial_resp resp;
-	int ret, num = 0;
-
-	struct sinfonia_usbdev sdev = {
-		.dev = dev,
-		.endp_up = endp_up,
-		.endp_down = endp_down,
-	};
-
-	cmd.cmd = cpu_to_le16(SINFONIA_CMD_GETSERIAL);
-	cmd.len = cpu_to_le16(0);
-
-	if ((ret = sinfonia_docmd(&sdev,
-				  (uint8_t*)&cmd, sizeof(cmd),
-				  (uint8_t*)&resp, sizeof(resp),
-				  &num)) < 0) {
-		return ret;
-	}
-
-	/* Copy and Null-terminate */
-	num = (buf_len > (int)sizeof(resp.data)) ? (int)sizeof(resp.data) : (buf_len - 1);
-	memcpy(buf, resp.data, num);
-	buf[num] = 0;
-
-	return CUPS_BACKEND_OK;
-}
-
 static int shinkos6245_query_markers(void *vctx, struct marker **markers, int *count)
 {
 	struct shinkos6245_ctx *ctx = vctx;
@@ -1298,7 +1440,7 @@ static const char *shinkos6245_prefixes[] = {
 
 struct dyesub_backend shinkos6245_backend = {
 	.name = "Sinfonia CHC-S6245 / Kodak 8810",
-	.version = "0.24" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.30" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = shinkos6245_prefixes,
 	.cmdline_usage = shinkos6245_cmdline,
 	.cmdline_arg = shinkos6245_cmdline_arg,
@@ -1307,7 +1449,7 @@ struct dyesub_backend shinkos6245_backend = {
 	.cleanup_job = sinfonia_cleanup_job,
 	.read_parse = shinkos6245_read_parse,
 	.main_loop = shinkos6245_main_loop,
-	.query_serno = shinkos6245_query_serno,
+	.query_serno = sinfonia_query_serno,
 	.query_markers = shinkos6245_query_markers,
 	.devices = {
 		{ USB_VID_SHINKO, USB_PID_SHINKO_S6245, P_SHINKO_S6245, NULL, "shinfonia-chcs6245"},
