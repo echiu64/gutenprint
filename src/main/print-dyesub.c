@@ -10463,9 +10463,9 @@ dyesub_parameters(const stp_vars_t *v, const char *name,
   else if (strcmp(name, "LegacyDyesubGamma") == 0)
     {
 #ifdef USE_WRONG_APPGAMMA_BY_DEFAULT
-	description->deflt.boolean = 0;
-#else
 	description->deflt.boolean = 1;
+#else
+	description->deflt.boolean = 0;
 #endif
         description->is_active = 1;
     }
