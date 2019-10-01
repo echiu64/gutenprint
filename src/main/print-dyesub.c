@@ -8008,6 +8008,73 @@ static void citizen_cw01_printer_start(stp_vars_t *v)
   /* CW-01 has no other smarts.  No multicut, no matte. */
 }
 
+/* HiTi P520L */
+static const dyesub_pagesize_t hiti_p520l_page[] =
+{
+  DEFINE_PAPER_SIMPLE( "B7", "3.5x5", PT1(1072,300), PT1(1540,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w288h432", "4x6", PT1(1240,300), PT1(1844,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w360h504", "5x7", PT1(1548,300), PT1(2140,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w432h576", "6x8", PT1(1844,300), PT1(2434,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w432h648", "6x9", PT1(1844,300), PT1(2740,300), DYESUB_PORTRAIT),
+};
+
+LIST(dyesub_pagesize_list_t, hiti_p520l_page_list, dyesub_pagesize_t, hiti_p520l_page);
+
+static const dyesub_printsize_t hiti_p520l_printsize[] =
+{
+  { "300x300", "B7", 1072, 1540},
+  { "300x300", "w288h432", 1240, 1844},
+  { "300x300", "w360h504", 1548, 2140},
+  { "300x300", "w432h576", 1844, 2434},
+  { "300x300", "w432h648", 1844, 2740},
+};
+
+LIST(dyesub_printsize_list_t, hiti_p520l_printsize_list, dyesub_printsize_t, hiti_p520l_printsize);
+
+static const overcoat_t hiti_p520l_overcoat[] =
+{
+  {"Glossy",  N_("Glossy"),  {4, "\x00\x00\x00\x00"}},
+  {"Matte",  N_("Matte"),  {4, "\x01\x00\x00\x00"}},
+};
+
+LIST(overcoat_list_t, hiti_p520l_overcoat_list, overcoat_t, hiti_p520l_overcoat);
+
+
+static void hiti_p520l_printer_start(stp_vars_t *v)
+{
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  int pgcode;
+
+  if (!strcmp(pd->pagesize, "B7"))
+	  pgcode = 8;
+  else if (!strcmp(pd->pagesize, "w288h432"))
+	  pgcode = 0;
+  else if (!strcmp(pd->pagesize, "w360h504"))
+	  pgcode = 2;
+  else if (!strcmp(pd->pagesize, "w432h576"))
+	  pgcode = 3;
+  else if (!strcmp(pd->pagesize, "w432h648"))
+	  pgcode = 6;
+  else
+	  pgcode = -1;
+
+  stp_put32_le(0x54485047, v);
+  stp_put32_le(13 * 4, v);
+  stp_put32_le(520, v);
+  stp_put32_le(pd->w_size, v);
+  stp_put32_le(pd->h_size, v);
+  stp_put32_le(pd->w_dpi, v);
+  stp_put32_le(pd->h_dpi, v);
+  stp_put32_le(pd->copies, v);
+  stp_put32_le(0, v); /* STD/Fine, 520L is always STD? */
+  stp_put32_le(pgcode, v);
+  stp_zfwrite((pd->overcoat->seq).data, 1,
+	      (pd->overcoat->seq).bytes, v);
+  stp_put32_le(0, v); /* ie is BGR packed */
+  stp_put32_le(pd->w_size * pd->h_size * 3, v);
+}
+
 /* Magicard Series */
 static const dyesub_pagesize_t magicard_page[] =
 {
@@ -9997,6 +10064,22 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     ds820_parameter_count,
     ds820_load_parameters,
     ds820_parse_parameters,
+  },
+  { /* HiTi P520L */
+    6500,
+    &bgr_ink_list,
+    &res_300dpi_list,
+    &hiti_p520l_page_list,
+    &hiti_p520l_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_NATIVECOPIES,
+    &hiti_p520l_printer_start, NULL,
+    NULL, NULL,
+    NULL, NULL,
+    &hiti_p520l_overcoat_list, NULL,
+    NULL, NULL,
+    NULL, 0, NULL, NULL,
   },
   { /* Magicard Series w/ Duplex */
     7000,
