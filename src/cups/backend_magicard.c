@@ -1,7 +1,7 @@
 /*
  *   Magicard card printer family CUPS backend -- libusb-1.0 version
  *
- *   (c) 2017-2018 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2017-2019 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -26,21 +26,11 @@
  *
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <time.h>
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <signal.h>
-#include <string.h>
-
 #define BACKEND magicard_backend
 
 #include "backend_common.h"
+
+#include <time.h>
 
 /* Exported */
 #define USB_VID_MAGICARD     0x0C1F
@@ -459,6 +449,7 @@ static int magicard_attach(void *vctx, struct libusb_device_handle *dev, int typ
 
 	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";  // XXX YMCK too!
 	ctx->marker.name = "Unknown"; // LC1/LC3/LC6/LC8
+	ctx->marker.numtype = -1;
 	ctx->marker.levelmax = -1;
 	ctx->marker.levelnow = -2;
 

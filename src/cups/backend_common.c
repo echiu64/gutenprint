@@ -28,8 +28,9 @@
 
 #include "backend_common.h"
 #include <errno.h>
+#include <signal.h>
 
-#define BACKEND_VERSION "0.95G"
+#define BACKEND_VERSION "0.96G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
@@ -693,6 +694,7 @@ extern struct dyesub_backend mitsup95d_backend;
 extern struct dyesub_backend dnpds40_backend;
 extern struct dyesub_backend magicard_backend;
 extern struct dyesub_backend mitsud90_backend;
+extern struct dyesub_backend hiti_backend;
 
 static struct dyesub_backend *backends[] = {
 	&canonselphy_backend,
@@ -705,12 +707,14 @@ static struct dyesub_backend *backends[] = {
 	&shinkos6145_backend,
 	&shinkos6245_backend,
 	&sonyupd_backend,
+//	&sonyupdneo_backend,
 	&mitsu70x_backend,
 	&mitsud90_backend,
 	&mitsu9550_backend,
 	&mitsup95d_backend,
 	&dnpds40_backend,
 	&magicard_backend,
+//	&hiti_backend,
 	NULL,
 };
 
@@ -736,7 +740,7 @@ static int find_and_enumerate(struct libusb_context *ctx,
 		return found;
 	}
 
-	STATE("+org.gutenprint-searching-for-device\n");
+	STATE("+org.gutenprint.searching-for-device\n");
 
 	/* Enumerate and find suitable device */
 	num = libusb_get_device_list(ctx, list);
@@ -785,7 +789,7 @@ static int find_and_enumerate(struct libusb_context *ctx,
 			break;
 	}
 
-	STATE("-org.gutenprint-searching-for-device\n");
+	STATE("-org.gutenprint.searching-for-device\n");
 	return found;
 }
 
@@ -1227,7 +1231,7 @@ bypass:
 		goto done_close;
 	}
 
-//	STATE("+org.gutenprint-attached-to-device\n");
+//	STATE("+org.gutenprint.attached-to-device\n");
 
 	if (!uri) {
 		if (backend->cmdline_arg(backend_ctx, argc, argv) < 0)
@@ -1366,7 +1370,7 @@ done:
 			backend->teardown(backend_ctx);
 		else
 			generic_teardown(backend_ctx);
-//		STATE("-org.gutenprint-attached-to-device");
+//		STATE("-org.gutenprint.attached-to-device");
 	}
 
 	if (list)
@@ -1462,6 +1466,13 @@ minimal:
 				DEBUG2(",");
 		}
 		DEBUG2("\n");
+	}
+
+	/* If we're running as a CUPS backend, report the media type */
+	if (full && getenv("DEVICE_URI")) {
+		for (i = 0 ; i < marker_count ; i++) {
+			PPD("StpMediaID%d=%d\n", i, markers[i].numtype);
+		}
 	}
 }
 

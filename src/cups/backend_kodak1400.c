@@ -26,16 +26,6 @@
  *
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <signal.h>
-
 #define BACKEND kodak1400_backend
 
 #include "backend_common.h"
@@ -308,6 +298,7 @@ static int kodak1400_attach(void *vctx, struct libusb_device_handle *dev, int ty
 
 	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
 	ctx->marker.name = "Unknown";
+	ctx->marker.numtype = -1;
 	ctx->marker.levelmax = -1;
 	ctx->marker.levelnow = -2;
 

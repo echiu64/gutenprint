@@ -30,16 +30,6 @@
  *
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <signal.h>
-
 #define BACKEND kodak6800_backend
 
 #include "backend_common.h"
@@ -748,6 +738,7 @@ static int kodak6800_attach(void *vctx, struct libusb_device_handle *dev, int ty
 
 	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
 	ctx->marker.name = kodak6_mediatypes(ctx->media_type);
+	ctx->marker.numtype = ctx->media_type;
 	ctx->marker.levelmax = 100; /* Ie percentage */
 	ctx->marker.levelnow = -2;
 

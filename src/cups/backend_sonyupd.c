@@ -26,16 +26,6 @@
  *
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <signal.h>
-
 #define BACKEND sonyupd_backend
 
 #include "backend_common.h"
@@ -128,6 +118,7 @@ static int upd_attach(void *vctx, struct libusb_device_handle *dev, int type,
 	}
 
 	ctx->marker.name = "Unknown";
+	ctx->marker.numtype = -1;
 	ctx->marker.levelmax = -1;
 	ctx->marker.levelnow = -2;
 

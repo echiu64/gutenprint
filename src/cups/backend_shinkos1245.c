@@ -28,16 +28,6 @@
  *
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <signal.h>
-
 #define BACKEND shinkos1245_backend
 
 #include "backend_common.h"
@@ -982,6 +972,7 @@ static int shinkos1245_attach(void *vctx, struct libusb_device_handle *dev, int 
 	}
 	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
 	ctx->marker.name = ctx->media_8x12 ? "8x12" : "8x10";
+	ctx->marker.numtype = ctx->media_8x12;
 	ctx->marker.levelmax = ctx->media_8x12 ? 230 : 280;
 	ctx->marker.levelnow = -2;
 

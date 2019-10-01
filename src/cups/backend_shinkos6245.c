@@ -28,21 +28,12 @@
  *
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <signal.h>
-#include <time.h>
-
 #define BACKEND shinkos6245_backend
 
 #include "backend_common.h"
 #include "backend_sinfonia.h"
+
+#include <time.h>
 
 enum {
 	S_IDLE = 0,
@@ -1020,6 +1011,7 @@ static int shinkos6245_attach(void *vctx, struct libusb_device_handle *dev, int 
 
 	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
 	ctx->marker.name = ribbon_sizes(ctx->media.ribbon_code);
+	ctx->marker.numtype = ctx->media.ribbon_code;
 	ctx->marker.levelmax = 100;
 	ctx->marker.levelnow = -2;
 

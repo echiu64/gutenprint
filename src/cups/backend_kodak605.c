@@ -26,16 +26,6 @@
  *
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <signal.h>
-
 #define BACKEND kodak605_backend
 
 #include "backend_common.h"
@@ -403,6 +393,7 @@ static int kodak605_attach(void *vctx, struct libusb_device_handle *dev, int typ
 
 	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
 	ctx->marker.name = kodak6_mediatypes(ctx->media->type);
+	ctx->marker.numtype = ctx->media->type;
 	ctx->marker.levelmax = 100; /* Ie percentage */
 	ctx->marker.levelnow = -2;
 
@@ -835,7 +826,7 @@ static const char *kodak605_prefixes[] = {
 /* Exported */
 struct dyesub_backend kodak605_backend = {
 	.name = "Kodak 605/70xx",
-	.version = "0.51.1" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.52" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = kodak605_prefixes,
 	.cmdline_usage = kodak605_cmdline,
 	.cmdline_arg = kodak605_cmdline_arg,

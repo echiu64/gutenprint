@@ -1,7 +1,7 @@
 /*
  *   Canon SELPHY ES/CP series CUPS backend -- libusb-1.0 version
  *
- *   (c) 2007-2018 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2007-2019 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -25,16 +25,6 @@
  *   SPDX-License-Identifier: GPL-2.0+
  *
  */
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <signal.h>
 
 #define BACKEND canonselphy_backend
 
@@ -94,10 +84,10 @@ struct printer_data {
 	int8_t  paper_code_offset; /* Offset in readback for paper type */
 	int8_t  paper_code_offset2; /* Offset in readback for paper type (2nd) */
 	uint8_t (*error_detect)(uint8_t *rdbuf);
-	char    *(*pgcode_names)(uint8_t *rdbuf, struct printer_data *printer);
+	char    *(*pgcode_names)(uint8_t *rdbuf, struct printer_data *printer, int *numtype);
 };
 
-static char *generic_pgcode_names(uint8_t *rdbuf, struct printer_data *printer)
+static char *generic_pgcode_names(uint8_t *rdbuf, struct printer_data *printer, int *numtype)
 {
 	uint8_t pgcode = 0, pgcode2 = 0;
 
@@ -105,6 +95,8 @@ static char *generic_pgcode_names(uint8_t *rdbuf, struct printer_data *printer)
 		pgcode = rdbuf[printer->paper_code_offset];
 	if (printer->paper_code_offset2 != -1)
 		pgcode2 = rdbuf[printer->paper_code_offset2];
+
+	*numtype = pgcode & 0xf;
 
 	switch(pgcode & 0xf) {
 	case 0x01: return "P";
@@ -236,11 +228,12 @@ static uint8_t cp790_error_detect(uint8_t *rdbuf)
 	return 0;
 }
 
-static char *cp10_pgcode_names(uint8_t *rdbuf, struct printer_data *printer)
+static char *cp10_pgcode_names(uint8_t *rdbuf, struct printer_data *printer, int *numtype)
 {
 	UNUSED(rdbuf);
 	UNUSED(printer);
 
+	*numtype = 3;
 	return "C";   /* Printer only supports one media type */
 }
 
@@ -579,7 +572,7 @@ static int canonselphy_get_status(struct canonselphy_ctx *ctx)
 	if (ret < 0)
 		return CUPS_BACKEND_FAILED;
 
-	INFO("Media type: %s\n", ctx->printer->pgcode_names? ctx->printer->pgcode_names(rdbuf, ctx->printer) : "Unknown");
+	INFO("Media type: %s\n", ctx->printer->pgcode_names? ctx->printer->pgcode_names(rdbuf, ctx->printer, &ret) : "Unknown");
 	ctx->printer->error_detect(rdbuf);
 
 	return CUPS_BACKEND_OK;
@@ -664,11 +657,13 @@ static int canonselphy_attach(void *vctx, struct libusb_device_handle *dev, int 
 			ctx->marker.levelnow = 0;  /* Out of media */
 		else
 			ctx->marker.levelnow = -3; /* Unknown but OK */
-		ctx->marker.name = ctx->printer->pgcode_names? ctx->printer->pgcode_names(rdbuf, ctx->printer) : "Unknown";
+
+		ctx->marker.name = ctx->printer->pgcode_names? ctx->printer->pgcode_names(rdbuf, ctx->printer, &ctx->marker.numtype) : "Unknown";
 	} else {
 		// XXX handle MEDIA_CODE at some point.
 		// we don't do any error checking here.
 		ctx->marker.name = "Unknown";
+		ctx->marker.numtype = -1;
 	}
 
 	return CUPS_BACKEND_OK;

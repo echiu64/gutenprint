@@ -20,32 +20,29 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *   along with this program; if not, write to the Free Software
+ *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  *          [http://www.gnu.org/licenses/gpl-2.0.html]
  *
- *   An additional permission is granted, under the GPLv2 section 10, to combine
+ *   An additional permission is granted, under the GPLv3 section 7, to combine
  *   and/or redistribute this program with the proprietary libS6145ImageProcess
  *   library, providing you have *written permission* from Sinfonia Technology
  *   Co. LTD to use and/or redistribute that library.
  *
  *   You must still adhere to all other terms of the license to this program
- *   (ie GPLv2) and the license of the libS6145ImageProcess library.
+ *   (ie GPLv3) and the license of the libS6145ImageProcess library.
  *
  *   SPDX-License-Identifier: GPL-2.0+ with special exception
  *
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
 
-#include <errno.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <signal.h>
+#define BACKEND shinkos6145_backend
+
+#include "backend_common.h"
+#include "backend_sinfonia.h"
+
 #include <time.h>
 
 /* For Integration into gutenprint */
@@ -75,11 +72,6 @@
 #define DL_EXIT()     do {} while(0)
 #warning "No dynamic loading support!"
 #endif
-
-#define BACKEND shinkos6145_backend
-
-#include "backend_common.h"
-#include "backend_sinfonia.h"
 
 /* Image processing library function prototypes */
 typedef int (*ImageProcessingFN)(unsigned char *, unsigned short *, void *);
@@ -811,7 +803,7 @@ static int shinkos6145_get_imagecorr(struct shinkos6145_ctx *ctx)
 	ctx->corrdata = malloc(sizeof(struct shinkos6145_correctionparam));
 	if (!ctx->corrdata) {
 		ERROR("Memory allocation failure\n");
-		ret = -ENOMEM;
+		ret = CUPS_BACKEND_FAILED;
 		goto done;
 	}
 	memset(ctx->corrdata, 0, sizeof(struct shinkos6145_correctionparam));
@@ -864,7 +856,7 @@ static int shinkos6145_get_eeprom(struct shinkos6145_ctx *ctx)
 	ctx->eeprom = malloc(ctx->eepromlen);
 	if (!ctx->eeprom) {
 		ERROR("Memory allocation failure\n");
-		ret = -ENOMEM;
+		ret = CUPS_BACKEND_FAILED;
 		goto done;
 	}
 	memcpy(ctx->eeprom, resp.data, ctx->eepromlen);
@@ -1054,6 +1046,7 @@ static int shinkos6145_attach(void *vctx, struct libusb_device_handle *dev, int 
 
 	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
 	ctx->marker.name = print_ribbons(ctx->media.ribbon_code);
+	ctx->marker.numtype = ctx->media.ribbon_code;
 	ctx->marker.levelmax = ribbon_sizes(ctx->media.ribbon_code);
 	ctx->marker.levelnow = -2;
 

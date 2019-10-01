@@ -1,7 +1,7 @@
 /*
  *   Mitsubishi CP-D70/D707 Photo Printer CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013-2018 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2019 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -26,15 +26,9 @@
  *
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
+#define BACKEND mitsu70x_backend
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <signal.h>
+#include "backend_common.h"
 
 /* For Integration into gutenprint */
 #if defined(HAVE_CONFIG_H)
@@ -63,10 +57,6 @@
 #define DL_EXIT()     do {} while(0)
 #warning "No dynamic loading support!"
 #endif
-
-#define BACKEND mitsu70x_backend
-
-#include "backend_common.h"
 
 // #include "lib70x/libMitsuD70ImageReProcess.h"
 
@@ -818,6 +808,7 @@ static int mitsu70x_attach(void *vctx, struct libusb_device_handle *dev, int typ
 	/* Set up markers */
 	ctx->marker[0].color = "#00FFFF#FF00FF#FFFF00";
 	ctx->marker[0].name = mitsu70x_media_types(resp.lower.media_brand, resp.lower.media_type);
+	ctx->marker[0].numtype = resp.lower.media_type;
 	ctx->marker[0].levelmax = be16_to_cpu(resp.lower.capacity);
 	ctx->marker[0].levelnow = be16_to_cpu(resp.lower.remain);
 	ctx->medias[0] = resp.lower.media_type & 0xf;
@@ -825,6 +816,7 @@ static int mitsu70x_attach(void *vctx, struct libusb_device_handle *dev, int typ
 	if (ctx->num_decks == 2) {
 		ctx->marker[1].color = "#00FFFF#FF00FF#FFFF00";
 		ctx->marker[1].name = mitsu70x_media_types(resp.upper.media_brand, resp.upper.media_type);
+		ctx->marker[1].numtype = resp.upper.media_type;
 		ctx->marker[1].levelmax = be16_to_cpu(resp.upper.capacity);
 		ctx->marker[1].levelnow = be16_to_cpu(resp.upper.remain);
 		ctx->medias[1] = resp.upper.media_type & 0xf;

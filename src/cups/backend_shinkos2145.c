@@ -30,16 +30,6 @@
  *
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <signal.h>
-
 #define BACKEND shinkos2145_backend
 
 #include "backend_common.h"
@@ -896,6 +886,7 @@ static int shinkos2145_attach(void *vctx, struct libusb_device_handle *dev, int 
 
 	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
 	ctx->marker.name = sinfonia_print_codes(ctx->media_code, 0);
+	ctx->marker.numtype = ctx->media_code;
 	ctx->marker.levelmax = media_prints;
 	ctx->marker.levelnow = -2;
 

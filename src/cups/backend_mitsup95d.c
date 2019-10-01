@@ -1,7 +1,7 @@
 /*
  *   Mitsubishi P93D/P95D Monochrome Thermal Photo Printer CUPS backend
  *
- *   (c) 2016-2018 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2016-2019 Solomon Peachy <pizza@shaftnet.org>
  *
  *   Development of this backend was sponsored by:
  *
@@ -29,16 +29,6 @@
  *   SPDX-License-Identifier: GPL-2.0+
  *
  */
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <signal.h>
 
 #define BACKEND mitsup95d_backend
 
@@ -153,6 +143,7 @@ static int mitsup95d_attach(void *vctx, struct libusb_device_handle *dev, int ty
 
 	ctx->marker.color = "#000000";  /* Ie black! */
 	ctx->marker.name = "Unknown";
+	ctx->marker.numtype = -1;
 	ctx->marker.levelmax = -1;
 	ctx->marker.levelnow = -2;
 

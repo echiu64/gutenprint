@@ -34,7 +34,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <signal.h>
 
 #include <libusb.h>
 #include <arpa/inet.h>
@@ -51,6 +50,7 @@
 #define INFO( ... )  do { if (!quiet) fprintf(stderr, "INFO: " __VA_ARGS__ ); } while(0)
 #define WARNING( ... )  do { fprintf(stderr, "WARNING: " __VA_ARGS__ ); } while(0)
 #define ERROR( ... ) do { fprintf(stderr, "ERROR: " __VA_ARGS__ ); sleep(1); } while (0)
+#define PPD( ... ) do { fprintf(stderr, "PPD: " __VA_ARGS__ ); sleep(1); } while (0)
 
 #if (__BYTE_ORDER == __LITTLE_ENDIAN)
 #define le64_to_cpu(__x) __x
@@ -111,59 +111,62 @@
 /* To enumerate supported devices */
 enum {
 	P_UNKNOWN = 0,
-	P_CP_XXX = 1,
-	P_CP10 = 2,
-	P_CP790 = 3,
-	P_CP900 = 4,
-	P_CP910 = 5,
-	P_ES1 = 6,
-	P_ES2_20 = 7,
-	P_ES3_30 = 8,
-	P_ES40 = 9,
-	P_KODAK_1400_805 = 10,
-	P_KODAK_6800 = 11,
-	P_KODAK_6850 = 12,
-	P_KODAK_305 = 13,
-	P_KODAK_605 = 14,
-	P_SHINKO_S1245 = 15,
-	P_SHINKO_S2145 = 16,
-	P_SHINKO_S6145 = 17,
-	P_SHINKO_S6145D = 18,
-	P_SHINKO_S6245 = 19,
-	P_SONY_UPCR10 = 20,
-	P_SONY_UPDR150 = 21,
-	P_MITSU_9550 = 22,
-	P_MITSU_9550S = 23,
-	P_MITSU_9600 = 24,
-	P_MITSU_9800 = 25,
-	P_MITSU_9800S = 26,
-	P_MITSU_9810 = 27,
-	P_MITSU_D70X = 28,
-	P_MITSU_D80 = 29,
-	P_MITSU_D90 = 30,
-	P_MITSU_K60 = 31,
-	P_MITSU_P93D = 32,
-	P_MITSU_P95D = 33,
-	P_CITIZEN_CW01 = 34,
-	P_CITIZEN_OP900II = 35,
-	P_DNP_DS40 = 36,
-	P_DNP_DS620 = 37,
-	P_DNP_DS80 = 38,
-	P_DNP_DS80D = 39,
-	P_DNP_DS820 = 40,
-	P_DNP_DSRX1 = 41,
-	P_FUJI_ASK300 = 42,
-	P_MAGICARD = 43,
-	P_SONY_UPD895 = 44,
-	P_SONY_UPD897 = 45,
-	P_SONY_UPD898 = 46,
-	P_SONY_UPCR20L = 47,
-	P_SONY_UPDR80 = 48,
-	P_KODAK_8810 = 49,
-	P_KODAK_7000 = 50,
-	P_KODAK_701X = 51,
-	P_KODAK_6900 = 52,
-	P_SHINKO_S2245 = 53,
+	P_CITIZEN_CW01,
+	P_CITIZEN_OP900II,
+	P_CP_XXX,
+	P_CP10,
+	P_CP790,
+	P_CP900,
+	P_CP910,
+	P_DNP_DS40,
+	P_DNP_DS80,
+	P_DNP_DS80D,
+	P_DNP_DS620,
+	P_DNP_DS820,
+	P_DNP_DSRX1,
+	P_ES1,
+	P_ES2_20,
+	P_ES3_30,
+	P_ES40,
+	P_FUJI_ASK300,
+	P_HITI_52X,
+	P_HITI_72X,
+	P_HITI_75X,
+	P_KODAK_1400_805,
+	P_KODAK_305,
+	P_KODAK_605,
+	P_KODAK_6800,
+	P_KODAK_6850,
+	P_KODAK_6900,
+	P_KODAK_7000,
+	P_KODAK_701X,
+	P_KODAK_8810,
+	P_MAGICARD,
+	P_MITSU_9550,
+	P_MITSU_9550S,
+	P_MITSU_9600,
+	P_MITSU_9800,
+	P_MITSU_9800S,
+	P_MITSU_9810,
+	P_MITSU_D70X,
+	P_MITSU_D80,
+	P_MITSU_D90,
+	P_MITSU_K60,
+	P_MITSU_P93D,
+	P_MITSU_P95D,
+	P_SHINKO_S1245,
+	P_SHINKO_S2145,
+	P_SHINKO_S2245,
+	P_SHINKO_S6145,
+	P_SHINKO_S6145D,
+	P_SHINKO_S6245,
+	P_SONY_UPCR10,
+	P_SONY_UPCR20L,
+	P_SONY_UPD895,
+	P_SONY_UPD897,
+	P_SONY_UPD898,
+	P_SONY_UPDR150,
+	P_SONY_UPDR80,
 	P_END,
 };
 
@@ -180,6 +183,7 @@ struct marker {
 	const char *name;   /* Eg "CK9015 (4x6)" */
 	int levelmax; /* Max media count, eg '600', or '-1' */
 	int levelnow; /* Remaining media, -3, -2, -1, 0..N.  See CUPS. */
+	int numtype; /* Numerical type, (-1 for unknown) */
 };
 
 #define BACKEND_FLAG_JOBLIST 0x00000001
