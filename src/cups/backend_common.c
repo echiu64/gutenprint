@@ -714,7 +714,7 @@ static struct dyesub_backend *backends[] = {
 	&mitsup95d_backend,
 	&dnpds40_backend,
 	&magicard_backend,
-//	&hiti_backend,
+	&hiti_backend,
 	NULL,
 };
 

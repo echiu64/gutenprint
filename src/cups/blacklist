@@ -247,6 +247,9 @@
 # Fujifilm ASK-300
 0x04cb 0x5006 blacklist
 
+# HiTi P520L
+0x0d16 0x0502 blacklist
+
 # HiTi M610
 0x0d16 0x0010 blacklist
 
