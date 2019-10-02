@@ -9,7 +9,7 @@
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
- *   Software Foundation; either version 3 of the License, or (at your option)
+ *   Software Foundation; either version 2 of the License, or (at your option)
  *   any later version.
  *
  *   This program is distributed in the hope that it will be useful, but
@@ -55,11 +55,11 @@ struct hiti_cmd {
 
 /* Request Device Characteristics */
 #define CMD_RDC_RS     0x0100 /* Request Summary */
-#define CMD_RDC_ROC    0x0104 /* Request Option Characteristics XX */
+#define CMD_RDC_ROC    0x0104 /* Request Option Characteristics XX (1 resp) */
 
 /* Printer Configuratio Control */
-#define CMD_PCC_RP     0x0301 /* Reset Printer (1 arg) XX */
-#define CMD_PCC_STP    0x030F /* Set Target Printer (1 arg) XX */
+#define CMD_PCC_RP     0x0301 /* Reset Printer (1 arg) */
+#define CMD_PCC_STP    0x030F /* Set Target Printer (1 arg) XX -- master or slave perhaps? */
 
 /* Request Device Status */
 #define CMD_RDS_RSS    0x0400 /* Request Status Summary */
@@ -74,11 +74,11 @@ struct hiti_cmd {
 #define CMD_RDS_RSUS   0x040C /* Request Supplies Status */
 
 /* Job Control */
-#define CMD_JC_SJ      0x0500 /* Start Job (2 arg) */
+#define CMD_JC_SJ      0x0500 /* Start Job (3 arg) */
 #define CMD_JC_EJ      0x0501 /* End Job (3 arg) */
-#define CMD_JC_QJC     0x0502 /* Query Job Completed (3 arg) XX */
-#define CMD_JC_QQA     0x0503 /* Query Jobs Queued or Active (2 arg) XX */
-#define CMD_JC_RSJ     0x0510 /* Resume Suspended Job (2 arg) XX */
+#define CMD_JC_QJC     0x0502 /* Query Job Completed (5 arg) XX */
+#define CMD_JC_QQA     0x0503 /* Query Jobs Queued or Active (3 arg) */
+#define CMD_JC_RSJ     0x0510 /* Resume Suspended Job (3 arg) XX */
 
 /* Extended Read Device Characteristics */
 #define CMD_ERDC_RS    0x8000 /* Request Summary */
@@ -91,8 +91,8 @@ struct hiti_cmd {
 #define CMD_ERDC_RRVC  0x800F /* Read Ribbon Vendor Code */
 
 // 8008 seen in Windows Comm @ 3211  (0 len response)
-// 8010 seen in Windows Comm @ 84 (14 len response)
-// 8011 seen in Windows Comm @ 3369 (4 len response)
+// 8010 seen in Windows Comm @ 84 (0 len req, 14 len response)
+// 8011 seen in Windows Comm @ 3369 (1 arg req (always 00), 4 len response)
 // 801c seen in Windows comm @ 3293 (6 len response, all zero..?)
 
 /* Extended Format Data */
@@ -121,6 +121,10 @@ struct hiti_cmd {
 #define CMD_EDM_CVD    0xE002 /* Common Voltage Drop Values (n arg) XX */
 #define CMD_EDM_CPP    0xE023 /* Clean Paper Path (1 arg) XX */
 
+/* CMD_PCC_RP */
+#define RESET_PRINTER 0x01
+#define RESET_SOFT    0x02
+
 /* CMD_ERDC_RCC */
 struct hiti_calibration {
 	uint8_t horiz;
@@ -144,15 +148,32 @@ struct hiti_erdc_rs {      /* All are BIG endian */
 	uint8_t  unk2[18];  // ff ff 4b 4b 4b 4b af 3c  4f 7b 19 08 5c 0a b4 64  af af
 } __attribute__((packed));
 
+/* CMD_JC_* */
+struct hiti_job {
+	uint8_t  lun;    /* Logical Unit Number.  Leave at 0 */
+	uint16_t jobid;  /* BE */
+} __attribute__((packed));
+
+/* CMD_JC_QJC */
+struct hiti_jc_qjc {
+	uint8_t  lun;    /* Logical Unit Number.  Leave at 0 */
+	uint16_t jobid;  /* BE */
+	uint16_t jobid2; /* BE, set to 1? */
+} __attribute__((packed));
+// repsonse is 6 bytes.
+
 //. 5x3.5 1547 1072
 //. 6x4   1844 1240
 //. 6x9   1844 2740
-// 6x8/2 1844 2492
+//. 6x8/2 1844 2492
 //. 6x8   1844 2434
 //. 5x7   1548 2140
-// 5x7/2 1548 2152
-// 6x4/2 1844 1248
-// 6x2   1844 ????
+//. 5x7/2 1548 2152
+//. 6x4/2 1844 1248
+// 6x6    1844 1844
+// 5x5    1540 1540 ? (1548?)
+// 6x5    1844 1544
+// 6x2    1844 ????
 
 
 #define PRINT_TYPE_6x4      0
@@ -175,7 +196,7 @@ struct hiti_gpjobhdr {
 	uint32_t col_dpi;
 	uint32_t row_dpi;
 	uint32_t copies;
-	uint32_t quality;  // 0 for std, 1 for matte
+	uint32_t quality;  // 0 for std, 1 for fine
 	uint32_t code;     // PRINT_TYPE_* ..?
 	uint32_t overcoat; // 1 for matte, 0 for glossy
 	uint32_t payload_type; // 0 for bgr packed. what about rgb, planar?
@@ -292,6 +313,8 @@ struct hiti_ctx {
 };
 
 /* Prototypes */
+static int hiti_doreset(struct hiti_ctx *ctx, uint8_t type);
+static int hiti_query_job_qa(struct hiti_ctx *ctx, struct hiti_job *jobid);
 static int hiti_query_status(struct hiti_ctx *ctx, uint8_t *sts, uint32_t *err);
 static int hiti_query_version(struct hiti_ctx *ctx);
 static int hiti_query_matrix(struct hiti_ctx *ctx);
@@ -418,9 +441,9 @@ static int hiti_sepd(struct hiti_ctx *ctx, uint32_t buf_len,
 }
 
 #define STATUS_IDLE          0x00
-#define STATUS_INITIALIZED   0x80
+#define STATUS0_POWERON      0x01
 #define STATUS0_RESEND_DATA  0x04
-#define STATUS0_BUSY         0x08
+#define STATUS0_BUSY         0x80
 #define STATUS1_SUPPLIES     0x01
 #define STATUS1_PAPERJAM     0x02
 #define STATUS1_INPUT        0x08
@@ -446,8 +469,6 @@ static const char *hiti_status(uint8_t *sts)
 		return "Resend Data";
 	else if (sts[0] & STATUS0_BUSY)
 		return "Busy";
-	else if (sts[0] == STATUS_INITIALIZED)
-		return "Initialized";
 	else if (sts[0] == STATUS_IDLE)
 		return "Idle";
 	else
@@ -635,6 +656,13 @@ static int hiti_get_info(struct hiti_ctx *ctx)
 {
 	int ret;
 
+	ret = hiti_query_tphv(ctx);
+	if (ret)
+		return ret;
+	ret = hiti_query_led_calibration(ctx);
+	if (ret)
+		return ret;
+
 	INFO("Printer ID: %s\n",
 	     ctx->id);
 	INFO("Printer Version: %s\n",
@@ -699,6 +727,42 @@ static int hiti_get_info(struct hiti_ctx *ctx)
 	return CUPS_BACKEND_OK;
 }
 
+/* Use jobid of 0 for "any" */
+static int hiti_query_job_qa(struct hiti_ctx *ctx, struct hiti_job *jobid)
+{
+	int ret;
+	uint16_t len = 16;
+	uint8_t buf[17];  /* Enough for four jobs */
+	int i;
+
+	buf[0] = 0;
+	ret = hiti_docmd_resp(ctx, CMD_JC_QQA,
+			      (uint8_t*) jobid, sizeof(*jobid),
+			      buf, &len);
+	if (ret)
+		return ret;
+
+	/* Clear job ID.. */
+	jobid->jobid = 0;
+
+	for (i = 0 ; i < buf[0] ; i++) {
+		// is jobid + status
+		// status of 3 is suspended.
+		// status of 0 is active.
+
+		if (buf[4*i + 4] == 0)
+			memcpy(jobid, &buf[4*i+1], sizeof(*jobid));
+
+#if 0
+		INFO("Job %02x %02x %02x => %02x\n",
+		     buf[4*i + 1], buf[4*i + 2],
+		     buf[4*i + 3], buf[4*i + 4]);
+#endif
+	}
+
+	return CUPS_BACKEND_OK;
+}
+
 static int hiti_get_status(struct hiti_ctx *ctx)
 {
 	uint8_t sts[3];
@@ -724,8 +788,11 @@ static int hiti_get_status(struct hiti_ctx *ctx)
 	     hiti_papers(ctx->supplies2[0]),
 	     ctx->supplies2[0]);
 
-	// XXX other shit..
-	// Jobs Queued Active
+	/* Find out if we have any jobs outstanding */
+	struct hiti_job job = { 0 };
+	hiti_query_job_qa(ctx, &job);
+
+	// XXX other shit.../
 
 	return CUPS_BACKEND_OK;
 }
@@ -771,16 +838,10 @@ static int hiti_attach(void *vctx, struct libusb_device_handle *dev, int type,
 		ret = hiti_query_calibration(ctx);
 		if (ret)
 			return ret;
-		ret = hiti_query_led_calibration(ctx);
-		if (ret)
-			return ret;
 		ret = hiti_query_ribbonvendor(ctx);
 		if (ret)
 			return ret;
 		ret = hiti_query_rpidm(ctx);
-		if (ret)
-			return ret;
-		ret = hiti_query_tphv(ctx);
 		if (ret)
 			return ret;
 
@@ -818,13 +879,12 @@ static void hiti_cleanup_job(const void *vjob) {
 
 #define CORRECTION_FILE_SIZE (33*33*33*3 + 2)
 
-static uint8_t *hiti_get_correction_data(struct hiti_ctx *ctx)
+static uint8_t *hiti_get_correction_data(struct hiti_ctx *ctx, uint8_t mode)
 {
 	char *fname;
 	uint8_t *buf;
 	int ret, len;
 
-	int mode = 0; // XXX 0 = standard, 1 = fine
 	int mediaver = ctx->ribbonvendor & 0x3f;
 	int mediatype = ((ctx->ribbonvendor & 0xf000) == 0x1000);
 
@@ -1389,7 +1449,7 @@ static int hiti_read_parse(void *vctx, const void **vjob, int data_fd, int copie
 	/* Load up correction data, if requested */
 	uint8_t *corrdata = NULL;
 	if (!(job->hdr.payload_type & PAYLOAD_TYPE_FLAG_NOCORRECT))
-		corrdata = hiti_get_correction_data(ctx);
+		corrdata = hiti_get_correction_data(ctx, job->hdr.quality);
 	if (corrdata) {
 		INFO("Running input data through correction tables\n");
 		hiti_interp_init();
@@ -1468,6 +1528,7 @@ static int hiti_main_loop(void *vctx, const void *vjob)
 	int copies;
 	uint32_t err = 0;
 	uint8_t sts[3];
+	struct hiti_job jobid;
 
 	const struct hiti_printjob *job = vjob;
 
@@ -1486,17 +1547,26 @@ top:
 		if (ret)
 			return ret;
 
-		/* If we're idle, proceed */
-		if (!sts[2] && !sts[1]) {
-			if (!sts[0])
-				break;
-			// query active jobs, make sure we're not colliding?
-		}
+		/* If we have an error state, bail! */
 		if (err) {
 			ERROR("Printer reported alert: %08x (%s)\n",
 			      err, hiti_errors(err));
 			return CUPS_BACKEND_FAILED;
 		}
+
+		/* If we're idle, proceed */
+		if (!(sts[0] & (STATUS0_POWERON|STATUS0_BUSY)))
+			break;
+
+		jobid.lun = 0;
+		jobid.jobid = 0;
+		ret = hiti_query_job_qa(ctx, &jobid);
+		if (ret)
+			return ret;
+
+		/* If we have no active job.. proceed! */
+		if (jobid.jobid == 0)
+		    break;
 
 		sleep(1);
 	} while(1);
@@ -1529,21 +1599,23 @@ top:
 	if (ret)
 		return CUPS_BACKEND_FAILED;
 
-	/* XXX startjob returns actual jobid */
-	uint16_t jobid = cpu_to_be16(ctx->jobid);
-	uint8_t jobresp[3];
+	// XXX msg 8011 sent here..
 
-	resplen = sizeof(jobresp);
+	/* XXX startjob returns actual jobid */
+	jobid.lun = 0;
+	jobid.jobid = cpu_to_be16(ctx->jobid);
+
+	resplen = sizeof(jobid);
 	ret = hiti_docmd_resp(ctx, CMD_JC_SJ, (uint8_t*) &jobid, sizeof(jobid),
-			      jobresp, &resplen);
+			      (uint8_t*) &jobid, &resplen);
 	if (ret)
 		return CUPS_BACKEND_FAILED;
 
-	memcpy(&jobid, &jobresp[1], sizeof(jobid));
-	jobid = be16_to_cpu(jobid);
-	INFO("Printer returned Job ID %04x\n", jobid);
+	INFO("Printer returned Job ID %04x\n", be16_to_cpu(jobid.jobid));
 
 	uint8_t chs[2] = { 0, 1 }; /* Fixed..? */
+
+	// XXX send ESD_SHTPC  w/ heat table.  Unknown.
 
 	resplen = 0;
 	ret = hiti_docmd(ctx, CMD_EFD_CHS, chs, sizeof(chs), &resplen);
@@ -1621,7 +1693,7 @@ top:
 		return CUPS_BACKEND_FAILED;
 
 	resplen = 3;
-	ret = hiti_docmd_resp(ctx, CMD_JC_EJ, jobresp, sizeof(jobresp), jobresp, &resplen);
+	ret = hiti_docmd_resp(ctx, CMD_JC_EJ, (uint8_t*) &jobid, sizeof(jobid), (uint8_t*) &jobid, &resplen);
 	if (ret)
 		return CUPS_BACKEND_FAILED;
 
@@ -1633,18 +1705,23 @@ top:
 		if (ret)
 			return ret;
 
-		/* If we're idle, we're done. */
-		if (!sts[2] && !sts[1] && !sts[0]) {
-			break;
-		}
 		if (err) {
 			ERROR("Printer reported alert: %08x (%s)\n",
 			      err, hiti_errors(err));
 			return CUPS_BACKEND_FAILED;
 		}
 
-		// XXX query job ID?
-		// if job completed, break;
+		/* If we're idle, proceed! */
+		if (!(sts[0] & (STATUS0_POWERON|STATUS0_BUSY)))
+			break;
+
+		ret = hiti_query_job_qa(ctx, &jobid);
+		if (ret)
+			return ret;
+
+		/* If our job is complete.. */
+		if (jobid.jobid == 0)
+			break;
 
 		if (fast_return) {
 			INFO("Fast return mode enabled.\n");
@@ -1673,11 +1750,17 @@ static int hiti_cmdline_arg(void *vctx, int argc, char **argv)
 	if (!ctx)
 		return -1;
 
-	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "is")) >= 0) {
+	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "irRs")) >= 0) {
 		switch(i) {
 		GETOPT_PROCESS_GLOBAL
 		case 'i':
 			hiti_get_info(ctx);
+			break;
+		case 'r':
+			hiti_doreset(ctx, RESET_SOFT);
+			break;
+		case 'R':
+			hiti_doreset(ctx, RESET_PRINTER);
 			break;
 		case 's':
 			hiti_get_status(ctx);
@@ -1693,8 +1776,9 @@ static int hiti_cmdline_arg(void *vctx, int argc, char **argv)
 static void hiti_cmdline(void)
 {
 	DEBUG("\t\t[ -i ]           # Query printer information\n");
+	DEBUG("\t\t[ -r ]           # Soft Reset printer\n");
+	DEBUG("\t\t[ -R ]           # Reset printer\n");
 	DEBUG("\t\t[ -s ]           # Query printer status\n");
-	// XXX add support for RESET.
 }
 
 static int hiti_query_version(struct hiti_ctx *ctx)
@@ -1847,8 +1931,6 @@ static int hiti_query_tphv(struct hiti_ctx *ctx)
 	if (ret)
 		return ret;
 
-	ctx->ribbonvendor = cpu_to_le32(ctx->ribbonvendor);
-
 	return CUPS_BACKEND_OK;
 }
 
@@ -1882,6 +1964,22 @@ static int hiti_query_statistics(struct hiti_ctx *ctx)
 
 	memcpy(&ctx->media_remain, &buf[2], sizeof(ctx->media_remain));
 	ctx->media_remain = be32_to_cpu(ctx->media_remain);
+
+	return CUPS_BACKEND_OK;
+}
+
+static int hiti_doreset(struct hiti_ctx *ctx, uint8_t type)
+{
+	int ret;
+	uint8_t buf[6];
+	uint16_t len = 6;
+
+	ret = hiti_docmd_resp(ctx, CMD_RDS_RPS, &type, sizeof(type), buf, &len);
+	if (ret)
+		return ret;
+
+	// response seems to be: 01 03 00 00 01 47
+	sleep(5);
 
 	return CUPS_BACKEND_OK;
 }
@@ -1973,7 +2071,7 @@ static const char *hiti_prefixes[] = {
 
 struct dyesub_backend hiti_backend = {
 	.name = "HiTi Photo Printers",
-	.version = "0.05",
+	.version = "0.08",
 	.uri_prefixes = hiti_prefixes,
 	.cmdline_usage = hiti_cmdline,
 	.cmdline_arg = hiti_cmdline_arg,

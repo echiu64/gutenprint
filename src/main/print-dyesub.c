@@ -222,6 +222,11 @@ typedef struct
 
 typedef struct
 {
+  int use_lut;
+} hiti_privdata_t;
+
+typedef struct
+{
   int sharpen;
 } kodak9810_privdata_t;
 
@@ -304,6 +309,7 @@ typedef struct
    mitsu_p95d_privdata_t m95d;
    magicard_privdata_t magicard;
    sonymd_privdata_t sonymd;
+   hiti_privdata_t hiti;
   } privdata;
 } dyesub_privdata_t;
 
@@ -8013,8 +8019,11 @@ static const dyesub_pagesize_t hiti_p520l_page[] =
 {
   DEFINE_PAPER_SIMPLE( "B7", "3.5x5", PT1(1072,300), PT1(1540,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER_SIMPLE( "w288h432", "4x6", PT1(1240,300), PT1(1844,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w288h432-div2", "2x6*2", PT1(1248,300), PT1(1844,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER_SIMPLE( "w360h504", "5x7", PT1(1548,300), PT1(2140,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w360h504-div2", "3.5x5*2", PT1(1548,300), PT1(2140,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w432h576", "6x8", PT1(1844,300), PT1(2434,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w432h576-div2", "4x6*2", PT1(1844,300), PT1(2434,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w432h648", "6x9", PT1(1844,300), PT1(2740,300), DYESUB_PORTRAIT),
 };
 
@@ -8024,8 +8033,11 @@ static const dyesub_printsize_t hiti_p520l_printsize[] =
 {
   { "300x300", "B7", 1072, 1540},
   { "300x300", "w288h432", 1240, 1844},
+  { "300x300", "w288h432-div2", 1248, 1844},
   { "300x300", "w360h504", 1548, 2140},
+  { "300x300", "w360h504-div2", 1548, 2152},
   { "300x300", "w432h576", 1844, 2434},
+  { "300x300", "w432h576-div2", 1844, 2492},
   { "300x300", "w432h648", 1844, 2740},
 };
 
@@ -8039,21 +8051,30 @@ static const overcoat_t hiti_p520l_overcoat[] =
 
 LIST(overcoat_list_t, hiti_p520l_overcoat_list, overcoat_t, hiti_p520l_overcoat);
 
-
 static void hiti_p520l_printer_start(stp_vars_t *v)
 {
   dyesub_privdata_t *pd = get_privdata(v);
 
   int pgcode;
+  int flags = 0;
+
+  if (!pd->privdata.hiti.use_lut)
+	  flags |= 0x02;
 
   if (!strcmp(pd->pagesize, "B7"))
 	  pgcode = 8;
   else if (!strcmp(pd->pagesize, "w288h432"))
 	  pgcode = 0;
+  else if (!strcmp(pd->pagesize, "w288h432-div2"))
+	  pgcode = 9;
   else if (!strcmp(pd->pagesize, "w360h504"))
 	  pgcode = 2;
+  else if (!strcmp(pd->pagesize, "w360h504-div2"))
+	  pgcode = 11;
   else if (!strcmp(pd->pagesize, "w432h576"))
 	  pgcode = 3;
+  else if (!strcmp(pd->pagesize, "w432h576-div2"))
+	  pgcode = 7;
   else if (!strcmp(pd->pagesize, "w432h648"))
 	  pgcode = 6;
   else
@@ -8073,6 +8094,60 @@ static void hiti_p520l_printer_start(stp_vars_t *v)
 	      (pd->overcoat->seq).bytes, v);
   stp_put32_le(0, v); /* ie is BGR packed */
   stp_put32_le(pd->w_size * pd->h_size * 3, v);
+}
+
+static const stp_parameter_t hiti_p520l_parameters[] =
+{
+  {
+    "UseLUT", N_("Internal Color Correction"), "Color=Yes,Category=Advanced Printer Setup",
+    N_("Use Internal Color Correction"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+};
+#define hiti_p520l_parameter_count (sizeof(hiti_p520l_parameters) / sizeof(const stp_parameter_t))
+
+static int
+hiti_p520l_load_parameters(const stp_vars_t *v, const char *name,
+			 stp_parameter_t *description)
+{
+  int	i;
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
+		  				stp_get_model_id(v));
+
+  if (caps->parameter_count && caps->parameters)
+    {
+      for (i = 0; i < caps->parameter_count; i++)
+        if (strcmp(name, caps->parameters[i].name) == 0)
+          {
+	    stp_fill_parameter_settings(description, &(caps->parameters[i]));
+	    break;
+          }
+    }
+
+  if (strcmp(name, "UseLUT") == 0)
+    {
+      description->deflt.boolean = 1;
+      description->is_active = 1;
+    }
+  else
+  {
+     return 0;
+  }
+  return 1;
+}
+
+static int hiti_p520l_parse_parameters(stp_vars_t *v)
+{
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  /* No need to set global params if there's no privdata yet */
+  if (!pd)
+    return 1;
+
+  pd->privdata.hiti.use_lut = stp_get_boolean_parameter(v, "UseLUT");
+
+  return 1;
 }
 
 /* Magicard Series */
@@ -10079,7 +10154,10 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     &hiti_p520l_overcoat_list, NULL,
     NULL, NULL,
-    NULL, 0, NULL, NULL,
+    hiti_p520l_parameters,
+    hiti_p520l_parameter_count,
+    hiti_p520l_load_parameters,
+    hiti_p520l_parse_parameters,
   },
   { /* Magicard Series w/ Duplex */
     7000,
