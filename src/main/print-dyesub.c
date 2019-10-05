@@ -8018,7 +8018,7 @@ static void citizen_cw01_printer_start(stp_vars_t *v)
 /* HiTi P520L */
 static const dyesub_pagesize_t hiti_p520l_page[] =
 {
-  DEFINE_PAPER_SIMPLE( "B7", "3.5x5", PT1(1072,300), PT1(1540,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "B7", "3.5x5", PT1(1072,300), PT1(1548,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER_SIMPLE( "w288h432", "4x6", PT1(1240,300), PT1(1844,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER_SIMPLE( "w288h432-div2", "2x6*2", PT1(1248,300), PT1(1844,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER_SIMPLE( "w360h504", "5x7", PT1(1548,300), PT1(2140,300), DYESUB_PORTRAIT),
@@ -8032,7 +8032,7 @@ LIST(dyesub_pagesize_list_t, hiti_p520l_page_list, dyesub_pagesize_t, hiti_p520l
 
 static const dyesub_printsize_t hiti_p520l_printsize[] =
 {
-  { "300x300", "B7", 1072, 1540},
+  { "300x300", "B7", 1072, 1548},
   { "300x300", "w288h432", 1240, 1844},
   { "300x300", "w288h432-div2", 1248, 1844},
   { "300x300", "w360h504", 1548, 2140},
@@ -8159,6 +8159,12 @@ static const stp_parameter_t hiti_p720l_parameters[] =
     "UseLUT", N_("Internal Color Correction"), "Color=Yes,Category=Advanced Printer Setup",
     N_("Use Internal Color Correction"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "PrintSpeed", N_("Print Speed"), "Color=No,Category=Advanced Printer Setup",
+    N_("Print Speed"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
 };
