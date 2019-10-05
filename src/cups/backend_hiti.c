@@ -89,11 +89,11 @@ struct hiti_cmd {
 #define CMD_ERDC_RPIDM 0x8009 /* Request PID and Model Code */
 #define CMD_ERDC_RTLV  0x800E /* Request T/L Voltage */
 #define CMD_ERDC_RRVC  0x800F /* Read Ribbon Vendor Code */
+#define CMD_ERDC_UNK   0x8010 /* Unknown Query RE */
+#define CMD_ERDC_RHA   0x801C /* Read Highlight Adjustment (6 resp) RE */
 
 // 8008 seen in Windows Comm @ 3211  (0 len response)
-// 8010 seen in Windows Comm @ 84 (0 len req, 14 len response)
 // 8011 seen in Windows Comm @ 3369 (1 arg req (always 00), 4 len response)
-// 801c seen in Windows comm @ 3293 (6 len response, all zero..?)
 
 /* Extended Format Data */
 #define CMD_EFD_SF     0x8100 /* Sublimation Format */
@@ -116,6 +116,7 @@ struct hiti_cmd {
 /* Extended Flash/NVram */
 #define CMD_EFM_RNV    0x8405 /* Read NVRam (1 arg) XX */
 #define CMD_EFM_RD     0x8408 /* Read single location (2 arg) -- XXX RE */
+#define CMD_EFM_SHA    0x840E /* Set Highlight Adjustment (5 arg) -- XXX RE */
 
 /* Extended ??? */
 #define CMD_EDM_CVD    0xE002 /* Common Voltage Drop Values (n arg) XX */
@@ -124,6 +125,14 @@ struct hiti_cmd {
 /* CMD_PCC_RP */
 #define RESET_PRINTER 0x01
 #define RESET_SOFT    0x02
+
+/* 801C --> 0 args
+        <-- 6 bytes: 00 YY MM CC 00 00  (YMC is +- 31d)
+
+   040E --> 5 args:  YY MM CC 00 00 (YMC is +- 31d)
+        <-- 1 arg:   00 (success, presumably)
+
+*/
 
 /* CMD_ERDC_RCC */
 struct hiti_calibration {
@@ -305,7 +314,9 @@ struct hiti_ctx {
 	uint8_t  supplies2[4]; /* Paper */  // XXX convert to struct
 	struct hiti_calibration calibration;
 	uint8_t  led_calibration[10]; // XXX convert to struct
+	uint8_t  unk_8010[15]; // XXX
 	struct hiti_erdc_rs erdc_rs;
+	uint8_t  hilight_adj[6]; // XXX convert to struct
 	uint8_t  rtlv[2];      /* XXX figure out conversion/math? */
 	struct hiti_rpidm rpidm;
 	uint16_t ribbonvendor; // low byte = media subtype, high byte = type.
@@ -326,6 +337,8 @@ static int hiti_query_led_calibration(struct hiti_ctx *ctx);
 static int hiti_query_ribbonvendor(struct hiti_ctx *ctx);
 static int hiti_query_summary(struct hiti_ctx *ctx, struct hiti_erdc_rs *rds);
 static int hiti_query_rpidm(struct hiti_ctx *ctx);
+static int hiti_query_hilightadj(struct hiti_ctx *ctx);
+static int hiti_query_unk8010(struct hiti_ctx *ctx);
 static int hiti_query_counter(struct hiti_ctx *ctx, uint8_t arg, uint32_t *resp);
 static int hiti_query_markers(void *vctx, struct marker **markers, int *count);
 
@@ -346,6 +359,8 @@ static int hiti_docmd(struct hiti_ctx *ctx, uint16_t cmdid, uint8_t *buf, uint16
 	if ((ret = send_data(ctx->dev, ctx->endp_down, (uint8_t*) cmd, buf_len + 3 + 3))) {
 		return ret;
 	}
+
+	usleep(10*1000);
 
 	/* Read back command */
 	ret = read_data(ctx->dev, ctx->endp_up, cmdbuf, 6, &num);
@@ -388,6 +403,8 @@ static int hiti_docmd_resp(struct hiti_ctx *ctx, uint16_t cmdid,
 		return CUPS_BACKEND_FAILED;
 	}
 
+	usleep(10*1000);
+
 	/* Read back the data*/
 	ret = read_data(ctx->dev, ctx->endp_up, respbuf, *resplen, &num);
 	if (ret)
@@ -427,6 +444,8 @@ static int hiti_sepd(struct hiti_ctx *ctx, uint32_t buf_len,
 		return ret;
 	}
 
+	usleep(10*1000);
+
 	/* Read back command */
 	ret = read_data(ctx->dev, ctx->endp_up, cmdbuf, 6, &num);
 	if (ret)
@@ -436,7 +455,6 @@ static int hiti_sepd(struct hiti_ctx *ctx, uint32_t buf_len,
 		ERROR("CMD Readback length mismatch (%d vs %d)!\n", num, 6);
 		return CUPS_BACKEND_FAILED;
 	}
-
 	return CUPS_BACKEND_OK;
 }
 
@@ -677,6 +695,8 @@ static int hiti_get_info(struct hiti_ctx *ctx)
 	INFO("Region: %s (%02x)\n",
 	     hiti_regions(ctx->rpidm.region),
 		ctx->rpidm.region);
+	INFO("Highlight Adjustment (Y M C): %d %d %d\n",
+	     ctx->hilight_adj[1], ctx->hilight_adj[2], ctx->hilight_adj[3]);
 
 	ret = hiti_query_summary(ctx, &ctx->erdc_rs);
 	if (ret)
@@ -829,6 +849,9 @@ static int hiti_attach(void *vctx, struct libusb_device_handle *dev, int type,
 		ctx->jobid++;
 
 	if (test_mode < TEST_MODE_NOATTACH) {
+		ret = hiti_query_unk8010(ctx);
+		if (ret)
+			return ret;
 		ret = hiti_query_version(ctx);
 		if (ret)
 			return ret;
@@ -842,6 +865,9 @@ static int hiti_attach(void *vctx, struct libusb_device_handle *dev, int type,
 		if (ret)
 			return ret;
 		ret = hiti_query_rpidm(ctx);
+		if (ret)
+			return ret;
+		ret = hiti_query_hilightadj(ctx);
 		if (ret)
 			return ret;
 
@@ -893,7 +919,7 @@ static uint8_t *hiti_get_correction_data(struct hiti_ctx *ctx, uint8_t mode)
 	case P_HITI_52X:
 		fname = CORRTABLE_PATH "/P52x_CCPPri.bin";
 		break;
-	case P_HITI_72X:
+	case P_HITI_720:
 		if (!mediatype) {
 			if (mode) {
 				fname = CORRTABLE_PATH "/P72x_CMQPrd.bin";
@@ -944,7 +970,7 @@ static uint8_t *hiti_get_correction_data(struct hiti_ctx *ctx, uint8_t mode)
 			}
 		}
 		break;
-	case P_HITI_75X:
+	case P_HITI_750:
 		fname = CORRTABLE_PATH "/P75x_CCPPri.bin";
 		break;
 	default:
@@ -1149,151 +1175,6 @@ static void hiti_interp33_256(uint8_t *dst, uint8_t *src, const uint8_t *pTable)
 	dst[2] = (pw1[p1_val.b] + pw2[p2_val.b] + pw3[p3_val.b] + pw4[p4_val.b]) >> 3;
 
 }
-
-#if 0
-struct hiti_jobhdr { /* based on p525l, others should be similar */
-	uint8_t queuename[32];
-	uint8_t octname[32];
-
-	uint8_t zero_a[11];
-	uint8_t unk_a[2]; // 6c 1b for 6x6, 6c 00 for others
-	uint8_t zero_b[7];
-	uint8_t unk_b[4]; // 06 00 05 00
-	uint8_t zero_c[8];
-
-	uint8_t unk_c[8]; // 64 00 00 00 00 00 64 00
-	uint8_t matte;    // 01 for enabled, 00 for disabled.
-	uint8_t unk_d[11]; // 00 06 00 05 00 06 00 05 00 01 00
-	uint8_t zero_d[4];
-	uint8_t unk_e[2]; // 05 00
-
-	uint8_t zero_e[114];
-
-	uint8_t unk_f[2]; // 32 00 for 6", 00 00 for 5"
-	uint8_t unk_g[2]; // 64 00
-	uint8_t zero_g[24];
-
-	uint8_t unk_h[8]; // 02 00 03 00 01 01 00 05
-	uint8_t unk_i[2]; // 00 00 on 6", 02 00 on 5"  (ribbon code?)
-	uint8_t zero_i[136];
-
-	uint8_t printsize; // 00 = 6x4, 09 = 6x9, 0b = 5x7, 0d = 6x4-cut2, 14 = 6x6
-	uint8_t unk_k[5]; // 02 01 00 01 00
-	uint8_t copies;
-	uint8_t unk_l[5]; // 00 00 00 03 01
-	uint16_t rows;  // LE!
-	uint16_t cols;  // LE!
-/* 0x1a2 */
-	uint8_t unk_m[10]; // 2d 01 01 00 00 00 00 00 01 00
-} __attribute__((packed)); // 436 bytes
-
-#define MAX_JOB_LEN (1844*2730*3+10480)
-
-int hiti_read_parse_legacy(void *vctx, const void **vjob, int data_fd, int copies)
-{
-	struct hiti_ctx *ctx = vctx;
-	struct hiti_printjob *job = NULL;
-	int i;
-
-	if (!ctx)
-		return CUPS_BACKEND_FAILED;
-
-	job = malloc(sizeof(*job));
-	if (!job) {
-		ERROR("Memory allocation failure!\n");
-		return CUPS_BACKEND_RETRY_CURRENT;
-	}
-	memset(job, 0, sizeof(*job));
-
-	job->copies = copies;
-
-	uint32_t job_size = 0;
-	struct hiti_jobhdr hdr;
-
-	/* Read in data */
-	while (1) {
-		uint32_t remain;
-		uint16_t blocktype;
-		uint8_t blocksubtype;
-
-		int i;
-
-		/* Read in block header */
-		i = read(data_fd, job->databuf + job->datalen, 5);
-		/* If we're done, we're done! */
-		if (i == 0)
-			break;
-		if (i < 0) {
-			hiti_cleanup_job(job);
-			return CUPS_BACKEND_CANCEL;
-		}
-		if (job->databuf[job->datalen] != 0xa6) {
-			ERROR("Bad header @ %d\n", job->datalen);
-			hiti_cleanup_job(job);
-			return CUPS_BACKEND_CANCEL;
-		}
-		memcpy(&remain, job->databuf + job->datalen + 1, sizeof(remain));
-		remain = be32_to_cpu(remain);
-		if (remain < 2) {
-			ERROR("Bad block length %d\n", remain);
-			hiti_cleanup_job(job);
-			return CUPS_BACKEND_CANCEL;
-		}
-		job->datalen += 5;
-
-		/* Read in block sub-header */
-		i = read(data_fd, job->databuf + job->datalen, 3);
-		if (i < 0) {
-			hiti_cleanup_job(job);
-			return CUPS_BACKEND_CANCEL;
-		}
-		memcpy(&blocktype, job->databuf + job->datalen, sizeof(blocktype));
-		blocksubtype = job->databuf[job->datalen + 2];
-		blocktype = be16_to_cpu(blocktype);
-
-		DEBUG("Block len %05d type %04x %02x @%d\n", remain - 3, blocktype, blocksubtype, job->datalen - 5);
-
-		remain -= 3;
-		job->datalen += 3;
-
-		uint32_t blocklen = remain;
-
-		/* Read in block */
-		while (remain) {
-			i = read(data_fd, job->databuf + job->datalen, remain);
-			if (i < 0) {
-				hiti_cleanup_job(job);
-				return CUPS_BACKEND_CANCEL;
-			}
-			remain -= i;
-			job->datalen += i;
-		}
-
-		switch (blocktype) {
-		case 0x40a1: /* Job header */
-			if (blocklen != sizeof(hdr)) {
-				ERROR("Header mismatch (%d vs %ld)\n", blocklen, sizeof(hdr));
-				hiti_cleanup_job(job);
-				return CUPS_BACKEND_CANCEL;
-			}
-			memcpy(&hdr, job->databuf + job->datalen - blocklen, blocklen);
-			job->datalen -= (blocklen + 3 + 5);  /* Rewind the entire block */
-			break;
-		case 0x40a2: /* Page header/footer?  (subtype 00/01 respectively) */
-			break;
-		case 0x40a3: /* Image data.  Subtype matters, see end! */
-			job->blocks++;
-			break;
-		}
-	}
-	DEBUG("Job data blocks: %d (%d)\n", job->blocks, job_size);
-
-	/* Byteswap header fields! */
-	hdr.rows = le16_to_cpu(hdr.rows);
-	hdr.cols = le16_to_cpu(hdr.cols);
-}
-
-#endif
 
 static int hiti_read_parse(void *vctx, const void **vjob, int data_fd, int copies)
 {
@@ -1627,6 +1508,8 @@ top:
 		return CUPS_BACKEND_FAILED;
 
 	// CMD_ESD_SHPTC // Heating Parameters & Tone Curve (~7Kb, seen on windows..)
+
+resend_y:
 	INFO("Sending yellow plane\n");
 	ret = hiti_docmd(ctx, CMD_EPC_SYP, NULL, 0, &resplen);
 	if (ret)
@@ -1637,6 +1520,7 @@ top:
 	ret = send_data(ctx->dev, ctx->endp_down, job->databuf + sent, rows * cols);
 	if (ret)
 		return CUPS_BACKEND_FAILED;
+	usleep(200*1000);
 	sent += rows * cols;
 	ret = hiti_query_status(ctx, sts, &err);
 	if (ret)
@@ -1646,7 +1530,12 @@ top:
 		      err, hiti_errors(err));
 		return CUPS_BACKEND_FAILED;
 	}
+	if (sts[0] & STATUS0_RESEND_DATA) {
+		WARNING("Printer requested resend\n");
+		goto resend_y;
+	}
 
+resend_m:
 	INFO("Sending magenta plane\n");
 	ret = hiti_docmd(ctx, CMD_EPC_SMP, NULL, 0, &resplen);
 	if (ret)
@@ -1658,6 +1547,7 @@ top:
 	if (ret)
 		return CUPS_BACKEND_FAILED;
 	sent += rows * cols;
+	usleep(200*1000);
 	ret = hiti_query_status(ctx, sts, &err);
 	if (ret)
 		return ret;
@@ -1666,7 +1556,12 @@ top:
 		      err, hiti_errors(err));
 		return CUPS_BACKEND_FAILED;
 	}
+	if (sts[0] & STATUS0_RESEND_DATA) {
+		WARNING("Printer requested resend\n");
+		goto resend_m;
+	}
 
+resend_c:
 	INFO("Sending cyan plane\n");
 	ret = hiti_docmd(ctx, CMD_EPC_SCP, NULL, 0, &resplen);
 	if (ret)
@@ -1677,6 +1572,7 @@ top:
 	ret = send_data(ctx->dev, ctx->endp_down, job->databuf + sent, rows * cols);
 	if (ret)
 		return CUPS_BACKEND_FAILED;
+	usleep(200*1000);
 	sent += rows * cols;
 	ret = hiti_query_status(ctx, sts, &err);
 	if (ret)
@@ -1685,6 +1581,10 @@ top:
 		ERROR("Printer reported alert: %08x (%s)\n",
 		      err, hiti_errors(err));
 		return CUPS_BACKEND_FAILED;
+	}
+	if (sts[0] & STATUS0_RESEND_DATA) {
+		WARNING("Printer requested resend\n");
+		goto resend_c;
 	}
 
 	INFO("Sending Print start\n");
@@ -1884,6 +1784,30 @@ static int hiti_query_rpidm(struct hiti_ctx *ctx)
 	return CUPS_BACKEND_OK;
 }
 
+static int hiti_query_hilightadj(struct hiti_ctx *ctx)
+{
+	int ret;
+	uint16_t len = sizeof(ctx->hilight_adj);
+
+	ret = hiti_docmd_resp(ctx, CMD_ERDC_RHA, NULL, 0, ctx->hilight_adj, &len);
+	if (ret)
+		return ret;
+
+	return CUPS_BACKEND_OK;
+}
+
+static int hiti_query_unk8010(struct hiti_ctx *ctx)
+{
+	int ret;
+	uint16_t len = sizeof(ctx->unk_8010);
+
+	ret = hiti_docmd_resp(ctx, CMD_ERDC_UNK, NULL, 0, ctx->unk_8010, &len);
+	if (ret)
+		return ret;
+
+	return CUPS_BACKEND_OK;
+}
+
 static int hiti_query_calibration(struct hiti_ctx *ctx)
 {
 	int ret;
@@ -2061,17 +1985,23 @@ static int hiti_query_markers(void *vctx, struct marker **markers, int *count)
 
 static const char *hiti_prefixes[] = {
 	"hiti", // Family name
-	"hiti-p52x", "hiti-p520l", "hiti-p525l",
+	"hiti-p52x",
+	"hiti-p520l", "hiti-p525l", "hiti-p720l", "hiti-p750l",
 	NULL
 };
 
 /* Exported */
 #define USB_VID_HITI         0x0d16
+#define USB_PID_HITI_P310    0x050A
 #define USB_PID_HITI_P52X    0x0502
+#define USB_PID_HITI_P530    0x000F
+#define USB_PID_HITI_P720    0x0009
+#define USB_PID_HITI_P750    0x0501
+#define USB_PID_HITI_X610    0x0800
 
 struct dyesub_backend hiti_backend = {
 	.name = "HiTi Photo Printers",
-	.version = "0.08",
+	.version = "0.10",
 	.uri_prefixes = hiti_prefixes,
 	.cmdline_usage = hiti_cmdline,
 	.cmdline_arg = hiti_cmdline_arg,
@@ -2083,46 +2013,32 @@ struct dyesub_backend hiti_backend = {
 	.query_serno = hiti_query_serno,
 	.query_markers = hiti_query_markers,
 	.devices = {
-		{ USB_VID_HITI, USB_PID_HITI_P52X, P_HITI_52X, NULL, "hiti-p52x"},
+		{ USB_VID_HITI, USB_PID_HITI_P52X, P_HITI_52X, NULL, "hiti-p520l"},
+		{ USB_VID_HITI, USB_PID_HITI_P720, P_HITI_720, NULL, "hiti-p720l"},
+		{ USB_VID_HITI, USB_PID_HITI_P750, P_HITI_750, NULL, "hiti-p750l"},
 		{ 0, 0, 0, NULL, NULL}
 	}
 };
 
-/* HiTi windows spool file format
+/* TODO:
 
- File is organized into a series of blocks.  Each has this header:
+   - Set Highight Adjustment  (And does it do anything in the driver?)
+   - Figure out 5x6, 6x5, 6x6, and 2x6 prints
+   - Job status & control (QJC, RSJ, QQA)
+   - Figure out occasional data transfer hang
+   - Set hilight adjustment & H/V alignment  (need to research the latter)
+   - Figure out Windows spool format (probably never)
+   - Add sanity checks in spool parsing
+   - Optimizations in color conversion code
+   - Commands 8008, 8011, EST_SEHT, ESD_SHTPC, RDC_ROC, PCC_STP, CMD_EDM_*
+   - Test with P525, P720, P750
+   - Further investigation into P110S & P510 series
+   - Start research into P530D, X610
+   - More Matrix decoding work
 
-  A6 LL LL LL LL         # LL is number of bytes that follow. (32-bit BE)
+WANRING:  P52x FIRMWARE
 
-Blocks are organized as follows:
-
-  40 II II <payload>
-
-   Known block IDs:
-
-	A1 xx   <Initial job header block>
-	A2 xx   <Unknown, seen after header block and as final block>
-	A3 xx  <Data chunk, presumably>
-
-Block A1 xx:  <TBD/WIP>
-
-   See struct hiti_jobhdr
-
-Block A2 00:  START PAGE
-
- a6 00 00  00 13  40  a2 00
-
-    01 00 00 00  00 00 00 00  00 00 00 00  00 00 00 00
-
-Block A2 01:  END PAGE
-
- a6 00 00  00 05  40  a2 01
-
-    00 00  [jobid? pageid?]
-
-Block A3 01:  ?? page setup? 1136 byte header, 48 byte payload.
-Block A3 02:  ?? 12 byte header?
-Block A3 04:  ?? 292 byte header
-Block A3 05:  raw BGR bitmap, to be blitted over?  384 byte header.
+	v1.19.0.X  FAILS to work on Linux; USB timeout problems!
+	v1.18.0.B  Functions properly.
 
 */
