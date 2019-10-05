@@ -223,6 +223,7 @@ typedef struct
 typedef struct
 {
   int use_lut;
+  int quality;
 } hiti_privdata_t;
 
 typedef struct
@@ -8082,17 +8083,17 @@ static void hiti_p520l_printer_start(stp_vars_t *v)
 
   stp_put32_le(0x54485047, v);
   stp_put32_le(13 * 4, v);
-  stp_put32_le(520, v);
+  stp_put32_le(520, v);  // XXX 525, 720, 750
   stp_put32_le(pd->w_size, v);
   stp_put32_le(pd->h_size, v);
   stp_put32_le(pd->w_dpi, v);
   stp_put32_le(pd->h_dpi, v);
   stp_put32_le(pd->copies, v);
-  stp_put32_le(0, v); /* STD/Fine, 520L is always STD? */
+  stp_put32_le(pd->privdata.hiti.quality, v);
   stp_put32_le(pgcode, v);
   stp_zfwrite((pd->overcoat->seq).data, 1,
 	      (pd->overcoat->seq).bytes, v);
-  stp_put32_le(0, v); /* ie is BGR packed */
+  stp_put32_le(0, v); /* ie BGR packed */
   stp_put32_le(pd->w_size * pd->h_size * 3, v);
 }
 
@@ -8144,6 +8145,93 @@ static int hiti_p520l_parse_parameters(stp_vars_t *v)
   /* No need to set global params if there's no privdata yet */
   if (!pd)
     return 1;
+
+  pd->privdata.hiti.use_lut = stp_get_boolean_parameter(v, "UseLUT");
+
+  return 1;
+}
+
+/* HiTi P720L/P750L */
+
+static const stp_parameter_t hiti_p720l_parameters[] =
+{
+  {
+    "UseLUT", N_("Internal Color Correction"), "Color=Yes,Category=Advanced Printer Setup",
+    N_("Use Internal Color Correction"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+};
+#define hiti_p720l_parameter_count (sizeof(hiti_p720l_parameters) / sizeof(const stp_parameter_t))
+
+static const dyesub_stringitem_t hiti_p720l_qualities[] =
+{
+  { "Standard", N_ ("Standard") },
+  { "Fine", N_ ("Fine") },
+};
+
+LIST(dyesub_stringlist_t, hiti_p720l_quality_list, dyesub_stringitem_t, hiti_p720l_qualities);
+
+
+static int
+hiti_p720l_load_parameters(const stp_vars_t *v, const char *name,
+			 stp_parameter_t *description)
+{
+  int	i;
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
+		  				stp_get_model_id(v));
+
+  if (caps->parameter_count && caps->parameters)
+    {
+      for (i = 0; i < caps->parameter_count; i++)
+        if (strcmp(name, caps->parameters[i].name) == 0)
+          {
+	    stp_fill_parameter_settings(description, &(caps->parameters[i]));
+	    break;
+          }
+    }
+
+  if (strcmp(name, "UseLUT") == 0)
+    {
+      description->deflt.boolean = 1;
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "Quality") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+
+      const dyesub_stringlist_t *mlist = &hiti_p720l_quality_list;
+      for (i = 0; i < mlist->n_items; i++)
+        {
+	  const dyesub_stringitem_t *m = &(mlist->item[i]);
+	  stp_string_list_add_string(description->bounds.str,
+				       m->name, m->text); /* Do *not* want this translated, otherwise use gettext(m->text) */
+	}
+      description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
+      description->is_active = 1;
+    }
+  else
+  {
+     return 0;
+  }
+  return 1;
+}
+
+static int hiti_p720l_parse_parameters(stp_vars_t *v)
+{
+  dyesub_privdata_t *pd = get_privdata(v);
+  const char *quality = stp_get_string_parameter(v, "PrintSpeed");
+
+  /* No need to set global params if there's no privdata yet */
+  if (!pd)
+    return 1;
+
+  /* Parse options */
+  if (strcmp(quality, "Fine") == 0) {
+     pd->privdata.hiti.quality = 1;
+  } else {
+     pd->privdata.hiti.quality = 0;
+  }
 
   pd->privdata.hiti.use_lut = stp_get_boolean_parameter(v, "UseLUT");
 
@@ -10140,7 +10228,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     ds820_load_parameters,
     ds820_parse_parameters,
   },
-  { /* HiTi P520L */
+  { /* HiTi P520L/P525L */
     6500,
     &bgr_ink_list,
     &res_300dpi_list,
@@ -10158,6 +10246,25 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     hiti_p520l_parameter_count,
     hiti_p520l_load_parameters,
     hiti_p520l_parse_parameters,
+  },
+  { /* HiTi P720L/P750L */
+    6501,
+    &bgr_ink_list,
+    &res_300dpi_list,
+    &hiti_p520l_page_list,
+    &hiti_p520l_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_NATIVECOPIES,
+    &hiti_p520l_printer_start, NULL,
+    NULL, NULL,
+    NULL, NULL,
+    &hiti_p520l_overcoat_list, NULL,
+    NULL, NULL,
+    hiti_p720l_parameters,
+    hiti_p720l_parameter_count,
+    hiti_p720l_load_parameters,
+    hiti_p720l_parse_parameters,
   },
   { /* Magicard Series w/ Duplex */
     7000,
