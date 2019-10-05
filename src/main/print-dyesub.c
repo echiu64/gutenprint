@@ -8196,7 +8196,7 @@ hiti_p720l_load_parameters(const stp_vars_t *v, const char *name,
       description->deflt.boolean = 1;
       description->is_active = 1;
     }
-  else if (strcmp(name, "Quality") == 0)
+  else if (strcmp(name, "PrintSpeed") == 0)
     {
       description->bounds.str = stp_string_list_create();
 
