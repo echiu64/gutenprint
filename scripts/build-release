@@ -445,6 +445,23 @@ function git_prep_release() {
     "$GIT" tag -a "$(pkg_tag)" -m "Gutenprint $(pkg_version) release" || return 1
 }
 
+function git_final_cleanup() {
+    if [[ $build_type != release ]] ; then
+	# Don't update the .po files for every snapshot.
+	echo "Cleaning up .po files"
+	"$GIT" checkout -- po
+    fi
+    # Shouldn't have anything left after this.
+    echo "Cleaning up .po files"
+    git checkout -- po
+    if "$GIT" status -uno --porcelain |grep -q -E -v 'po/.*\.po' ; then
+	console_log "*** ERROR: Unexpected untracked files:"
+	"$GIT" status -uno --porcelain |grep -E -v 'po/.*\.po' | console_log
+	return 1
+    fi
+    return 0
+}
+
 # make distcheck-minimal
 #
 # We have to rebuild the tarball in any event here, so that we pick up
@@ -819,7 +836,8 @@ declare -a OPERATIONS=(preflight
 		       git_prep_release
 		       run_distcheck_minimal
 		       save_build_artifacts
-		       finis)
+		       finis
+		       git_final_cleanup)
 
 function get_longest_op() {
     local longest_op=0
