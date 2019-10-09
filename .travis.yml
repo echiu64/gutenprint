@@ -254,7 +254,7 @@ matrix:
       name: 5 clang-3.9
       env: *full_env
       script: scripts/travis/full clang-3.9 5
-      addons: *clang-3_8-addons
+      addons: *clang-3_9-addons
     -
       name: 6 clang-5.0
       env: *full_env
