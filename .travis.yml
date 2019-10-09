@@ -135,7 +135,7 @@ matrix:
     -
       script: scripts/travis/integration clang-6.0 6
       env: *integration_env
-      name: clang-5.0
+      name: clang-6.0
       addons: &clang-6_0-addons
         apt:
           sources:
@@ -159,7 +159,7 @@ matrix:
     -
       script: scripts/travis/integration clang-8 8
       env: *integration_env
-      name: clang-7
+      name: clang-8
       addons: &clang-8-addons
         apt:
           sources:
