@@ -271,7 +271,7 @@ STP_ARG_WITH_DETAILED(
   [(automatic)],
   [
     yes)
-         if test "$FOUND_CUPS_CONFIG" == "yes" ; then
+         if test "$FOUND_CUPS_CONFIG" = "yes" ; then
 	   [BUILD_CUPS]="yes"
 	   AC_MSG_RESULT([yes])
 	   cups_prefix="/usr"
@@ -289,7 +289,7 @@ STP_ARG_WITH_DETAILED(
          AC_MSG_ERROR([${withval}: no such directory for --with-cups])
        fi ;;
   ],[
-     if test "$FOUND_CUPS_CONFIG" == "yes" ; then
+     if test "$FOUND_CUPS_CONFIG" = "yes" ; then
        cups_prefix="${prefix}"
        [BUILD_CUPS]="yes"
      else
