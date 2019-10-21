@@ -3204,7 +3204,7 @@ update_standard_print_command(void)
   char *label_text =
     stpui_build_standard_print_command(pv, stp_get_printer(pv->v));
   gtk_entry_set_text(GTK_ENTRY(standard_cmd_entry), label_text);
-  g_free(label_text);
+  stp_free(label_text);
 }
 
 static void
@@ -4182,7 +4182,7 @@ print_driver_callback (GtkWidget      *widget, /* I - Driver list */
   tmp_printer = stp_get_printer_by_index (p2gint(data));
   tmp = stpui_build_standard_print_command(pv, tmp_printer);
   gtk_entry_set_text(GTK_ENTRY(standard_cmd_entry), tmp);
-  g_free(tmp);
+  stp_free(tmp);
 
   pop_ppd_box();
   calling_print_driver_callback--;
