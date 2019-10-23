@@ -36,6 +36,8 @@ download links.</p>
 <H2><font color="#ff0000">Installation problems on MacOS 10.15 "Catalina"</font></h2>
 
 <P><strong>We are aware of installation problems on MacOS 10.15 "Catalina".  Unfortunately, we do not have a solution at this time.  We will update this as appropriate.</p>
+<P>We do not know whether Gutenprint will function on Catalina.  If you choose to upgrade and rely on Gutenprint, please unerstand that that is at your own risk.</p>
+
 
 <H2><font color="#ff0000">Gutenprint 5.3.3 is available!</font></h2>
 

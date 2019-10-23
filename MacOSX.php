@@ -132,7 +132,9 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Installation problems with MacOS 10.15 "Catalina"</span>
 			<br>
-			<a href="MacOSX.php#Catalina">October 23, 2019</a> - We are aware of installation problems that many people are having on MacOS 10.15 "Catalina".  We are working on this problem, but do not have a timeline for resolution at this time.  We will update this as appropriate.
+			<a href="MacOSX.php#Catalina">October 23, 2019</a> - We are aware of installation problems that many people are having on MacOS 10.15 "Catalina".  We are working on this problem, but do not have a timeline for resolution at this time.  We will update this as appropriate.</p>
+		<o>
+We do not know whether Gutenprint will function on Catalina.  If you choose to upgrade and rely on Gutenprint, please unerstand that that is at your own risk.
 		</p>
 
 		<p>
