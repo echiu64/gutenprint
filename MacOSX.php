@@ -120,7 +120,7 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	</tr>
 </table>
 <!--  Main desination banner for Mac OS X  -->
-<h1 style="color:#999999;"> Gutenprint and Gimp-Print for Mac OS X (10.2 through 10.11 and later) </h1> <h4> High quality printer drivers for Canon, Epson, Lexmark, and PCL printers. <br>For multi-function devices, the drivers only support the printer function.</h4>
+<h1 style="color:#999999;"> Gutenprint and Gimp-Print for Mac OS X (10.2 through 10.14) </h1> <h4> High quality printer drivers for Canon, Epson, Lexmark, dye sublimation, and PCL printers. <br>For multi-function devices, the drivers only support the printer function.</h4>
 <hr>
 <!--         THE CONTENT       -->
 <!-- left column -->
@@ -128,6 +128,12 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 <!-- indent text -->
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Headlines </h2>
+
+		<p>
+			<span style="color:red;font-size:115%;font-weight:bold;">Installation problems with MacOS 10.15 "Catalina"</span>
+			<br>
+			<a href="MacOSX.php#Catalina">October 23, 2019</a> - We are aware of installation problems that many people are having on MacOS 10.15 "Catalina".  We are working on this problem, but do not have a timeline for resolution at this time.  We will update this as appropriate.
+		</p>
 
 		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.3.3 is released!</span>
