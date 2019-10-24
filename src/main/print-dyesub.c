@@ -8052,7 +8052,7 @@ static const overcoat_t hiti_p520l_overcoat[] =
 
 LIST(overcoat_list_t, hiti_p520l_overcoat_list, overcoat_t, hiti_p520l_overcoat);
 
-static void hiti_p520l_printer_start(stp_vars_t *v)
+static void hiti_printer_start(stp_vars_t *v, int model)
 {
   dyesub_privdata_t *pd = get_privdata(v);
 
@@ -8083,7 +8083,7 @@ static void hiti_p520l_printer_start(stp_vars_t *v)
 
   stp_put32_le(0x54485047, v);
   stp_put32_le(13 * 4, v);
-  stp_put32_le(520, v);  // XXX 525, 720, 750
+  stp_put32_le(model, v);
   stp_put32_le(pd->w_size, v);
   stp_put32_le(pd->h_size, v);
   stp_put32_le(pd->w_dpi, v);
@@ -8095,6 +8095,11 @@ static void hiti_p520l_printer_start(stp_vars_t *v)
 	      (pd->overcoat->seq).bytes, v);
   stp_put32_le(0, v); /* ie BGR packed */
   stp_put32_le(pd->w_size * pd->h_size * 3, v);
+}
+
+static void hiti_p520l_printer_start(stp_vars_t *v)
+{
+  hiti_printer_start(v, 520);
 }
 
 static const stp_parameter_t hiti_p520l_parameters[] =
@@ -8152,6 +8157,10 @@ static int hiti_p520l_parse_parameters(stp_vars_t *v)
 }
 
 /* HiTi P720L/P750L */
+static void hiti_p720l_printer_start(stp_vars_t *v)
+{
+  hiti_printer_start(v, 720);
+}
 
 static const stp_parameter_t hiti_p720l_parameters[] =
 {
@@ -10262,7 +10271,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_NATIVECOPIES,
-    &hiti_p520l_printer_start, NULL,
+    &hiti_p720l_printer_start, NULL,
     NULL, NULL,
     NULL, NULL,
     &hiti_p520l_overcoat_list, NULL,
