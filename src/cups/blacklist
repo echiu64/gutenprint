@@ -232,6 +232,9 @@
 # Citizen CX-02
 0x1343 0x000A blacklist
 
+# Citizen CX-02W
+0x1343 0x000B blacklist
+
 # DNP DS80D
 0x1343 0x0008 blacklist
 

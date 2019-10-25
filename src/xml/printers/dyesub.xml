@@ -95,6 +95,7 @@
       <printer translate="name" name="Citizen CW-02" driver="citizen-cw-02" manufacturer="Citizen" model="6000" />
       <printer translate="name" name="Citizen CX" driver="citizen-cx" deviceid="MANUFACTURER:CITIZEN SYSTEMS ;MODEL:CX;" manufacturer="Citizen" model="6000" />
       <printer translate="name" name="Citizen CX-02" driver="citizen-cx-02" manufacturer="Citizen" model="6003" />
+      <printer translate="name" name="Citizen CX-02W" driver="citizen-cx-02w" manufacturer="Citizen" model="6007" />
       <printer translate="name" name="Citizen CX-W" driver="citizen-cx-w" manufacturer="Citizen" model="6001" />
       <printer translate="name" name="Citizen CY" driver="citizen-cy" manufacturer="Citizen" model="6002" />
       <printer translate="name" name="Citizen CY-02" driver="citizen-cy-02" manufacturer="Citizen" model="6002" />

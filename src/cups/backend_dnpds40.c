@@ -1292,7 +1292,6 @@ static int dnpds40_read_parse(void *vctx, const void **vjob, int data_fd, int co
 	}
 	memset(job, 0, sizeof(*job));
 	job->printspeed = -1;
-	job->copies = copies;
 
 	/* There's no way to figure out the total job length in advance, we
 	   have to parse the stream until we get to the image plane data,
@@ -1383,7 +1382,8 @@ static int dnpds40_read_parse(void *vctx, const void **vjob, int data_fd, int co
 
 		/* Check for some offsets */
 		if(!memcmp("CNTRL QTY", job->databuf + job->datalen+2, 9)) {
-			/* Ignore this.  We will insert our own later on */
+			memcpy(buf, job->databuf + job->datalen + 32, 8);
+			job->copies = atoi(buf);
 			continue;
 		}
 		if(!memcmp("CNTRL CUTTER", job->databuf + job->datalen+2, 12)) {
@@ -1502,6 +1502,12 @@ parsed:
 		dnpds40_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
 	}
+
+	/* Use the larger of the copy arguments */
+	if (job->copies > copies)
+		copies = job->copies;
+	else
+		job->copies = copies;
 
 	/* Sanity check matte mode */
 	if (job->matte == 21 && !ctx->supports_finematte) {
@@ -1812,7 +1818,7 @@ skip_multicut:
 				return CUPS_BACKEND_CANCEL;
 			}
 		} else {
-			ERROR("Printer only supports legacy 2-inch cuts on 4x6 or 8x6 jobs!");
+			ERROR("Printer only supports legacy 2-inch cuts on 4x6 or 8x6 jobs!\n");
 			dnpds40_cleanup_job(job);
 			return CUPS_BACKEND_CANCEL;
 		}
@@ -1827,7 +1833,7 @@ skip_checks:
 	can_combine = job->can_rewind; /* Any rewindable size can be stacked */
 
 	/* Try to combine prints */
-	if (copies > 1 && can_combine) {
+	if (job->copies > 1 && can_combine) {
 		struct dnpds40_printjob *combined;
 		combined = combine_jobs(job, job);
 		if (combined) {
@@ -2018,7 +2024,7 @@ top:
 #if 0  // XXX Fix 600dpi support on CW01
 			// have to read the last DPI, and send the correct CWD over?
 			if (ctx->dpi == 600 && strcmp("RV0334", *char*)resp) {
-				ERROR("600DPI prints not yet supported, need 600DPI CWD load");
+				ERROR("600DPI prints not yet supported, need 600DPI CWD load\n");
 				return CUPS_BACKEND_CANCEL;
 			}
 #endif
@@ -2973,7 +2979,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 				break;
 			}
 			if (sleeptime < 0 || sleeptime > 99) {
-				ERROR("Value out of range (0-99)");
+				ERROR("Value out of range (0-99)\n");
 				j = -1;
 				break;
 			}
@@ -2988,7 +2994,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 				break;
 			}
 			if (keep < 0 || keep > 1) {
-				ERROR("Value out of range (0-1)");
+				ERROR("Value out of range (0-1)\n");
 				j = -1;
 				break;
 			}
@@ -3032,7 +3038,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 				break;
 			}
 			if (enable < 0 || enable > 1) {
-				ERROR("Value out of range (0-1)");
+				ERROR("Value out of range (0-1)\n");
 				j = -1;
 				break;
 			}
@@ -3090,6 +3096,7 @@ static const char *dnpds40_prefixes[] = {
 	"dnp_citizen", "dnpds40",  // Family names, do *not* nuke.
 	"dnp-ds40", "dnp-ds80", "dnp-ds80dx", "dnp-ds620", "dnp-ds820", "dnp-dsrx1",
 	"citizen-cw-01", "citizen-cw-02", "citizen-cx-02",
+	"citizen-cx-02w",
 	// backwards compatibility
 	"dnpds80", "dnpds80dx", "dnpds620", "dnpds820", "dnprx1",
 	"citizencw01", "citizencw02", "citizencx02",
@@ -3108,6 +3115,7 @@ static const char *dnpds40_prefixes[] = {
 #define USB_PID_CITIZEN_CW01 0x0002 // Maybe others?
 #define USB_PID_CITIZEN_CW02 0x0006 // Also OP900II
 #define USB_PID_CITIZEN_CX02 0x000A
+#define USB_PID_CITIZEN_CX02W 0x000B
 
 #define USB_VID_DNP       0x1452
 #define USB_PID_DNP_DS620 0x8b01
@@ -3116,7 +3124,7 @@ static const char *dnpds40_prefixes[] = {
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS-series / Citizen C-series",
-	.version = "0.119",
+	.version = "0.122",
 	.uri_prefixes = dnpds40_prefixes,
 	.flags = BACKEND_FLAG_JOBLIST,
 	.cmdline_usage = dnpds40_cmdline,
@@ -3139,6 +3147,7 @@ struct dyesub_backend dnpds40_backend = {
 		{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW01, P_CITIZEN_CW01, NULL, "citizen-cw-01"}, // Also OP900 ?
 		{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW02, P_CITIZEN_OP900II, NULL, "citizen-cw-02"}, // Also OP900II
 		{ USB_VID_CITIZEN, USB_PID_CITIZEN_CX02, P_DNP_DS620, NULL, "citizen-cx-02"},
+		{ USB_VID_CITIZEN, USB_PID_CITIZEN_CX02W, P_DNP_DS820, NULL, "citizen-cx-02w"},
 		{ 0, 0, 0, NULL, NULL}
 	}
 };
@@ -3293,6 +3302,9 @@ static int legacy_cw01_read_parse(struct dnpds40_printjob *job, int data_fd, int
 	job->dpi = (hdr.res == DPI_600) ? 600 : 334;
 	job->cutter = 0;
 
+	/* Use job's copies */
+	job->copies = hdr.copies;
+
 	return legacy_spool_helper(job, data_fd, read_data,
 				   sizeof(hdr), plane_len, 0);
 }
@@ -3327,6 +3339,9 @@ static int legacy_dnp_read_parse(struct dnpds40_printjob *job, int data_fd, int 
 		ERROR("Unrecognized header data format @%d!\n", job->datalen);
 		return CUPS_BACKEND_CANCEL;
 	}
+
+	/* Use job's copies */
+	job->copies = hdr.copies;
 
 	/* Don't bother with FW version checks for legacy stuff */
 	job->multicut = hdr.type + 1;
@@ -3371,6 +3386,9 @@ static int legacy_dnp620_read_parse(struct dnpds40_printjob *job, int data_fd, i
 		return CUPS_BACKEND_CANCEL;
 	}
 
+	/* Use job's copies */
+	job->copies = hdr.copies;
+
 	/* Don't bother with FW version checks for legacy stuff */
 	job->multicut = hdr.type + 1;
 	if ((hdr.flags & FLAG_FINEMATTE) == FLAG_FINEMATTE)
@@ -3412,6 +3430,9 @@ static int legacy_dnp820_read_parse(struct dnpds40_printjob *job, int data_fd, i
 		ERROR("Unrecognized header data format @%d!\n", job->datalen);
 		return CUPS_BACKEND_CANCEL;
 	}
+
+	/* Use job's copies */
+	job->copies = hdr.copies;
 
 	/* Don't bother with FW version checks for legacy stuff */
 	job->multicut = hdr.type + 1;
