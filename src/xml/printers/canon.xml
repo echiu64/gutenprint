@@ -1218,6 +1218,8 @@
       <!-- Canon E3100 family -->
       <printer translate="name" name="Canon E3100 series" driver="bjc-E3100-series" manufacturer="Canon" model="12003100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA E3170" driver="bjc-PIXMA-E3170" manufacturer="Canon" model="12003100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA E3190" driver="bjc-PIXMA-E3190" manufacturer="Canon" model="12003100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA E3195" driver="bjc-PIXMA-E3195" manufacturer="Canon" model="12003100" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <!-- Canon PIXMA G1000 family -->
       <printer translate="name" name="Canon G1000 series" driver="bjc-G1000-series" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA G1000" driver="bjc-PIXMA-G1000" manufacturer="Canon" model="17001000" parameters="PIXMA_iP4000_params">EXPERIMENTAL</printer>
