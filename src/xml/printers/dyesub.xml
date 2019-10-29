@@ -125,7 +125,7 @@
       <printer translate="name" name="Kodak 1400" deviceid="MFG:Eastman Kodak Company;CMD:EK1;MDL: 1400 Printer;CLS:Printer;DES:Kodak 1400 Printer;`" driver="kodak-1400" manufacturer="Kodak" model="4004" />
       <printer translate="name" name="Kodak 6800" deviceid="MFG:Eastman Kodak Company;CMD:ESC;MDL:Photo Printer 6800;CLS:PRINTER;DES:KODAK Photo Printer 6800;" driver="kodak-6800" manufacturer="Kodak" model="4001" />
       <printer translate="name" name="Kodak 6850" deviceid="MFG:Eastman Kodak Company;CMD:ESC;MDL:Photo Printer 6850;CLS:PRINTER;DES:KODAK Photo Printer 6850;" driver="kodak-6850" manufacturer="Kodak" model="4002" />
-      <printer translate="name" name="Kodak 6900" driver="kodak-6900" manufacturer="Kodak" model="4010">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kodak 6900" deviceid="MFG:Kodak Alaris Inc.;CMD:SUPCC;MDL:KODAK 6900 Photo Printer;CLS:PRINTER;DES Thermal Dye Photo Printer;"driver="kodak-6900" manufacturer="Kodak" model="4010">EXPERIMENTAL</printer>
       <printer translate="name" name="Kodak 7000" deviceid="MFG:Eastman Kodak Company;CMD:SUPCC;MDL:KODAK 7000 Photo Printer;CLS:PRINTER;DES:Thermal Dye Photo Printer;" driver="kodak-7000" manufacturer="Kodak" model="4008" />
       <printer translate="name" name="Kodak 7010" deviceid="MFG:Eastman Kodak Company;CMD:SUPCC;MDL:KODAK 7010 Photo Printer;CLS:PRINTER;DES:Thermal Dye Photo Printer;" driver="kodak-7010" manufacturer="Kodak" model="4008">EXPERIMENTAL</printer>
       <printer translate="name" name="Kodak 7015" driver="kodak-7015" manufacturer="Kodak" model="4009">EXPERIMENTAL</printer>
