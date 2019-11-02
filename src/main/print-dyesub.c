@@ -2006,7 +2006,7 @@ static void sony_upd898_printer_init_func(stp_vars_t *v)
   /* Write block header */
   stp_zfwrite(hdrbuf, 1, sizeof(hdrbuf), v);
 
-  /* Write 274 bytes of payload header */
+  /* Write 290 bytes of payload header */
   stp_putc(0x00, v);
   stp_putc(0x00, v);
   stp_putc(0x01, v);
@@ -2098,7 +2098,7 @@ static void sony_upd898_printer_init_func(stp_vars_t *v)
 static void sony_updneo_printer_end_func(stp_vars_t *v)
 {
   /* write post-payload trailing stuff. */
-  dyesub_nputc(v, '\xff', 16);
+//  dyesub_nputc(v, '\xff', 16);
   stp_putc(0x00, v);
   stp_putc(0x00, v);
   stp_putc(0x14, v);
@@ -2121,6 +2121,14 @@ static void sony_updneo_printer_end_func(stp_vars_t *v)
 
   /* And finally, the PJL footer */
   stp_zfwrite("@PJL EOJ\r\n\x1b%%-12345X\r\n", 1, 21, v);
+}
+
+static void sony_updneo_printer_end_func_type2(stp_vars_t *v)
+{
+  /* write post-payload trailing stuff. */
+  dyesub_nputc(v, '\xff', 16);
+  /* It's the same from here */
+  sony_updneo_printer_end_func(v);
 }
 
 /* Sony UP-CR20 family */
@@ -2205,7 +2213,7 @@ static void sony_upcr20_printer_init_func(stp_vars_t *v)
   else if (strcmp(pd->pagesize,"w432h576-div2") == 0)
     pg = 0x49;
 
-  /* Write 274 bytes of payload header */
+  /* Write 290 bytes of payload header */
   stp_putc(0x00, v);
   stp_putc(0x00, v);
   stp_putc(0x01, v);
@@ -2393,7 +2401,7 @@ static void sony_updr80md_printer_init_func(stp_vars_t *v)
   else if (strcmp(pd->pagesize,"A4") == 0)
     pg = 0x56;
 
-  /* Write 296 bytes of payload header */
+  /* Write 312 bytes of payload header */
   stp_putc(0x00, v);
   stp_putc(0x00, v);
   stp_putc(0x01, v);
@@ -2523,34 +2531,6 @@ static void sony_updr80md_printer_init_func(stp_vars_t *v)
   stp_putc(0x00, v);
   stp_putc(0x82, v);
   stp_put32_be(pd->w_size* pd->h_size * 3, v);
-}
-
-static void sony_updr80md_printer_end_func(stp_vars_t *v)
-{
-  /* write post-payload trailing stuff. */
-//  dyesub_nputc(v, '\xff', 16);
-  stp_putc(0x00, v);
-  stp_putc(0x00, v);
-  stp_putc(0x14, v);
-  stp_putc(0x01, v);
-  stp_putc(0x00, v);
-  stp_putc(0x12, v);
-  stp_putc(0x00, v);
-
-  /* Write block header */
-  stp_zfwrite("JOBSIZE=PJL-T,302", 1, 17, v);
-  dyesub_nputc(v, 0, 256-17);
-
-  /* Write block */
-  stp_putc(0x80, v);
-  stp_putc(0x00, v);
-  stp_putc(0x8f, v);
-  stp_putc(0x01, v);
-  stp_putc(0x11, v);
-  dyesub_nputc(v, 0, 276);
-
-  /* And finally, the PJL footer */
-  stp_zfwrite("@PJL EOJ\r\n\x1b%%-12345X\r\n", 1, 21, v);
 }
 
 /* Fujifilm CX-400 */
@@ -9371,7 +9351,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_MONOCHROME | DYESUB_FEATURE_NATIVECOPIES,
-    &sony_upd898_printer_init_func, &sony_updneo_printer_end_func,
+    &sony_upd898_printer_init_func, &sony_updneo_printer_end_func_type2,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
     NULL, NULL,
@@ -9386,7 +9366,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &upcr20_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
-    &sony_upcr20_printer_init_func, &sony_updneo_printer_end_func,
+    &sony_upcr20_printer_init_func, &sony_updneo_printer_end_func_type2,
     NULL, NULL,
     NULL, NULL,
     &upcr20_overcoat_list, NULL,
@@ -9401,7 +9381,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &updr80md_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
-    &sony_updr80md_printer_init_func, &sony_updr80md_printer_end_func,
+    &sony_updr80md_printer_init_func, &sony_updneo_printer_end_func,
     NULL, NULL,
     NULL, NULL,
     NULL, NULL,
