@@ -2120,7 +2120,7 @@ static void sony_updneo_printer_end_func(stp_vars_t *v)
   dyesub_nputc(v, 0, 276);
 
   /* And finally, the PJL footer */
-  stp_zfwrite("@PJL EOJ\r\n\\x1b%%-12345X\r\n", 1, 21, v);
+  stp_zfwrite("@PJL EOJ\r\n\x1b%%-12345X\r\n", 1, 21, v);
 }
 
 /* Sony UP-CR20 family */
@@ -2550,7 +2550,7 @@ static void sony_updr80md_printer_end_func(stp_vars_t *v)
   dyesub_nputc(v, 0, 276);
 
   /* And finally, the PJL footer */
-  stp_zfwrite("@PJL EOJ\r\n\\x1b%%-12345X\r\n", 1, 21, v);
+  stp_zfwrite("@PJL EOJ\r\n\x1b%%-12345X\r\n", 1, 21, v);
 }
 
 /* Fujifilm CX-400 */
