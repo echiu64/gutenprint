@@ -130,11 +130,12 @@ static int mitsup95d_get_status(struct mitsup95d_ctx *ctx, uint8_t *resp)
 }
 
 static int mitsup95d_attach(void *vctx, struct libusb_device_handle *dev, int type,
-			    uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
+			    uint8_t endp_up, uint8_t endp_down, int iface, uint8_t jobid)
 {
 	struct mitsup95d_ctx *ctx = vctx;
 
 	UNUSED(jobid);
+	UNUSED(iface);
 
 	ctx->dev = dev;
 	ctx->endp_up = endp_up;
@@ -319,7 +320,7 @@ top:
 		}
 	} else if (ptr == job->ftr) {
 
-		/* XXX Update unknown header field to match sniffs */
+		/* Update unknown header field to match sniffs */
 		if (ctx->type == P_MITSU_P95D) {
 			if (job->hdr1[18] == 0x00)
 				job->hdr1[18] = 0x01;
@@ -327,7 +328,8 @@ top:
 
 		/* Update printjob header to reflect number of requested copies */
 		if (job->hdr2[13] != 0xff)
-			job->hdr2[13] = copies;
+			if (copies > job->hdr2[13])
+				job->hdr2[13] = copies;
 
 		*vjob = job;
 		return CUPS_BACKEND_OK;
@@ -590,7 +592,7 @@ static const char *mitsup95d_prefixes[] = {
 /* Exported */
 struct dyesub_backend mitsup95d_backend = {
 	.name = "Mitsubishi P93D/P95D",
-	.version = "0.12",
+	.version = "0.13",
 	.uri_prefixes = mitsup95d_prefixes,
 	.cmdline_arg = mitsup95d_cmdline_arg,
 	.cmdline_usage = mitsup95d_cmdline,

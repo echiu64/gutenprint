@@ -30,7 +30,7 @@
 #include <errno.h>
 #include <signal.h>
 
-#define BACKEND_VERSION "0.96G"
+#define BACKEND_VERSION "0.98G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
@@ -106,7 +106,7 @@ static int lookup_printer_type(struct dyesub_backend *backend, uint16_t idVendor
 
 /* Interface **MUST** already be claimed! */
 #define ID_BUF_SIZE 2048
-static char *get_device_id(struct libusb_device_handle *dev, int iface)
+char *get_device_id(struct libusb_device_handle *dev, int iface)
 {
 	int length;
 	char *buf = malloc(ID_BUF_SIZE + 1);
@@ -156,14 +156,7 @@ done:
 }
 
 /* Used with the IEEE1284 deviceid string parsing */
-struct deviceid_dict {
-	char *key;
-	char *val;
-};
-
-#define MAX_DICT 32
-
-static int parse1284_data(const char *device_id, struct deviceid_dict* dict)
+int parse1284_data(const char *device_id, struct deviceid_dict* dict)
 {
 	char *ptr;
 	char key[256];
@@ -196,8 +189,6 @@ static int parse1284_data(const char *device_id, struct deviceid_dict* dict)
 		/* Next up, value */
 		for (ptr = val; *device_id && *device_id != ';'; device_id++)
 			*ptr++ = *device_id;
-		if (!*device_id)
-			break;
 		while (ptr > val && *(ptr-1) == ' ')
 			ptr--;
 		*ptr = 0;
@@ -214,7 +205,7 @@ static int parse1284_data(const char *device_id, struct deviceid_dict* dict)
 	return num;
 }
 
-static char *dict_find(const char *key, int dlen, struct deviceid_dict* dict)
+char *dict_find(const char *key, int dlen, struct deviceid_dict* dict)
 {
 	while(dlen) {
 		if (!strcmp(key, dict->key))
@@ -581,14 +572,15 @@ candidate:
 		serial = url_encode(serial);
 	} else if ((serial = dict_find("SERN", dlen, dict))) {
 		serial = url_encode(serial);
-	} else if (desc->iSerialNumber) {  /* Get from USB descriptor */
+	} else if (!(backend->flags & BACKEND_FLAG_BADISERIAL) &&
+		   desc->iSerialNumber) {  /* Get from USB descriptor, if we can trust it.. */
 		libusb_get_string_descriptor_ascii(dev, desc->iSerialNumber, (unsigned char*)buf, STR_LEN_MAX);
 		sanitize_string(buf);
 		serial = url_encode(buf);
 	} else if (backend->query_serno) { /* Get from backend hook */
 		buf[0] = 0;
 		/* Ignore result since a failure isn't critical here */
-		backend->query_serno(dev, endp_up, endp_down, buf, STR_LEN_MAX);
+		backend->query_serno(dev, endp_up, endp_down, iface, buf, STR_LEN_MAX);
 		serial = url_encode(buf);
 	}
 
@@ -841,7 +833,7 @@ Copyright 2007-2019 Solomon Peachy <pizza AT shaftnet DOT org>\n\
 \n\
 This program is free software; you can redistribute it and/or modify it\n\
 under the terms of the GNU General Public License as published by the Free\n\
-Software Foundation; either version 3 of the License, or (at your option)\n\
+Software Foundation; either version 2 of the License, or (at your option)\n\
 any later version.\n\
 \n\
 This program is distributed in the hope that it will be useful, but\n\
@@ -1225,8 +1217,8 @@ bypass:
 	}
 
 	/* Attach backend to device */
-	if (backend->attach(backend_ctx, dev, printer_type, endp_up, endp_down, jobid)) {
-		ERROR("Unable to attach to printer!");
+	if (backend->attach(backend_ctx, dev, printer_type, endp_up, endp_down, iface, jobid)) {
+		ERROR("Unable to attach to printer!\n");
 		ret = CUPS_BACKEND_FAILED;
 		goto done_close;
 	}
@@ -1310,7 +1302,7 @@ newpage:
 	/* Create our own joblist if necessary */
 	if (!(backend->flags & BACKEND_FLAG_JOBLIST)) {
 		struct dyesub_joblist *jlist = dyesub_joblist_create(backend, backend_ctx);
-		if (!list)
+		if (!jlist)
 			goto done_claimed;
 		dyesub_joblist_addjob(jlist, job);
 		job = jlist;

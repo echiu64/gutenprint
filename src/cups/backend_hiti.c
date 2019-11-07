@@ -859,10 +859,12 @@ static void *hiti_init(void)
 extern struct dyesub_backend hiti_backend;
 
 static int hiti_attach(void *vctx, struct libusb_device_handle *dev, int type,
-			    uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
+		       uint8_t endp_up, uint8_t endp_down, int iface, uint8_t jobid)
 {
 	struct hiti_ctx *ctx = vctx;
 	int ret;
+
+	UNUSED(iface);
 
 	ctx->dev = dev;
 	ctx->endp_up = endp_up;
@@ -943,6 +945,51 @@ static uint8_t *hiti_get_correction_data(struct hiti_ctx *ctx, uint8_t mode)
 
 	switch (ctx->type)
 	{
+	case P_HITI_51X:
+		if (!mediatype) {
+			if (mode) {
+				fname = CORRTABLE_PATH "/P51x_CMQPra.bin";
+				break;
+			} else {
+				fname = CORRTABLE_PATH "/P51x_CMPPra.bin";
+				break;
+			}
+		} else {
+			if (mode) {
+				switch(mediaver) {
+				case 0:
+					fname = CORRTABLE_PATH "/P51x_CCQPra.bin";
+					break;
+				case 1:
+					fname = CORRTABLE_PATH "/P51x_CCQP1ra.bin";
+					break;
+				case 2:
+					fname = CORRTABLE_PATH "/P51x_CCQP2ra.bin";
+					break;
+				case 3:
+				default:
+					fname = CORRTABLE_PATH "/P51x_CCQP3ra.bin";
+					break;
+				}
+			} else {
+				switch(mediaver) {
+				case 0:
+					fname = CORRTABLE_PATH "/P51x_CCPPra.bin";
+					break;
+				case 1:
+					fname = CORRTABLE_PATH "/P51x_CCPP1ra.bin";
+					break;
+				case 2:
+					fname = CORRTABLE_PATH "/P51x_CCPP2ra.bin";
+					break;
+				case 3:
+				default:
+					fname = CORRTABLE_PATH "/P51x_CCPP3ra.bin";
+					break;
+				}
+			}
+		}
+		break;
 	case P_HITI_52X:
 		fname = CORRTABLE_PATH "/P52x_CCPPri.bin";
 		break;
@@ -1403,6 +1450,14 @@ static int hiti_read_parse(void *vctx, const void **vjob, int data_fd, int copie
 			uint8_t *rowM = ymcbuf + stride * (job->hdr.rows + i);
 			uint8_t *rowC = ymcbuf + stride * (job->hdr.rows * 2 + i);
 
+			/* Simple optimization */
+			uint8_t oldrgb[3] = { 255, 255, 255 };
+			uint8_t destrgb[3];
+
+			if (corrdata) {
+				hiti_interp33_256(oldrgb, destrgb, corrdata);
+			}
+
 			for (j = 0 ; j < job->hdr.cols ; j++) {
 				uint8_t rgb[3];
 				uint32_t base = (job->hdr.cols * i + j) * 3;
@@ -1413,9 +1468,21 @@ static int hiti_read_parse(void *vctx, const void **vjob, int data_fd, int copie
 				rgb[0] = job->databuf[base + 2];
 
 				if (corrdata) {
-					// XXX optimize?  No need to repeat
-					// calculation if input repeats.
-					hiti_interp33_256(rgb, rgb, corrdata);
+					if (rgb[0] == oldrgb[0] &&
+					    rgb[1] == oldrgb[1] &&
+					    rgb[2] == oldrgb[2]) {
+						rgb[0] = destrgb[0];
+						rgb[1] = destrgb[1];
+						rgb[2] = destrgb[2];
+					} else {
+						oldrgb[0] = rgb[0];
+						oldrgb[1] = rgb[1];
+						oldrgb[2] = rgb[2];
+						hiti_interp33_256(rgb, rgb, corrdata);
+						destrgb[0] = rgb[0];
+						destrgb[1] = rgb[1];
+						destrgb[2] = rgb[2];
+					}
 				}
 
 				/* Finally convert to YMC */
@@ -1424,7 +1491,8 @@ static int hiti_read_parse(void *vctx, const void **vjob, int data_fd, int copie
 				rowC[j] = 255 - rgb[0];
 			}
 		}
-		/* Nuke the old BGR buffer and replace it with YMC */
+
+		/* Nuke the old BGR buffer and replace it with YMC buffer */
 		free(job->databuf);
 		job->databuf = ymcbuf;
 		job->datalen = stride * 3 * job->hdr.cols;
@@ -1991,11 +2059,13 @@ static int hiti_query_counter(struct hiti_ctx *ctx, uint8_t arg, uint32_t *resp)
 	return CUPS_BACKEND_OK;
 }
 
-static int hiti_query_serno(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, char *buf, int buf_len)
+static int hiti_query_serno(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, int iface, char *buf, int buf_len)
 {
 	int ret;
 	uint16_t rsplen = 18;
 	uint8_t rspbuf[18];
+
+	UNUSED(iface);
 
 	struct hiti_ctx ctx = {
 		.dev = dev,
@@ -2063,7 +2133,7 @@ static const char *hiti_prefixes[] = {
 
 struct dyesub_backend hiti_backend = {
 	.name = "HiTi Photo Printers",
-	.version = "0.11",
+	.version = "0.13",
 	.uri_prefixes = hiti_prefixes,
 	.cmdline_usage = hiti_cmdline,
 	.cmdline_arg = hiti_cmdline_arg,
@@ -2084,20 +2154,22 @@ struct dyesub_backend hiti_backend = {
 
 /* TODO:
 
-   - Figure out 5x6, 6x5, 6x6, and 2x6 prints
+   - Figure out 5x6, 6x5, and 6x6 prints (need 6x8 or 6x9 media!)
+   - Confirm 6x2" print dimensions (windows?)
+   - Confirm 5" media works properly
    - Figure out stats/counters for non-4x6 sizes
    - Job status & control (QJC, RSJ, QQA)
    - Figure out occasional data transfer hang (related to FW bug?)
-   - Set hilight adjustment & H/V alignment
-     (need to research the former; does driver or fw consume it?)
+   - Set highlight adjustment & H/V alignment from cmdline
+   - Figure out if driver needs to consume highlight adjustment (ie feed into gamma correction?)
    - Figure out Windows spool format (probably never)
    - Spool parsing
-      * Add sanity checks
-      * Add additional 'reserved' fields for future use
+      * Add additional 'reserved' fields for future use?
+      * Support more hdr.format variants?
       * Have GP report proper modelid
-   - Performance optimizations in color conversion code
-      * Cache last calculation and re-use if possible
-      * Pre-compute then cache entire map
+   - Job combining (4x6 -> 8x6, etc)
+   - Further performance optimizations in color conversion code
+      * Pre-compute then cache entire map on disk?
    - Commands 8008, 8011, EST_SEHT, ESD_SHTPC, RDC_ROC, PCC_STP, CMD_EDM_*
    - Test with P525, P720, P750
    - Further investigation into P110S & P510 series

@@ -173,16 +173,18 @@ struct mitsu98xx_data {
 	/* @ 1600 */	struct {
 		/* @    0 */	double   unka[256];
 		/* @ 2048 */	double   unkb[256];
-		/* @ 4096 */	uint32_t unkc[10];
+		/* @ 4096 */	double   unkc[5];   /* Weight factors */
 		/* @ 4136 */	double   unkd[256];
 		/* @ 6184 */	double   unke[256]; // *= sharp->coef[X]
-		/* @ 8232 */	uint32_t unkf[10];
+		/* @ 8232 */	double   unkf[5];   /* Weight factors */
 		/* @ 8272 */	double   unkg[256];
 		/* @10320 */
 			} WMAM;
 	/* @11920 */	double   sharp_coef[11]; /* 0 is off, 1-10 are the levels.  Default is 5. [4 in settings] */
-	/* @12008 */	uint32_t unk_kh[3];
-	/* @12020 */	uint8_t  KH[2048];
+	/* @12008 */	uint32_t KHStart;
+	/* @12012 */	uint32_t KHEnd;
+	/* @12016 */	uint32_t KHStep;
+	/* @12020 */	double   KH[256];
 	/* @14068 */
 } __attribute__((packed));
 
@@ -421,12 +423,13 @@ static void *mitsu9550_init(void)
 }
 
 static int mitsu9550_attach(void *vctx, struct libusb_device_handle *dev, int type,
-			    uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
+			    uint8_t endp_up, uint8_t endp_down, int iface, uint8_t jobid)
 {
 	struct mitsu9550_ctx *ctx = vctx;
 	struct mitsu9550_media media;
 
 	UNUSED(jobid);
+	UNUSED(iface);
 
 	ctx->dev = dev;
 	ctx->endp_up = endp_up;
@@ -648,13 +651,15 @@ hdr_done:
 		int j;
 		struct mitsu98xx_data *ptr = &ctx->m98xxdata->superfine;
 		for (j = 0 ; j < 3 ; j++) {
+			ptr->KHStart = be32_to_cpu(ptr->KHStart);
+			ptr->KHEnd = be32_to_cpu(ptr->KHEnd);
+			ptr->KHStep = be32_to_cpu(ptr->KHStep);
 			for (i = 3 ; i < 3 ; i++) {
 				ptr->GammaAdj[i] = be64_to_cpu(ptr->GammaAdj[i]);
-				ptr->unk_kh[i] = be32_to_cpu(ptr->unk_kh[i]);
 			}
-			for (i = 0 ; i < 10 ; i++) {
-				ptr->WMAM.unkc[i] = be32_to_cpu(ptr->WMAM.unkc[i]);
-				ptr->WMAM.unkf[i] = be32_to_cpu(ptr->WMAM.unkf[i]);
+			for (i = 0 ; i < 5 ; i++) {
+				ptr->WMAM.unkc[i] = be64_to_cpu(ptr->WMAM.unkc[i]);
+				ptr->WMAM.unkf[i] = be64_to_cpu(ptr->WMAM.unkf[i]);
 			}
 			for (i = 0 ; i < 11 ; i++) {
 				ptr->sharp_coef[i] = be64_to_cpu(ptr->sharp_coef[i]);
@@ -672,9 +677,8 @@ hdr_done:
 				ptr->GNMby[i] = be16_to_cpu(ptr->GNMby[i]);
 				ptr->GNMgm[i] = be16_to_cpu(ptr->GNMgm[i]);
 				ptr->GNMrc[i] = be16_to_cpu(ptr->GNMrc[i]);
-
+				ptr->KH[i] = be64_to_cpu(ptr->KH[i]);
 			}
-			// XXX TODO: KH[2048]
 			ptr++;
 		}
 #endif
@@ -851,7 +855,8 @@ hdr_done:
 	/* Update printjob header to reflect number of requested copies */
 	if (job->hdr2_present) {
 		copies = 1;
-		job->hdr2.copies = cpu_to_be16(copies);
+		if (be16_to_cpu(job->hdr2.copies) < copies)
+			job->hdr2.copies = cpu_to_be16(copies);
 	}
 	job->copies = copies;
 
@@ -1055,7 +1060,8 @@ static int validate_media(int type, int media, int cols, int rows)
 		}
 		break;
 	case P_MITSU_9800:
-	case P_MITSU_9810: // XXX and don't forget the 9820S
+	case P_MITSU_9810:
+//	case P_MITSU_9820S:
 		switch(media & 0xf) {
 		case 0x01: /* 3.5x5 */
 			if (cols != 1572 && rows != 1076)
@@ -1132,11 +1138,10 @@ static int mitsu9550_main_loop(void *vctx, const void *vjob) {
 
 	int ret;
 #if 0
-	int copies;
+	int copies = 1;
 #endif
 
-//	const struct mitsu9550_printjob *job = vjob;
-	struct mitsu9550_printjob *job = (struct mitsu9550_printjob*) vjob; // XXX not good.
+	struct mitsu9550_printjob *job = (struct mitsu9550_printjob*) vjob;
 
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
@@ -1145,13 +1150,6 @@ static int mitsu9550_main_loop(void *vctx, const void *vjob) {
 
 	/* Okay, let's do this thing */
 	ptr = job->databuf;
-
-#if 0
-	/* If hdr2 is not present, we have to generate copies ourselves! */
-	if (job->hdr2_present)
-		copies = job->copies;
-	// XXX..
-#endif
 
 	/* Do the 98xx processing here */
 	if (!ctx->is_98xx || job->is_raw)
@@ -1567,12 +1565,14 @@ static int mitsu9550_query_status2(struct mitsu9550_ctx *ctx)
 	return ret;
 }
 
-static int mitsu9550_query_serno(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, char *buf, int buf_len)
+static int mitsu9550_query_serno(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, int iface, char *buf, int buf_len)
 {
 	struct mitsu9550_cmd cmd;
 	uint8_t rdbuf[READBACK_LEN];
 	uint8_t *ptr;
 	int ret, num, i;
+
+	UNUSED(iface);
 
 	cmd.cmd[0] = 0x1b;
 	cmd.cmd[1] = 0x72;
@@ -1703,7 +1703,7 @@ static const char *mitsu9550_prefixes[] = {
 /* Exported */
 struct dyesub_backend mitsu9550_backend = {
 	.name = "Mitsubishi CP9xxx family",
-	.version = "0.48",
+	.version = "0.49",
 	.uri_prefixes = mitsu9550_prefixes,
 	.cmdline_usage = mitsu9550_cmdline,
 	.cmdline_arg = mitsu9550_cmdline_arg,

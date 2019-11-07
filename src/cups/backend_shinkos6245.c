@@ -971,7 +971,7 @@ static void *shinkos6245_init(void)
 }
 
 static int shinkos6245_attach(void *vctx, struct libusb_device_handle *dev, int type,
-			      uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
+			      uint8_t endp_up, uint8_t endp_down, int iface, uint8_t jobid)
 {
 	struct shinkos6245_ctx *ctx = vctx;
 
@@ -979,6 +979,7 @@ static int shinkos6245_attach(void *vctx, struct libusb_device_handle *dev, int 
 	ctx->dev.endp_up = endp_up;
 	ctx->dev.endp_down = endp_down;
 	ctx->dev.type = type;
+	ctx->dev.iface = iface;
 
 	if (type == P_KODAK_8810) {
 		ctx->dev.error_codes = &ek8810_error_codes;
@@ -1044,7 +1045,8 @@ static int shinkos6245_read_parse(void *vctx, const void **vjob, int data_fd, in
 		return ret;
 	}
 
-	if (job->jp.copies > 1)
+	/* Use whicever copy count is larger */
+	if ((int)job->jp.copies > copies)
 		job->copies = job->jp.copies;
 	else
 		job->copies = copies;
@@ -1432,7 +1434,7 @@ static const char *shinkos6245_prefixes[] = {
 
 struct dyesub_backend shinkos6245_backend = {
 	.name = "Sinfonia CHC-S6245 / Kodak 8810",
-	.version = "0.30" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.31" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = shinkos6245_prefixes,
 	.cmdline_usage = shinkos6245_cmdline,
 	.cmdline_arg = shinkos6245_cmdline_arg,

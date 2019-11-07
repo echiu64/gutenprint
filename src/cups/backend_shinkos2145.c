@@ -830,7 +830,7 @@ static void *shinkos2145_init(void)
 }
 
 static int shinkos2145_attach(void *vctx, struct libusb_device_handle *dev, int type,
-			      uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
+			      uint8_t endp_up, uint8_t endp_down, int iface, uint8_t jobid)
 {
 	struct shinkos2145_ctx *ctx = vctx;
 
@@ -838,6 +838,7 @@ static int shinkos2145_attach(void *vctx, struct libusb_device_handle *dev, int 
 	ctx->dev.endp_up = endp_up;
 	ctx->dev.endp_down = endp_down;
 	ctx->dev.type = type;
+	ctx->dev.iface = iface;
 	ctx->dev.error_codes = &error_codes;
 
 	/* Ensure jobid is sane */
@@ -915,7 +916,8 @@ static int shinkos2145_read_parse(void *vctx, const void **vjob, int data_fd, in
 		return ret;
 	}
 
-	if (job->jp.copies > 1)
+	/* Use whicever copy count is larger */
+	if ((int)job->jp.copies > copies)
 		job->copies = job->jp.copies;
 	else
 		job->copies = copies;
@@ -1098,7 +1100,7 @@ printer_error:
 	return CUPS_BACKEND_FAILED;
 }
 
-static int shinkos2145_query_serno(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, char *buf, int buf_len)
+static int shinkos2145_query_serno(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, int iface, char *buf, int buf_len)
 {
 	struct sinfonia_cmd_hdr cmd;
 	struct s2145_getunique_resp resp;
@@ -1108,6 +1110,7 @@ static int shinkos2145_query_serno(struct libusb_device_handle *dev, uint8_t end
 		.dev = dev,
 		.endp_up = endp_up,
 		.endp_down = endp_down,
+		.iface = iface,
 	};
 
 	cmd.cmd = cpu_to_le16(SINFONIA_CMD_GETUNIQUE);
@@ -1169,7 +1172,7 @@ static const char *shinkos2145_prefixes[] = {
 
 struct dyesub_backend shinkos2145_backend = {
 	.name = "Shinko/Sinfonia CHC-S2145/S2",
-	.version = "0.63" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.64" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = shinkos2145_prefixes,
 	.cmdline_usage = shinkos2145_cmdline,
 	.cmdline_arg = shinkos2145_cmdline_arg,

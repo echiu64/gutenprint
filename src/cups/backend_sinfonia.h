@@ -83,6 +83,7 @@ struct sinfonia_usbdev {
 	uint8_t endp_up;
 	uint8_t endp_down;
 	int type;
+	int iface;
 
 	const struct sinfonia_param *params;
 	int params_count;
@@ -104,7 +105,7 @@ int sinfonia_gettonecurve(struct sinfonia_usbdev *usbh, int type, char *fname);
 int sinfonia_settonecurve(struct sinfonia_usbdev *usbh, int target, char *fname);
 int sinfonia_button_set(struct sinfonia_usbdev *dev, int enable);
 
-int sinfonia_query_serno(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, char *buf, int buf_len);
+int sinfonia_query_serno(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, int iface, char *buf, int buf_len);
 int sinfonia_dumpallparams(struct sinfonia_usbdev *usbh, int known);
 const char *sinfonia_paramname(struct sinfonia_usbdev *usbh, int id);
 

@@ -186,13 +186,14 @@ static void *selphyneo_init(void)
 extern struct dyesub_backend selphyneo_backend;
 
 static int selphyneo_attach(void *vctx, struct libusb_device_handle *dev, int type,
-			    uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
+			    uint8_t endp_up, uint8_t endp_down, int iface, uint8_t jobid)
 {
 	struct selphyneo_ctx *ctx = vctx;
 	struct selphyneo_readback rdback;
 	int ret, num;
 
 	UNUSED(jobid);
+	UNUSED(iface);
 
 	ctx->dev = dev;
 	ctx->endp_up = endp_up;
@@ -623,6 +624,7 @@ struct dyesub_backend canonselphyneo_backend = {
 Also, the first time a readback happens after plugging in the printer:
 
 34 44 35 31  01 00 01 00  01 00 45 00      "4D51" ...??
+34 44 35 31  01 00 01 00  01 00 54 00      [also seen..]
 
 
 ** ** ** ** This is what windows sends if you print over the network:

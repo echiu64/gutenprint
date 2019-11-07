@@ -58,7 +58,7 @@ const char *mitsu70x_temperatures(uint8_t temp);
 #define D90_STATUS_TYPE_x2b    0x2b // 2,  all 0
 #define D90_STATUS_TYPE_x2c    0x2c // 2,  00 56
 #define D90_STATUS_TYPE_x65    0x65 // 50, ac 80 00 01 bb b8 fe 48 05 13 5d 9c 00 33 00 00  00 00 00 00 00 00 00 00 00 00 02 39 00 00 00 00  03 13 00 02 10 40 00 00 00 00 00 00 05 80 00 3a  00 00
-#define D90_STATUS_TYPE_x82    0x82 // 1,  80 (iserial disabled?)
+#define D90_STATUS_TYPE_ISER   0x82 // 1,  80 (iserial disabled)
 #define D90_STATUS_TYPE_x83    0x83 // 1,  00
 #define D90_STATUS_TYPE_x84    0x84 // 1,  00
 
@@ -105,7 +105,7 @@ struct mitsud90_info_resp {
 	uint8_t  x2b[2];
 	uint8_t  x2c[2];
 	uint8_t  x65[50];
-	uint8_t  x82;
+	uint8_t  iserial;
 	uint8_t  x83;
 	uint8_t  x84;
 } __attribute__((packed));
@@ -151,7 +151,8 @@ struct mitsud90_job_hdr {
 	uint8_t  hdr[6]; /* 1b 53 50 30 00 33 */
 	uint16_t cols;   /* BE */
 	uint16_t rows;   /* BE */
-	uint8_t  unk[5]; /* 64 00 00 01 00 */
+	uint8_t  unk[4]; /* 64 00 00 01 */
+	uint8_t  margincut; /* 1 for enabled, 0 for disabled */
 	union {
 #if 0
 		struct {
@@ -163,7 +164,7 @@ struct mitsud90_job_hdr {
 	} __attribute__((packed));
 	uint8_t  zero[24];
 
-	uint8_t  overcoat;
+/*@x30*/uint8_t  overcoat;
 	uint8_t  quality;
 	uint8_t  colorcorr;
 	uint8_t  sharp_h;
@@ -186,7 +187,9 @@ struct mitsud90_job_hdr {
 } __attribute__((packed));
 
 struct mitsud90_plane_hdr {
-	uint8_t  hdr[10]; /* 1b 5a 54 01 00 09 00 00 00 00 */
+	uint8_t  hdr[6]; /* 1b 5a 54 01 00 09 */
+	uint16_t origin_cols;
+	uint16_t origin_rows;
 	uint16_t cols;  /* BE */
 	uint16_t rows;  /* BE */
 	uint8_t  zero_fill[498];
@@ -509,12 +512,13 @@ static void *mitsud90_init(void)
 }
 
 static int mitsud90_attach(void *vctx, struct libusb_device_handle *dev, int type,
-			    uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
+			   uint8_t endp_up, uint8_t endp_down, int iface, uint8_t jobid)
 {
 	struct mitsud90_ctx *ctx = vctx;
 	struct mitsud90_media_resp resp;
 
 	UNUSED(jobid);
+	UNUSED(iface);
 
 	ctx->dev = dev;
 	ctx->endp_up = endp_up;
@@ -921,28 +925,28 @@ int mitsud90_get_info(struct mitsud90_ctx *ctx)
 	cmdbuf[6] = 19;  /* Number of commands */
 
 	cmdbuf[7] = D90_STATUS_TYPE_MODEL;
-	cmdbuf[8] = 0x02;
-	cmdbuf[9] = 0x0b;
-	cmdbuf[10] = 0x0c;
+	cmdbuf[8] = D90_STATUS_TYPE_x02;
+	cmdbuf[9] = D90_STATUS_TYPE_FW_0b;
+	cmdbuf[10] = D90_STATUS_TYPE_FW_MA;
 
-	cmdbuf[11] = 0x0d;
-	cmdbuf[12] = 0x0e;
-	cmdbuf[13] = 0x0f;
-	cmdbuf[14] = 0x11;
+	cmdbuf[11] = D90_STATUS_TYPE_FW_F;
+	cmdbuf[12] = D90_STATUS_TYPE_FW_T;
+	cmdbuf[13] = D90_STATUS_TYPE_FW_0f;
+	cmdbuf[14] = D90_STATUS_TYPE_FW_11;
 
-	cmdbuf[15] = 0x13;
-	cmdbuf[16] = 0x1e;
-	cmdbuf[17] = 0x22;
-	cmdbuf[18] = 0x28;
+	cmdbuf[15] = D90_STATUS_TYPE_FW_ME;
+	cmdbuf[16] = D90_STATUS_TYPE_x1e;
+	cmdbuf[17] = D90_STATUS_TYPE_x22;
+	cmdbuf[18] = D90_STATUS_TYPE_x28;
 
-	cmdbuf[19] = 0x29;
-	cmdbuf[20] = 0x2b;
-	cmdbuf[21] = 0x2c;
-	cmdbuf[22] = 0x65;
+	cmdbuf[19] = D90_STATUS_TYPE_x29;
+	cmdbuf[20] = D90_STATUS_TYPE_x2b;
+	cmdbuf[21] = D90_STATUS_TYPE_x2c;
+	cmdbuf[22] = D90_STATUS_TYPE_x65;
 
-	cmdbuf[23] = 0x82;
-	cmdbuf[24] = 0x83;
-	cmdbuf[25] = 0x84;
+	cmdbuf[23] = D90_STATUS_TYPE_ISER;
+	cmdbuf[24] = D90_STATUS_TYPE_x83;
+	cmdbuf[25] = D90_STATUS_TYPE_x84;
 
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
 			     cmdbuf, sizeof(cmdbuf))))
@@ -984,12 +988,11 @@ int mitsud90_get_info(struct mitsud90_ctx *ctx)
 		DEBUG2(" %02x", resp.x65[num]);
 	}
 	DEBUG2("\n");
-	INFO("TYPE_82: %02x\n", resp.x82);
+	INFO("iSerial: %s\n", resp.iserial ? "Disabled" : "Enabled");
 	INFO("TYPE_83: %02x\n", resp.x83);
 	INFO("TYPE_84: %02x\n", resp.x84);
 
-	/* XXX Dump iSerial, sleep time settings */
-	// XXX what about resume, wait time, "cut limit" ?
+	// XXX what about resume, wait time, "cut limit", sleep time ?
 
 	return CUPS_BACKEND_OK;
 }
@@ -1208,7 +1211,7 @@ static const char *mitsud90_prefixes[] = {
 /* Exported */
 struct dyesub_backend mitsud90_backend = {
 	.name = "Mitsubishi CP-D90DW",
-	.version = "0.14",
+	.version = "0.15",
 	.uri_prefixes = mitsud90_prefixes,
 	.cmdline_arg = mitsud90_cmdline_arg,
 	.cmdline_usage = mitsud90_cmdline,
@@ -1231,9 +1234,9 @@ struct dyesub_backend mitsud90_backend = {
 
  [[HEADER 1]]
 
-   1b 53 50 30 00 33 XX XX  YY YY 64 00 00 01 00 ??  XX XX == COLS, YY XX ROWS (BE)
+   1b 53 50 30 00 33 XX XX  YY YY 64 00 00 01 MM ??  XX XX == COLS, YY XX ROWS (BE)
    ?? ?? ?? ?? ?? ?? ?? ??  00 00 00 00 00 00 00 00  <-- cut position, see below
-   00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+   00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  MM == 0 for no margin cut, 1 for margin cut
    QQ RR SS HH VV 00 00 00  00 00 01 00 03 II 09 7c  QQ == 02 matte, 00 glossy,
    09 4c 00 00 02 58 00 0c  00 06                    RR == 00 auto, 03 == fine, 02 == superfine.
                                                      SS == 00 colorcorr, 01 == none

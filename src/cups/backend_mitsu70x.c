@@ -341,7 +341,7 @@ struct mitsu70x_printerstatus_resp {
 	int16_t  serno[6]; /* LE, UTF-16 */
 	struct mitsu70x_status_ver vers[7]; // components are 'MLRTF'
 	uint8_t  null[2];
-	uint8_t  user_serno[6];  /* XXX Supposedly, don't know how to set it */
+	uint8_t  user_serno[6];  /* XXX Supposedly. Don't know how to set it! */
 	struct mitsu70x_status_deck lower;
 	struct mitsu70x_status_deck upper;
 } __attribute__((packed));
@@ -694,9 +694,11 @@ static void *mitsu70x_init(void)
 }
 
 static int mitsu70x_attach(void *vctx, struct libusb_device_handle *dev, int type,
-			   uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
+			   uint8_t endp_up, uint8_t endp_down, int iface, uint8_t jobid)
 {
 	struct mitsu70x_ctx *ctx = vctx;
+
+	UNUSED(iface);
 
 	ctx->jobid = jobid;
 	if (!ctx->jobid)
@@ -1159,8 +1161,8 @@ repeat:
 			mhdr.hdr[3] = 0x90;
 		}
 	} else if (ctx->type == P_FUJI_ASK300) {
-		job->laminatefname = CORRTABLE_PATH "/ASK300M2.raw"; // Same as D70
-//		job->lutfname = CORRTABLE_PATH "/CPD70L01.lut";  // XXX guess, driver did not come with external LUT!
+		job->laminatefname = CORRTABLE_PATH "/ASK300M2.raw"; /* Same as D70 */
+		job->lutfname = NULL; /* Printer does not come with external LUT */
 		if (mhdr.speed == 3 || mhdr.speed == 4) {
 			mhdr.speed = 3; /* Super Fine */
 			job->cpcfname = CORRTABLE_PATH "/ASK300T3.cpc";
@@ -1717,8 +1719,7 @@ static int mitsu70x_main_loop(void *vctx, const void *vjob)
 	int copies;
 	int deck, legal, reqdeck;
 
-	struct mitsu70x_printjob *job = (struct mitsu70x_printjob *) vjob; // XXX not clean.
-//	const struct mitsu70x_printjob *job = vjob;
+	struct mitsu70x_printjob *job = (struct mitsu70x_printjob *) vjob;
 
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
@@ -1968,7 +1969,7 @@ top:
 
 		/* Hold job if we have no legal decks for it, but printer is online. */
 		if (!legal) {
-			ERROR("Legal deck for printjob has errors, aborting job");
+			ERROR("Legal deck for printjob has errors, aborting job\n");
 			return CUPS_BACKEND_HOLD;
 		}
 
@@ -2359,7 +2360,7 @@ static int mitsu70x_query_status(struct mitsu70x_ctx *ctx)
 	return ret;
 }
 
-static int mitsu70x_query_serno(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, char *buf, int buf_len)
+static int mitsu70x_query_serno(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, int iface, char *buf, int buf_len)
 {
 	int ret, i;
 	struct mitsu70x_printerstatus_resp resp = { .hdr = { 0 } };
@@ -2369,6 +2370,7 @@ static int mitsu70x_query_serno(struct libusb_device_handle *dev, uint8_t endp_u
 		.endp_up = endp_up,
 		.endp_down = endp_down,
 	};
+	UNUSED(iface);
 
 	ret = mitsu70x_get_printerstatus(&ctx, &resp);
 

@@ -539,7 +539,7 @@ done:
 	return ret;
 }
 
-static int kodak6800_query_serno(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, char *buf, int buf_len)
+static int kodak6800_query_serno(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, int iface, char *buf, int buf_len)
 {
 	struct kodak6800_ctx ctx = {
 		.dev = dev,
@@ -552,6 +552,8 @@ static int kodak6800_query_serno(struct libusb_device_handle *dev, uint8_t endp_
 
 	uint8_t resp[33];
 	uint8_t req[16];
+
+	UNUSED(iface);
 
 	memset(req, 0, sizeof(req));
 	memset(resp, 0, sizeof(resp));
@@ -601,13 +603,6 @@ static int kodak6850_send_unk(struct kodak6800_ctx *ctx)
 		return CUPS_BACKEND_FAILED;
 	}
 
-#if 0
-	// XXX No particular idea what this actually is
-	if (rdbuf[1] != 0x01 && rdbuf[1] != 0x00) {
-		ERROR("Unexpected status code (0x%02x)!\n", rdbuf[1]);
-		return CUPS_BACKEND_FAILED;
-	}
-#endif
 	return ret;
 }
 
@@ -684,9 +679,11 @@ static void *kodak6800_init(void)
 }
 
 static int kodak6800_attach(void *vctx, struct libusb_device_handle *dev, int type,
-			    uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
+			    uint8_t endp_up, uint8_t endp_down, int iface, uint8_t jobid)
 {
 	struct kodak6800_ctx *ctx = vctx;
+
+	UNUSED(iface);
 
 	ctx->dev = dev;
 	ctx->endp_up = endp_up;
@@ -856,7 +853,7 @@ static int kodak6800_read_parse(void *vctx, const void **vjob, int data_fd, int 
 
 	hdr.copies = be16_to_cpu(hdr.copies);
 	hdr.copies = packed_bcd_to_uint32((char*)&hdr.copies, 2);
-	if (hdr.copies > 1)
+	if (hdr.copies > copies)
 		copies = hdr.copies;
 
 	/* Fill out job structure */
@@ -1038,7 +1035,7 @@ static const char *kodak6800_prefixes[] = {
 /* Exported */
 struct dyesub_backend kodak6800_backend = {
 	.name = "Kodak 6800/6850",
-	.version = "0.77" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.78" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = kodak6800_prefixes,
 	.cmdline_usage = kodak6800_cmdline,
 	.cmdline_arg = kodak6800_cmdline_arg,

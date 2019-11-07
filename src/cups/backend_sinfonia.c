@@ -779,7 +779,7 @@ const char *dummy_error_codes(uint8_t major, uint8_t minor)
 	return "Unknown";
 }
 
-int sinfonia_query_serno(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, char *buf, int buf_len)
+int sinfonia_query_serno(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, int iface, char *buf, int buf_len)
 {
 	struct sinfonia_cmd_hdr cmd;
 	struct sinfonia_getserial_resp resp;
@@ -787,6 +787,7 @@ int sinfonia_query_serno(struct libusb_device_handle *dev, uint8_t endp_up, uint
 
 	struct sinfonia_usbdev sdev = {
 		.dev = dev,
+		.iface = iface,
 		.endp_up = endp_up,
 		.endp_down = endp_down,
 		.error_codes = dummy_error_codes,

@@ -90,7 +90,7 @@ static void* upd_init(void)
 {
 	struct upd_ctx *ctx = malloc(sizeof(struct upd_ctx));
 	if (!ctx) {
-		ERROR("Memory Allocation Failure!");
+		ERROR("Memory Allocation Failure!\n");
 		return NULL;
 	}
 	memset(ctx, 0, sizeof(struct upd_ctx));
@@ -98,11 +98,12 @@ static void* upd_init(void)
 }
 
 static int upd_attach(void *vctx, struct libusb_device_handle *dev, int type,
-			  uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
+		      uint8_t endp_up, uint8_t endp_down, int iface, uint8_t jobid)
 {
 	struct upd_ctx *ctx = vctx;
 
 	UNUSED(jobid);
+	UNUSED(iface);
 
 	ctx->dev = dev;
 	ctx->endp_up = endp_up;
@@ -365,9 +366,13 @@ static int upd_read_parse(void *vctx, const void **vjob, int data_fd, int copies
 
 	/* Some models specify copies in the print job */
 	if (copies_offset) {
-		uint16_t tmp = copies;
-		tmp = cpu_to_be16(copies);
-		memcpy(job->databuf + copies_offset, &tmp, sizeof(tmp));
+		uint16_t tmp;
+		memcpy(&tmp, job->databuf + copies_offset, sizeof(tmp));
+		tmp = be16_to_cpu(tmp);
+		if (tmp < copies) {  /* Use whichever one is larger */
+			tmp = cpu_to_be16(copies);
+			memcpy(job->databuf + copies_offset, &tmp, sizeof(tmp));
+		}
 		job->copies = 1;
 	}
 
@@ -606,7 +611,7 @@ static const char *sonyupd_prefixes[] = {
 
 struct dyesub_backend sonyupd_backend = {
 	.name = "Sony UP-D",
-	.version = "0.37",
+	.version = "0.38",
 	.uri_prefixes = sonyupd_prefixes,
 	.cmdline_arg = upd_cmdline_arg,
 	.cmdline_usage = upd_cmdline,

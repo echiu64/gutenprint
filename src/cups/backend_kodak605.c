@@ -78,7 +78,7 @@ struct kodak605_status {
 	uint16_t b4_complete;
 	uint16_t b4_total;
 	uint8_t  b4_sts;    /* see BANK_STATUS_* */
-/*@70*/	uint8_t  unk[4];  /* XXX EK605 has 01/00/00/00, EK7000 has 01/01/01/01 */
+/*@70*/	uint8_t  unk[4];  /* EK605 has 01/00/00/00, EK7000 has 01/01/01/01 */
 /*@74*/	uint8_t  null_2[2]; /* 00 00 */
 /*@76*/	uint8_t  null_3[1]; /* EK7000 only */
 } __attribute__((packed));
@@ -357,7 +357,7 @@ static void *kodak605_init(void)
 }
 
 static int kodak605_attach(void *vctx, struct libusb_device_handle *dev, int type,
-			   uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
+			   uint8_t endp_up, uint8_t endp_down, int iface, uint8_t jobid)
 {
 	struct kodak605_ctx *ctx = vctx;
 
@@ -365,6 +365,7 @@ static int kodak605_attach(void *vctx, struct libusb_device_handle *dev, int typ
 	ctx->dev.endp_up = endp_up;
 	ctx->dev.endp_down = endp_down;
 	ctx->dev.type = type;
+	ctx->dev.iface = iface;
 	ctx->dev.error_codes = &error_codes;
 
 	if (ctx->dev.type != P_KODAK_605) {
@@ -423,7 +424,7 @@ static int kodak605_read_parse(void *vctx, const void **vjob, int data_fd, int c
 		return ret;
 	}
 
-	/* Printer handles generating copies.. */
+	/* Printer handles generating copies.  Use larger of our options */
 	if (le16_to_cpu(job->jp.copies) < (uint16_t)copies)
 		job->jp.copies = cpu_to_le16(copies);
 
@@ -551,7 +552,7 @@ static int kodak605_main_loop(void *vctx, const void *vjob) {
 			return ret;
 		}
 		offset += 44;
-		// XXX sanity check backpriny parameters..
+		// XXX sanity check backprint parameters..
 	}
 
 	/* Send print job */

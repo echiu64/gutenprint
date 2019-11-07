@@ -940,9 +940,11 @@ static void *shinkos1245_init(void)
 }
 
 static int shinkos1245_attach(void *vctx, struct libusb_device_handle *dev, int type,
-			      uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
+			      uint8_t endp_up, uint8_t endp_down, int iface, uint8_t jobid)
 {
 	struct shinkos1245_ctx *ctx = vctx;
+
+	UNUSED(iface);
 
 	ctx->dev = dev;
 	ctx->endp_up = endp_up;
@@ -1002,7 +1004,8 @@ static int shinkos1245_read_parse(void *vctx, const void **vjob, int data_fd, in
 		return ret;
 	}
 
-	if (job->jp.copies > 1)
+	/* Use larger of our copy counts */
+	if ((int)job->jp.copies > copies)
 		job->copies = job->jp.copies;
 	else
 		job->copies = copies;
@@ -1201,7 +1204,7 @@ printer_error2:
 	return CUPS_BACKEND_FAILED;
 }
 
-static int shinkos1245_query_serno(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, char *buf, int buf_len)
+static int shinkos1245_query_serno(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, int iface, char *buf, int buf_len)
 {
 	struct shinkos1245_resp_getid resp;
 	int i;
@@ -1211,6 +1214,7 @@ static int shinkos1245_query_serno(struct libusb_device_handle *dev, uint8_t end
 		.endp_up = endp_up,
 		.endp_down = endp_down,
 	};
+	UNUSED(iface);
 
 	i = shinkos1245_get_printerid(&ctx, &resp);
 	if (i < 0)
@@ -1261,7 +1265,7 @@ static const char *shinkos1245_prefixes[] = {
 
 struct dyesub_backend shinkos1245_backend = {
 	.name = "Shinko/Sinfonia CHC-S1245/E1",
-	.version = "0.31" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.32" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = shinkos1245_prefixes,
 	.cmdline_usage = shinkos1245_cmdline,
 	.cmdline_arg = shinkos1245_cmdline_arg,

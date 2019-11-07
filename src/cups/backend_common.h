@@ -108,6 +108,16 @@
 /* To cheat the compiler */
 #define UNUSED(expr) do { (void)(expr); } while (0)
 
+/* IEEE1284 ID processing */
+struct deviceid_dict {
+	char *key;
+	char *val;
+};
+#define MAX_DICT 32
+int parse1284_data(const char *device_id, struct deviceid_dict* dict);
+char *dict_find(const char *key, int dlen, struct deviceid_dict* dict);
+char *get_device_id(struct libusb_device_handle *dev, int iface);
+
 /* To enumerate supported devices */
 enum {
 	P_UNKNOWN = 0,
@@ -129,6 +139,7 @@ enum {
 	P_ES3_30,
 	P_ES40,
 	P_FUJI_ASK300,
+	P_HITI_51X,
 	P_HITI_52X,
 	P_HITI_720,
 	P_HITI_750,
@@ -186,7 +197,8 @@ struct marker {
 	int numtype; /* Numerical type, (-1 for unknown) */
 };
 
-#define BACKEND_FLAG_JOBLIST 0x00000001
+#define BACKEND_FLAG_JOBLIST    0x00000001
+#define BACKEND_FLAG_BADISERIAL 0x00000002
 
 /* Backend Functions */
 struct dyesub_backend {
@@ -197,13 +209,13 @@ struct dyesub_backend {
 	void (*cmdline_usage)(void);  /* Optional */
 	void *(*init)(void);
 	int  (*attach)(void *ctx, struct libusb_device_handle *dev, int type,
-		       uint8_t endp_up, uint8_t endp_down, uint8_t jobid);
+		       uint8_t endp_up, uint8_t endp_down, int iface, uint8_t jobid);
 	void (*teardown)(void *ctx);
 	int  (*cmdline_arg)(void *ctx, int argc, char **argv);
 	int  (*read_parse)(void *ctx, const void **job, int data_fd, int copies);
 	void (*cleanup_job)(const void *job);
 	int  (*main_loop)(void *ctx, const void *job);
-	int  (*query_serno)(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, char *buf, int buf_len); /* Optional */
+	int  (*query_serno)(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, int iface, char *buf, int buf_len); /* Optional */
 	int  (*query_markers)(void *ctx, struct marker **markers, int *count);
 	const struct device_id devices[];
 };

@@ -65,6 +65,7 @@ struct dnpds40_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;
 	uint8_t endp_down;
+	int iface;
 
 	int type;
 
@@ -228,7 +229,7 @@ static struct dnpds40_printjob *combine_jobs(const struct dnpds40_printjob *job1
 
 #if 0
 	// XXX TODO:  2x6*2 + 2x6*2 --> 8x6+cutter!
-	// problem is that 8x6" size is 4 rows smaller than 2* 4x6" prints, posing a problem.
+	// problem is that 8x6" size is 4 rows smaller than 2* 4x6" prints, posing a problem.  Maybe cut off the top and bottom 2 rows?
 
 	/* Only handle cutter if it's for 2x6" strips */
 	if (job1->cutter != 0 && job1->cutter != 120)
@@ -665,7 +666,7 @@ static uint8_t *dnpds40_resp_cmd2(struct dnpds40_ctx *ctx,
 
 #define dnpds40_resp_cmd(__ctx, __cmd, __len) dnpds40_resp_cmd2(__ctx, __cmd, __len, NULL, 0)
 
-static int dnpds40_query_serno(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, char *buf, int buf_len)
+static int dnpds40_query_serno(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, int iface, char *buf, int buf_len)
 {
 	struct dnpds40_cmd cmd;
 	uint8_t *resp;
@@ -675,6 +676,7 @@ static int dnpds40_query_serno(struct libusb_device_handle *dev, uint8_t endp_up
 		.dev = dev,
 		.endp_up = endp_up,
 		.endp_down = endp_down,
+		.iface = iface,
 	};
 
 	/* Get Serial Number */
@@ -775,7 +777,7 @@ static int dnpds80dx_query_paper(struct dnpds40_ctx *ctx)
 }
 
 static int dnpds40_attach(void *vctx, struct libusb_device_handle *dev, int type,
-			  uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
+			  uint8_t endp_up, uint8_t endp_down, int iface, uint8_t jobid)
 {
 	struct dnpds40_ctx *ctx = vctx;
 
@@ -785,6 +787,7 @@ static int dnpds40_attach(void *vctx, struct libusb_device_handle *dev, int type
 	ctx->endp_up = endp_up;
 	ctx->endp_down = endp_down;
 	ctx->type = type;
+	ctx->iface = iface;
 
 	if (test_mode < TEST_MODE_NOATTACH) {
 		struct dnpds40_cmd cmd;
@@ -1959,7 +1962,6 @@ top:
 		goto top;
 	case 900:
 		INFO("Waking printer up from standby...\n");
-		// XXX do someting here?
 		break;
 	case 1000: /* Cover open */
 	case 1010: /* No Scrap Box */
@@ -2021,7 +2023,7 @@ top:
 
 			dnpds40_cleanup_string((char*)resp, len);
 
-#if 0  // XXX Fix 600dpi support on CW01
+#if 0  // TODO Fix 600dpi support on CW01
 			// have to read the last DPI, and send the correct CWD over?
 			if (ctx->dpi == 600 && strcmp("RV0334", *char*)resp) {
 				ERROR("600DPI prints not yet supported, need 600DPI CWD load\n");

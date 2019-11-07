@@ -428,7 +428,7 @@ static void* magicard_init(void)
 {
 	struct magicard_ctx *ctx = malloc(sizeof(struct magicard_ctx));
 	if (!ctx) {
-		ERROR("Memory Allocation Failure!");
+		ERROR("Memory Allocation Failure!\n");
 		return NULL;
 	}
 	memset(ctx, 0, sizeof(struct magicard_ctx));
@@ -436,11 +436,12 @@ static void* magicard_init(void)
 }
 
 static int magicard_attach(void *vctx, struct libusb_device_handle *dev, int type,
-			   uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
+			   uint8_t endp_up, uint8_t endp_down, int iface, uint8_t jobid)
 {
 	struct magicard_ctx *ctx = vctx;
 
 	UNUSED(jobid);
+	UNUSED(iface);
 
 	ctx->dev = dev;
 	ctx->endp_up = endp_up;
