@@ -91,7 +91,7 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      want to use Gutenprint, you should stick with 10.14 (Mojave) or
      below.
 
-  2) A long-standing gamma correction bug affecting all dye-sublimation 
+  2) A long-standing gamma correction bug affecting all dye-sublimation
      printers has been corrected, resulting in visibly improved contrast,
      tonal range, and color fidelity.  However, users upgrading from older
      versions can continue using the old gamma behaviour, by setting the
@@ -106,7 +106,7 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      HiTi P750L (EXPERIMENTAL)
      Kodak 6900 (EXPERIMENTAL)
 
-  4) The following printers have been siginificant bugfixes or other 
+  4) The following printers have been siginificant bugfixes or other
      enhancements:
 
      DNP DS820
