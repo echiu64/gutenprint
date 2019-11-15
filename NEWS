@@ -91,6 +91,31 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      want to use Gutenprint, you should stick with 10.14 (Mojave) or
      below.
 
+  2) A long-standing gamma correction bug affecting all dye-sublimation 
+     printers has been corrected, resulting in visibly improved contrast,
+     tonal range, and color fidelity.  However, users upgrading from older
+     versions can continue using the old gamma behaviour, by setting the
+     "StpLegacyDyesubGamma" option to "true"
+
+  3) Support for the following printers has been added:
+
+     Citizen CX-02W
+     HiTi P520L
+     HiTi P525L
+     HiTi P720L (EXPERIMENTAL)
+     HiTi P750L (EXPERIMENTAL)
+     Kodak 6900 (EXPERIMENTAL)
+
+  4) The following printers have been siginificant bugfixes or other 
+     enhancements:
+
+     DNP DS820
+     Kodak 605
+     Kodak 6800/6850
+     Kodak 7000 series
+     Kodak 8810
+     Sony UP-DR80MD
+
 * Changes from Gutenprint 5.3.1 (Gutenprint 5.3.2 was not released)
 
   1) Gutenprint will fail to configure if the necessary CUPS
