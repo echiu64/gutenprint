@@ -878,6 +878,12 @@ static int hiti_attach(void *vctx, struct libusb_device_handle *dev, int type,
 		ctx->jobid++;
 
 	if (test_mode < TEST_MODE_NOATTACH) {
+		/* P52x firmware v1.19+ lose their minds when Linux
+		   issues a routine CLEAR_ENDPOINT_HALT.  Printer can recover
+		   if it is reset.  Unclear what the side effects are.. */
+		if (ctx->type == P_HITI_52X)
+			libusb_reset_device(dev);
+
 		ret = hiti_query_unk8010(ctx);
 		if (ret)
 			return ret;
@@ -2133,7 +2139,7 @@ static const char *hiti_prefixes[] = {
 
 struct dyesub_backend hiti_backend = {
 	.name = "HiTi Photo Printers",
-	.version = "0.13",
+	.version = "0.14",
 	.uri_prefixes = hiti_prefixes,
 	.cmdline_usage = hiti_cmdline,
 	.cmdline_arg = hiti_cmdline_arg,
@@ -2176,10 +2182,5 @@ struct dyesub_backend hiti_backend = {
    - Start research into P530D, X610
    - Incorporate changes for CS-series card printers
    - More "Matrix table" decoding work
-
-WANRING:  P52x FIRMWARE
-
-	v1.19.0.X  FAILS to work on Linux; USB timeout problems!
-	v1.18.0.B  Functions properly.
 
 */
