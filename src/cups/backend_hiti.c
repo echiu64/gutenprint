@@ -536,7 +536,7 @@ static const char* hiti_ribbontypes(uint8_t code)
 	}
 }
 
-static int hiti_ribboncounts(uint8_t code)
+static unsigned int hiti_ribboncounts(uint8_t code)
 {
 	switch(code) {
 	case RIBBON_TYPE_4x6: return 500;
@@ -740,7 +740,7 @@ static int hiti_get_info(struct hiti_ctx *ctx)
 	if (ret)
 		return CUPS_BACKEND_FAILED;
 
-	uint32_t buf;
+	uint32_t buf = 0;
 	ret = hiti_query_counter(ctx, 1, &buf);
 	if (ret)
 		return CUPS_BACKEND_FAILED;
@@ -826,7 +826,7 @@ static int hiti_get_status(struct hiti_ctx *ctx)
 	INFO("Printer Error: %s (%08x)\n",
 	     hiti_errors(err), err);
 
-	INFO("Media: %s (%02x / %04x) : %03d/%03d\n",
+	INFO("Media: %s (%02x / %04x) : %03u/%03u\n",
 	     hiti_ribbontypes(ctx->supplies[2]),
 	     ctx->supplies[2],
 	     ctx->ribbonvendor,
@@ -870,7 +870,6 @@ static int hiti_attach(void *vctx, struct libusb_device_handle *dev, int type,
 	ctx->endp_up = endp_up;
 	ctx->endp_down = endp_down;
 	ctx->type = type;
-	ctx->jobid = jobid;
 
 	/* Ensure jobid is sane */
 	ctx->jobid = (jobid & 0x7fff);
@@ -1296,7 +1295,7 @@ static int hiti_read_parse(void *vctx, const void **vjob, int data_fd, int copie
 
 	/* Sanity check header */
 	if (job->hdr.hdr_len != sizeof(job->hdr)) {
-		ERROR("Header length mismatch (%d/%d)!\n", job->hdr.hdr_len, (int)sizeof(job->hdr));
+		ERROR("Header length mismatch (%u/%d)!\n", job->hdr.hdr_len, (int)sizeof(job->hdr));
 		hiti_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
 	}
@@ -1346,7 +1345,7 @@ static int hiti_read_parse(void *vctx, const void **vjob, int data_fd, int copie
 	while (remain) {
 		i = read(data_fd, job->databuf + job->datalen, remain);
 		if (i < 0) {
-			ERROR("Read failed (%d/%u/%d)\n",
+			ERROR("Read failed (%d/%u/%u)\n",
 			      i, remain, job->datalen);
 			perror("ERROR: Read failed");
 			hiti_cleanup_job(job);
@@ -1522,7 +1521,7 @@ static int calc_offset(int val, int mid, int max, int step)
 	val -= mid;
 	val *= step;
 
-	return step;
+	return val;
 }
 
 static int hiti_main_loop(void *vctx, const void *vjob)
@@ -2139,7 +2138,7 @@ static const char *hiti_prefixes[] = {
 
 struct dyesub_backend hiti_backend = {
 	.name = "HiTi Photo Printers",
-	.version = "0.14",
+	.version = "0.15",
 	.uri_prefixes = hiti_prefixes,
 	.cmdline_usage = hiti_cmdline,
 	.cmdline_arg = hiti_cmdline_arg,
