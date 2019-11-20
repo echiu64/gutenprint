@@ -9771,7 +9771,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Mitsubishi CPD90D */
     4109,
-    &bgr_ink_list,
+    &rgb_ink_list,
     &res_300dpi_list,
     &mitsu_cpd90_page_list,
     &mitsu_cpd90_printsize_list,
