@@ -3126,7 +3126,7 @@ static const char *dnpds40_prefixes[] = {
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS-series / Citizen C-series",
-	.version = "0.122",
+	.version = "0.123",
 	.uri_prefixes = dnpds40_prefixes,
 	.flags = BACKEND_FLAG_JOBLIST,
 	.cmdline_usage = dnpds40_cmdline,
@@ -3440,9 +3440,9 @@ static int legacy_dnp820_read_parse(struct dnpds40_printjob *job, int data_fd, i
 	job->multicut = hdr.type + 1;
 	if ((hdr.flags & FLAG_820_FMATTE) == FLAG_820_FMATTE)
 		job->matte = 21;
-	else if (hdr.flags & FLAG_820_LUSTER)
+	else if ((hdr.flags & FLAG_820_LUSTER) == FLAG_820_LUSTER)
 		job->matte = 22;
-	else if (hdr.flags & FLAG_820_MATTE)
+	else if ((hdr.flags & FLAG_820_MATTE) == FLAG_820_MATTE)
 		job->matte = 1;
 
 	if (hdr.flags & FLAG_820_HD)
