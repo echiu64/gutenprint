@@ -10374,7 +10374,7 @@ static const stp_parameter_t the_parameters[] =
     "LegacyDyesubGamma", N_("Use legacy dyesub gamma curve"), "Color=Yes,Category=Advanced Printer Setup",
     N_("Use legacy dyesub gamma curve"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 0, STP_CHANNEL_NONE, 1, 0
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 0, STP_CHANNEL_NONE, 1, 0
   },
 };
 
