@@ -96,7 +96,7 @@ function pkg_tag() {
 
 function preflight() {
     # shellcheck disable=SC2155
-    local trailing_ws="$("$GIT" grep -Il '[	 ]$')"
+    local trailing_ws="$("$GIT" grep -Il '[	 ]$' ':(exclude)po/*.po')"
     if [[ -n $trailing_ws ]] ; then
 	console_log "*** ERROR: The following files have trailing whitespace:"
 	console_log "$trailing_ws"
@@ -413,6 +413,12 @@ function run_checksums() {
     console_log "*** ERROR: make checksums failed"
     (( lstatus > 127 )) && return $lstatus
     return 2
+}
+
+# Fetch the translations
+
+function fetch_translations() {
+    rsync -Lrtzv rsync://translationproject.org/tp/latest/gutenprint/ po/
 }
 
 # Prep the release
@@ -832,6 +838,7 @@ declare -a OPERATIONS=(preflight
 		       run_valgrind
 		       run_full
 		       run_checksums
+		       fetch_translations
 		       run_distcheck_minimal
 		       git_prep_release
 		       run_distcheck_minimal
