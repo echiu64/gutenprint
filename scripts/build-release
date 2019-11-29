@@ -96,7 +96,7 @@ function pkg_tag() {
 
 function preflight() {
     # shellcheck disable=SC2155
-    local trailing_ws="$("$GIT" grep -Il '[	 ]$')"
+    local trailing_ws="$("$GIT" grep -Il '[	 ]$' ':(exclude)po/*.po')"
     if [[ -n $trailing_ws ]] ; then
 	console_log "*** ERROR: The following files have trailing whitespace:"
 	console_log "$trailing_ws"
