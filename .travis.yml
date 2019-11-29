@@ -25,6 +25,7 @@ matrix:
                 - gettext
                 - libtool
                 - perl
+                - rsync
                 - time
                 - zpaq
               - &cups_packages

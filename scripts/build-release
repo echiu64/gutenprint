@@ -415,6 +415,12 @@ function run_checksums() {
     return 2
 }
 
+# Fetch the translations
+
+function fetch_translations() {
+    rsync -Lrtzv rsync://translationproject.org/tp/latest/gutenprint/ po/
+}
+
 # Prep the release
 
 function git_prep_release() {
@@ -832,6 +838,7 @@ declare -a OPERATIONS=(preflight
 		       run_valgrind
 		       run_full
 		       run_checksums
+		       fetch_translations
 		       run_distcheck_minimal
 		       git_prep_release
 		       run_distcheck_minimal
