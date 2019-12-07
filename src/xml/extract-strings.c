@@ -31,6 +31,12 @@ main(int argc, char **argv)
 {
   int status = 0;
   argv++;
+  printf("/*\n");
+  printf(" * TRANSLATORS:\n");
+  printf(" * All strings in this file must be no more than 80 bytes in length.\n");
+  printf(" * Please take into account expansion due to multi-byte characters,\n");
+  printf(" * as the limit is *bytes*, not characters!\n");
+  printf(" */\n");
   while (*argv)
     {
       stp_mxml_node_t *top =

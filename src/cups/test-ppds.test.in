@@ -56,18 +56,15 @@ rotor="-R ${STP_TEST_ROTOR_CIRCUMFERENCE:-1} -r ${STP_TEST_ROTOR:-0}"
 function test_full() {
     rm -rf "$PPD_DIR"
     echo "GENERATING PPD FILES (all):"
-    set -e
     $DEBUG make "PPD_DIR=$PPD_DIR" EXTRA_GENPPD_OPTS="$rotor -b -Z" ppd-clean ppd-global-a ppd-nls-a ppd-nonls-a
 }
 
 function test_fast() {
     rm -rf "$PPD_DIR"
     echo "GENERATING PPD FILES (fast):"
-    set -e
     $DEBUG make "PPD_DIR=$PPD_DIR" EXTRA_GENPPD_OPTS="$rotor -b -Z" ppd-clean ppd-nonls
     if [[ -n $STP_TEST_DIST ]] ; then
 	echo "GENERATING PPD FILES (global):"
-	set -e
 	$DEBUG make "PPD_DIR=$PPD_DIR" EXTRA_GENPPD_OPTS="$rotor -b -Z -S" ppd-global
     fi
     PPD_PARALLEL=20
@@ -76,7 +73,6 @@ function test_fast() {
 function test_minimal() {
     rm -rf "$PPD_DIR"
     echo "GENERATING PPD FILES (minimal):"
-    set -e
     $DEBUG make "PPD_DIR=$PPD_DIR" EXTRA_GENPPD_OPTS="$rotor -b -Z -S" ppd-clean ppd-nonls
     PPD_PARALLEL=20
 }
@@ -106,13 +102,14 @@ ppd_count=$(find "$PPD_DIR" -name '*.ppd' -print | wc -l)
 # Also, a number of our media sizes aren't named correctly, but we'll
 # accept those issues rather than cluttering the namespace further and/or
 # changing tag names.
-cupstestppdopts='-I profiles -W sizes -I filters'
+cupstestppdopts='-r -I profiles -W sizes -I filters'
 
 # This lets us report progress
-testcmd="echo -n . 1>&2; cupstestppd $cupstestppdopts "'"$@"'
+testcmd="echo -n . 1>&2; cupstestppd $cupstestppdopts"' "$@" |grep '"'FAIL$' | awk -F: '{print \$1}'"
 
 echo -n "TESTING PPD FILES: "
-failures="$(find $PPD_DIR -name '*.ppd*' -print | sort -t/ -k3 -k2 | xargs $PARALLEL sh -c "$testcmd" |grep 'FAIL$' | awk -F: '{print $1}')"
+failures="$(find $PPD_DIR -name '*.ppd*' -print | sort -t/ -k3 -k2 | xargs $PARALLEL sh -c "$testcmd")"
+echo 1>&2
 
 if [[ -z "$failures" ]] ; then
     echo "All $ppd_count PPD files pass"
@@ -126,8 +123,8 @@ fi
 # Use this with PPD files with translated numbers (genppd -N)
 # With normal globalized PPD files this will yield hundreds of megabytes
 # of errors.
-echo "$failures" | xargs cupstestppd -r $cupstestppdopts 2>&1
+echo "$failures" | xargs -P $STP_PARALLEL -L 10 sh -c "cupstestppd -r $cupstestppdopts "'"$@"'" 2>&1 | egrep -v '(WARN.*(Size \".*\" should be \"|has unexpected dimensions|should be the Adobe standard name)|REF: Page.*|^$)'"
 
-fail_count=`echo "$failures" | wc -l`
+fail_count=$(wc -l <<< "$failures")
 echo "$fail_count/$ppd_count fail"
 exit 1
