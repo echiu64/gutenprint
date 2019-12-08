@@ -117,6 +117,8 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      Mitsubishi CP-D90 series
      Sony UP-DR80MD
 
+  5) Croation translation added; other translations updated.
+
 * Changes from Gutenprint 5.3.1 (Gutenprint 5.3.2 was not released)
 
   1) Gutenprint will fail to configure if the necessary CUPS
