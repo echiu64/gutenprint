@@ -11,14 +11,14 @@ msgstr ""
 "Project-Id-Version: gutenprint 5.3.4\n"
 "Report-Msgid-Bugs-To: gimp-print-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2019-11-26 01:00-0500\n"
-"PO-Revision-Date: 2019-11-29 17:30+0200\n"
+"PO-Revision-Date: 2019-12-08 17:33+0200\n"
 "Last-Translator: Pavel Maryanov <acid@jack.kiev.ua>\n"
 "Language-Team: Russian <gnu@d07.ru>\n"
 "Language: ru\n"
-"X-Bugs: Report translation errors to the Language-Team address.\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Bugs: Report translation errors to the Language-Team address.\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\\n;\n"
 "X-Generator: Poedit 2.2.3\n"
 
@@ -1467,7 +1467,7 @@ msgstr "Значение светло-голубого"
 
 #: src/main/print-escp2.c:586 src/main/print-escp2.c:587
 msgid "Light Cyan Density Scale"
-msgstr "Шкала плотности светло-голубого"
+msgstr "Шкaлa плoтнocти cвeтлo-гoлубoгo"
 
 #: src/main/print-escp2.c:594 src/main/print-escp2.c:595
 msgid "Light Magenta Value"
@@ -1475,7 +1475,7 @@ msgstr "Баланс светло-пурпурного"
 
 #: src/main/print-escp2.c:602 src/main/print-escp2.c:603
 msgid "Light Magenta Density Scale"
-msgstr "Шкала плотности светло-пурпурного"
+msgstr "Шкaлa плoтнocти cвeтлo-пуpпуpнoгo"
 
 #: src/main/print-escp2.c:618 src/main/print-escp2.c:619
 msgid "Dark Yellow Value"
@@ -1487,7 +1487,7 @@ msgstr "Переход тёмно-жёлтого"
 
 #: src/main/print-escp2.c:634 src/main/print-escp2.c:635
 msgid "Dark Yellow Density Scale"
-msgstr "Шкала плотности тёмно-жёлтого"
+msgstr "Шкaлa плoтнocти тёмнo-жёлтoгo"
 
 #: src/main/print-escp2.c:642 src/main/print-escp2.c:643
 #: src/main/print-escp2.c:666 src/main/print-escp2.c:667
@@ -1517,7 +1517,7 @@ msgstr "Переход светло-серого"
 #: src/main/print-escp2.c:706 src/main/print-escp2.c:707
 #: src/main/print-escp2.c:778 src/main/print-escp2.c:779
 msgid "Light Gray Density Scale"
-msgstr "Шкала плотности светло-серого"
+msgstr "Шкaлa плoтнocти cвeтлo-сeрoгo"
 
 #: src/main/print-escp2.c:714 src/main/print-escp2.c:715
 msgid "Dark Gray Value"
@@ -1529,7 +1529,7 @@ msgstr "Переход тёмно-серого"
 
 #: src/main/print-escp2.c:730 src/main/print-escp2.c:731
 msgid "Dark Gray Density Scale"
-msgstr "Шкала плотности тёмно-серого"
+msgstr "Шкaлa плoтнocти тёмнo-сepoгo"
 
 #: src/main/print-escp2.c:738
 msgid "Mid Gray Value"
@@ -1558,87 +1558,87 @@ msgstr "Шкала плотности нейтрально-серого"
 
 #: src/main/print-escp2.c:786
 msgid "Hextone Gray 5 Value"
-msgstr "Значение серого 5 (шеститоновая печать)"
+msgstr "Hextone: значение серого 5"
 
 #: src/main/print-escp2.c:787
 msgid "Hextone Gray 5 (Darkest) Value"
-msgstr "Значение серого 5 (самый тёмный)"
+msgstr "Hextone: значение серого 5 (самый тёмный)"
 
 #: src/main/print-escp2.c:794
 msgid "Hextone Gray 5 Transition"
-msgstr "Переход серого 5 (шеститоновая печать)"
+msgstr "Hextone: переход серого 5"
 
 #: src/main/print-escp2.c:795
 msgid "Hextone Gray 5 (Darkest) Transition"
-msgstr "Переход серого 5 (самый тёмный)"
+msgstr "Hextone: переход серого 5 (самый тёмный)"
 
 #: src/main/print-escp2.c:802
 msgid "Hextone Gray 5 Density Scale"
-msgstr "Шкала плотности серого 5 (шеститоновая печать)"
+msgstr "Hextone: шкала плотности серого 5"
 
 #: src/main/print-escp2.c:803
 msgid "Hextone Gray 5 (Darkest) Density Scale"
-msgstr "Шкала плотности серого 5 (самый тёмный)"
+msgstr "Hextone: шкала плотности серого 5 (самый тёмный)"
 
 #: src/main/print-escp2.c:810 src/main/print-escp2.c:811
 msgid "Hextone Gray 4 Value"
-msgstr "Значение серого 4 (шеститоновая печать)"
+msgstr "Hextone: значение серого 4"
 
 #: src/main/print-escp2.c:818 src/main/print-escp2.c:819
 msgid "Hextone Gray 4 Transition"
-msgstr "Переход серого 4 (шеститоновая печать)"
+msgstr "Hextone: переход серого 4"
 
 #: src/main/print-escp2.c:826 src/main/print-escp2.c:827
 msgid "Hextone Gray 4 Density Scale"
-msgstr "Шкала плотности серого 4 (шеститоновая печать)"
+msgstr "Hextone: шкала плотности серого 4"
 
 #: src/main/print-escp2.c:834 src/main/print-escp2.c:835
 msgid "Hextone Gray 3 Value"
-msgstr "Значение серого 3 (шеститоновая печать)"
+msgstr "Hextone: значение серого 3"
 
 #: src/main/print-escp2.c:842 src/main/print-escp2.c:843
 msgid "Hextone Gray 3 Transition"
-msgstr "Переход серого 3 (шеститоновая печать)"
+msgstr "Hextone: переход серого 3"
 
 #: src/main/print-escp2.c:850 src/main/print-escp2.c:851
 msgid "Hextone Gray 3 Density Scale"
-msgstr "Шкала плотности серого 3 (шеститоновая печать)"
+msgstr "Hextone: шкала плотности серого 3"
 
 #: src/main/print-escp2.c:858 src/main/print-escp2.c:859
 msgid "Hextone Gray 2 Value"
-msgstr "Значение серого 2 (шеститоновая печать)"
+msgstr "Hextone: значение серого 2"
 
 #: src/main/print-escp2.c:866 src/main/print-escp2.c:867
 msgid "Hextone Gray 2 Transition"
-msgstr "Переход серого 2 (шеститоновая печать)"
+msgstr "Hextone: переход серого 2"
 
 #: src/main/print-escp2.c:874 src/main/print-escp2.c:875
 msgid "Hextone Gray 2 Density Scale"
-msgstr "Шкала плотности серого 2 (шеститоновая печать)"
+msgstr "Hextone: шкала плотности серого 2"
 
 #: src/main/print-escp2.c:882
 msgid "Hextone Gray 1 Value"
-msgstr "Значение серого 1 (шеститоновая печать)"
+msgstr "Hextone: значение серого 1"
 
 #: src/main/print-escp2.c:883
 msgid "Hextone Gray 1 (Lightest) Value"
-msgstr "Значение серого 1 (самый светлый)"
+msgstr "Hextone: значение серого 1 (самый светлый)"
 
 #: src/main/print-escp2.c:890
 msgid "Hextone Gray 1 Transition"
-msgstr "Переход серого 1 (шеститоновая печать)"
+msgstr "Hextone: переход серого 1"
 
 #: src/main/print-escp2.c:891
 msgid "Hextone Gray 1 (Lightest) Transition"
-msgstr "Переход серого 1 (самый светлый)"
+msgstr "Hextone: переход серого 1 (самый светлый)"
 
 #: src/main/print-escp2.c:898
 msgid "Hextone Gray 1 Density Scale"
-msgstr "Шкала плотности серого 1 (шеститоновая печать)"
+msgstr "Hextone: шкала плотности серого 1"
 
 #: src/main/print-escp2.c:899
 msgid "Hextone Gray 1 (Lightest) Density Scale"
-msgstr "Шкала плотности серого 1 (самый светлый)"
+msgstr "Hextone: шкала плотности серого 1 (макс.светлый)"
 
 #: src/main/print-escp2.c:930
 msgid "Subchannel Cutoff"
@@ -1650,7 +1650,7 @@ msgstr "Верхний предел использования светлых ч
 
 #: src/main/print-escp2.c:938
 msgid "Drying Time Per Page"
-msgstr "Время высыхания для страницы"
+msgstr "Вpeмя высыхaния для cтрaницы"
 
 #: src/main/print-escp2.c:939
 msgid "Set drying time per page"
@@ -1658,7 +1658,7 @@ msgstr "Указать время высыхания для страницы"
 
 #: src/main/print-escp2.c:946
 msgid "Drying Time Per Scan"
-msgstr "Время высыхания для сканирования"
+msgstr "Bpeмя выcыxaния для cкaниpoвaния"
 
 #: src/main/print-escp2.c:947
 msgid "Set drying time per scan"
@@ -1666,7 +1666,7 @@ msgstr "Указать время высыхания для сканирован
 
 #: src/main/print-escp2.c:954
 msgid "Minimum Drying Time Per Scan"
-msgstr "Минимальное время высыхания для сканирования"
+msgstr "Мин. время высыхания для сканирования"
 
 #: src/main/print-escp2.c:955
 msgid "Set minimum drying time per scan"
@@ -2143,7 +2143,7 @@ msgstr "Фотобумага"
 #: src/xml/xmli18n-tmp.h:2725 src/xml/xmli18n-tmp.h:2746
 #: src/xml/xmli18n-tmp.h:2767 src/xml/xmli18n-tmp.h:2786
 msgid "Premium Glossy Photo Paper"
-msgstr "Глянцевая фотобумага высшего сорта"
+msgstr "Глянцевая фотобумага Premium"
 
 #: src/main/print-lexmark.c:890 src/xml/xmli18n-tmp.h:1852
 #: src/xml/xmli18n-tmp.h:1879 src/xml/xmli18n-tmp.h:1899
@@ -2168,7 +2168,7 @@ msgstr "Глянцевая фотобумага высшего сорта"
 #: src/xml/xmli18n-tmp.h:2727 src/xml/xmli18n-tmp.h:2748
 #: src/xml/xmli18n-tmp.h:2769 src/xml/xmli18n-tmp.h:2788
 msgid "Premium Luster Photo Paper"
-msgstr "Люстровая фотобумага высшего сорта"
+msgstr "Люстровая фотобумага Premium"
 
 #: src/main/print-lexmark.c:894 src/xml/xmli18n-tmp.h:1855
 #: src/xml/xmli18n-tmp.h:1882 src/xml/xmli18n-tmp.h:1900
@@ -2845,7 +2845,7 @@ msgstr "Область, которую не нужно покрывать защ
 
 #: src/main/print-dyesub.c:8517
 msgid "Overcoat Hole Duplex"
-msgstr "Область без защитного покрытия с переворотом"
+msgstr "Облacть бeз зaщитнoгo пoкpытия c пeрeвopoтoм"
 
 #: src/main/print-dyesub.c:8525 src/main/print-dyesub.c:8526
 msgid "Overcoat Pattern Duplex"
@@ -2966,7 +2966,7 @@ msgstr "Шаблон защитного покрытия"
 
 #: src/main/print-dyesub.c:10368 src/main/print-pcl.c:1616
 msgid "Printer Generates Copies Natively"
-msgstr "Принтер создаёт копии при помощи встроенных функций"
+msgstr "Принтер создаёт копии своими средствами"
 
 #: src/main/print-dyesub.c:10369 src/main/print-pcl.c:1617
 msgid "Printer Generates Copies"
@@ -2974,7 +2974,7 @@ msgstr "Принтер создаёт копии"
 
 #: src/main/print-dyesub.c:10374 src/main/print-dyesub.c:10375
 msgid "Use legacy dyesub gamma curve"
-msgstr ""
+msgstr "Использовать устаревшую кривую гамма-распределения dyesub"
 
 #: src/main/print-dyesub.c:10397 src/main/print-dyesub.c:10405
 #: src/main/print-dyesub.c:10413 src/main/print-dyesub.c:10421
@@ -3011,7 +3011,7 @@ msgstr "Высококачественная"
 
 #: src/main/print-pcl.c:198
 msgid "Premium"
-msgstr "Высшего сорта"
+msgstr "Premium"
 
 #: src/main/print-pcl.c:199
 msgid "Glossy Photo"
@@ -3983,7 +3983,7 @@ msgstr "Значение"
 
 #: src/cups/genppd.c:939 src/cups/genppd.c:1098
 msgid "Fine Adjustment"
-msgstr "Точная настройка"
+msgstr "Тoчнaя нaстрoйкa"
 
 #: src/cups/genppd.c:982 src/cups/genppd.c:1118
 #, c-format
@@ -4000,7 +4000,7 @@ msgstr "Двусторонняя печать"
 
 #: src/cups/genppd.c:1644 src/cups/genppd.c:1920
 msgid "Shrink Page If Necessary to Fit Borders"
-msgstr "Уменьшать страницу, если нужно вместить границы"
+msgstr "Уменьшать страницу до границ, если нужно"
 
 #: src/cups/genppd.c:1649 src/cups/genppd.c:1921
 msgid "Shrink (print the whole page)"
@@ -4012,7 +4012,7 @@ msgstr "Обрезать (сохранять размеры)"
 
 #: src/cups/genppd.c:1651 src/cups/genppd.c:1923
 msgid "Expand (use maximum page area)"
-msgstr "Разворачивать (использовать максимальную площадь на странице)"
+msgstr "Разворачивать (использовать всю страницу)"
 
 #: src/escputil/escputil.c:73
 msgid "Escputil version "
@@ -5476,11 +5476,11 @@ msgstr "Вручную (спереди)"
 
 #: src/xml/xmli18n-tmp.h:815
 msgid "Roll Feed (borderless with single cut)"
-msgstr "Рулонная подача (без границ, одиночный обрез)"
+msgstr "Рулонная подача (без границ, одиночн. обрез)"
 
 #: src/xml/xmli18n-tmp.h:816
 msgid "Roll Feed (borderless with double cut)"
-msgstr "Рулонная подача (двойной обрез)"
+msgstr "Рулонная подача (без границ, двойной обрез)"
 
 #: src/xml/xmli18n-tmp.h:838
 msgid "Photo Board"
@@ -6017,7 +6017,7 @@ msgstr "Плотная матовая бумага"
 #: src/xml/xmli18n-tmp.h:1982 src/xml/xmli18n-tmp.h:2008
 #: src/xml/xmli18n-tmp.h:2035
 msgid "Premium Presentation Paper Matte"
-msgstr "Матовая бумага высшего сорта для презентаций"
+msgstr "Матовая бумага Premium для презентаций"
 
 #: src/xml/xmli18n-tmp.h:1850 src/xml/xmli18n-tmp.h:1875
 #: src/xml/xmli18n-tmp.h:1987 src/xml/xmli18n-tmp.h:2014
@@ -6048,13 +6048,13 @@ msgstr "Фотобумага с высоким глянцем"
 #: src/xml/xmli18n-tmp.h:2747 src/xml/xmli18n-tmp.h:2768
 #: src/xml/xmli18n-tmp.h:2787
 msgid "Premium Semigloss Photo Paper"
-msgstr "Полуглянцевая фотобумага высшего сорта для презентаций"
+msgstr "Полуглянцевая фотобумага Premium"
 
 #: src/xml/xmli18n-tmp.h:1853 src/xml/xmli18n-tmp.h:1881
 #: src/xml/xmli18n-tmp.h:1990 src/xml/xmli18n-tmp.h:2017
 #: src/xml/xmli18n-tmp.h:2043
 msgid "Ultra Premium Photo Paper Luster"
-msgstr "Люстровая фотобумага высшего сорта"
+msgstr "Люстровая фотобумага Premium"
 
 #: src/xml/xmli18n-tmp.h:1854 src/xml/xmli18n-tmp.h:2010
 msgid "CD or DVD"
@@ -6087,23 +6087,23 @@ msgstr "Фотобумага ColorLife"
 
 #: src/xml/xmli18n-tmp.h:1873
 msgid "Premium Glossy Photo Paper 170 wt"
-msgstr "Фотобумага высшего сорта с высоким глянцем (170)"
+msgstr "Фотобумага с высоким глянцем Premium (170)"
 
 #: src/xml/xmli18n-tmp.h:1874
 msgid "Premium Glossy Photo Paper 250 wt"
-msgstr "Фотобумага высшего сорта с высоким глянцем (250)"
+msgstr "Фотобумага с высоким глянцем Premium (250)"
 
 #: src/xml/xmli18n-tmp.h:1877
 msgid "Premium Semigloss Photo Paper 170 wt"
-msgstr "Полуглянцевая фотобумага высшего сорта (170)"
+msgstr "Полуглянцевая фотобумага Premium (170)"
 
 #: src/xml/xmli18n-tmp.h:1878
 msgid "Premium Semigloss Photo Paper 250 wt"
-msgstr "Полуглянцевая фотобумага высшего сорта (250)"
+msgstr "Полуглянцевая фотобумага Premium (250)"
 
 #: src/xml/xmli18n-tmp.h:1880
 msgid "Premium Luster Photo Paper 250 wt"
-msgstr "Люстровая фотобумага высшего сорта (250)"
+msgstr "Люстровая фотобумага Premium (250)"
 
 #: src/xml/xmli18n-tmp.h:1906 src/xml/xmli18n-tmp.h:1928
 #: src/xml/xmli18n-tmp.h:1950 src/xml/xmli18n-tmp.h:1972
@@ -6764,19 +6764,19 @@ msgstr "Японский длинный конверт №4 (альбомная)
 
 #: src/xml/xmli18n-tmp.h:3103
 msgid "Japanese Western-style envelope #4"
-msgstr "Японский конверт в западном стиле №4"
+msgstr "Японский конверт Western-style №4"
 
 #: src/xml/xmli18n-tmp.h:3104
 msgid "Japanese Western-style envelope #4 landscape"
-msgstr "Японский конверт в западном стиле №4 (альбомная)"
+msgstr "Японский конверт Western-style №4 (альбомная)"
 
 #: src/xml/xmli18n-tmp.h:3105
 msgid "Japanese Western-style envelope #6"
-msgstr "Японский конверт в западном стиле №6"
+msgstr "Японский конверт Western-style №6"
 
 #: src/xml/xmli18n-tmp.h:3106
 msgid "Japanese Western-style envelope #6 landscape"
-msgstr "Японский конверт в западном стиле №6 (альбомная)"
+msgstr "Японский конверт Western-style №6 (альбомная)"
 
 #: src/xml/xmli18n-tmp.h:3107
 msgid "Japanese Kaku envelope #4"
@@ -10883,16 +10883,12 @@ msgid "Canon PIXMA E3170"
 msgstr "Canon PIXMA E3170"
 
 #: src/xml/xmli18n-tmp.h:4135
-#, fuzzy
-#| msgid "Canon PIXMA E3170"
 msgid "Canon PIXMA E3190"
-msgstr "Canon PIXMA E3170"
+msgstr "Canon PIXMA E3190"
 
 #: src/xml/xmli18n-tmp.h:4136
-#, fuzzy
-#| msgid "Canon PIXMA TS3195"
 msgid "Canon PIXMA E3195"
-msgstr "Canon PIXMA TS3195"
+msgstr "Canon PIXMA E3195"
 
 #: src/xml/xmli18n-tmp.h:4137
 msgid "Canon G1000 series"
@@ -12175,10 +12171,8 @@ msgid "Citizen CX-02"
 msgstr "Citizen CX-02"
 
 #: src/xml/xmli18n-tmp.h:4457
-#, fuzzy
-#| msgid "Citizen CX-02"
 msgid "Citizen CX-02W"
-msgstr "Citizen CX-02"
+msgstr "Citizen CX-02W"
 
 #: src/xml/xmli18n-tmp.h:4458
 msgid "Citizen CX-W"
@@ -12262,19 +12256,19 @@ msgstr "Fujifilm Printpix-CX-550"
 
 #: src/xml/xmli18n-tmp.h:4478
 msgid "HiTi P520L"
-msgstr ""
+msgstr "HiTi P520L"
 
 #: src/xml/xmli18n-tmp.h:4479
 msgid "HiTi P525L"
-msgstr ""
+msgstr "HiTi P525L"
 
 #: src/xml/xmli18n-tmp.h:4480
 msgid "HiTi P720L"
-msgstr ""
+msgstr "HiTi P720L"
 
 #: src/xml/xmli18n-tmp.h:4481
 msgid "HiTi P750L"
-msgstr ""
+msgstr "HiTi P750L"
 
 #: src/xml/xmli18n-tmp.h:4482
 msgid "Kodak 305"
@@ -12297,10 +12291,8 @@ msgid "Kodak 6850"
 msgstr "Kodak 6850"
 
 #: src/xml/xmli18n-tmp.h:4487
-#, fuzzy
-#| msgid "Kodak 6800"
 msgid "Kodak 6900"
-msgstr "Kodak 6800"
+msgstr "Kodak 6900"
 
 #: src/xml/xmli18n-tmp.h:4488
 msgid "Kodak 7000"
@@ -15488,83 +15480,83 @@ msgstr "Fujitsu PrintPartner 8000"
 
 #: src/xml/xmli18n-tmp.h:5284
 msgid "Generic PCL 4 Printer"
-msgstr "Универсальный принтер PCL 4"
+msgstr "Универс. принтер PCL 4"
 
 #: src/xml/xmli18n-tmp.h:5285
 msgid "Generic PCL 4 Printer wide margin"
-msgstr "Универсальный принтер PCL 4, широкие поля"
+msgstr "Универс. принтер PCL 4, широкие поля"
 
 #: src/xml/xmli18n-tmp.h:5286
 msgid "Generic PCL 4 LF Printer"
-msgstr "Универсальный принтер PCL 4 LF"
+msgstr "Универс. принтер PCL 4 LF"
 
 #: src/xml/xmli18n-tmp.h:5287
 msgid "Generic PCL 5 Printer"
-msgstr "Универсальный принтер PCL 5"
+msgstr "Универс. принтер PCL 5"
 
 #: src/xml/xmli18n-tmp.h:5288
 msgid "Generic PCL 5 Printer wide margin"
-msgstr "Универсальный принтер PCL 5, широкие поля"
+msgstr "Универс. принтер PCL 5, широкие поля"
 
 #: src/xml/xmli18n-tmp.h:5289
 msgid "Generic PCL 5 LF Printer"
-msgstr "Универсальный принтер PCL 5 LF"
+msgstr "Универс. принтер PCL 5 LF"
 
 #: src/xml/xmli18n-tmp.h:5290
 msgid "Generic PCL 5c Printer"
-msgstr "Универсальный принтер PCL 5c"
+msgstr "Универс. принтер PCL 5c"
 
 #: src/xml/xmli18n-tmp.h:5291
 msgid "Generic PCL 5c LF Printer"
-msgstr "Универсальный принтер PCL 5c LF"
+msgstr "Универс. принтер PCL 5c LF"
 
 #: src/xml/xmli18n-tmp.h:5292
 msgid "Generic PCL 5e Printer"
-msgstr "Универсальный принтер PCL 5e"
+msgstr "Универс. принтер PCL 5e"
 
 #: src/xml/xmli18n-tmp.h:5293
 msgid "Generic PCL 5e LF Printer"
-msgstr "Универсальный принтер Generic PCL 5e LF"
+msgstr "Универс. принтер PCL 5e LF"
 
 #: src/xml/xmli18n-tmp.h:5294
 msgid "Generic PCL 6/PCL XL Printer"
-msgstr "Универсальный принтер PCL 6/PCL XL"
+msgstr "Универс. принтер PCL 6/PCL XL"
 
 #: src/xml/xmli18n-tmp.h:5295
 msgid "Generic PCL 6/PCL XL LF Printer"
-msgstr "Универсальный принтер PCL 6/PCL XL LF"
+msgstr "Универс. принтер PCL 6/PCL XL LF"
 
 #: src/xml/xmli18n-tmp.h:5296
 msgid "Generic PCL 6 Printer wide margin"
-msgstr "Универсальный принтер PCL 6, широкие поля"
+msgstr "Универс. принтер PCL 6, широкие поля"
 
 #: src/xml/xmli18n-tmp.h:5297
 msgid "Generic PCL 6 LF Printer wide margin"
-msgstr "Универсальный принтер PCL 6 LF, широкие поля"
+msgstr "Универс. принтер PCL 6 LF, широкие поля"
 
 #: src/xml/xmli18n-tmp.h:5298
 msgid "Generic PCL 6 Tabl Printer wide margin"
-msgstr "Универсальный принтер PCL 6, малогабаритный, широкие поля"
+msgstr "Универс. принтер PCL 6 Tabl, широкие поля"
 
 #: src/xml/xmli18n-tmp.h:5299
 msgid "Generic PCL Color Laser"
-msgstr "Универсальный принтер PCL, цветной, лазерный"
+msgstr "Универс. цветной лазерный принтер PCL"
 
 #: src/xml/xmli18n-tmp.h:5300
 msgid "Generic PCL Color Laser LF Printer"
-msgstr "Универсальный принтер PCL Color Laser LF"
+msgstr "Универс. цветной лазерный принтер PCL LF"
 
 #: src/xml/xmli18n-tmp.h:5301
 msgid "Generic PCL Color wide margin"
-msgstr "Универсальный принтер PCL, цветной, широкие поля"
+msgstr "Универс. цветной принтер PCL, широкие поля"
 
 #: src/xml/xmli18n-tmp.h:5302
 msgid "Generic PCL Color LF wide margin"
-msgstr "Универсальный принтер PCL, цветной, LF, широкие поля"
+msgstr "Универс. цветной принтер PCL LF, широкие поля"
 
 #: src/xml/xmli18n-tmp.h:5303
 msgid "Generic PCL Color Tabl wide margin"
-msgstr "Универсальный принтер PCL, цветной, малогабаритный, широкие поля"
+msgstr "Универс. цветной принтер PCL Tabl, широкие поля"
 
 #: src/xml/xmli18n-tmp.h:5304
 msgid "Gestetner 10512"
