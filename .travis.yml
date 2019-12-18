@@ -39,6 +39,8 @@ matrix:
               - &gimp_packages
                 - libgimp2.0-dev
                 - libgtk2.0-dev
+                - libpango1.0-dev
+                - libxrandr-dev
             - &doc_packages
               - docbook
               - docbook-dsssl
