@@ -41,6 +41,11 @@ matrix:
                 - libgtk2.0-dev
                 - libpango1.0-dev
                 - libxrandr-dev
+                - libxrandr2
+                - libpango-1.0-0
+                - libpangocairo-1.0-0
+                - libpangoft2-1.0-0
+                - libpangoxft-1.0-0
             - &doc_packages
               - docbook
               - docbook-dsssl
