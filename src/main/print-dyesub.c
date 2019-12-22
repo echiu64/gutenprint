@@ -6047,7 +6047,12 @@ static void mitsu_cpd90_printer_init(stp_vars_t *v)
     stp_putc(0x00, v);
     stp_putc(0x02, v);
     stp_putc(0x65, v);
-    dyesub_nputc(v, 0x00, 6);
+    stp_putc(0x01, v);
+    stp_putc(0x00, v);
+    stp_putc(0x00, v);
+    stp_putc(0x01, v);
+    stp_putc(0x00, v);
+    stp_putc(0x00, v);
   } else if (strcmp(pd->pagesize,"w432h648-div2") == 0) {
     stp_putc(0x01, v);
     stp_putc(0x05, v);
