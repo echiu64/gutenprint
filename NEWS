@@ -117,6 +117,10 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      Mitsubishi CP-D90 series
      Sony UP-DR80MD
 
+     Note that for the Mitsubishi CP-D90 series, when upgrading from a
+     prior release, you will need to remove and re-create your printer
+     queue for printing to function properly.
+
   5) Croation translation added; other translations updated.
 
 * Changes from Gutenprint 5.3.1 (Gutenprint 5.3.2 was not released)

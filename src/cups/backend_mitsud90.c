@@ -51,13 +51,13 @@ const char *mitsu70x_temperatures(uint8_t temp);
 #define D90_STATUS_TYPE_MECHA  0x17 // 2  (see below)
 #define D90_STATUS_TYPE_x1e    0x1e // 1, power state or time?  (x00)
 #define D90_STATUS_TYPE_TEMP   0x1f // 1  (see below)
-#define D90_STATUS_TYPE_x22    0x22 // 2,  all 0
-#define D90_STATUS_TYPE_x28    0x28 // 2,  all 0, seen some sort of counter?
+#define D90_STATUS_TYPE_x22    0x22 // 2,  all 0  (counter?)
+#define D90_STATUS_TYPE_x28    0x28 // 2, next jobid? (starts 00 01, increments by 1 for each print)
 #define D90_STATUS_TYPE_x29    0x29 // 8,  e0 07 00 00 21 e6 b3 22
 #define D90_STATUS_TYPE_MEDIA  0x2a // 10 (see below)
-#define D90_STATUS_TYPE_x2b    0x2b // 2,  all 0
-#define D90_STATUS_TYPE_x2c    0x2c // 2,  00 56
-#define D90_STATUS_TYPE_x65    0x65 // 50, ac 80 00 01 bb b8 fe 48 05 13 5d 9c 00 33 00 00  00 00 00 00 00 00 00 00 00 00 02 39 00 00 00 00  03 13 00 02 10 40 00 00 00 00 00 00 05 80 00 3a  00 00
+#define D90_STATUS_TYPE_x2b    0x2b // 2,  all 0 (counter?)
+#define D90_STATUS_TYPE_x2c    0x2c // 2,  00 56 (counter?)
+#define D90_STATUS_TYPE_x65    0x65 // 50, see below
 #define D90_STATUS_TYPE_ISER   0x82 // 1,  80 (iserial disabled)
 #define D90_STATUS_TYPE_x83    0x83 // 1,  00
 #define D90_STATUS_TYPE_x84    0x84 // 1,  00
@@ -100,7 +100,7 @@ struct mitsud90_info_resp {
 	struct mitsud90_fw_resp_single fw_vers[7];
 	uint8_t  x1e;
 	uint8_t  x22[2];
-	uint8_t  x28[2];
+	uint16_t x28;
 	uint8_t  x29[8];
 	uint8_t  x2b[2];
 	uint8_t  x2c[2];
@@ -151,7 +151,7 @@ struct mitsud90_job_hdr {
 	uint8_t  hdr[6]; /* 1b 53 50 30 00 33 */
 	uint16_t cols;   /* BE */
 	uint16_t rows;   /* BE */
-	uint8_t  unk[4]; /* 64 00 00 01 */
+	uint8_t  unk[4]; /* 64 00 00 01 */ // XXX 00 01 might be the jobid?
 	uint8_t  margincut; /* 1 for enabled, 0 for disabled */
 	union {
 #if 0
@@ -423,6 +423,7 @@ struct mitsud90_ctx {
 	uint8_t endp_down;
 
 	int type;
+	char serno[7];
 
 	/* Used in parsing.. */
 	struct mitsud90_job_footer holdover;
@@ -497,6 +498,51 @@ static int mitsud90_query_status(struct mitsud90_ctx *ctx, struct mitsud90_statu
 	return CUPS_BACKEND_OK;
 }
 
+static int mitsud90_get_serno(struct mitsud90_ctx *ctx)
+{
+	uint8_t cmdbuf[32];
+	int ret, num;
+
+	/* Send Request */
+	cmdbuf[0] = 0x1b;
+	cmdbuf[1] = 0x61;
+	cmdbuf[2] = 0x36;
+	cmdbuf[3] = 0x36;
+	cmdbuf[4] = 0x41;
+	cmdbuf[5] = 0xbe;
+	cmdbuf[6] = 0x00;
+	cmdbuf[7] = 0x00;
+
+	cmdbuf[8] = 0x00;
+	cmdbuf[9] = 0x06;
+	cmdbuf[10] = 0x00;
+	cmdbuf[11] = 0x00;
+	cmdbuf[12] = 0x00;
+	cmdbuf[13] = 0x30;
+	cmdbuf[14] = 0xff;
+	cmdbuf[15] = 0xff;
+
+	cmdbuf[16] = 0xff;
+	cmdbuf[17] = 0xf9;
+	cmdbuf[18] = 0xff;
+	cmdbuf[19] = 0xff;
+	cmdbuf[20] = 0xff;
+	cmdbuf[21] = 0xcf;
+
+	if ((ret = send_data(ctx->dev, ctx->endp_down,
+			     cmdbuf, 22)))
+		return ret;
+
+	ret = read_data(ctx->dev, ctx->endp_up,
+			cmdbuf, sizeof(cmdbuf), &num);
+
+	/* Store it */
+	memcpy(ctx->serno, &cmdbuf[22], 6);
+	ctx->serno[6] = 0;
+
+	return ret;
+}
+
 /* Generic functions */
 
 static void *mitsud90_init(void)
@@ -527,6 +573,8 @@ static int mitsud90_attach(void *vctx, struct libusb_device_handle *dev, int typ
 
 	if (test_mode < TEST_MODE_NOATTACH) {
 		if (mitsud90_query_media(ctx, &resp))
+			return CUPS_BACKEND_FAILED;
+		if (mitsud90_get_serno(ctx))
 			return CUPS_BACKEND_FAILED;
 	} else {
 		resp.media.brand = 0xff;
@@ -910,7 +958,7 @@ static int mitsud90_get_status(struct mitsud90_ctx *ctx)
 	return CUPS_BACKEND_OK;
 }
 
-int mitsud90_get_info(struct mitsud90_ctx *ctx)
+static int mitsud90_get_info(struct mitsud90_ctx *ctx)
 {
 	uint8_t cmdbuf[26];
 	int ret, num;
@@ -967,6 +1015,7 @@ int mitsud90_get_info(struct mitsud90_ctx *ctx)
 	memset(cmdbuf, 0, sizeof(cmdbuf));
 	memcpy(cmdbuf, resp.model, sizeof(resp.model));
 	INFO("Model: %s\n", (char*)cmdbuf);
+	INFO("Serial: %s\n", ctx->serno);
 	for (num = 0; num < 7 ; num++) {
 		memset(cmdbuf, 0, sizeof(cmdbuf));
 		memcpy(cmdbuf, resp.fw_vers[num].version, sizeof(resp.fw_vers[num].version));
@@ -976,7 +1025,7 @@ int mitsud90_get_info(struct mitsud90_ctx *ctx)
 	INFO("TYPE_02: %02x\n", resp.x02);
 	INFO("TYPE_1e: %02x\n", resp.x1e);
 	INFO("TYPE_22: %02x %02x\n", resp.x22[0], resp.x22[1]);
-	INFO("TYPE_28: %02x %02x\n", resp.x28[0], resp.x28[1]);
+	INFO("TYPE_28: %04x\n", be16_to_cpu(resp.x28));
 	INFO("TYPE_29: %02x %02x %02x %02x %02x %02x %02x %02x\n",
 	     resp.x29[0], resp.x29[1], resp.x29[2], resp.x29[3],
 	     resp.x29[4], resp.x29[5], resp.x29[6], resp.x29[7]);
@@ -1024,14 +1073,14 @@ static int mitsud90_dumpall(struct mitsud90_ctx *ctx)
 		ret = read_data(ctx->dev, ctx->endp_up,
 				buf, sizeof(buf), &num);
 
-		if (ret <= 0)
+		if (ret < 0)
 			continue;
 
 		if (num > 4) {
-			DEBUG("TYPE %02x LEN: %d (%d)\n", i, num, num - 4);
+			DEBUG("TYPE %02x LEN: %d\n", i, num - 4);
 			DEBUG("<--");
-			for (ret = 0; ret < num ; ret ++) {
-				DEBUG2(" %x", buf[ret]);
+			for (ret = 4; ret < num ; ret ++) {
+				DEBUG2(" %02x", buf[ret]);
 			}
 			DEBUG2("\n");
 		}
@@ -1040,6 +1089,26 @@ static int mitsud90_dumpall(struct mitsud90_ctx *ctx)
 	return CUPS_BACKEND_OK;
 }
 
+static int mitsud90_query_serno(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, int iface, char *buf, int buf_len)
+{
+	struct mitsud90_ctx ctx = {
+		.dev = dev,
+		.endp_up = endp_up,
+		.endp_down = endp_down
+	};
+
+	int ret;
+
+	UNUSED(iface);
+	UNUSED(buf_len);
+
+	ret = mitsud90_get_serno(&ctx);
+
+	/* Copy it */
+	memcpy(buf, ctx.serno, sizeof(ctx.serno));
+
+	return ret;
+}
 static int mitsud90_set_iserial(struct mitsud90_ctx *ctx, uint8_t enabled)
 {
 	uint8_t cmdbuf[23];
@@ -1080,8 +1149,6 @@ static int mitsud90_set_iserial(struct mitsud90_ctx *ctx, uint8_t enabled)
 
 	ret = read_data(ctx->dev, ctx->endp_up,
 			cmdbuf, sizeof(cmdbuf), &num);
-
-	/* No response */
 
 	return ret;
 }
@@ -1129,7 +1196,7 @@ static int mitsud90_set_sleeptime(struct mitsud90_ctx *ctx, uint16_t time)
 
 	/* No response */
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static void mitsud90_cmdline(void)
@@ -1182,7 +1249,7 @@ static int mitsud90_cmdline_arg(void *vctx, int argc, char **argv)
 		if (j) return j;
 	}
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static int mitsud90_query_markers(void *vctx, struct marker **markers, int *count)
@@ -1190,8 +1257,8 @@ static int mitsud90_query_markers(void *vctx, struct marker **markers, int *coun
 	struct mitsud90_ctx *ctx = vctx;
 	struct mitsud90_media_resp resp;
 
-	*markers = &ctx->marker;
-	*count = 1;
+	if (markers) *markers = &ctx->marker;
+	if (count) *count = 1;
 
 	if (mitsud90_query_media(ctx, &resp))
 		return CUPS_BACKEND_FAILED;
@@ -1211,7 +1278,7 @@ static const char *mitsud90_prefixes[] = {
 /* Exported */
 struct dyesub_backend mitsud90_backend = {
 	.name = "Mitsubishi CP-D90DW",
-	.version = "0.15",
+	.version = "0.17",
 	.uri_prefixes = mitsud90_prefixes,
 	.cmdline_arg = mitsud90_cmdline_arg,
 	.cmdline_usage = mitsud90_cmdline,
@@ -1221,6 +1288,7 @@ struct dyesub_backend mitsud90_backend = {
 	.read_parse = mitsud90_read_parse,
 	.main_loop = mitsud90_main_loop,
 	.query_markers = mitsud90_query_markers,
+	.query_serno = mitsud90_query_serno,
 	.devices = {
 		{ USB_VID_MITSU, USB_PID_MITSU_D90, P_MITSU_D90, NULL, "mitsubishi-d90dw"},
 		{ 0, 0, 0, NULL, NULL}
@@ -1270,16 +1338,16 @@ struct dyesub_backend mitsud90_backend = {
    ...
    [pad to 512b]
 
-    data, BGR packed, 8bpp.  No padding to 512b!
+    data, RGB packed, 8bpp.  No padding to 512b!
 
  [[FOOTER]]
 
-   1b 42 51 31 00 TT                  ## TT == secs to wait for second print
+   1b 42 51 31 00 TT                  ## TT == secs to wait for second print, 0xff also valid for something?
 
 
  ****************************************************
 
-Comms Protocol for D90:
+Comms Protocol for D90 & CP-M1
 
  [[ ERROR STATUS ]]
 
@@ -1307,13 +1375,14 @@ Comms Protocol for D90:
 <- e4 47 44 30 HH
 
  [[ UNKNOWN QUERY ]]
+
 -> 1b 47 44 30 00 00 01 28
-<- e4 47 44 30 XX XX        Unknown, seems to increment.
+<- e4 47 44 30 XX XX        Unknown, seems to increment.  Lifetime counter?
 
  [[ JOB STATUS QUERY ?? ]]
 
 -> 1b 47 44 31 00 00 JJ JJ  Jobid?
-<- e4 47 44 31 XX YY ZZ ZZ  No idea.. sure.
+<- e4 47 44 31 XX YY ZZ ZZ  No idea... maybe remaining prints?
 
  [[ COMBINED STATUS QUERIES ]]
 
@@ -1341,7 +1410,7 @@ Comms Protocol for D90:
  [[ WAKE UP PRINTER ]]
 -> 1b 45 57 55
 
- [[ GET iSERIAL ]]
+ [[ GET iSERIAL Setting ]]
 
 -> 1b 61 36 36 41 be 00 00
    00 01 00 00 00 11 ff ff
@@ -1349,6 +1418,16 @@ Comms Protocol for D90:
 <- e4 61 36 36 41 be 00 00
    00 01 00 00 00 11 ff ff
    ff fe ff ff ff ee XX      <- XX is 0x80 or 0x00.  (0x80)  ISERIAL OFF
+
+ [[ GET SERIAL NUMBER ]]
+
+-> 1b 61 36 36 41 be 00 00
+   00 06 00 00 00 30 ff ff
+   ff f9 ff ff ff cf
+<- e4 61 36 36 41 00 00 00
+   00 06 00 00 00 30 ff ff
+   ff f9 ff ff ff cf XX XX
+   XX XX XX XX               <- XX is 6-char ASCII serial number!
 
  [[ GET CUT? ]]
 
@@ -1398,7 +1477,7 @@ Comms Protocol for D90:
    00 01 00 00 00 11 ff ff
    ff fe ff ff ff ee XX        <- XX 0x80 OFF, 0x00 ON.
 
- [[ SANITY CHECK PRINT ARGUMENTS / MEMTEST ]]
+ [[ SANITY CHECK PRINT ARGUMENTS / MEM CHECK ]]
 
 -> 1b 47 44 33 00 33 07 3c  04 ca 64 00 00 01 00 00
    00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
@@ -1411,8 +1490,8 @@ Comms Protocol for D90:
 <- e4 47 44 43 XX YY
 
    ... possibly the same as the D70's "memorystatus"
-       XX == size ok (non-zero if bad size)
-       YY == memory ok (non-zero or 0xff if full?)
+       XX == 00 size ok, 01 bad size, ff out of range
+       YY == 00 memory ok, 01 memory full, 02 driver setting, ff out of range
 
  [[ SEND OVER HDRs and DATA ]]
 
@@ -1437,5 +1516,22 @@ Comms Protocol for D90:
    ... Footer.
    ZZ == Seconds to wait for follow-up print (0x05)
 
+   ALSO SEEN (in SDK)
+
+   1b 42 61 32 00 00
+
+ [[ UNKNOWN (seen in SDK) ]]
+
+   1b 44 43 41  4e 43 45 4c  00 00 00 00
+
+ request x65 examples:
+
+   ac 80 00 01 bb b8 fe 48 05 13 5d 9c 00 33 00 00  00 00 00 00 00 00 00 00 00 00 02 39 00 00 00 00  03 13 00 02 10 40 00 00 00 00 00 00 05 80 00 3a  00 00
+   aa 79 00 01 bb b7 fe 47 05 13 5d 9c 01 2f 00 68  00 00 00 00 00 00 00 00 00 00 02 08 00 00 00 00  03 14 00 02 10 40 00 00 00 00 00 00 05 80 00 3a  00 00
+   a3 5d 00 01 ba ba fe 43 04 13 5d 9c 00 00 00 00  00 00 00 00 00 00 00 00 00 00 02 0c 00 00 00 00  03 0f 00 03 10 40 00 00 00 00 00 00 05 80 00 3a  00 00
+   a3 5d 00 01 ba ba fe 42 04 13 5d 9c 01 08 00 87  00 00 00 00 00 00 00 00 00 00 01 e5 00 00 00 00  03 0f 00 03 10 40 00 00 00 00 00 00 05 80 00 3a  00 00
+   a2 5d 00 01 ba ba fe 42 06 13 5d 9c 01 08 00 87  00 00 00 00 00 00 00 00 00 00 01 d1 00 00 00 00  03 0f 00 03 10 40 00 00 00 00 00 00 05 80 00 3a  00 00
+   a2 5c 00 01 ba ba fe 42 06 13 5d 9c 00 00 00 00  00 00 00 00 00 00 00 00 00 00 01 e0 00 00 00 00  03 0f 00 03 10 40 00 00 00 00 00 00 05 80 00 3a  00 00
+   a2 5d 00 01 ba ba fe 41 04 13 5d 9c 01 08 00 89  00 00 00 00 00 00 00 00 00 00 01 c9 00 00 00 00  03 0f 00 03 10 40 00 00 00 00 00 00 05 80 00 3a  00 00
 
  */
