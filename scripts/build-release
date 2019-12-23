@@ -914,7 +914,6 @@ Memory information:
 $(free)
 
 Running operations:
-$(printf "    %s\n" "${OPERATIONS[@]}")
 EOF
 
 if [[ -n ${TRAVIS_MODE:-} ]] ; then
