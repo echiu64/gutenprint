@@ -1529,7 +1529,6 @@ static int hiti_main_loop(void *vctx, const void *vjob)
 	struct hiti_ctx *ctx = vctx;
 
 	int ret;
-	int copies;
 	uint32_t err = 0;
 	uint8_t sts[3];
 	struct hiti_job jobid;
@@ -1541,9 +1540,6 @@ static int hiti_main_loop(void *vctx, const void *vjob)
 	if (!job)
 		return CUPS_BACKEND_FAILED;
 
-	copies = job->copies;
-
-top:
 	INFO("Waiting for printer idle\n");
 
 	do {
@@ -1597,7 +1593,7 @@ top:
 	sf.rows_offset = calc_offset(ctx->calibration.vert, 5, 8, 4);
 	sf.cols_offset = calc_offset(ctx->calibration.horiz, 6, 11, 4);
 	sf.colorSeq = 0x87 + (job->hdr.overcoat ? 0xc0 : 0);
-	sf.copies = copies;
+	sf.copies = job->copies;
 	sf.printMode = 0x08 + (job->hdr.quality ? 0x02 : 0);
 	ret = hiti_docmd(ctx, CMD_EFD_SF, (uint8_t*) &sf, sizeof(sf), &resplen);
 	if (ret)
@@ -1752,15 +1748,7 @@ resend_c:
 		}
 	} while(1);
 
-	/* Clean up */
-	if (terminate)
-		copies = 1;
-
-	INFO("Print complete (%d copies remaining)\n", copies - 1);
-
-	if (copies && --copies) {
-		goto top;
-	}
+	INFO("Print complete\n");
 
 	return CUPS_BACKEND_OK;
 }
@@ -1793,7 +1781,7 @@ static int hiti_cmdline_arg(void *vctx, int argc, char **argv)
 		if (j) return j;
 	}
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static void hiti_cmdline(void)
@@ -2138,7 +2126,7 @@ static const char *hiti_prefixes[] = {
 
 struct dyesub_backend hiti_backend = {
 	.name = "HiTi Photo Printers",
-	.version = "0.15",
+	.version = "0.15.1",
 	.uri_prefixes = hiti_prefixes,
 	.cmdline_usage = hiti_cmdline,
 	.cmdline_arg = hiti_cmdline_arg,
