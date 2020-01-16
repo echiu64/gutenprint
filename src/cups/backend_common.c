@@ -30,7 +30,7 @@
 #include <errno.h>
 #include <signal.h>
 
-#define BACKEND_VERSION "0.98G"
+#define BACKEND_VERSION "0.98.1G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
@@ -1524,7 +1524,7 @@ uint32_t packed_bcd_to_uint32(const char *in, int len)
 
 	while (len--) {
 		out *= 10;
-		out += (*in >> 4);
+		out += ((*in >> 4) & 0xf);
 		out *= 10;
 		out += (*in & 0xf);
 		in++;
