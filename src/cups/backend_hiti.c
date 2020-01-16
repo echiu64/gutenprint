@@ -190,6 +190,20 @@ struct hiti_job {
 	uint16_t jobid;  /* BE */
 } __attribute__((packed));
 
+/* CMD_JC_QQA */
+#define MAX_JOBS 4
+struct hiti_job_qqa {
+	uint8_t  count;  /* 0-MAX_JOBS */
+	struct {
+		struct hiti_job job;
+		uint8_t status;
+	} row[MAX_JOBS];  /* Four jobs max outstanding */
+} __attribute__((packed));
+
+#define QQA_STATUS_PRINTING 0x00
+#define QQA_STATUS_WAITING  0x01
+#define QQA_STATUS_SUSPENDED 0x03
+
 /* CMD_JC_QJC */
 struct hiti_jc_qjc {
 	uint8_t  lun;    /* Logical Unit Number.  Leave at 0 */
@@ -352,7 +366,7 @@ struct hiti_ctx {
 
 /* Prototypes */
 static int hiti_doreset(struct hiti_ctx *ctx, uint8_t type);
-static int hiti_query_job_qa(struct hiti_ctx *ctx, struct hiti_job *jobid);
+static int hiti_query_job_qa(struct hiti_ctx *ctx, struct hiti_job *jobid, struct hiti_job_qqa *resp);
 static int hiti_query_status(struct hiti_ctx *ctx, uint8_t *sts, uint32_t *err);
 static int hiti_query_version(struct hiti_ctx *ctx);
 static int hiti_query_matrix(struct hiti_ctx *ctx);
@@ -514,10 +528,22 @@ static const char *hiti_status(uint8_t *sts)
 		return "Resend Data";
 	else if (sts[0] & STATUS0_BUSY)
 		return "Busy";
+	else if (sts[0] & STATUS0_POWERON)
+		return "Powering On";
 	else if (sts[0] == STATUS_IDLE)
-		return "Idle";
+		return "Accepting Jobs";
 	else
 		return "Unknown";
+}
+
+static const char *hiti_jobstatuses(uint8_t code)
+{
+	switch (code) {
+	case QQA_STATUS_PRINTING:  return "Printing";
+	case QQA_STATUS_WAITING:   return "Waiting";
+	case QQA_STATUS_SUSPENDED: return "Suspended";
+	default: return "Unknown";
+	}
 }
 
 #define RIBBON_TYPE_4x6    0x01
@@ -744,17 +770,17 @@ static int hiti_get_info(struct hiti_ctx *ctx)
 	ret = hiti_query_counter(ctx, 1, &buf);
 	if (ret)
 		return CUPS_BACKEND_FAILED;
-	INFO("6x4 Total prints?: %u\n", buf);
+	INFO("Total prints: %u\n", buf);
 
 	ret = hiti_query_counter(ctx, 2, &buf);
 	if (ret)
 		return CUPS_BACKEND_FAILED;
-	INFO("6x4 APC prints?: %u\n", buf);
+	INFO("6x4 prints: %u\n", buf);
 
 	ret = hiti_query_counter(ctx, 4, &buf);
 	if (ret)
 		return CUPS_BACKEND_FAILED;
-	INFO("6x8 APC prints?: %u\n", buf);
+	INFO("6x8 prints: %u\n", buf);
 
 	int i;
 
@@ -769,43 +795,22 @@ static int hiti_get_info(struct hiti_ctx *ctx)
 	DEBUG2("\n");
 
 	// XXX other shit..
-	// Serial number?
 
 	return CUPS_BACKEND_OK;
 }
 
 /* Use jobid of 0 for "any" */
-static int hiti_query_job_qa(struct hiti_ctx *ctx, struct hiti_job *jobid)
+static int hiti_query_job_qa(struct hiti_ctx *ctx, struct hiti_job *jobid, struct hiti_job_qqa *resp)
 {
 	int ret;
-	uint16_t len = 16;
-	uint8_t buf[17];  /* Enough for four jobs */
-	int i;
+	uint16_t len = sizeof(*resp);
 
-	buf[0] = 0;
+	resp->count = 0;
 	ret = hiti_docmd_resp(ctx, CMD_JC_QQA,
 			      (uint8_t*) jobid, sizeof(*jobid),
-			      buf, &len);
+			      (uint8_t*) resp, &len);
 	if (ret)
 		return ret;
-
-	/* Clear job ID.. */
-	jobid->jobid = 0;
-
-	for (i = 0 ; i < buf[0] ; i++) {
-		// is jobid + status
-		// status of 3 is suspended.
-		// status of 0 is active.
-
-		if (buf[4*i + 4] == 0)
-			memcpy(jobid, &buf[4*i+1], sizeof(*jobid));
-
-#if 0
-		INFO("Job %02x %02x %02x => %02x\n",
-		     buf[4*i + 1], buf[4*i + 2],
-		     buf[4*i + 3], buf[4*i + 4]);
-#endif
-	}
 
 	return CUPS_BACKEND_OK;
 }
@@ -814,7 +819,8 @@ static int hiti_get_status(struct hiti_ctx *ctx)
 {
 	uint8_t sts[3];
 	uint32_t err = 0;
-	int ret;
+	int ret, i;
+	struct hiti_job_qqa qqa;
 
 	hiti_query_markers(ctx, NULL, NULL);
 	ret = hiti_query_status(ctx, sts, &err);
@@ -837,9 +843,15 @@ static int hiti_get_status(struct hiti_ctx *ctx)
 
 	/* Find out if we have any jobs outstanding */
 	struct hiti_job job = { 0 };
-	hiti_query_job_qa(ctx, &job);
+	hiti_query_job_qa(ctx, &job, &qqa);
+	for (i = 0 ; i < qqa.count ; i++) {
+		INFO("JobID %02x %04x (%s)\n",
+		     qqa.row[i].job.lun,
+		     be16_to_cpu(qqa.row[i].job.jobid),
+		     hiti_jobstatuses(qqa.row[i].status));
+	}
 
-	// XXX other shit.../
+	// XXX other shit...?
 
 	return CUPS_BACKEND_OK;
 }
@@ -1551,22 +1563,12 @@ static int hiti_main_loop(void *vctx, const void *vjob)
 		if (err) {
 			ERROR("Printer reported alert: %08x (%s)\n",
 			      err, hiti_errors(err));
-			return CUPS_BACKEND_FAILED;
+			return CUPS_BACKEND_STOP;
 		}
 
-		/* If we're idle, proceed */
+		/* If we're able to accept jobs, proceed */
 		if (!(sts[0] & (STATUS0_POWERON|STATUS0_BUSY)))
 			break;
-
-		jobid.lun = 0;
-		jobid.jobid = 0;
-		ret = hiti_query_job_qa(ctx, &jobid);
-		if (ret)
-			return ret;
-
-		/* If we have no active job.. proceed! */
-		if (jobid.jobid == 0)
-		    break;
 
 		sleep(1);
 	} while(1);
@@ -1718,6 +1720,7 @@ resend_c:
 
 	INFO("Waiting for printer acknowledgement\n");
 	do {
+		struct hiti_job_qqa qqa;
 		sleep(1);
 
 		ret = hiti_query_status(ctx, sts, &err);
@@ -1730,22 +1733,20 @@ resend_c:
 			return CUPS_BACKEND_FAILED;
 		}
 
-		/* If we're idle, proceed! */
-		if (!(sts[0] & (STATUS0_POWERON|STATUS0_BUSY)))
-			break;
-
-		ret = hiti_query_job_qa(ctx, &jobid);
-		if (ret)
-			return ret;
-
-		/* If our job is complete.. */
-		if (jobid.jobid == 0)
-			break;
-
 		if (fast_return) {
 			INFO("Fast return mode enabled.\n");
 			break;
 		}
+
+		/* See if our job is done.. */
+		ret = hiti_query_job_qa(ctx, &jobid, &qqa);
+		if (ret)
+			return ret;
+
+		/* If our job is complete.. */
+		if (qqa.count == 0 || qqa.row[0].job.jobid == 0)
+			break;
+
 	} while(1);
 
 	INFO("Print complete\n");
@@ -2126,7 +2127,7 @@ static const char *hiti_prefixes[] = {
 
 struct dyesub_backend hiti_backend = {
 	.name = "HiTi Photo Printers",
-	.version = "0.15.1",
+	.version = "0.15.2",
 	.uri_prefixes = hiti_prefixes,
 	.cmdline_usage = hiti_cmdline,
 	.cmdline_arg = hiti_cmdline_arg,
@@ -2151,8 +2152,7 @@ struct dyesub_backend hiti_backend = {
    - Confirm 6x2" print dimensions (windows?)
    - Confirm 5" media works properly
    - Figure out stats/counters for non-4x6 sizes
-   - Job status & control (QJC, RSJ, QQA)
-   - Figure out occasional data transfer hang (related to FW bug?)
+   - Job control (QJC, RSJ) -- and canceling?
    - Set highlight adjustment & H/V alignment from cmdline
    - Figure out if driver needs to consume highlight adjustment (ie feed into gamma correction?)
    - Figure out Windows spool format (probably never)
