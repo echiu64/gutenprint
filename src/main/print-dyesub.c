@@ -218,6 +218,7 @@ typedef struct
   int sharpen;
   int delay;
   int deck;
+  int margincutoff;
 } mitsu70x_privdata_t;
 
 typedef struct
@@ -5933,6 +5934,12 @@ static const stp_parameter_t mitsu_d90_parameters[] =
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
+  {
+    "MarginCutOff", N_("Disable Margin Cut"), "Color=No,Category=Advanced Printer Setup",
+    N_("Disable Margin Cut"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 0, STP_CHANNEL_NONE, 1, 0
+  },
 };
 #define mitsu_d90_parameter_count (sizeof(mitsu_d90_parameters) / sizeof(const stp_parameter_t))
 
@@ -5987,6 +5994,11 @@ mitsu_d90_load_parameters(const stp_vars_t *v, const char *name,
       description->bounds.integer.upper = 25;
       description->is_active = 1;
     }
+  else if (strcmp(name, "MarginCutOff") == 0)
+    {
+      description->deflt.boolean = 0;
+      description->is_active = 1;
+    }
   else
   {
      return 0;
@@ -6015,6 +6027,7 @@ static int mitsu_d90_parse_parameters(stp_vars_t *v)
   pd->privdata.m70x.use_lut = stp_get_boolean_parameter(v, "UseLUT");
   pd->privdata.m70x.sharpen = stp_get_int_parameter(v, "Sharpen");
   pd->privdata.m70x.delay = stp_get_int_parameter(v, "ComboWait");
+  pd->privdata.m70x.margincutoff = stp_get_boolean_parameter(v, "MarginCutOff");
 
   return 1;
 }
@@ -6036,7 +6049,7 @@ static void mitsu_cpd90_printer_init(stp_vars_t *v)
   stp_putc(0x00, v);
   stp_putc(0x00, v);
   stp_putc(0x01, v);
-  stp_putc(0x00, v);
+  stp_putc(pd->privdata.m70x.margincutoff, v);
 
   if (strcmp(pd->pagesize,"w432h576-div2") == 0) {
     stp_putc(0x01, v);
