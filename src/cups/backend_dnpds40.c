@@ -1320,12 +1320,21 @@ static int dnpds40_read_parse(void *vctx, const void **vjob, int data_fd, int co
 		if (i < 0) {
 			dnpds40_cleanup_job(job);
 			return i;
-		}
-		if (i == 0)
+		} else if (i == 0) {
 			break;
-		if (i < (int) sizeof(struct dnpds40_cmd)) {
-			dnpds40_cleanup_job(job);
-			return CUPS_BACKEND_CANCEL;
+		} else if (i < (int) sizeof(struct dnpds40_cmd)) {
+			int r = i;
+			i = read(data_fd, job->databuf + job->datalen + r, sizeof(struct dnpds40_cmd) - r);
+			if (i < 0) {
+				dnpds40_cleanup_job(job);
+				return i;
+			} else if (i == 0) {
+				break;
+			} else if (i < (int)(sizeof(struct dnpds40_cmd) - r)) {
+				ERROR("Double short read (%d + %d vs %d)\n", r, i, (int)sizeof(struct dnpds40_cmd));
+				dnpds40_cleanup_job(job);
+				return CUPS_BACKEND_CANCEL;
+			}
 		}
 
 		/* Special case handling for beginning of job */
@@ -3126,7 +3135,7 @@ static const char *dnpds40_prefixes[] = {
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS-series / Citizen C-series",
-	.version = "0.123",
+	.version = "0.123.1",
 	.uri_prefixes = dnpds40_prefixes,
 	.flags = BACKEND_FLAG_JOBLIST,
 	.cmdline_usage = dnpds40_cmdline,

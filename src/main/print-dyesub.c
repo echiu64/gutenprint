@@ -7164,7 +7164,8 @@ static void dnpds40_printer_start(stp_vars_t *v)
 
 static void dnpds40_printer_end(stp_vars_t *v)
 {
-  stp_zprintf(v, "\033PCNTRL START"); dyesub_nputc(v, ' ', 19);
+  stp_zprintf(v, "\033PCNTRL START");
+  dyesub_nputc(v, ' ', 19);
 }
 
 static void dnpds40_plane_init(stp_vars_t *v)
