@@ -640,11 +640,12 @@ static uint8_t *dnpds40_resp_cmd2(struct dnpds40_ctx *ctx,
 	}
 
 	i = atoi(tmp);  /* Length of payload in bytes, possibly padded */
-	respbuf = malloc(i);
+	respbuf = malloc(i + 1);
 	if (!respbuf) {
 		ERROR("Memory allocation failure (%d bytes)!\n", i);
 		return NULL;
 	}
+	respbuf[i] = 0; /* Explicitly null-pad */
 
 	/* Read in the actual response */
 	ret = read_data(ctx->dev, ctx->endp_up,
@@ -3135,7 +3136,7 @@ static const char *dnpds40_prefixes[] = {
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS-series / Citizen C-series",
-	.version = "0.123.1",
+	.version = "0.123.2",
 	.uri_prefixes = dnpds40_prefixes,
 	.flags = BACKEND_FLAG_JOBLIST,
 	.cmdline_usage = dnpds40_cmdline,
