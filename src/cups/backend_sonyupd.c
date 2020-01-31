@@ -611,7 +611,7 @@ static const char *sonyupd_prefixes[] = {
 
 struct dyesub_backend sonyupd_backend = {
 	.name = "Sony UP-D",
-	.version = "0.38",
+	.version = "0.38.1",
 	.uri_prefixes = sonyupd_prefixes,
 	.cmdline_arg = upd_cmdline_arg,
 	.cmdline_usage = upd_cmdline,
@@ -625,7 +625,7 @@ struct dyesub_backend sonyupd_backend = {
 		{ USB_VID_SONY, USB_PID_SONY_UPDR150, P_SONY_UPDR150, NULL, "sony-updr150"},
 		{ USB_VID_SONY, USB_PID_SONY_UPDR200, P_SONY_UPDR150, NULL, "sony-updr200"},
 		{ USB_VID_SONY, USB_PID_SONY_UPCR10, P_SONY_UPCR10, NULL, "sony-upcr10l"},
-		{ USB_VID_SONY, USB_PID_SONY_UPD895, P_SONY_UPD895, NULL, "sonyupd895"},
+		{ USB_VID_SONY, USB_PID_SONY_UPD895, P_SONY_UPD895, NULL, "sony-upd895"},
 		{ USB_VID_SONY, USB_PID_SONY_UPD897, P_SONY_UPD897, NULL, "sony-upd897"},
 		{ 0, 0, 0, NULL, NULL}
 	}
