@@ -1146,7 +1146,7 @@ static const char *canonselphy_prefixes[] = {
 
 struct dyesub_backend canonselphy_backend = {
 	.name = "Canon SELPHY CP/ES (legacy)",
-	.version = "0.104",
+	.version = "0.104.1",
 	.uri_prefixes = canonselphy_prefixes,
 	.cmdline_usage = canonselphy_cmdline,
 	.cmdline_arg = canonselphy_cmdline_arg,
@@ -1161,7 +1161,7 @@ struct dyesub_backend canonselphy_backend = {
 		{ USB_VID_CANON, USB_PID_CANON_CP100, P_CP_XXX, NULL, "canon-cp100"},
 		{ USB_VID_CANON, USB_PID_CANON_CP200, P_CP_XXX, NULL, "canon-cp200"},
 		{ USB_VID_CANON, USB_PID_CANON_CP220, P_CP_XXX, NULL, "canon-cp220"},
-		{ USB_VID_CANON, USB_PID_CANON_CP300, P_CP_XXX, NULL, "selpyhcp300"},
+		{ USB_VID_CANON, USB_PID_CANON_CP300, P_CP_XXX, NULL, "canon-cp300"},
 		{ USB_VID_CANON, USB_PID_CANON_CP330, P_CP_XXX, NULL, "canon-cp330"},
 		{ USB_VID_CANON, USB_PID_CANON_CP400, P_CP_XXX, NULL, "canon-cp400"},
 		{ USB_VID_CANON, USB_PID_CANON_CP500, P_CP_XXX, NULL, "canon-cp500"},
