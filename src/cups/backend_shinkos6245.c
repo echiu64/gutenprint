@@ -1434,7 +1434,7 @@ static const char *shinkos6245_prefixes[] = {
 
 struct dyesub_backend shinkos6245_backend = {
 	.name = "Sinfonia CHC-S6245 / Kodak 8810",
-	.version = "0.31" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.31.1" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = shinkos6245_prefixes,
 	.cmdline_usage = shinkos6245_cmdline,
 	.cmdline_arg = shinkos6245_cmdline_arg,
@@ -1446,7 +1446,7 @@ struct dyesub_backend shinkos6245_backend = {
 	.query_serno = sinfonia_query_serno,
 	.query_markers = shinkos6245_query_markers,
 	.devices = {
-		{ USB_VID_SHINKO, USB_PID_SHINKO_S6245, P_SHINKO_S6245, NULL, "shinfonia-chcs6245"},
+		{ USB_VID_SHINKO, USB_PID_SHINKO_S6245, P_SHINKO_S6245, NULL, "sinfonia-chcs6245"},
 		{ USB_VID_HITI, USB_PID_HITI_P910L, P_SHINKO_S6245, NULL, "hiti-p910l"},
 		{ USB_VID_KODAK, USB_PID_KODAK_8810, P_KODAK_8810, NULL, "kodak-8810"},
 		{ 0, 0, 0, NULL, NULL}
