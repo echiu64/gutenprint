@@ -5288,7 +5288,8 @@ static void mitsu_cp98xx_printer_init(stp_vars_t *v, int model)
   stp_put16_be(pd->copies, v);
   dyesub_nputc(v, 0x00, 8);
   stp_putc(pd->privdata.m9550.quality, v);
-  dyesub_nputc(v, 0x00, 9);
+  dyesub_nputc(v, 0x00, 8);
+  stp_putc(0x01, v); /* EXTENSION! Tell backend data is in correct order */
   stp_putc(pd->privdata.m70x.use_lut, v);  /* Use LUT? EXTENSION! */
   stp_putc(0x01, v);
 
@@ -9704,8 +9705,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cp9810_page_list,
     &mitsu_cp9810_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_NATIVECOPIES,
     &mitsu_cp9810_printer_init, &mitsu_cp9810_printer_end,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
@@ -9866,8 +9866,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cp9810_page_list,
     &mitsu_cp9810_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_NATIVECOPIES,
     &mitsu_cp9800_printer_init, &mitsu_cp9810_printer_end,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
