@@ -5167,6 +5167,12 @@ static const stp_parameter_t mitsu98xx_parameters[] =
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
+  {
+    "Sharpen", N_("Image Sharpening"), "Color=No,Category=Advanced Printer Setup",
+    N_("Sharpening to apply to image (0 is off, 1 is min, 9 is max"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
 };
 #define mitsu98xx_parameter_count (sizeof(mitsu98xx_parameters) / sizeof(const stp_parameter_t))
 
@@ -5207,6 +5213,13 @@ mitsu98xx_load_parameters(const stp_vars_t *v, const char *name,
       description->deflt.boolean = 0;
       description->is_active = 1;
     }
+  else if (strcmp(name, "Sharpen") == 0)
+    {
+      description->deflt.integer = 6;
+      description->bounds.integer.lower = 0;
+      description->bounds.integer.upper = 10;
+      description->is_active = 1;
+    }
   else
   {
      return 0;
@@ -5238,6 +5251,7 @@ static int mitsu98xx_parse_parameters(stp_vars_t *v)
   }
 
   pd->privdata.m70x.use_lut = stp_get_boolean_parameter(v, "UseLUT");
+  pd->privdata.m70x.sharpen = stp_get_int_parameter(v, "Sharpen");
 
   /* Matte lamination forces SuperFine mode */
   if (caps->overcoat) {
@@ -5288,7 +5302,8 @@ static void mitsu_cp98xx_printer_init(stp_vars_t *v, int model)
   stp_put16_be(pd->copies, v);
   dyesub_nputc(v, 0x00, 8);
   stp_putc(pd->privdata.m9550.quality, v);
-  dyesub_nputc(v, 0x00, 8);
+  dyesub_nputc(v, 0x00, 7);
+  stp_putc(pd->privdata.m70x.sharpen, v); /* EXTENSION! Sharpness. */
   stp_putc(0x01, v); /* EXTENSION! Tell backend data is in correct order */
   stp_putc(pd->privdata.m70x.use_lut, v);  /* Use LUT? EXTENSION! */
   stp_putc(0x01, v);

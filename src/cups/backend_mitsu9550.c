@@ -851,6 +851,11 @@ hdr_done:
 				 job->cols, job->rows, job->cols * 3, COLORCONV_BGR);
 		job->hdr2.unkc[9] = 0;
 	}
+	if (ctx->is_98xx) {
+		/* Clear a couple more extensions, not handled yet. */
+		job->hdr2.unkc[8] = 0;
+		job->hdr2.unkc[7] = 0;
+	}
 
 	/* Update printjob header to reflect number of requested copies */
 	if (job->hdr2_present) {
@@ -1703,7 +1708,7 @@ static const char *mitsu9550_prefixes[] = {
 /* Exported */
 struct dyesub_backend mitsu9550_backend = {
 	.name = "Mitsubishi CP9xxx family",
-	.version = "0.49",
+	.version = "0.49.1",
 	.uri_prefixes = mitsu9550_prefixes,
 	.cmdline_usage = mitsu9550_cmdline,
 	.cmdline_arg = mitsu9550_cmdline_arg,
