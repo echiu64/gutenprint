@@ -97,7 +97,7 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      versions can continue using the old gamma behaviour, by setting the
      "StpLegacyDyesubGamma" option to "true"
 
-  3) Support for the following printers has been added:
+  3) Support for the following dye sublimcation printers has been added:
 
      Citizen CX-02W
      HiTi P520L
@@ -121,7 +121,17 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      prior release, you will need to remove and re-create your printer
      queue for printing to function properly.
 
-  5) Croation translation added; other translations updated.
+  5) Add support for Epson Stylus Office BX305F.
+
+  6) Add duplex support for the following:
+
+     Epson Stylus Office BX525WD
+     Epson Stylus Office BX535WD
+     Epson Stylus Office BX62F5WD
+     Epson Stylus Office BX635FWD
+     Epson Stylus Office TX620FWD
+
+  7) Croation translation added; other translations updated.
 
 * Changes from Gutenprint 5.3.1 (Gutenprint 5.3.2 was not released)
 
