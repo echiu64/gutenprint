@@ -721,10 +721,12 @@ F) GIMP
     If your system separates development packages from runtime
     packages, you will typically have to install development packages
     for GIMP itself, in addition to Gtk and Glib.  With GIMP 2.x and
-    GTK 2.x, additional packages may be required.  Failure to install
-    these packages will lead to errors when the package is compiled.
-    The errors will typically look like this; the important errors are
-    the ones "No such file or directory".
+    GTK 2.x, additional packages may be required (typically gimp-devel
+    on RPM-based distributions or libgimp2.0-dev on Debian-based
+    ones).  Failure to install these packages will lead to errors when
+    the package is compiled.  The errors will typically look like
+    this; the important errors are the ones "No such file or
+    directory".
 
 	make[3]: Entering directory `/opt/gutenprint/gutenprint-5.3.0-pre2/src/gimp2'
 	gcc -DHAVE_CONFIG_H -I. -I../..  -I../../include -I../../include
@@ -745,6 +747,9 @@ F) GIMP
 	make[1]: *** [all-recursive] Error 1
 	make[1]: Leaving directory `/opt/gutenprint/gutenprint-5.3.0-pre2'
 	make: *** [all] Error 2
+
+    If this happens, you will need to re-run configure after
+    installing these packages.
 
     Normally, the Gutenprint configure script detects which version,
     if any, of GIMP is installed and builds an appropriate plugin.  If
