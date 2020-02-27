@@ -618,6 +618,7 @@ static int updneo_query_markers(void *vctx, struct marker **markers, int *count)
 static const char *sonyupdneo_prefixes[] = {
 	"sonyupdneo",
 	"sony-upd898", "sony-upcr20l", "sony-updr80", "sony-updr80md",
+	"stryker-sdp1000",
 	"dnp-sl20",
 	NULL
 };
@@ -627,12 +628,13 @@ static const char *sonyupdneo_prefixes[] = {
 #define USB_PID_SONY_UPD898MD 0xabcd // 0x589a?
 #define USB_PID_SONY_UPCR20L  0xbcde
 #define USB_PID_SONY_UPDR80MD 0x03c3
+#define USB_PID_STRYKER_SDP1000 0x03c4
 #define USB_PID_SONY_UPDR80   0x03c5
 #define USB_PID_SONY_UPCX1    0x02d4
 
 struct dyesub_backend sonyupdneo_backend = {
 	.name = "Sony UP-D Neo",
-	.version = "0.09",
+	.version = "0.09.1",
 	.uri_prefixes = sonyupdneo_prefixes,
 	.cmdline_arg = updneo_cmdline_arg,
 	.cmdline_usage = updneo_cmdline,
@@ -648,7 +650,7 @@ struct dyesub_backend sonyupdneo_backend = {
 		{ USB_VID_SONY, USB_PID_SONY_UPCR20L, P_SONY_UPCR20L, NULL, "sony-upcr20l"},
 		{ USB_VID_SONY, USB_PID_SONY_UPDR80, P_SONY_UPDR80, NULL, "sony-updr80"},
 		{ USB_VID_SONY, USB_PID_SONY_UPDR80MD, P_SONY_UPDR80, NULL, "sony-updr80md"},
-
+		{ USB_VID_SONY, USB_PID_STRYKER_SDP1000, P_SONY_UPDR80, NULL, "syryker-sdp1000"},
 		{ 0, 0, 0, NULL, NULL}
 	}
 };

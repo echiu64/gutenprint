@@ -177,6 +177,9 @@
 # Sony UP-DR80MD
 0x054c 0x03c3 blacklist
 
+# Stryker SDP1000
+0x054c 0x03c4 blacklist
+
 # Mitsubishi CP-D70DW/CP-D707DW
 0x06d3 0x3b30 blacklist
 

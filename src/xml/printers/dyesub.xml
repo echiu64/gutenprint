@@ -194,6 +194,7 @@
       <printer translate="name" name="Sony UP-D898" driver="sony-upd898" manufacturer="Sony" model="2008">EXPERIMENTAL</printer>
       <printer translate="name" name="Sony UP-CR20L" driver="sony-upcr20l" manufacturer="Sony" model="2009">EXPERIMENTAL</printer>
       <printer translate="name" name="Sony UP-DR80MD" deviceid="MFG:SONY;MDL:UP-DR80MD;DES:Sony UP-DR80MD;CMD:SPJL-DS,SPDL-DS;CLS:PRINTER;" driver="sony-updr80md" manufacturer="Sony" model="2010" />
+      <printer translate="name" name="Stryker SDP1000" deviceid="MFG:Stryker;MDL:SDP1000;DES:Stryker SDP1000;CMD:SPJL-DS,SPDL-DS2;CLS:PRINTER;" driver="stryker-sdp1000" manufacturer="Stryker" model="2010" />
     </family>
   </printdef>
 </gutenprint>
