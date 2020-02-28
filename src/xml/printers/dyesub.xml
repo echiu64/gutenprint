@@ -118,8 +118,8 @@
       <printer translate="name" name="Fujifilm Printpix-CX-550" driver="fujifilm-cx550" manufacturer="Fujifilm" model="3001" />
       <printer translate="name" name="HiTi P520L" deviceid="MFG:HiTi;CMD:???;MDL:P520L;CLS:PRINTER;" driver="hiti-p520l" manufacturer="HiTi" model="6500" />
       <printer translate="name" name="HiTi P525L" deviceid="MFG:HiTi;CMD:???;MDL:P525L;CLS:PRINTER;" driver="hiti-p525l" manufacturer="HiTi" model="6500" />
-      <printer translate="name" name="HiTi P720L" driver="hiti-p720l" manufacturer="HiTi" model="6501" >EXPERIMENTAL</printer>
-      <printer translate="name" name="HiTi P750L" driver="hiti-p750l" manufacturer="HiTi" model="6501" >EXPERIMENTAL</printer>
+      <printer translate="name" name="HiTi P720L" deviceid="MFG:HiTi;MDL:HiTi P720L;" driver="hiti-p720l" manufacturer="HiTi" model="6501" >EXPERIMENTAL</printer>
+      <printer translate="name" name="HiTi P750L" deviceid="MFG:HiTi;MDL:P750L;" driver="hiti-p750l" manufacturer="HiTi" model="6501" >EXPERIMENTAL</printer>
       <printer translate="name" name="Kodak 305" deviceid="MFG:KODAK;CMD:KODAK305;MDL:305 Photo Printer;CLS:PRINTER;DES:KODAK 305 Photo Printer" driver="kodak-305" manufacturer="Kodak" model="4108" />
       <printer translate="name" name="Kodak 605" deviceid="MFG:Eastman Kodak Company;CMD:SUPCC;MCL:KODAK 605 Photo Printer;CLS:PRINTER;DES:Thermal Dye Photo Printer;" driver="kodak-605" manufacturer="Kodak" model="4003" />
       <printer translate="name" name="Kodak 1400" deviceid="MFG:Eastman Kodak Company;CMD:EK1;MDL: 1400 Printer;CLS:Printer;DES:Kodak 1400 Printer;`" driver="kodak-1400" manufacturer="Kodak" model="4004" />
