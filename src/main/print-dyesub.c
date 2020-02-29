@@ -5882,6 +5882,7 @@ static const dyesub_pagesize_t mitsu_cpd90_page[] =
   DEFINE_PAPER_SIMPLE( "w288h432", "4x6", PT1(1226,300), PT1(1852,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER_SIMPLE( "w288h432-div2", "2x6*2", PT1(1226,300), PT1(1852,300),	DYESUB_LANDSCAPE),
   DEFINE_PAPER_SIMPLE( "w360h504", "5x7", PT1(1550,300), PT1(2128,300), DYESUB_PORTRAIT),
+  // XXX add 5x7-div2
   DEFINE_PAPER_SIMPLE( "w360h360", "5x5", PT1(1527,300), PT1(1550,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER_SIMPLE( "w432h432", "6x6", PT1(1827,300), PT1(1852,300), DYESUB_LANDSCAPE),
   // XXX add 6x6+2x6!
@@ -5904,6 +5905,7 @@ static const dyesub_printsize_t mitsu_cpd90_printsize[] =
   { "300x300", "w288h432-div2", 1226, 1852},
   { "300x300", "w360h360", 1527, 1550},
   { "300x300", "w360h504", 1550, 2128},
+  // XXX add 5x7-div2
   { "300x300", "w432h432", 1827, 1852},
   // XXX add 6x6+2x6!
   { "300x300", "w432h576", 1852, 2428},
@@ -6048,7 +6050,7 @@ static int mitsu_d90_parse_parameters(stp_vars_t *v)
   return 1;
 }
 
-static void mitsu_cpd90_printer_init(stp_vars_t *v)
+static void mitsu_cpdneo_printer_init(stp_vars_t *v, int m1)
 {
   dyesub_privdata_t *pd = get_privdata(v);
 
@@ -6061,7 +6063,7 @@ static void mitsu_cpd90_printer_init(stp_vars_t *v)
   stp_putc(0x33, v);
   stp_put16_be(pd->w_size, v);  /* Columns */
   stp_put16_be(pd->h_size, v);  /* Rows */
-  stp_putc(0x64, v);
+  stp_putc(0x64, v); // XXX wait time, this could be an option..
   stp_putc(0x00, v);
   stp_putc(0x00, v);
   stp_putc(0x01, v);
@@ -6069,56 +6071,58 @@ static void mitsu_cpd90_printer_init(stp_vars_t *v)
 
   if (strcmp(pd->pagesize,"w432h576-div2") == 0) {
     stp_putc(0x01, v);
-    stp_putc(0x04, v);
-    stp_putc(0xbe, v);
+    stp_put16_be(0x04be, v);
     dyesub_nputc(v, 0x00, 6);
   } else if (strcmp(pd->pagesize,"w288h432-div2") == 0) {
     stp_putc(0x00, v);
-    stp_putc(0x02, v);
-    stp_putc(0x65, v);
+    stp_put16_be(0x0265, v);
     stp_putc(0x01, v);
-    stp_putc(0x00, v);
-    stp_putc(0x00, v);
+    stp_put16_be(0x00, v);
     stp_putc(0x01, v);
-    stp_putc(0x00, v);
-    stp_putc(0x00, v);
+    stp_put16_be(0x00, v);
   } else if (strcmp(pd->pagesize,"w432h648-div2") == 0) {
     stp_putc(0x01, v);
-    stp_putc(0x05, v);
-    stp_putc(0x36, v);
+    stp_put16_be(0x0536, v);
     dyesub_nputc(v, 0x00, 6);
   } else if (strcmp(pd->pagesize,"w432h648-div3") == 0) {
     stp_putc(0x00, v);
-    stp_putc(0x03, v);
-    stp_putc(0x90, v);
+    stp_put16_be(0x0390, v);
     stp_putc(0x00, v);
-    stp_putc(0x07, v);
-    stp_putc(0x14, v);
+    stp_put16_be(0x0714, v);
     dyesub_nputc(v, 0x00, 3);
   } else if (strcmp(pd->pagesize,"w432h648-div4") == 0) {
     stp_putc(0x00, v);
-    stp_putc(0x02, v);
-    stp_putc(0x97, v);
+    stp_put16_be(0x0297, v);
     stp_putc(0x00, v);
-    stp_putc(0x05, v);
-    stp_putc(0x22, v);
+    stp_put16_be(0x0522, v);
     stp_putc(0x00, v);
-    stp_putc(0x07, v);
-    stp_putc(0xad, v);
+    stp_put16_be(0x07ad, v);
   } else {
     dyesub_nputc(v, 0x00, 9);
   }
   dyesub_nputc(v, 0x00, 24);
 
+  /* @ 0x40 */
   stp_zfwrite((pd->overcoat->seq).data, 1,
 	      (pd->overcoat->seq).bytes, v); /* Lamination mode */
   stp_putc(pd->privdata.m70x.quality, v);
   stp_putc(pd->privdata.m70x.use_lut, v);
   stp_putc(pd->privdata.m70x.sharpen, v); /* Horizontal */
   stp_putc(pd->privdata.m70x.sharpen, v); /* Vertical */
-  dyesub_nputc(v, 0x00, 11);
+  dyesub_nputc(v, 0x00, 4);
 
-  dyesub_nputc(v, 0x00, 512 - 64);
+  /* Panorama setup, leave blank for now */
+  if (m1) {
+	  stp_putc(0x01, v);  /* Tells backend that we need to process this */
+	  stp_put16_be(2, v);
+	  dyesub_nputc(v, 0x00, 14);
+  } else {
+	  dyesub_nputc(v, 0x00, 17);
+  }
+  dyesub_nputc(v, 0x00, 6);
+
+  /* @0x60, zero fill to 512 byte boundary. */
+  dyesub_nputc(v, 0x00, 512 - 80);
 
   /* Data Plane header */
   stp_putc(0x1b, v);
@@ -6131,8 +6135,13 @@ static void mitsu_cpd90_printer_init(stp_vars_t *v)
   stp_put16_be(pd->w_size, v);  /* Columns */
   stp_put16_be(pd->h_size, v);  /* Rows */
   dyesub_nputc(v, 0x00, 2);
-
+  /* @0x10 */
   dyesub_nputc(v, 0x00, 512 - 16);
+}
+
+static void mitsu_cpd90_printer_init(stp_vars_t *v)
+{
+	mitsu_cpdneo_printer_init(v, 0);
 }
 
 static void mitsu_cpd90_job_end(stp_vars_t *v)
@@ -6150,6 +6159,151 @@ static void mitsu_cpd90_job_end(stp_vars_t *v)
   stp_putc(0x31, v);
   stp_putc(0x00, v);
   stp_putc(delay, v);
+}
+
+/* Mitsubishi CP-M1 family */
+static const dyesub_pagesize_t mitsu_cpm1_page[] =
+{
+  DEFINE_PAPER_SIMPLE( "w144h432", "2x6", PT1(625,300), PT1(1852,300),	DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "B7", "3.5x5", PT1(1076,300), PT1(1550,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w288h432", "4x6", PT1(1226,300), PT1(1852,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w288h432-div2", "2x6*2", PT1(1226,300), PT1(1852,300),	DYESUB_LANDSCAPE),
+//  DEFINE_PAPER_SIMPLE( "w360h360", "5x5", PT1(1527,300), PT1(1550,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w360h504", "5x7", PT1(1550,300), PT1(2128,300), DYESUB_PORTRAIT),
+  // XXX add 5x7-div2
+//  DEFINE_PAPER_SIMPLE( "w432h432", "6x6", PT1(1827,300), PT1(1852,300), DYESUB_LANDSCAPE),
+  // XXX add 6x6+2x6?
+  DEFINE_PAPER_SIMPLE( "w432h576", "6x8", PT1(1852,300), PT1(2428,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w432h576-div2", "4x6*2", PT1(1852,300), PT1(2488,300), DYESUB_PORTRAIT),
+//  DEFINE_PAPER_SIMPLE( "w432h576-div4", "2x6*4", PT1(1852,300), PT1(2628,300), DYESUB_PORTRAIT),
+};
+
+LIST(dyesub_pagesize_list_t, mitsu_cpm1_page_list, dyesub_pagesize_t, mitsu_cpm1_page);
+
+static const dyesub_printsize_t mitsu_cpm1_printsize[] =
+{
+  { "300x300", "w144h432", 625, 1852},
+  { "300x300", "B7", 1076, 1550},
+  { "300x300", "w288h432", 1226, 1852},
+  { "300x300", "w288h432-div2", 1226, 1852},
+//  { "300x300", "w360h360", 1527, 1550},
+  { "300x300", "w360h504", 1550, 2128},
+  // XXX add 5x7-div2
+//  { "300x300", "w432h432", 1827, 1852},
+  // XXX add 6x6+2x6!
+  { "300x300", "w432h576", 1852, 2428},
+  { "300x300", "w432h576-div2", 1852, 2488},
+//  { "300x300", "w432h576-div4", 1852, 2488},
+};
+LIST(dyesub_printsize_list_t, mitsu_cpm1_printsize_list, dyesub_printsize_t, mitsu_cpm1_printsize);
+
+static const overcoat_t mitsu_cpm1_overcoat[] =
+{
+  {"Glossy", N_("Glossy"), {1, "\x00"}},
+  {"Matte", N_("Matte"), {1, "\x03"}},
+};
+
+LIST(overcoat_list_t, mitsu_cpm1_overcoat_list, overcoat_t, mitsu_cpm1_overcoat);
+
+static const stp_parameter_t mitsu_cpm1_parameters[] =
+{
+  {
+    "UseLUT", N_("Internal Color Correction"), "Color=Yes,Category=Advanced Printer Setup",
+    N_("Use Internal Color Correction"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "Sharpen", N_("Image Sharpening"), "Color=No,Category=Advanced Printer Setup",
+    N_("Sharpening to apply to image (0 is off, 1 is min, 7 is max"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "ComboWait", N_("Combo Print Wait Time"), "Color=No,Category=Advanced Printer Setup",
+    N_("How many seconds to wait for a second print before starting"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "MarginCutOff", N_("Disable Margin Cut"), "Color=No,Category=Advanced Printer Setup",
+    N_("Disable Margin Cut"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 0, STP_CHANNEL_NONE, 1, 0
+  },
+};
+#define mitsu_cpm1_parameter_count (sizeof(mitsu_cpm1_parameters) / sizeof(const stp_parameter_t))
+
+static int
+mitsu_cpm1_load_parameters(const stp_vars_t *v, const char *name,
+			   stp_parameter_t *description)
+{
+  int	i;
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
+		  				stp_get_model_id(v));
+
+  if (caps->parameter_count && caps->parameters)
+    {
+      for (i = 0; i < caps->parameter_count; i++)
+        if (strcmp(name, caps->parameters[i].name) == 0)
+          {
+	    stp_fill_parameter_settings(description, &(caps->parameters[i]));
+	    break;
+          }
+    }
+
+  if (strcmp(name, "UseLUT") == 0)
+    {
+      description->deflt.boolean = 0;
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "Sharpen") == 0)
+    {
+      description->deflt.integer = 4;
+      description->bounds.integer.lower = 0;
+      description->bounds.integer.upper = 7;
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "ComboWait") == 0)
+    {
+      description->deflt.integer = 5;
+      description->bounds.integer.lower = 1;
+      description->bounds.integer.upper = 25;
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "MarginCutOff") == 0)
+    {
+      description->deflt.boolean = 0;
+      description->is_active = 1;
+    }
+  else
+  {
+     return 0;
+  }
+  return 1;
+}
+
+static int mitsu_cpm1_parse_parameters(stp_vars_t *v)
+{
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  /* No need to set global params if there's no privdata yet */
+  if (!pd)
+    return 1;
+
+  /* Parse options */
+  pd->privdata.m70x.quality = 0;
+  pd->privdata.m70x.use_lut = !stp_get_boolean_parameter(v, "UseLUT");
+  pd->privdata.m70x.sharpen = stp_get_int_parameter(v, "Sharpen");
+  pd->privdata.m70x.delay = stp_get_int_parameter(v, "ComboWait");
+  pd->privdata.m70x.margincutoff = stp_get_boolean_parameter(v, "MarginCutOff");
+
+  return 1;
+}
+
+static void mitsu_cpm1_printer_init(stp_vars_t *v)
+{
+	mitsu_cpdneo_printer_init(v, 1);
 }
 
 /* Fujifilm ASK-300 */
@@ -9966,6 +10120,24 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     mitsu707_parameter_count,
     mitsu707_load_parameters,
     mitsu70x_parse_parameters,
+  },
+  { /* Mitsubishi CP-M1 family */
+    4118,
+    &rgb_ink_list,
+    &res_300dpi_list,
+    &mitsu_cpm1_page_list,
+    &mitsu_cpm1_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    &mitsu_cpm1_printer_init, NULL,  // change
+    NULL, NULL,
+    NULL, NULL, /* No block funcs */
+    &mitsu_cpm1_overcoat_list, NULL,
+    NULL, mitsu_cpd90_job_end,
+    mitsu_cpm1_parameters,
+    mitsu_cpm1_parameter_count,
+    mitsu_cpm1_load_parameters,
+    mitsu_cpm1_parse_parameters,
   },
   { /* Fujifilm ASK-2000/2500 */
     4200,
