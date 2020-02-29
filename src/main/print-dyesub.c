@@ -5874,7 +5874,7 @@ static void kodak305_printer_init(stp_vars_t *v)
   mitsu_cpd70k60_printer_init(v, 0x90);
 }
 
-/* Mitsubishi CP-D90D */
+/* Mitsubishi CP-D90DW family */
 static const dyesub_pagesize_t mitsu_cpd90_page[] =
 {
   DEFINE_PAPER_SIMPLE( "w144h432", "2x6", PT1(625,300), PT1(1852,300),	DYESUB_LANDSCAPE),
@@ -6040,7 +6040,7 @@ static int mitsu_d90_parse_parameters(stp_vars_t *v)
      pd->privdata.m70x.quality = 0;
   }
 
-  pd->privdata.m70x.use_lut = stp_get_boolean_parameter(v, "UseLUT");
+  pd->privdata.m70x.use_lut = !stp_get_boolean_parameter(v, "UseLUT");
   pd->privdata.m70x.sharpen = stp_get_int_parameter(v, "Sharpen");
   pd->privdata.m70x.delay = stp_get_int_parameter(v, "ComboWait");
   pd->privdata.m70x.margincutoff = stp_get_boolean_parameter(v, "MarginCutOff");
