@@ -650,7 +650,7 @@ struct dyesub_backend sonyupdneo_backend = {
 		{ USB_VID_SONY, USB_PID_SONY_UPCR20L, P_SONY_UPCR20L, NULL, "sony-upcr20l"},
 		{ USB_VID_SONY, USB_PID_SONY_UPDR80, P_SONY_UPDR80, NULL, "sony-updr80"},
 		{ USB_VID_SONY, USB_PID_SONY_UPDR80MD, P_SONY_UPDR80, NULL, "sony-updr80md"},
-		{ USB_VID_SONY, USB_PID_STRYKER_SDP1000, P_SONY_UPDR80, NULL, "syryker-sdp1000"},
+		{ USB_VID_SONY, USB_PID_STRYKER_SDP1000, P_SONY_UPDR80, NULL, "stryker-sdp1000"},
 		{ 0, 0, 0, NULL, NULL}
 	}
 };
