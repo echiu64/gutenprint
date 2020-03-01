@@ -6075,7 +6075,10 @@ static void mitsu_cpdneo_printer_init(stp_vars_t *v, int m1)
     dyesub_nputc(v, 0x00, 6);
   } else if (strcmp(pd->pagesize,"w288h432-div2") == 0) {
     stp_putc(0x00, v);
-    stp_put16_be(0x0265, v);
+    if (m1)
+	    stp_put16_be(0x0265, v);
+    else
+	    stp_put16_be(0x0268, v);
     stp_putc(0x01, v);
     stp_put16_be(0x00, v);
     stp_putc(0x01, v);
@@ -6164,17 +6167,17 @@ static void mitsu_cpd90_job_end(stp_vars_t *v)
 /* Mitsubishi CP-M1 family */
 static const dyesub_pagesize_t mitsu_cpm1_page[] =
 {
-  DEFINE_PAPER_SIMPLE( "w144h432", "2x6", PT1(625,300), PT1(1852,300),	DYESUB_LANDSCAPE),
-  DEFINE_PAPER_SIMPLE( "B7", "3.5x5", PT1(1076,300), PT1(1550,300), DYESUB_LANDSCAPE),
-  DEFINE_PAPER_SIMPLE( "w288h432", "4x6", PT1(1226,300), PT1(1852,300), DYESUB_LANDSCAPE),
-  DEFINE_PAPER_SIMPLE( "w288h432-div2", "2x6*2", PT1(1226,300), PT1(1852,300),	DYESUB_LANDSCAPE),
-//  DEFINE_PAPER_SIMPLE( "w360h360", "5x5", PT1(1527,300), PT1(1550,300), DYESUB_LANDSCAPE),
-  DEFINE_PAPER_SIMPLE( "w360h504", "5x7", PT1(1550,300), PT1(2128,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w144h432", "2x6", PT1(631,300), PT1(1852,300),	DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "B7", "3.5x5", PT1(1082,300), PT1(1550,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w288h432", "4x6", PT1(1232,300), PT1(1852,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w288h432-div2", "2x6*2", PT1(1232,300), PT1(1852,300),	DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w360h360", "5x5", PT1(1533,300), PT1(1550,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w360h504", "5x7", PT1(1550,300), PT1(2134,300), DYESUB_PORTRAIT),
   // XXX add 5x7-div2
-//  DEFINE_PAPER_SIMPLE( "w432h432", "6x6", PT1(1827,300), PT1(1852,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w432h432", "6x6", PT1(1833,300), PT1(1852,300), DYESUB_LANDSCAPE),
   // XXX add 6x6+2x6?
-  DEFINE_PAPER_SIMPLE( "w432h576", "6x8", PT1(1852,300), PT1(2428,300), DYESUB_PORTRAIT),
-  DEFINE_PAPER_SIMPLE( "w432h576-div2", "4x6*2", PT1(1852,300), PT1(2488,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w432h576", "6x8", PT1(1852,300), PT1(2434,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w432h576-div2", "4x6*2", PT1(1852,300), PT1(2434,300), DYESUB_PORTRAIT),
 //  DEFINE_PAPER_SIMPLE( "w432h576-div4", "2x6*4", PT1(1852,300), PT1(2628,300), DYESUB_PORTRAIT),
 };
 
@@ -6182,17 +6185,17 @@ LIST(dyesub_pagesize_list_t, mitsu_cpm1_page_list, dyesub_pagesize_t, mitsu_cpm1
 
 static const dyesub_printsize_t mitsu_cpm1_printsize[] =
 {
-  { "300x300", "w144h432", 625, 1852},
-  { "300x300", "B7", 1076, 1550},
-  { "300x300", "w288h432", 1226, 1852},
-  { "300x300", "w288h432-div2", 1226, 1852},
-//  { "300x300", "w360h360", 1527, 1550},
-  { "300x300", "w360h504", 1550, 2128},
+  { "300x300", "w144h432", 631, 1852},
+  { "300x300", "B7", 1082, 1550},
+  { "300x300", "w288h432", 1232, 1852},
+  { "300x300", "w288h432-div2", 1232, 1852},
+  { "300x300", "w360h360", 1533, 1550},
+  { "300x300", "w360h504", 1550, 2134},
   // XXX add 5x7-div2
-//  { "300x300", "w432h432", 1827, 1852},
+  { "300x300", "w432h432", 1833, 1852},
   // XXX add 6x6+2x6!
-  { "300x300", "w432h576", 1852, 2428},
-  { "300x300", "w432h576-div2", 1852, 2488},
+  { "300x300", "w432h576", 1852, 2434},
+  { "300x300", "w432h576-div2", 1852, 2434},
 //  { "300x300", "w432h576-div4", 1852, 2488},
 };
 LIST(dyesub_printsize_list_t, mitsu_cpm1_printsize_list, dyesub_printsize_t, mitsu_cpm1_printsize);
