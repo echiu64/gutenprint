@@ -6112,7 +6112,9 @@ static void mitsu_cpdneo_printer_init(stp_vars_t *v, int m1)
   stp_putc(pd->privdata.m70x.use_lut, v);
   stp_putc(pd->privdata.m70x.sharpen, v); /* Horizontal */
   stp_putc(pd->privdata.m70x.sharpen, v); /* Vertical */
-  dyesub_nputc(v, 0x00, 4);
+  dyesub_nputc(v, 0x00, 3);
+
+  /* @ 0x48 */
 
   /* Panorama setup, leave blank for now */
   if (m1) {
@@ -6122,7 +6124,7 @@ static void mitsu_cpdneo_printer_init(stp_vars_t *v, int m1)
   } else {
 	  dyesub_nputc(v, 0x00, 17);
   }
-  dyesub_nputc(v, 0x00, 6);
+  dyesub_nputc(v, 0x00, 7);
 
   /* @0x60, zero fill to 512 byte boundary. */
   dyesub_nputc(v, 0x00, 512 - 80);
