@@ -5169,7 +5169,7 @@ static const stp_parameter_t mitsu98xx_parameters[] =
   },
   {
     "Sharpen", N_("Image Sharpening"), "Color=No,Category=Advanced Printer Setup",
-    N_("Sharpening to apply to image (0 is off, 1 is min, 9 is max"),
+    N_("Sharpening to apply to image (0 is off, 1 is min, 10 is max"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
