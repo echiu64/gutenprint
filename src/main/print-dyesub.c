@@ -5995,7 +5995,7 @@ mitsu_d90_load_parameters(const stp_vars_t *v, const char *name,
     }
   else if (strcmp(name, "UseLUT") == 0)
     {
-      description->deflt.boolean = 0;
+      description->deflt.boolean = 1;
       description->is_active = 1;
     }
   else if (strcmp(name, "Sharpen") == 0)
@@ -6008,8 +6008,8 @@ mitsu_d90_load_parameters(const stp_vars_t *v, const char *name,
   else if (strcmp(name, "ComboWait") == 0)
     {
       description->deflt.integer = 5;
-      description->bounds.integer.lower = 1;
-      description->bounds.integer.upper = 25;
+      description->bounds.integer.lower = 0;
+      description->bounds.integer.upper = 100;
       description->is_active = 1;
     }
   else if (strcmp(name, "MarginCutOff") == 0)
@@ -6151,19 +6151,16 @@ static void mitsu_cpd90_printer_init(stp_vars_t *v)
 
 static void mitsu_cpd90_job_end(stp_vars_t *v)
 {
-  int delay;
-  if (stp_check_int_parameter(v, "ComboWait", STP_PARAMETER_ACTIVE))
-    delay = stp_get_int_parameter(v, "ComboWait");
-  else
-    delay = 5;
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  int delay = pd->privdata.m70x.delay == 0 ? 0xff : pd->privdata.m70x.delay;
 
   /* Wrap it up */
   stp_putc(0x1b, v);
   stp_putc(0x42, v);
   stp_putc(0x51, v);
   stp_putc(0x31, v);
-  stp_putc(0x00, v);
-  stp_putc(delay, v);
+  stp_put16_be(delay, v);
 }
 
 /* Mitsubishi CP-M1 family */
@@ -6219,6 +6216,12 @@ static const stp_parameter_t mitsu_cpm1_parameters[] =
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
+    "ColorMatching", N_("Color Matching"), "Color=Yes,Category=Advanced Printer Setup",
+    N_("Enable if color matched flow (ICC profile) is being used"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
     "Sharpen", N_("Image Sharpening"), "Color=No,Category=Advanced Printer Setup",
     N_("Sharpening to apply to image (0 is off, 1 is min, 7 is max"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
@@ -6259,6 +6262,11 @@ mitsu_cpm1_load_parameters(const stp_vars_t *v, const char *name,
 
   if (strcmp(name, "UseLUT") == 0)
     {
+      description->deflt.boolean = 1;
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "ColorMatching") == 0)
+    {
       description->deflt.boolean = 0;
       description->is_active = 1;
     }
@@ -6272,8 +6280,8 @@ mitsu_cpm1_load_parameters(const stp_vars_t *v, const char *name,
   else if (strcmp(name, "ComboWait") == 0)
     {
       description->deflt.integer = 5;
-      description->bounds.integer.lower = 1;
-      description->bounds.integer.upper = 25;
+      description->bounds.integer.lower = 0;
+      description->bounds.integer.upper = 100;
       description->is_active = 1;
     }
   else if (strcmp(name, "MarginCutOff") == 0)
@@ -6291,6 +6299,19 @@ mitsu_cpm1_load_parameters(const stp_vars_t *v, const char *name,
 static int mitsu_cpm1_parse_parameters(stp_vars_t *v)
 {
   dyesub_privdata_t *pd = get_privdata(v);
+  int use_lut = stp_get_boolean_parameter(v, "UseLUT");
+  int matching = stp_get_boolean_parameter(v, "ColorMatching");
+
+  if (use_lut && matching) {
+	  stp_eprintf(v, _("Cannot use Internal Correction and Color Matching together!\n"));
+	  return 0;
+  } else if (use_lut && !matching) {
+	  matching = 0;
+  } else if (!use_lut && matching) {
+	  matching = 2;
+  } else { /* !use_lut && !matching */
+	  matching = 1;
+  }
 
   /* No need to set global params if there's no privdata yet */
   if (!pd)
@@ -6298,7 +6319,8 @@ static int mitsu_cpm1_parse_parameters(stp_vars_t *v)
 
   /* Parse options */
   pd->privdata.m70x.quality = 0;
-  pd->privdata.m70x.use_lut = !stp_get_boolean_parameter(v, "UseLUT");
+
+  pd->privdata.m70x.use_lut = matching;
   pd->privdata.m70x.sharpen = stp_get_int_parameter(v, "Sharpen");
   pd->privdata.m70x.delay = stp_get_int_parameter(v, "ComboWait");
   pd->privdata.m70x.margincutoff = stp_get_boolean_parameter(v, "MarginCutOff");
