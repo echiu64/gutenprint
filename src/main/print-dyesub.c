@@ -6076,9 +6076,9 @@ static void mitsu_cpdneo_printer_init(stp_vars_t *v, int m1)
   } else if (strcmp(pd->pagesize,"w288h432-div2") == 0) {
     stp_putc(0x00, v);
     if (m1)
-	    stp_put16_be(0x0265, v);
+      stp_put16_be(0x0265, v);
     else
-	    stp_put16_be(0x0268, v);
+      stp_put16_be(0x0268, v);
     stp_putc(0x01, v);
     stp_put16_be(0x00, v);
     stp_putc(0x01, v);
@@ -6118,11 +6118,11 @@ static void mitsu_cpdneo_printer_init(stp_vars_t *v, int m1)
 
   /* Panorama setup, leave blank for now */
   if (m1) {
-	  stp_putc(0x01, v);  /* Tells backend that we need to process this */
-	  stp_put16_be(2, v);
-	  dyesub_nputc(v, 0x00, 14);
+    stp_putc(0x01, v);  /* Tells backend that we need to process this */
+    stp_put16_be(2, v);
+    dyesub_nputc(v, 0x00, 14);
   } else {
-	  dyesub_nputc(v, 0x00, 17);
+    dyesub_nputc(v, 0x00, 17);
   }
   dyesub_nputc(v, 0x00, 7);
 
@@ -6146,14 +6146,20 @@ static void mitsu_cpdneo_printer_init(stp_vars_t *v, int m1)
 
 static void mitsu_cpd90_printer_init(stp_vars_t *v)
 {
-	mitsu_cpdneo_printer_init(v, 0);
+  mitsu_cpdneo_printer_init(v, 0);
 }
 
 static void mitsu_cpd90_job_end(stp_vars_t *v)
 {
-  dyesub_privdata_t *pd = get_privdata(v);
+  int delay;
 
-  int delay = pd->privdata.m70x.delay == 0 ? 0xff : pd->privdata.m70x.delay;
+  if (stp_check_int_parameter(v, "ComboWait", STP_PARAMETER_ACTIVE))
+    delay = stp_get_int_parameter(v, "ComboWait");
+  else
+    delay = 5;
+
+  if (delay == 0)
+    delay = 0xff;
 
   /* Wrap it up */
   stp_putc(0x1b, v);
