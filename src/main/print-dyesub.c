@@ -6269,6 +6269,16 @@ mitsu_cpm1_load_parameters(const stp_vars_t *v, const char *name,
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
+  if (caps->parameter_count && caps->parameters)
+    {
+      for (i = 0; i < caps->parameter_count; i++)
+        if (strcmp(name, caps->parameters[i].name) == 0)
+          {
+	    stp_fill_parameter_settings(description, &(caps->parameters[i]));
+	    break;
+          }
+    }
+
   if (strcmp(name, "PrintSpeed") == 0)
     {
       description->bounds.str = stp_string_list_create();
@@ -6283,17 +6293,7 @@ mitsu_cpm1_load_parameters(const stp_vars_t *v, const char *name,
       description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
       description->is_active = 1;
     }
-  else if (caps->parameter_count && caps->parameters)
-    {
-      for (i = 0; i < caps->parameter_count; i++)
-        if (strcmp(name, caps->parameters[i].name) == 0)
-          {
-	    stp_fill_parameter_settings(description, &(caps->parameters[i]));
-	    break;
-          }
-    }
-
-  if (strcmp(name, "UseLUT") == 0)
+  else if (strcmp(name, "UseLUT") == 0)
     {
       description->deflt.boolean = 1;
       description->is_active = 1;
