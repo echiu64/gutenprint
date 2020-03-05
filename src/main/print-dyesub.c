@@ -4,7 +4,7 @@
  *
  *   Copyright 2003-2006 Michael Mraka (Michael.Mraka@linux.cz)
  *
- *   Copyright 2007-2019 Solomon Peachy (pizza@shaftnet.org)
+ *   Copyright 2007-2020 Solomon Peachy (pizza@shaftnet.org)
  *
  *   The plug-in is based on the code of the RAW plugin for the GIMP of
  *   Michael Sweet (mike@easysw.com) and Robert Krawitz (rlk@alum.mit.edu)
@@ -6216,6 +6216,12 @@ LIST(overcoat_list_t, mitsu_cpm1_overcoat_list, overcoat_t, mitsu_cpm1_overcoat)
 static const stp_parameter_t mitsu_cpm1_parameters[] =
 {
   {
+    "PrintSpeed", N_("Print Speed"), "Color=No,Category=Advanced Printer Setup",
+    N_("Print Speed"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
     "UseLUT", N_("Internal Color Correction"), "Color=Yes,Category=Advanced Printer Setup",
     N_("Use Internal Color Correction"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
@@ -6248,6 +6254,13 @@ static const stp_parameter_t mitsu_cpm1_parameters[] =
 };
 #define mitsu_cpm1_parameter_count (sizeof(mitsu_cpm1_parameters) / sizeof(const stp_parameter_t))
 
+static const dyesub_stringitem_t mitsu_cpm1_qualities[] =
+{
+  { "Auto",      N_ ("Automatic") },
+  { "Fast",      N_ ("Fast") },
+};
+LIST(dyesub_stringlist_t, mitsu_cpm1_quality_list, dyesub_stringitem_t, mitsu_cpm1_qualities);
+
 static int
 mitsu_cpm1_load_parameters(const stp_vars_t *v, const char *name,
 			   stp_parameter_t *description)
@@ -6256,7 +6269,21 @@ mitsu_cpm1_load_parameters(const stp_vars_t *v, const char *name,
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
 		  				stp_get_model_id(v));
 
-  if (caps->parameter_count && caps->parameters)
+  if (strcmp(name, "PrintSpeed") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+
+      const dyesub_stringlist_t *mlist = &mitsu_cpm1_quality_list;
+      for (i = 0; i < mlist->n_items; i++)
+        {
+	  const dyesub_stringitem_t *m = &(mlist->item[i]);
+	  stp_string_list_add_string(description->bounds.str,
+				       m->name, m->text); /* Do *not* want this translated, otherwise use gettext(m->text) */
+	}
+      description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
+      description->is_active = 1;
+    }
+  else if (caps->parameter_count && caps->parameters)
     {
       for (i = 0; i < caps->parameter_count; i++)
         if (strcmp(name, caps->parameters[i].name) == 0)
@@ -6307,6 +6334,7 @@ static int mitsu_cpm1_parse_parameters(stp_vars_t *v)
   dyesub_privdata_t *pd = get_privdata(v);
   int use_lut = stp_get_boolean_parameter(v, "UseLUT");
   int matching = stp_get_boolean_parameter(v, "ColorMatching");
+  const char *quality = stp_get_string_parameter(v, "PrintSpeed");
 
   if (use_lut && matching) {
 	  stp_eprintf(v, _("Cannot use Internal Correction and Color Matching together!\n"));
@@ -6324,7 +6352,11 @@ static int mitsu_cpm1_parse_parameters(stp_vars_t *v)
     return 1;
 
   /* Parse options */
-  pd->privdata.m70x.quality = 0;
+  if (strcmp(quality, "Fast") == 0) {
+     pd->privdata.m70x.quality = 5;
+  } else {
+     pd->privdata.m70x.quality = 0;
+  }
 
   pd->privdata.m70x.use_lut = matching;
   pd->privdata.m70x.sharpen = stp_get_int_parameter(v, "Sharpen");
