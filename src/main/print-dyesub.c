@@ -6063,47 +6063,58 @@ static void mitsu_cpdneo_printer_init(stp_vars_t *v, int m1)
   stp_putc(0x33, v);
   stp_put16_be(pd->w_size, v);  /* Columns */
   stp_put16_be(pd->h_size, v);  /* Rows */
-  stp_putc(0x64, v); // XXX wait time, this could be an option..
+  stp_putc(0x64, v); /* Wait Time, Theoretically configurable */
   stp_putc(0x00, v);
   stp_putc(0x00, v);
   stp_putc(0x01, v);
   stp_putc(pd->privdata.m70x.margincutoff, v);
 
   if (strcmp(pd->pagesize,"w432h576-div2") == 0) {
-    stp_putc(0x01, v);
+    stp_putc(0x01, v); /* NumCuts */
     stp_put16_be(0x04be, v);
-    dyesub_nputc(v, 0x00, 6);
+    stp_putc(0x00, v); /* MarginCut */
+    stp_putc(0x00, v); /* Pad */
+    dyesub_nputc(v, 0x00, 28);
   } else if (strcmp(pd->pagesize,"w288h432-div2") == 0) {
-    stp_putc(0x00, v);
+    stp_putc(0x01, v); /* NumCuts */
     if (m1)
       stp_put16_be(0x0265, v);
     else
       stp_put16_be(0x0268, v);
-    stp_putc(0x01, v);
-    stp_put16_be(0x00, v);
-    stp_putc(0x01, v);
-    stp_put16_be(0x00, v);
+    stp_putc(0x01, v); /* Margin Cut */
+    stp_putc(0x00, v); /* Pad */
+    dyesub_nputc(v, 0x00, 28);
   } else if (strcmp(pd->pagesize,"w432h648-div2") == 0) {
-    stp_putc(0x01, v);
+    stp_putc(0x01, v); /* NumCuts */
     stp_put16_be(0x0536, v);
-    dyesub_nputc(v, 0x00, 6);
+    stp_putc(0x00, v); /* MarginCut */
+    stp_putc(0x00, v); /* Pad */
+    dyesub_nputc(v, 0x00, 28);
   } else if (strcmp(pd->pagesize,"w432h648-div3") == 0) {
-    stp_putc(0x00, v);
+    stp_putc(0x02, v); /* NumCuts */
     stp_put16_be(0x0390, v);
-    stp_putc(0x00, v);
+    stp_putc(0x00, v); /* MarginCut */
+    stp_putc(0x00, v); /* Pad */
     stp_put16_be(0x0714, v);
-    dyesub_nputc(v, 0x00, 3);
+    stp_putc(0x00, v); /* MarginCut */
+    stp_putc(0x00, v); /* Pad */
+    dyesub_nputc(v, 0x00, 24);
   } else if (strcmp(pd->pagesize,"w432h648-div4") == 0) {
-    stp_putc(0x00, v);
+    stp_putc(0x03, v); /* NumCuts */
     stp_put16_be(0x0297, v);
-    stp_putc(0x00, v);
+    stp_putc(0x00, v); /* MarginCut */
+    stp_putc(0x00, v); /* Pad */
     stp_put16_be(0x0522, v);
-    stp_putc(0x00, v);
+    stp_putc(0x00, v); /* MarginCut */
+    stp_putc(0x00, v); /* Pad */
     stp_put16_be(0x07ad, v);
+    stp_putc(0x00, v); /* MarginCut */
+    stp_putc(0x00, v); /* Pad */
+    dyesub_nputc(v, 0x00, 20);
   } else {
-    dyesub_nputc(v, 0x00, 9);
+    stp_putc(0x00, v); /* NumCuts */
+    dyesub_nputc(v, 0x00, 32);
   }
-  dyesub_nputc(v, 0x00, 24);
 
   /* @ 0x40 */
   stp_zfwrite((pd->overcoat->seq).data, 1,
