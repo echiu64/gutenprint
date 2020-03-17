@@ -64,6 +64,7 @@ struct mitsup95d_ctx {
 	uint8_t endp_down;
 
 	int type;
+	char serno[STR_LEN_MAX + 1];
 
 	struct marker marker;
 };
@@ -145,9 +146,32 @@ static int mitsup95d_attach(void *vctx, struct libusb_device_handle *dev, int ty
 	ctx->marker.color = "#000000";  /* Ie black! */
 	ctx->marker.name = "Unknown";
 	ctx->marker.numtype = -1;
-	ctx->marker.levelmax = -1;
-	ctx->marker.levelnow = -2;
+	ctx->marker.levelmax = CUPS_MARKER_UNAVAILABLE;
+	ctx->marker.levelnow = CUPS_MARKER_UNKNOWN;
 
+	if (test_mode >= TEST_MODE_NOATTACH)
+		goto done;
+
+	/* Query serial number */
+	{
+		struct libusb_device_descriptor desc;
+		struct libusb_device *udev;
+
+		udev = libusb_get_device(ctx->dev);
+		libusb_get_device_descriptor(udev, &desc);
+
+		if (!desc.iSerialNumber) {
+			WARNING("Printer configured for iSerial mode U0, so no serial number is reported.\n");
+		} else {
+			libusb_get_string_descriptor_ascii(ctx->dev, desc.iSerialNumber, (uint8_t*)ctx->serno, STR_LEN_MAX);
+
+			if (strstr(ctx->serno, "000000")) {
+				WARNING("Printer configured for iSerial mode U2, reporting a fixed serial number of 000000\n");
+			}
+		}
+	}
+
+done:
 	return CUPS_BACKEND_OK;
 }
 
@@ -497,6 +521,14 @@ static int mitsup95d_dump_status(struct mitsup95d_ctx *ctx)
 	ret = mitsup95d_get_status(ctx, queryresp);
 	if (ret)
 		return ret;
+	if (!ctx->serno[0])
+		INFO("iSerial mode: Disasbled (U0)\n");
+	else if (strstr(ctx->serno, "000000"))
+		INFO("iSerial Mode: Force 000000 (U2)\n");
+	else {
+		INFO("iSerial Mode: Enabled (U1)\n");
+		INFO("Serial Number: %s\n", ctx->serno);
+	}
 
 	if (ctx->type == P_MITSU_P95D) {
 		if (queryresp[6] & 0x40) {
@@ -545,7 +577,7 @@ static int mitsup95d_cmdline_arg(void *vctx, int argc, char **argv)
 		if (j) return j;
 	}
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static int mitsup95d_query_markers(void *vctx, struct marker **markers, int *count)
@@ -556,7 +588,7 @@ static int mitsup95d_query_markers(void *vctx, struct marker **markers, int *cou
 	if (mitsup95d_get_status(ctx, queryresp))
 		return CUPS_BACKEND_FAILED;
 
-	ctx->marker.levelnow = -3;
+	ctx->marker.levelnow = CUPS_MARKER_UNKNOWN_OK;
 
 	if (ctx->type == P_MITSU_P95D) {
 		if (queryresp[6] & 0x40) {
@@ -568,13 +600,6 @@ static int mitsup95d_query_markers(void *vctx, struct marker **markers, int *cou
 		}
 	}
 
-	/* Lot state */
-	if (ctx->marker.levelnow)
-		STATE("-media-empty\n");
-	else
-		STATE("+media-empty\n");
-
-
 	*markers = &ctx->marker;
 	*count = 1;
 
@@ -583,7 +608,6 @@ static int mitsup95d_query_markers(void *vctx, struct marker **markers, int *cou
 
 static const char *mitsup95d_prefixes[] = {
 	"mitsup9x", // Family driver name
-	"mitsubishi-p95d", "mitsubishi-p93d",
 	// backwards compatibility
 	"mitsup95d", "mitsup93d",
 	NULL
@@ -592,7 +616,7 @@ static const char *mitsup95d_prefixes[] = {
 /* Exported */
 struct dyesub_backend mitsup95d_backend = {
 	.name = "Mitsubishi P93D/P95D",
-	.version = "0.13",
+	.version = "0.14",
 	.uri_prefixes = mitsup95d_prefixes,
 	.cmdline_arg = mitsup95d_cmdline_arg,
 	.cmdline_usage = mitsup95d_cmdline,
@@ -795,7 +819,6 @@ UNKNOWNS:
  * How multiple images are stacked for printing on a single page
    (col offset too?  write four, then tell PRINT?)
  * How to adjust P95D printer sharpness?
- * Serial number query (iSerial appears bogus)
  * What "custom gamma" table does to spool file?
 
 */

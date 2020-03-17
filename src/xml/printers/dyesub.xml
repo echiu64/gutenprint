@@ -167,7 +167,7 @@
       <printer translate="name" name="Mitsubishi CP-D70DW" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP60D70D707D;CLS:PRINTER;DES:MITSUBISHI CP60D70D707D" driver="mitsubishi-d70dw" manufacturer="Mitsubishi" model="4105" />
       <printer translate="name" name="Mitsubishi CP-D707DW" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP60D70D707D;CLS:PRINTER;DES:MITSUBISHI CP60D70D707D" driver="mitsubishi-d707dw" manufacturer="Mitsubishi" model="4117" />
       <printer translate="name" name="Mitsubishi CP-K60DW-S" driver="mitsubishi-k60dw" manufacturer="Mitsubishi" model="4106" />
-      <printer translate="name" name="Mitsubishi CP-M1" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP-M1;CLS:PRINTER;DES:MITSUBISHI_CP-M1" driver="mitsubishi-cpm1" manufacturer="Mitsubishi" model="4118">EXPERIMENTAL</printer>
+      <printer translate="name" name="Mitsubishi CP-M1" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP-M1;CLS:PRINTER;DES:MITSUBISHI_CP-M1" driver="mitsubishi-cpm1" manufacturer="Mitsubishi" model="4118" />
       <printer translate="name" name="Mitsubishi P93D" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:P93D;CLS:PRINTER;DES:MITSUBISHI P93D;" driver="mitsubishi-p93d" manufacturer="Mitsubishi" model="4116" />
       <printer translate="name" name="Mitsubishi P95D" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:P95D    ;CLS:PRINTER;DES:MITSUBISHI P95D    ;" driver="mitsubishi-p95d" manufacturer="Mitsubishi" model="4114" />
       <printer translate="name" name="Nidac Copal DPB-4000"  driver="nidalcopac-dpb-4000" manufacturer="Nidac Copal" model="4201">EXPERIMENTAL</printer>

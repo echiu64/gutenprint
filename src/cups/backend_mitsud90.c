@@ -1,7 +1,7 @@
 /*
  *   Mitsubishi CP-D90DW Photo Printer CUPS backend
  *
- *   (c) 2019 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2019-2020 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -18,9 +18,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
- *          [http://www.gnu.org/licenses/gpl-2.0.html]
+ *   along with this program; if not, see <https://www.gnu.org/licenses/>.
  *
  *   SPDX-License-Identifier: GPL-2.0+
  *
@@ -29,38 +27,48 @@
 #define BACKEND mitsud90_backend
 
 #include "backend_common.h"
+#include "backend_mitsu.h"
 
 #define USB_VID_MITSU       0x06D3
 #define USB_PID_MITSU_D90   0x3B60
+#define USB_PID_MITSU_CPM1  0x3B80
 
-const char *mitsu70x_media_types(uint8_t brand, uint8_t type);
-const char *mitsu70x_temperatures(uint8_t temp);
+/* CPM1 stuff */
+#define CPM1_LAMINATE_STRIDE 1852
+#define CPM1_LAMINATE_FILE "M1_MAT02.raw"
+#define CPM1_CPC_FNAME "CPM1_N1.csv"
+#define CPM1_CPC_G1_FNAME "CPM1_G1.csv"
+#define CPM1_CPC_G5_FNAME "CPM1_G5.csv"
+#define CPM1_LUT_FNAME "CPM1_NL.lut"
 
 /* Printer data structures */
-#define D90_STATUS_TYPE_MODEL  0x01 // 10, null-terminated ASCII. 'CPD90D'
-#define D90_STATUS_TYPE_x02    0x02 // 1, 0x5f ?
-#define D90_STATUS_TYPE_FW_0b  0x0b // 8, 34 31 34 42 31 31 a7 de (414D11)
-#define D90_STATUS_TYPE_FW_MA  0x0c // 8, 34 31 35 41 38 31 86 bf (415A81)  // MAIN FW
-#define D90_STATUS_TYPE_FW_F   0x0d // 8, 34 31 36 41 35 31 dc 8a (416A51)  // FPGA FW
-#define D90_STATUS_TYPE_FW_T   0x0e // 8, 34 31 37 45 31 31 e7 e6 (417E11)  // TABLE FW
-#define D90_STATUS_TYPE_FW_0f  0x0f // 8, 34 31 38 41 31 32 6c 64 (418A12)
-#define D90_STATUS_TYPE_FW_11  0x11 // 8, 34 32 31 51 31 31 74 f2 (421Q11)
-#define D90_STATUS_TYPE_FW_ME  0x13 // 8, 34 31 39 45 31 31 15 bf (419E11)  // MECHA FW
+#define COM_STATUS_TYPE_MODEL   0x01 // 10, null-terminated ASCII. 'CPD90D'
+#define COM_STATUS_TYPE_x02     0x02 // 1, 0x5f ?
+#define CM1_STATUS_TYPE_ISERIAL 0x03 // 24, full iSerial string in UTF16(LE)
+#define CM1_STATUS_TYPE_SERIAL  0x04 // 6, serial number only (ascii)
+#define CM1_STATUS_TYPE_FW_0a   0x0a // 8, 34 34 38 41 31 32 29 f4 (448A12)
+#define COM_STATUS_TYPE_FW_0b   0x0b // 8, 34 31 34 42 31 31 a7 de (414D11)
+#define COM_STATUS_TYPE_FW_MA   0x0c // 8, 34 31 35 41 38 31 86 bf (415A81)  // MAIN FW
+#define COM_STATUS_TYPE_FW_F    0x0d // 8, 34 31 36 41 35 31 dc 8a (416A51)  // FPGA FW
+#define COM_STATUS_TYPE_FW_T    0x0e // 8, 34 31 37 45 31 31 e7 e6 (417E11)  // TABLE FW
+#define COM_STATUS_TYPE_FW_0f   0x0f // 8, 34 31 38 41 31 32 6c 64 (418A12)
+#define COM_STATUS_TYPE_FW_11   0x11 // 8, 34 32 31 51 31 31 74 f2 (421Q11)
+#define COM_STATUS_TYPE_FW_ME   0x13 // 8, 34 31 39 45 31 31 15 bf (419E11)  // MECHA FW
 
-#define D90_STATUS_TYPE_ERROR  0x16 // 11 (see below)
-#define D90_STATUS_TYPE_MECHA  0x17 // 2  (see below)
-#define D90_STATUS_TYPE_x1e    0x1e // 1, power state or time?  (x00)
-#define D90_STATUS_TYPE_TEMP   0x1f // 1  (see below)
-#define D90_STATUS_TYPE_x22    0x22 // 2,  all 0  (counter?)
-#define D90_STATUS_TYPE_x28    0x28 // 2, next jobid? (starts 00 01, increments by 1 for each print)
-#define D90_STATUS_TYPE_x29    0x29 // 8,  e0 07 00 00 21 e6 b3 22
-#define D90_STATUS_TYPE_MEDIA  0x2a // 10 (see below)
-#define D90_STATUS_TYPE_x2b    0x2b // 2,  all 0 (counter?)
-#define D90_STATUS_TYPE_x2c    0x2c // 2,  00 56 (counter?)
-#define D90_STATUS_TYPE_x65    0x65 // 50, see below
-#define D90_STATUS_TYPE_ISER   0x82 // 1,  80 (iserial disabled)
-#define D90_STATUS_TYPE_x83    0x83 // 1,  00
-#define D90_STATUS_TYPE_x84    0x84 // 1,  00
+#define COM_STATUS_TYPE_ERROR   0x16 // 11 (see below)
+#define COM_STATUS_TYPE_MECHA   0x17 // 2  (see below)
+#define COM_STATUS_TYPE_x1e     0x1e // 1, power state or time?  (x00)
+#define COM_STATUS_TYPE_TEMP    0x1f // 1  (see below)
+#define COM_STATUS_TYPE_x22     0x22 // 2,  all 0  (counter?)
+#define COM_STATUS_TYPE_x28     0x28 // 2, next jobid? (starts 00 01 at power cycle, increments by 1 for each print)
+#define COM_STATUS_TYPE_x29     0x29 // 8,  e0 07 00 00 21 e6 b3 22 or e0 07 80 96 3f 28 12 2d
+#define COM_STATUS_TYPE_MEDIA   0x2a // 10 (see below)
+#define COM_STATUS_TYPE_x2b     0x2b // 2,  all 0 (counter?)
+#define COM_STATUS_TYPE_x2c     0x2c // 2,  00 56 (counter?) or 00 28
+#define COM_STATUS_TYPE_x65     0x65 // 50, see below
+#define D90_STATUS_TYPE_ISEREN  0x82 // 1,  80 (iserial disabled)
+#define COM_STATUS_TYPE_x83     0x83 // 1,  00
+#define D90_STATUS_TYPE_x84     0x84 // 1,  00
 
 //#define D90_STATUS_TYPE_x85    0x85 // 2, 00 ?? BE, wait time?
                                     // combined total of 5.
@@ -79,17 +87,17 @@ struct mitsud90_media_resp {
 		uint16_t capacity; /* BE */
 		uint16_t remain;  /* BE */
 		uint8_t  unk_b[2];
-	} __attribute__((packed)) media; /* D90_STATUS_TYPE_MEDIA */
+	} __attribute__((packed)) media; /* COM_STATUS_TYPE_MEDIA */
 } __attribute__((packed));
 
 struct mitsud90_status_resp {
 	uint8_t  hdr[4];  /* e4 47 44 30 */
-	/* D90_STATUS_TYPE_ERROR */
+	/* COM_STATUS_TYPE_ERROR */
 	uint8_t  code[2]; /* 00 is ok, nonzero is error */
 	uint8_t  unk[9];
-	/* D90_STATUS_TYPE_MECHA */
+	/* COM_STATUS_TYPE_MECHA */
 	uint8_t  mecha[2];
-	/* D90_STATUS_TYPE_TEMP */
+	/* COM_STATUS_TYPE_TEMP */
 	uint8_t  temp;
 } __attribute__((packed));
 
@@ -109,6 +117,22 @@ struct mitsud90_info_resp {
 	uint8_t  x83;
 	uint8_t  x84;
 } __attribute__((packed));
+
+struct mitsum1_info_resp {
+	uint8_t  hdr[4];  /* e4 47 44 30 */
+	uint8_t  model[10];
+	uint8_t  x02;
+	struct mitsud90_fw_resp_single fw_vers[8];
+	uint8_t  x1e;
+	uint8_t  x22[2];
+	uint16_t x28;
+	uint8_t  x29[8];
+	uint8_t  x2b[2];
+	uint8_t  x2c[2];
+	uint8_t  x65[50];
+	uint8_t  x83;
+} __attribute__((packed));
+
 
 #define D90_MECHA_STATUS_IDLE         0x00
 #define D90_MECHA_STATUS_PRINTING     0x50
@@ -138,68 +162,70 @@ struct mitsud90_info_resp {
 struct mitsud90_job_query {
 	uint8_t  hdr[4];  /* 1b 47 44 31 */
 	uint16_t jobid;   /* BE */
-};
+} __attribute__((packed));
 
 struct mitsud90_job_resp {
 	uint8_t  hdr[4];  /* e4 47 44 31 */
 	uint8_t  unk1;
 	uint8_t  unk2;
 	uint16_t unk3;
-};
+} __attribute__((packed));
 
 struct mitsud90_job_hdr {
 	uint8_t  hdr[6]; /* 1b 53 50 30 00 33 */
 	uint16_t cols;   /* BE */
 	uint16_t rows;   /* BE */
-	uint8_t  unk[4]; /* 64 00 00 01 */ // XXX 00 01 might be the jobid?
+	uint8_t  waittime; /* 0-100 */
+	uint8_t  unk[3]; /* 00 00 01 */ // XXX 00 01 might be the jobid?
 	uint8_t  margincut; /* 1 for enabled, 0 for disabled */
-	union {
-#if 0
-		struct {
-			uint8_t  margin;
-			uint16_t position;
-		} cuts[3] __attribute__((packed));
-#endif
-		uint8_t cutzero[9];
-	} __attribute__((packed));
-	uint8_t  zero[24];
-
-/*@x30*/uint8_t  overcoat;
-	uint8_t  quality;
-	uint8_t  colorcorr;
-	uint8_t  sharp_h;
-	uint8_t  sharp_v;
-	uint8_t  zero_b[5];
-	union {
-		struct {
-			uint16_t pano_on;   /* 0x0001 when pano is on,  */
-			uint8_t  pano_tot;  /* 2 or 3 */
-			uint8_t  pano_pg;   /* 1, 2, 3 */
-			uint16_t pano_rows; /* always 0x097c (BE), ie 2428 ie 8" print */
-			uint16_t pano_rows2; /* Always 0x30 less than pano_rows */
-			uint16_t pano_zero; /* 0x0000 */
-			uint8_t  pano_unk[6];  /* 02 58 00 0c 00 06 */
-		} pano __attribute__((packed));
-		uint8_t zero_c[16];
-	};
-	uint8_t zero_d[6];
-	uint8_t zero_fill[432];
+	uint8_t  numcuts; /* # of cuts (0-3) but 0-8 legal */
+/*@0x10*/
+	struct {
+		uint16_t position;  // @ center?
+		uint8_t  margincut; /* 0 for double cut, 1 for single */
+		uint8_t  zeropad;
+	} cutlist[8] __attribute__((packed));  /* 3 is current legal max */
+/*@x30*/uint8_t  overcoat;  /* 0 glossy, matte is 2 (D90) or 3 (M1) */
+	uint8_t  quality;   /* 0 is automatic, 5 is "fast" on M1 */
+	uint8_t  colorcorr; /* Always 1 on M1 */
+	uint8_t  sharp_h;   /* Always 0 on M1 */
+	uint8_t  sharp_v;   /* Always 0 on M1 */
+	uint8_t  zero_b[4]; /* 0 on D90, on M1, zero_b[3] is the not-raw flag */
+	struct {
+		uint16_t pano_on;   /* 0x0001 when pano is on, or always 0x0002 on M1  */
+		uint8_t  pano_tot;  /* 2 or 3 */
+		uint8_t  pano_pg;   /* 1, 2, 3 */
+		uint16_t pano_rows; /* always 0x097c (BE), ie 2428 ie 8" print */
+		uint16_t pano_rows2; /* Always 0x30 less than pano_rows */
+		uint16_t pano_zero; /* 0x0000 */
+		uint16_t pano_overlap; /* always 0x0258, ie 600 or 2 inches */
+		uint8_t  pano_unk[4];  /* 00 0c 00 06 */
+	} pano __attribute__((packed));
+	uint8_t zero_c[7];
+/*@x50*/uint8_t unk_m1;   /* 00 on d90 & m1 Linux, 01 on m1 (windows) */
+	uint8_t rgbrate;  /* M1 only, see below */
+	uint8_t oprate;   /* M1 only, see below */
+	uint8_t zero_fill[429];
 } __attribute__((packed));
 
 struct mitsud90_plane_hdr {
 	uint8_t  hdr[6]; /* 1b 5a 54 01 00 09 */
-	uint16_t origin_cols;
-	uint16_t origin_rows;
+	uint16_t origin_cols;  /* Leave at 0 */
+	uint16_t origin_rows;  /* Leave at 0 */
 	uint16_t cols;  /* BE */
 	uint16_t rows;  /* BE */
-	uint8_t  zero_fill[498];
-};
+	uint8_t  zero_a[6];
+	uint16_t lamcols; /* BE (M1 only, OC=3) should be cols+origin_cols */
+	uint16_t lamrows; /* BE (M1 only, OC=3) should be rows+origin_rows+12 */
+	uint8_t  zero_b[8];
+	uint8_t  unk_m1[8]; /* 07 e4 02 19 xx xx xx 00 always incrementing. timestamp? Only seen from win-generated jobs? */
+	uint8_t  zero_fill[472];
+} __attribute__((packed));
 
 struct mitsud90_job_footer {
 	uint8_t hdr[4]; /* 1b 42 51 31 */
-	uint8_t pad;
-	uint8_t seconds; /* 0x05 by default (windows) */
-};
+	uint16_t seconds; /* BE, 0x0005 by default (windows), 0x00ff means don't wait */
+} __attribute__((packed));
 
 struct mitsud90_memcheck {
 	uint8_t  hdr[4]; /* 1b 47 44 33 */
@@ -208,13 +234,13 @@ struct mitsud90_memcheck {
 	uint16_t rows;   /* BE */
 	uint8_t  unk_b[4]; /* 64 00 00 01  */
 	uint8_t  zero_fill[498];
-};
+} __attribute__((packed));
 
 struct mitsud90_memcheck_resp {
 	uint8_t  hdr[4];   /* e4 47 44 43 */
 	uint8_t  size_bad; /* 0x00 is ok */
 	uint8_t  mem_bad;  /* 0x00 is ok */
-};
+} __attribute__((packed));
 
 const char *mitsud90_mecha_statuses(const uint8_t *code)
 {
@@ -407,14 +433,25 @@ static void mitsud90_dump_status(struct mitsud90_status_resp *resp)
 	     mitsud90_mecha_statuses(resp->mecha),
 	     resp->mecha[0], resp->mecha[1]);
 	INFO("Temperature Status: %s\n",
-	     mitsu70x_temperatures(resp->temp));
+	     mitsu_temperatures(resp->temp));
 }
 
 /* Private data structure */
 struct mitsud90_printjob {
-	uint8_t *databuf;
-	int datalen;
+	size_t jobsize;
 	int copies;
+
+	uint8_t *databuf;
+	uint32_t datalen;
+
+	int is_raw;
+
+	int m1_colormode;
+
+	struct mitsud90_job_hdr hdr;
+
+	int has_footer;
+	struct mitsud90_job_footer footer;
 };
 
 struct mitsud90_ctx {
@@ -428,6 +465,9 @@ struct mitsud90_ctx {
 	/* Used in parsing.. */
 	struct mitsud90_job_footer holdover;
 	int holdover_on;
+
+	/* For the CP-M1 family */
+	struct mitsu_lib lib;
 
 	struct marker marker;
 };
@@ -444,7 +484,7 @@ static int mitsud90_query_media(struct mitsud90_ctx *ctx, struct mitsud90_media_
 	cmdbuf[4] = 0;
 	cmdbuf[5] = 0;
 	cmdbuf[6] = 0x01;  /* Number of commands */
-	cmdbuf[7] = D90_STATUS_TYPE_MEDIA;
+	cmdbuf[7] = COM_STATUS_TYPE_MEDIA;
 
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
 			     cmdbuf, sizeof(cmdbuf))))
@@ -476,9 +516,9 @@ static int mitsud90_query_status(struct mitsud90_ctx *ctx, struct mitsud90_statu
 	cmdbuf[4] = 0;
 	cmdbuf[5] = 0;
 	cmdbuf[6] = 0x03;  /* Number of commands */
-	cmdbuf[7] = D90_STATUS_TYPE_ERROR;
-	cmdbuf[8] = D90_STATUS_TYPE_MECHA;
-	cmdbuf[9] = D90_STATUS_TYPE_TEMP;
+	cmdbuf[7] = COM_STATUS_TYPE_ERROR;
+	cmdbuf[8] = COM_STATUS_TYPE_MECHA;
+	cmdbuf[9] = COM_STATUS_TYPE_TEMP;
 
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
 			     cmdbuf, sizeof(cmdbuf))))
@@ -585,11 +625,40 @@ static int mitsud90_attach(void *vctx, struct libusb_device_handle *dev, int typ
 
 	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
 	ctx->marker.numtype = resp.media.type;
-	ctx->marker.name = mitsu70x_media_types(resp.media.brand, resp.media.type);
+	ctx->marker.name = mitsu_media_types(ctx->type, resp.media.brand, resp.media.type);
 	ctx->marker.levelmax = be16_to_cpu(resp.media.capacity);
 	ctx->marker.levelnow = be16_to_cpu(resp.media.remain);
 
+	if (ctx->type == P_MITSU_M1) {
+#if defined(WITH_DYNAMIC)
+		/* Attempt to open the library */
+		if (mitsu_loadlib(&ctx->lib, ctx->type))
+#endif
+			WARNING("Dynamic library support not loaded, will be unable to print.");
+	}
+
+	// XXX do some runtime checks for FW versions.
+	// do a MA FW comparison; CP-M1 v1.00 is 450B11.  ME is 454C11
+	// CP-D90-P v2.10 is 415A81 or 415G11 (revA vs revB)  ME is 419E11
+	// CP-D90DW v2.10 is 415B94 or 415E54 (??)    ME is 419E42
+	// if nothing else, D90 v2.10 is needed for panorama.
+	// D90DW-P and D90DW share same USB VID/PID.  Not sure how to tell
+	// them apart other than FW.  No idea what functional differences are.
+
 	return CUPS_BACKEND_OK;
+}
+
+static void mitsud90_teardown(void *vctx) {
+	struct mitsud90_ctx *ctx = vctx;
+
+	if (!ctx)
+		return;
+
+	if (ctx->type == P_MITSU_M1) {
+		mitsu_destroylib(&ctx->lib);
+	}
+
+	free(ctx);
 }
 
 static void mitsud90_cleanup_job(const void *vjob)
@@ -602,12 +671,17 @@ static void mitsud90_cleanup_job(const void *vjob)
 	free((void*)job);
 }
 
+/* Sanity check some stuff */
+STATIC_ASSERT(sizeof(struct mitsud90_job_hdr) == 512);
+STATIC_ASSERT(sizeof(struct mitsud90_plane_hdr) == 512);
+
+static int mitsud90_main_loop(void *vctx, const void *vjob);
+
 static int mitsud90_read_parse(void *vctx, const void **vjob, int data_fd, int copies) {
 	struct mitsud90_ctx *ctx = vctx;
 	int i, remain;
-	struct mitsud90_job_hdr *hdr;
 
-	struct mitsud90_printjob *job;;
+	struct mitsud90_printjob *job;
 
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
@@ -618,14 +692,15 @@ static int mitsud90_read_parse(void *vctx, const void **vjob, int data_fd, int c
 		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 	memset(job, 0, sizeof(*job));
+	job->jobsize = sizeof(*job);
 	job->copies = copies;
 
 	/* Just allocate a worst-case buffer */
 	job->datalen = 0;
 	job->databuf = malloc(sizeof(struct mitsud90_job_hdr) +
 			      sizeof(struct mitsud90_plane_hdr) +
-			      sizeof(struct mitsud90_job_footer) +
-			      1852*2729*3);
+			      1852*2729*3 + 1024);
+
 	if (!job->databuf) {
 		ERROR("Memory allocation failure!\n");
 		mitsud90_cleanup_job(job);
@@ -654,21 +729,77 @@ static int mitsud90_read_parse(void *vctx, const void **vjob, int data_fd, int c
 		remain -= i;
 		job->datalen += i;
 	}
+	/* Move over to its final resting place, and reset */
+	memcpy(&job->hdr, job->databuf, sizeof(job->hdr));
+	job->datalen = 0;
 
 	/* Sanity check header */
-	hdr = (struct mitsud90_job_hdr *) job->databuf;
-	if (hdr->hdr[0] != 0x1b ||
-	    hdr->hdr[1] != 0x53 ||
-	    hdr->hdr[2] != 0x50 ||
-	    hdr->hdr[3] != 0x30 ) {
+	if (job->hdr.hdr[0] != 0x1b ||
+	    job->hdr.hdr[1] != 0x53 ||
+	    job->hdr.hdr[2] != 0x50 ||
+	    job->hdr.hdr[3] != 0x30 ) {
 		ERROR("Unrecognized data format (%02x%02x%02x%02x)!\n",
-		      hdr->hdr[0], hdr->hdr[1], hdr->hdr[2], hdr->hdr[3]);
+		      job->hdr.hdr[0], job->hdr.hdr[1],
+		      job->hdr.hdr[2], job->hdr.hdr[3]);
 		mitsud90_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
 	}
 
+	/* More sanity checks */
+	if (job->hdr.pano.pano_on && ctx->type != P_MITSU_M1) {
+		ERROR("Unable to handle panorama jobs yet\n");
+		mitsud90_cleanup_job(job);
+		return CUPS_BACKEND_CANCEL;
+	}
+
+	/* Sanity check cutlist */
+	if (job->hdr.numcuts > 3) {
+		ERROR("Cut list too long!\n");
+		mitsud90_cleanup_job(job);
+		return CUPS_BACKEND_CANCEL;
+	}
+	if (job->hdr.numcuts >= 1) {
+		int rows = be16_to_cpu(job->hdr.rows);
+		for (i = 0 ; i < job->hdr.numcuts ; i++) {
+			int min_size;
+			int position = be16_to_cpu(job->hdr.cutlist[i].position);
+			int last_position = (i == 0) ? 0 : be16_to_cpu(job->hdr.cutlist[i-1].position);
+
+			if (i == 0)
+				min_size = 613;
+			else
+				min_size = (job->hdr.cutlist[i-1].margincut) ? 601 : 660; // XXX inverted?
+
+			if ((position - last_position) < min_size) {
+				ERROR("Minumum cut#%d length is %d rows\n", i, min_size);
+				mitsud90_cleanup_job(job);
+				return CUPS_BACKEND_CANCEL;
+			}
+			if ((rows - position) < min_size) {
+				ERROR("Cut#%d is too close to end\n", i);
+				mitsud90_cleanup_job(job);
+				return CUPS_BACKEND_CANCEL;
+			}
+		}
+	}
+
+	/* How many pixels do we need to read? */
+	remain = be16_to_cpu(job->hdr.cols) * be16_to_cpu(job->hdr.rows) * 3;
+
+	if (ctx->type == P_MITSU_M1) {
+		/* See if it's a special gutenprint "not-raw" job */
+		job->is_raw = !job->hdr.zero_b[3];
+		job->hdr.zero_b[3] = 0;
+
+		/* If it's a raw M1 job, the pixels are 2 bytes each */
+		if (job->is_raw)
+			remain *= 2;
+	}
+
+	/* Add in the plane header */
+	remain += sizeof(struct mitsud90_plane_hdr);
+
 	/* Now read in the rest */
-	remain = sizeof(struct mitsud90_plane_hdr) + be16_to_cpu(hdr->cols) * be16_to_cpu(hdr->rows) * 3;
 	while(remain) {
 		i = read(data_fd, job->databuf + job->datalen, remain);
 		if (i == 0) {
@@ -683,9 +814,8 @@ static int mitsud90_read_parse(void *vctx, const void **vjob, int data_fd, int c
 		remain -= i;
 	}
 
-	/* Read in the footer.  Hopefully. */
-	remain = sizeof(struct mitsud90_job_footer);
-	i = read(data_fd, job->databuf + job->datalen, remain);
+	/* Read in the footer.  Hopefully... */
+	i = read(data_fd, (uint8_t*)&job->footer, sizeof(job->footer));
 	if (i == 0) {
 		mitsud90_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
@@ -696,32 +826,79 @@ static int mitsud90_read_parse(void *vctx, const void **vjob, int data_fd, int c
 	}
 
 	/* See if this is a job footer.  If it is, keep, else holdover. */
-	if (job->databuf[job->datalen + 0] != 0x1b ||
-	    job->databuf[job->datalen + 1] != 0x42 ||
-	    job->databuf[job->datalen + 2] != 0x51 ||
-	    job->databuf[job->datalen + 3] != 0x31) {
-		memcpy(&ctx->holdover, job->databuf + job->datalen, sizeof(struct mitsud90_job_footer));
+	if (job->footer.hdr[0] != 0x1b ||
+	    job->footer.hdr[1] != 0x42 ||
+	    job->footer.hdr[2] != 0x51 ||
+	    job->footer.hdr[3] != 0x31) {
+		memcpy(&ctx->holdover, &job->footer, sizeof(job->footer));
 	        ctx->holdover_on = 1;
+		// XXX generate a footer!
 	} else {
-		job->datalen += i;
+		job->has_footer = 1;
 		ctx->holdover_on = 0;
 	}
 
-	/* Sanity check */
-	if (hdr->pano.pano_on) {
-		ERROR("Unable to handle panorama jobs yet\n");
-		mitsud90_cleanup_job(job);
-		return CUPS_BACKEND_CANCEL;
+	/* CP-M1 has... other considerations */
+	if (ctx->type == P_MITSU_M1 && !job->is_raw) {
+		if (!ctx->lib.dl_handle) {
+			ERROR("!!! Image Processing Library not found, aborting!\n");
+			mitsud90_cleanup_job(job);
+			return CUPS_BACKEND_CANCEL;
+		}
+
+		job->m1_colormode = job->hdr.colorcorr;
+		job->hdr.colorcorr = 1;
+
+		if (job->m1_colormode == 0) {
+			int ret = mitsu_apply3dlut(&ctx->lib, CPM1_LUT_FNAME,
+						   job->databuf + sizeof(struct mitsud90_plane_hdr),
+						   be16_to_cpu(job->hdr.cols),
+						   be16_to_cpu(job->hdr.rows),
+						   be16_to_cpu(job->hdr.cols) * 3, COLORCONV_RGB);
+			if (ret) {
+				mitsud90_cleanup_job(job);
+				return ret;
+			}
+			job->hdr.colorcorr = 1;
+		}
 	}
+
+	/* All further work is in main loop */
+	if (test_mode >= TEST_MODE_NOPRINT)
+		mitsud90_main_loop(ctx, job);
 
 	*vjob = job;
 
 	return CUPS_BACKEND_OK;
 }
 
+static int cpm1_fillmatte(struct mitsud90_printjob *job)
+{
+	int ret;
+	int rows, cols;
+
+	struct mitsud90_plane_hdr *phdr = (struct mitsud90_plane_hdr *) job->databuf;
+
+	rows = be16_to_cpu(job->hdr.rows) + 12;
+	cols = be16_to_cpu(job->hdr.cols);
+
+	/* Fill in matte data */
+	ret = mitsu_readlamdata(CPM1_LAMINATE_FILE, CPM1_LAMINATE_STRIDE,
+				job->databuf, &job->datalen,
+				rows, cols, 1);
+
+	if (ret)
+		return ret;
+
+	/* Update plane header and overall length */
+	phdr->lamcols = cpu_to_be16(cols);
+	phdr->lamrows = cpu_to_be16(rows);
+
+	return CUPS_BACKEND_OK;
+}
+
 static int mitsud90_main_loop(void *vctx, const void *vjob) {
 	struct mitsud90_ctx *ctx = vctx;
-	struct mitsud90_job_hdr *hdr;
 	struct mitsud90_status_resp resp;
 	uint8_t last_status[2] = {0xff, 0xff};
 
@@ -729,7 +906,7 @@ static int mitsud90_main_loop(void *vctx, const void *vjob) {
 	int ret;
 	int copies;
 
-	const struct mitsud90_printjob *job = vjob;
+	struct mitsud90_printjob *job = (struct mitsud90_printjob *)vjob;
 
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
@@ -737,7 +914,110 @@ static int mitsud90_main_loop(void *vctx, const void *vjob) {
 		return CUPS_BACKEND_FAILED;
 	copies = job->copies;
 
-	hdr = (struct mitsud90_job_hdr*) job->databuf;
+	if (ctx->type == P_MITSU_M1 && !job->is_raw) {
+		struct BandImage input;
+		struct BandImage output;
+		struct M1CPCData *cpc;
+
+		input.origin_rows = input.origin_cols = 0;
+		input.rows = be16_to_cpu(job->hdr.rows);
+		input.cols = be16_to_cpu(job->hdr.cols);
+		input.imgbuf = job->databuf + sizeof(struct mitsud90_plane_hdr);
+		input.bytes_per_row = input.cols * 3;
+
+		/* Allocate new buffer, with extra room for header */
+		uint8_t *convbuf = malloc(input.rows * input.cols * sizeof(uint16_t) * 3 + (job->hdr.overcoat? (input.rows + 12) * input.cols + CPM1_LAMINATE_STRIDE / 2 : 0) + sizeof(struct mitsud90_plane_hdr));
+		if (!convbuf) {
+			ERROR("Memory allocation Failure!\n");
+			return CUPS_BACKEND_RETRY_CURRENT;
+		}
+
+		output.origin_rows = output.origin_cols = 0;
+		output.rows = input.rows;
+		output.cols = input.cols;
+		output.imgbuf = convbuf + sizeof(struct mitsud90_plane_hdr);
+		output.bytes_per_row = output.cols * 3 * sizeof(uint16_t);
+
+		/* Copy over the plane header */
+		memcpy(convbuf, job->databuf, sizeof(struct mitsud90_plane_hdr));
+
+		// Do CContrastConv prior to RGBRate
+		job->hdr.rgbrate = ctx->lib.M1_CalcRGBRate(input.rows,
+							   input.cols,
+							   input.imgbuf);
+
+		/* Color modes: 0 LUT, NOMATCH
+		                1 NOLUT, MATCH  <-- ie use with external ICC profile!
+                                2 NOLUT, NOMATCH */
+
+		const char *gammatab;
+		if (job->m1_colormode == 1) {
+			gammatab = CPM1_CPC_G5_FNAME;
+		} else { /* Mode 0 or 2 */
+			gammatab = CPM1_CPC_G1_FNAME;
+		}
+
+		cpc = ctx->lib.M1_GetCPCData(corrtable_path, CPM1_CPC_FNAME, gammatab);
+		if (!cpc) {
+			ERROR("Cannot read data tables\n");
+			free(convbuf);
+			return CUPS_BACKEND_FAILED;
+		}
+
+		/* Do gamma conversion */
+		ctx->lib.M1_Gamma8to14(cpc, &input, &output);
+
+		if (job->hdr.sharp_h || job->hdr.sharp_v) {
+			/* 0 is off, 1-7 corresponds to level 0-6 */
+			int sharp = ((job->hdr.sharp_h > job->hdr.sharp_v) ? job->hdr.sharp_h : job->hdr.sharp_v) - 1;
+			job->hdr.sharp_h = 0;
+			job->hdr.sharp_v = 0;
+
+			/* And do the sharpening */
+			if (ctx->lib.M1_CLocalEnhancer(cpc, sharp, &output)) {
+				ERROR("CLocalEnhancer failed (out of memory?)\n");
+				free(convbuf);
+				ctx->lib.M1_DestroyCPCData(cpc);
+				return CUPS_BACKEND_RETRY_CURRENT;
+			}
+		}
+
+		/* We're done with the CPC data */
+		ctx->lib.M1_DestroyCPCData(cpc);
+
+#if (__BYTE_ORDER == __BIG_ENDIAN)
+		/* Convert data to LITTLE ENDIAN if needed */
+		int i;
+		uint16_t *ptr = output.imgbuf;
+		for (i = 0; i < output.rows * output.cols ; i ++) {
+			ptr[i] = cpu_to_le16(i);
+		}
+#endif
+
+		free(job->databuf);
+		job->databuf = convbuf;
+		job->datalen = sizeof(struct mitsud90_plane_hdr) + input.rows * input.cols * sizeof(uint16_t) * 3;
+
+		/* Deal with lamination settings */
+		if (job->hdr.overcoat == 3) {
+			int pre_matte_len = job->datalen;
+			ret = cpm1_fillmatte(job);
+			if (ret) {
+				mitsud90_cleanup_job(job);
+				return ret;
+			}
+			job->hdr.oprate = ctx->lib.M1_CalcOpRateMatte(output.rows,
+								      output.cols,
+								      job->databuf + pre_matte_len);
+		} else {
+			job->hdr.oprate = ctx->lib.M1_CalcOpRateGloss(output.rows,
+								      output.cols);
+		}
+	}
+
+	/* Bypass */
+	if (test_mode >= TEST_MODE_NOPRINT)
+		return CUPS_BACKEND_OK;
 
 	INFO("Waiting for printer idle...\n");
 
@@ -786,14 +1066,13 @@ top:
 		}
 	} while(1);
 
-
 	/* Send memory check */
 	{
 		struct mitsud90_memcheck mem;
 		struct mitsud90_memcheck_resp mem_resp;
 		int num;
 
-		memcpy(&mem, hdr, sizeof(mem));
+		memcpy(&mem, &job->hdr, sizeof(mem));
 		mem.hdr[0] = 0x1b;
 		mem.hdr[1] = 0x47;
 		mem.hdr[2] = 0x44;
@@ -823,23 +1102,29 @@ top:
 		}
 	}
 
-	/* Send header */
+	/* Send job header */
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
-			     job->databuf + sent, sizeof(*hdr))))
+			     (uint8_t*) &job->hdr, sizeof(job->hdr))))
 		return CUPS_BACKEND_FAILED;
-	sent += sizeof(*hdr);
 
 	/* Send Plane header */
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
-			     job->databuf + sent, sizeof(*hdr))))
+			     job->databuf + sent, sizeof(job->hdr))))
 		return CUPS_BACKEND_FAILED;
-	sent += sizeof(*hdr);
+	sent += sizeof(job->hdr);
 
-	/* Send payload + footer */
+	/* Send payload */
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
 			     job->databuf + sent, job->datalen - sent)))
 		return CUPS_BACKEND_FAILED;
 //	sent += (job->datalen - sent);
+
+	/* Send job footer */
+	if (job->has_footer) {
+		if ((ret = send_data(ctx->dev, ctx->endp_down,
+				     (uint8_t*) &job->footer, sizeof(job->footer))))
+			return CUPS_BACKEND_FAILED;
+	}
 
 	/* Wait for completion */
 	do {
@@ -936,7 +1221,7 @@ static int mitsud90_get_media(struct mitsud90_ctx *ctx)
 		return CUPS_BACKEND_FAILED;
 
 	INFO("Media Type:  %s (%02x/%02x)\n",
-	     mitsu70x_media_types(resp.media.brand, resp.media.type),
+	     mitsu_media_types(ctx->type, resp.media.brand, resp.media.type),
 	     resp.media.brand,
 	     resp.media.type);
 	INFO("Prints Remaining:  %03d/%03d\n",
@@ -972,28 +1257,28 @@ static int mitsud90_get_info(struct mitsud90_ctx *ctx)
 	cmdbuf[5] = 0;
 	cmdbuf[6] = 19;  /* Number of commands */
 
-	cmdbuf[7] = D90_STATUS_TYPE_MODEL;
-	cmdbuf[8] = D90_STATUS_TYPE_x02;
-	cmdbuf[9] = D90_STATUS_TYPE_FW_0b;
-	cmdbuf[10] = D90_STATUS_TYPE_FW_MA;
+	cmdbuf[7] = COM_STATUS_TYPE_MODEL;
+	cmdbuf[8] = COM_STATUS_TYPE_x02;
+	cmdbuf[9] = COM_STATUS_TYPE_FW_0b;
+	cmdbuf[10] = COM_STATUS_TYPE_FW_MA;
 
-	cmdbuf[11] = D90_STATUS_TYPE_FW_F;
-	cmdbuf[12] = D90_STATUS_TYPE_FW_T;
-	cmdbuf[13] = D90_STATUS_TYPE_FW_0f;
-	cmdbuf[14] = D90_STATUS_TYPE_FW_11;
+	cmdbuf[11] = COM_STATUS_TYPE_FW_F;
+	cmdbuf[12] = COM_STATUS_TYPE_FW_T;
+	cmdbuf[13] = COM_STATUS_TYPE_FW_0f;
+	cmdbuf[14] = COM_STATUS_TYPE_FW_11;
 
-	cmdbuf[15] = D90_STATUS_TYPE_FW_ME;
-	cmdbuf[16] = D90_STATUS_TYPE_x1e;
-	cmdbuf[17] = D90_STATUS_TYPE_x22;
-	cmdbuf[18] = D90_STATUS_TYPE_x28;
+	cmdbuf[15] = COM_STATUS_TYPE_FW_ME;
+	cmdbuf[16] = COM_STATUS_TYPE_x1e;
+	cmdbuf[17] = COM_STATUS_TYPE_x22;
+	cmdbuf[18] = COM_STATUS_TYPE_x28;
 
-	cmdbuf[19] = D90_STATUS_TYPE_x29;
-	cmdbuf[20] = D90_STATUS_TYPE_x2b;
-	cmdbuf[21] = D90_STATUS_TYPE_x2c;
-	cmdbuf[22] = D90_STATUS_TYPE_x65;
+	cmdbuf[19] = COM_STATUS_TYPE_x29;
+	cmdbuf[20] = COM_STATUS_TYPE_x2b;
+	cmdbuf[21] = COM_STATUS_TYPE_x2c;
+	cmdbuf[22] = COM_STATUS_TYPE_x65;
 
-	cmdbuf[23] = D90_STATUS_TYPE_ISER;
-	cmdbuf[24] = D90_STATUS_TYPE_x83;
+	cmdbuf[23] = D90_STATUS_TYPE_ISEREN;
+	cmdbuf[24] = COM_STATUS_TYPE_x83;
 	cmdbuf[25] = D90_STATUS_TYPE_x84;
 
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
@@ -1040,6 +1325,91 @@ static int mitsud90_get_info(struct mitsud90_ctx *ctx)
 	INFO("iSerial: %s\n", resp.iserial ? "Disabled" : "Enabled");
 	INFO("TYPE_83: %02x\n", resp.x83);
 	INFO("TYPE_84: %02x\n", resp.x84);
+
+	// XXX what about resume, wait time, "cut limit", sleep time ?
+
+	return CUPS_BACKEND_OK;
+}
+
+static int mitsum1_get_info(struct mitsud90_ctx *ctx)
+{
+	uint8_t cmdbuf[25];
+	int ret, num;
+	struct mitsum1_info_resp resp;
+
+	cmdbuf[0] = 0x1b;
+	cmdbuf[1] = 0x47;
+	cmdbuf[2] = 0x44;
+	cmdbuf[3] = 0x30;
+	cmdbuf[4] = 0;
+	cmdbuf[5] = 0;
+	cmdbuf[6] = 18;  /* Number of commands */
+
+	cmdbuf[7] = COM_STATUS_TYPE_MODEL;
+	cmdbuf[8] = COM_STATUS_TYPE_x02;
+	cmdbuf[9] = CM1_STATUS_TYPE_FW_0a;
+	cmdbuf[10] = COM_STATUS_TYPE_FW_0b;
+	cmdbuf[11] = COM_STATUS_TYPE_FW_MA;
+
+	cmdbuf[12] = COM_STATUS_TYPE_FW_F;
+	cmdbuf[13] = COM_STATUS_TYPE_FW_T;
+	cmdbuf[14] = COM_STATUS_TYPE_FW_0f;
+	cmdbuf[15] = COM_STATUS_TYPE_FW_11;
+
+	cmdbuf[16] = COM_STATUS_TYPE_FW_ME;
+	cmdbuf[17] = COM_STATUS_TYPE_x1e;
+	cmdbuf[18] = COM_STATUS_TYPE_x22;
+	cmdbuf[19] = COM_STATUS_TYPE_x28;
+
+	cmdbuf[20] = COM_STATUS_TYPE_x29;
+	cmdbuf[21] = COM_STATUS_TYPE_x2b;
+	cmdbuf[22] = COM_STATUS_TYPE_x2c;
+	cmdbuf[23] = COM_STATUS_TYPE_x65;
+
+	cmdbuf[24] = COM_STATUS_TYPE_x83;
+
+	if ((ret = send_data(ctx->dev, ctx->endp_down,
+			     cmdbuf, sizeof(cmdbuf))))
+		return ret;
+	memset(&resp, 0, sizeof(resp));
+
+	ret = read_data(ctx->dev, ctx->endp_up,
+			(uint8_t*) &resp, sizeof(resp), &num);
+
+	if (ret < 0)
+		return ret;
+	if (num != sizeof(resp)) {
+		ERROR("Short Read! (%d/%d)\n", num, (int)sizeof(resp));
+		return 4;
+	}
+
+	/* start dumping output */
+	memset(cmdbuf, 0, sizeof(cmdbuf));
+	memcpy(cmdbuf, resp.model, sizeof(resp.model));
+	INFO("Model: %s\n", (char*)cmdbuf);
+	INFO("Serial: %s\n", ctx->serno);
+	for (num = 0; num < 8 ; num++) {
+		memset(cmdbuf, 0, sizeof(cmdbuf));
+		memcpy(cmdbuf, resp.fw_vers[num].version, sizeof(resp.fw_vers[num].version));
+		INFO("FW Component %02d: %s (%04x)\n",
+		     num, cmdbuf, be16_to_cpu(resp.fw_vers[num].csum));
+	}
+	INFO("TYPE_02: %02x\n", resp.x02);
+	INFO("TYPE_1e: %02x\n", resp.x1e);
+	INFO("TYPE_22: %02x %02x\n", resp.x22[0], resp.x22[1]);
+	INFO("TYPE_28: %04x\n", be16_to_cpu(resp.x28));
+	INFO("TYPE_29: %02x %02x %02x %02x %02x %02x %02x %02x\n",
+	     resp.x29[0], resp.x29[1], resp.x29[2], resp.x29[3],
+	     resp.x29[4], resp.x29[5], resp.x29[6], resp.x29[7]);
+	INFO("TYPE_2b: %02x %02x\n", resp.x2b[0], resp.x2b[1]);
+	INFO("TYPE_2c: %02x %02x\n", resp.x2c[0], resp.x2c[1]);
+
+	INFO("TYPE_65:");
+	for (num = 0; num < 50 ; num++) {
+		DEBUG2(" %02x", resp.x65[num]);
+	}
+	DEBUG2("\n");
+	INFO("TYPE_83: %02x\n", resp.x83);
 
 	// XXX what about resume, wait time, "cut limit", sleep time ?
 
@@ -1222,7 +1592,10 @@ static int mitsud90_cmdline_arg(void *vctx, int argc, char **argv)
 		switch(i) {
 		GETOPT_PROCESS_GLOBAL
 		case 'i':
-			j = mitsud90_get_info(ctx);
+			if (ctx->type == P_MITSU_D90)
+				j = mitsud90_get_info(ctx);
+			else
+				j = mitsum1_get_info(ctx);
 			break;
 		case 'j':
 			j = mitsud90_get_jobstatus(ctx, atoi(optarg));
@@ -1237,7 +1610,8 @@ static int mitsud90_cmdline_arg(void *vctx, int argc, char **argv)
 			j = mitsud90_get_status(ctx);
 			break;
 		case 'x':
-			j = mitsud90_set_iserial(ctx, atoi(optarg));
+			if (ctx->type == P_MITSU_D90)
+				j = mitsud90_set_iserial(ctx, atoi(optarg));
 			break;
 		case 'Z':
 			j = mitsud90_dumpall(ctx);
@@ -1268,32 +1642,93 @@ static int mitsud90_query_markers(void *vctx, struct marker **markers, int *coun
 	return CUPS_BACKEND_OK;
 }
 
+static int mitsud90_query_stats(void *vctx, struct printerstats *stats)
+{
+	struct mitsud90_ctx *ctx = vctx;
+	struct mitsud90_status_resp resp;
+
+	if (mitsud90_query_markers(ctx, NULL, NULL))
+		return CUPS_BACKEND_FAILED;
+	if (mitsud90_query_status(ctx, &resp))
+		return CUPS_BACKEND_FAILED;
+
+	stats->mfg = "Mitsubishi";
+	switch (ctx->type) {
+	case P_MITSU_D90:
+		stats->model = "CP-D90 family";
+		break;
+	case P_MITSU_M1:
+		stats->model = "CP-M1 family";
+		break;
+	default:
+		stats->model = "Unknown!";
+		break;
+	}
+
+	stats->serial = ctx->serno;
+
+	// stats->fwver = ctx->fwver; // XXX use resp.fw_vers for 0xc/FW_MA
+	stats->decks = 1;
+
+	stats->name[0] = "Roll";
+	if (resp.code[0] != D90_ERROR_STATUS_OK)
+		stats->status[0] = strdup(mitsud90_error_codes(resp.code));
+	else if (resp.code[1] & D90_ERROR_STATUS_OK_WARMING ||
+		 resp.temp & D90_ERROR_STATUS_OK_WARMING)
+		stats->status[0] = strdup("Warming up");
+	else if (resp.code[1] & D90_ERROR_STATUS_OK_COOLING ||
+		 resp.temp & D90_ERROR_STATUS_OK_COOLING)
+		stats->status[0] = strdup("Cooling down");
+	else
+		stats->status[0] = strdup(mitsud90_mecha_statuses(resp.mecha));
+
+	stats->mediatype[0] = ctx->marker.name;
+	stats->levelmax[0] = ctx->marker.levelmax;
+	stats->levelnow[0] = ctx->marker.levelnow;
+	// stats->cnt_life[0] = ??? // XXX Don't know about any counters yet.
+
+	return CUPS_BACKEND_OK;
+}
+
 static const char *mitsud90_prefixes[] = {
-	"mitsubishi-d90dw",
-	// backwards compatibility
-	"mitsud90",
+	"mitsud90", /* Family Name */
 	NULL
 };
 
 /* Exported */
 struct dyesub_backend mitsud90_backend = {
-	.name = "Mitsubishi CP-D90DW",
-	.version = "0.17",
+	.name = "Mitsubishi CP-D90/CP-M1",
+	.version = "0.28"  " (lib " LIBMITSU_VER ")",
 	.uri_prefixes = mitsud90_prefixes,
 	.cmdline_arg = mitsud90_cmdline_arg,
 	.cmdline_usage = mitsud90_cmdline,
 	.init = mitsud90_init,
 	.attach = mitsud90_attach,
+	.teardown = mitsud90_teardown,
 	.cleanup_job = mitsud90_cleanup_job,
 	.read_parse = mitsud90_read_parse,
 	.main_loop = mitsud90_main_loop,
-	.query_markers = mitsud90_query_markers,
 	.query_serno = mitsud90_query_serno,
+	.query_markers = mitsud90_query_markers,
+	.query_stats = mitsud90_query_stats,
 	.devices = {
 		{ USB_VID_MITSU, USB_PID_MITSU_D90, P_MITSU_D90, NULL, "mitsubishi-d90dw"},
+		{ USB_VID_MITSU, USB_PID_MITSU_CPM1, P_MITSU_M1, NULL, "mitsubishi-cpm1"},
+//		{ USB_VID_MITSU, USB_PID_MITSU_CPM15, P_MITSU_M1, NULL, "mitsubishi-cpm15"},
 		{ 0, 0, 0, NULL, NULL}
 	}
 };
+
+/* To-Do:
+
+     * consolidate M1 vs D90 info query/dump more efficiently
+     * job control (job id, active job, buffer status, etc)
+     * any sort of counters
+     * figure out "margin" parameter on the cut list
+     * sleep and waking up
+     * cut limit?
+     * put FW version into stats structure
+ */
 
 /*
    Mitsubishi CP-D90DW data format
@@ -1302,26 +1737,32 @@ struct dyesub_backend mitsud90_backend = {
 
  [[HEADER 1]]
 
-   1b 53 50 30 00 33 XX XX  YY YY 64 00 00 01 MM ??  XX XX == COLS, YY XX ROWS (BE)
-   ?? ?? ?? ?? ?? ?? ?? ??  00 00 00 00 00 00 00 00  <-- cut position, see below
+   1b 53 50 30 00 33 XX XX  YY YY TT 00 00 01 MM NN  XX XX == COLS, YY XX ROWS (BE)
+   ?? ?? ?? ?? ?? ?? ?? ??  ?? ?? ?? ?? 00 00 00 00  NN == num of cuts, ?? see below
    00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  MM == 0 for no margin cut, 1 for margin cut
-   QQ RR SS HH VV 00 00 00  00 00 01 00 03 II 09 7c  QQ == 02 matte, 00 glossy,
-   09 4c 00 00 02 58 00 0c  00 06                    RR == 00 auto, 03 == fine, 02 == superfine.
-                                                     SS == 00 colorcorr, 01 == none
-                                                     HH/VV sharpening for Horiz/Vert, 0-8, 0 is off, 4 is normal
+   QQ RR SS HH VV 00 00 00  00 00 ZZ 00 03 II 09 7c  QQ == 02 matte (D90) or 03 (M1), 00 glossy,
+   09 4c 00 00 02 58 00 0c  00 06 00 00 00 00 00 00  RR == 00 auto, (D90: 03 == fine, 02 == superfine), (M1: 05 == Fast)
+   Z0 Z1 Z2 00 00 00 00 00  00 00 00 00 00 00 00 00  SS == 00 colorcorr, 01 == none (always 01 on M1)
+                                                     HH/VV sharpening for Horiz/Vert, 0-8, 0 is off, 4 is normal (always 00 on M1)
+                                                     TT is waittime (100 max, always 100 on D90)
+						     ZZ is 0x02 on M1, D90 see below
+						     Z0 is 0x01 (M1 windows) (00 Linux and d90 UNK!)
+						     Z1 is RGB Rate (M1)
+						     Z2 is OP Rate (M1)
   [pad to 512b]
 
-                normal  == rows  00  00 00  00  00 00  00  00 00
-                4x6div2 == 1226  00  02 65  01  00 00  01  00 00
-                8x6div2 == 2488  01  04 be  00  00 00  00  00 00
+                normal  == rows  00  00 00 00 00  00 00 00 00
+                4x6div2 == 1226  01  02 65 01 00  00 00 00 00
+                8x6div2 == 2488  01  04 be 00 00  00 00 00 00
 
 		    guesses based on SDK docs:
 
-		9x6div2 == 2728  01  05 36  00  00 00  00  00 00
-		9x6div3 == 2724  00  03 90  00  07 14  00  00 00
-		9x6div4 == 2628  00  02 97  00  05 22  00  07 ad
+		9x6div2 == 2728  01  05 36 01 00  00 00 00 00  00 00 00 00
+		9x6div3 == 2724  02  03 90 01 00  07 14 00 00  00 00 00 00
+		9x6div4 == 2628  03  02 97 01 00  05 22 00 00  07 ad 00 00
 
-    from [01 00 03 03] onwards, only shows in 8x20" PANORAMA prints.  Assume 2" overlap.
+    from [ZZ 00 03 03] onwards, only shows in 8x20" PANORAMA prints.  Assume 2" overlap.
+    ZZ == 00 (normal) or 01 (panorama)
     II == 01 02 03 (which panel # in panorama!)
     [02 58] == 600, aka 2" * 300dpi?
     [09 4c] == 2380  (48 less than 8 size? (trim length on ends?)
@@ -1334,11 +1775,21 @@ struct dyesub_backend mitsud90_backend = {
 
  [[DATA PLANE HEADER]]
 
-   1b 5a 54 01 00 09 00 00  00 00 XX XX YY YY 00 00
+   1b 5a 54 01 00 09 00 00  00 00 CC CC RR RR 00 00
+   00 00 00 00 LC LC LR LR
    ...
    [pad to 512b]
 
-    data, RGB packed, 8bpp.  No padding to 512b!
+   CC CC cols (BE)
+   RR RR rows (BE)
+   LC LC lamination columns (BE, M1 only, same as cols)
+   LR LR lamination rows (BE, M1 only, rows + 12d )
+
+   D90 family:
+    data is *RGB* packed, @ 8bpp.  No padding to 512b!
+   M1 family:
+    data is *RGB* packed, @16bpp, LITTLE ENDIAN.  No padding to 512b!
+    optional matte data is 8bpp, follows immediately.
 
  [[FOOTER]]
 
@@ -1396,7 +1847,7 @@ Comms Protocol for D90 & CP-M1
 
    WW    == 0x50 or 0x00 (seen, no idea what it means)
    VV    == Media vendor (0xff etc)
-   TT    == Media type, 0x02/0x0f etc (see mitsu70x_media_types!)
+   TT    == Media type, 0x02/0x0f etc (see mitsu_media_types!)
    XX XX == Media capacity, BE
    YY YY == Media remain,   BE
    QQ QQ == 00 00 normal, 3f 37 error
@@ -1522,16 +1973,26 @@ Comms Protocol for D90 & CP-M1
 
  [[ UNKNOWN (seen in SDK) ]]
 
-   1b 44 43 41  4e 43 45 4c  00 00 00 00
+   1b 44 43 41  4e 43 45 4c  00 00 00 00      : \ESC D CANCEL
+
+ [[ UNKNOWON (seen in SDK) ]]
+
+   1b 42 51 32 00 00       [ Footer of some sort ? ]
 
  request x65 examples:
 
    ac 80 00 01 bb b8 fe 48 05 13 5d 9c 00 33 00 00  00 00 00 00 00 00 00 00 00 00 02 39 00 00 00 00  03 13 00 02 10 40 00 00 00 00 00 00 05 80 00 3a  00 00
    aa 79 00 01 bb b7 fe 47 05 13 5d 9c 01 2f 00 68  00 00 00 00 00 00 00 00 00 00 02 08 00 00 00 00  03 14 00 02 10 40 00 00 00 00 00 00 05 80 00 3a  00 00
+
+ [ power cycle, new capture ]
    a3 5d 00 01 ba ba fe 43 04 13 5d 9c 00 00 00 00  00 00 00 00 00 00 00 00 00 00 02 0c 00 00 00 00  03 0f 00 03 10 40 00 00 00 00 00 00 05 80 00 3a  00 00
    a3 5d 00 01 ba ba fe 42 04 13 5d 9c 01 08 00 87  00 00 00 00 00 00 00 00 00 00 01 e5 00 00 00 00  03 0f 00 03 10 40 00 00 00 00 00 00 05 80 00 3a  00 00
    a2 5d 00 01 ba ba fe 42 06 13 5d 9c 01 08 00 87  00 00 00 00 00 00 00 00 00 00 01 d1 00 00 00 00  03 0f 00 03 10 40 00 00 00 00 00 00 05 80 00 3a  00 00
+ [ power cycle ]
    a2 5c 00 01 ba ba fe 42 06 13 5d 9c 00 00 00 00  00 00 00 00 00 00 00 00 00 00 01 e0 00 00 00 00  03 0f 00 03 10 40 00 00 00 00 00 00 05 80 00 3a  00 00
    a2 5d 00 01 ba ba fe 41 04 13 5d 9c 01 08 00 89  00 00 00 00 00 00 00 00 00 00 01 c9 00 00 00 00  03 0f 00 03 10 40 00 00 00 00 00 00 05 80 00 3a  00 00
+ [ cp-m1 ]
+   00 00 01 f2 00 07 00 00 00 0f 00 a7 02 9f 03 91  00 00 00 00 00 00 02 36 00 07 03 ff 02 07 03 ff  03 4c 00 01 10 00 00 00 00 00 00 00 05 80 00 24  04 00
+
 
  */

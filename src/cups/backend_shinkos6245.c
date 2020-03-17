@@ -1,7 +1,7 @@
 /*
  *   Shinko/Sinfonia CHC-S6245 CUPS backend -- libusb-1.0 version
  *
- *   (c) 2015-2019 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2015-2020 Solomon Peachy <pizza@shaftnet.org>
  *
  *   Low-level documentation was provided by Sinfonia, Inc.  Thank you!
  *
@@ -703,6 +703,9 @@ struct shinkos6245_ctx {
 
 	struct marker marker;
 
+	char serial[32];
+	char fwver[32];
+
 	struct sinfonia_6x45_mediainfo_resp media;
 };
 
@@ -1014,7 +1017,7 @@ static int shinkos6245_attach(void *vctx, struct libusb_device_handle *dev, int 
 	ctx->marker.name = ribbon_sizes(ctx->media.ribbon_code);
 	ctx->marker.numtype = ctx->media.ribbon_code;
 	ctx->marker.levelmax = 100;
-	ctx->marker.levelnow = -2;
+	ctx->marker.levelnow = CUPS_MARKER_UNKNOWN;
 
 	return CUPS_BACKEND_OK;
 }
@@ -1132,7 +1135,7 @@ static int shinkos6245_main_loop(void *vctx, const void *vjob) {
 	copies = job->copies;
 
 	/* Cap copies */
-	// XXX 120 for 8x10 media, 100 for 8x12 media (S6245)
+	// XXX 120 for 8x10 media, 100 for 8x12 media (S6245 / P910L)
 	// 250 for 8x12, 300 for 8x10 (Kodak 8810)
 	if (copies > 120)
 		copies = 120;
@@ -1409,8 +1412,91 @@ static int shinkos6245_query_markers(void *vctx, struct marker **markers, int *c
 
 	ctx->marker.levelnow = le32_to_cpu(status.count_ribbon_left);
 
-	*markers = &ctx->marker;
-	*count = 1;
+	if (markers) *markers = &ctx->marker;
+	if (count) *count = 1;
+
+	return CUPS_BACKEND_OK;
+}
+
+static int shinkos6245_query_stats(void *vctx,  struct printerstats *stats)
+{
+	struct shinkos6245_ctx *ctx = vctx;
+	struct sinfonia_cmd_hdr cmd;
+	struct s6245_status_resp status;
+	int num;
+
+	if (shinkos6245_query_markers(ctx, NULL, NULL))
+		return CUPS_BACKEND_FAILED;
+
+	/* Query Status */
+	cmd.cmd = cpu_to_le16(SINFONIA_CMD_GETSTATUS);
+	cmd.len = cpu_to_le16(0);
+
+	if (sinfonia_docmd(&ctx->dev,
+			   (uint8_t*)&cmd, sizeof(cmd),
+			   (uint8_t*)&status, sizeof(status),
+			   &num)) {
+		return CUPS_BACKEND_FAILED;
+	}
+
+	switch (ctx->dev.type) {
+	case P_SHINKO_S6245:
+		stats->mfg = "Sinfonia";
+		stats->model = "CE1 / S6245";
+		break;
+	case P_HITI_910:
+		stats->mfg = "HiTi";
+		stats->model = "P910L";
+		break;
+	case P_KODAK_8810:
+		stats->mfg = "Kodak";
+		stats->model = "8810";
+		break;
+	default:
+		stats->mfg = "Unknown";
+		stats->model = "Unknown";
+		break;
+	}
+
+	if (sinfonia_query_serno(ctx->dev.dev, ctx->dev.endp_up,
+				 ctx->dev.endp_down, ctx->dev.iface,
+				 ctx->serial, sizeof(ctx->serial)))
+		return CUPS_BACKEND_FAILED;
+
+	stats->serial = ctx->serial;
+
+	{
+		struct sinfonia_fwinfo_cmd  fcmd;
+		struct sinfonia_fwinfo_resp resp;
+
+		num = 0;
+		fcmd.hdr.cmd = cpu_to_le16(SINFONIA_CMD_FWINFO);
+		fcmd.hdr.len = cpu_to_le16(1);
+		fcmd.target = FWINFO_TARGET_MAIN_APP;
+
+		if (sinfonia_docmd(&ctx->dev,
+				   (uint8_t*)&fcmd, sizeof(fcmd),
+				   (uint8_t*)&resp, sizeof(resp),
+				   &num))
+			return CUPS_BACKEND_FAILED;
+		snprintf(ctx->fwver, sizeof(ctx->fwver)-1,
+			 "%d.%d", resp.major, resp.minor);
+		stats->fwver = ctx->fwver;
+	}
+
+	stats->decks = 1;
+	stats->mediatype[0] = ctx->marker.name;
+	stats->levelmax[0] = ctx->marker.levelmax;
+	stats->levelnow[0] = ctx->marker.levelnow;
+	stats->name[0] = "Roll";
+	if (status.hdr.status == ERROR_PRINTER) {
+		if(status.hdr.error == ERROR_NONE)
+			status.hdr.error = status.hdr.status;
+		stats->status[0] = strdup(sinfonia_error_str(status.hdr.error));
+	} else {
+		stats->status[0] = strdup(sinfonia_status_str(status.hdr.status));
+	}
+	stats->cnt_life[0] = le32_to_cpu(status.count_lifetime);
 
 	return CUPS_BACKEND_OK;
 }
@@ -1424,17 +1510,15 @@ static int shinkos6245_query_markers(void *vctx, struct marker **markers, int *c
 #define USB_PID_KODAK_8810   0x404D
 
 static const char *shinkos6245_prefixes[] = {
-	"sinfonia-chcs6245", "hiti-p910l", "kodak-8810",
-	// extras
-	"shinko-chcs6245",
+	"shinkos6245", /* Family Name */
 	// backwards compatibility
-	"shinkos6245", "hitip910",
+	"hitip910",
 	NULL
 };
 
 struct dyesub_backend shinkos6245_backend = {
 	.name = "Sinfonia CHC-S6245 / Kodak 8810",
-	.version = "0.31.1" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.33" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = shinkos6245_prefixes,
 	.cmdline_usage = shinkos6245_cmdline,
 	.cmdline_arg = shinkos6245_cmdline_arg,
@@ -1445,9 +1529,11 @@ struct dyesub_backend shinkos6245_backend = {
 	.main_loop = shinkos6245_main_loop,
 	.query_serno = sinfonia_query_serno,
 	.query_markers = shinkos6245_query_markers,
+	.query_stats = shinkos6245_query_stats,
 	.devices = {
 		{ USB_VID_SHINKO, USB_PID_SHINKO_S6245, P_SHINKO_S6245, NULL, "sinfonia-chcs6245"},
-		{ USB_VID_HITI, USB_PID_HITI_P910L, P_SHINKO_S6245, NULL, "hiti-p910l"},
+		{ USB_VID_SHINKO, USB_PID_SHINKO_S6245, P_SHINKO_S6245, NULL, "shinko-chcs6245"}, /* Duplicate */
+		{ USB_VID_HITI, USB_PID_HITI_P910L, P_HITI_910, NULL, "hiti-p910l"},
 		{ USB_VID_KODAK, USB_PID_KODAK_8810, P_KODAK_8810, NULL, "kodak-8810"},
 		{ 0, 0, 0, NULL, NULL}
 	}

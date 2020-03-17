@@ -1,7 +1,7 @@
 /*
  *   Shinko/Sinfonia CHC-S6145 CUPS backend -- libusb-1.0 version
  *
- *   (c) 2015-2019 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2015-2020 Solomon Peachy <pizza@shaftnet.org>
  *
  *   Low-level documentation was provided by Sinfonia.  Thank you!
  *
@@ -25,13 +25,13 @@
  *
  *          [http://www.gnu.org/licenses/gpl-2.0.html]
  *
- *   An additional permission is granted, under the GPLv3 section 7, to combine
+ *   An additional permission is granted, under the GPLv2 to combine
  *   and/or redistribute this program with the proprietary libS6145ImageProcess
  *   library, providing you have *written permission* from Sinfonia Technology
  *   Co. LTD to use and/or redistribute that library.
  *
  *   You must still adhere to all other terms of the license to this program
- *   (ie GPLv3) and the license of the libS6145ImageProcess library.
+ *   (ie GPLv2) and the license of the libS6145ImageProcess library.
  *
  *   SPDX-License-Identifier: GPL-2.0+ with special exception
  *
@@ -45,31 +45,7 @@
 
 #include <time.h>
 
-/* For Integration into gutenprint */
-#if defined(HAVE_CONFIG_H)
-#include <config.h>
-#endif
-
-#if defined(USE_DLOPEN)
-#define WITH_DYNAMIC
-#include <dlfcn.h>
-#define DL_INIT() do {} while(0)
-#define DL_OPEN(__x) dlopen(__x, RTLD_NOW)
-#define DL_SYM(__x, __y) dlsym(__x, __y)
-#define DL_CLOSE(__x) dlclose(__x)
-#define DL_EXIT() do {} while(0)
-#elif defined(USE_LTDL)
-#define WITH_DYNAMIC
-#include <ltdl.h>
-#define DL_INIT() lt_dlinit()
-#define DL_OPEN(__x) lt_dlopen(__x)
-#define DL_SYM(__x, __y) lt_dlsym(__x, __y)
-#define DL_CLOSE(__x) do {} while(0)
-#define DL_EXIT() lt_dlexit()
-#else
-#define DL_INIT()     do {} while(0)
-#define DL_CLOSE(__x) do {} while(0)
-#define DL_EXIT()     do {} while(0)
+#ifndef WITH_DYNAMIC
 #warning "No dynamic loading support!"
 #endif
 
@@ -77,8 +53,8 @@
 typedef int (*ImageProcessingFN)(unsigned char *, unsigned short *, void *);
 typedef int (*ImageAvrCalcFN)(unsigned char *, unsigned short, unsigned short, unsigned char *);
 
-#define LIB_NAME    "libS6145ImageProcess.so"    // Official library
-#define LIB_NAME_RE "libS6145ImageReProcess.so" // Reimplemented library
+#define LIB_NAME    "libS6145ImageProcess" DLL_SUFFIX    // Official library
+#define LIB_NAME_RE "libS6145ImageReProcess" DLL_SUFFIX // Reimplemented library
 
 enum {
 	S_IDLE = 0,
@@ -556,7 +532,10 @@ struct shinkos6145_ctx {
 
 	uint8_t jobid;
 
-	uint8_t image_avg[3]; /* CMY */
+	uint8_t image_avg[3]; /* YMC */
+
+	char serial[32];
+	char fwver[32];
 
 	struct marker marker;
 
@@ -570,7 +549,7 @@ struct shinkos6145_ctx {
 	ImageAvrCalcFN ImageAvrCalc;
 
 	struct shinkos6145_correctionparam *corrdata;
-	size_t corrdatalen;
+	uint16_t corrdatalen;
 };
 
 static int shinkos6145_get_imagecorr(struct shinkos6145_ctx *ctx);
@@ -780,7 +759,7 @@ static int shinkos6145_get_imagecorr(struct shinkos6145_ctx *ctx)
 	struct sinfonia_cmd_hdr cmd;
 	struct s6145_imagecorr_resp resp;
 
-	size_t total = 0;
+	uint16_t total = 0;
 	int ret, num;
 	cmd.cmd = cpu_to_le16(SINFONIA_CMD_GETCORR);
 	cmd.len = 0;
@@ -798,7 +777,7 @@ static int shinkos6145_get_imagecorr(struct shinkos6145_ctx *ctx)
 	}
 
 	ctx->corrdatalen = le16_to_cpu(resp.total_size);
-	INFO("Fetching %zu bytes of image correction data\n", ctx->corrdatalen);
+	INFO("Fetching %u bytes of image correction data\n", ctx->corrdatalen);
 
 	ctx->corrdata = malloc(sizeof(struct shinkos6145_correctionparam));
 	if (!ctx->corrdata) {
@@ -822,7 +801,7 @@ static int shinkos6145_get_imagecorr(struct shinkos6145_ctx *ctx)
 		total += sizeof(data.data);
 
 		if (data.remain_pkt == 0)
-			DEBUG("correction block transferred (%zu/%zu total)\n", total, ctx->corrdatalen);
+			DEBUG("correction block transferred (%u/%u total)\n", total, ctx->corrdatalen);
 
 	}
 
@@ -1049,7 +1028,7 @@ static int shinkos6145_attach(void *vctx, struct libusb_device_handle *dev, int 
 	ctx->marker.name = print_ribbons(ctx->media.ribbon_code);
 	ctx->marker.numtype = ctx->media.ribbon_code;
 	ctx->marker.levelmax = ribbon_sizes(ctx->media.ribbon_code);
-	ctx->marker.levelnow = -2;
+	ctx->marker.levelnow = CUPS_MARKER_UNKNOWN;
 
 	return CUPS_BACKEND_OK;
 }
@@ -1186,6 +1165,7 @@ static int shinkos6145_read_parse(void *vctx, const void **vjob, int data_fd, in
 		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 	memset(job, 0, sizeof(*job));
+	job->jobsize = sizeof(*job);
 
 	/* Common read/parse code */
 	if (ctx->dev.type == P_KODAK_6900) {
@@ -1203,6 +1183,16 @@ static int shinkos6145_read_parse(void *vctx, const void **vjob, int data_fd, in
 		job->copies = job->jp.copies;
 	else
 		job->copies = copies;
+
+	/* S6145 can only combine 2* 4x6 -> 8x6.
+	   2x6 strips and 3.5x5 -> 5x7 can't. */
+	if (job->jp.columns == 1844 &&
+	    job->jp.rows == 1240 &&
+	    job->jp.method == PRINT_METHOD_STD &&
+	    (ctx->media.ribbon_code == RIBBON_6x8 ||
+	     ctx->media.ribbon_code == RIBBON_6x9)) {
+		job->can_combine = 1;
+	}
 
 	/* Extended spool format to re-purpose an unused header field.
 	   When bit 0 is set, this tells the backend that the data is
@@ -1234,14 +1224,102 @@ static int shinkos6145_read_parse(void *vctx, const void **vjob, int data_fd, in
 		job->databuf = databuf3;
 	}
 
-	// if (job->copies > 1 && hdr->media == 0 && hdr->method == 0)
-	// and if printer_media == 6x8 or 6x9
-	// combine 4x6 + 4x6 -> 8x6
-	// 1844x2492 = 1844x1240.. delta = 12.
-
 	*vjob = job;
 
 	return CUPS_BACKEND_OK;
+}
+
+#define JOB_EQUIV(__x)  if (job1->__x != job2->__x) goto done
+
+// XXX this code could be "generic sinfonia?"
+// but only the S6145 and S2245 can't automatically combine
+// or rewind.  So it's really only useful here.
+static void *shinkos6145_combine_jobs(const void *vjob1,
+				      const void *vjob2)
+{
+	const struct sinfonia_printjob *job1 = vjob1;
+	const struct sinfonia_printjob *job2 = vjob2;
+	struct sinfonia_printjob *newjob = NULL;
+
+	uint16_t newrows;
+	uint16_t newpad;
+
+	if (!job1 || !job2)
+		goto done;
+
+	/* Make sure we're okay to proceed */
+	JOB_EQUIV(jp.columns);
+	JOB_EQUIV(jp.rows);
+	JOB_EQUIV(jp.oc_mode);
+	JOB_EQUIV(jp.method);
+	JOB_EQUIV(jp.media);
+	JOB_EQUIV(jp.quality);
+
+	switch (job1->jp.rows) {
+	case 1240:  /* 4x6 */
+		if (job1->jp.method != PRINT_METHOD_STD)
+			goto done;
+		newrows = 2492;
+		newpad = 12;
+		break;
+	default:
+		/* All other sizes, we can't combine */
+		goto done;
+	}
+
+        newjob = malloc(sizeof(*newjob));
+        if (!newjob) {
+                ERROR("Memory allocation failure!\n");
+                goto done;
+        }
+        memcpy(newjob, job1, sizeof(*newjob));
+
+	newjob->jp.rows = newrows;
+	newjob->jp.media = CODE_6x8;
+	newjob->jp.method = PRINT_METHOD_SPLIT;
+
+	/* Allocate new buffer */
+	newjob->databuf = malloc(newjob->jp.rows * newjob->jp.columns * 3);
+	newjob->datalen = 0;
+	if (!newjob->databuf) {
+		sinfonia_cleanup_job(newjob);
+		newjob = NULL;
+		goto done;
+	}
+
+	/* Copy Planar YMC payload into new buffer! */
+	memcpy(newjob->databuf + newjob->datalen,
+	       job1->databuf,
+	       job1->jp.rows * job1->jp.columns);
+	newjob->datalen += job1->jp.rows * job1->jp.columns;
+	memset(newjob->databuf + newjob->datalen, 0xff, newpad * newjob->jp.columns);
+	memcpy(newjob->databuf + newjob->datalen,
+	       job2->databuf,
+	       job2->jp.rows * job2->jp.columns);
+	newjob->datalen += job2->jp.rows * job2->jp.columns;
+
+	memcpy(newjob->databuf + newjob->datalen,
+	       job1->databuf + (job1->jp.rows * job1->jp.columns),
+	       job1->jp.rows * job1->jp.columns);
+	newjob->datalen += job1->jp.rows * job1->jp.columns;
+	memset(newjob->databuf + newjob->datalen, 0xff, newpad * newjob->jp.columns);
+	memcpy(newjob->databuf + newjob->datalen,
+	       job2->databuf + (job2->jp.rows * job2->jp.columns),
+	       job2->jp.rows * job2->jp.columns);
+	newjob->datalen += job2->jp.rows * job2->jp.columns;
+
+	memcpy(newjob->databuf + newjob->datalen,
+	       job1->databuf + 2*(job1->jp.rows * job1->jp.columns),
+	       job1->jp.rows * job1->jp.columns);
+	newjob->datalen += job1->jp.rows * job1->jp.columns;
+	memset(newjob->databuf + newjob->datalen, 0xff, newpad * newjob->jp.columns);
+	memcpy(newjob->databuf + newjob->datalen,
+	       job2->databuf + 2*(job2->jp.rows * job2->jp.columns),
+	       job2->jp.rows * job2->jp.columns);
+	newjob->datalen += job2->jp.rows * job2->jp.columns;
+
+done:
+	return newjob;
 }
 
 static int shinkos6145_main_loop(void *vctx, const void *vjob) {
@@ -1534,11 +1612,12 @@ static int shinkos6145_query_markers(void *vctx, struct marker **markers, int *c
 
 	ctx->marker.levelnow = le32_to_cpu(sts.count_ribbon_left);
 
-	*markers = &ctx->marker;
-	*count = 1;
+	if (markers) *markers = &ctx->marker;
+	if (count) *count = 1;
 
 	return CUPS_BACKEND_OK;
 }
+
 
 /* Exported */
 #define USB_VID_SHINKO        0x10CE
@@ -1550,19 +1629,119 @@ static int shinkos6145_query_markers(void *vctx, struct marker **markers, int *c
 #define USB_VID_HITI          0x0D16
 #define USB_PID_HITI_M610     0x0010
 
+static int shinkos6145_query_stats(void *vctx,  struct printerstats *stats)
+{
+	struct shinkos6145_ctx *ctx = vctx;
+	struct sinfonia_cmd_hdr cmd;
+	struct s6145_status_resp status;
+	int num;
+	uint16_t usbID = 0xffff;
+
+	if (shinkos6145_query_markers(ctx, NULL, NULL))
+		return CUPS_BACKEND_FAILED;
+
+	/* Query Status */
+	cmd.cmd = cpu_to_le16(SINFONIA_CMD_GETSTATUS);
+	cmd.len = cpu_to_le16(0);
+
+	if (sinfonia_docmd(&ctx->dev,
+			   (uint8_t*)&cmd, sizeof(cmd),
+			   (uint8_t*)&status, sizeof(status),
+			   &num)) {
+		return CUPS_BACKEND_FAILED;
+	}
+
+	/* Query USB ID */
+	{
+		struct libusb_device_descriptor desc;
+		struct libusb_device *dev;
+
+		dev = libusb_get_device(ctx->dev.dev);
+		libusb_get_device_descriptor(dev, &desc);
+
+		usbID = desc.idProduct;
+	}
+
+	switch (ctx->dev.type) {
+	case P_SHINKO_S6145:
+		stats->mfg = "Sinfonia";
+		stats->model = "CS2 / S6145";
+		break;
+	case P_SHINKO_S6145D:
+		stats->mfg = "Ciaat";
+		stats->model = "Brava 21";
+		break;
+	case P_SHINKO_S2245:
+		stats->mfg = "Sinfonia";
+		stats->model = "S3 / S2245";
+		break;
+	default:
+		if (usbID == USB_PID_KA_6900) {
+			stats->mfg = "Kodak";
+			stats->model = "6900";
+		} else if (usbID == USB_PID_HITI_M610) {
+			stats->mfg = "HiTi";
+			stats->model = "M610";
+		} else {
+			stats->mfg = "Unknown";
+			stats->model = "Unknown";
+		}
+		break;
+	}
+
+	if (sinfonia_query_serno(ctx->dev.dev, ctx->dev.endp_up,
+				 ctx->dev.endp_down, ctx->dev.iface,
+				 ctx->serial, sizeof(ctx->serial)))
+		return CUPS_BACKEND_FAILED;
+
+	stats->serial = ctx->serial;
+
+	{
+		struct sinfonia_fwinfo_cmd  fcmd;
+		struct sinfonia_fwinfo_resp resp;
+
+		num = 0;
+		fcmd.hdr.cmd = cpu_to_le16(SINFONIA_CMD_FWINFO);
+		fcmd.hdr.len = cpu_to_le16(1);
+		fcmd.target = FWINFO_TARGET_MAIN_APP;
+
+		if (sinfonia_docmd(&ctx->dev,
+				   (uint8_t*)&fcmd, sizeof(fcmd),
+				   (uint8_t*)&resp, sizeof(resp),
+				   &num))
+			return CUPS_BACKEND_FAILED;
+		snprintf(ctx->fwver, sizeof(ctx->fwver)-1,
+			 "%d.%d", resp.major, resp.minor);
+		stats->fwver = ctx->fwver;
+	}
+
+	stats->decks = 1;
+	stats->mediatype[0] = ctx->marker.name;
+	stats->levelmax[0] = ctx->marker.levelmax;
+	stats->levelnow[0] = ctx->marker.levelnow;
+	stats->name[0] = "Roll";
+	if (status.hdr.status == ERROR_PRINTER) {
+		if(status.hdr.error == ERROR_NONE)
+			status.hdr.error = status.hdr.status;
+		stats->status[0] = strdup(sinfonia_error_str(status.hdr.error));
+	} else {
+		stats->status[0] = strdup(sinfonia_status_str(status.hdr.status));
+	}
+	stats->cnt_life[0] = le32_to_cpu(status.count_lifetime);
+
+	return CUPS_BACKEND_OK;
+}
+
 static const char *shinkos6145_prefixes[] = {
-	"sinfonia-chcs6145", "ciaat-brava-21",
-	"sinfonia-chcs2245", "hiti-m610", "kodak-6900",
-	// extras
-	"shinko-chcs6145",
+	"shinkos6145", /* Family Name */
 	// backwards-compatiblity
-	"shinkos6145", "brava21",
+	"brava21",
 	NULL
 };
 
 struct dyesub_backend shinkos6145_backend = {
 	.name = "Shinko/Sinfonia CHC-S6145/CS2/S2245/S3",
-	.version = "0.46" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.48" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = shinkos6145_prefixes,
 	.cmdline_usage = shinkos6145_cmdline,
 	.cmdline_arg = shinkos6145_cmdline_arg,
@@ -1574,8 +1753,11 @@ struct dyesub_backend shinkos6145_backend = {
 	.main_loop = shinkos6145_main_loop,
 	.query_serno = sinfonia_query_serno,
 	.query_markers = shinkos6145_query_markers,
+	.query_stats = shinkos6145_query_stats,
+	.combine_jobs = shinkos6145_combine_jobs,
 	.devices = {
 		{ USB_VID_SHINKO, USB_PID_SHINKO_S6145, P_SHINKO_S6145, NULL, "sinfonia-chcs6145"},
+		{ USB_VID_SHINKO, USB_PID_SHINKO_S6145, P_SHINKO_S6145, NULL, "shinko-chcs6145"}, /* Duplicate */
 		{ USB_VID_SHINKO, USB_PID_SHINKO_S6145D, P_SHINKO_S6145D, NULL, "ciaat-brava-21"},
 		{ USB_VID_SHINKO, USB_PID_SHINKO_S2245, P_SHINKO_S2245, NULL, "sinfonia-chcs2245"},
 		{ USB_VID_KODAKALARIS, USB_PID_KA_6900, P_SHINKO_S2245, NULL, "kodak-6900"},

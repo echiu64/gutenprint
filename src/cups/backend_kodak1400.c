@@ -111,9 +111,9 @@ static int send_plane(struct kodak1400_ctx *ctx,
 	cmdbuf[3] = planeno;
 
 	if (planedata) {
-		temp16 = htons(job->hdr.columns);
+		temp16 = be16_to_cpu(job->hdr.columns);
 		memcpy(cmdbuf+7, &temp16, 2);
-		temp16 = htons(job->hdr.rows);
+		temp16 = be16_to_cpu(job->hdr.rows);
 		memcpy(cmdbuf+9, &temp16, 2);
 	}
 
@@ -141,7 +141,7 @@ static int send_plane(struct kodak1400_ctx *ctx,
 			     cmdbuf, CMDBUF_LEN)))
 		return ret;
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 #define TONE_CURVE_SIZE 1552
@@ -269,7 +269,7 @@ int kodak1400_cmdline_arg(void *vctx, int argc, char **argv)
 		if (j) return j;
 	}
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static void *kodak1400_init(void)
@@ -300,8 +300,8 @@ static int kodak1400_attach(void *vctx, struct libusb_device_handle *dev, int ty
 	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
 	ctx->marker.name = "Unknown";
 	ctx->marker.numtype = -1;
-	ctx->marker.levelmax = -1;
-	ctx->marker.levelnow = -2;
+	ctx->marker.levelmax = CUPS_MARKER_UNAVAILABLE;
+	ctx->marker.levelnow = CUPS_MARKER_UNKNOWN;
 
 	return CUPS_BACKEND_OK;
 }
@@ -628,11 +628,8 @@ static int kodak1400_query_markers(void *vctx, struct marker **markers, int *cou
 
 static const char *kodak1400_prefixes[] = {
 	"kodak1400", // Family driver, do NOT nuke!
-	"kodak-1400", "kodak-805", "mitsubishi-3020d", "mitsubishi-3020da",
 	// backwards compatibility
-	"kodak805", "mitsu3020d", "mitsu3020da",
-	// Extras.
-	"mitsubishi-3020dae", "mitsubishi-3020de", "mitsubishi-3020du",
+	"kodak805",
 	NULL,
 };
 
@@ -652,7 +649,10 @@ struct dyesub_backend kodak1400_backend = {
 		{ USB_VID_KODAK, USB_PID_KODAK_1400, P_KODAK_1400_805, "Kodak", "kodak-1400"},
 		{ USB_VID_KODAK, USB_PID_KODAK_805, P_KODAK_1400_805, "Kodak", "kodak-805"},
 		{ USB_VID_MITSU, USB_PID_MITSU_3020D, P_KODAK_1400_805, NULL, "mitsubishi-3020d"},
+		{ USB_VID_MITSU, USB_PID_MITSU_3020D, P_KODAK_1400_805, NULL, "mitsubishi-3020du"}, /* Duplicate */
+		{ USB_VID_MITSU, USB_PID_MITSU_3020D, P_KODAK_1400_805, NULL, "mitsubishi-3020de"}, /* Duplicate */
 		{ USB_VID_MITSU, USB_PID_MITSU_3020DA, P_KODAK_1400_805, NULL, "mitsubishi-3020da" },
+		{ USB_VID_MITSU, USB_PID_MITSU_3020DA, P_KODAK_1400_805, NULL, "mitsubishi-3020dae" }, /* Duplicate */
 		{ 0, 0, 0, NULL, NULL}
 	}
 };

@@ -145,6 +145,9 @@ struct kodak605_ctx {
 
 	struct kodak605_media_list *media;
 
+	char serial[32];
+	char fwver[32];
+
 	struct marker marker;
 };
 
@@ -396,7 +399,7 @@ static int kodak605_attach(void *vctx, struct libusb_device_handle *dev, int typ
 	ctx->marker.name = kodak6_mediatypes(ctx->media->type);
 	ctx->marker.numtype = ctx->media->type;
 	ctx->marker.levelmax = 100; /* Ie percentage */
-	ctx->marker.levelnow = -2;
+	ctx->marker.levelnow = CUPS_MARKER_UNKNOWN;
 
 	return CUPS_BACKEND_OK;
 }
@@ -519,7 +522,7 @@ static int kodak605_main_loop(void *vctx, const void *vjob) {
 	}
 
 	/* Send backprint */
-	if (job->jp.ext_flags & EXT_FLAG_BACKPRINT && offset == 0) {
+	if ((job->jp.ext_flags & EXT_FLAG_BACKPRINT) && offset == 0) {
 		struct kodak701x_backprint bp;
 		INFO("Sending backprint text..\n");
 		bp.hdr.cmd = cpu_to_le16(SINFONIA_CMD_BACKPRINT);
@@ -812,22 +815,94 @@ static int kodak605_query_markers(void *vctx, struct marker **markers, int *coun
 
 	ctx->marker.levelnow = sts.donor;
 
-	*markers = &ctx->marker;
-	*count = 1;
+	if (markers) *markers = &ctx->marker;
+	if (count) *count = 1;
+
+	return CUPS_BACKEND_OK;
+}
+
+static int kodak605_query_stats(void *vctx,  struct printerstats *stats)
+{
+	struct kodak605_ctx *ctx = vctx;
+	struct kodak605_status status;
+
+	if (kodak605_query_markers(ctx, NULL, NULL))
+		return CUPS_BACKEND_FAILED;
+
+	if (kodak605_get_status(ctx, &status))
+		return CUPS_BACKEND_FAILED;
+
+	switch (ctx->dev.type) {
+	case P_KODAK_605:
+		stats->mfg = "Kodak";
+		stats->model = "605";
+		break;
+	case P_KODAK_7000:
+		stats->mfg = "Kodak";
+		stats->model = "7000";
+		break;
+	case P_KODAK_701X:
+		stats->mfg = "Kodak";
+		stats->model = "7010/7015";
+		break;
+	default:
+		stats->mfg = "Unknown";
+		stats->model = "Unknown";
+		break;
+	}
+
+	if (sinfonia_query_serno(ctx->dev.dev, ctx->dev.endp_up,
+				 ctx->dev.endp_down, ctx->dev.iface,
+				 ctx->serial, sizeof(ctx->serial)))
+		return CUPS_BACKEND_FAILED;
+
+	stats->serial = ctx->serial;
+
+	{
+		struct sinfonia_fwinfo_cmd  cmd;
+		struct sinfonia_fwinfo_resp resp;
+		int num = 0;
+		cmd.hdr.cmd = cpu_to_le16(SINFONIA_CMD_FWINFO);
+		cmd.hdr.len = cpu_to_le16(1);
+		cmd.target = FWINFO_TARGET_MAIN_APP;
+
+		if (sinfonia_docmd(&ctx->dev,
+				   (uint8_t*)&cmd, sizeof(cmd),
+				   (uint8_t*)&resp, sizeof(resp),
+				   &num))
+			return CUPS_BACKEND_FAILED;
+		snprintf(ctx->fwver, sizeof(ctx->fwver)-1,
+			 "%d.%d", resp.major, resp.minor);
+		stats->fwver = ctx->fwver;
+	}
+
+	stats->decks = 1;
+	stats->mediatype[0] = ctx->marker.name;
+	stats->levelmax[0] = ctx->marker.levelmax;
+	stats->levelnow[0] = ctx->marker.levelnow;
+	stats->name[0] = "Roll";
+	if (status.hdr.status == ERROR_PRINTER) {
+		if(status.hdr.error == ERROR_NONE)
+			status.hdr.error = status.hdr.status;
+		stats->status[0] = strdup(sinfonia_error_str(status.hdr.error));
+	} else {
+		stats->status[0] = strdup(sinfonia_status_str(status.hdr.status));
+	}
+	stats->cnt_life[0] = le32_to_cpu(status.ctr_life);
 
 	return CUPS_BACKEND_OK;
 }
 
 static const char *kodak605_prefixes[] = {
 	"kodak605",  // Family driver, do NOT nuke.
-	"kodak-605", "kodak-7000", "kodak-7010", "kodak-7015",
+	"kodak-701x", // Just in case
 	NULL,
 };
 
 /* Exported */
 struct dyesub_backend kodak605_backend = {
 	.name = "Kodak 605/70xx",
-	.version = "0.52" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.54" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = kodak605_prefixes,
 	.cmdline_usage = kodak605_cmdline,
 	.cmdline_arg = kodak605_cmdline_arg,
@@ -837,11 +912,12 @@ struct dyesub_backend kodak605_backend = {
 	.read_parse = kodak605_read_parse,
 	.main_loop = kodak605_main_loop,
 	.query_markers = kodak605_query_markers,
+	.query_stats = kodak605_query_stats,
 	.devices = {
 		{ USB_VID_KODAK, USB_PID_KODAK_605, P_KODAK_605, "Kodak", "kodak-605"},
 		{ USB_VID_KODAK, USB_PID_KODAK_7000, P_KODAK_7000, "Kodak", "kodak-7000"},
 		{ USB_VID_KODAK, USB_PID_KODAK_7010, P_KODAK_701X, "Kodak", "kodak-7010"},
-		{ USB_VID_KODAK, USB_PID_KODAK_7015, P_KODAK_701X, "Kodak", "kodak-7015"},
+		{ USB_VID_KODAK, USB_PID_KODAK_7015, P_KODAK_701X, "Kodak", "kodak-7015"}, /* Duplicate */
 		{ 0, 0, 0, NULL, NULL}
 	}
 };

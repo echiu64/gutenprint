@@ -274,7 +274,7 @@ static int magicard_query_sensors(struct magicard_ctx *ctx)
 		buf[num] = 0;
 		INFO("%s\n", buf);
 	}
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static int magicard_selftest_card(struct magicard_ctx *ctx)
@@ -344,7 +344,7 @@ static int magicard_query_printer(struct magicard_ctx *ctx)
 		buf[num] = 0;
 		INFO("%s\n", buf);
 	}
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static int magicard_query_status(struct magicard_ctx *ctx)
@@ -451,8 +451,8 @@ static int magicard_attach(void *vctx, struct libusb_device_handle *dev, int typ
 	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";  // XXX YMCK too!
 	ctx->marker.name = "Unknown"; // LC1/LC3/LC6/LC8
 	ctx->marker.numtype = -1;
-	ctx->marker.levelmax = -1;
-	ctx->marker.levelnow = -2;
+	ctx->marker.levelmax = CUPS_MARKER_UNAVAILABLE;
+	ctx->marker.levelnow = CUPS_MARKER_UNKNOWN;
 
 	return CUPS_BACKEND_OK;
 }
@@ -915,7 +915,7 @@ static int magicard_cmdline_arg(void *vctx, int argc, char **argv)
 		if (j) return j;
 	}
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static int magicard_query_markers(void *vctx, struct marker **markers, int *count)
@@ -930,9 +930,6 @@ static int magicard_query_markers(void *vctx, struct marker **markers, int *coun
 
 static const char *magicard_prefixes[] = {
 	"magicard", // Family name
-	"magicard-tango-2e", "magicard-enduro", "magicard-enduroplus",
-	// extras
-	"magicard-rio-2e",
 	// backwards compatibility
 	"tango2e", "enduro", "enduroplus",
 	NULL
@@ -952,6 +949,7 @@ struct dyesub_backend magicard_backend = {
 	.query_markers = magicard_query_markers,
 	.devices = {
 		{ USB_VID_MAGICARD, USB_PID_MAGICARD_TANGO2E, P_MAGICARD, NULL, "magicard-tango2e"},
+//		{ USB_VID_MAGICARD, USB_PID_MAGICARD_TANGO2E, P_MAGICARD, NULL, "magicard-rio2e"},
 		{ USB_VID_MAGICARD, USB_PID_MAGICARD_ENDURO, P_MAGICARD, NULL, "magicard-enduro"},
 		{ USB_VID_MAGICARD, USB_PID_MAGICARD_ENDUROPLUS, P_MAGICARD, NULL, "magicard-enduroplus"},
 		{ USB_VID_MAGICARD, 0xFFFF, P_MAGICARD, NULL, "magicard"},

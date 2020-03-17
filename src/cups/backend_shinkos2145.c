@@ -1,7 +1,7 @@
- /*
+/*
  *   Shinko/Sinfonia CHC-S2145 CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013-2019 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2020 Solomon Peachy <pizza@shaftnet.org>
  *
  *   Development of this backend was sponsored by:
  *
@@ -393,6 +393,9 @@ struct shinkos2145_ctx {
 	struct sinfonia_usbdev dev;
 
 	uint8_t jobid;
+
+	char serial[32];
+	char fwver[32];
 
 	struct s2145_mediainfo_resp media;
 	struct marker marker;
@@ -889,7 +892,7 @@ static int shinkos2145_attach(void *vctx, struct libusb_device_handle *dev, int 
 	ctx->marker.name = sinfonia_print_codes(ctx->media_code, 0);
 	ctx->marker.numtype = ctx->media_code;
 	ctx->marker.levelmax = media_prints;
-	ctx->marker.levelnow = -2;
+	ctx->marker.levelnow = CUPS_MARKER_UNKNOWN;
 
 	return CUPS_BACKEND_OK;
 }
@@ -1151,8 +1154,75 @@ static int shinkos2145_query_markers(void *vctx, struct marker **markers, int *c
 
 	ctx->marker.levelnow = ctx->marker.levelmax - le32_to_cpu(sts.count_ribbon_left);
 
-	*markers = &ctx->marker;
-	*count = 1;
+	if (markers) *markers = &ctx->marker;
+	if (count) *count = 1;
+
+	return CUPS_BACKEND_OK;
+}
+
+
+static int shinkos2145_query_stats(void *vctx,  struct printerstats *stats)
+{
+	struct shinkos2145_ctx *ctx = vctx;
+	struct sinfonia_cmd_hdr cmd;
+	struct s2145_status_resp status;
+	int num;
+
+	if (shinkos2145_query_markers(ctx, NULL, NULL))
+		return CUPS_BACKEND_FAILED;
+
+	/* Query Status */
+	cmd.cmd = cpu_to_le16(SINFONIA_CMD_GETSTATUS);
+	cmd.len = cpu_to_le16(0);
+
+	if (sinfonia_docmd(&ctx->dev,
+			   (uint8_t*)&cmd, sizeof(cmd),
+			   (uint8_t*)&status, sizeof(status),
+			   &num)) {
+		return CUPS_BACKEND_FAILED;
+	}
+
+	stats->mfg = "Sinfonia";
+	stats->model = "S2 / S2145";
+
+	if (sinfonia_query_serno(ctx->dev.dev, ctx->dev.endp_up,
+				 ctx->dev.endp_down, ctx->dev.iface,
+				 ctx->serial, sizeof(ctx->serial)))
+		return CUPS_BACKEND_FAILED;
+
+	stats->serial = ctx->serial;
+
+	{
+		struct sinfonia_fwinfo_cmd  fcmd;
+		struct sinfonia_fwinfo_resp resp;
+		fcmd.hdr.cmd = cpu_to_le16(SINFONIA_CMD_FWINFO);
+		fcmd.hdr.len = cpu_to_le16(1);
+		fcmd.target = FWINFO_TARGET_MAIN_APP;
+
+		num = 0;
+		if (sinfonia_docmd(&ctx->dev,
+				   (uint8_t*)&fcmd, sizeof(fcmd),
+				   (uint8_t*)&resp, sizeof(resp),
+				   &num))
+			return CUPS_BACKEND_FAILED;
+		snprintf(ctx->fwver, sizeof(ctx->fwver)-1,
+			 "%d.%d", resp.major, resp.minor);
+		stats->fwver = ctx->fwver;
+	}
+
+	stats->decks = 1;
+	stats->mediatype[0] = ctx->marker.name;
+	stats->levelmax[0] = ctx->marker.levelmax;
+	stats->levelnow[0] = ctx->marker.levelnow;
+	stats->name[0] = "Roll";
+	if (status.hdr.status == ERROR_PRINTER) {
+		if(status.hdr.error == ERROR_NONE)
+			status.hdr.error = status.hdr.status;
+		stats->status[0] = strdup(sinfonia_error_str(status.hdr.error));
+	} else {
+		stats->status[0] = strdup(sinfonia_status_str(status.hdr.status));
+	}
+	stats->cnt_life[0] = le32_to_cpu(status.count_lifetime);
 
 	return CUPS_BACKEND_OK;
 }
@@ -1162,17 +1232,13 @@ static int shinkos2145_query_markers(void *vctx, struct marker **markers, int *c
 #define USB_PID_SHINKO_S2145 0x000E
 
 static const char *shinkos2145_prefixes[] = {
-	"shinko-chcs2145",
-	// extras
-	"sinfonia-chcs2145",
-	// Backwards compatibility
-	"shinkos2145",
+	"shinkos2145", /* Family Name */
 	NULL
 };
 
 struct dyesub_backend shinkos2145_backend = {
 	.name = "Shinko/Sinfonia CHC-S2145/S2",
-	.version = "0.64.1" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.65" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = shinkos2145_prefixes,
 	.cmdline_usage = shinkos2145_cmdline,
 	.cmdline_arg = shinkos2145_cmdline_arg,
@@ -1183,8 +1249,10 @@ struct dyesub_backend shinkos2145_backend = {
 	.main_loop = shinkos2145_main_loop,
 	.query_serno = shinkos2145_query_serno,
 	.query_markers = shinkos2145_query_markers,
+	.query_stats = shinkos2145_query_stats,
 	.devices = {
 		{ USB_VID_SHINKO, USB_PID_SHINKO_S2145, P_SHINKO_S2145, NULL, "shinko-chcs2145"},
+		{ USB_VID_SHINKO, USB_PID_SHINKO_S2145, P_SHINKO_S2145, NULL, "sinfonia-chcs2145"}, /* Duplicate */
 		{ 0, 0, 0, NULL, NULL}
 	}
 };

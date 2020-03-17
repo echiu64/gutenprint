@@ -142,8 +142,8 @@ static int updneo_attach(void *vctx, struct libusb_device_handle *dev, int type,
 
 		ctx->marker.name = "Unknown";
 		ctx->marker.numtype = -1;
-		ctx->marker.levelmax = -1;
-		ctx->marker.levelnow = -2;
+		ctx->marker.levelmax = CUPS_MARKER_UNAVAILABLE;
+		ctx->marker.levelnow = CUPS_MARKER_UNKNOWN;
 	} else {
 		ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
 		ctx->native_bpp = 3;
@@ -588,7 +588,7 @@ static int updneo_query_serno(struct libusb_device_handle *dev, uint8_t endp_up,
 		return ret;
 	}
 	ptr = ctx.sts.scsno;
-	while (*ptr && *ptr == 0x30) ptr++;
+	while (*ptr == 0x30) ptr++;
 	strncpy(buf, ptr, buf_len);
 	buf[buf_len-1] = 0;
 
@@ -616,10 +616,8 @@ static int updneo_query_markers(void *vctx, struct marker **markers, int *count)
 }
 
 static const char *sonyupdneo_prefixes[] = {
-	"sonyupdneo",
-	"sony-upd898", "sony-upcr20l", "sony-updr80", "sony-updr80md",
-	"stryker-sdp1000",
-	"dnp-sl20",
+	"sonyupdneo", /* Family Name */
+	"dnp-sl20", // extra, unknown if shared with CR20L
 	NULL
 };
 
@@ -634,7 +632,7 @@ static const char *sonyupdneo_prefixes[] = {
 
 struct dyesub_backend sonyupdneo_backend = {
 	.name = "Sony UP-D Neo",
-	.version = "0.09.1",
+	.version = "0.10",
 	.uri_prefixes = sonyupdneo_prefixes,
 	.cmdline_arg = updneo_cmdline_arg,
 	.cmdline_usage = updneo_cmdline,
@@ -651,6 +649,7 @@ struct dyesub_backend sonyupdneo_backend = {
 		{ USB_VID_SONY, USB_PID_SONY_UPDR80, P_SONY_UPDR80, NULL, "sony-updr80"},
 		{ USB_VID_SONY, USB_PID_SONY_UPDR80MD, P_SONY_UPDR80, NULL, "sony-updr80md"},
 		{ USB_VID_SONY, USB_PID_STRYKER_SDP1000, P_SONY_UPDR80, NULL, "stryker-sdp1000"},
+
 		{ 0, 0, 0, NULL, NULL}
 	}
 };
@@ -843,6 +842,12 @@ struct dyesub_backend sonyupdneo_backend = {
 
   COVER OPEN:
     MFG:SONY;MDL:UP-DR80MD;DES:Sony UP-DR80MD;CMD:SPJL-DS,SPDL-DS;CLS:PRINTER;SCDIV:0100;SCSYV:01060000;SCSNO:0000000000089864;SCSYS:0000001800010000000100;SCMDS:00000000000000000000;SCPRS:0000;SCSES:0000;SCWTS:0000;SCJBS:0000;SCSYE:00;SCMDE:0800;SCMCE:01;SCJBI:0000000000000000;SCSYI:0A300E560000000000000000012D00;SCSVI:000345000345;SCMNI:000345000345;SCCAI:00000000000000;SCGAI:0000;SCGSI:00;SCMDI:1100FF
+
+  Stryker SDP1000
+
+    MFG:Stryker;MDL:SDP1000;DES:Stryker SDP1000;CMD:SPJL-DS,SPDL-DS2;CLS:PRINTER;SCDIV:0100;SCSYV:01010000;SCSNO:0000000000083389;SCSYS:0000001000010000000100;SCMDS:00000000002D002D002D;SCPRS:0000;SCSES:0000;SCWTS:0000;SCJBS:0000;SCSYE:00;SCMDE:0000;SCMCE:00;SCJBI:0000000000000000;SCSYI:0A300E5609A00C7809A00C78012D00;SCSVI:000047000047;SCMNI:000047000047;SCCAI:00000000000000;SCGAI:0000;SCGSI:00;SCMDI:110154;
+
+  [ Notable difference is SCSYI ]
 
 Breakdown:
 

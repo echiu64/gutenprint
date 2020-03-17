@@ -125,7 +125,7 @@ static uint8_t es1_error_detect(uint8_t *rdbuf)
 		return 1;
 	}
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static uint8_t es2_error_detect(uint8_t *rdbuf)
@@ -149,7 +149,7 @@ static uint8_t es2_error_detect(uint8_t *rdbuf)
 		return 1;
 	}
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static uint8_t es3_error_detect(uint8_t *rdbuf)
@@ -183,14 +183,14 @@ static uint8_t es3_error_detect(uint8_t *rdbuf)
 		return 1;
 	}
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static uint8_t es40_error_detect(uint8_t *rdbuf)
 {
 	/* ES40 */
 	if (!rdbuf[3])
-		return 0;
+		return CUPS_BACKEND_OK;
 
 	if (rdbuf[3] == 0x01)
 		ERROR("Generic communication error\n");
@@ -225,7 +225,7 @@ static uint8_t cp790_error_detect(uint8_t *rdbuf)
 		return 1;
 	}
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static char *cp10_pgcode_names(uint8_t *rdbuf, struct printer_data *printer, int *numtype)
@@ -240,7 +240,7 @@ static char *cp10_pgcode_names(uint8_t *rdbuf, struct printer_data *printer, int
 static uint8_t cp10_error_detect(uint8_t *rdbuf)
 {
 	if (!rdbuf[2])
-		return 0;
+		return CUPS_BACKEND_OK;
 
 	if (rdbuf[2] == 0x80)
 		ERROR("No ribbon loaded\n");
@@ -256,7 +256,7 @@ static uint8_t cp10_error_detect(uint8_t *rdbuf)
 static uint8_t cpxxx_error_detect(uint8_t *rdbuf)
 {
 	if (!rdbuf[2])
-		return 0;
+		return CUPS_BACKEND_OK;
 
 	if (rdbuf[2] == 0x01)
 		ERROR("Paper feed problem!\n");
@@ -459,9 +459,9 @@ enum {
 	S_FINISHED,
 };
 
-static int fancy_memcmp(const uint8_t *buf_a, const int16_t *buf_b, uint len)
+static int fancy_memcmp(const uint8_t *buf_a, const int16_t *buf_b, uint16_t len)
 {
-	uint i;
+	uint16_t i;
 
 	for (i = 0 ; i < len ; i++) {
 		if (buf_b[i] == -1)
@@ -471,7 +471,7 @@ static int fancy_memcmp(const uint8_t *buf_a, const int16_t *buf_b, uint len)
 		else if (buf_a[i] < buf_b[i])
 			return -1;
 	}
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static int parse_printjob(uint8_t *buffer, uint8_t *bw_mode, uint32_t *plane_len)
@@ -640,7 +640,7 @@ static int canonselphy_attach(void *vctx, struct libusb_device_handle *dev, int 
 
 	/* Fill out marker structure */
 	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
-	ctx->marker.levelmax = -1; /* Unknown */
+	ctx->marker.levelmax = CUPS_MARKER_UNAVAILABLE;
 
 	if (test_mode < TEST_MODE_NOATTACH) {
 		/* Read printer status. Twice. */
@@ -655,9 +655,9 @@ static int canonselphy_attach(void *vctx, struct libusb_device_handle *dev, int 
 			return CUPS_BACKEND_FAILED;
 
 		if (ctx->printer->error_detect(rdbuf))
-			ctx->marker.levelnow = 0;  /* Out of media */
+			ctx->marker.levelnow = 0;
 		else
-			ctx->marker.levelnow = -3; /* Unknown but OK */
+			ctx->marker.levelnow = CUPS_MARKER_UNKNOWN_OK;
 
 		ctx->marker.name = ctx->printer->pgcode_names? ctx->printer->pgcode_names(rdbuf, ctx->printer, &ctx->marker.numtype) : "Unknown";
 	} else {
@@ -1084,7 +1084,7 @@ static int canonselphy_cmdline_arg(void *vctx, int argc, char **argv)
 		if (j) return j;
 	}
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static void canonselphy_cmdline(void)
@@ -1114,7 +1114,7 @@ static int canonselphy_query_markers(void *vctx, struct marker **markers, int *c
 	if (ctx->printer->error_detect(rdbuf))
 		ctx->marker.levelnow = 0;
 	else
-		ctx->marker.levelnow = -3;
+		ctx->marker.levelnow = CUPS_MARKER_UNKNOWN_OK;
 
 	*markers = &ctx->marker;
 	*count = 1;
@@ -1124,14 +1124,6 @@ static int canonselphy_query_markers(void *vctx, struct marker **markers, int *c
 
 static const char *canonselphy_prefixes[] = {
 	"canonselphy", // Family name
-	"canon-cp10", "canon-cp100", "canon-cp200", "canon-cp220",
-	"canon-cp300", "canon-cp330", "canon-cp400", "canon-cp500",
-	"canon-cp510", "canon-cp520", "canon-cp530", "canon-cp600",
-	"canon-cp710", "canon-cp720", "canon-cp730", "canon-cp740",
-	"canon-cp750", "canon-cp760", "canon-cp770", "canon-cp780",
-	"canon-cp790", "canon-cp800", "canon-cp810", "canon-cp900",
-	"canon-es1", "canon-es2", "canon-es20", "canon-es3",
-	"canon-es30", "canon-es40",
 	// backwards compatibility
 	"selphycp10", "selphycp100", "selphycp200", "selphycp220",
 	"selphycp300", "selphycp330", "selphycp400", "selphycp500",
@@ -1146,7 +1138,7 @@ static const char *canonselphy_prefixes[] = {
 
 struct dyesub_backend canonselphy_backend = {
 	.name = "Canon SELPHY CP/ES (legacy)",
-	.version = "0.104.1",
+	.version = "0.105",
 	.uri_prefixes = canonselphy_prefixes,
 	.cmdline_usage = canonselphy_cmdline,
 	.cmdline_arg = canonselphy_cmdline_arg,

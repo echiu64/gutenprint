@@ -224,11 +224,11 @@ static int selphyneo_attach(void *vctx, struct libusb_device_handle *dev, int ty
 	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
 	ctx->marker.name = selphynew_pgcodes(rdback.data[6]);
 	ctx->marker.numtype = rdback.data[6];
-	ctx->marker.levelmax = -1;
+	ctx->marker.levelmax = CUPS_MARKER_UNAVAILABLE;
 	if (rdback.data[2]) {
 		ctx->marker.levelnow = 0;
 	} else {
-		ctx->marker.levelnow = -3;
+		ctx->marker.levelnow = CUPS_MARKER_UNKNOWN_OK;
 	}
 
 	return CUPS_BACKEND_OK;
@@ -473,7 +473,7 @@ static int selphyneo_cmdline_arg(void *vctx, int argc, char **argv)
 		if (j) return j;
 	}
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static void selphyneo_cmdline(void)
@@ -505,7 +505,7 @@ static int selphyneo_query_markers(void *vctx, struct marker **markers, int *cou
 	if (rdback.data[2])
 		ctx->marker.levelnow = 0;
 	else
-		ctx->marker.levelnow = -3;
+		ctx->marker.levelnow = CUPS_MARKER_UNKNOWN_OK;
 
 	*markers = &ctx->marker;
 	*count = 1;
@@ -515,7 +515,6 @@ static int selphyneo_query_markers(void *vctx, struct marker **markers, int *cou
 
 static const char *canonselphyneo_prefixes[] = {
 	"canonselphyneo", // Family name
-	"canon-cp820", "canon-cp910", "canon-cp1000", "canon-cp1200", "canon-cp1300",
 	// backwards compatibility
 	"selphycp820", "selphycp910", "selphycp1000", "selphycp1200", "selphycp1300",
 	NULL

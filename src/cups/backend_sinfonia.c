@@ -126,10 +126,10 @@ int sinfonia_read_parse(int data_fd, uint32_t model,
 		job->jp.oc_mode = hdr[9];
 	else
 		job->jp.oc_mode = hdr[10];
-	if (hdr[1] == 1245)
+	if (hdr[1] == 1245) {
 		job->jp.mattedepth = hdr[11];
-	if (hdr[1] == 1245)
 		job->jp.dust = hdr[12];
+	}
 	job->jp.columns = hdr[13];
 	job->jp.rows = hdr[14];
 	job->jp.copies = hdr[15];
@@ -870,7 +870,7 @@ const char *sinfonia_error_str(uint8_t v) {
 		return "Main Communication Timeout";
 	case ERROR_MAINT_NEEDED:
 		return "Maintenance Needed";
-	case ERROR_BAD_COMMAND:
+	case ERROR_INAPP_COMMAND:
 		return "Inappropriate Command";
 	case ERROR_PRINTER:
 		return "Printer Error";
@@ -1160,7 +1160,7 @@ int kodak6_mediamax(int type)
 	case KODAK7_MEDIA_6R:
 		return 570;
 	default:
-		return 0;
+		return CUPS_BACKEND_OK;
 	}
 }
 

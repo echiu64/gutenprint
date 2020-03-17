@@ -120,8 +120,8 @@ static int upd_attach(void *vctx, struct libusb_device_handle *dev, int type,
 
 	ctx->marker.name = "Unknown";
 	ctx->marker.numtype = -1;
-	ctx->marker.levelmax = -1;
-	ctx->marker.levelnow = -2;
+	ctx->marker.levelmax = CUPS_MARKER_UNAVAILABLE;
+	ctx->marker.levelnow = CUPS_MARKER_UNKNOWN;
 
 	return CUPS_BACKEND_OK;
 }
@@ -565,7 +565,7 @@ static int upd_cmdline_arg(void *vctx, int argc, char **argv)
 		if (j) return j;
 	}
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static int upd_query_markers(void *vctx, struct marker **markers, int *count)
@@ -582,22 +582,18 @@ static int upd_query_markers(void *vctx, struct marker **markers, int *count)
 	if (ctx->stsbuf.sts1 == 0x40 ||
 	    ctx->stsbuf.sts1 == 0x08) {
 		ctx->marker.levelnow = 0;
-		STATE("+media-empty\n");
 	} else {
-		ctx->marker.levelnow = -3;
-		STATE("-media-empty\n");
+		ctx->marker.levelnow = CUPS_MARKER_UNKNOWN_OK;
 	}
 
 	return CUPS_BACKEND_OK;
 }
 
 static const char *sonyupd_prefixes[] = {
-	"sonyupd",
-	"sony-updr150", "sony-updr200", "sony-upcr10l",
-	"sony-upd895", "sony-upd897", "dnp-sl10",
+	"sonyupd", /* Family Name */
+	"dnp-sl10", // Unknown if shared with CR10L
 	// Backwards compatibility
-	"sonyupdr150",
-	"sonyupdr200", "sonyupcr10",
+	"sonyupdr150", "sonyupdr200", "sonyupcr10",
 	NULL
 };
 
@@ -611,7 +607,7 @@ static const char *sonyupd_prefixes[] = {
 
 struct dyesub_backend sonyupd_backend = {
 	.name = "Sony UP-D",
-	.version = "0.38.1",
+	.version = "0.39",
 	.uri_prefixes = sonyupd_prefixes,
 	.cmdline_arg = upd_cmdline_arg,
 	.cmdline_usage = upd_cmdline,

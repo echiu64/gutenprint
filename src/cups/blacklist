@@ -189,6 +189,9 @@
 # Mitsubishi CP-D90DW
 0x06d3 0x3b60 blacklist
 
+# Mitsubishi CP-M1
+0x06d3 0x3b80 blacklist
+
 # Mitsubishi CP-K60DW-S
 0x06d3 0x3b31 blacklist
 

@@ -1,7 +1,7 @@
 /*
  *   Mitsubishi CP-9xxx Photo Printer Family CUPS backend
  *
- *   (c) 2014-2019 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2014-2020 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -18,9 +18,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
- *          [http://www.gnu.org/licenses/gpl-2.0.html]
+ *   along with this program; if not, see <https://www.gnu.org/licenses/>.
  *
  *   SPDX-License-Identifier: GPL-2.0+
  *
@@ -29,76 +27,12 @@
 #define BACKEND mitsu9550_backend
 
 #include "backend_common.h"
+#include "backend_mitsu.h"
 
-/* For Integration into gutenprint */
-#if defined(HAVE_CONFIG_H)
-#include <config.h>
-#endif
-
-#if defined(USE_DLOPEN)
-#define WITH_DYNAMIC
-#include <dlfcn.h>
-#define DL_INIT() do {} while(0)
-#define DL_OPEN(__x) dlopen(__x, RTLD_NOW)
-#define DL_SYM(__x, __y) dlsym(__x, __y)
-#define DL_CLOSE(__x) dlclose(__x)
-#define DL_EXIT() do {} while(0)
-#elif defined(USE_LTDL)
-#define WITH_DYNAMIC
-#include <ltdl.h>
-#define DL_INIT() lt_dlinit()
-#define DL_OPEN(__x) lt_dlopen(__x)
-#define DL_SYM(__x, __y) lt_dlsym(__x, __y)
-#define DL_CLOSE(__x) do {} while(0)
-#define DL_EXIT() lt_dlexit()
-#else
-#define DL_INIT()     do {} while(0)
-#define DL_CLOSE(__x) do {} while(0)
-#define DL_EXIT()     do {} while(0)
-#warning "No dynamic loading support!"
-#endif
-
-// #include "lib70x/libMitsuD70ImageReProcess.h"
-
-#ifndef LUT_LEN
-#define COLORCONV_RGB 0
-#define COLORCONV_BGR 1
-
-#define LUT_LEN 14739
-struct BandImage {
-	   void  *imgbuf;
-	 int32_t bytes_per_row;
-	uint16_t origin_cols;
-	uint16_t origin_rows;
-	uint16_t cols;
-	uint16_t rows;
-};
-#endif
-
-#define REQUIRED_LIB_APIVERSION 4
-
-/* Image processing library function prototypes */
-#define LIB_NAME_RE "libMitsuD70ImageReProcess.so" // Reimplemented library
-
-typedef int (*lib70x_getapiversionFN)(void);
-typedef int (*Get3DColorTableFN)(uint8_t *buf, const char *filename);
-typedef struct CColorConv3D *(*Load3DColorTableFN)(const uint8_t *ptr);
-typedef void (*Destroy3DColorTableFN)(struct CColorConv3D *this);
-typedef void (*DoColorConvFN)(struct CColorConv3D *this, uint8_t *data, uint16_t cols, uint16_t rows, uint32_t bytes_per_row, int rgb_bgr);
-
-#ifndef CORRTABLE_PATH
-#ifdef PACKAGE_DATA_DIR
-#define CORRTABLE_PATH PACKAGE_DATA_DIR "/backend_data"
-#else
-#error "Must define CORRTABLE_PATH or PACKAGE_DATA_DIR!"
-#endif
-#endif
-
-#define MITSU_M98xx_LAMINATE_FILE CORRTABLE_PATH "/M98MATTE.raw"
-#define MITSU_M98xx_DATATABLE_FILE CORRTABLE_PATH "/M98TABLE.dat"
-#define MITSU_M98xx_LUT_FILE       CORRTABLE_PATH "/M98XXL01.lut"
+#define MITSU_M98xx_LAMINATE_FILE  "M98MATTE.raw"
+#define MITSU_M98xx_DATATABLE_FILE "M98TABLE.dat"
+#define MITSU_M98xx_LUT_FILE       "M98XXL01.lut"
 #define LAMINATE_STRIDE 1868
-#define DATATABLE_SIZE  42204
 
 /* USB VIDs and PIDs */
 
@@ -137,7 +71,7 @@ struct mitsu9550_hdr2 {
 	uint8_t  cut;      /* 00 == normal, 83 == 2x6*2 */
 	uint8_t  unkb[5];
 	uint8_t  mode;     /* 00 == fine, 80 == superfine */
-	uint8_t  unkc[11]; /* 00 [...] 00 01 */
+	uint8_t  unkc[11]; /* 00 [...] 00 01 ; note [7][8][9] are cp98xx extensions for sharpness/reversed/lut */
 } __attribute__((packed));
 
 /* Fine Deep selection (9550 only) */
@@ -163,37 +97,6 @@ struct mitsu9550_plane {
 	uint16_t rows;       /* BE */
 } __attribute__((packed));
 
-/* CP98xx Tabular Data, as stored in data file! */
-struct mitsu98xx_data {
-	/* @    0 */	uint16_t GNMby[256];     /* BGR Order uncertain */
-	/* @  512 */	uint16_t GNMgm[256];
-	/* @ 1024 */    uint16_t GNMrc[256];
-	/* @ 1536 */    uint16_t unk_sharp[20];  /* Actual format is: u16, u16[9], u16, u16[9] */
-	/* @ 1576 */    double   GammaAdj[3];    /* Assumed to be same order as tables (BGR?) */
-	/* @ 1600 */	struct {
-		/* @    0 */	double   unka[256];
-		/* @ 2048 */	double   unkb[256];
-		/* @ 4096 */	double   unkc[5];   /* Weight factors */
-		/* @ 4136 */	double   unkd[256];
-		/* @ 6184 */	double   unke[256]; // *= sharp->coef[X]
-		/* @ 8232 */	double   unkf[5];   /* Weight factors */
-		/* @ 8272 */	double   unkg[256];
-		/* @10320 */
-			} WMAM;
-	/* @11920 */	double   sharp_coef[11]; /* 0 is off, 1-10 are the levels.  Default is 5. [4 in settings] */
-	/* @12008 */	uint32_t KHStart;
-	/* @12012 */	uint32_t KHEnd;
-	/* @12016 */	uint32_t KHStep;
-	/* @12020 */	double   KH[256];
-	/* @14068 */
-} __attribute__((packed));
-
-struct mitsu98xx_tables {
-	struct mitsu98xx_data superfine;
-	struct mitsu98xx_data fine_std;
-	struct mitsu98xx_data fine_hg;
-} __attribute__((packed));
-
 /* Command header */
 struct mitsu9550_cmd {
 	uint8_t cmd[4];
@@ -201,6 +104,9 @@ struct mitsu9550_cmd {
 
 /* Private data structure */
 struct mitsu9550_printjob {
+	size_t jobsize;
+	int copies;
+
 	uint8_t *databuf;
 	uint32_t datalen;
 
@@ -208,8 +114,6 @@ struct mitsu9550_printjob {
 	uint16_t cols;
 	uint32_t plane_len;
 	int is_raw;
-
-	int copies;
 
 	/* Parse headers separately */
 	struct mitsu9550_hdr1 hdr1;
@@ -233,15 +137,8 @@ struct mitsu9550_ctx {
 	struct marker marker;
 
 	/* CP98xx stuff */
-	void *dl_handle;
-	lib70x_getapiversionFN GetAPIVersion;
-	Get3DColorTableFN Get3DColorTable;
-	Load3DColorTableFN Load3DColorTable;
-	Destroy3DColorTableFN Destroy3DColorTable;
-	DoColorConvFN DoColorConv;
-
-	struct CColorConv3D *lut;
-	struct mitsu98xx_tables *m98xxdata;
+	struct mitsu_lib lib;
+	const struct mitsu98xx_data *m98xxdata;
 };
 
 /* Printer data structures */
@@ -331,28 +228,9 @@ static int mitsu9550_main_loop(void *vctx, const void *vjob);
 		} \
 	} while (0);
 
-static void mitsu98xx_dogamma(uint8_t *src, uint16_t *dest, uint8_t plane,
-			      uint16_t *table, uint32_t len)
-{
-	src += plane;
-	while(len--) {
-		*dest++ = cpu_to_be16(table[*src]);
-		src += 3;
-	}
-}
-
 static int mitsu98xx_fillmatte(struct mitsu9550_printjob *job)
 {
-	int fd, i;
-	uint32_t j, remain;
-
-	DEBUG("Reading %d bytes of matte data from disk (%d/%d)\n", job->cols * job->rows * 2, job->cols, LAMINATE_STRIDE);
-	fd = open(MITSU_M98xx_LAMINATE_FILE, O_RDONLY);
-	if (fd < 0) {
-		WARNING("Unable to open matte lamination data file '%s'\n", MITSU_M98xx_LAMINATE_FILE);
-		job->hdr1.matte = 0;
-		goto done;
-	}
+	int ret;
 
 	/* Fill in the lamination plane header */
 	struct mitsu9550_plane *matte = (struct mitsu9550_plane *)(job->databuf + job->datalen);
@@ -366,28 +244,11 @@ static int mitsu98xx_fillmatte(struct mitsu9550_printjob *job)
 	matte->rows = cpu_to_be16(job->hdr1.rows);
 	job->datalen += sizeof(struct mitsu9550_plane);
 
-	/* Read in the matte data plane */
-	for (j = 0 ; j < job->rows ; j++) {
-		remain = LAMINATE_STRIDE * 2;
-
-		/* Read one row of lamination data at a time */
-		while (remain) {
-			i = read(fd, job->databuf + job->datalen, remain);
-			if (i < 0)
-				return CUPS_BACKEND_CANCEL;
-			if (i == 0) {
-				/* We hit EOF, restart from beginning */
-				lseek(fd, 0, SEEK_SET);
-				continue;
-			}
-			job->datalen += i;
-			remain -= i;
-		}
-		/* Back off the buffer so we "wrap" on the print row. */
-		job->datalen -= ((LAMINATE_STRIDE - job->cols) * 2);
-	}
-	/* We're done! */
-	close(fd);
+	ret = mitsu_readlamdata(MITSU_M98xx_LAMINATE_FILE, LAMINATE_STRIDE,
+				job->databuf, &job->datalen,
+				job->rows, job->cols, 2);
+	if (ret)
+		return ret;
 
 	/* Fill in the lamination plane footer */
 	job->databuf[job->datalen++] = 0x1b;
@@ -395,15 +256,8 @@ static int mitsu98xx_fillmatte(struct mitsu9550_printjob *job)
 	job->databuf[job->datalen++] = 0x56;
 	job->databuf[job->datalen++] = 0x00;
 
-done:
 	return CUPS_BACKEND_OK;
 }
-
-#ifndef LUT_LEN
-#define LUT_LEN 14739
-#define COLORCONV_RGB 0
-#define COLORCONV_BGR 1
-#endif
 
 static int mitsu9550_get_status(struct mitsu9550_ctx *ctx, uint8_t *resp, int status, int status2, int media);
 static char *mitsu9550_media_types(uint8_t type, uint8_t is_s);
@@ -416,8 +270,6 @@ static void *mitsu9550_init(void)
 		return NULL;
 	}
 	memset(ctx, 0, sizeof(struct mitsu9550_ctx));
-
-	DL_INIT();
 
 	return ctx;
 }
@@ -445,45 +297,13 @@ static int mitsu9550_attach(void *vctx, struct libusb_device_handle *dev, int ty
 	    ctx->type == P_MITSU_9810)
 		ctx->is_98xx = 1;
 
-	/* Attempt to open the library */
+	if (ctx->is_98xx) {
 #if defined(WITH_DYNAMIC)
-	if (!ctx->is_98xx) goto skip;
-
-	DEBUG("Attempting to load image processing library\n");
-	ctx->dl_handle = DL_OPEN(LIB_NAME_RE);
-	if (!ctx->dl_handle)
-		WARNING("Image processing library not found, using internal fallback code\n");
-	if (ctx->dl_handle) {
-		ctx->GetAPIVersion = DL_SYM(ctx->dl_handle, "lib70x_getapiversion");
-		if (!ctx->GetAPIVersion) {
-			ERROR("Problem resolving API Version symbol in imaging processing library, too old or not installed?\n");
-			DL_CLOSE(ctx->dl_handle);
-			ctx->dl_handle = NULL;
-			return CUPS_BACKEND_FAILED;
-		}
-		if (ctx->GetAPIVersion() != REQUIRED_LIB_APIVERSION) {
-			ERROR("Image processing library API version mismatch!\n");
-			DL_CLOSE(ctx->dl_handle);
-			ctx->dl_handle = NULL;
-			return CUPS_BACKEND_FAILED;
-		}
-
-		ctx->Get3DColorTable = DL_SYM(ctx->dl_handle, "CColorConv3D_Get3DColorTable");
-		ctx->Load3DColorTable = DL_SYM(ctx->dl_handle, "CColorConv3D_Load3DColorTable");
-		ctx->Destroy3DColorTable = DL_SYM(ctx->dl_handle, "CColorConv3D_Destroy3DColorTable");
-		ctx->DoColorConv = DL_SYM(ctx->dl_handle, "CColorConv3D_DoColorConv");
-		if (!ctx->Get3DColorTable || !ctx->Load3DColorTable ||
-		    !ctx->Destroy3DColorTable || !ctx->DoColorConv ) {
-			ERROR("Problem resolving symbols in imaging processing library\n");
-			DL_CLOSE(ctx->dl_handle);
-			ctx->dl_handle = NULL;
-			return CUPS_BACKEND_FAILED;
-		} else {
-			DEBUG("Image processing library successfully loaded\n");
-		}
-	}
-skip:
+		/* Attempt to open the library */
+		if (mitsu_loadlib(&ctx->lib, ctx->type))
 #endif
+			WARNING("Dynamic library support not loaded, will be unable to print.");
+	}
 
 	if (test_mode < TEST_MODE_NOATTACH) {
 		if (mitsu9550_get_status(ctx, (uint8_t*) &media, 0, 0, 1))
@@ -523,13 +343,10 @@ static void mitsu9550_teardown(void *vctx) {
 	if (!ctx)
 		return;
 
-	if (ctx->dl_handle) {
-		if (ctx->lut)
-			ctx->Destroy3DColorTable(ctx->lut);
-		if (ctx->m98xxdata)
-			free(ctx->m98xxdata);
-		DL_CLOSE(ctx->dl_handle);
-	}
+	if (ctx->m98xxdata)
+		ctx->lib.CP98xx_DestroyData(ctx->m98xxdata);
+
+	mitsu_destroylib(&ctx->lib);
 
 	free(ctx);
 }
@@ -552,6 +369,8 @@ static int mitsu9550_read_parse(void *vctx, const void **vjob, int data_fd, int 
 	}
 	memset(job, 0, sizeof(*job));
 	job->is_raw = 1;
+	job->jobsize = sizeof(*job);
+	job->copies = copies;
 
 top:
 	/* Read in initial header */
@@ -631,57 +450,21 @@ hdr_done:
 
 	/* Read in CP98xx data tables if necessary */
 	if (ctx->is_98xx && !job->is_raw && !ctx->m98xxdata) {
-		int ret;
-		ctx->m98xxdata = malloc(DATATABLE_SIZE);
-		if (!ctx->m98xxdata) {
-			ERROR("Memory allocation Failure!\n");
+		char full[2048];
+
+		if (!ctx->lib.dl_handle) {
+			ERROR("!!! Image Processing Library not found, aborting!\n");
 			mitsu9550_cleanup_job(job);
-			return CUPS_BACKEND_RETRY_CURRENT;
+			return CUPS_BACKEND_CANCEL;
 		}
+
+		snprintf(full, sizeof(full), "%s/%s", corrtable_path, MITSU_M98xx_DATATABLE_FILE);
 
 		DEBUG("Reading in 98xx data from disk\n");
-		if ((ret = dyesub_read_file(MITSU_M98xx_DATATABLE_FILE, ctx->m98xxdata, DATATABLE_SIZE, NULL))) {
-			ERROR("Unable to read 98xx data table file '%s'\n", MITSU_M98xx_DATATABLE_FILE);
-			free(ctx->m98xxdata);
-			return ret;
+		ctx->m98xxdata = ctx->lib.CP98xx_GetData(full);
+		if (!ctx->m98xxdata) {
+			ERROR("Unable to read 98xx data table file '%s'\n", full);
 		}
-
-		/* Byteswap data table to native endianness, if necessary */
-#if (__BYTE_ORDER == __LITTLE_ENDIAN)
-		int j;
-		struct mitsu98xx_data *ptr = &ctx->m98xxdata->superfine;
-		for (j = 0 ; j < 3 ; j++) {
-			ptr->KHStart = be32_to_cpu(ptr->KHStart);
-			ptr->KHEnd = be32_to_cpu(ptr->KHEnd);
-			ptr->KHStep = be32_to_cpu(ptr->KHStep);
-			for (i = 3 ; i < 3 ; i++) {
-				ptr->GammaAdj[i] = be64_to_cpu(ptr->GammaAdj[i]);
-			}
-			for (i = 0 ; i < 5 ; i++) {
-				ptr->WMAM.unkc[i] = be64_to_cpu(ptr->WMAM.unkc[i]);
-				ptr->WMAM.unkf[i] = be64_to_cpu(ptr->WMAM.unkf[i]);
-			}
-			for (i = 0 ; i < 11 ; i++) {
-				ptr->sharp_coef[i] = be64_to_cpu(ptr->sharp_coef[i]);
-			}
-			for (i = 0 ; i < 20 ; i++) {
-				ptr->unk_sharp[i] = be16_to_cpu(ptr->unk_sharp[i]);
-			}
-			for (i = 0 ; i < 256 ; i++) {
-				ptr->WMAM.unka[i] = be64_to_cpu(ptr->WMAM.unka[i]);
-				ptr->WMAM.unkb[i] = be64_to_cpu(ptr->WMAM.unkb[i]);
-				ptr->WMAM.unkd[i] = be64_to_cpu(ptr->WMAM.unkd[i]);
-				ptr->WMAM.unke[i] = be64_to_cpu(ptr->WMAM.unke[i]);
-				ptr->WMAM.unkg[i] = be64_to_cpu(ptr->WMAM.unkg[i]);
-
-				ptr->GNMby[i] = be16_to_cpu(ptr->GNMby[i]);
-				ptr->GNMgm[i] = be16_to_cpu(ptr->GNMgm[i]);
-				ptr->GNMrc[i] = be16_to_cpu(ptr->GNMrc[i]);
-				ptr->KH[i] = be64_to_cpu(ptr->KH[i]);
-			}
-			ptr++;
-		}
-#endif
 	}
 
 	if (job->is_raw) {
@@ -817,44 +600,16 @@ hdr_done:
 
 	/* Apply LUT, if job calls for it.. */
 	if (ctx->is_98xx && !job->is_raw && job->hdr2.unkc[9]) {
-
-		if (!ctx->dl_handle) {
-			// XXXFALLBACK write fallback code?
-			ERROR("!!! Image Processing Library not found, aborting!\n");
+		int ret = mitsu_apply3dlut(&ctx->lib, MITSU_M98xx_LUT_FILE,
+					   job->databuf + sizeof(struct mitsu9550_plane),
+					   job->cols, job->rows,
+					   job->cols * 3, COLORCONV_BGR);
+		if (ret) {
 			mitsu9550_cleanup_job(job);
-			return CUPS_BACKEND_CANCEL;
+			return ret;
 		}
 
-		if (!ctx->lut) {
-			uint8_t *lbuf = malloc(LUT_LEN);
-			if (!lbuf) {
-				ERROR("Memory allocation failure!\n");
-				mitsu9550_cleanup_job(job);
-				return CUPS_BACKEND_RETRY_CURRENT;
-			}
-			if (ctx->Get3DColorTable(lbuf, MITSU_M98xx_LUT_FILE)) {
-				ERROR("Unable to open LUT file '%s'\n", MITSU_M98xx_LUT_FILE);
-				mitsu9550_cleanup_job(job);
-				return CUPS_BACKEND_CANCEL;
-			}
-			ctx->lut = ctx->Load3DColorTable(lbuf);
-			free(lbuf);
-			if (!ctx->lut) {
-				ERROR("Unable to parse LUT\n");
-				mitsu9550_cleanup_job(job);
-				return CUPS_BACKEND_CANCEL;
-			}
-		}
-
-		DEBUG("Running print data through 3D LUT\n");
-		ctx->DoColorConv(ctx->lut, job->databuf + sizeof(struct mitsu9550_plane),
-				 job->cols, job->rows, job->cols * 3, COLORCONV_BGR);
 		job->hdr2.unkc[9] = 0;
-	}
-	if (ctx->is_98xx) {
-		/* Clear a couple more extensions, not handled yet. */
-		job->hdr2.unkc[8] = 0;
-		job->hdr2.unkc[7] = 0;
 	}
 
 	/* Update printjob header to reflect number of requested copies */
@@ -902,7 +657,7 @@ static int mitsu9550_get_status(struct mitsu9550_ctx *ctx, uint8_t *resp, int st
 		return 4;
 	}
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static char *mitsu9550_media_types(uint8_t type, uint8_t is_s)
@@ -1132,7 +887,7 @@ static int validate_media(int type, int media, int cols, int rows)
 		WARNING("Unknown printer type %d\n", type);
 		break;
 	}
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static int mitsu9550_main_loop(void *vctx, const void *vjob) {
@@ -1158,11 +913,11 @@ static int mitsu9550_main_loop(void *vctx, const void *vjob) {
 
 	/* Do the 98xx processing here */
 	if (!ctx->is_98xx || job->is_raw)
-		goto bypass;
+		goto non_98xx;
 
+	/* Special CP98xx handling code */
 	uint8_t *newbuf;
 	uint32_t newlen = 0;
-	struct mitsu98xx_data *table;
 	int i, remain, planelen;
 
 	planelen = job->rows * job->cols * 2;
@@ -1172,58 +927,80 @@ static int mitsu9550_main_loop(void *vctx, const void *vjob) {
 		ERROR("Memory allocation Failure!\n");
 		return CUPS_BACKEND_RETRY_CURRENT;
 	}
-	switch (job->hdr2.mode) {
-	case 0x80:
-		table = &ctx->m98xxdata->superfine;
-		break;
-	case 0x11:
-		table = &ctx->m98xxdata->fine_hg;
-		job->hdr2.mode = 0x10;
-		break;
-	case 0x10:
-	default:
-		table = &ctx->m98xxdata->fine_std;
-		break;
+
+	DEBUG("Running print data through processing library\n");
+
+	/* Create band images for input and output */
+	struct BandImage input;
+	struct BandImage output;
+
+	uint8_t *convbuf = malloc(planelen * 3);
+	if (!convbuf) {
+		free(newbuf);
+		ERROR("Memory allocation Failure!\n");
+		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 
-	DEBUG("Applying 8bpp->12bpp Gamma Correction\n");
-#pragma GCC diagnostic push
-#if (defined(__GNUC__) && (__GNUC__ >= 9))
-#pragma GCC diagnostic ignored "-Waddress-of-packed-member"
-#endif
-	/* For B/Y plane */
-	memcpy(newbuf + newlen, job->databuf, sizeof(struct mitsu9550_plane));
-	newbuf[newlen + 3] = 0x10;  /* ie 16bpp data */
-	newlen += sizeof(struct mitsu9550_plane);
-	mitsu98xx_dogamma(job->databuf + sizeof(struct mitsu9550_plane),
-			  (uint16_t*) (newbuf + newlen),
-			  0,
-			  table->GNMby,
-			  planelen / 2);
-	newlen += planelen;
+	input.origin_rows = input.origin_cols = 0;
+	input.rows = job->rows;
+	input.cols = job->cols;
+	input.imgbuf = job->databuf + sizeof(struct mitsu9550_plane);
+	input.bytes_per_row = job->cols * 3;
 
-	/* For G/M plane */
-	memcpy(newbuf + newlen, job->databuf, sizeof(struct mitsu9550_plane));
-	newbuf[newlen + 3] = 0x10;  /* ie 16bpp data */
-	newlen += sizeof(struct mitsu9550_plane);
-	mitsu98xx_dogamma(job->databuf + sizeof(struct mitsu9550_plane),
-			  (uint16_t*) (newbuf + newlen),
-			  1,
-			  table->GNMgm,
-			  planelen / 2);
-	newlen += planelen;
+	output.origin_rows = output.origin_cols = 0;
+	output.rows = job->rows;
+	output.cols = job->cols;
+	output.imgbuf = convbuf;
+	output.bytes_per_row = job->cols * 3 * sizeof(uint16_t);
 
-	/* For R/C plane */
-	memcpy(newbuf + newlen, job->databuf, sizeof(struct mitsu9550_plane));
-	newbuf[newlen + 3] = 0x10;  /* ie 16bpp data */
-	newlen += sizeof(struct mitsu9550_plane);
-	mitsu98xx_dogamma(job->databuf + sizeof(struct mitsu9550_plane),
-			  (uint16_t*) (newbuf + newlen),
-			  2,
-			  table->GNMrc,
-			  planelen / 2);
-	newlen += planelen;
-#pragma GCC diagnostic pop
+	int sharpness = job->hdr2.unkc[7];
+
+	if (!ctx->lib.CP98xx_DoConvert(ctx->m98xxdata, &input, &output, job->hdr2.mode, sharpness, job->hdr2.unkc[8])) {
+		free(convbuf);
+		free(newbuf);
+		ERROR("CP98xx_DoConvert() failed!\n");
+		return CUPS_BACKEND_FAILED;
+	}
+
+	/* Clear special extension flags used by our backend */
+	if (job->hdr2.mode == 0x11)
+		job->hdr2.mode = 0x10;
+	job->hdr2.unkc[8] = 0;  /* Clear "already reversed" flag */
+	job->hdr2.unkc[7] = 0;  /* Clear "sharpness" parameter */
+
+	/* Library is now done, but output is packed YMC16 format.  We need to
+	   convert it to a planar YMC16, plus appropriate plane headers */
+	uint8_t *yPtr, *mPtr, *cPtr;
+	int j, offset;
+
+	yPtr = newbuf + newlen;
+	memcpy(yPtr, job->databuf, sizeof(struct mitsu9550_plane));
+	yPtr[3] = 0x10;  /* ie 16bpp data */
+	yPtr += sizeof(struct mitsu9550_plane);
+	newlen += sizeof(struct mitsu9550_plane) + planelen;
+
+	mPtr = newbuf + newlen;
+	memcpy(mPtr, job->databuf, sizeof(struct mitsu9550_plane));
+	mPtr[3] = 0x10;  /* ie 16bpp data */
+	mPtr += sizeof(struct mitsu9550_plane);
+	newlen += sizeof(struct mitsu9550_plane) + planelen;
+
+	cPtr = newbuf + newlen;
+	memcpy(cPtr, job->databuf, sizeof(struct mitsu9550_plane));
+	cPtr[3] = 0x10;  /* ie 16bpp data */
+	cPtr += sizeof(struct mitsu9550_plane);
+	newlen += sizeof(struct mitsu9550_plane) + planelen;
+
+	for (offset = 0, i = output.cols - 1; i >= 0 ; i--) {
+		for (j = 0 ; j < output.rows ; j ++) {
+			yPtr[i*output.cols + j] = convbuf[offset++];
+			mPtr[i*output.cols + j] = convbuf[offset++];
+			cPtr[i*output.cols + j] = convbuf[offset++];
+		}
+	}
+
+	/* All done with conversion buffer, nuke it */
+	free(convbuf);
 
 	/* And finally, the job footer. */
 	memcpy(newbuf + newlen, job->databuf + sizeof(struct mitsu9550_plane) + planelen/2 * 3, sizeof(struct mitsu9550_cmd));
@@ -1242,7 +1019,7 @@ static int mitsu9550_main_loop(void *vctx, const void *vjob) {
 		}
 	}
 
-bypass:
+non_98xx:
 	/* Bypass */
 	if (test_mode >= TEST_MODE_NOPRINT)
 		return CUPS_BACKEND_OK;
@@ -1671,7 +1448,7 @@ static int mitsu9550_cmdline_arg(void *vctx, int argc, char **argv)
 		if (j) return j;
 	}
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static int mitsu9550_query_markers(void *vctx, struct marker **markers, int *count)
@@ -1693,13 +1470,6 @@ static int mitsu9550_query_markers(void *vctx, struct marker **markers, int *cou
 
 static const char *mitsu9550_prefixes[] = {
 	"mitsu9xxx", // Family driver, do not nuke.
-	"mitsubishi-9000dw", "mitsubishi-9500dw",
-	"mitsubishi-9550dw", "mitsubishi-9550dw-s",
-	"mitsubishi-9600dw", // "mitsubishi-9600dw-s",
-	"mitsubishi-9800dw", "mitsubishi-9800dw-s",
-	"mitsubishi-9810dw",
-	// extras
-	"mitsubishi-9550d", "mitsubishi-9550dz", "mitsubishi-9800d", "mitsubishi-9800dz", "mitsubishi-9810d",
 	// Backwards compatibility
 	"mitsu9000", "mitsu9500", "mitsu9550", "mitsu9600", "mitsu9800", "mitsu9810",
 	NULL
@@ -1708,7 +1478,7 @@ static const char *mitsu9550_prefixes[] = {
 /* Exported */
 struct dyesub_backend mitsu9550_backend = {
 	.name = "Mitsubishi CP9xxx family",
-	.version = "0.49.1",
+	.version = "0.52" " (lib " LIBMITSU_VER ")",
 	.uri_prefixes = mitsu9550_prefixes,
 	.cmdline_usage = mitsu9550_cmdline,
 	.cmdline_arg = mitsu9550_cmdline_arg,
@@ -1725,12 +1495,17 @@ struct dyesub_backend mitsu9550_backend = {
 		{ USB_VID_MITSU, USB_PID_MITSU_9000D, P_MITSU_9550, NULL, "mitsubishi-9000dw"},
 		{ USB_VID_MITSU, USB_PID_MITSU_9500D, P_MITSU_9550, NULL, "mitsubishi-9500dw"},
 		{ USB_VID_MITSU, USB_PID_MITSU_9550D, P_MITSU_9550, NULL, "mitsubishi-9550dw"},
+		{ USB_VID_MITSU, USB_PID_MITSU_9550D, P_MITSU_9550, NULL, "mitsubishi-9550d"}, /* Duplicate */
 		{ USB_VID_MITSU, USB_PID_MITSU_9550DS, P_MITSU_9550S, NULL, "mitsubishi-9550dw-s"},
+		{ USB_VID_MITSU, USB_PID_MITSU_9550DS, P_MITSU_9550S, NULL, "mitsubishi-9550dz"}, /* Duplicate */
 		{ USB_VID_MITSU, USB_PID_MITSU_9600D, P_MITSU_9600, NULL, "mitsubishi-9600dw"},
 //	{ USB_VID_MITSU, USB_PID_MITSU_9600D, P_MITSU_9600S, NULL, "mitsubishi-9600dw-s"},
 		{ USB_VID_MITSU, USB_PID_MITSU_9800D, P_MITSU_9800, NULL, "mitsubishi-9800dw"},
+		{ USB_VID_MITSU, USB_PID_MITSU_9800D, P_MITSU_9800, NULL, "mitsubishi-9800d"}, /* Duplicate */
 		{ USB_VID_MITSU, USB_PID_MITSU_9800DS, P_MITSU_9800S, NULL, "mitsubishi-9800dw-s"},
+		{ USB_VID_MITSU, USB_PID_MITSU_9800DS, P_MITSU_9800S, NULL, "mitsubishi-9800dz"}, /* Duplicate */
 		{ USB_VID_MITSU, USB_PID_MITSU_98__D, P_MITSU_9810, NULL, "mitsubishi-9810dw"},
+		{ USB_VID_MITSU, USB_PID_MITSU_98__D, P_MITSU_9810, NULL, "mitsubishi-9810d"}, /* Duplicate */
 //	{ USB_VID_MITSU, USB_PID_MITSU_9810D, P_MITSU_9810, NULL, "mitsubishi-9810dw"},
 //	{ USB_VID_MITSU, USB_PID_MITSU_9820DS, P_MITSU_9820S, NULL, "mitsubishi-9820dw-s"},
 		{ 0, 0, 0, NULL, NULL}
@@ -1755,9 +1530,11 @@ struct dyesub_backend mitsu9550_backend = {
 
    1b 57 21 2e 00 80 00 22  QQ QQ 00 00 00 00 00 00 :: ZZ ZZ = num copies (>= 0x01)
    00 00 00 00 00 00 00 00  00 00 00 00 ZZ ZZ 00 00 :: YY = 00/80 Fine/SuperFine (9550), 10/80 Fine/Superfine (98x0), 00 (9600)
-   XX 00 00 00 00 00 YY 00  00 00 00 00 00 00 00 00 :: XX = 00 normal, 83 Cut 2x6 (9550 only!)
+   XX 00 00 00 00 00 YY 00  00 00 00 00 00 00 SS TT :: XX = 00 normal, 83 Cut 2x6 (9550 only!)
    RR 01                                            :: QQ QQ = 0x0803 on 9550, 0x0801 on 98x0, 0x0003 on 9600, 0xa803 on 9500
                                                     :: RR = 01 for "use LUT" on 98xx, 0x00 otherwise.  Extension to stock.
+						    :: TT = 01 for "already reversed". Extension to stock.
+						    :: SS == sharpening level, 0 for off, 1-10 otherwise. Extesion to stock.
 
    ~~~ Header 3 (9550 and 9800-S only..)
 
@@ -1795,14 +1572,17 @@ struct dyesub_backend mitsu9550_backend = {
 
   ~~~~ Footer:
 
-   1b 50 57 00  (9500)
+   1b 50 41 00  (9500AM)
    1b 50 46 00  (9550)
    1b 50 47 00  (9550-S)
    1b 50 48 00  (9600)
    1b 50 4c 00  (9800/9810)
+   1b 50 4d 00  (9000)
    1b 50 4e 00  (9800-S)
+   1b 50 51 00  (CP3020DA)
+   1b 50 57 00  (9500)
 
-   Unknown: 9600-S, 9820-S
+   Unknown: 9600-S, 9820-S, 1 other..
 
   ~~~~ Lamination data follows (on 9810 only, if matte selected)
 
@@ -1844,6 +1624,15 @@ struct dyesub_backend mitsu9550_backend = {
      'LL' is length.  Data is returned in 16-bit unicode, LE.
      Contents are model ('9550Z'), then space, then serialnum ('A20067')
 
+  Query FW Version?
+
+ -> 1b 72 01 00
+ <- e4 82 01 00 LL 39 00 35  00 35 00 30 00 5a 00 20
+    00 41 00 32 00 30 00 30  00 36 00 37 00
+
+     'LL' is length.  Data is returned in 16-bit unicode, LE.
+     Contents are model ('9550Z'), then space, then serialnum ('A20067')
+
   Media Query
 
  -> 1b 56 24 00
@@ -1855,6 +1644,11 @@ struct dyesub_backend mitsu9550_backend = {
 
  -> 1b 4b 01 00
  <- e4 4b 01 00 02 00 78
+
+  [[ Unknown query.. "Printer number" related? ]]
+
+ -> 1b 72 10 00
+ <- e4 82 10 00 LL [ 10 unknown bytes.  guess. ]
 
   Status Query
 
@@ -1869,6 +1663,26 @@ struct dyesub_backend mitsu9550_backend = {
  <- 21 2e 00 80 00 22 a8 0b  00 00 00 00 00 00 00 00
     00 00 00 00 00 00 00 00  00 00 00 QQ 00 00 00 00 :: QQ == Prints in job?
     00 00 00 00 00 00 00 00  00 00 NN NN 0A 00 00 01 :: NN NN = Remaining media
+
+  Status Query C (unknown)
+
+ -> 1b 56 36 00
+ <- ??? 48 bytes?
+
+  Status Query D (unknown)
+
+ -> 1b 56 20 00
+ <- ??? 48 bytes?
+
+  Status Query E (unknown)
+
+ -> 1b 56 33 00
+ <- ??? 48 bytes?
+
+  Status Query F (unknown, possibly lifetime print count?)
+
+ -> 1b 56 23 00
+ <- ??? 48 bytes?
 
   [[ Job Cancel ]]
 

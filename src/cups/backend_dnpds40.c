@@ -1,7 +1,7 @@
 /*
  *   Citizen / DNP Photo Printer CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013-2019 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2020 Solomon Peachy <pizza@shaftnet.org>
  *
  *   Development of this backend was sponsored by:
  *
@@ -46,10 +46,13 @@
 
 /* Private data structure */
 struct dnpds40_printjob {
+	size_t jobsize;
+	int copies;
+	int can_combine;
+
 	uint8_t *databuf;
 	int datalen;
 
-	int copies;
 	uint32_t dpi;
 	int matte;
 	int cutter;
@@ -57,6 +60,7 @@ struct dnpds40_printjob {
 	int fullcut;
 	int printspeed;
 	int can_rewind;
+
 	int buf_needed;
 	int cut_paper;
 };
@@ -68,6 +72,7 @@ struct dnpds40_ctx {
 	int iface;
 
 	int type;
+	int mfg;  /* 0 for dnp, 1 citizen, 2 other */
 
 	/* Version and whatnot */
 	char *serno;
@@ -97,6 +102,7 @@ struct dnpds40_ctx {
 	/* Printer capabilities */
 	uint32_t native_width;
 	uint32_t max_height;
+	int supports_600dpi;
 	int supports_6x9;
 	int supports_2x6;
 	int supports_3x5x2;
@@ -107,6 +113,7 @@ struct dnpds40_ctx {
 	int supports_fullcut;
 	int supports_rewind;
 	int supports_standby;
+	int supports_keepmode;
 	int supports_6x4_5;
 	int supports_mqty_default;
 	int supports_iserial;
@@ -115,10 +122,12 @@ struct dnpds40_ctx {
 	int supports_counterp;
 	int supports_adv_fullcut;
 	int supports_mediaoffset;
+	int supports_ctrld_ext;
 	int supports_media_ext;
 	int supports_printspeed;
 	int supports_lowspeed;
 	int supports_highdensity;
+	int supports_mediaclassrfid;
 	int supports_gamma;
 };
 
@@ -189,7 +198,9 @@ struct dnpds40_cmd {
 #define MULTICUT_S_8x10_75 26
 #define MULTICUT_S_8x4X3   28  // different than roll type.
 
+#ifndef min
 #define min(__x, __y) ((__x) < (__y)) ? __x : __y
+#endif
 
 /* Legacy spool file support */
 static int legacy_cw01_read_parse(struct dnpds40_printjob *job, int data_fd, int read_data);
@@ -202,13 +213,16 @@ static int dnpds40_query_markers(void *vctx, struct marker **markers, int *count
 
 #define JOB_EQUIV(__x)  if (job1->__x != job2->__x) goto done
 
-static struct dnpds40_printjob *combine_jobs(const struct dnpds40_printjob *job1,
-					     const struct dnpds40_printjob *job2)
+/* NOTE:  Does _not_ free the input jobs */
+static void *dnp_combine_jobs(const void *vjob1,
+			      const void *vjob2)
 {
+	const struct dnpds40_printjob *job1 = vjob1;
+	const struct dnpds40_printjob *job2 = vjob2;
 	struct dnpds40_printjob *newjob = NULL;
 	uint32_t new_multicut;
 	uint16_t new_w, new_h;
-	uint16_t gap_bytes;
+	int32_t gap_bytes;
 
 	/* Sanity check */
 	if (!job1 || !job2)
@@ -223,18 +237,9 @@ static struct dnpds40_printjob *combine_jobs(const struct dnpds40_printjob *job1
 	JOB_EQUIV(datalen); // <-- cheating a little?
 	// JOV_EQUIV(printspeed); <-- does it matter?
 
-	/* Any cutter means we shouldn't bother */
-	if (job1->fullcut || job1->cutter)
+	/* Any fancy cutter action means we pass */
+	if (job1->fullcut || job1->cutter > 120)
 		goto done;
-
-#if 0
-	// XXX TODO:  2x6*2 + 2x6*2 --> 8x6+cutter!
-	// problem is that 8x6" size is 4 rows smaller than 2* 4x6" prints, posing a problem.  Maybe cut off the top and bottom 2 rows?
-
-	/* Only handle cutter if it's for 2x6" strips */
-	if (job1->cutter != 0 && job1->cutter != 120)
-		goto done;
-#endif
 
 	/* Make sure we can combine these two prints */
 	switch (job1->multicut) {
@@ -245,19 +250,15 @@ static struct dnpds40_printjob *combine_jobs(const struct dnpds40_printjob *job1
 		gap_bytes = 0;
 		break;
 	case MULTICUT_6x4:
-#if 0
-		if (job1->cutter != 120) {
+		if (job1->cutter == 120) {
 			new_multicut = MULTICUT_6x8;
 			new_h = 2436;
-			gap_bytes = -4;
+			gap_bytes = -44;  /* Chop out the middle 44 rows */
 		} else {
-#endif
 			new_multicut = MULTICUT_6x4X2;
 			new_h = 2498;
 			gap_bytes = 18;
-#if 0
 		}
-#endif
 		new_w = 1920;
 		break;
 	case MULTICUT_6x4_5:
@@ -285,7 +286,6 @@ static struct dnpds40_printjob *combine_jobs(const struct dnpds40_printjob *job1
 		gap_bytes = 30;
 		break;
 	default:
-		// 2-up 8x6 prints too?
 		/* Everything else is NOT handled */
 		goto done;
 	}
@@ -306,9 +306,11 @@ static struct dnpds40_printjob *combine_jobs(const struct dnpds40_printjob *job1
 	}
 	memcpy(newjob, job1, sizeof(*newjob));
 
-	newjob->databuf = malloc(((new_w*new_h+1024+54+10))*3+1024);
+	newjob->databuf = malloc(((new_w*new_h+1024+54+10))*3+1024 + abs(gap_bytes));
 	newjob->datalen = 0;
 	newjob->multicut = new_multicut;
+	newjob->can_rewind = 0;
+	newjob->can_combine = 0;
 	if (!newjob->databuf) {
 		dnpds40_cleanup_job(newjob);
 		newjob = NULL;
@@ -344,15 +346,32 @@ static struct dnpds40_printjob *combine_jobs(const struct dnpds40_printjob *job1
 			newlen = cpu_to_le32(new_h);
 			memcpy(newjob->databuf + newjob->datalen + 32 + 22, &newlen, 4);
 
-			/* Insert gap/padding after first image */
-			memset(newjob->databuf + newjob->datalen + i, 0, gap_bytes);
-			newjob->datalen += gap_bytes;
+			if (gap_bytes > 0) {
+				/* Insert gap/padding after first image */
+				memset(newjob->databuf + newjob->datalen + i, 0xff, gap_bytes);
+				newjob->datalen += gap_bytes;
+			} else {
+//				uint8_t *ptrA = newjob->databuf + newjob->datalen + 1088;
+//				/* Back off by 1/2 the gap */
+//				memmove(ptrA, ptrA - (gap_bytes / 2), (i - 1088) + gap_bytes/2);
+				/* And chop the end off by half the gap */
+				newjob->datalen += gap_bytes / 2;
+			}
 
-			// locate job2's PLANE properly?  Assumption is it's in the same place.
+			/* Locate job2's PLANE -- Assume it's in the same place! */
 			ptr2 = job2->databuf + (ptr - job1->databuf);
+
 			/* Copy over job2's image data */
 			memcpy(newjob->databuf + newjob->datalen + i,
 			        ptr2 + 32 + 1088, i - 32 - 1088);
+
+			if (gap_bytes < 0) {
+				uint8_t *ptrA = newjob->databuf + newjob->datalen + i;
+				/* Back off by 1/2 the gap */
+				memmove(ptrA, ptrA - (gap_bytes / 2), (i - 1088) + gap_bytes/2);
+				/* And chop the end off by half the gap */
+				newjob->datalen += gap_bytes / 2;
+			}
 			newjob->datalen += i - 32 - 1088;  /* add in job2 length */
 		}
 
@@ -374,11 +393,10 @@ static void dnpds40_build_cmd(struct dnpds40_cmd *cmd, char *arg1, char *arg2, u
 	memcpy(cmd->arg1, arg1, min(strlen(arg1), sizeof(cmd->arg1)));
 	memcpy(cmd->arg2, arg2, min(strlen(arg2), sizeof(cmd->arg2)));
 	if (arg3_len) {
-		char buf[9];
+		char buf[11];
 		snprintf(buf, sizeof(buf), "%08u", arg3_len);
 		memcpy(cmd->arg3, buf, 8);
 	}
-
 }
 
 static void dnpds40_cleanup_string(char *start, int len)
@@ -398,17 +416,17 @@ static void dnpds40_cleanup_string(char *start, int len)
 	}
 }
 
-static const char *dnpds40_printer_type(int type)
+static const char *dnpds40_printer_type(int type, int mfg)
 {
 	switch(type) {
-	case P_DNP_DS40: return "DS40";
-	case P_DNP_DS80: return "DS80";
+	case P_DNP_DS40: return mfg == 1? "CX" : "DS40";
+	case P_DNP_DS80: return mfg == 1? "CW" : (mfg == 2 ? "CP3800" : "DS80");
 	case P_DNP_DS80D: return "DS80DX";
-	case P_DNP_DSRX1: return "DSRX1";
-	case P_DNP_DS620: return "DS620";
-	case P_DNP_DS820: return "DS820";
+	case P_DNP_DSRX1: return mfg == 1 ? "CY" : "DSRX1";
+	case P_DNP_DS620: return mfg == 1 ? "CX-02" : "DS620";
+	case P_DNP_DS820: return type == 1 ? "CX-02W" : "DS820";
 	case P_CITIZEN_CW01: return "CW01";
-	case P_CITIZEN_OP900II: return "OP900ii";
+	case P_CITIZEN_OP900II: return "CW-02 / OP900ii";
 	default: break;
 	}
 	return "Unknown";
@@ -447,7 +465,7 @@ static const char *dnpds620_media_extension_code(int media)
 	return "Unknown";
 }
 
-static const char *dnpds820_media_subtypes(int media)
+static const char *rfid_media_subtypes(int media)
 {
 	switch (media) {
 	case 1: return "SD";
@@ -790,6 +808,9 @@ static int dnpds40_attach(void *vctx, struct libusb_device_handle *dev, int type
 	ctx->type = type;
 	ctx->iface = iface;
 
+	/* All current models support 600dpi */
+	ctx->supports_600dpi = 1;
+
 	if (test_mode < TEST_MODE_NOATTACH) {
 		struct dnpds40_cmd cmd;
 		uint8_t *resp;
@@ -810,101 +831,11 @@ static int dnpds40_attach(void *vctx, struct libusb_device_handle *dev, int type
 			ctx->ver_major = atoi(ptr);
 			ptr = strtok(NULL, ".");
 			ctx->ver_minor = atoi(ptr);
-			free(resp);
-		} else {
-			return CUPS_BACKEND_FAILED;
-		}
-
-		/* Get Serial Number */
-		dnpds40_build_cmd(&cmd, "INFO", "SERIAL_NUMBER", 0);
-
-		resp = dnpds40_resp_cmd(ctx, &cmd, &len);
-		if (resp) {
-			dnpds40_cleanup_string((char*)resp, len);
-			ctx->serno = (char*) resp;
-			/* Do NOT free resp! */
-		} else {
-			return CUPS_BACKEND_FAILED;
-		}
-
-		/* Query Media Info */
-		dnpds40_build_cmd(&cmd, "INFO", "MEDIA", 0);
-
-		resp = dnpds40_resp_cmd(ctx, &cmd, &len);
-		if (resp) {
-			char tmp[4];
-
-			dnpds40_cleanup_string((char*)resp, len);
-
-			memcpy(tmp, resp + 4, 3);
-			tmp[3] = 0;
-
-			ctx->media = atoi(tmp);
-
-			/* Subtract out the "mark" type */
-			if (ctx->media & 1)
-				ctx->media--;
 
 			free(resp);
 		} else {
 			return CUPS_BACKEND_FAILED;
 		}
-
-		/* Try to figure out media subtype */
-		if (ctx->type == P_DNP_DS820) {
-			dnpds40_build_cmd(&cmd, "INFO", "MEDIA_CLASS_RFID", 0);
-			resp = dnpds40_resp_cmd(ctx, &cmd, &len);
-			if (!resp)
-				return CUPS_BACKEND_FAILED;
-
-			dnpds40_cleanup_string((char*)resp, len);
-			ctx->media_subtype = atoi((char*)resp);
-			free(resp);
-		}
-
-		if (ctx->type == P_DNP_DS80D) {
-			if (dnpds80dx_query_paper(ctx))
-				return CUPS_BACKEND_FAILED;
-		}
-
-#if (defined(DNP_ONLY) || defined(CITIZEN_ONLY))
-		{
-			char buf[256];
-			buf[0] = 0;
-			libusb_get_string_descriptor_ascii(dev, desc->iManufacturer, (unsigned char*)buf, STR_LEN_MAX);
-			sanitize_string(buf);
-#ifdef DNP_ONLY  /* Only allow DNP printers to work. */
-			if (strncmp(buf, "Dai", 3)) /* "Dai Nippon Printing" */
-				return CUPS_BACKEND_FAILED;
-#endif
-#ifdef CITIZEN_ONLY   /* Only allow CITIZEN printers to work. */
-			if (strncmp(buf, "CIT", 3)) /* "CITIZEN SYSTEMS" */
-				return CUPS_BACKEND_FAILED;
-#endif
-		}
-#endif
-	} else {
-		ctx->ver_major = 3;
-		ctx->ver_minor = 0;
-		ctx->version = strdup("UNKNOWN");
-		switch(ctx->type) {
-		case P_DNP_DS80D:
-			ctx->duplex_media = 200;
-			/* Intentional fallthrough */
-		case P_DNP_DS80:
-		case P_DNP_DS820:
-			ctx->media = 510; /* 8x12 */
-			break;
-		case P_DNP_DSRX1:
-			ctx->media = 310; /* 6x8 */
-			break;
-		default:
-			ctx->media = 400; /* 6x9 */
-			break;
-		}
-
-		if (getenv("MEDIA_CODE"))
-			ctx->media = atoi(getenv("MEDIA_CODE"));
 	}
 
 	/* Per-printer options */
@@ -980,6 +911,7 @@ static int dnpds40_attach(void *vctx, struct libusb_device_handle *dev, int type
 		else
 			ctx->supports_rewind = 1;
 		ctx->supports_standby = 1;
+		ctx->supports_keepmode = 1;
 		ctx->supports_iserial = 1;
 		ctx->supports_6x6 = 1;
 		ctx->supports_5x5 = 1;
@@ -1010,6 +942,7 @@ static int dnpds40_attach(void *vctx, struct libusb_device_handle *dev, int type
 		else
 			ctx->supports_rewind = 1;
 		ctx->supports_standby = 1;
+		ctx->supports_keepmode = 1;
 		ctx->supports_iserial = 1;
 		ctx->supports_adv_fullcut = 1;
 		ctx->supports_advmatte = 1;
@@ -1018,12 +951,126 @@ static int dnpds40_attach(void *vctx, struct libusb_device_handle *dev, int type
 		ctx->supports_printspeed = 1;
 		ctx->supports_lowspeed = 1;
 		ctx->supports_highdensity = 1;
+		ctx->supports_ctrld_ext = 1;
+		ctx->supports_mediaclassrfid = 1;
 		if (FW_VER_CHECK(0,50))
 			ctx->supports_gamma = 1;
 		break;
 	default:
 		ERROR("Unknown printer type %d\n", ctx->type);
 		return CUPS_BACKEND_FAILED;
+	}
+
+	if (test_mode < TEST_MODE_NOATTACH) {
+		struct dnpds40_cmd cmd;
+		uint8_t *resp;
+		int len = 0;
+
+		/* Get Serial Number */
+		dnpds40_build_cmd(&cmd, "INFO", "SERIAL_NUMBER", 0);
+
+		resp = dnpds40_resp_cmd(ctx, &cmd, &len);
+		if (resp) {
+			dnpds40_cleanup_string((char*)resp, len);
+			ctx->serno = (char*) resp;
+			/* Do NOT free resp! */
+		} else {
+			return CUPS_BACKEND_FAILED;
+		}
+
+		/* Query Media Info */
+		dnpds40_build_cmd(&cmd, "INFO", "MEDIA", 0);
+
+		resp = dnpds40_resp_cmd(ctx, &cmd, &len);
+		if (resp) {
+			char tmp[4];
+
+			dnpds40_cleanup_string((char*)resp, len);
+
+			memcpy(tmp, resp + 4, 3);
+			tmp[3] = 0;
+
+			ctx->media = atoi(tmp);
+
+			/* Subtract out the "mark" type */
+			if (ctx->media & 1)
+				ctx->media--;
+
+			free(resp);
+		} else {
+			return CUPS_BACKEND_FAILED;
+		}
+
+		/* Try to figure out media subtype */
+		if (ctx->supports_mediaclassrfid) {
+			dnpds40_build_cmd(&cmd, "INFO", "MEDIA_CLASS_RFID", 0);
+			resp = dnpds40_resp_cmd(ctx, &cmd, &len);
+			if (!resp)
+				return CUPS_BACKEND_FAILED;
+
+			dnpds40_cleanup_string((char*)resp, len);
+			ctx->media_subtype = atoi((char*)resp);
+			free(resp);
+		}
+
+		if (ctx->type == P_DNP_DS80D) {
+			if (dnpds80dx_query_paper(ctx))
+				return CUPS_BACKEND_FAILED;
+		}
+
+		/* Figure out actual Manufacturer */
+		{
+			struct libusb_device_descriptor desc;
+			struct libusb_device *udev;
+
+			udev = libusb_get_device(ctx->dev);
+			libusb_get_device_descriptor(udev, &desc);
+
+			char buf[STR_LEN_MAX + 1];
+			buf[0] = 0;
+			buf[STR_LEN_MAX] = 0;
+			libusb_get_string_descriptor_ascii(ctx->dev, desc.iManufacturer, (unsigned char*)buf, STR_LEN_MAX);
+
+			if (!strncmp(buf, "Dai", 3)) /* "Dai Nippon Printing" */
+				ctx->mfg = 0;
+			else if (!strncmp(buf, "CIT", 3)) /* "CITIZEN SYSTEMS" */
+				ctx->mfg = 1;
+			else if (!strncmp(buf, "M", 1)) /* "Mitsubishi" */
+				ctx->mfg = 2;
+			else
+				ctx->mfg = 3;
+
+#ifdef DNP_ONLY  /* Only allow DNP printers to work. */
+			if (ctx->mfg != 0)
+				return CUPS_BACKEND_FAILED;
+#endif
+#ifdef CITIZEN_ONLY   /* Only allow CITIZEN printers to work. */
+			if (ctx->mfg != 1)
+				return CUPS_BACKEND_FAILED
+#endif
+		}
+	} else {
+		ctx->ver_major = 3;
+		ctx->ver_minor = 0;
+		ctx->version = strdup("UNKNOWN");
+		switch(ctx->type) {
+		case P_DNP_DS80D:
+			ctx->duplex_media = 200;
+			/* Intentional fallthrough */
+		case P_DNP_DS80:
+		case P_DNP_DS820:
+			ctx->media = 510; /* 8x12 */
+			break;
+		case P_DNP_DSRX1:
+			ctx->media = 310; /* 6x8 */
+			break;
+		default:
+			ctx->media = 400; /* 6x9 */
+			break;
+		}
+
+		if (getenv("MEDIA_CODE"))
+			ctx->media = atoi(getenv("MEDIA_CODE"));
 	}
 
 	ctx->last_matte = -1;
@@ -1212,10 +1259,10 @@ static int dnpds40_attach(void *vctx, struct libusb_device_handle *dev, int type
 	}
 
 	/* Fill out marker message */
-	if (ctx->type == P_DNP_DS820) {
+	if (ctx->supports_mediaclassrfid) {
 		snprintf(ctx->media_text, sizeof(ctx->media_text),
 			 "%s %s", dnpds40_media_types(ctx->media),
-			 dnpds820_media_subtypes(ctx->media_subtype));
+			 rfid_media_subtypes(ctx->media_subtype));
 	} else {
 		snprintf(ctx->media_text, sizeof(ctx->media_text),
 			 "%s", dnpds40_media_types(ctx->media));
@@ -1225,7 +1272,7 @@ static int dnpds40_attach(void *vctx, struct libusb_device_handle *dev, int type
 	ctx->marker[0].name = ctx->media_text;
 	ctx->marker[0].numtype = ctx->media;
 	ctx->marker[0].levelmax = ctx->media_count_new;
-	ctx->marker[0].levelnow = -2;
+	ctx->marker[0].levelnow = CUPS_MARKER_UNKNOWN;
 	ctx->marker_count = 1;
 
 	if (ctx->type == P_DNP_DS80D) {
@@ -1233,7 +1280,7 @@ static int dnpds40_attach(void *vctx, struct libusb_device_handle *dev, int type
 		ctx->marker[1].name = dnpds80_duplex_media_types(ctx->duplex_media);
 		ctx->marker[1].numtype = ctx->duplex_media;
 		ctx->marker[1].levelmax = ctx->marker[0].levelmax/2;
-		ctx->marker[1].levelnow = -2;
+		ctx->marker[1].levelnow = CUPS_MARKER_UNKNOWN;
 		ctx->marker_count++;
 	}
 
@@ -1283,8 +1330,6 @@ static int dnpds40_read_parse(void *vctx, const void **vjob, int data_fd, int co
 	char buf[9] = { 0 };
 
 	struct dnpds40_printjob *job = NULL;
-	struct dyesub_joblist *list;
-	int can_combine = 0;
 
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
@@ -1295,6 +1340,7 @@ static int dnpds40_read_parse(void *vctx, const void **vjob, int data_fd, int co
 		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 	memset(job, 0, sizeof(*job));
+	job->jobsize = sizeof(*job);
 	job->printspeed = -1;
 
 	/* There's no way to figure out the total job length in advance, we
@@ -1517,9 +1563,7 @@ parsed:
 	}
 
 	/* Use the larger of the copy arguments */
-	if (job->copies > copies)
-		copies = job->copies;
-	else
+	if (job->copies < copies)
 		job->copies = copies;
 
 	/* Sanity check matte mode */
@@ -1542,6 +1586,13 @@ parsed:
 		else
 			job->printspeed = 0;
 	}
+
+	if (job->dpi == 600 && !ctx->supports_600dpi) {
+		ERROR("Printer does not support 600dpi!\n");
+		dnpds40_cleanup_job(job);
+		return CUPS_BACKEND_CANCEL;
+	}
+
 	/* And sanity-check whatever value is there */
 	if (job->printspeed == 0 && job->dpi == 600) {
 		job->printspeed = 1;
@@ -1841,32 +1892,9 @@ skip_checks:
 	DEBUG("job->dpi %u matte %d mcut %u cutter %d/%d, bufs %d spd %d\n",
 	      job->dpi, job->matte, job->multicut, job->cutter, job->fullcut, job->buf_needed, job->printspeed);
 
-	list = dyesub_joblist_create(&dnpds40_backend, ctx);
+	job->can_combine = job->can_rewind; /* Any rewindable size can be stacked */
 
-	can_combine = job->can_rewind; /* Any rewindable size can be stacked */
-
-	/* Try to combine prints */
-	if (job->copies > 1 && can_combine) {
-		struct dnpds40_printjob *combined;
-		combined = combine_jobs(job, job);
-		if (combined) {
-			combined->copies = job->copies / 2;
-			combined->can_rewind = 0;
-			dyesub_joblist_addjob(list, combined);
-
-			if (job->copies & 1) {
-				job->copies = 1;
-			} else {
-				dnpds40_cleanup_job(job);
-				job = NULL;
-			}
-		}
-	}
-	if (job) {
-		dyesub_joblist_addjob(list, job);
-	}
-
-	*vjob = list;
+	*vjob = job;
 
 	return CUPS_BACKEND_OK;
 }
@@ -2271,10 +2299,13 @@ static int dnpds40_get_sensors(struct dnpds40_ctx *ctx)
 static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 {
 	struct dnpds40_cmd cmd;
+	int cwd_extra = 0;
+	int cwd_index = 1;
+	uint8_t cwd_buf[5];
 	uint8_t *resp;
 	int len = 0;
 
-	INFO("Model: %s\n", dnpds40_printer_type(ctx->type));
+	INFO("Model: %s\n", dnpds40_printer_type(ctx->type, ctx->mfg));
 
 	/* Serial number already queried */
 	INFO("Serial Number: %s\n", ctx->serno);
@@ -2419,49 +2450,32 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 
 	free(resp);
 
-	/* Figure out control data and checksums */
+CWD_TOP:
+	/* Figure out color data and checksums */
+	if (ctx->supports_ctrld_ext) {
+		cwd_extra = 4;
+		snprintf((char*)cwd_buf, sizeof(cwd_buf), "%04d", cwd_index);
+	} else {
+		cwd_extra = 0;
+		cwd_buf[0] = 0;
+	}
 
 	/* 300 DPI */
-	dnpds40_build_cmd(&cmd, "TBL_RD", "CWD300_Version", 0);
+	dnpds40_build_cmd(&cmd, "TBL_RD", "CWD300_Version", cwd_extra);
 
-	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
+	resp = dnpds40_resp_cmd2(ctx, &cmd, &len, cwd_buf, cwd_extra);
 	if (!resp)
 		return CUPS_BACKEND_FAILED;
 
 	dnpds40_cleanup_string((char*)resp, len);
 
-	INFO("300 DPI Color Data: %s ", (char*)resp);
+	INFO("300 DPI Color Data (%s): %s ", rfid_media_subtypes(cwd_index), (char*)resp);
 
 	free(resp);
 
-	dnpds40_build_cmd(&cmd, "TBL_RD", "CWD300_Checksum", 0);
+	dnpds40_build_cmd(&cmd, "TBL_RD", "CWD300_Checksum", cwd_extra);
 
-	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
-	if (!resp)
-		return CUPS_BACKEND_FAILED;
-
-	dnpds40_cleanup_string((char*)resp, len);
-
-	DEBUG2("(%s)\n", (char*)resp);
-
-	free(resp);
-
-	/* 600 DPI */
-	dnpds40_build_cmd(&cmd, "TBL_RD", "CWD600_Version", 0);
-
-	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
-	if (!resp)
-		return CUPS_BACKEND_FAILED;
-
-	dnpds40_cleanup_string((char*)resp, len);
-
-	INFO("600 DPI Color Data: %s ", (char*)resp);
-
-	free(resp);
-
-	dnpds40_build_cmd(&cmd, "TBL_RD", "CWD600_Checksum", 0);
-
-	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
+	resp = dnpds40_resp_cmd2(ctx, &cmd, &len, cwd_buf, cwd_extra);
 	if (!resp)
 		return CUPS_BACKEND_FAILED;
 
@@ -2471,23 +2485,58 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 
 	free(resp);
 
-	if (ctx->supports_lowspeed) {
-		/* "Low Speed" */
-		dnpds40_build_cmd(&cmd, "TBL_RD", "CWD610_Version", 0);
+	if (ctx->supports_600dpi) {
+		/* 600 DPI */
+		dnpds40_build_cmd(&cmd, "TBL_RD", "CWD600_Version", cwd_extra);
 
-		resp = dnpds40_resp_cmd(ctx, &cmd, &len);
+		resp = dnpds40_resp_cmd2(ctx, &cmd, &len, cwd_buf, cwd_extra);
 		if (!resp)
 			return CUPS_BACKEND_FAILED;
 
 		dnpds40_cleanup_string((char*)resp, len);
 
-		INFO("Low Speed Color Data: %s ", (char*)resp);
+		INFO("600 DPI Color Data (%s): %s ", rfid_media_subtypes(cwd_index), (char*)resp);
 
 		free(resp);
 
-		dnpds40_build_cmd(&cmd, "TBL_RD", "CWD610_Checksum", 0);
+		dnpds40_build_cmd(&cmd, "TBL_RD", "CWD600_Checksum", cwd_extra);
 
-		resp = dnpds40_resp_cmd(ctx, &cmd, &len);
+		resp = dnpds40_resp_cmd2(ctx, &cmd, &len, cwd_buf, cwd_extra);
+		if (!resp)
+			return CUPS_BACKEND_FAILED;
+
+		dnpds40_cleanup_string((char*)resp, len);
+
+		DEBUG2("(%s)\n", (char*)resp);
+
+		free(resp);
+	}
+
+	if (ctx->supports_lowspeed) {
+		/* "Low Speed" */
+		if (ctx->supports_600dpi) {
+			dnpds40_build_cmd(&cmd, "TBL_RD", "CWD610_Version", cwd_extra);
+		} else {
+			dnpds40_build_cmd(&cmd, "TBL_RD", "CWD310_Version", cwd_extra);
+		}
+
+		resp = dnpds40_resp_cmd2(ctx, &cmd, &len, cwd_buf, cwd_extra);
+		if (!resp)
+			return CUPS_BACKEND_FAILED;
+
+		dnpds40_cleanup_string((char*)resp, len);
+
+		INFO("Low Speed Color Data (%s): %s ", rfid_media_subtypes(cwd_index), (char*)resp);
+
+		free(resp);
+
+		if (ctx->supports_600dpi) {
+			dnpds40_build_cmd(&cmd, "TBL_RD", "CWD610_Checksum", cwd_extra);
+		} else {
+			dnpds40_build_cmd(&cmd, "TBL_RD", "CWD310_Checksum", cwd_extra);
+		}
+
+		resp = dnpds40_resp_cmd2(ctx, &cmd, &len, cwd_buf, cwd_extra);
 		if (!resp)
 			return CUPS_BACKEND_FAILED;
 
@@ -2498,27 +2547,30 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 		free(resp);
 	}
 	if (ctx->supports_highdensity) {
-		uint8_t buf[5];
-		int i = 0;
-
-		snprintf((char*)buf, sizeof(buf), "%04d", i);
-
 		/* "High Density" */
-		dnpds40_build_cmd(&cmd, "TBL_RD", "CWD620_Version", 4);
+		if (ctx->supports_600dpi) {
+			dnpds40_build_cmd(&cmd, "TBL_RD", "CWD620_Version", cwd_extra);
+		} else {
+			dnpds40_build_cmd(&cmd, "TBL_RD", "CWD320_Version", cwd_extra);
+		}
 
-		resp = dnpds40_resp_cmd2(ctx, &cmd, &len, buf, 4);
+		resp = dnpds40_resp_cmd2(ctx, &cmd, &len, cwd_buf, cwd_extra);
 		if (!resp)
 			return CUPS_BACKEND_FAILED;
 
 		dnpds40_cleanup_string((char*)resp, len);
 
-		INFO("High Density Color Data: %s ", (char*)resp);
+		INFO("High Density Color Data (%s): %s ", rfid_media_subtypes(cwd_index), (char*)resp);
 
 		free(resp);
 
-		dnpds40_build_cmd(&cmd, "TBL_RD", "CWD620_Checksum", 4);
+		if (ctx->supports_600dpi) {
+			dnpds40_build_cmd(&cmd, "TBL_RD", "CWD620_Checksum", cwd_extra);
+		} else {
+			dnpds40_build_cmd(&cmd, "TBL_RD", "CWD320_Checksum", cwd_extra);
+		}
 
-		resp = dnpds40_resp_cmd2(ctx, &cmd, &len, buf, 4);
+		resp = dnpds40_resp_cmd2(ctx, &cmd, &len, cwd_buf, cwd_extra);
 		if (!resp)
 			return CUPS_BACKEND_FAILED;
 
@@ -2528,6 +2580,12 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 
 		free(resp);
 	}
+
+	if (cwd_extra && cwd_index == 1) {
+		cwd_index = 3;
+		goto CWD_TOP;
+	}
+
 	if (ctx->supports_gamma) {
 		/* "Low Speed" */
 		dnpds40_build_cmd(&cmd, "TBL_RD", "CTRLD_GAMMA16", 0);
@@ -2559,8 +2617,12 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 		INFO("Standby Transition time: %d minutes\n", i);
 
 		free(resp);
+	}
 
+	if (ctx->supports_keepmode) {
 		/* Get Media End Keep */
+		int i;
+
 		dnpds40_build_cmd(&cmd, "MNT_RD", "END_KEEP_MODE", 0);
 
 		resp = dnpds40_resp_cmd(ctx, &cmd, &len);
@@ -2678,8 +2740,8 @@ static int dnpds40_get_status(struct dnpds40_ctx *ctx)
 	}
 
 	/* Try to figure out media subtype */
-	if (ctx->type == P_DNP_DS820) {
-		INFO("Media Subtype: %s\n", dnpds820_media_subtypes(ctx->media_subtype));
+	if (ctx->supports_mediaclassrfid) {
+		INFO("Media Subtype: %s\n", rfid_media_subtypes(ctx->media_subtype));
 	}
 
 	/* Report Cut Media */
@@ -2715,7 +2777,7 @@ static int dnpds40_get_status(struct dnpds40_ctx *ctx)
 	}
 	INFO("Half-Size Prints Remaining on Media: %d\n", count);
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static int dnpds40_get_counters(struct dnpds40_ctx *ctx)
@@ -2855,7 +2917,7 @@ static int dnpds40_clear_counter(struct dnpds40_ctx *ctx, char counter)
 	if ((ret = dnpds40_do_cmd(ctx, &cmd, (uint8_t*)msg, 4)))
 		return ret;
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static int dnpds40_cancel_job(struct dnpds40_ctx *ctx)
@@ -2869,7 +2931,7 @@ static int dnpds40_cancel_job(struct dnpds40_ctx *ctx)
 	if ((ret = dnpds40_do_cmd(ctx, &cmd, NULL, 0)))
 		return ret;
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static int dnpds40_reset_printer(struct dnpds40_ctx *ctx)
@@ -2883,7 +2945,7 @@ static int dnpds40_reset_printer(struct dnpds40_ctx *ctx)
 	if ((ret = dnpds40_do_cmd(ctx, &cmd, NULL, 0)))
 		return ret;
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static int dnpds620_standby_mode(struct dnpds40_ctx *ctx, int delay)
@@ -2899,7 +2961,7 @@ static int dnpds620_standby_mode(struct dnpds40_ctx *ctx, int delay)
 	if ((ret = dnpds40_do_cmd(ctx, &cmd, (uint8_t*)msg, 8)))
 		return ret;
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static int dnpds620_media_keep_mode(struct dnpds40_ctx *ctx, int delay)
@@ -2915,7 +2977,7 @@ static int dnpds620_media_keep_mode(struct dnpds40_ctx *ctx, int delay)
 	if ((ret = dnpds40_do_cmd(ctx, &cmd, (uint8_t*)msg, 4)))
 		return ret;
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static int dnpds620_iserial_mode(struct dnpds40_ctx *ctx, int enable)
@@ -2931,7 +2993,7 @@ static int dnpds620_iserial_mode(struct dnpds40_ctx *ctx, int enable)
 	if ((ret = dnpds40_do_cmd(ctx, &cmd, (uint8_t*)msg, 8)))
 		return ret;
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static int dnpds40_set_counter_p(struct dnpds40_ctx *ctx, char *arg)
@@ -2948,7 +3010,7 @@ static int dnpds40_set_counter_p(struct dnpds40_ctx *ctx, char *arg)
 	if ((ret = dnpds40_do_cmd(ctx, &cmd, (uint8_t*)msg, 8)))
 		return ret;
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static void dnpds40_cmdline(void)
@@ -3068,7 +3130,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 		if (j) return j;
 	}
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static int dnpds40_query_markers(void *vctx, struct marker **markers, int *count)
@@ -3093,10 +3155,10 @@ static int dnpds40_query_markers(void *vctx, struct marker **markers, int *count
 			ctx->marker[1].levelnow = 0;
 			break;
 		case DUPLEX_UNIT_PAPER_PROTECTIVE:
-			ctx->marker[1].levelnow = -1;
+			ctx->marker[1].levelnow = CUPS_MARKER_UNAVAILABLE;
 			break;
 		case DUPLEX_UNIT_PAPER_PRESENT:
-			ctx->marker[1].levelnow = -3;
+			ctx->marker[1].levelnow = CUPS_MARKER_UNKNOWN_OK;
 			break;
 		}
 	}
@@ -3104,17 +3166,112 @@ static int dnpds40_query_markers(void *vctx, struct marker **markers, int *count
 	return CUPS_BACKEND_OK;
 }
 
+static int dnp_query_stats(void *vctx, struct printerstats *stats)
+{
+	struct dnpds40_cmd cmd;
+	struct dnpds40_ctx *ctx = vctx;
+	uint8_t *resp;
+	int len = 0;
+
+	/* Update marker info */
+	if (dnpds40_query_markers(ctx, NULL, NULL))
+		return CUPS_BACKEND_FAILED;
+
+	switch (ctx->mfg)
+	{
+	case 0: stats->mfg = "Dai Nippon Printing"; break;
+	case 1: stats->mfg = "Citizen Systems"; break;
+	case 2: stats->mfg = "Mitsubishi" ; break;
+	default: stats->mfg = "Unknown" ; break;
+	}
+
+	stats->model = dnpds40_printer_type(ctx->type, ctx->mfg);
+	stats->serial = ctx->serno;
+	stats->fwver = ctx->version; // XXX duplexer version?
+
+	stats->decks = ctx->type == P_DNP_DS80D ? 2: 1;
+	stats->mediatype[0] = ctx->marker[0].name;
+	stats->levelmax[0] = ctx->marker[0].levelmax;
+	stats->levelnow[0] = ctx->marker[0].levelnow;
+	stats->name[0] = "Roll";
+
+	/* Query status */
+	dnpds40_build_cmd(&cmd, "STATUS", "", 0);
+	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
+	if (!resp)
+		return CUPS_BACKEND_FAILED;
+	dnpds40_cleanup_string((char*)resp, len);
+	stats->status[0] = strdup(dnpds40_statuses(atoi((char*)resp)));
+	free(resp);
+
+	/* Query lifetime counter */
+	dnpds40_build_cmd(&cmd, "MNT_RD", "COUNTER_LIFE", 0);
+
+	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
+	if (!resp)
+		return CUPS_BACKEND_FAILED;
+
+	dnpds40_cleanup_string((char*)resp, len);
+
+	stats->cnt_life[0] = atoi((char*)resp+2);
+	free(resp);
+
+	if (ctx->type == P_DNP_DS80D) {
+		stats->name[0] = "Sheet";
+		stats->mediatype[1] = ctx->marker[1].name;
+		stats->levelmax[1] = ctx->marker[1].levelmax;
+		stats->levelnow[1] = ctx->marker[1].levelnow;
+		stats->status[1] = strdup(dnpds80_duplex_paper_status(ctx->duplex_media_status));
+
+		dnpds40_build_cmd(&cmd, "MNT_RD", "COUNTER_DUPLEX", 0);
+
+		resp = dnpds40_resp_cmd(ctx, &cmd, &len);
+		if (!resp)
+			return CUPS_BACKEND_FAILED;
+
+		dnpds40_cleanup_string((char*)resp, len);
+
+		stats->cnt_life[1] = atoi((char*)resp);
+
+		free(resp);
+	}
+
+	return CUPS_BACKEND_OK;
+}
+
+static int dnp_job_polarity(void *vctx)
+{
+	struct dnpds40_ctx *ctx = vctx;
+	struct dnpds40_cmd cmd;
+	uint8_t *resp;
+	int count;
+	int len = 0;
+
+	if (test_mode >= TEST_MODE_NOATTACH)
+		return 0;
+
+	if (!ctx->supports_rewind)
+		return 0;
+
+	/* Get Media remaining */
+	dnpds40_build_cmd(&cmd, "INFO", "RQTY", 0);
+
+	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
+	if (!resp)
+		return 0;
+
+	dnpds40_cleanup_string((char*)resp, len);
+	count = atoi((char*)resp+4);
+	free(resp);
+
+	return (count & 1);
+}
+
 static const char *dnpds40_prefixes[] = {
 	"dnp_citizen", "dnpds40",  // Family names, do *not* nuke.
-	"dnp-ds40", "dnp-ds80", "dnp-ds80dx", "dnp-ds620", "dnp-ds820", "dnp-dsrx1",
-	"citizen-cw-01", "citizen-cw-02", "citizen-cx-02",
-	"citizen-cx-02w",
 	// backwards compatibility
 	"dnpds80", "dnpds80dx", "dnpds620", "dnpds820", "dnprx1",
 	"citizencw01", "citizencw02", "citizencx02",
-	// These are all extras.
-	"citizen-cx", "citizen-cx-w", "citizen-cy", "citizen-cy-02",
-	"citizen-op900", "citizen-op900ii",
 	NULL
 };
 
@@ -3124,7 +3281,7 @@ static const char *dnpds40_prefixes[] = {
 #define USB_PID_DNP_DSRX1 0x0005 // Also Citizen CY
 #define USB_PID_DNP_DS80D 0x0008
 
-#define USB_PID_CITIZEN_CW01 0x0002 // Maybe others?
+#define USB_PID_CITIZEN_CW01 0x0002 // Also OP900
 #define USB_PID_CITIZEN_CW02 0x0006 // Also OP900II
 #define USB_PID_CITIZEN_CX02 0x000A
 #define USB_PID_CITIZEN_CX02W 0x000B
@@ -3136,9 +3293,8 @@ static const char *dnpds40_prefixes[] = {
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS-series / Citizen C-series",
-	.version = "0.123.2",
+	.version = "0.132",
 	.uri_prefixes = dnpds40_prefixes,
-	.flags = BACKEND_FLAG_JOBLIST,
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
 	.init = dnpds40_init,
@@ -3149,15 +3305,25 @@ struct dyesub_backend dnpds40_backend = {
 	.main_loop = dnpds40_main_loop,
 	.query_serno = dnpds40_query_serno,
 	.query_markers = dnpds40_query_markers,
+	.query_stats = dnp_query_stats,
+	.combine_jobs = dnp_combine_jobs,
+	.job_polarity = dnp_job_polarity,
 	.devices = {
-		{ USB_VID_CITIZEN, USB_PID_DNP_DS40, P_DNP_DS40, NULL, "dnp-ds40"},  // Also Citizen CX
-		{ USB_VID_CITIZEN, USB_PID_DNP_DS80, P_DNP_DS80, NULL, "dnp-ds80"},  // Also Citizen CX-W and Mitsubishi CP-3800DW
+		{ USB_VID_CITIZEN, USB_PID_DNP_DS40, P_DNP_DS40, NULL, "dnp-ds40"},
+		{ USB_VID_CITIZEN, USB_PID_DNP_DS40, P_DNP_DS40, NULL, "citizen-cx"}, /* Duplicate */
+		{ USB_VID_CITIZEN, USB_PID_DNP_DS80, P_DNP_DS80, NULL, "dnp-ds80"},
+		{ USB_VID_CITIZEN, USB_PID_DNP_DS80, P_DNP_DS80, NULL, "citizen-cx-w"}, /* Duplicate */
+		{ USB_VID_CITIZEN, USB_PID_DNP_DS80, P_DNP_DS80, NULL, "mitsubishi-cp3800dw"}, /* Duplicate */
 		{ USB_VID_CITIZEN, USB_PID_DNP_DS80D, P_DNP_DS80D, NULL, "dnp-ds80dx"},
-		{ USB_VID_CITIZEN, USB_PID_DNP_DSRX1, P_DNP_DSRX1, NULL, "dnp-dsrx1"}, // Also Citizen CY
+		{ USB_VID_CITIZEN, USB_PID_DNP_DSRX1, P_DNP_DSRX1, NULL, "dnp-dsrx1"},
+		{ USB_VID_CITIZEN, USB_PID_DNP_DSRX1, P_DNP_DSRX1, NULL, "citizen-cy"}, /* Duplicate */
+		{ USB_VID_CITIZEN, USB_PID_DNP_DSRX1, P_DNP_DSRX1, NULL, "citizen-cy-02"}, /* Duplicate */
 		{ USB_VID_DNP, USB_PID_DNP_DS620, P_DNP_DS620, NULL, "dnp-ds620"},
 		{ USB_VID_DNP, USB_PID_DNP_DS820, P_DNP_DS820, NULL, "dnp-ds820"},
-		{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW01, P_CITIZEN_CW01, NULL, "citizen-cw-01"}, // Also OP900 ?
-		{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW02, P_CITIZEN_OP900II, NULL, "citizen-cw-02"}, // Also OP900II
+		{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW01, P_CITIZEN_CW01, NULL, "citizen-cw-01"},
+		{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW01, P_CITIZEN_CW01, NULL, "citizen-op900"}, /* Duplicate */
+		{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW02, P_CITIZEN_OP900II, NULL, "citizen-cw-02"},
+		{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW02, P_CITIZEN_OP900II, NULL, "citizen-op900ii"}, /* Duplicate */
 		{ USB_VID_CITIZEN, USB_PID_CITIZEN_CX02, P_DNP_DS620, NULL, "citizen-cx-02"},
 		{ USB_VID_CITIZEN, USB_PID_CITIZEN_CX02W, P_DNP_DS820, NULL, "citizen-cx-02w"},
 		{ 0, 0, 0, NULL, NULL}
@@ -3281,7 +3447,7 @@ struct cw01_spool_hdr {
 	uint8_t  null0;
 	uint32_t plane_len; /* LE */
 	uint8_t  null1[4];
-};
+} __attribute__((packed));
 
 #define DPI_334 0
 #define DPI_600 1
@@ -3329,7 +3495,7 @@ struct rx1_spool_hdr {
 	uint32_t plane_len; /* LE */
         uint8_t  flags; /* combination of FLAG_?? */
 	uint8_t  null2[3];
-};
+} __attribute__((packed));
 
 #define FLAG_MATTE     0x02
 #define FLAG_NORETRY   0x08
@@ -3373,7 +3539,8 @@ struct ds620_spool_hdr {
 	uint32_t plane_len; /* LE */
 	uint8_t  flags; /* FLAG_?? */
 	uint8_t  null1[3];
-};
+} __attribute__((packed));
+
 #define FLAG_LUSTER    0x04
 #define FLAG_FINEMATTE 0x06
 

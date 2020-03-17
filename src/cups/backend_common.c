@@ -1,7 +1,7 @@
 /*
  *   CUPS Backend common code
  *
- *   Copyright (c) 2007-2019 Solomon Peachy <pizza@shaftnet.org>
+ *   Copyright (c) 2007-2020 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -30,9 +30,17 @@
 #include <errno.h>
 #include <signal.h>
 
-#define BACKEND_VERSION "0.98.1G"
+#define BACKEND_VERSION "0.106G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
+#endif
+
+#ifndef CORRTABLE_PATH
+#ifdef PACKAGE_DATA_DIR
+#define CORRTABLE_PATH PACKAGE_DATA_DIR "/backend_data"
+#else
+#error "Must define CORRTABLE_PATH or PACKAGE_DATA_DIR!"
+#endif
 #endif
 
 #define URB_XFER_SIZE  (64*1024)
@@ -52,11 +60,12 @@ int extra_type = -1;
 int ncopies = 1;
 int collate = 0;
 int test_mode = 0;
-int old_uri = 0;
 int quiet = 0;
 
+const char *corrtable_path = CORRTABLE_PATH;
 static int max_xfer_size = URB_XFER_SIZE;
 static int xfer_timeout = XFER_TIMEOUT;
+static int old_uri = 0;
 
 /* Support Functions */
 int backend_claim_interface(struct libusb_device_handle *dev, int iface,
@@ -164,7 +173,7 @@ int parse1284_data(const char *device_id, struct deviceid_dict* dict)
 	int num = 0;
 
 	if (!device_id)
-		return 0;
+		return CUPS_BACKEND_OK;
 
 	//[whitespace]key[whitespace]:[whitespace]value[whitespace];
 	while (*device_id && num < MAX_DICT) {
@@ -272,26 +281,27 @@ int send_data(struct libusb_device_handle *dev, uint8_t endp,
 
 	while (len) {
 		int len2 = (len > max_xfer_size) ? max_xfer_size: len;
-		int ret = libusb_bulk_transfer(dev, endp,
-					       (uint8_t*) buf, len2,
-					       &num, xfer_timeout);
 
-		if ((dyesub_debug > 1 && len < 4096) ||
+		if ((dyesub_debug > 1 && len2 < 4096) ||
 		    dyesub_debug > 2) {
-			int i = num;
+			int i = len2;
 
 			DEBUG("-> ");
 			while(i > 0) {
-				if ((num-i) != 0 &&
-				    (num-i) % 16 == 0) {
+				if ((len2-i) != 0 &&
+				    (len2-i) % 16 == 0) {
 					DEBUG2("\n");
 					DEBUG("   ");
 				}
-				DEBUG2("%02x ", buf[num-i]);
+				DEBUG2("%02x ", buf[len2-i]);
 				i--;
 			}
 			DEBUG2("\n");
 		}
+
+		int ret = libusb_bulk_transfer(dev, endp,
+					       (uint8_t*) buf, len2,
+					       &num, xfer_timeout);
 
 		if (ret < 0) {
 			ERROR("Failure to send data to printer (libusb error %d: (%d/%d to 0x%02x))\n", ret, num, len2, endp);
@@ -301,16 +311,18 @@ int send_data(struct libusb_device_handle *dev, uint8_t endp,
 		buf += num;
 	}
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 /* More stuff */
+#ifndef _WIN32
 static void sigterm_handler(int signum) {
 	UNUSED(signum);
 
 	terminate = 1;
 	INFO("Job Cancelled");
 }
+#endif
 
 static char *sanitize_string(char *str) {
 	int len = strlen(str);
@@ -389,7 +401,7 @@ static char *url_decode(char *str) {
 
 static int probe_device(struct libusb_device *device,
 			struct libusb_device_descriptor *desc,
-			const char *uri_prefix,
+			const char *make,
 			const char *prefix, const char *manuf_override,
 			int found, int num_claim_attempts,
 			int scan_only, const char *match_serno,
@@ -411,13 +423,36 @@ static int probe_device(struct libusb_device *device,
 	DEBUG("Probing VID: %04X PID: %04x\n", desc->idVendor, desc->idProduct);
 	STATE("+connecting-to-device\n");
 
-	if (libusb_open(device, &dev)) {
-		ERROR("Could not open device %04x:%04x (need to be root?)\n", desc->idVendor, desc->idProduct);
+	if ((i = libusb_open(device, &dev))) {
+#ifdef _WIN32
+		if (i == LIBUSB_ERROR_NOT_SUPPORTED)
+			ERROR("Could not open device %04x:%04x! (Genric USB driver missing, See README)\n", desc->idVendor, desc->idProduct);
+		else
+#endif
+			ERROR("Could not open device %04x:%04x - %d (need to be root?)\n", desc->idVendor, desc->idProduct, i);
 		found = -1;
 		goto abort;
 	}
 
-	/* XXX FIXME:  Iterate through possible configurations? */
+#if 0
+	/* XXX FIXME: Iterate through bNumConfigurations */
+
+	/* Force reset of device configuration */
+	{
+		int cfgnum = -1;
+		if (libusb_get_configuration(dev, &cfgnum)) {
+			ERROR("Can't get config!");
+		}
+		INFO("Config %d\n", config);
+		if (config < 1)
+			cfgnum = 1;
+		if (libusb_set_configuration(dev, cfgnum)) {
+			ERROR("Can't set config\n");
+		}
+	}
+#endif
+
+	/* Get descriptor for active configuration */
 	if (libusb_get_active_config_descriptor(device, &config)) {
 		found  = -1;
 		goto abort_close;
@@ -595,7 +630,7 @@ candidate:
 	if (scan_only) {
 		if (!old_uri) {
 			fprintf(stdout, "direct %s://%s/%s \"%s\" \"%s\" \"%s\" \"\"\n",
-				prefix, uri_prefix, serial,
+				prefix, make, serial,
 				descr, descr,
 				ieee_id ? ieee_id : "");
 		} else {
@@ -610,7 +645,7 @@ candidate:
 			strncpy(buf + k, product, sizeof(buf)-k);
 
 			fprintf(stdout, "direct %s://%s?serial=%s&backend=%s \"%s\" \"%s\" \"%s\" \"\"\n",
-				prefix, buf, serial, uri_prefix,
+				prefix, buf, serial, make,
 				descr, descr,
 				ieee_id? ieee_id : "");
 		}
@@ -714,6 +749,7 @@ static int find_and_enumerate(struct libusb_context *ctx,
 			      struct libusb_device ***list,
 			      const struct dyesub_backend *backend,
 			      const char *match_serno,
+			      const char *prefix,
 			      int scan_only, int num_claim_attempts,
 			      uint8_t *r_iface, uint8_t *r_altset,
 			      uint8_t *r_endp_up, uint8_t *r_endp_down)
@@ -721,7 +757,6 @@ static int find_and_enumerate(struct libusb_context *ctx,
 	int num;
 	int i, j = 0, k;
 	int found = -1;
-	const char *prefix = NULL;
 
 	if (test_mode >= TEST_MODE_NOATTACH) {
 		found = 1;
@@ -737,14 +772,36 @@ static int find_and_enumerate(struct libusb_context *ctx,
 	/* Enumerate and find suitable device */
 	num = libusb_get_device_list(ctx, list);
 
+	/* See if we can actually match on the supplied prefix! */
+	if (backend && prefix) {
+		int match = 0;
+		for (j = 0 ; backend->devices[j].vid ; j++) {
+			if (!strcmp(prefix,backend->devices[j].prefix)) {
+				match = 1;
+				break;
+			}
+		}
+		/* If not, clear it */
+		if (!match)
+			prefix = NULL;
+	} else {
+		prefix = NULL; /* Explicitly clear it */
+	}
+
 	for (i = 0 ; i < num ; i++) {
+		const char *foundprefix = NULL;
+		const char *probeprefix = NULL;
+
 		struct libusb_device_descriptor desc;
 		libusb_get_device_descriptor((*list)[i], &desc);
 
 		for (k = 0 ; backends[k] ; k++) {
 			if (backend && backend != backends[k])
 				continue;
+
 			for (j = 0 ; backends[k]->devices[j].vid ; j++) {
+				/* Try for extra pid/vid/type */
+				// XXX nuke entire extra_??? concept?
 				if (extra_pid != -1 &&
 				    extra_vid != -1 &&
 				    extra_type != -1) {
@@ -756,12 +813,15 @@ static int find_and_enumerate(struct libusb_context *ctx,
 						goto match;
 					}
 				}
+
+				/* Match based on VID/PID (and prefix, if specified) */
 				if (desc.idVendor == backends[k]->devices[j].vid &&
 				    (desc.idProduct == backends[k]->devices[j].pid ||
-				     desc.idProduct == 0xffff)) {
-					prefix = backends[k]->devices[j].prefix;
-					found = i;
-					goto match;
+				     desc.idProduct == 0xffff) &&
+				    (!prefix || !strcmp(prefix,backends[k]->devices[j].prefix))) {
+					    found = i;
+					    foundprefix = backends[k]->devices[j].prefix;
+					    goto match;
 				}
 			}
 		}
@@ -769,14 +829,16 @@ static int find_and_enumerate(struct libusb_context *ctx,
 		continue;
 
 	match:
-		found = probe_device((*list)[i], &desc, prefix,
+		probeprefix = foundprefix ? foundprefix : prefix;
+
+		found = probe_device((*list)[i], &desc, probeprefix,
 				     URI_PREFIX, backends[k]->devices[j].manuf_str,
 				     found, num_claim_attempts,
 				     scan_only, match_serno,
 				     r_iface, r_altset,
 				     r_endp_up, r_endp_down,
 				     backends[k]);
-
+		foundprefix = NULL;
 		if (found != -1 && !scan_only)
 			break;
 	}
@@ -795,17 +857,23 @@ static struct dyesub_backend *find_backend(const char *uri_prefix)
 	for (i = 0; ; i++) {
 		struct dyesub_backend *backend = backends[i];
 		const char **alias;
+		int j;
 		if (!backend)
 			return NULL;
 		for (alias = backend->uri_prefixes ; alias && *alias ; alias++) {
 			if (!strcmp(uri_prefix, *alias))
 				return backend;
 		}
+		for (j = 0 ; backend->devices[j].vid ; j++) {
+			if (!strcmp(uri_prefix,backend->devices[j].prefix)) {
+				return backend;
+			}
+		}
 	}
 	return NULL;
 }
 
-static int query_markers(struct dyesub_backend *backend, void *ctx, int full)
+static int query_markers(const struct dyesub_backend *backend, void *ctx, int full)
 {
 	struct marker *markers = NULL;
 	int marker_count = 0;
@@ -826,10 +894,100 @@ static int query_markers(struct dyesub_backend *backend, void *ctx, int full)
 	return CUPS_BACKEND_OK;
 }
 
+static void dump_stats(struct dyesub_backend *backend, struct printerstats *stats, int json)
+{
+	int i;
+	struct tm *tm;
+	char tmbuf[64];
+	tm = localtime(&stats->timestamp);
+
+	strftime(tmbuf, sizeof(tmbuf), "%Y-%m-%d %H:%M:%S", tm);
+
+	if (json) {
+		fprintf(stdout, "{\n");
+		fprintf(stdout, "\t\"backend\": \"%s\",\n", backend->name);
+		fprintf(stdout, "\t\"version\": \"%s / %s\",\n", BACKEND_VERSION, backend->version);
+		fprintf(stdout, "\t\"timestamp\": \"%s\",\n", tmbuf);
+		if (stats->mfg)
+			fprintf(stdout, "\t\"manufacturer\": \"%s\",\n", stats->mfg);
+		if (stats->model)
+			fprintf(stdout, "\t\"model\": \"%s\",\n", stats->model);
+		if (stats->serial)
+			fprintf(stdout, "\t\"serial\": \"%s\",\n", stats->serial);
+		if (stats->fwver)
+			fprintf(stdout, "\t\"firmware\": \"%s\",\n", stats->fwver);
+
+		fprintf(stdout, "\t\"decks\": {\n");
+		for (i = 0 ; i < stats->decks ; i++) {
+			fprintf(stdout, "\t\t\"%s\": {\n", stats->name[i]);
+			if (stats->status[i])
+				fprintf(stdout, "\t\t\t\"status\": \"%s\",\n", stats->status[i]);
+			fprintf(stdout, "\t\t\t\"mediatype\": \"%s\",\n", stats->mediatype[i]);
+			switch (stats->levelnow[i]) {
+			case CUPS_MARKER_UNKNOWN:
+				fprintf(stdout, "\t\t\t\"medialevel\": \"Unknown\",\n");
+				break;
+			case CUPS_MARKER_UNAVAILABLE:
+				fprintf(stdout, "\t\t\t\"medialevel\": \"Unavailable\",\n");
+				break;
+			case CUPS_MARKER_UNKNOWN_OK:
+				fprintf(stdout, "\t\t\t\"medialevel\": \"OK\",\n");
+				break;
+			default:
+				if (stats->levelnow[i] >= 0 && stats->levelmax[i] > 0) {
+					fprintf(stdout, "\t\t\t\"medialevel\": \"OK\",\n");
+					fprintf(stdout, "\t\t\t\"medialevelnow\": %d,\n", stats->levelnow[i]);
+					fprintf(stdout, "\t\t\t\"medialevelmax\": %d,\n", stats->levelmax[i]);
+				} else {
+				fprintf(stdout, "\t\t\t\"medialevel\": \"Illegal value\",\n");
+				}
+				break;
+			}
+			fprintf(stdout, "\t\t\t\"counters\": {\n");
+			if (stats->cnt_life[i] >= 0)
+				fprintf(stdout, "\t\t\t\t\"lifetime\": %d\n", stats->cnt_life[i]);
+
+			fprintf(stdout, "\t\t\t}\n");
+
+			fprintf(stdout, "\t\t}%c\n", (i < (stats->decks -1) ? ',': ' '));
+		}
+		fprintf(stdout, "\t}\n");
+		fprintf(stdout, "}\n");
+	} else {
+		fprintf(stdout, "Backend: %s\n", backend->name);
+		fprintf(stdout, "Version: %s / %s\n", BACKEND_VERSION, backend->version);
+		fprintf(stdout, "Timestamp: %s\n", tmbuf);
+		if (stats->mfg)
+			fprintf(stdout, "Manufacturer: %s\n", stats->mfg);
+		if (stats->model)
+			fprintf(stdout, "Model: %s\n", stats->model);
+		if (stats->serial)
+			fprintf(stdout, "Serial Number: %s\n", stats->serial);
+		if (stats->fwver)
+			fprintf(stdout, "Firmware Version: %s\n", stats->fwver);
+
+		for (i = 0 ; i < stats->decks ; i++) {
+			if (stats->status[i])
+				fprintf(stdout, "%s Status: %s\n", stats->name[i], stats->status[i]);
+			if (stats->cnt_life[i] >= 0)
+				fprintf(stdout, "%s Lifetime Prints: %d\n", stats->name[i], stats->cnt_life[i]);
+			fprintf(stdout, "%s Media Type: %s\n", stats->name[i], stats->mediatype[i]);
+			if (stats->levelnow[i] == CUPS_MARKER_UNKNOWN_OK)
+				fprintf(stdout, "%s Media Level: OK\n", stats->name[i]);
+			else if (stats->levelnow[i] == CUPS_MARKER_UNKNOWN)
+				fprintf(stdout, "%s Media Level: Unknown\n", stats->name[i]);
+			else if (stats->levelnow[i] == CUPS_MARKER_UNAVAILABLE)
+				fprintf(stdout, "%s Media Level: Unavailable\n", stats->name[i]);
+			else if (stats->levelnow[i] >= 0 && stats->levelmax[i] > 0)
+				fprintf(stdout, "%s Media Level: %d / %d\n", stats->name[i], stats->levelnow[i], stats->levelmax[i]);
+		}
+	}
+}
+
 void print_license_blurb(void)
 {
 	const char *license = "\n\
-Copyright 2007-2019 Solomon Peachy <pizza AT shaftnet DOT org>\n\
+Copyright 2007-2020 Solomon Peachy <pizza AT shaftnet DOT org>\n\
 \n\
 This program is free software; you can redistribute it and/or modify it\n\
 under the terms of the GNU General Public License as published by the Free\n\
@@ -842,8 +1000,7 @@ or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License\n\
 for more details.\n\
 \n\
 You should have received a copy of the GNU General Public License\n\
-along with this program.  If not, see https://www.gnu.org/licenses/.\n\
-\n          [http://www.gnu.org/licenses/gpl-2.0.html]\n\n";
+along with this program; if not, see <https://www.gnu.org/licenses/>.\n\n";
 
 	fprintf(stderr, "%s", license);
 }
@@ -853,7 +1010,9 @@ void print_help(const char *argv0, const struct dyesub_backend *backend)
 	struct libusb_context *ctx = NULL;
 	struct libusb_device **list = NULL;
 
-	const char *ptr = strrchr(argv0, '/');
+	const char *ptr = getenv("BACKEND");
+	if (!ptr)
+		ptr = strrchr(argv0, '/');
 	if (ptr)
 		ptr++;
 	else
@@ -893,11 +1052,14 @@ void print_help(const char *argv0, const struct dyesub_backend *backend)
 		}
 	} else {
 		const char **alias;
+		int j;
 		DEBUG("Standalone %s backend version %s\n",
 		      backend->name, backend->version);
 		DEBUG("\t supporting: ");
 		for (alias = backend->uri_prefixes ; alias && *alias ; alias++)
 			DEBUG2("%s ", *alias);
+		for (j = 0 ; backend->devices[j].vid ; j++)
+			DEBUG2("%s ", backend->devices[j].prefix);
 		DEBUG2("\n");
 
 		DEBUG("\t[ -D ] [ -G ] [ -f ]\n");
@@ -907,7 +1069,7 @@ void print_help(const char *argv0, const struct dyesub_backend *backend)
 	}
 
 	/* Probe for printers */
-	find_and_enumerate(ctx, &list, backend, NULL, 1, 1, NULL, NULL, NULL, NULL);
+	find_and_enumerate(ctx, &list, backend, NULL, ptr, 1, 1, NULL, NULL, NULL, NULL);
 	libusb_free_device_list(list, 1);
 }
 
@@ -951,11 +1113,144 @@ int parse_cmdstream(struct dyesub_backend *backend, void *backend_ctx, int fd)
 	return CUPS_BACKEND_OK;
 };
 
+static int handle_input(struct dyesub_backend *backend, void *backend_ctx,
+			char *fname, char *uri, char *type)
+{
+	int ret = CUPS_BACKEND_OK;
+#ifndef _WIN32
+	int i;
+#endif
+	const void *job;
+	int data_fd = fileno(stdin);
+	int read_page = 0, print_page = 0;
+	struct dyesub_joblist *jlist = NULL;
+
+	if (!fname) {
+		if (uri && strlen(uri))
+			ERROR("ERROR: No input file specified\n");
+		ret = CUPS_BACKEND_FAILED;
+		goto done;
+	}
+
+	if (ncopies < 1) {
+		ERROR("ERROR: need to have at least 1 copy!\n");
+		ret = CUPS_BACKEND_FAILED;
+		goto done;
+	}
+
+	/* Open file if not STDIN */
+	if (strcmp("-", fname)) {
+		data_fd = open(fname, O_RDONLY);
+		if (data_fd < 0) {
+			perror("ERROR:Can't open input file");
+			ret = CUPS_BACKEND_FAILED;
+			goto done;
+		}
+	}
+
+#ifndef _WIN32
+	/* Ensure we're using BLOCKING I/O */
+	i = fcntl(data_fd, F_GETFL, 0);
+	if (i < 0) {
+		perror("ERROR:Can't open input");
+		ret = CUPS_BACKEND_FAILED;
+		goto done;
+	}
+	i &= ~O_NONBLOCK;
+	i = fcntl(data_fd, F_SETFL, i);
+	if (i < 0) {
+		perror("ERROR:Can't open input");
+		ret = CUPS_BACKEND_FAILED;
+		goto done;
+	}
+
+	/* Ignore SIGPIPE */
+	signal(SIGPIPE, SIG_IGN);
+	signal(SIGTERM, sigterm_handler);
+#endif
+
+	/* Time for the main processing loop */
+	INFO("Printing started (%d copies)\n", ncopies);
+
+	/* See if it's a CUPS command stream, and if yes, handle it! */
+	if (type && !strcmp("application/vnd.cups-command", type))
+	{
+		ret = parse_cmdstream(backend, backend_ctx, data_fd);
+		goto done;
+	}
+
+	/* Emit a verbose marker dump */
+	ret = query_markers(backend, backend_ctx, 1);
+	if (ret)
+		goto done;
+
+newpage:
+	/* Read in data */
+	job = NULL;
+	if ((ret = backend->read_parse(backend_ctx, &job, data_fd, ncopies))) {
+		if (read_page)
+			goto done_multiple;
+		else
+			goto done;
+	}
+
+	if (!job) {
+		WARNING("No job returned by backend read_parse?\n");
+		goto newpage;
+	}
+
+	/* Create a joblist if needed */
+	if (!jlist) {
+		jlist = dyesub_joblist_create(backend, backend_ctx);
+	}
+	if (!jlist) {
+		backend->cleanup_job(job);
+		goto done;
+	}
+
+	/* Stick it onto the end of the list */
+	dyesub_joblist_appendjob(jlist, job);
+	read_page++;
+
+	INFO("Parsed page %d (%d copies)\n", read_page, ncopies);
+
+	/* If we get here, we can wait for another combined job, do so */
+	if (dyesub_joblist_canwait(jlist))
+		goto newpage;
+
+print_list:
+	/* Print the pagelist */
+	ret = dyesub_joblist_print(jlist, &print_page);
+	if (ret)
+		goto done;
+
+	dyesub_joblist_cleanup(jlist);
+	jlist = NULL;
+
+	/* Since we have no way of telling if there's more data remaining
+	   to be read (without actually trying to read it), always assume
+	   multiple print jobs. */
+	goto newpage;
+
+done_multiple:
+	if (jlist)
+		goto print_list;
+
+	close(data_fd);
+
+	ret = CUPS_BACKEND_OK;
+
+done:
+	if (jlist) dyesub_joblist_cleanup(jlist);
+
+	return ret;
+}
+
 int main (int argc, char **argv)
 {
 	struct libusb_context *ctx = NULL;
 	struct libusb_device **list = NULL;
-	struct libusb_device_handle *dev;
+	struct libusb_device_handle *dev = NULL;
 
 	struct dyesub_backend *backend = NULL;
 	void * backend_ctx = NULL;
@@ -963,27 +1258,24 @@ int main (int argc, char **argv)
 	uint8_t endp_up, endp_down;
 	uint8_t iface, altset;
 
-	int data_fd = fileno(stdin);
-
-	const void *job = NULL;
-
-	int i;
-
 	int ret = CUPS_BACKEND_OK;
 
 	int found = -1;
 	int jobid = 0;
-	int current_page = 0;
 
+	int stats_only = 0;
 	char *uri;
 	char *type;
 	char *fname = NULL;
 	char *use_serno = NULL;
+	const char *backend_str = NULL;
 	int  printer_type;
 
 	/* Handle environment variables  */
 	if (getenv("BACKEND_QUIET"))
 		quiet = atoi(getenv("BACKEND_QUIET"));
+	if (getenv("BACKEND_STATS_ONLY"))
+		stats_only = atoi(getenv("BACKEND_STATS_ONLY"));
 	if (getenv("DYESUB_DEBUG"))
 		dyesub_debug = atoi(getenv("DYESUB_DEBUG"));
 	if (getenv("EXTRA_PID"))
@@ -993,7 +1285,7 @@ int main (int argc, char **argv)
 	if (getenv("EXTRA_TYPE"))
 		extra_type = atoi(getenv("EXTRA_TYPE"));
 	if (getenv("BACKEND"))
-		backend = find_backend(getenv("BACKEND"));
+		backend_str = getenv("BACKEND");
 	if (getenv("FAST_RETURN"))
 		fast_return++;
 	if (getenv("MAX_XFER_SIZE"))
@@ -1004,15 +1296,20 @@ int main (int argc, char **argv)
 		test_mode = atoi(getenv("TEST_MODE"));
 	if (getenv("OLD_URI_SCHEME"))
 		old_uri = atoi(getenv("OLD_URI_SCHEME"));
+	if (getenv("CORRTABLE_PATH"))
+		corrtable_path = getenv("CORRTABLE_PATH");
 
 	if (test_mode >= TEST_MODE_NOATTACH && (extra_vid == -1 || extra_pid == -1)) {
 		ERROR("Must specify EXTRA_VID, EXTRA_PID in test mode > 1!\n");
 		exit(1);
 	}
 
+	if (stats_only)
+		quiet = 1;
+
 	DEBUG("Multi-Call Dye-sublimation CUPS Backend version %s\n",
 	      BACKEND_VERSION);
-	DEBUG("Copyright 2007-2019 Solomon Peachy\n");
+	DEBUG("Copyright 2007-2020 Solomon Peachy\n");
 	DEBUG("This free software comes with ABSOLUTELY NO WARRANTY! \n");
 	DEBUG("Licensed under the GNU GPL.  Run with '-G' for more details.\n");
 	DEBUG("\n");
@@ -1021,8 +1318,7 @@ int main (int argc, char **argv)
 	uri = getenv("DEVICE_URI");  /* CUPS backend mode! */
 	type = getenv("FINAL_CONTENT_TYPE"); /* CUPS content type -- ie raster or command */
 
-	if (uri) {
-		/* CUPS backend mode */
+	if (uri && strlen(uri)) {  /* CUPS backend mode */
 		int base = optind; /* ie 1 */
 		if (argc < 6) {
 			ERROR("Insufficient arguments\n");
@@ -1039,71 +1335,71 @@ int main (int argc, char **argv)
 
 		/* Figure out backend based on URI */
 		{
-			char *ptr = strstr(uri, "backend="), *ptr2;
-			if (ptr) { /* Original format */
-				ptr += 8;
-				ptr2 = strchr(ptr, '&');
-				if (ptr2)
+			char *ptr2;
+			backend_str = strstr(uri, "backend=");
+			if (backend_str) { /* Original format */
+				backend_str += 8;
+				ptr2 = strchr(backend_str, '&');
+				if (ptr2) {
+					use_serno = strstr(ptr2, "serial=");
 					*ptr2 = 0;
-
-				backend = find_backend(ptr);
-				if (!backend) {
-					ERROR("Invalid backend (%s)\n", ptr);
-					exit(1);
 				}
-				if (ptr2)
-					*ptr2 = '&';
 
-				use_serno = strchr(uri, '=');
-				if (!use_serno || !*(use_serno+1)) {
+				if (!use_serno)
+					use_serno = strstr(uri, "serial=");
+
+				if (!use_serno || !*(use_serno+7)) {
 					ERROR("Invalid URI (%s)\n", uri);
 					exit(1);
 				}
-				use_serno++;
-				ptr = strchr(use_serno, '&');
-				if (ptr)
-					*ptr = 0;
+				use_serno += 7;
+
 			} else { /* New format */
 				// prefix://backend/serno
-				ptr = strchr(uri, '/');
-				ptr += 2;
-				use_serno = strchr(ptr, '/');
+				backend_str = strchr(uri, '/');
+				backend_str += 2;
+				use_serno = strchr(backend_str, '/');
 				if (!use_serno || !*(use_serno+1)) {
 					ERROR("Invalid URI (%s)\n", uri);
 					exit(1);
 				}
 				*use_serno = 0;
 				use_serno++;
+			}
 
-				backend = find_backend(ptr);
-				if (!backend) {
-					ERROR("Invalid backend (%s)\n", ptr);
-					exit(1);
-				}
-
-				ptr = strchr(ptr, '?');
-				if (ptr)
-					*ptr = 0;
+			if (use_serno) {
+				ptr2 = strchr(use_serno, '&');
+				if (ptr2)
+					*ptr2 = 0;
 			}
 		}
 
 		/* Always enable fast return in CUPS mode */
 		fast_return++;
-	} else {
-		/* Standalone mode */
+
+	} else {  /* Standalone mode */
 
 		/* Try to guess backend from executable name */
-		if (!backend) {
-			char *ptr = strrchr(argv[0], '/');
-			if (ptr)
-				ptr++;
+		if (!backend_str) {
+			backend_str = strrchr(argv[0], '/');
+			if (backend_str)
+				backend_str++;
 			else
-				ptr = argv[0];
-			backend = find_backend(ptr);
+				backend_str = argv[0];
 		}
 
 		srand(getpid());
 		jobid = rand();
+	}
+
+	/* Finally, look up the backend */
+	backend = find_backend(backend_str);
+	if (!backend) {
+		if (uri && strlen(uri)) {
+			ERROR("Invalid backend requested (%s)\n", backend_str);
+			exit(1);
+		}
+		backend_str = NULL;
 	}
 
 #ifndef LIBUSB_PRE_1_0_10
@@ -1124,14 +1420,14 @@ int main (int argc, char **argv)
 	}
 
 	/* If we don't have a valid backend, print help and terminate */
-	if (!backend) {
+	if (!backend && !stats_only) {
 		print_help(argv[0], NULL); // probes all devices
 		ret = CUPS_BACKEND_OK;
 		goto done;
 	}
 
 	/* If we're in standalone mode, print help only if no args */
-	if (!uri) {
+	if ((!uri || !strlen(uri)) && !stats_only) {
 		if (argc < 2) {
 			print_help(argv[0], backend); // probes all devices
 			ret = CUPS_BACKEND_OK;
@@ -1140,7 +1436,7 @@ int main (int argc, char **argv)
 	}
 
 	/* Enumerate devices */
-	found = find_and_enumerate(ctx, &list, backend, use_serno, 0, NUM_CLAIM_ATTEMPTS, &iface, &altset, &endp_up, &endp_down);
+	found = find_and_enumerate(ctx, &list, backend, use_serno, backend_str, 0, NUM_CLAIM_ATTEMPTS, &iface, &altset, &endp_up, &endp_down);
 
 	if (found == -1) {
 		ERROR("Printer open failure (No matching printers found!)\n");
@@ -1186,7 +1482,7 @@ int main (int argc, char **argv)
 		if (ret) {
 			ERROR("Printer open failure (Unable to issue altsettinginterface) (%d)\n", ret);
 			ret = CUPS_BACKEND_RETRY;
-			goto done_close;
+			goto done_claimed;
 		}
 	}
 
@@ -1213,140 +1509,45 @@ bypass:
 	if (printer_type <= P_UNKNOWN) {
 		ERROR("Unable to lookup printer type\n");
 		ret = CUPS_BACKEND_FAILED;
-		goto done_close;
+		goto done_claimed;
 	}
 
-	/* Attach backend to device */
+	/* Attach backend to device */ // XXX pass backend_str?
 	if (backend->attach(backend_ctx, dev, printer_type, endp_up, endp_down, iface, jobid)) {
 		ERROR("Unable to attach to printer!\n");
 		ret = CUPS_BACKEND_FAILED;
-		goto done_close;
+		goto done_claimed;
 	}
 
 //	STATE("+org.gutenprint.attached-to-device\n");
 
-	if (!uri) {
-		if (backend->cmdline_arg(backend_ctx, argc, argv) < 0)
+	/* Dump stats only */
+	if (stats_only && backend->query_stats) {
+		struct printerstats stats;
+		memset(&stats, 0, sizeof(stats));
+
+		stats.timestamp = time(NULL);
+		ret = backend->query_stats(backend_ctx, &stats);
+		if (ret)
+			goto done_claimed;
+		dump_stats(backend, &stats, stats_only -1);
+		for (int i = 0 ; i < stats.decks ; i++) {
+			if (stats.status[i])
+				free(stats.status[i]); // the only dynamic member..
+		}
+		goto done_claimed;
+	}
+
+	if (!uri || !strlen(uri)) {
+		if (backend->cmdline_arg(backend_ctx, argc, argv))
 			goto done_claimed;
 
 		/* Grab the filename */
 		fname = argv[optind]; // XXX do this a smarter way?
 	}
 
-	if (!fname) {
-		if (uri)
-			ERROR("ERROR: No input file specified\n");
-		goto done_claimed;
-	}
-
-	if (ncopies < 1) {
-		ERROR("ERROR: need to have at least 1 copy!\n");
-		ret = CUPS_BACKEND_FAILED;
-		goto done_claimed;
-	}
-
-	/* Open file if not STDIN */
-	if (strcmp("-", fname)) {
-		data_fd = open(fname, O_RDONLY);
-		if (data_fd < 0) {
-			perror("ERROR:Can't open input file");
-			ret = CUPS_BACKEND_FAILED;
-			goto done_claimed;
-		}
-	}
-
-	/* Ensure we're using BLOCKING I/O */
-	i = fcntl(data_fd, F_GETFL, 0);
-	if (i < 0) {
-		perror("ERROR:Can't open input");
-		ret = CUPS_BACKEND_FAILED;
-		goto done;
-	}
-	i &= ~O_NONBLOCK;
-	i = fcntl(data_fd, F_SETFL, i);
-	if (i < 0) {
-		perror("ERROR:Can't open input");
-		ret = CUPS_BACKEND_FAILED;
-		goto done_claimed;
-	}
-
-	/* Ignore SIGPIPE */
-	signal(SIGPIPE, SIG_IGN);
-	signal(SIGTERM, sigterm_handler);
-
-	/* Time for the main processing loop */
-	INFO("Printing started (%d copies)\n", ncopies);
-
-	/* See if it's a CUPS command stream, and if yes, handle it! */
-	if (type && !strcmp("application/vnd.cups-command", type))
-	{
-		ret = parse_cmdstream(backend, backend_ctx, data_fd);
-		goto done_claimed;
-	}
-
-newpage:
-
-	/* Read in data */
-	if ((ret = backend->read_parse(backend_ctx, &job, data_fd, ncopies))) {
-		if (current_page)
-			goto done_multiple;
-		else
-			goto done_claimed;
-	}
-
-	/* The backend parser might not return a job due to job dependencies.
-	   Try and read another page. */
-	if (!job)
-		goto newpage;
-
-	/* Create our own joblist if necessary */
-	if (!(backend->flags & BACKEND_FLAG_JOBLIST)) {
-		struct dyesub_joblist *jlist = dyesub_joblist_create(backend, backend_ctx);
-		if (!jlist)
-			goto done_claimed;
-		dyesub_joblist_addjob(jlist, job);
-		job = jlist;
-	}
-
-	/* Dump the full marker dump */
-	ret = query_markers(backend, backend_ctx, !current_page);
-	if (ret)
-		goto done_claimed;
-
-	INFO("Printing page %d\n", ++current_page);
-
-	if (test_mode >= TEST_MODE_NOPRINT ) {
-		WARNING("**** TEST MODE, bypassing printing!\n");
-	} else {
-		ret = dyesub_joblist_print(job);
-	}
-
-	dyesub_joblist_cleanup(job);
-
-	if (ret)
-		goto done_claimed;
-
-	/* Log the completed page */
-	if (!uri)
-		PAGE("%d %d\n", current_page, ncopies);
-
-	/* Dump a marker status update */
-	ret = query_markers(backend, backend_ctx, !current_page);
-	if (ret)
-		goto done_claimed;
-
-	/* Since we have no way of telling if there's more data remaining
-	   to be read (without actually trying to read it), always assume
-	   multiple print jobs. */
-	goto newpage;
-
-done_multiple:
-	close(data_fd);
-
-	/* Done printing, log the total number of pages */
-	if (!uri)
-		PAGE("total %d\n", current_page * ncopies);
-	ret = CUPS_BACKEND_OK;
+	/* Parse the file passed in */
+	ret = handle_input(backend, backend_ctx, fname, uri, type);
 
 done_claimed:
 	if (test_mode < TEST_MODE_NOATTACH)
@@ -1425,7 +1626,7 @@ minimal:
 	for (i = 0 ; i < marker_count; i++) {
 		int val;
 		if (markers[i].levelmax <= 0 || markers[i].levelnow < 0)
-			val = (markers[i].levelnow <= 0) ? markers[i].levelnow : -1;
+			val = (markers[i].levelnow <= 0) ? markers[i].levelnow : CUPS_MARKER_UNAVAILABLE;
 		else if (markers[i].levelmax == 100)
 			val = markers[i].levelnow;
 		else
@@ -1441,13 +1642,13 @@ minimal:
 		ATTR("marker-message=");
 		for (i = 0 ; i < marker_count; i++) {
 			switch (markers[i].levelnow) {
-			case -1:
+			case CUPS_MARKER_UNAVAILABLE:
 				DEBUG2("'\"Unable to query remaining prints on %s media\"'", markers[i].name);
 				break;
-			case -2:
+			case CUPS_MARKER_UNKNOWN:
 				DEBUG2("'\"Unknown remaining prints on %s media\"'", markers[i].name);
 				break;
-			case -3:
+			case CUPS_MARKER_UNKNOWN_OK:
 				DEBUG2("'\"One or more remaining prints on %s media\"'", markers[i].name);
 				break;
 			default:
@@ -1459,6 +1660,11 @@ minimal:
 		}
 		DEBUG2("\n");
 	}
+
+	if (markers[0].levelnow == 0)
+		STATE("+media-empty\n");
+	else if (markers[0].levelnow > 0 || markers[0].levelnow == CUPS_MARKER_UNKNOWN_OK)
+		STATE("-media-empty\n");
 
 	/* If we're running as a CUPS backend, report the media type */
 	if (full && getenv("DEVICE_URI")) {
@@ -1564,27 +1770,182 @@ void dyesub_joblist_cleanup(const struct dyesub_joblist *list)
 	free((void*)list);
 }
 
-int dyesub_joblist_addjob(struct dyesub_joblist *list, const void *job)
+static int __dyesub_joblist_addjob(struct dyesub_joblist *list, const void *job)
 {
 	if (list->num_entries >= DYESUB_MAX_JOB_ENTRIES)
 		return 1;
 
 	list->entries[list->num_entries++] = job;
 
-	return 0;
+	return CUPS_BACKEND_OK;
+};
+
+static int __dyesub_append_job(struct dyesub_joblist *list, const void **vjob, int polarity)
+{
+	struct dyesub_job_common *job, *combined;
+	const struct dyesub_job_common *oldjob;
+
+	/* Create writable copy of the new job */
+	job = malloc(((const struct dyesub_job_common *)*vjob)->jobsize);
+	if (!job) {
+		ERROR("Memory allocation failure!\n");
+		return CUPS_BACKEND_RETRY_CURRENT;
+	}
+	memcpy(job, *vjob, ((const struct dyesub_job_common *)*vjob)->jobsize);
+
+	/* If we can't combine the new job, don't bother doing anything else */
+	if (!job->can_combine) {
+		free(job);
+		return CUPS_BACKEND_OK;
+	}
+
+	/* Get the old job */
+	oldjob = dyesub_joblist_popjob(list);
+
+	/* If we can't combine with it, carry on as before */
+	if (oldjob && (oldjob->copies > 1 || !oldjob->can_combine)) {
+		__dyesub_joblist_addjob(list, oldjob);
+		oldjob = NULL;
+	}
+
+	if (oldjob) {
+		/* Try to combine first copy with old job */
+		combined = list->backend->combine_jobs(oldjob, job);
+		if (combined) {
+			INFO("Successfully combined two jobs\n");
+			/* Success, add it to the list */
+	                __dyesub_joblist_addjob(list, combined);
+			combined = NULL;
+
+			/* Clean up the old job */
+			list->backend->cleanup_job(oldjob);
+
+			/* Anything left in the new job? */
+			job->copies--;
+			if (job->copies == 0) {
+				/* Nope, we're done */
+				list->backend->cleanup_job(job);
+			} else if (job->copies == 1) {
+				/* Just one, shove it on the list */
+				__dyesub_joblist_addjob(list, job);
+			}
+
+			goto done;
+		} else {
+			/* Failed to combine, restore old job and continue */
+			__dyesub_joblist_addjob(list, oldjob);
+		}
+
+		polarity = 0;
+	}
+
+	/* If we have no work to do, just return */
+	if (job->copies == 1) {
+		free(job);
+		return CUPS_BACKEND_OK;
+	}
+
+	/* Attempt to combine multiple copies! */
+	combined = list->backend->combine_jobs(job, job);
+
+	if (!combined) {
+		/* Failed, so return */
+		free(job);
+		return CUPS_BACKEND_OK;
+	}
+
+	INFO("Successfully combined multiple copies\n");
+	combined->copies = job->copies / 2;
+	job->copies = job->copies % 2;
+
+	/* Add the combined job at start if we can */
+	if (!polarity) {
+		__dyesub_joblist_addjob(list, combined);
+	}
+
+	/* Add the remainder, if any */
+	if (job->copies) {
+		__dyesub_joblist_addjob(list, job);
+	} else {
+		list->backend->cleanup_job(job);
+	}
+
+	/* Add combined job at end of we need to */
+	if (polarity) {
+		__dyesub_joblist_addjob(list, combined);
+	}
+
+done:
+	/* Clean up */
+	free((void*)*vjob);
+	*vjob = NULL;
+
+	return CUPS_BACKEND_OK;
 }
 
-int dyesub_joblist_print(const struct dyesub_joblist *list)
+int dyesub_joblist_appendjob(struct dyesub_joblist *list, const void *job)
+{
+	if (list->backend->combine_jobs) {
+		int polarity = 0;
+		if (list->backend->job_polarity)
+			polarity = list->backend->job_polarity(list->ctx);
+		__dyesub_append_job(list, &job, polarity);
+	}
+
+	if (job)
+		__dyesub_joblist_addjob(list, job);
+
+	return CUPS_BACKEND_OK;
+}
+
+const void *dyesub_joblist_popjob(struct dyesub_joblist *list)
+{
+	if (list->num_entries) {
+		return list->entries[--list->num_entries];
+	}
+
+	return NULL;
+}
+
+int dyesub_joblist_canwait(struct dyesub_joblist *list)
+{
+	if (list->num_entries == DYESUB_MAX_JOB_ENTRIES)
+		return 0;
+	if (!list->num_entries)
+		return 1;
+
+	return ((const struct dyesub_job_common *)(list->entries[list->num_entries - 1]))->can_combine;
+}
+
+int dyesub_joblist_print(const struct dyesub_joblist *list, int *pagenum)
 {
 	int i, j;
 	int ret;
+//	int pages = 0;
+
 	for (i = 0 ; i < list->copies ; i++) {
 		for (j = 0 ; j < list->num_entries ; j++) {
 			if (list->entries[j]) {
-				ret = list->backend->main_loop(list->ctx, list->entries[j]);
+				int copies = ((const struct dyesub_job_common *)(list->entries[j]))->copies;
+
+				INFO("Printing page %d (%d copies)\n", ++(*pagenum), copies);
+				if (test_mode >= TEST_MODE_NOPRINT )
+					WARNING("**** TEST MODE, bypassing printing!\n");
+
+				/* Print this page */
+				if (test_mode < TEST_MODE_NOPRINT ||
+				    list->backend->flags & BACKEND_FLAG_DUMMYPRINT) {
+					ret = list->backend->main_loop(list->ctx, list->entries[j]);
+					if (ret)
+						return ret;
+				}
+
+//				pages += copies;
+
+				/* Dump a marker status update */
+				ret = query_markers(list->backend, list->ctx, 0);
 				if (ret)
 					return ret;
-
 #if 0
 				/* Free up the job as we go along
 				   if we're on the final copy */
@@ -1596,5 +1957,8 @@ int dyesub_joblist_print(const struct dyesub_joblist *list)
 			}
 		}
 	}
+
+//	INFO("Printed %d total pages/copies\n", pages);
+
 	return CUPS_BACKEND_OK;
 }
