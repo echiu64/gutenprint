@@ -1682,9 +1682,11 @@ static int sony_upd895_parse_parameters(stp_vars_t *v)
     pd->privdata.sonymd.gamma = 0x02;
   } else if (!strcmp(gamma, "Soft")) {
     pd->privdata.sonymd.gamma = 0x01;
-  } else{
+  } else {
     pd->privdata.sonymd.gamma = 0x00;
   }
+
+  return 1;
 }
 
 static void sony_upd89x_printer_init_func(stp_vars_t *v, int is_897)
@@ -1966,9 +1968,11 @@ static int sony_upd897_parse_parameters(stp_vars_t *v)
     pd->privdata.sonymd.gamma = 0x01;
   } else if (!strcmp(gamma, "Softer")) {
     pd->privdata.sonymd.gamma = 0x04;
-  } else{
+  } else {
     pd->privdata.sonymd.gamma = 0x00;
   }
+
+  return 1;
 }
 
 /* Sony UP-D898 family */
