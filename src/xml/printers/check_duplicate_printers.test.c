@@ -37,7 +37,7 @@ main(int argc, char **argv)
       freopen(path, "w", stdout);
       dup2(1, 2);
     }
-  setenv("STP_CHECK_DUPLICATE_PRINTERS", "TRUE", 1);
+  putenv("STP_CHECK_DUPLICATE_PRINTERS=TRUE");
   fprintf(stderr, "CHECK_DUPLICATE_PRINTERS\n");
   stp_init();			/* Aborts if duplicates are found */
   return 0;
