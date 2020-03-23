@@ -51,9 +51,15 @@ main(int  argc,			    /* I - Number of command-line arguments */
   * Force POSIX locale, since stp_init incorrectly calls setlocale...
   */
 
+#if defined(HAVE_SETENV)
   (void) setenv("LANG", "C", 1);
   (void) setenv("LC_ALL", "C", 1);
   (void) setenv("LC_NUMERIC", "C", 1);
+#else
+  putenv("LANG=C");
+  putenv("LC_ALL=C");
+  putenv("LC_NUMERIC=C");
+#endif
 
  /*
   * Initialise libgutenprint

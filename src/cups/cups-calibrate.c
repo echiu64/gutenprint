@@ -330,6 +330,7 @@ main(int  argc,
   puts("Calibration is complete.");
   puts("");
 
+#if defined(HAVE_GETUID)
   if (getuid() == 0)
   {
     do
@@ -338,6 +339,7 @@ main(int  argc,
     while (tolower(line[0]) != 'n' && tolower(line[0]) != 'y');
   }
   else
+#endif
     line[0] = 'n';
 
   if (line[0] == 'n')
