@@ -30,6 +30,9 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
+#define _POSIX_THREAD_SAFE_FUNCTIONS /* For mingw and localtime_r */
+
 #include <gutenprint/gutenprint.h>
 #include "gutenprint-internal.h"
 #include <gutenprint/gutenprint-intl-internal.h>

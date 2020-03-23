@@ -21,6 +21,7 @@
  * 02110-1301 USA
  */
 
+#include <ctype.h>
 #include <stdio.h>
 #include <gutenprint/mxml.h>
 #include <gutenprint/util.h>
