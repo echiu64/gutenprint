@@ -363,9 +363,6 @@ static const dyesub_cap_t* dyesub_get_model_capabilities(const stp_vars_t *v, in
 static const overcoat_t* dyesub_get_overcoat_pattern(stp_vars_t *v);
 static const dyesub_media_t* dyesub_get_mediatype(stp_vars_t *v);
 static void  dyesub_nputc(stp_vars_t *v, char byte, int count);
-static void  dyesub_adjust_curve(stp_vars_t *v,
-				 const char *color_adj,
-				 const char *color_curve);
 
 static dyesub_privdata_t *
 get_privdata(stp_vars_t *v)
@@ -11244,23 +11241,6 @@ dyesub_swap_ints(int *a, int *b)
   int t = *a;
   *a = *b;
   *b = t;
-}
-
-static void
-dyesub_adjust_curve(stp_vars_t *v,
-		const char *color_adj,
-		const char *color_curve)
-{
-  stp_curve_t   *adjustment = NULL;
-
-  if (color_adj &&
-        !stp_check_curve_parameter(v, color_curve, STP_PARAMETER_ACTIVE))
-    {
-      adjustment = stp_curve_create_from_string(color_adj);
-      stp_set_curve_parameter(v, color_curve, adjustment);
-      stp_set_curve_parameter_active(v, color_curve, STP_PARAMETER_ACTIVE);
-      stp_curve_destroy(adjustment);
-    }
 }
 
 static void
