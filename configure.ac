@@ -895,6 +895,7 @@ AC_TYPE_SIZE_T
 dnl Checks for library functions.
 AC_CHECK_FUNCS([nanosleep poll usleep])
 AC_CHECK_FUNCS([getopt_long])
+AC_CHECK_FUNCS([setenv])
 
 dnl finite() is non-standard, isfinite() is ISO-standard, figure out
 dnl which to use...

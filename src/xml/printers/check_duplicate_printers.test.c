@@ -17,6 +17,7 @@
  *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <config.h>
 #include <gutenprint/gutenprint.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -37,7 +38,13 @@ main(int argc, char **argv)
       freopen(path, "w", stdout);
       dup2(1, 2);
     }
+
+#if defined(HAVE_SETENV)
+  setenv("STP_CHECK_DUPLICATE_PRINTERS", "TRUE", 1);
+#else
   putenv("STP_CHECK_DUPLICATE_PRINTERS=TRUE");
+#endif
+
   fprintf(stderr, "CHECK_DUPLICATE_PRINTERS\n");
   stp_init();			/* Aborts if duplicates are found */
   return 0;
