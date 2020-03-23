@@ -749,9 +749,9 @@ AC_DEFINE_UNQUOTED(PKGMODULEDIR, ["$PKGMODULEDIR"])
 
 dnl Compiler flags
 if test x$ac_compiler_gnu = "xyes"; then
-  STP_ADD_COMPILER_ARGS([-Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wwrite-strings -Werror-implicit-function-declaration -Winline -Wformat=2 -finline-limit=131072 -Wformat -Werror=format-security -Wmissing-prototypes],, [GNUCFLAGS])
+  STP_ADD_COMPILER_ARGS([-Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wwrite-strings -Werror-implicit-function-declaration -Winline -Wformat=2 -finline-limit=131072 -Wformat -Werror=format-security] -D_POSIX_C_SOURCE=200809L -std=c99,, [GNUCFLAGS])
   if test x${USE_MAINTAINER_MODE} = xyes ; then
-    STP_ADD_COMPILER_ARGS([-D_POSIX_C_SOURCE=200809L -std=c99 -pedantic -Waggregate-return -Wcast-qual -Wshadow -Wredundant-decls],, [GNUCFLAGS])
+    STP_ADD_COMPILER_ARGS([ -pedantic -Waggregate-return -Wcast-qual -Wshadow -Wredundant-decls],, [GNUCFLAGS])
   fi
   if test x$ENABLE_DEBUG = xyes ; then
     STP_ADD_COMPILER_ARG([-g])
