@@ -242,7 +242,7 @@ struct mitsud90_memcheck_resp {
 	uint8_t  mem_bad;  /* 0x00 is ok */
 } __attribute__((packed));
 
-const char *mitsud90_mecha_statuses(const uint8_t *code)
+static const char *mitsud90_mecha_statuses(const uint8_t *code)
 {
 	switch (code[0]) {
 	case D90_MECHA_STATUS_IDLE:
@@ -279,7 +279,7 @@ const char *mitsud90_mecha_statuses(const uint8_t *code)
 	}
 }
 
-const char *mitsud90_error_codes(const uint8_t *code)
+static const char *mitsud90_error_codes(const uint8_t *code)
 {
 	switch(code[0]) {
 	case D90_ERROR_STATUS_OK:

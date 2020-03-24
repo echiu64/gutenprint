@@ -385,7 +385,7 @@ done:
 
 #undef JOB_EQUIV
 
-static void dnpds40_build_cmd(struct dnpds40_cmd *cmd, char *arg1, char *arg2, uint32_t arg3_len)
+static void dnpds40_build_cmd(struct dnpds40_cmd *cmd, const char *arg1, const char *arg2, uint32_t arg3_len)
 {
 	memset(cmd, 0x20, sizeof(*cmd));
 	cmd->esc = 0x1b;

@@ -516,7 +516,7 @@ static int shinkos1245_get_matte(struct shinkos1245_ctx *ctx,
 	return CUPS_BACKEND_OK;
 }
 
-static char* shinkos1245_tonecurves(int type, int table)
+static const char* shinkos1245_tonecurves(int type, int table)
 {
 	switch (type) {
 	case TONE_TABLE_STANDARD:
@@ -554,7 +554,7 @@ static char* shinkos1245_tonecurves(int type, int table)
 static void shinkos1245_dump_status(struct shinkos1245_ctx *ctx,
 				    struct shinkos1245_resp_status *sts)
 {
-	char *detail;
+	const char *detail;
 	switch (sts->print_status) {
 	case STATUS_PRINTING:
 		detail = "Printing";
@@ -861,7 +861,7 @@ static void shinkos1245_cmdline(void)
 	DEBUG("\t\t[ -L filename ]  # Set current tone curve\n");
 }
 
-int shinkos1245_cmdline_arg(void *vctx, int argc, char **argv)
+static int shinkos1245_cmdline_arg(void *vctx, int argc, char **argv)
 {
 	struct shinkos1245_ctx *ctx = vctx;
 	int i, j = 0;

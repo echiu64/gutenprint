@@ -140,8 +140,8 @@ struct magicard_resp_header {
 };
 
 struct magicard_requests {
-	char *key;
-	char *desc;
+	const char *key;
+	const char *desc;
 	uint8_t type;
 };
 
@@ -200,7 +200,7 @@ static struct magicard_requests magicard_sta_requests[] = {
 
 /* Helper functions */
 static int magicard_build_cmd(uint8_t *buf,
-			       char *cmd, char *subcmd, char *arg)
+			      const char *cmd, const char *subcmd, const char *arg)
 {
 	struct magicard_cmd_header *hdr = (struct magicard_cmd_header *) buf;
 
@@ -219,7 +219,7 @@ static int magicard_build_cmd(uint8_t *buf,
 }
 
 static int magicard_build_cmd_simple(uint8_t *buf,
-				     char *cmd)
+				     const char *cmd)
 {
 	struct magicard_cmd_simple_header *hdr = (struct magicard_cmd_simple_header *) buf;
 	int len = strlen(cmd);

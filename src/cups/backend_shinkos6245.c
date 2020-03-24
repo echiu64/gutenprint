@@ -867,7 +867,7 @@ static void shinkos6245_cmdline(void)
 //	DEBUG("\t\t[ -Z ]           # Dump all parameters\n");
 }
 
-int shinkos6245_cmdline_arg(void *vctx, int argc, char **argv)
+static int shinkos6245_cmdline_arg(void *vctx, int argc, char **argv)
 {
 	struct shinkos6245_ctx *ctx = vctx;
 	int i, j = 0;

@@ -69,10 +69,10 @@ struct mitsu70x_printjob {
 	int sharpen; /* ie mhdr.sharpen - 1 */
 	int reverse;
 
-	char *laminatefname;
-	char *lutfname;
-	char *cpcfname;
-	char *ecpcfname;
+	const char *laminatefname;
+	const char *lutfname;
+	const char *cpcfname;
+	const char *ecpcfname;
 };
 
 struct mitsu70x_ctx {
@@ -95,8 +95,8 @@ struct mitsu70x_ctx {
 
 	struct mitsu_lib lib;
 
-	char *last_cpcfname;
-	char *last_ecpcfname;
+	const char *last_cpcfname;
+	const char *last_ecpcfname;
 
 	struct BandImage output;
 };

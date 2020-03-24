@@ -772,7 +772,7 @@ int sinfonia_query_media(struct sinfonia_usbdev *dev,
 	return CUPS_BACKEND_OK;
 }
 
-const char *dummy_error_codes(uint8_t major, uint8_t minor)
+static const char *dummy_error_codes(uint8_t major, uint8_t minor)
 {
 	UNUSED(major);
 	UNUSED(minor);

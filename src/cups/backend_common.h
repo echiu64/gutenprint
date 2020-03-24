@@ -191,7 +191,7 @@ struct printerstats {
 	const char *fwver;    /* Firmware Version */
 	uint8_t decks;        /* Number of "decks" (1 or 2) */
 
-	char *name[DECKS_MAX];        /* Name */
+	const char *name[DECKS_MAX];  /* Name */
 	char *status[DECKS_MAX];      /* Status (dynamic) */
 	const char *mediatype[DECKS_MAX]; /* Media Type */
 	int32_t levelmax[DECKS_MAX];  /* Max media count (-1 if unknown) */

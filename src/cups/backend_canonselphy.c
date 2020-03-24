@@ -69,7 +69,7 @@
 
 struct printer_data {
 	int  type;  /* P_??? */
-	char *model; /* eg "SELPHY ES1" */
+	const char *model; /* eg "SELPHY ES1" */
 	uint16_t init_length;
 	uint16_t  foot_length;
 	int16_t init_readback[READBACK_LEN];
@@ -84,10 +84,10 @@ struct printer_data {
 	int8_t  paper_code_offset; /* Offset in readback for paper type */
 	int8_t  paper_code_offset2; /* Offset in readback for paper type (2nd) */
 	uint8_t (*error_detect)(uint8_t *rdbuf);
-	char    *(*pgcode_names)(uint8_t *rdbuf, struct printer_data *printer, int *numtype);
+	const char    *(*pgcode_names)(uint8_t *rdbuf, struct printer_data *printer, int *numtype);
 };
 
-static char *generic_pgcode_names(uint8_t *rdbuf, struct printer_data *printer, int *numtype)
+static const char *generic_pgcode_names(uint8_t *rdbuf, struct printer_data *printer, int *numtype)
 {
 	uint8_t pgcode = 0, pgcode2 = 0;
 
@@ -228,7 +228,7 @@ static uint8_t cp790_error_detect(uint8_t *rdbuf)
 	return CUPS_BACKEND_OK;
 }
 
-static char *cp10_pgcode_names(uint8_t *rdbuf, struct printer_data *printer, int *numtype)
+static const char *cp10_pgcode_names(uint8_t *rdbuf, struct printer_data *printer, int *numtype)
 {
 	UNUSED(rdbuf);
 	UNUSED(printer);
@@ -607,8 +607,6 @@ static void *canonselphy_init(void)
 	return ctx;
 }
 
-extern struct dyesub_backend canonselphy_backend;
-
 static int canonselphy_attach(void *vctx, struct libusb_device_handle *dev, int type,
 			      uint8_t endp_up, uint8_t endp_down, int iface, uint8_t jobid)
 {
@@ -684,7 +682,7 @@ static void canonselphy_cleanup_job(const void *vjob) {
 	if (job->footer)
 		free(job->footer);
 
-	free((void*)job);
+	free((void*)vjob);
 }
 
 static int canonselphy_read_parse(void *vctx, const void **vjob, int data_fd, int copies)

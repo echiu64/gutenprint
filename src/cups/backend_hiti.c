@@ -31,6 +31,9 @@
 
 #include "backend_common.h"
 
+// We should use nanosleep everywhere properly.
+#define __usleep(__x) { struct timespec t = { 0, (__x) * 1000 } ; nanosleep (&t, NULL); }
+
 /* Private structures */
 struct hiti_cmd {
 	uint8_t hdr;    /* 0xa5 */
@@ -422,7 +425,7 @@ static int hiti_docmd(struct hiti_ctx *ctx, uint16_t cmdid, uint8_t *buf, uint16
 		return ret;
 	}
 
-	usleep(10*1000);
+	__usleep(10*1000);
 
 	/* Read back command */
 	ret = read_data(ctx->dev, ctx->endp_up, cmdbuf, 6, &num);
@@ -465,7 +468,7 @@ static int hiti_docmd_resp(struct hiti_ctx *ctx, uint16_t cmdid,
 		return CUPS_BACKEND_FAILED;
 	}
 
-	usleep(10*1000);
+	__usleep(10*1000);
 
 	/* Read back the data*/
 	ret = read_data(ctx->dev, ctx->endp_up, respbuf, *resplen, &num);
@@ -506,7 +509,7 @@ static int hiti_sepd(struct hiti_ctx *ctx, uint32_t buf_len,
 		return ret;
 	}
 
-	usleep(10*1000);
+	__usleep(10*1000);
 
 	/* Read back command */
 	ret = read_data(ctx->dev, ctx->endp_up, cmdbuf, 6, &num);
@@ -889,8 +892,6 @@ static void *hiti_init(void)
 	return ctx;
 }
 
-extern struct dyesub_backend hiti_backend;
-
 static int hiti_attach(void *vctx, struct libusb_device_handle *dev, int type,
 		       uint8_t endp_up, uint8_t endp_down, int iface, uint8_t jobid)
 {
@@ -1137,7 +1138,7 @@ static int hiti_seht2(struct hiti_ctx *ctx, uint8_t plane,
 		return ret;
 	}
 
-	usleep(10*1000);
+	__usleep(10*1000);
 
 	/* Read back command */
 	ret = read_data(ctx->dev, ctx->endp_up, cmdbuf, 6, &num);
@@ -1876,7 +1877,7 @@ resend_y:
 	ret = send_data(ctx->dev, ctx->endp_down, job->databuf + sent, rows * cols);
 	if (ret)
 		return CUPS_BACKEND_FAILED;
-	usleep(200*1000);
+	__usleep(200*1000);
 	sent += rows * cols;
 	ret = hiti_query_status(ctx, sts, &err);
 	if (ret)
@@ -1903,7 +1904,7 @@ resend_m:
 	if (ret)
 		return CUPS_BACKEND_FAILED;
 	sent += rows * cols;
-	usleep(200*1000);
+	__usleep(200*1000);
 	ret = hiti_query_status(ctx, sts, &err);
 	if (ret)
 		return ret;
@@ -1928,7 +1929,7 @@ resend_c:
 	ret = send_data(ctx->dev, ctx->endp_down, job->databuf + sent, rows * cols);
 	if (ret)
 		return CUPS_BACKEND_FAILED;
-	usleep(200*1000);
+	__usleep(200*1000);
 	sent += rows * cols;
 	ret = hiti_query_status(ctx, sts, &err);
 	if (ret)

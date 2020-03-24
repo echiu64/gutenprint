@@ -269,7 +269,7 @@ static int kodak68x0_reset(struct kodak6800_ctx *ctx)
 
 static void kodak68x0_dump_status(struct kodak6800_ctx *ctx, struct kodak68x0_status_readback *status)
 {
-	char *detail;
+	const char *detail;
 
 	switch (status->status) {
         case STATUS_PRINTING:

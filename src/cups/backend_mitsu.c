@@ -140,7 +140,7 @@ int mitsu_destroylib(struct mitsu_lib *lib)
 	return CUPS_BACKEND_OK;
 }
 
-int mitsu_apply3dlut(struct mitsu_lib *lib, char *lutfname, uint8_t *databuf,
+int mitsu_apply3dlut(struct mitsu_lib *lib, const char *lutfname, uint8_t *databuf,
 		     uint16_t cols, uint16_t rows, uint16_t stride,
 		     int rgb_bgr)
 {

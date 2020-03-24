@@ -260,7 +260,7 @@ static int mitsu98xx_fillmatte(struct mitsu9550_printjob *job)
 }
 
 static int mitsu9550_get_status(struct mitsu9550_ctx *ctx, uint8_t *resp, int status, int status2, int media);
-static char *mitsu9550_media_types(uint8_t type, uint8_t is_s);
+static const char *mitsu9550_media_types(uint8_t type, uint8_t is_s);
 
 static void *mitsu9550_init(void)
 {
@@ -660,7 +660,7 @@ static int mitsu9550_get_status(struct mitsu9550_ctx *ctx, uint8_t *resp, int st
 	return CUPS_BACKEND_OK;
 }
 
-static char *mitsu9550_media_types(uint8_t type, uint8_t is_s)
+static const char *mitsu9550_media_types(uint8_t type, uint8_t is_s)
 {
 	if (is_s) {
 		switch (type & 0xf) { /* values can be 0x0? or 0x4? */

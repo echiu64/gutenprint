@@ -248,7 +248,7 @@ static void kodak1400_cmdline(void)
 	DEBUG("\t\t[ -C filename ]  # Set tone curve\n");
 }
 
-int kodak1400_cmdline_arg(void *vctx, int argc, char **argv)
+static int kodak1400_cmdline_arg(void *vctx, int argc, char **argv)
 {
 	struct kodak1400_ctx *ctx = vctx;
 	int i, j = 0;

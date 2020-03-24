@@ -112,7 +112,7 @@ struct s2145_readtone_cmd {
 #define FWINFO_TARGET_USB_APP   0x06
 #define FWINFO_TARGET_TABLES    0x07
 
-static char *fwinfo_targets (uint8_t v) {
+static const char *fwinfo_targets (uint8_t v) {
 	switch (v) {
 	case FWINFO_TARGET_MAIN_BOOT:
 		return "Main Boot";
@@ -747,7 +747,7 @@ static void shinkos2145_cmdline(void)
 	DEBUG("\t\t[ -X jobid ]     # Abort a printjob\n");
 }
 
-int shinkos2145_cmdline_arg(void *vctx, int argc, char **argv)
+static int shinkos2145_cmdline_arg(void *vctx, int argc, char **argv)
 {
 	struct shinkos2145_ctx *ctx = vctx;
 	int i, j = 0;

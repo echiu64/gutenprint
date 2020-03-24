@@ -153,7 +153,7 @@ static void upd_cleanup_job(const void *vjob)
 // total prints (lifetime)
 // f/w version
 
-static char* upd895_statuses(uint8_t code)
+static const char* upd895_statuses(uint8_t code)
 {
 	switch (code) {
 	case UPD_STS1_IDLE:
