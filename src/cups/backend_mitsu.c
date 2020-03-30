@@ -9,7 +9,7 @@
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
- *   Software Foundation; either version 3 of the License, or (at your option)
+ *   Software Foundation; either version 2 of the License, or (at your option)
  *   any later version.
  *
  *   This program is distributed in the hope that it will be useful, but
@@ -20,7 +20,7 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program; if not, see <https://www.gnu.org/licenses/>.
  *
- *   SPDX-License-Identifier: GPL-3.0+
+ *   SPDX-License-Identifier: GPL-2.0+
  *
  */
 
@@ -280,12 +280,20 @@ const char *mitsu_media_types(int printer, uint8_t brand, uint8_t type)
 			return "R2L-CF460/5R (5x7)";
 		else if (type == 0x0f)
 			return "R68-CF400/6R (6x8)";
+	} else if (brand == 0xd1) { /* Mitsubishi (D70/D80 -S series) */
+		if (type == 0x02)
+			return "CK-D715 (4x6)";
+		else if (type == 0x04)
+			return "CK-D718 (5x7)";
+		else if (type == 0x05)
+			return "CK-D723 (6x9)";
+		else if (type == 0x0f)
+			return "CK-D720 (6x8)";
 	}
 
 	return "Unknown";
 
-// Also CK-D715, CK-D718, CK-D720, CK-D723 (4x6,5x8,6x8,6x9) for D70-S model
-//      CK-D746-U for D70-U model
+// Also CK-D746-U for D70-U model
 //      CK-D820 (6x8) for D80-S model
 // D90 can use _all_ of these types except for the -U!
 

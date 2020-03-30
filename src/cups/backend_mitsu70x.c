@@ -80,6 +80,7 @@ struct mitsu70x_ctx {
 	uint8_t endp_up;
 	uint8_t endp_down;
 	int type;
+	int is_s;
 
 	uint16_t jobid;
 
@@ -251,8 +252,8 @@ struct mitsu70x_printerstatus_resp {
 	uint8_t  sleeptime; /* In minutes, 0-60 */
 	uint8_t  iserial; /* 0x00 for Enabled, 0x80 for Disabled */
 	uint8_t  unk_b[5]; // [4] == 0x44 on D70x, 0x02 on D80
-	uint8_t  dual_deck;  /* 0x80 for dual-deck D707 */
-	uint8_t  unk_c[6]; // [3] == 0x5f on D70x, 0x01 on D80.  [5] == 0xbd on D70x, 0x87 on D80
+	uint8_t  dual_deck; /* 0x80 for dual-deck D707 */
+	uint8_t  unk_c[6]; // [2] == 0x5f on D70x, 0x5e on D70xS, 0x01 on D80.  [5] == 0xbd on D70x, 0x87 on D80
 	int16_t  model[6]; /* LE, UTF-16 */
 	int16_t  serno[6]; /* LE, UTF-16 */
 	struct mitsu70x_status_ver vers[7]; // components are 'MLRTF'
@@ -658,6 +659,12 @@ static int mitsu70x_attach(void *vctx, struct libusb_device_handle *dev, int typ
 	}
 	ctx->serno[6] = 0;
 
+	/* Check for the -S variants */
+	if (ctx->type == P_MITSU_K60)
+		ctx->is_s = 1;
+	if (ctx->type == P_MITSU_D70X && resp.unk_c[2] == 0x5e)
+		ctx->is_s = 1;
+
 	/* FW sanity checking */
 	if (ctx->type == P_KODAK_305) {
 		/* Known versions:
@@ -674,10 +681,13 @@ static int mitsu70x_attach(void *vctx, struct libusb_device_handle *dev, int typ
 		if (strncmp(resp.vers[0].ver, "316M31", 6) < 0)
 			WARNING("Printer FW out of date. Highly recommend upgrading K60 to v1.05 or newer!\n");
 	} else if (ctx->type == P_MITSU_D70X) {
-		/* Known versions:
+		/* Known versions for D70/D707:
 		   v1.10: M 316V11 064D   (Add ultrafine mode, 6x6 support, 2x6 strip, and more?)
 		   v1.12: M 316W11 9FC3   (??)
 		   v1.13:                 (??)
+
+		   Known versions for D70-S/D707-S
+		   v???   M 316K11 E08A   (??)
 		*/
 		if (strncmp(resp.vers[0].ver, "316W11", 6) < 0)
 			WARNING("Printer FW out of date. Highly recommend upgrading D70/D707 to v1.12 or newer!\n");
@@ -934,7 +944,10 @@ repeat:
 		} else {
 			job->cpcfname = "CPD70N01.cpc";
 		}
-		if (mhdr.hdr[3] != 0x01) {
+		if (ctx->is_s && mhdr.hdr[3] != 0x00) {
+			WARNING("Print job has wrong submodel specifier (%x)\n", mhdr.hdr[3]);
+			mhdr.hdr[3] = 0x00;
+		} else if (!ctx->is_s && mhdr.hdr[3] != 0x01) {
 			WARNING("Print job has wrong submodel specifier (%x)\n", mhdr.hdr[3]);
 			mhdr.hdr[3] = 0x01;
 		}
@@ -2334,7 +2347,7 @@ static const char *mitsu70x_prefixes[] = {
 /* Exported */
 struct dyesub_backend mitsu70x_backend = {
 	.name = "Mitsubishi CP-D70 family",
-	.version = "0.98" " (lib " LIBMITSU_VER ")",
+	.version = "0.99" " (lib " LIBMITSU_VER ")",
 	.flags = BACKEND_FLAG_DUMMYPRINT,
 	.uri_prefixes = mitsu70x_prefixes,
 	.cmdline_usage = mitsu70x_cmdline,
