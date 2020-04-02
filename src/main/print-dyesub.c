@@ -8241,6 +8241,7 @@ static const dyesub_pagesize_t dnp_qw410_page[] =
   DEFINE_PAPER( "w324h324", "4.5x4.5", PT1(1386,300), PT1(1408,300), 0, 0, 0, 0, DYESUB_LANDSCAPE),
   DEFINE_PAPER( "w324h432", "4.5x6", PT1(1408,300), PT1(1836,300), 0, 0, 0, 0, DYESUB_PORTRAIT),
   DEFINE_PAPER( "w324h432-div2", "4.5x3*2", PT1(1408,300), PT1(1836,300), 0, 0, 0, 0, DYESUB_PORTRAIT),
+  DEFINE_PAPER( "w324h486", "4.5x6.75", PT1(1408,300), PT1(2436,300), 0, 0, PT1(375,300), 0, DYESUB_PORTRAIT),
   // XXX 4.5x4.5 + 4.5x2 / 4.5x3 / 4.5x3.5 ?
   DEFINE_PAPER( "w324h432-div3", "4.5x2*3", PT1(1408,300), PT1(1836,300), 0, 0, 0, 0, DYESUB_PORTRAIT),
   DEFINE_PAPER( "w324h576", "4.5x8", PT1(1408,300), PT1(2436,300), 0, 0, 0, 0, DYESUB_PORTRAIT),
@@ -8272,6 +8273,7 @@ static const dyesub_printsize_t dnp_qw410_printsize[] =
   { "300x300", "w324h432", 1408, 1836},
   { "300x300", "w324h432-div2", 1408, 1836},
   { "300x300", "w324h432-div3", 1408, 1836},
+  { "300x300", "w324h486", 1408, 2436},
   { "300x300", "w324h576", 1408, 2436},
   { "300x300", "w324h576-div2", 1408, 2436},
   { "300x300", "w324h576-div4", 1408, 2436},
@@ -8295,6 +8297,8 @@ static void dnp_qw410_printer_start(stp_vars_t *v)
     cut1 = 30;
   } else if (!strcmp(pd->pagesize, "w324h288")) {
     cut1 = 40;
+  } else if (!strcmp(pd->pagesize, "w324h486")) {
+    cut1 = 67;
   } else if (!strcmp(pd->pagesize, "w288h288-div2")) {
     cut1 = cut2 = 20;
   } else if (!strcmp(pd->pagesize, "w288h432-div2") || !strcmp(pd->pagesize, "w324h432-div2")) {
