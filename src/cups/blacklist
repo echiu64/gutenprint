@@ -247,6 +247,9 @@
 # Citizen CX-02W
 0x1343 0x000B blacklist
 
+# Citizen CZ-01
+0x1343 0x000C blacklist
+
 # DNP DS80D
 0x1343 0x0008 blacklist
 
@@ -255,6 +258,9 @@
 
 # DNP DS820
 0x1452 0x9001 blacklist
+
+# DNP QW410
+0x1452 0x9201 blacklist
 
 # CIAAT Brava 21
 0x10ce 0x001e blacklist
