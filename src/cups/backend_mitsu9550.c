@@ -603,7 +603,7 @@ hdr_done:
 		int ret = mitsu_apply3dlut(&ctx->lib, MITSU_M98xx_LUT_FILE,
 					   job->databuf + sizeof(struct mitsu9550_plane),
 					   job->cols, job->rows,
-					   job->cols * 3, COLORCONV_BGR);
+					   job->cols * 3, COLORCONV_RGB);
 		if (ret) {
 			mitsu9550_cleanup_job(job);
 			return ret;
@@ -1478,7 +1478,7 @@ static const char *mitsu9550_prefixes[] = {
 /* Exported */
 struct dyesub_backend mitsu9550_backend = {
 	.name = "Mitsubishi CP9xxx family",
-	.version = "0.52" " (lib " LIBMITSU_VER ")",
+	.version = "0.52.1" " (lib " LIBMITSU_VER ")",
 	.uri_prefixes = mitsu9550_prefixes,
 	.cmdline_usage = mitsu9550_cmdline,
 	.cmdline_arg = mitsu9550_cmdline_arg,
