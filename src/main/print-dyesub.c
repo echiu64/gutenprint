@@ -5355,6 +5355,107 @@ static void mitsu_cp9810_printer_end(stp_vars_t *v)
   stp_putc(0x00, v);
 }
 
+/* Mitsubishi CP30DW */
+static const dyesub_resolution_t res_423dpi[] =
+{
+  { "423x423", 423, 423},
+};
+
+LIST(dyesub_resolution_list_t, res_423dpi_list, dyesub_resolution_t, res_423dpi);
+
+static const dyesub_pagesize_t mitsu_cp30_page[] =
+{
+  DEFINE_PAPER_SIMPLE( "w272h204", "S", PT1(1200,300), PT1(1600,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w272h357", "L", PT1(1600,300), PT1(2100,300), DYESUB_PORTRAIT),
+};
+
+LIST(dyesub_pagesize_list_t, mitsu_cp30_page_list, dyesub_pagesize_t, mitsu_cp30_page);
+
+static const dyesub_printsize_t mitsu_cp30_printsize[] =
+{
+  { "423x423", "w272h204", 1200, 1600},
+  { "423x423", "w272h357", 1600, 2100},
+};
+
+LIST(dyesub_printsize_list_t, mitsu_cp30_printsize_list, dyesub_printsize_t, mitsu_cp30_printsize);
+
+static void mitsu_cp30_printer_init(stp_vars_t *v)
+{
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  /* Header 1 */
+  stp_putc(0x1b, v);
+  stp_putc(0x57, v);
+  stp_putc(0x20, v);
+  stp_putc(0x2e, v);
+  stp_putc(0x00, v);
+  stp_putc(0x0a, v);
+  stp_putc(0x10, v);
+  dyesub_nputc(v, 0x00, 7);
+  stp_put16_be(pd->w_size, v);
+  stp_put16_be(pd->h_size, v);
+  dyesub_nputc(v, 0x00, 32);
+
+  /* Header 2 */
+  stp_putc(0x1b, v);
+  stp_putc(0x57, v);
+  stp_putc(0x21, v);
+  stp_putc(0x2e, v);
+  dyesub_nputc(v, 0x00, 3);
+  stp_putc(0x20, v);
+  stp_putc(0x08, v);
+  stp_putc(0x02, v);
+  dyesub_nputc(v, 0x00, 18);
+  stp_put16_be(pd->copies, v);
+  dyesub_nputc(v, 0x00, 8);
+  stp_putc(pd->privdata.m9550.quality, v); // XXX 0x80 for powersave, 0x00 normal
+  dyesub_nputc(v, 0x00, 7);
+  stp_putc(pd->privdata.m70x.sharpen, v); /* XXX EXTENSION! Sharpness? */
+  stp_putc(0x00, v); /* XXX change to 0x01 if we revert the order? */
+  stp_putc(pd->privdata.m70x.use_lut, v);  /* XXX Use LUT? EXTENSION! */
+  stp_putc(0x00, v);
+
+  // XXX add in sharpening / color correction ala 9810?
+
+  /* Header 3 */
+  stp_putc(0x1b, v);
+  stp_putc(0x57, v);
+  stp_putc(0x22, v);
+  stp_putc(0x2e, v);
+  stp_putc(0x00, v);
+  stp_putc(0x40, v);
+  dyesub_nputc(v, 0x00, 46);
+
+  /* Header 4 */
+  stp_putc(0x1b, v);
+  stp_putc(0x57, v);
+  stp_putc(0x26, v);
+  stp_putc(0x2e, v);
+  stp_putc(0x00, v);
+  stp_putc(0x3f, v);
+  stp_putc(0x80, v);
+  dyesub_nputc(v, 0x00, 5);
+  stp_putc(0x01, v);
+  stp_putc(0x01, v);
+  stp_putc(0x80, v);
+  stp_putc(0x10, v);
+  stp_putc(0x10, v);
+  stp_putc(0x00, v);
+  stp_putc(0x10, v);
+  dyesub_nputc(v, 0x00, 31);
+}
+
+static void mitsu_cp30_printer_end(stp_vars_t *v)
+{
+  /* Page Footer */
+  stp_putc(0x1b, v);
+  stp_putc(0x50, v);
+  stp_putc(0x52, v);
+  stp_putc(0x00, v);
+  stp_putc(0x00, v);
+  stp_putc(0x00, v);
+}
+
 /* Mitsubishi CP-D70D/CP-D707 */
 static const dyesub_pagesize_t mitsu_cpd70x_page[] =
 {
@@ -10456,6 +10557,21 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     mitsu_cpm1_parameter_count,
     mitsu_cpm1_load_parameters,
     mitsu_cpm1_parse_parameters,
+  },
+  { /* Mitsubishi CP30 family */
+    4119,
+    &rgb_ink_list,
+    &res_423dpi_list,
+    &mitsu_cp30_page_list,
+    &mitsu_cp30_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    &mitsu_cp30_printer_init, &mitsu_cp30_printer_end,
+    &mitsu_cp3020da_plane_init, NULL,
+    NULL, NULL, /* No block funcs */
+    NULL, NULL,
+    NULL, NULL,
+    NULL, 0, NULL, NULL,
   },
   { /* Fujifilm ASK-2000/2500 */
     4200,
