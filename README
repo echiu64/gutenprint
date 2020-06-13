@@ -508,42 +508,56 @@ D) CUPS dye-sublimation backend
 	Canon SELPHY CP series
 	Ciaat Brava 21
 	Citizen CW-01 / Olmec OP900
-	Citizen CW-02
+	Citizen CW-02 / OP900II
 	DNP DS40 / Citizen CX
 	DNP DS80 / Citizen CX-W
-	DNP DS80DX  (experimental)
-	DNP DS-RX1 / DS-RX1HS / Citizen CY
-	DNP DS620
-	DNP DS820
+	DNP DS80DX
+	DNP DS-RX1 / DS-RX1HS / Citizen CY / CY-02
+	DNP DS620 / DS620A / Citizen CX-02
+	DNP DS820 / DS820A / Citizen CX-02W
+	DNP QW410 / Citizen CZ-01
+	Fujifilm ASK-300
+	HiTi P520L
+	HiTi P525L
 	Kodak Professional 1400
 	Kodak 305 Photo Printer
 	Kodak 605 Photo Printer
 	Kodak 805 Photo Printer
 	Kodak 6800 Photo Printer
 	Kodak 6850 Photo Printer
+	Kodak 7000 Photo Printer
+	Kodak 8810 Photo Printer
 	Mitsubishi CP-3800DW
 	Mitsubishi CP-9550D/DW/DW-S/DZ/DZ-S
 	Mitsubishi CP-9600D/DW
-	Mitsubishi CP-9800DW/DW-S (experimental)
-	Mitsubishi CP-9810DW (experimental)
+	Mitsubishi CP-M1A / CP-M1E
+	Mitsubishi CP-9800DW/DW-S
+	Mitsubishi CP-9810DW
 	Mitsubishi CP-K60DW-S
 	Mitsubishi CP-D70DW / CP-D707DW
+	Mitsubishi CP-D70DW-S and P-D707DW-S
+	Mitsubishi CP-D80DW
+	Mitsubishi CP-D90DW
 	Mitsubishi P93DW
 	Mitsubishi P95DW
-	Shinko CHC-S1245 (aka Sinfonia E1) (experimental)
-	Shinko CHC-S6245 (aka Sinfonia CE1) (experimental)
+	Shinko CHC-S1245 (aka Sinfonia E1)
 	Shinko CHC-S2145 (aka Sinfonia S2)
 	Shinko CHC-S6145 (aka Sinfonia CS2)
+	Sony UP-CR10L / DNP DS-SL10
 	Sony UP-DR150
 	Sony UP-DR200
-	Sony UP-CR10L / DNP DS-SL10  (experimental)
+	Sony UP-DR80MD
+	Sony UP-D895
+	Sony UP-D897
+	Stryker SDP1000
 
     Although these printers advertise themselves as standard USB Printer
     Class devices, they do not actually obey those specifications, and
     require two-way handshaking in order to successfully print.
 
     Over time, it is expected that additional printer models will be
-    supported by this backend.
+    supported by this backend; this list only includes ones that are
+    known to work.
 
     NOTE: If you are upgrading from 5.2.9 (or earlier) and using one of
     the following models, you will need to remove and re-create your
