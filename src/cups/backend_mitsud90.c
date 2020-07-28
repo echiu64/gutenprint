@@ -1714,7 +1714,7 @@ struct dyesub_backend mitsud90_backend = {
 	.devices = {
 		{ USB_VID_MITSU, USB_PID_MITSU_D90, P_MITSU_D90, NULL, "mitsubishi-d90dw"},
 		{ USB_VID_MITSU, USB_PID_MITSU_CPM1, P_MITSU_M1, NULL, "mitsubishi-cpm1"},
-//		{ USB_VID_MITSU, USB_PID_MITSU_CPM15, P_MITSU_M1, NULL, "mitsubishi-cpm15"},
+		{ USB_VID_MITSU, USB_PID_MITSU_CPM1, P_MITSU_M1, NULL, "mitsubishi-cpm15"}, // Duplicate for the M15
 		{ 0, 0, 0, NULL, NULL}
 	}
 };
