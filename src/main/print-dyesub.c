@@ -238,6 +238,11 @@ typedef struct
 
 typedef struct
 {
+  int quality;
+} kodak6900_privdata_t;
+
+typedef struct
+{
   int sharpen;
   int matte_intensity;
 } kodak8500_privdata_t;
@@ -309,6 +314,7 @@ typedef struct
    dnp_privdata_t dnp;
    mitsu9550_privdata_t m9550;
    mitsu70x_privdata_t m70x;
+   kodak6900_privdata_t k6900;
    kodak9810_privdata_t k9810;
    kodak8500_privdata_t k8500;
    shinko1245_privdata_t s1245;
@@ -3331,6 +3337,82 @@ static const overcoat_t kodak_6900_overcoat[] =
 
 LIST(overcoat_list_t, kodak_6900_overcoat_list, overcoat_t, kodak_6900_overcoat);
 
+static const dyesub_stringitem_t kodak6900_qualities[] =
+{
+  { "Standard",      N_ ("Standard") },
+  { "High", N_ ("High") },
+};
+LIST(dyesub_stringlist_t, kodak6900_quality_list, dyesub_stringitem_t, kodak6900_qualities);
+
+static const stp_parameter_t kodak6900_parameters[] =
+{
+  {
+    "PrintQuality", N_("Print Quality"), "Color=No,Category=Advanced Printer Setup",
+    N_("Print Speed"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+};
+#define kodak6900_parameter_count (sizeof(kodak6900_parameters) / sizeof(const stp_parameter_t))
+
+static int
+kodak6900_load_parameters(const stp_vars_t *v, const char *name,
+			 stp_parameter_t *description)
+{
+  int	i;
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
+		  				stp_get_model_id(v));
+
+  if (caps->parameter_count && caps->parameters)
+    {
+      for (i = 0; i < caps->parameter_count; i++)
+        if (strcmp(name, caps->parameters[i].name) == 0)
+          {
+	    stp_fill_parameter_settings(description, &(caps->parameters[i]));
+	    break;
+          }
+    }
+
+  if (strcmp(name, "PrintQuality") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+
+      const dyesub_stringlist_t *mlist = &kodak6900_quality_list;
+      for (i = 0; i < mlist->n_items; i++)
+        {
+	  const dyesub_stringitem_t *m = &(mlist->item[i]);
+	  stp_string_list_add_string(description->bounds.str,
+				       m->name, m->text); /* Do *not* want this translated, otherwise use gettext(m->text) */
+	}
+      description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
+      description->is_active = 1;
+    }
+  else
+  {
+     return 0;
+  }
+  return 1;
+}
+
+static int kodak6900_parse_parameters(stp_vars_t *v)
+{
+  const char *quality = stp_get_string_parameter(v, "PrintQuality");
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  /* No need to set global params if there's no privdata yet */
+  if (!pd)
+    return 1;
+
+  pd->privdata.k6900.quality = 0;
+
+  /* Parse options */
+  if (strcmp(quality, "High") == 0) {
+     pd->privdata.k6900.quality = 1;
+  }
+
+  return 1;
+}
+
 static void kodak_6900_printer_init(stp_vars_t *v)
 {
   dyesub_privdata_t *pd = get_privdata(v);
@@ -3343,6 +3425,8 @@ static void kodak_6900_printer_init(stp_vars_t *v)
 
   int media = 0;
   int overcoat = ((const char*)((pd->overcoat->seq).data))[0];
+
+  overcoat |= (pd->privdata.k6900.quality ? 0x08 : 0);
 
   if (strcmp(pd->pagesize,"w144h432") == 0)
     media = 0x02;
@@ -3363,7 +3447,7 @@ static void kodak_6900_printer_init(stp_vars_t *v)
 
   stp_putc(media, v);  /* Media Type */
   dyesub_nputc(v, 0, 7);  /* Reserved */
-  stp_putc(overcoat, v);  /* Options XXX QUALITY */
+  stp_putc(overcoat, v);  /* Options */
   stp_putc(0, v);         /* Method XXX Multicut? */
   dyesub_nputc(v, 0, 11); /* Reserved */
 }
@@ -7273,7 +7357,7 @@ static void shinko_chcs2245_printer_init(stp_vars_t *v)
   } else {
     stp_put32_le(0x00, v);
   }
-  stp_put32_le(0x00, v);  /* XXX quality; 00 == default, 0x01 == std */
+  stp_put32_le(pd->privdata.k6900.quality, v);  /* Quality */
   stp_zfwrite((pd->overcoat->seq).data, 1,
 	      (pd->overcoat->seq).bytes, v); /* Lamination */
   stp_put32_le(0x00, v);
@@ -10200,7 +10284,10 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,  /* No blocks */
     &kodak_6900_overcoat_list, NULL,
     NULL, NULL,
-    NULL, 0, NULL, NULL,
+    kodak6900_parameters,
+    kodak6900_parameter_count,
+    kodak6900_load_parameters,
+    kodak6900_parse_parameters,
   },
   { /* Kodak 7015 */
     4009,
@@ -10730,7 +10817,10 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,  /* No blocks */
     &shinko_chcs6145_overcoat_list, NULL,
     NULL, NULL,
-    NULL, 0, NULL, NULL,
+    kodak6900_parameters,
+    kodak6900_parameter_count,
+    kodak6900_load_parameters,
+    kodak6900_parse_parameters,
   },
   { /* Dai Nippon Printing DS40 */
     6000,
