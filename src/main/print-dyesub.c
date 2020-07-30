@@ -7307,6 +7307,37 @@ static void shinko_chcs6145_printer_init(stp_vars_t *v)
 #endif
 }
 
+/* CHC-S2245 */
+static const dyesub_pagesize_t shinko_chcs2245_page[] =
+{
+  DEFINE_PAPER_SIMPLE( "w144h432",	"2x6", PT1(634,300), PT1(1844,300),	DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w288h432",	"4x6", PT1(1240,300), PT1(1844,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w288h432-div2", "2x6*2", PT1(1240,300), PT1(1844,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w360h360",	"5x5", PT1(1536,300), PT1(1548,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w360h504",	"5x7", PT1(1548,300), PT1(2140,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w432h432",	"6x6", PT1(1832,300), PT1(1844,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w432h576",	"6x8", PT1(1844,300), PT1(2434,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w432h576-div4",	"2x6*4", PT1(1844,300), PT1(2434,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w432h576-div2", "4x6*2", PT1(1844,300), PT1(2492,300), DYESUB_PORTRAIT),
+};
+
+LIST(dyesub_pagesize_list_t, shinko_chcs2245_page_list, dyesub_pagesize_t, shinko_chcs2245_page);
+
+static const dyesub_printsize_t shinko_chcs2245_printsize[] =
+{
+  { "300x300", "w144h432", 634, 1844},
+  { "300x300", "w288h432", 1240, 1844},
+  { "300x300", "w288h432-div2", 1240, 1844},
+  { "300x300", "w360h360", 1536, 1548},
+  { "300x300", "w360h504", 1548, 2140},
+  { "300x300", "w432h432", 1832, 1844},
+  { "300x300", "w432h576", 1844, 2434},
+  { "300x300", "w432h576-div4", 1844, 2434},
+  { "300x300", "w432h576-div2", 1844, 2492},
+};
+
+LIST(dyesub_printsize_list_t, shinko_chcs2245_printsize_list, dyesub_printsize_t, shinko_chcs2245_printsize);
+
 static void shinko_chcs2245_printer_init(stp_vars_t *v)
 {
   dyesub_privdata_t *pd = get_privdata(v);
@@ -7348,7 +7379,7 @@ static void shinko_chcs2245_printer_init(stp_vars_t *v)
   stp_put32_le(media, v);  /* Media Type */
   stp_put32_le(0x00, v);
 
-  if (strcmp(pd->pagesize,"w432h576-w432h432_w432h144") == 0) {
+  if (strcmp(pd->pagesize,"w432h576-div4") == 0) {
     stp_put32_le(0x05, v);
   } else if (strcmp(pd->pagesize,"w288h432-div2") == 0) {
     stp_put32_le(0x04, v);
@@ -10805,8 +10836,8 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &rgb_ink_list,
 #endif
     &res_300dpi_list,
-    &shinko_chcs6145_page_list,
-    &shinko_chcs6145_printsize_list,
+    &shinko_chcs2245_page_list,
+    &shinko_chcs2245_printsize_list,
     SHRT_MAX,
 #ifdef S6145_YMC
     DYESUB_FEATURE_PLANE_INTERLACE |
