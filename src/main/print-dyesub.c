@@ -45,6 +45,7 @@
 #endif
 
 #define S6145_YMC  /* Generate YMC data for S6145 family */
+//#define S2245_YMC  /* Generate YMC data for S2245 family */
 
 //#define USE_WRONG_APPGAMMA_BY_DEFAULT
 
@@ -7413,7 +7414,7 @@ static void shinko_chcs2245_printer_init(stp_vars_t *v)
   stp_put32_le(0x00, v);
   stp_put32_le(0x00, v);
 
-#ifdef S6145_YMC
+#ifdef S2245_YMC
   stp_put32_le(0x01, v);
 #else
   stp_put32_le(0x00, v);
@@ -10830,7 +10831,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Shinko/Sinfonia CHC-S2245 */
     5006,
-#ifdef S6145_YMC
+#ifdef S2245_YMC
     &ymc_ink_list,
 #else
     &rgb_ink_list,
@@ -10839,7 +10840,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &shinko_chcs2245_page_list,
     &shinko_chcs2245_printsize_list,
     SHRT_MAX,
-#ifdef S6145_YMC
+#ifdef S2245_YMC
     DYESUB_FEATURE_PLANE_INTERLACE |
 #endif
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
