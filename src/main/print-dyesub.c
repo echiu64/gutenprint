@@ -7339,6 +7339,14 @@ static const dyesub_printsize_t shinko_chcs2245_printsize[] =
 
 LIST(dyesub_printsize_list_t, shinko_chcs2245_printsize_list, dyesub_printsize_t, shinko_chcs2245_printsize);
 
+static const overcoat_t shinko_chcs2245_overcoat[] =
+{
+  {"Glossy",  N_("Glossy"),  {4, "\x01\0\0\0"}},
+  {"Matte",  N_("Matte"),  {4, "\x02\0\0\0"}},
+};
+
+LIST(overcoat_list_t, shinko_chcs2245_overcoat_list, overcoat_t, shinko_chcs2245_overcoat);
+
 static void shinko_chcs2245_printer_init(stp_vars_t *v)
 {
   dyesub_privdata_t *pd = get_privdata(v);
@@ -10847,7 +10855,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &shinko_chcs2245_printer_init, &shinko_chcs2145_printer_end,
     NULL, NULL,  /* No planes */
     NULL, NULL,  /* No blocks */
-    &shinko_chcs6145_overcoat_list, NULL,
+    &shinko_chcs2245_overcoat_list, NULL,
     NULL, NULL,
     kodak6900_parameters,
     kodak6900_parameter_count,
