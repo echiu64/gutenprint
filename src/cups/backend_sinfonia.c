@@ -1,7 +1,7 @@
  /*
  *   Shinko/Sinfonia Common Code
  *
- *   (c) 2019 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2019-2020 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -18,10 +18,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *
- *          [http://www.gnu.org/licenses/gpl-2.0.html]
+ *   along with this program; if not, see <https://www.gnu.org/licenses/>.
  *
  *   SPDX-License-Identifier: GPL-2.0+
  *
@@ -283,8 +280,8 @@ int sinfonia_raw28_read_parse(int data_fd, struct sinfonia_printjob *job)
 	job->jp.rows = le16_to_cpu(hdr.rows);
 	job->jp.columns = le16_to_cpu(hdr.columns);
 	job->jp.media = hdr.media;
-	job->jp.oc_mode = hdr.options & 0x03;
-	job->jp.quality = hdr.options & 0x08;
+	job->jp.oc_mode = hdr.options & SINFONIA_PRINT28_OC_MASK;
+	job->jp.quality = hdr.options & SINFONIA_PRINT28_OPTIONS_HQ;
 	job->jp.method = hdr.method;
 
 	/* Allocate buffer */
@@ -495,6 +492,7 @@ int sinfonia_getfwinfo(struct sinfonia_usbdev *usbh)
 	struct sinfonia_fwinfo_resp resp;
 	int num = 0;
 	int i;
+	int last = FWINFO_TARGET_PRINT_TABLES2;
 
 	cmd.hdr.cmd = cpu_to_le16(SINFONIA_CMD_FWINFO);
 	cmd.hdr.len = cpu_to_le16(1);
@@ -503,7 +501,10 @@ int sinfonia_getfwinfo(struct sinfonia_usbdev *usbh)
 
 	INFO("FW Information:\n");
 
-	for (i = FWINFO_TARGET_MAIN_BOOT ; i <= FWINFO_TARGET_PRINT_TABLES2 ; i++) {
+	if (usbh->type == P_SHINKO_S6145) last = FWINFO_TARGET_PRINT_TABLES;
+	if (usbh->type == P_SHINKO_S2245) last = FWINFO_TARGET_DSP;
+
+	for (i = FWINFO_TARGET_MAIN_BOOT ; i <= last ; i++) {
 		int ret;
 		cmd.target = i;
 		resp.major = 0;
@@ -563,6 +564,7 @@ int sinfonia_geterrorlog(struct sinfonia_usbdev *usbh)
 		     resp.items[i].major, resp.items[i].minor,
 		     usbh->error_codes(resp.items[i].major, resp.items[i].minor));
 	}
+
 	return CUPS_BACKEND_OK;
 }
 

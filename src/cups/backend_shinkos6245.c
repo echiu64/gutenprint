@@ -144,22 +144,6 @@ static const struct sinfonia_param s6245_params[] =
 #define PARAM_SLEEP_120MIN  0x00000004
 #define PARAM_SLEEP_240MIN  0x00000005
 
-struct s6245_settime_cmd {
-	struct sinfonia_cmd_hdr hdr;
-	uint8_t enable;  /* 0 or 1 */
-	uint8_t second;
-	uint8_t minute;
-	uint8_t hour;
-	uint8_t day;
-	uint8_t month;
-	uint8_t year;
-} __attribute__((packed));
-
-struct s6245_errorlog_cmd {
-	struct sinfonia_cmd_hdr hdr;
-	uint16_t index;  /* 0 is latest */
-} __attribute__((packed));
-
 static const char *s6245_error_codes(uint8_t major, uint8_t minor)
 {
 	switch(major) {
@@ -594,38 +578,6 @@ static const char *ek8810_error_codes(uint8_t major, uint8_t minor)
 	}
 }
 
-struct s6245_status_resp {
-	struct sinfonia_status_hdr hdr;
-	uint32_t count_lifetime;
-	uint32_t count_maint;
-	uint32_t count_paper;
-	uint32_t count_cutter;
-	uint32_t count_head;
-	uint32_t count_ribbon_left;
-	uint32_t reserved;
-
-	uint8_t  bank1_printid;
-	uint16_t bank1_remaining;
-	uint16_t bank1_finished;
-	uint16_t bank1_specified;
-	uint8_t  bank1_status;
-
-	uint8_t  bank2_printid;
-	uint16_t bank2_remaining;
-	uint16_t bank2_finished;
-	uint16_t bank2_specified;
-	uint8_t  bank2_status;
-
-	uint8_t  reserved2[16];
-	uint8_t  tonecurve_status;
-	uint8_t  reserved3[6];
-} __attribute__((packed));
-
-struct s6245_geteeprom_resp {
-	struct sinfonia_status_hdr hdr;
-	uint8_t data[256];
-} __attribute__((packed));
-
 #define RIBBON_NONE 0x00
 #define RIBBON_8x10 0x11
 #define RIBBON_8x12 0x12
@@ -714,7 +666,7 @@ struct shinkos6245_ctx {
 static int get_status(struct shinkos6245_ctx *ctx)
 {
 	struct sinfonia_cmd_hdr cmd;
-	struct s6245_status_resp resp;
+	struct sinfonia_status_resp resp;
 	struct sinfonia_getextcounter_resp resp2;
 	int ret, num = 0;
 
@@ -741,7 +693,7 @@ static int get_status(struct shinkos6245_ctx *ctx)
 	}
 
 	/* Sanity checking */
-	if (le16_to_cpu(resp.hdr.payload_len) != (sizeof(struct s6245_status_resp) - sizeof(struct sinfonia_status_hdr)))
+	if (le16_to_cpu(resp.hdr.payload_len) != (sizeof(struct sinfonia_status_resp) - sizeof(struct sinfonia_status_hdr)))
 		return CUPS_BACKEND_OK;
 
 	INFO(" Print Counts:\n");
@@ -795,7 +747,7 @@ static int get_status(struct shinkos6245_ctx *ctx)
 
 static int get_errorlog(struct shinkos6245_ctx *ctx)
 {
-	struct s6245_errorlog_cmd cmd;
+	struct sinfonia_errorlog2_cmd cmd;
 	struct s6245_errorlog_resp resp;
 	int num = 0;
 	int i = 0;
@@ -1126,7 +1078,7 @@ static int shinkos6245_main_loop(void *vctx, const void *vjob) {
 
 	struct sinfonia_cmd_hdr *cmd = (struct sinfonia_cmd_hdr *) cmdbuf;;
 	struct s6245_print_cmd *print = (struct s6245_print_cmd *) cmdbuf;
-	struct s6245_status_resp sts, sts2;
+	struct sinfonia_status_resp sts, sts2;
 	struct sinfonia_status_hdr resp;
 
 	struct sinfonia_printjob *job = (struct sinfonia_printjob*) vjob;
@@ -1213,13 +1165,13 @@ static int shinkos6245_main_loop(void *vctx, const void *vjob) {
 
 	/* Send Set Time */
 	if (ctx->dev.type != P_KODAK_8810) {
-		struct s6245_settime_cmd *settime = (struct s6245_settime_cmd *)cmdbuf;
+		struct sinfonia_settime_cmd *settime = (struct sinfonia_settime_cmd *)cmdbuf;
 		time_t now = time(NULL);
 		struct tm *cur = localtime(&now);
 
 		memset(cmdbuf, 0, CMDBUF_LEN);
 		cmd->cmd = cpu_to_le16(SINFONIA_CMD_SETTIME);
-		cmd->len = cpu_to_le16(0);
+		cmd->len = cpu_to_le16(sizeof(*settime)-sizeof(settime->hdr));
 		settime->enable = 1;
 		settime->second = cur->tm_sec;
 		settime->minute = cur->tm_min;
@@ -1396,7 +1348,7 @@ static int shinkos6245_query_markers(void *vctx, struct marker **markers, int *c
 {
 	struct shinkos6245_ctx *ctx = vctx;
 	struct sinfonia_cmd_hdr cmd;
-	struct s6245_status_resp status;
+	struct sinfonia_status_resp status;
 	int num;
 
 	/* Query Status */
@@ -1422,7 +1374,7 @@ static int shinkos6245_query_stats(void *vctx,  struct printerstats *stats)
 {
 	struct shinkos6245_ctx *ctx = vctx;
 	struct sinfonia_cmd_hdr cmd;
-	struct s6245_status_resp status;
+	struct sinfonia_status_resp status;
 	int num;
 
 	if (shinkos6245_query_markers(ctx, NULL, NULL))
@@ -1518,7 +1470,7 @@ static const char *shinkos6245_prefixes[] = {
 
 struct dyesub_backend shinkos6245_backend = {
 	.name = "Sinfonia CHC-S6245 / Kodak 8810",
-	.version = "0.33" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.35" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = shinkos6245_prefixes,
 	.cmdline_usage = shinkos6245_cmdline,
 	.cmdline_arg = shinkos6245_cmdline_arg,

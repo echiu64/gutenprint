@@ -1,7 +1,7 @@
  /*
  *   Shinko/Sinfonia Common Code
  *
- *   (c) 2019 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2019-2020 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -27,7 +27,7 @@
  *
  */
 
-#define LIBSINFONIA_VER "0.13"
+#define LIBSINFONIA_VER "0.15"
 
 #define SINFONIA_HDR1_LEN 0x10
 #define SINFONIA_HDR2_LEN 0x64
@@ -171,6 +171,7 @@ const char *sinfonia_print_modes(uint8_t v);
 #define PRINT_METHOD_COMBO_2 0x02
 #define PRINT_METHOD_COMBO_3 0x03 // S6245 only
 #define PRINT_METHOD_SPLIT   0x04
+#define PRINT_METHOD_4SPLIT  0x05 // S2245 only
 #define PRINT_METHOD_DOUBLE  0x08 // S6145 only
 #define PRINT_METHOD_DISABLE_ERR 0x10 // S6245 only
 #define PRINT_METHOD_NOTRIM  0x80 // S6145 only
@@ -198,7 +199,7 @@ struct sinfonia_status_hdr {
 	uint8_t  printer_major;
 	uint8_t  printer_minor;
 	uint8_t  reserved[2];
-	uint8_t  mode;  /* S6245 and EK605 only, so far */
+	uint8_t  mode;  /* S2245, S6245 and EK605 only, so far */
 	uint8_t  status;
 	uint16_t payload_len;
 } __attribute__((packed));
@@ -227,6 +228,12 @@ struct sinfonia_errorlog_resp {
 	struct sinfonia_status_hdr hdr;
 	uint8_t  count;
 	struct sinfonia_error_item items[10];  /* Not all necessarily used */
+} __attribute__((packed));
+
+
+struct sinfonia_errorlog2_cmd {
+	struct sinfonia_cmd_hdr hdr;
+	uint16_t index;  /* 0 is latest */
 } __attribute__((packed));
 
 struct sinfonia_mediainfo_item {
@@ -294,6 +301,38 @@ struct sinfonia_getprintidstatus_resp {
 #define IDSTATUS_COMPLETED 0x0200
 #define IDSTATUS_ERROR     0xFFFF
 
+struct sinfonia_status_resp {
+	struct sinfonia_status_hdr hdr;
+	uint32_t count_lifetime;
+	uint32_t count_maint;
+	uint32_t count_paper;
+	uint32_t count_cutter;
+	uint32_t count_head;
+	uint32_t count_ribbon_left;
+	uint32_t reserved;
+
+	uint8_t  bank1_printid;
+	uint16_t bank1_remaining;
+	uint16_t bank1_finished;
+	uint16_t bank1_specified;
+	uint8_t  bank1_status;
+
+	uint8_t  bank2_printid;
+	uint16_t bank2_remaining;
+	uint16_t bank2_finished;
+	uint16_t bank2_specified;
+	uint8_t  bank2_status;
+
+	uint8_t  reserved2[16];
+	uint8_t  tonecurve_status;
+	uint8_t  reserved3[6];
+} __attribute__((packed));
+
+struct sinfonia_geteeprom_resp {
+	struct sinfonia_status_hdr hdr;
+	uint8_t data[256];
+} __attribute__((packed));
+
 struct sinfonia_button_cmd {
 	struct sinfonia_cmd_hdr hdr;
 	uint8_t  enabled;
@@ -310,7 +349,6 @@ struct sinfonia_reset_cmd {
 
 #define RESET_PRINTER       0x03
 #define RESET_TONE_CURVE    0x04
-
 #define TONE_CURVE_ID       0x01
 
 struct sinfonia_readtone_cmd {
@@ -385,11 +423,39 @@ struct sinfonia_printcmd28_hdr {
 	uint16_t copies;
 	uint16_t columns;
 	uint16_t rows;
-	uint8_t  media;
+	uint8_t  media;  /* always 0 on S2245 */
 	uint8_t  reserved[7];
 	uint8_t  options;
 	uint8_t  method;
-	uint8_t  reserved2[11];
+	uint8_t  ipp;
+	uint8_t  reserved2[10];
+} __attribute__((packed));
+
+#define SINFONIA_PRINT28_OPTIONS_HQ   0x08
+#define SINFONIA_PRINT28_OC_MASK      0x03
+#define SINFONIA_PRINT28_OC_GLOSS     0x01
+#define SINFONIA_PRINT28_OC_MATTE     0x02
+
+#define SINFONIA_PRINT28_METHOD_PRINT_MASK   0x07
+#define SINFONIA_PRINT28_METHOD_PRINT_COMBO  0x02
+#define SINFONIA_PRINT28_METHOD_PRINT_SPLIT  0x04
+#define SINFONIA_PRINT28_METHOD_PRINT_4SPLIT 0x05
+
+#define SINFONIA_PRINT28_METHOD_ERR_RECOVERY 0x08
+#define SINFONIA_PRINT28_METHOD_ERR_PREHEAT  0x10
+
+#define SINFONIA_PRINT28_IPP_RESP     0x01
+#define SINFONIA_PRINT28_IPP_CONTOUR  0x02
+
+struct sinfonia_settime_cmd {
+	struct sinfonia_cmd_hdr hdr;
+	uint8_t enable;  /* 0 or 1 */
+	uint8_t second;
+	uint8_t minute;
+	uint8_t hour;
+	uint8_t day;
+	uint8_t month;
+	uint8_t year;
 } __attribute__((packed));
 
 struct kodak701x_backprint {
@@ -493,7 +559,7 @@ const char *sinfonia_status_str(uint8_t v);
 #define SINFONIA_CMD_GETEEPROM  0x400E // 6x45
 #define SINFONIA_CMD_SETEEPROM  0x400F // 6x45
 
-#define SINFONIA_CMD_SETTIME    0x4011 // 6245
+#define SINFONIA_CMD_SETTIME    0x4011 // 6245, 2245
 
 #define SINFONIA_CMD_UNIVERSAL  0x4080 // EK70xx
 
