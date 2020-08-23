@@ -7314,9 +7314,8 @@ static const dyesub_pagesize_t shinko_chcs2245_page[] =
   DEFINE_PAPER_SIMPLE( "w144h432",	"2x6", PT1(634,300), PT1(1844,300),	DYESUB_LANDSCAPE),
   DEFINE_PAPER_SIMPLE( "w288h432",	"4x6", PT1(1240,300), PT1(1844,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER_SIMPLE( "w288h432-div2", "2x6*2", PT1(1240,300), PT1(1844,300), DYESUB_LANDSCAPE),
-  DEFINE_PAPER_SIMPLE( "w360h360",	"5x5", PT1(1536,300), PT1(1548,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER_SIMPLE( "w360h504",	"5x7", PT1(1548,300), PT1(2140,300), DYESUB_PORTRAIT),
-  DEFINE_PAPER_SIMPLE( "w432h432",	"6x6", PT1(1832,300), PT1(1844,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w432h432",	"6x6", PT1(1824,300), PT1(1844,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER_SIMPLE( "w432h576",	"6x8", PT1(1844,300), PT1(2434,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w432h576-div4",	"2x6*4", PT1(1844,300), PT1(2434,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w432h576-div2", "4x6*2", PT1(1844,300), PT1(2492,300), DYESUB_PORTRAIT),
@@ -7329,9 +7328,8 @@ static const dyesub_printsize_t shinko_chcs2245_printsize[] =
   { "300x300", "w144h432", 634, 1844},
   { "300x300", "w288h432", 1240, 1844},
   { "300x300", "w288h432-div2", 1240, 1844},
-  { "300x300", "w360h360", 1536, 1548},
   { "300x300", "w360h504", 1548, 2140},
-  { "300x300", "w432h432", 1832, 1844},
+  { "300x300", "w432h432", 1824, 1844},
   { "300x300", "w432h576", 1844, 2434},
   { "300x300", "w432h576-div4", 1844, 2434},
   { "300x300", "w432h576-div2", 1844, 2492},
@@ -7357,12 +7355,10 @@ static void shinko_chcs2245_printer_init(stp_vars_t *v)
     media = 0x00;
   else if (strcmp(pd->pagesize,"w288h432-div2") == 0)
     media = 0x00;
-  else if (strcmp(pd->pagesize,"w360h360") == 0)
-    media = 0x08;
   else if (strcmp(pd->pagesize,"w360h504") == 0)
     media = 0x03;
   else if (strcmp(pd->pagesize,"w432h432") == 0)
-    media = 0x06;
+    media = 0x08;
   else if (strcmp(pd->pagesize,"w432h576") == 0)
     media = 0x06;
   else if (strcmp(pd->pagesize,"w144h432") == 0)
@@ -7370,6 +7366,8 @@ static void shinko_chcs2245_printer_init(stp_vars_t *v)
   else if (strcmp(pd->pagesize,"w432h576-w432h432_w432h144") == 0)
     media = 0x06;
   else if (strcmp(pd->pagesize,"w432h576-div2") == 0)
+    media = 0x06;
+  else if (strcmp(pd->pagesize,"w432h576-div4") == 0)
     media = 0x06;
   else if (strcmp(pd->pagesize,"w432h648") == 0)
     media = 0x05;
