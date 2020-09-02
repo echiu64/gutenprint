@@ -62,6 +62,7 @@ typedef int (*ImageAvrCalcFN)(unsigned char *, unsigned short, unsigned short, u
 #define S6145_CORRDATA_HEIGHT_OFFSET    12434
 #define S6145_CORRDATA_EXTRA_LEN        4
 
+#define S2245_CORRDATA_HEADER_MODE_OFFSET (64+7)
 
 typedef bool (*ip_imageProcFN)(uint16_t *destData, uint8_t *srcInRgb,
 			       uint16_t width, uint16_t height, void *srcIpp);
@@ -199,19 +200,31 @@ static const struct sinfonia_param s2245_params[] =
 };
 #define s2245_params_num (sizeof(s2245_params) / sizeof(struct sinfonia_param))
 
+// CHC-S6145
 #define PARAM_OC_PRINT_OFF   0x00000001
 #define PARAM_OC_PRINT_GLOSS 0x00000002
 #define PARAM_OC_PRINT_MATTE 0x00000003
 
+// CHC-S6145-5A
+#define PARAM_PRINTM_OC_OFF    0x00000001
+#define PARAM_PRINTM_OC_GLOSS  0x00000002
+#define PARAM_PRINTM_OC_MATTE  0x00000012
+#define PARAM_PRINTM_STD       0x00000000
+#define PARAM_PRINTM_FINE      0x00000004
+#define PARAM_PRINTM_FAST      0x00000008
+
+// S6145 (ALL)
 #define PARAM_PAPER_PRESV_OFF 0x00000000
 #define PARAM_PAPER_PRESV_ON  0x00000001
 
+// S6145 (ALL), S2245
 #define PARAM_DRIVER_WIZOFF 0x00000000
 #define PARAM_DRIVER_WIZON  0x00000001
 
 #define PARAM_PAPER_NOCUT   0x00000000
 #define PARAM_PAPER_CUTLOAD 0x00000001
 
+// S6145
 #define PARAM_SLEEP_5MIN    0x00000000
 #define PARAM_SLEEP_15MIN   0x00000001
 #define PARAM_SLEEP_30MIN   0x00000002
@@ -574,27 +587,49 @@ static const char *s2245_error_codes(uint8_t major, uint8_t minor)
 #define RIBBON_5x7    0x03
 #define RIBBON_6x8    0x04
 #define RIBBON_6x9    0x05
-// XXX what about 89xXXXmm ribbons?
 
-static int ribbon_sizes (uint8_t v) {
+#define RIBBON_89x60mm 0x01
+
+static int ribbon_sizes (uint8_t v, uint8_t is_card, uint8_t is_2245) {
+	if (is_card) {
+		return 450;
+	}
+
 	switch (v) {
 	case RIBBON_4x6:
-		return 300;
+		if (is_2245)
+			return 900;
+		else
+			return 300;
 	case RIBBON_3_5x5:
 		return 340;
 	case RIBBON_5x7:
 		return 170;
 	case RIBBON_6x8:
-		return 150;
+		if (is_2245)
+			return 450;
+		else
+			return 150;
 	case RIBBON_6x9:
 		return 130; // XXX guessed
-	// XXX 89x??? rubbons.
 	default:
-		return 300; // don't want 0.
+		if (is_2245)
+			return 450;
+		else
+			return 300;
 	}
 }
 
-static const char *print_ribbons (uint8_t v) {
+static const char *print_ribbons (uint8_t v, uint8_t is_card) {
+	if (is_card) {
+		if (v == RIBBON_89x60mm)
+			return "89x60mm";
+		else if (v == RIBBON_NONE)
+			return "None";
+		else
+			return "Unknown";
+	}
+
 	switch (v) {
 	case RIBBON_NONE:
 		return "None";
@@ -608,7 +643,6 @@ static const char *print_ribbons (uint8_t v) {
 		return "6x8";
 	case RIBBON_6x9:
 		return "6x9";
-	// XXX 89x??? ribbons.
 	default:
 		return "Unknown";
 	}
@@ -649,6 +683,8 @@ struct shinkos6145_ctx {
 
 	char serial[32];
 	char fwver[32];
+
+	int is_card; /* card printer model */
 
 	struct marker marker;
 
@@ -804,11 +840,11 @@ static int get_status(struct shinkos6145_ctx *ctx)
 	return CUPS_BACKEND_OK;
 }
 
-static void dump_mediainfo(struct sinfonia_6x45_mediainfo_resp *resp)
+static void dump_mediainfo(struct sinfonia_6x45_mediainfo_resp *resp, int is_card)
 {
 	int i;
 
-	INFO("Loaded Media Type:  %s\n", print_ribbons(resp->ribbon_code));
+	INFO("Loaded Media Type:  %s\n", print_ribbons(resp->ribbon_code, is_card));
 	INFO("Supported Print Sizes: %u entries:\n", resp->count);
 	for (i = 0 ; i < resp->count ; i++) {
 		INFO(" %02d: C 0x%02x (%s), %04ux%04u, P 0x%02x (%s)\n", i,
@@ -1169,7 +1205,7 @@ static int shinkos6145_cmdline_arg(void *vctx, int argc, char **argv)
 			j = sinfonia_settonecurve(&ctx->dev, UPDATE_TARGET_TONE_CURRENT, optarg);
 			break;
 		case 'm':
-			dump_mediainfo(&ctx->media);
+			dump_mediainfo(&ctx->media, ctx->is_card);
 			break;
 		case 'q':
 			j = shinkos6145_dump_eeprom(ctx, optarg);
@@ -1302,9 +1338,9 @@ static int shinkos6145_attach(void *vctx, struct libusb_device_handle *dev, int 
 	}
 
 	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
-	ctx->marker.name = print_ribbons(ctx->media.ribbon_code);
+	ctx->marker.name = print_ribbons(ctx->media.ribbon_code, ctx->is_card);
 	ctx->marker.numtype = ctx->media.ribbon_code;
-	ctx->marker.levelmax = ribbon_sizes(ctx->media.ribbon_code);
+	ctx->marker.levelmax = ribbon_sizes(ctx->media.ribbon_code, ctx->is_card, ctx->dev.type == P_SHINKO_S2245);
 	ctx->marker.levelnow = CUPS_MARKER_UNKNOWN;
 
 	return CUPS_BACKEND_OK;
@@ -1370,13 +1406,18 @@ static int shinkos6145_read_parse(void *vctx, const void **vjob, int data_fd, in
 		job->copies = copies;
 
 	/* S6145 can only combine 2* 4x6 -> 8x6.
-	   2x6 strips and 3.5x5 -> 5x7 can't. */
+	   2x6 strips and 3.5x5 -> 5x7 can't.
+	   S2245 can combine 2x6 strips too!
+	*/
 	if (job->jp.columns == 1844 &&
 	    job->jp.rows == 1240 &&
-	    job->jp.method == PRINT_METHOD_STD &&
 	    (ctx->media.ribbon_code == RIBBON_6x8 ||
 	     ctx->media.ribbon_code == RIBBON_6x9)) {
-		job->can_combine = 1;
+
+		if (model == 6145 && job->jp.method == PRINT_METHOD_STD)
+			job->can_combine = 1;
+		else if (model == 2245)
+			job->can_combine = 1;
 	}
 
 	/* Extended spool format to re-purpose an unused header field.
@@ -1416,9 +1457,6 @@ static int shinkos6145_read_parse(void *vctx, const void **vjob, int data_fd, in
 
 #define JOB_EQUIV(__x)  if (job1->__x != job2->__x) goto done
 
-// XXX this code could be "generic sinfonia?"
-// but only the S6145 and S2245 can't automatically combine
-// or rewind.  So it's really only useful here.
 static void *shinkos6145_combine_jobs(const void *vjob1,
 				      const void *vjob2)
 {
@@ -1442,8 +1480,6 @@ static void *shinkos6145_combine_jobs(const void *vjob1,
 
 	switch (job1->jp.rows) {
 	case 1240:  /* 4x6 */
-		if (job1->jp.method != PRINT_METHOD_STD)
-			goto done;
 		newrows = 2492;
 		newpad = 12;
 		break;
@@ -1461,7 +1497,11 @@ static void *shinkos6145_combine_jobs(const void *vjob1,
 
 	newjob->jp.rows = newrows;
 	newjob->jp.media = CODE_6x8;
-	newjob->jp.method = PRINT_METHOD_SPLIT;
+
+	if (job1->jp.method == PRINT_METHOD_SPLIT) /* 4x6-div2 -> 8x6-div4 */
+		newjob->jp.method = PRINT_METHOD_COMBO_4;
+	else /* 4x6 -> 8x6-div2 */
+		newjob->jp.method = PRINT_METHOD_SPLIT;
 
 	/* Allocate new buffer */
 	newjob->databuf = malloc(newjob->jp.rows * newjob->jp.columns * 3);
@@ -1631,6 +1671,13 @@ top:
 		uint32_t oc_mode = job->jp.oc_mode;
 		uint32_t updated = 0;
 
+		if (ctx->dev.type == P_SHINKO_S2245) {
+			oc_mode = (job->jp.oc_mode & SINFONIA_PRINT28_OC_MASK) | (job->jp.quality ? SINFONIA_PRINT28_OPTIONS_HQ : 0);
+			if (!ctx->corrdata ||
+			    ctx->corrdatalen <= S2245_CORRDATA_HEADER_MODE_OFFSET ||
+			    ((uint8_t*)ctx->corrdata)[S2245_CORRDATA_HEADER_MODE_OFFSET] != oc_mode)
+				updated = 1;
+		}
 		if (ctx->dev.type != P_SHINKO_S2245) {
 			if (!oc_mode) /* if nothing set, default to glossy */
 				oc_mode = PARAM_OC_PRINT_GLOSS;
@@ -1661,11 +1708,11 @@ top:
 			return ret;
 		}
 
-		if (ctx->dev.type == P_SHINKO_S2245) {
-			ret = shinkos2245_get_imagecorr(ctx, (job->jp.oc_mode & SINFONIA_PRINT28_OC_MASK) | (job->jp.quality ? SINFONIA_PRINT28_OPTIONS_HQ : 0));
-		} else {
-			/* Get image correction parameters if necessary */
-			if (updated || !ctx->corrdata || !ctx->corrdatalen) {
+		/* Get image correction parameters if necessary */
+		if (updated || !ctx->corrdata || !ctx->corrdatalen) {
+			if (ctx->dev.type == P_SHINKO_S2245) {
+				ret = shinkos2245_get_imagecorr(ctx, oc_mode);
+			} else {
 				ret = shinkos6145_get_imagecorr(ctx);
 			}
 		}
@@ -1994,7 +2041,7 @@ static const char *shinkos6145_prefixes[] = {
 
 struct dyesub_backend shinkos6145_backend = {
 	.name = "Shinko/Sinfonia CHC-S6145/CS2/S2245/S3",
-	.version = "0.42" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.43.1" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = shinkos6145_prefixes,
 	.cmdline_usage = shinkos6145_cmdline,
 	.cmdline_arg = shinkos6145_cmdline_arg,

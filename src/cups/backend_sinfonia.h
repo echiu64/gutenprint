@@ -27,7 +27,7 @@
  *
  */
 
-#define LIBSINFONIA_VER "0.15"
+#define LIBSINFONIA_VER "0.15.1"
 
 #define SINFONIA_HDR1_LEN 0x10
 #define SINFONIA_HDR2_LEN 0x64
@@ -171,7 +171,7 @@ const char *sinfonia_print_modes(uint8_t v);
 #define PRINT_METHOD_COMBO_2 0x02
 #define PRINT_METHOD_COMBO_3 0x03 // S6245 only
 #define PRINT_METHOD_SPLIT   0x04
-#define PRINT_METHOD_4SPLIT  0x05 // S2245 only
+#define PRINT_METHOD_COMBO_4 0x05 // S2245 only
 #define PRINT_METHOD_DOUBLE  0x08 // S6145 only
 #define PRINT_METHOD_DISABLE_ERR 0x10 // S6245 only
 #define PRINT_METHOD_NOTRIM  0x80 // S6145 only
