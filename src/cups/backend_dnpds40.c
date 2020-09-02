@@ -290,6 +290,18 @@ static void *dnp_combine_jobs(const void *vjob1,
 		new_h = 3102;
 		gap_bytes = 30;
 		break;
+	case MULTICUT_A4x5:
+		new_multicut = MULTICUT_A4x5X2;
+		new_w = 2560;
+		new_h = 3102;
+		gap_bytes = 30;
+		break;
+	case MULTICUT_A5:
+		new_multicut = MULTICUT_A5X2;
+		new_w = 2560;
+		new_h = 3598;
+		gap_bytes = 30;
+		break;
 	case MULTICUT_8x6:
 		new_multicut = MULTICUT_8x6X2;
 		new_w = 2560;
@@ -1895,10 +1907,9 @@ parsed:
 				dnpds40_cleanup_job(job);
 				return CUPS_BACKEND_CANCEL;
 			}
-			/* A4xn and A5 can be rewound */
-			if (job->multicut == MULTICUT_A4x4 ||
-			    job->multicut == MULTICUT_A4x5 ||
-			    job->multicut == MULTICUT_A4x6 ||
+			/* Only A4x4 and A5 can be rewound */
+			// XXX we can fake more with fancy multicuts...
+			if (job->multicut == MULTICUT_A4x5 ||
 			    job->multicut == MULTICUT_A5)
 				job->can_rewind = 1;
 			break;
@@ -3411,7 +3422,7 @@ static const char *dnpds40_prefixes[] = {
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS-series / Citizen C-series",
-	.version = "0.133",
+	.version = "0.133.1",
 	.uri_prefixes = dnpds40_prefixes,
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
