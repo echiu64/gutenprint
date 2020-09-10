@@ -108,6 +108,7 @@ struct dnpds40_ctx {
 	int supports_6x9;
 	int supports_2x6;
 	int supports_3x5x2;
+	int supports_a4x6;
 	int supports_matte;
 	int supports_finematte;
 	int supports_luster;
@@ -990,6 +991,8 @@ static int dnpds40_attach(void *vctx, struct libusb_device_handle *dev, int type
 		ctx->supports_mediaclassrfid = 1;
 		if (FW_VER_CHECK(0,50))
 			ctx->supports_gamma = 1;
+		if (FW_VER_CHECK(1,07)) // XXX might be 1.06
+			ctx->supports_a4x6 = 1;
 		break;
 	case P_DNP_QW410:
 		ctx->native_width = 1408;
@@ -1978,6 +1981,12 @@ parsed:
 
 	if (job->multicut == MULTICUT_5x3_5X2 && !ctx->supports_3x5x2) {
 		ERROR("Printer does not support 3.5x5*2 prints, aborting!\n");
+		dnpds40_cleanup_job(job);
+		return CUPS_BACKEND_CANCEL;
+	}
+
+	if (!ctx->supports_a4x6 && job->multicut == MULTICUT_A4x6) {
+		ERROR("Printer does not support A4x6 prints, aborting!\n");
 		dnpds40_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
 	}
@@ -3422,7 +3431,7 @@ static const char *dnpds40_prefixes[] = {
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS-series / Citizen C-series",
-	.version = "0.133.1",
+	.version = "0.133.2",
 	.uri_prefixes = dnpds40_prefixes,
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
