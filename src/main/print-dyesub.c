@@ -8059,6 +8059,9 @@ static const overcoat_t dnpds620_overcoat[] =
   {"Matte", N_("Matte"), {3, "001"}},
   {"MatteFine", N_("Matte Fine"), {3, "021"}},
   {"MatteLuster", N_("Matte Luster"), {3, "022"}},
+  {"PartialMatte", N_("Partial Matte"), {3, "101"}},
+  {"PartialMatteFine", N_("Partial Matte Fine"), {3, "121"}},
+  {"PartialMatteLuster", N_("Partial Matte Luster"), {3, "122"}},
 };
 
 LIST(overcoat_list_t, dnpds620_overcoat_list, overcoat_t, dnpds620_overcoat);

@@ -93,6 +93,7 @@ struct dnpds40_ctx {
 
 	uint32_t last_multicut;
 	int last_matte;
+	int partialmatte;
 
 	int mediaoffset;
 	int correct_count;
@@ -251,6 +252,10 @@ static void *dnp_combine_jobs(const void *vjob1,
 
 	/* Any fancy cutter action means we pass */
 	if (job1->fullcut || job1->cutter > 120)
+		goto done;
+	/* Partial matte is no bueno */
+	if (job1->matte > 100 ||
+	    job2->matte > 100)
 		goto done;
 
 	/* Make sure we can combine these two prints */
@@ -1653,11 +1658,28 @@ parsed:
 	if (job->copies < copies)
 		job->copies = copies;
 
+	/* Make sure advanced matte modes are supported */
+	if (job->matte > 100) {
+		if (!ctx->supports_advmatte) {
+			ERROR("Printer does not support advanced matte modes, aborting!\n");
+			return CUPS_BACKEND_CANCEL;
+		}
+		if (ctx->partialmatte == 1) {
+			ctx->partialmatte = 2;
+		} else {
+			INFO("Partial matte lamination layer!\n");
+			ctx->partialmatte = 1;
+		}
+	} else {
+		if (ctx->partialmatte == 1)
+			ctx->partialmatte = 2;
+	}
+
 	/* Sanity check matte mode */
-	if (job->matte == 21 && !ctx->supports_finematte) {
+	if ((job->matte == 21 || job->matte == 121) && !ctx->supports_finematte) {
 		WARNING("Printer FW does not support Fine Matte mode, downgrading to normal matte\n");
 		job->matte = 1;
-	} else if (job->matte == 22 && !ctx->supports_luster) {
+	} else if ((job->matte == 22 || job->matte == 122) && !ctx->supports_luster) {
 		WARNING("Printer FW does not support Luster mode, downgrading to normal matte\n");
 		job->matte = 1;
 	} else if (job->matte > 1 && !ctx->supports_advmatte) {
@@ -2068,6 +2090,17 @@ static int dnpds40_main_loop(void *vctx, const void *vjob) {
 		manual_copies = 1;
 	}
 
+	/* Partial matte operation:
+	   - Two buffers to start
+	   - One buffer to complete
+	*/
+	if (ctx->partialmatte == 1) {
+		copies = 1;  /* Only send the partial matte layer over once */
+		buf_needed = 2;
+	} else if (ctx->partialmatte == 2) {
+		buf_needed = 1;
+	}
+
 	/* RX1HS requires HS media, but the only way to tell is that the
 	   HS media reports a lot code, while the non-HS media does not. */
 	if (ctx->needs_mlot) {
@@ -2248,7 +2281,7 @@ top:
 	}
 
 	/* Set overcoat parameters if appropriate */
-	if (ctx->supports_matte) {
+	if (ctx->supports_matte && ctx->partialmatte != 2) {
 		snprintf(buf, sizeof(buf), "%08d", job->matte);
 		dnpds40_build_cmd(&cmd, "CNTRL", "OVERCOAT", 8);
 		if ((ret = dnpds40_do_cmd(ctx, &cmd, (uint8_t*)buf, 8)))
@@ -2295,9 +2328,13 @@ top:
 	}
 	sleep(1);  /* Give things a moment */
 
+	/* Reset partial matte state if necessary */
+	if (ctx->partialmatte == 2)
+		ctx->partialmatte = 0;
+
 	if (fast_return && !manual_copies) {
 		INFO("Fast return mode enabled.\n");
-	} else {
+	} else if (!ctx->partialmatte) {
 		INFO("Waiting for job to complete...\n");
 		int started = 0;
 
@@ -3431,7 +3468,7 @@ static const char *dnpds40_prefixes[] = {
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS-series / Citizen C-series",
-	.version = "0.133.2",
+	.version = "0.133.3",
 	.uri_prefixes = dnpds40_prefixes,
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
