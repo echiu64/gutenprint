@@ -1984,6 +1984,31 @@ static int sony_upd897_parse_parameters(stp_vars_t *v)
 }
 
 /* Sony UP-D898 family */
+static const dyesub_pagesize_t sony_d898_page[] =
+{
+  DEFINE_PAPER_SIMPLE( "w213h284", "960x1280", PT1(960,325), PT1(1280,325), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w284h284", "1280x1280", PT1(1280,325), PT1(1280,325), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w426h284", "1920x1280", PT1(1280,325), PT1(1920,325), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w852h284", "3840x1280", PT1(1280,325), PT1(3840,325), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w907h284", "4096x1280", PT1(1280,325), PT1(4096,325), DYESUB_PORTRAIT),
+  /* A true "custom" size, printer will cut at the image boundary */
+  DEFINE_PAPER_SIMPLE( "Custom", "Custom", PT1(1280,325), -1, DYESUB_PORTRAIT),
+};
+
+LIST(dyesub_pagesize_list_t, sony_d898_page_list, dyesub_pagesize_t, sony_d898_page);
+
+static const dyesub_printsize_t sony_d898_printsize[] =
+{
+  { "325x325", "w213h284", 960, 1280},
+  { "325x325", "w284h284", 1280, 1280},
+  { "325x325", "w426h284", 1280, 1920},
+  { "325x325", "w852h284", 1280, 3840},
+  { "325x325", "w907h284", 1280, 4096},
+  { "325x325", "Custom", 1280, 4096}, /* Maximum */
+};
+
+LIST(dyesub_printsize_list_t, sony_d898_printsize_list, dyesub_printsize_t, sony_d898_printsize);
+
 static void sony_upd898_printer_init_func(stp_vars_t *v)
 {
   char hdrbuf[256];
@@ -2054,13 +2079,13 @@ static void sony_upd898_printer_init_func(stp_vars_t *v)
   stp_putc(0x28, v);
   stp_putc(0x01, v);
 
-  stp_putc(0x10, v);
+  stp_putc(0x00, v);
   stp_putc(0xd4, v);
   stp_putc(0x00, v);
   stp_putc(0x00, v);
   stp_putc(0x03, v);
   stp_putc(0x58, v);
-  stp_put16_be(pd->h_size, v);
+  stp_put16_be(pd->h_size, v); // ie "rows"
   stp_putc(0x00, v);
   stp_putc(0x00, v);
   stp_putc(0x13, v);
@@ -10058,8 +10083,8 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     2008,
     &w_ink_list,
     &res_325dpi_list,
-    &sony_d89x_page_list,
-    &sony_d89x_printsize_list,
+    &sony_d898_page_list,
+    &sony_d898_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_MONOCHROME | DYESUB_FEATURE_NATIVECOPIES,
