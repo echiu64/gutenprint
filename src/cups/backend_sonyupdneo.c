@@ -372,10 +372,17 @@ static int updneo_read_parse(void *vctx, const void **vjob, int data_fd, int cop
 
 	// XXX Check vs loaded media type (ctx->marker.numtype?)
 
-	// XXX set job copies to max(job, parameter)
-	job->databuf[28] = job->copies;
+	// XXX set job copies to max(job, parameter)?
+	/* Find copy offset */
+	for (int i = 0 ; i < 312 ; i++ ) {
+		if (job->databuf[i] == 0x02 &&
+		    job->databuf[i+1] == 0x00 &&
+		    job->databuf[i+2] == 0x09) {
+			job->databuf[i+4] = copies;
+			break;
+		}
+	}
 	job->copies = 1;  /* Printer makes copies */
-	UNUSED(copies);
 
 	*vjob = job;
 
@@ -694,7 +701,7 @@ static const char *sonyupdneo_prefixes[] = {
 
 const struct dyesub_backend sonyupdneo_backend = {
 	.name = "Sony UP-D Neo",
-	.version = "0.13",
+	.version = "0.14",
 	.flags = BACKEND_FLAG_BADISERIAL, /* UP-D898MD at least */
 	.uri_prefixes = sonyupdneo_prefixes,
 	.cmdline_arg = updneo_cmdline_arg,
@@ -748,6 +755,7 @@ const struct dyesub_backend sonyupdneo_backend = {
    size is the length mentioned in the payload (ie rows * cols * planes)
    plus the PDL header (varies) and PDL footer (7 bytes)
 
+Note:  All multi-byte values are BIG ENDIAN
 
  UP-D898MD:  18*16+2 == 290 byte header
 
@@ -825,8 +833,6 @@ const struct dyesub_backend sonyupdneo_backend = {
 
   898 Format:
 
-  LL ZZ ZZ [ LL bytes]
-
   00  00 01
   00  00 10
   0f  00 1c  00 00 00 00  00 00 00 00  00 00 00 00  00 00 01
@@ -836,11 +842,10 @@ const struct dyesub_backend sonyupdneo_backend = {
   09  00 28  01 00 d4 00  00 03 58 YY  YY
   00  00 13
   01  00 04  00
-  80  00 23  00 0c 01 09  XX XX YY YY  00 00 00 00  08 ff 08 00
-             19 00 00 00  00 XX XX YY  YY 00 00 81  80 00 8f 00
-
-  b8  [ follwed by zeros ]
-
+  80  00 23  00 0c 01 09  XX XX YY YY  00 00 00 00  08 ff
+  08  00 19  00 00 00 00  XX XX YY YY
+  00  00 81
+  80  00 8f  ## ##  [ follwed by ## zeros ]  [ b8 on 898 ]
   c0  00 82  LL LL LL LL
 
   DR80MD format:
@@ -860,11 +865,10 @@ const struct dyesub_backend sonyupdneo_backend = {
   00  00 13
   01  00 04  00
   80  00 23  00 10 03 00  CC CC RR RR  00 00 00 00  08 08 08 ff
-             ff ff 01 00  17 00 08 00  19 00 00 00  00 CC CC RR
-             RR 00 00 81  80 00 8f 00
-
-  a6 [ followed by zeros ]
-
+             ff ff 01 00  17 00
+  08  00 19  00 00 00 00  CC CC RR RR
+  00  00 81
+  80  00 8f  ## ## [ followed by ## zeros ] [ a6 on dr80md ]
   c0  00 82  LL LL LL LL
 
   CR20L format:
@@ -884,12 +888,63 @@ const struct dyesub_backend sonyupdneo_backend = {
   00  00 13
   01  00 04  00
   80  00 23  00 10 03 00  RR RR CC CC  00 00 00 00  08 08 08 ff
-             ff ff 01 00  17 00 08 00  19 00 00 00  00 RR RR CC
-             CC 00 00 81  80 00 8f 00
-
-  a4/9d [ followed by zeros ]   [ 9d if mcut is on ]
-
+             ff ff 01 00  17 00
+  08  00 19  00 00 00 00  RR RR CC CC
+  00  00 81
+  80  00 8f  ## ## [ followed by ## zeros ]   [ a4/9d if mcut is off/on ]
   c0  00 82  LL LL LL LL
+
+  ***  COMBINED / COMMON :
+
+  XX ZZ ZZ [ XX = length, ZZ = code, followed by XX bytes ]
+
+  00  00 01
+  00  00 10
+  0f  00 1c  00 00 00 00  00 00 00 00  00 00 00 00  00 00 ZZ  [ ZZ = pagecode; 01 for 898, 00 for CR20L, 00/56 for Letter/A4 on DR80MD ]
+  02  00 09  00 NN  [ NN = copies ]
+  01  00 11  01
+  08  00 1a  00 00 00 00  CC CC RR RR   [ CC = cols, RR = rows ]
+  00  00 13
+  01  00 04  00
+  [ more/unique stuff in here ]
+  [ always ends with these ]
+  08  00 19  00 00 00 00  RR RR CC CC
+  00  00 81
+  80  00 8f  ## ##  [ follwed by ## zeros, pad to fill out header ]
+  c0  00 82  LL LL LL LL
+
+  *** 898 unique [ 290 byte header ]
+
+  09  00 28  01 00 d4 00  00 03 58 CC  CC
+  80  00 23  00 0c  01 09 RR RR  CC CC 00 00  00 00 08 ff
+             ^^ ^^
+             length of data to follow
+
+  ** CR20L unique [ 290 byte header ]
+
+  03  00 1d  00 00 00
+  03  00 13  00 01 02   [ only when multicut is on ]
+  01  00 27  40
+
+  02  00 16  00 00
+  02  00 06  01 01
+  01  00 20  01
+
+  80  00 23  00 10  03 00 RR RR  CC CC 00 00  00 00 08 08  08 ff ff ff
+  01  00 17  00
+
+  ** DR80MD unique [ 312 byte header ]
+
+  80  00 15  00 12 55 50  44 52 38 30  00 00 4c 55  54 QQ 00 00
+             00 00 00 SS  [ SS/QQ = LUT (See above) ]
+  04  00 1d  01 00 00 05
+
+  02  00 16  00 01
+  02  00 06  01 03
+  01  00 20  00
+
+  80  00 23  00 10  03 00 RR RR  CC CC 00 00  00 00 08 08  08 ff ff ff
+  01  00 17  00
 
  *****************
 
