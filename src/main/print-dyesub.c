@@ -2097,11 +2097,7 @@ static void sony_upd898_printer_init_func(stp_vars_t *v)
   stp_putc(0x8f, v);
   stp_putc(0x00, v);
   stp_putc(0xb8, v);
-  dyesub_nputc(v, 0, 13);
-
-  dyesub_nputc(v, 0, 16 * 9);
-
-  dyesub_nputc(v, 0, 11);
+  dyesub_nputc(v, 0, 0xb8);
   stp_putc(0xc0, v);
   stp_putc(0x00, v);
   stp_putc(0x82, v);
@@ -2111,7 +2107,6 @@ static void sony_upd898_printer_init_func(stp_vars_t *v)
 static void sony_updneo_printer_end_func(stp_vars_t *v)
 {
   /* write post-payload trailing stuff. */
-//  dyesub_nputc(v, '\xff', 16);
   stp_putc(0x00, v);
   stp_putc(0x00, v);
   stp_putc(0x14, v);
@@ -2130,18 +2125,10 @@ static void sony_updneo_printer_end_func(stp_vars_t *v)
   stp_putc(0x8f, v);
   stp_putc(0x01, v);
   stp_putc(0x11, v);
-  dyesub_nputc(v, 0, 276);
+  dyesub_nputc(v, 0, 275);
 
   /* And finally, the PJL footer */
-  stp_zfwrite("@PJL EOJ\r\n\x1b%%-12345X\r\n", 1, 21, v);
-}
-
-static void sony_updneo_printer_end_func_type2(stp_vars_t *v)
-{
-  /* write post-payload trailing stuff. */
-  dyesub_nputc(v, '\xff', 16);
-  /* It's the same from here */
-  sony_updneo_printer_end_func(v);
+  stp_zfwrite("@PJL EOJ\r\n\x1b%%-12345X\r\n", 1, 22, v);
 }
 
 /* Sony UP-CR20 family */
@@ -2341,15 +2328,11 @@ static void sony_upcr20_printer_init_func(stp_vars_t *v)
   if (strcmp(pd->pagesize,"w360h504-div2") == 0 ||
       strcmp(pd->pagesize,"w432h576-div2") == 0) {
     stp_putc(0x9e, v);
-    dyesub_nputc(v, 0, 3);
+    dyesub_nputc(v, 0, 0x9e);
   } else {
     stp_putc(0xa4, v);
-    dyesub_nputc(v, 0, 9);
+    dyesub_nputc(v, 0, 0xa4);
   }
-
-  dyesub_nputc(v, 0, 16 * 8);
-
-  dyesub_nputc(v, 0, 11);
   stp_putc(0xc0, v);
   stp_putc(0x00, v);
   stp_putc(0x82, v);
@@ -2535,11 +2518,7 @@ static void sony_updr80md_printer_init_func(stp_vars_t *v)
   stp_putc(0x8f, v);
   stp_putc(0x00, v);
   stp_putc(0xa6, v);
-  dyesub_nputc(v, 0, 5);
-
-  dyesub_nputc(v, 0, 16 * 10);
-
-  stp_putc(0x00, v);
+  dyesub_nputc(v, 0, 0xa6);
   stp_putc(0xc0, v);
   stp_putc(0x00, v);
   stp_putc(0x82, v);
@@ -10084,7 +10063,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_MONOCHROME | DYESUB_FEATURE_NATIVECOPIES,
-    &sony_upd898_printer_init_func, &sony_updneo_printer_end_func_type2,
+    &sony_upd898_printer_init_func, &sony_updneo_printer_end_func,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
     NULL, NULL,
@@ -10099,7 +10078,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &upcr20_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
-    &sony_upcr20_printer_init_func, &sony_updneo_printer_end_func_type2,
+    &sony_upcr20_printer_init_func, &sony_updneo_printer_end_func,
     NULL, NULL,
     NULL, NULL,
     &upcr20_overcoat_list, NULL,
