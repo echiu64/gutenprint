@@ -145,6 +145,13 @@ static int updneo_attach(void *vctx, struct dyesub_connection *conn, uint8_t job
 		/* Needed by the UP-D898!  But should be safe for
 		   all models */
 		libusb_reset_device(ctx->conn->dev);
+	} else {
+		if (ctx->conn->type == P_SONY_UPD898) {
+			strcpy(ctx->sts.scsyi, "100005001000050000000000014500");
+		} else if (ctx->conn->type == P_SONY_UPDR80) {
+			strcpy(ctx->sts.scsyi, "0A300E5609A00C7809A00C78012D00");
+		}
+		// XXX don't forget cr20l here.
 	}
 
 	if (test_mode >= TEST_MODE_NOATTACH && getenv("MEDIA_CODE"))
@@ -331,21 +338,32 @@ static int updneo_read_parse(void *vctx, const void **vjob, int data_fd, int cop
 		char w[5], h[5];
 		uint16_t mw, mh;
 		uint16_t jw, jh;
-		memcpy(h, ctx->sts.scsyi, 4);
+		memcpy(w, ctx->sts.scsyi, 4);
 		h[4] = 0;
-		memcpy(w, ctx->sts.scsyi + 4, 4);
+		memcpy(h, ctx->sts.scsyi + 4, 4);
 		w[4] = 0;
-		mw = strtol(w, NULL, 16);
-		mh = strtol(h, NULL, 16);
 
-		memcpy(&jw, job->databuf + 40, 2);
-		memcpy(&jh, job->databuf + 40 + 2, 2);
+		if (ctx->conn->type == P_SONY_UPD898) {
+			mw = strtol(h, NULL, 16);
+			mh = strtol(w, NULL, 16);
+		} else {
+			mw = strtol(w, NULL, 16);
+			mh = strtol(h, NULL, 16);
+		}
+
+		if (ctx->conn->type == P_SONY_UPDR80) {
+			memcpy(&jw, job->databuf + 84, 2);
+			memcpy(&jh, job->databuf + 84 + 2, 2);
+		} else {
+			memcpy(&jw, job->databuf + 40, 2);
+			memcpy(&jh, job->databuf + 40 + 2, 2);
+		}
 
 		jw = be16_to_cpu(jw);
 		jh = be16_to_cpu(jh);
 
-		if (jw > mw || jh > mh) {
-			ERROR("Job (%dx%d) exceeds max dimensions(%d/%d)\n",
+		if (mw && mh && (jw > mw || jh > mh)) {
+			ERROR("Job (%d/%d) exceeds max dimensions(%d/%d)\n",
 			      jw,jh,mw,mh);
 			updneo_cleanup_job(job);
 			return CUPS_BACKEND_CANCEL;
@@ -676,7 +694,7 @@ static const char *sonyupdneo_prefixes[] = {
 
 const struct dyesub_backend sonyupdneo_backend = {
 	.name = "Sony UP-D Neo",
-	.version = "0.12",
+	.version = "0.13",
 	.flags = BACKEND_FLAG_BADISERIAL, /* UP-D898MD at least */
 	.uri_prefixes = sonyupdneo_prefixes,
 	.cmdline_arg = updneo_cmdline_arg,
@@ -803,58 +821,75 @@ const struct dyesub_backend sonyupdneo_backend = {
 
    [payload of LL bytes follows]
 
- Common sequences:
-
-  [ D898 ]
-
-  [00 00 01 00 00 10 0f 00  1c 00 00 00 00 00 00 00
-   00 00 00 00]00 00 00 01 [02 00 09 00 NN]01 00 11
-   01 08 00 1a 00 00 00 00  XX XX YY YY 09 00 28 01
-   00 d4 00 00 03 58 YY YY  00 00[13 01 00 04 00 80
-   00 23]00 0c 01 09 XX XX  YY YY 00 00 00 00 08 ff
-  [08 00 19 00 00 00 00 XX  XX YY YY 00 00 81 80 00
-   8f 00 b8]
-
-   [ 0xb8 of 0x00 ] ... c0 00 82 LL LL LL LL
-
-  [ CR20L ]
-
-  [00 00 01 00 00 10 0f 00  1c 00 00 00 00 00 00 00
-   00 00 00 00]01 00 00 00  02 00 16 00 00[02 00 09
-   00 NN]02 00 06 01 01 03  00 1d 00 00 00*01 00 20
-   01 01 00 27 40 01 00 11  01 08 00 1a 00 00 00 00
-   RR RR CC CC 00 00[13 01  00 04 00 80 00 23]00 10
-   03 00 RR RR CC CC 00 00  00 00 08 08 08 ff ff ff
-   01 00 17 00[08 00 19 00  00 00 00 RR RR CC CC 00
-   00 81 80 00 8f 00 a4]
-
-    * 03 00 13 00 01 02   [inserted when using multicut ]
-
-   [ 0xa4 of 0x00 ] ... c0 00 82 LL LL LL LL
-
-  [ UP-DR80MD ]
-
-  [00 00 01 00 00 10 0f 00  1c 00 00 00 00 00 00 00
-   00 00 00 00]00 00 00 ZZ  02 00 16 00 01 80 00 15
-   00 12 55 50 44 52 38 30  00 00 4c 55 54 QQ 00 00
-   00 00 00 SS[02 00 09 00  NN]02 00 06 01 03 04 00
-   1d 01 00 00 05 01 00 20  00 01 00 11 01 08 00 1a
-   00 00 00 00 CC CC RR RR  00 00[13 01 00 04 00 80
-   00 23]00 10 03 00 CC CC  RR RR 00 00 00 00 08 08
-   08 ff ff ff 01 00 17 00 [08 00 19 00 00 00 00 CC
-   CC RR RR 00 00 81 80 00  8f 00 a6]
-
-   [ 0xa6 of 0x00 ] ... c0 00 82 LL LL LL LL
-
  *********
 
-   02 00 09 00 NN  <- Copy count
-   00 00 00 ZZ     <- Media type?
+  898 Format:
 
-   27 54 01 00
+  LL ZZ ZZ [ LL bytes]
 
-   00 10 03 00 RR RR CC CC
-   08 00 19 00 00 00 00 00 RR RR CC CC 00 00 81 80 00 8f 00 a4
+  00  00 01
+  00  00 10
+  0f  00 1c  00 00 00 00  00 00 00 00  00 00 00 00  00 00 01
+  02  00 09  00 NN
+  01  00 11  01
+  08  00 1a  00 00 00 00  XX XX YY YY
+  09  00 28  01 00 d4 00  00 03 58 YY  YY
+  00  00 13
+  01  00 04  00
+  80  00 23  00 0c 01 09  XX XX YY YY  00 00 00 00  08 ff 08 00
+             19 00 00 00  00 XX XX YY  YY 00 00 81  80 00 8f 00
+
+  b8  [ follwed by zeros ]
+
+  c0  00 82  LL LL LL LL
+
+  DR80MD format:
+
+  00  00 01
+  00  00 10
+  0f  00 1c  00 00 00 00  00 00 00 00  00 00 00 00  00 00 ZZ
+  02  00 16  00 01
+  80  00 15  00 12 55 50  44 52 38 30  00 00 4c 55  54 QQ 00 00
+             00 00 00 SS
+  02  00 09  00 NN
+  02  00 06  01 03
+  04  00 1d  01 00 00 05
+  01  00 20  00
+  01  00 11  01
+  08  00 1a  00 00 00 00  CC CC RR RR
+  00  00 13
+  01  00 04  00
+  80  00 23  00 10 03 00  CC CC RR RR  00 00 00 00  08 08 08 ff
+             ff ff 01 00  17 00 08 00  19 00 00 00  00 CC CC RR
+             RR 00 00 81  80 00 8f 00
+
+  a6 [ followed by zeros ]
+
+  c0  00 82  LL LL LL LL
+
+  CR20L format:
+
+  00  00 01
+  00  00 10
+  0f  00 1c  00 00 00 00  00 00 00 00  00 00 00 01  00 00 00
+  02  00 16  00 00
+  02  00 09  00 NN
+  02  00 06  01 01
+  03  00 1d  00 00 00
+  03  00 13  00 01 02   [ only when multicut is on ]
+  01  00 20  01
+  01  00 27  40
+  01  00 11  01
+  08  00 1a  00 00 00 00  RR RR CC CC
+  00  00 13
+  01  00 04  00
+  80  00 23  00 10 03 00  RR RR CC CC  00 00 00 00  08 08 08 ff
+             ff ff 01 00  17 00 08 00  19 00 00 00  00 RR RR CC
+             CC 00 00 81  80 00 8f 00
+
+  a4/9d [ followed by zeros ]   [ 9d if mcut is on ]
+
+  c0  00 82  LL LL LL LL
 
  *****************
 
