@@ -51,6 +51,8 @@
 #endif
 
 /* Image processing library function prototypes */
+typedef void (*dump_announceFN)(FILE *fp);
+
 typedef int (*ImageProcessingFN)(unsigned char *, unsigned short *, void *);
 typedef int (*ImageAvrCalcFN)(unsigned char *, unsigned short, unsigned short, unsigned char *);
 
@@ -695,6 +697,7 @@ struct shinkos6145_ctx {
 
 	void *dl_handle;
 
+	dump_announceFN DumpAnnounce;
 	ImageProcessingFN ImageProcessing;
 	ImageAvrCalcFN ImageAvrCalc;
 
@@ -783,7 +786,7 @@ static int get_status(struct shinkos6145_ctx *ctx)
 	INFO("Head Distance:         %08u inches\n", le32_to_cpu(resp2.head_distance));
 
 	/* Query various params */
-	if (ctx->dev.type == P_SHINKO_S6145D) {
+	if (ctx->dev.conn->type == P_SHINKO_S6145D) {
 		if ((ret = sinfonia_getparam(&ctx->dev, PARAM_REGION_CODE, &val))) {
 			ERROR("Failed to execute command\n");
 			return ret;
@@ -791,7 +794,7 @@ static int get_status(struct shinkos6145_ctx *ctx)
 		INFO("Region Code: %#x\n", val);
 
 	}
-	if (ctx->dev.type != P_SHINKO_S2245) {
+	if (ctx->dev.conn->type != P_SHINKO_S2245) {
 		if ((ret = sinfonia_getparam(&ctx->dev, PARAM_PAPER_PRESV, &val))) {
 			ERROR("Failed to execute command\n");
 			return ret;
@@ -802,7 +805,7 @@ static int get_status(struct shinkos6145_ctx *ctx)
 		ERROR("Failed to execute command\n");
 		return ret;
 	}
-	if (ctx->dev.type != P_SHINKO_S2245) {
+	if (ctx->dev.conn->type != P_SHINKO_S2245) {
 		INFO("Driver mode:         %s\n", s2245_drivermodes(val));
 	} else {
 		INFO("Driver mode:         %s\n", (val ? "On" : "Off"));
@@ -814,7 +817,7 @@ static int get_status(struct shinkos6145_ctx *ctx)
 	}
 	INFO("Paper load mode:     %s\n", (val ? "Cut" : "No Cut"));
 
-	if (ctx->dev.type != P_SHINKO_S2245) {
+	if (ctx->dev.conn->type != P_SHINKO_S2245) {
 		if ((ret = sinfonia_getparam(&ctx->dev, PARAM_SLEEP_TIME, &val))) {
 			ERROR("Failed to execute command\n");
 			return ret;
@@ -861,7 +864,7 @@ static int shinkos6145_dump_corrdata(struct shinkos6145_ctx *ctx, char *fname)
 {
 	int ret;
 
-	if (ctx->dev.type == P_SHINKO_S2245) {
+	if (ctx->dev.conn->type == P_SHINKO_S2245) {
 		ret = shinkos2245_get_imagecorr(ctx, 0x0a); // XXX have to supply something..  this is HQ matte.
 	} else {
 		ret = shinkos6145_get_imagecorr(ctx);
@@ -959,7 +962,7 @@ static int shinkos6145_get_imagecorr(struct shinkos6145_ctx *ctx)
 	while (total < ctx->corrdatalen) {
 		struct s6145_imagecorr_data data;
 
-		ret = read_data(ctx->dev.dev, ctx->dev.endp_up, (uint8_t *) &data,
+		ret = read_data(ctx->dev.conn, (uint8_t *) &data,
 				sizeof(data),
 				&num);
 		if (ret < 0)
@@ -1017,7 +1020,7 @@ static int shinkos2245_get_imagecorr(struct shinkos6145_ctx *ctx, uint8_t option
 	while (total < ctx->corrdatalen) {
 		struct s6145_imagecorr_data data;
 
-		ret = read_data(ctx->dev.dev, ctx->dev.endp_up, (uint8_t *) &data,
+		ret = read_data(ctx->dev.conn, (uint8_t *) &data,
 				sizeof(data),
 				&num);
 		if (ret < 0)
@@ -1166,7 +1169,7 @@ static int shinkos6145_cmdline_arg(void *vctx, int argc, char **argv)
 			j = sinfonia_settonecurve(&ctx->dev, UPDATE_TARGET_TONE_USER, optarg);
 			break;
 		case 'e':
-			if (ctx->dev.type == P_SHINKO_S2245) {
+			if (ctx->dev.conn->type == P_SHINKO_S2245) {
 				j = s2245_get_errorlog(&ctx->dev);
 			} else {
 				j = sinfonia_geterrorlog(&ctx->dev);
@@ -1252,18 +1255,13 @@ static void *shinkos6145_init(void)
 	return ctx;
 }
 
-static int shinkos6145_attach(void *vctx, struct libusb_device_handle *dev, int type,
-			      uint8_t endp_up, uint8_t endp_down, int iface, uint8_t jobid)
+static int shinkos6145_attach(void *vctx, struct dyesub_connection *conn, uint8_t jobid)
 {
 	struct shinkos6145_ctx *ctx = vctx;
 
-	ctx->dev.dev = dev;
-	ctx->dev.endp_up = endp_up;
-	ctx->dev.endp_down = endp_down;
-	ctx->dev.type = type;
-	ctx->dev.iface = iface;
+	ctx->dev.conn = conn;
 
-	if (type == P_SHINKO_S2245) {
+	if (conn->type == P_SHINKO_S2245) {
 		ctx->dev.params = s2245_params;
 		ctx->dev.params_count = s2245_params_num;
 		ctx->dev.error_codes = &s2245_error_codes;
@@ -1274,6 +1272,7 @@ static int shinkos6145_attach(void *vctx, struct libusb_device_handle *dev, int 
 		if (!ctx->dl_handle)
 			ctx->dl_handle = DL_OPEN(LIB2245_NAME_RE); /* Then the RE one */
 		if (ctx->dl_handle) {
+			ctx->DumpAnnounce = DL_SYM(ctx->dl_handle, "dump_announce");
 			ctx->ip_imageProc = DL_SYM(ctx->dl_handle, "ip_imageProc");
 			ctx->ip_checkIpp = DL_SYM(ctx->dl_handle, "ip_checkIpp");
 			ctx->ip_getMemorySize = DL_SYM(ctx->dl_handle, "ip_getMemorySize");
@@ -1283,11 +1282,13 @@ static int shinkos6145_attach(void *vctx, struct libusb_device_handle *dev, int 
 				ctx->dl_handle = NULL;
 			} else {
 				INFO("Image processing library successfully loaded\n");
+				if (ctx->DumpAnnounce)
+					ctx->DumpAnnounce(logger);
 			}
 		}
 #endif
-	} else if (type == P_SHINKO_S6145 ||
-		   type == P_SHINKO_S6145D) {
+	} else if (conn->type == P_SHINKO_S6145 ||
+		   conn->type == P_SHINKO_S6145D) {
 		ctx->dev.params = s6145_params;
 		ctx->dev.params_count = s6145_params_num;
 		ctx->dev.error_codes = &s6145_error_codes;
@@ -1298,6 +1299,7 @@ static int shinkos6145_attach(void *vctx, struct libusb_device_handle *dev, int 
 		if (!ctx->dl_handle)
 			ctx->dl_handle = DL_OPEN(LIB6145_NAME_RE); /* Then the RE one */
 		if (ctx->dl_handle) {
+			ctx->DumpAnnounce = DL_SYM(ctx->dl_handle, "dump_announce");
 			ctx->ImageProcessing = DL_SYM(ctx->dl_handle, "ImageProcessing");
 			ctx->ImageAvrCalc = DL_SYM(ctx->dl_handle, "ImageAvrCalc");
 			if (!ctx->ImageProcessing || !ctx->ImageAvrCalc) {
@@ -1306,6 +1308,8 @@ static int shinkos6145_attach(void *vctx, struct libusb_device_handle *dev, int 
 				ctx->dl_handle = NULL;
 			} else {
 				INFO("Image processing library successfully loaded\n");
+				if (ctx->DumpAnnounce)
+					ctx->DumpAnnounce(logger);
 			}
 		}
 #endif
@@ -1340,7 +1344,7 @@ static int shinkos6145_attach(void *vctx, struct libusb_device_handle *dev, int 
 	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
 	ctx->marker.name = print_ribbons(ctx->media.ribbon_code, ctx->is_card);
 	ctx->marker.numtype = ctx->media.ribbon_code;
-	ctx->marker.levelmax = ribbon_sizes(ctx->media.ribbon_code, ctx->is_card, ctx->dev.type == P_SHINKO_S2245);
+	ctx->marker.levelmax = ribbon_sizes(ctx->media.ribbon_code, ctx->is_card, ctx->dev.conn->type == P_SHINKO_S2245);
 	ctx->marker.levelnow = CUPS_MARKER_UNKNOWN;
 
 	return CUPS_BACKEND_OK;
@@ -1374,8 +1378,8 @@ static int shinkos6145_read_parse(void *vctx, const void **vjob, int data_fd, in
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
 
-	if (ctx->dev.type == P_SHINKO_S6145 ||
-	    ctx->dev.type == P_SHINKO_S6145D)
+	if (ctx->dev.conn->type == P_SHINKO_S6145 ||
+	    ctx->dev.conn->type == P_SHINKO_S6145D)
 		model = 6145;
 	else
 		model = 2245;
@@ -1389,7 +1393,7 @@ static int shinkos6145_read_parse(void *vctx, const void **vjob, int data_fd, in
 	job->jobsize = sizeof(*job);
 
 	/* Common read/parse code */
-	if (ctx->dev.type == P_KODAK_6900) {
+	if (ctx->dev.conn->type == P_KODAK_6900) {
 		ret = sinfonia_raw28_read_parse(data_fd, job);
 	} else {
 		ret = sinfonia_read_parse(data_fd, model, job);
@@ -1427,7 +1431,7 @@ static int shinkos6145_read_parse(void *vctx, const void **vjob, int data_fd, in
 	input_ymc = job->jp.ext_flags & EXT_FLAG_PLANARYMC;
 
 	/* Convert packed RGB to planar YMC if necessary */
-	if (ctx->dev.type != P_SHINKO_S2245 && !input_ymc) {
+	if (ctx->dev.conn->type != P_SHINKO_S2245 && !input_ymc) {
 		INFO("Converting Packed RGB to Planar YMC\n");
 		int planelen = job->jp.columns * job->jp.rows;
 		uint8_t *databuf3 = malloc(job->datalen);
@@ -1580,7 +1584,7 @@ static int shinkos6145_main_loop(void *vctx, const void *vjob) {
 
 	// XXX check copies against remaining media?
 
-	if (ctx->dev.type != P_SHINKO_S2245) {
+	if (ctx->dev.conn->type != P_SHINKO_S2245) {
 		/* Query printer mode */
 		ret = sinfonia_getparam(&ctx->dev, PARAM_OC_PRINT, &cur_mode);
 		if (ret) {
@@ -1590,7 +1594,7 @@ static int shinkos6145_main_loop(void *vctx, const void *vjob) {
 	}
 
 	/* Send Set Time */
-	if (ctx->dev.type == P_SHINKO_S2245) {
+	if (ctx->dev.conn->type == P_SHINKO_S2245) {
 		struct sinfonia_settime_cmd settime;
 		time_t now = time(NULL);
 		struct tm *cur = localtime(&now);
@@ -1655,7 +1659,7 @@ top:
 	}
 	last_state = state;
 
-	fflush(stderr);
+	fflush(logger);
 
 	switch (state) {
 	case S_IDLE:
@@ -1671,14 +1675,14 @@ top:
 		uint32_t oc_mode = job->jp.oc_mode;
 		uint32_t updated = 0;
 
-		if (ctx->dev.type == P_SHINKO_S2245) {
+		if (ctx->dev.conn->type == P_SHINKO_S2245) {
 			oc_mode = (job->jp.oc_mode & SINFONIA_PRINT28_OC_MASK) | (job->jp.quality ? SINFONIA_PRINT28_OPTIONS_HQ : 0);
 			if (!ctx->corrdata ||
 			    ctx->corrdatalen <= S2245_CORRDATA_HEADER_MODE_OFFSET ||
 			    ((uint8_t*)ctx->corrdata)[S2245_CORRDATA_HEADER_MODE_OFFSET] != oc_mode)
 				updated = 1;
 		}
-		if (ctx->dev.type != P_SHINKO_S2245) {
+		if (ctx->dev.conn->type != P_SHINKO_S2245) {
 			if (!oc_mode) /* if nothing set, default to glossy */
 				oc_mode = PARAM_OC_PRINT_GLOSS;
 
@@ -1710,7 +1714,7 @@ top:
 
 		/* Get image correction parameters if necessary */
 		if (updated || !ctx->corrdata || !ctx->corrdatalen) {
-			if (ctx->dev.type == P_SHINKO_S2245) {
+			if (ctx->dev.conn->type == P_SHINKO_S2245) {
 				ret = shinkos2245_get_imagecorr(ctx, oc_mode);
 			} else {
 				ret = shinkos6145_get_imagecorr(ctx);
@@ -1728,7 +1732,7 @@ top:
 			return CUPS_BACKEND_FAILED;
 		}
 
-		if (ctx->dev.type == P_SHINKO_S2245) {
+		if (ctx->dev.conn->type == P_SHINKO_S2245) {
 			uint32_t bufSize = 0;
 			uint16_t *newbuf;
 
@@ -1786,7 +1790,7 @@ top:
 
 		INFO("Sending print job (internal id %u)\n", ctx->jobid);
 
-		if (ctx->dev.type != P_SHINKO_S2245) {
+		if (ctx->dev.conn->type != P_SHINKO_S2245) {
 			struct s6145_print_cmd print;
 			memset(&print, 0, sizeof(print));
 			print.hdr.cmd = cpu_to_le16(SINFONIA_CMD_PRINTJOB);
@@ -1801,7 +1805,7 @@ top:
 			print.combo_wait = 0;
 
 			/* Brava21 header has a few quirks */
-			if(ctx->dev.type == P_SHINKO_S6145D) {
+			if(ctx->dev.conn->type == P_SHINKO_S6145D) {
 				print.media = job->jp.media;
 				print.unk_1 = 0x01;
 			}
@@ -1850,7 +1854,7 @@ top:
 		INFO("Sending image data to printer\n");
 		// XXX we shouldn't send the lamination layer over if
 		// it's not needed.  hdr->oc_mode == PRINT_MODE_NO_OC
-		if ((ret = send_data(ctx->dev.dev, ctx->dev.endp_down,
+		if ((ret = send_data(ctx->dev.conn,
 				     job->databuf, job->datalen)))
 			return CUPS_BACKEND_FAILED;
 
@@ -1953,13 +1957,13 @@ static int shinkos6145_query_stats(void *vctx,  struct printerstats *stats)
 		struct libusb_device_descriptor desc;
 		struct libusb_device *dev;
 
-		dev = libusb_get_device(ctx->dev.dev);
+		dev = libusb_get_device(ctx->dev.conn->dev);
 		libusb_get_device_descriptor(dev, &desc);
 
 		usbID = desc.idProduct;
 	}
 
-	switch (ctx->dev.type) {
+	switch (ctx->dev.conn->type) {
 	case P_SHINKO_S6145:
 		stats->mfg = "Sinfonia";
 		stats->model = "CS2 / S6145";
@@ -1989,8 +1993,7 @@ static int shinkos6145_query_stats(void *vctx,  struct printerstats *stats)
 		break;
 	}
 
-	if (sinfonia_query_serno(ctx->dev.dev, ctx->dev.endp_up,
-				 ctx->dev.endp_down, ctx->dev.iface,
+	if (sinfonia_query_serno(ctx->dev.conn,
 				 ctx->serial, sizeof(ctx->serial)))
 		return CUPS_BACKEND_FAILED;
 
@@ -2039,9 +2042,9 @@ static const char *shinkos6145_prefixes[] = {
 	NULL
 };
 
-struct dyesub_backend shinkos6145_backend = {
+const struct dyesub_backend shinkos6145_backend = {
 	.name = "Shinko/Sinfonia CHC-S6145/CS2/S2245/S3",
-	.version = "0.43.1" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.45" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = shinkos6145_prefixes,
 	.cmdline_usage = shinkos6145_cmdline,
 	.cmdline_arg = shinkos6145_cmdline_arg,

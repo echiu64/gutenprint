@@ -1,7 +1,7 @@
 /*
  *   Sony UP-D series (new) Photo Printer CUPS backend -- libusb-1.0 version
  *
- *   (c) 2019 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2019-2020 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -33,16 +33,15 @@
 
 /* Private data structures */
 struct updneo_printjob {
+	size_t jobsize;
+	int copies;
+
 	uint8_t *databuf;
 	int datalen;
 	uint8_t *hdrbuf;
 	int hdrlen;
 	uint8_t *ftrbuf;
 	int ftrlen;
-
-//	int copies_offset;  // XXX eventually implement
-
-	int copies;
 
 	uint16_t rows;
 	uint16_t cols;
@@ -62,21 +61,19 @@ struct updneo_sts {
 	uint16_t scmde;
 	uint8_t  scmce;
 	char     scjbi[17]; /* 16 char string, unknown */
-	char     scsyi[31]; /* 30 char string, unknown */
+	char     scsyi[31]; /* 30 char string, max resolution? */
 	uint32_t scsvi[2];  /* 2* 6char numbers */
 	uint32_t scmni[2];  /* 2* 6char numbers */
 	char     sccai[15]; /* 14 char string, unknown */
 	uint16_t scgai;
 	uint8_t  scgsi;
 	uint32_t scmdi;
+	uint32_t scqti;
+	uint32_t spuqi;
 };
 
 struct updneo_ctx {
-	struct libusb_device_handle *dev;
-	uint8_t endp_up;
-	uint8_t endp_down;
-	int iface;
-	int type;
+	struct dyesub_connection *conn;
 
 	int native_bpp;
 
@@ -99,6 +96,8 @@ static const char* updneo_decode_errors(uint16_t mde, uint8_t mce, uint8_t sye)
 		return "No paper loaded";
 	if (mde == 0x0002)
 		return "No ribbon loaded";
+	if (mde == 0x0300)
+		return "No media loaded";
 	if (mde == 0x2000)
 		return "Job does not match installed media";
 
@@ -116,32 +115,48 @@ static void* updneo_init(void)
 	return ctx;
 }
 
-static int updneo_attach(void *vctx, struct libusb_device_handle *dev, int type,
-			 uint8_t endp_up, uint8_t endp_down, int iface, uint8_t jobid)
+static const char *updneo_medias(uint32_t mdi)
+{
+	mdi >>= 16;
+	mdi &= 0xff;
+
+	switch(mdi) {
+	case 0x11: return "UPC-R81MD (Letter)";
+		// UPC-R80MD (A4)
+	case 0x20: return "UPP-110 Roll";
+	default: return "Unknown";
+	}
+}
+
+static int updneo_attach(void *vctx, struct dyesub_connection *conn, uint8_t jobid)
 {
 	struct updneo_ctx *ctx = vctx;
 	int ret;
 
 	UNUSED(jobid);
 
-	ctx->dev = dev;
-	ctx->endp_up = endp_up;
-	ctx->endp_down = endp_down;
-	ctx->type = type;
-	ctx->iface = iface;
+	ctx->conn = conn;
 
 	if (test_mode < TEST_MODE_NOATTACH) {
 		if ((ret = updneo_get_status(ctx))) {
 			return ret;
 		}
+
+		/* Needed by the UP-D898!  But should be safe for
+		   all models */
+		libusb_reset_device(ctx->conn->dev);
 	}
 
-	if (ctx->type == P_SONY_UPD898) {
+	if (test_mode >= TEST_MODE_NOATTACH && getenv("MEDIA_CODE"))
+		ctx->marker.numtype = atoi(getenv("MEDIA_CODE"));
+	else
+		ctx->marker.numtype = (ctx->sts.scmdi >> 16) & 0xff;
+
+	ctx->marker.name = updneo_medias(ctx->sts.scmdi);
+
+	if (ctx->conn->type == P_SONY_UPD898) {
 		ctx->marker.color = "#000000";  /* Ie black! */
 		ctx->native_bpp = 1;
-
-		ctx->marker.name = "Unknown";
-		ctx->marker.numtype = -1;
 		ctx->marker.levelmax = CUPS_MARKER_UNAVAILABLE;
 		ctx->marker.levelnow = CUPS_MARKER_UNKNOWN;
 	} else {
@@ -150,15 +165,6 @@ static int updneo_attach(void *vctx, struct libusb_device_handle *dev, int type,
 		ctx->marker.levelmax = 50;
 		ctx->marker.numtype = (ctx->sts.scmdi >> 16) & 0xff;
 		ctx->marker.levelnow = ctx->sts.scmds[4];
-
-		if (test_mode >= TEST_MODE_NOATTACH && getenv("MEDIA_CODE"))
-			ctx->marker.numtype = atoi(getenv("MEDIA_CODE"));
-
-		if (ctx->marker.numtype == 0x11) { /* UP-DR80MD */
-			ctx->marker.name = "UPC-R81MD (Letter)"; // vs UPC-R80MD (A4)
-		} else {
-			ctx->marker.name = "Unknown";
-		}
 	}
 
 	return CUPS_BACKEND_OK;
@@ -319,11 +325,37 @@ static int updneo_read_parse(void *vctx, const void **vjob, int data_fd, int cop
 	}
 
 	/* Sanity check job parameters */
-	// XXX rows * cols lines up with imgsize, and others?
-	// Check vs loaded media type (ctx->marker.numtype, plus scsyi)
 
-	// set job copies to max(job, parameter)
-	// job->copies = copies;
+	/* Validate against max print size in SCSYI */
+	{
+		char w[5], h[5];
+		uint16_t mw, mh;
+		uint16_t jw, jh;
+		memcpy(h, ctx->sts.scsyi, 4);
+		h[4] = 0;
+		memcpy(w, ctx->sts.scsyi + 4, 4);
+		w[4] = 0;
+		mw = strtol(w, NULL, 16);
+		mh = strtol(h, NULL, 16);
+
+		memcpy(&jw, job->databuf + 40, 2);
+		memcpy(&jh, job->databuf + 40 + 2, 2);
+
+		jw = be16_to_cpu(jw);
+		jh = be16_to_cpu(jh);
+
+		if (jw > mw || jh > mh) {
+			ERROR("Job (%dx%d) exceeds max dimensions(%d/%d)\n",
+			      jw,jh,mw,mh);
+			updneo_cleanup_job(job);
+			return CUPS_BACKEND_CANCEL;
+		}
+	}
+
+	// XXX Check vs loaded media type (ctx->marker.numtype?)
+
+	// XXX set job copies to max(job, parameter)
+	job->databuf[28] = job->copies;
 	job->copies = 1;  /* Printer makes copies */
 	UNUSED(copies);
 
@@ -337,7 +369,7 @@ static struct deviceid_dict dict[MAX_DICT];
 
 static int updneo_get_status(struct updneo_ctx *ctx)
 {
-	char *ieee_id = get_device_id(ctx->dev, ctx->iface);
+	char *ieee_id = get_device_id(ctx->conn->dev, ctx->conn->iface);
 	int i;
 
 	if (!ieee_id)
@@ -358,6 +390,14 @@ static int updneo_get_status(struct updneo_ctx *ctx)
 			ctx->sts.scsyv = strtol(dict[i].val, NULL, 16);
 		} else if (!strcmp("SCSNO", dict[i].key)) {
 			strncpy(ctx->sts.scsno, dict[i].val, sizeof(ctx->sts.scsno) - 1);
+
+			/* Trim trailing '-'s off of serial number (UP-D898)*/
+			for (int i = 0; i < (int) sizeof(ctx->sts.scsno); i++) {
+				if (ctx->sts.scsno[i] == '-') {
+					ctx->sts.scsno[i] = 0;
+					break;
+				}
+			}
 		} else if (!strcmp("SCSYS", dict[i].key)) {
 			strncpy(ctx->sts.scsys, dict[i].val, sizeof(ctx->sts.scsys) - 1);
 		} else if (!strcmp("SCMDS", dict[i].key)) {
@@ -410,15 +450,18 @@ static int updneo_get_status(struct updneo_ctx *ctx)
 			ctx->sts.scgsi = strtol(dict[i].val, NULL, 16);
 		} else if (!strcmp("SCMDI", dict[i].key)) {
 			ctx->sts.scmdi = strtol(dict[i].val, NULL, 16);
+		} else if (!strcmp("SCQTI", dict[i].key)) {
+			ctx->sts.scqti = strtol(dict[i].val, NULL, 16);
+		} else if (!strcmp("SPUQI", dict[i].key)) {
+			ctx->sts.spuqi = strtol(dict[i].val, NULL, 16);
 		} else if (!strcmp("MFG", dict[i].key) ||
 			   !strcmp("MDL", dict[i].key) ||
 			   !strcmp("DES", dict[i].key) ||
 			   !strcmp("CMD", dict[i].key) ||
-			   !strcmp("CLS", dict[i].key))
-		{
+			   !strcmp("CLS", dict[i].key)) {
 			/* Ignore standard IEEE1284 attributes! */
 		} else {
-			if (!strncmp("SC", dict[i].key, 2))
+			if (!strncmp("SC", dict[i].key, 2) && !strncmp("SP", dict[i].key, 2))
 				DEBUG("Extra/Unknown IEEE1284 field '%s' = '%s'\n",
 				      dict[i].key, dict[i].val);
 		}
@@ -435,7 +478,7 @@ static int updneo_get_status(struct updneo_ctx *ctx)
 	return CUPS_BACKEND_OK;
 }
 
-static void updneo_dump_status(struct updneo_sts *sts)
+static void updneo_dump_status(struct updneo_ctx *ctx, struct updneo_sts *sts)
 {
 	/* Dump status */
 	INFO("Serial Number: %s\n", sts->scsno);
@@ -444,8 +487,11 @@ static void updneo_dump_status(struct updneo_sts *sts)
 	     (sts->scsyv >> 16) & 0xff,
 	     (sts->scsyv >> 8) & 0xff,
 	     (sts->scsyv >> 0) & 0xff);
-	INFO("Media type: %s\n", sts->scmdi == 0x110154 ? "UPC-R81MD (Letter)" : "Unknown");
-	INFO("Remaining prints: %u/50\n", sts->scmds[4]);
+	INFO("Media type: %s\n", updneo_medias(sts->scmdi));
+
+	if (ctx->conn->type == P_SONY_UPDR80)
+		INFO("Remaining prints: %u/50\n", sts->scmds[4]);
+
 	INFO("Print count: %u\n", sts->scsvi[0]);
 
 	/* If the printer reports an error, pass it on */
@@ -491,17 +537,17 @@ top:
 	}
 
 	/* Send over header */
-	if ((ret = send_data(ctx->dev, ctx->endp_down,
+	if ((ret = send_data(ctx->conn,
 			     job->hdrbuf, job->hdrlen)))
 		return CUPS_BACKEND_FAILED;
 
 	/* Send over data */
-	if ((ret = send_data(ctx->dev, ctx->endp_down,
+	if ((ret = send_data(ctx->conn,
 			     job->databuf, job->datalen)))
 		return CUPS_BACKEND_FAILED;
 
 	/* Send over footer */
-	if ((ret = send_data(ctx->dev, ctx->endp_down,
+	if ((ret = send_data(ctx->conn,
 			     job->ftrbuf, job->ftrlen)))
 		return CUPS_BACKEND_FAILED;
 
@@ -540,6 +586,10 @@ retry:
 		goto top;
 	}
 
+	/* Needed by the UP-D898!  But should be safe for
+	   all models */
+	libusb_reset_device(ctx->conn->dev);
+
 	return CUPS_BACKEND_OK;
 }
 
@@ -562,7 +612,7 @@ static int updneo_cmdline_arg(void *vctx, int argc, char **argv)
 		case 's':
 			j = updneo_get_status(ctx);
 			if (!j)
-				updneo_dump_status(&ctx->sts);
+				updneo_dump_status(ctx, &ctx->sts);
 			break;
 		}
 
@@ -572,18 +622,13 @@ static int updneo_cmdline_arg(void *vctx, int argc, char **argv)
 	return CUPS_BACKEND_OK;
 }
 
-static int updneo_query_serno(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, int iface, char *buf, int buf_len)
+static int updneo_query_serno(struct dyesub_connection *conn, char *buf, int buf_len)
 {
 	int ret;
 	char *ptr;
 	struct updneo_ctx ctx = {
-		.dev = dev,
-		.endp_up = endp_up,
-		.endp_down = endp_down,
+		.conn = conn,
 	};
-
-	UNUSED(iface);
-
 	if ((ret = updneo_get_status(&ctx))) {
 		return ret;
 	}
@@ -591,7 +636,6 @@ static int updneo_query_serno(struct libusb_device_handle *dev, uint8_t endp_up,
 	while (*ptr == 0x30) ptr++;
 	strncpy(buf, ptr, buf_len);
 	buf[buf_len-1] = 0;
-
 	return CUPS_BACKEND_OK;
 }
 
@@ -608,7 +652,7 @@ static int updneo_query_markers(void *vctx, struct marker **markers, int *count)
 		return ret;
 	}
 
-	if (ctx->type != P_SONY_UPD898) {
+	if (ctx->conn->type != P_SONY_UPD898) {
 		ctx->marker.levelnow = ctx->sts.scmds[4];
 	}
 
@@ -622,17 +666,18 @@ static const char *sonyupdneo_prefixes[] = {
 };
 
 /* Exported */
-#define USB_VID_SONY         0x054C
-#define USB_PID_SONY_UPD898MD 0xabcd // 0x589a?
+#define USB_VID_SONY          0x054C
+#define USB_PID_SONY_UPD898MD 0x0877 // 0x589a?
 #define USB_PID_SONY_UPCR20L  0xbcde
 #define USB_PID_SONY_UPDR80MD 0x03c3
 #define USB_PID_STRYKER_SDP1000 0x03c4
 #define USB_PID_SONY_UPDR80   0x03c5
 #define USB_PID_SONY_UPCX1    0x02d4
 
-struct dyesub_backend sonyupdneo_backend = {
+const struct dyesub_backend sonyupdneo_backend = {
 	.name = "Sony UP-D Neo",
-	.version = "0.10",
+	.version = "0.12",
+	.flags = BACKEND_FLAG_BADISERIAL, /* UP-D898MD at least */
 	.uri_prefixes = sonyupdneo_prefixes,
 	.cmdline_arg = updneo_cmdline_arg,
 	.cmdline_usage = updneo_cmdline,
@@ -849,6 +894,12 @@ struct dyesub_backend sonyupdneo_backend = {
 
   [ Notable difference is SCSYI ]
 
+  UP-DR898MD
+
+    MFG:Sony;MDL:UP-D898MD_X898MD;DES:Sony UP-D898MD_X898MD;CMD:SPJL-DS,SPDL-DS2;CLS:PRINTER;SCDIV:0100;SCSYV:01010000;SCSYS:0000001000010000000000;SCMDS:00000500000100000000;SCSYE:00;SCMDE:0000;SCMCE:00;SCSYI:100005001000050000000000014500;SCSVI:000204000204;SCMDI:200406;SCSNO:7100886---------;SCJBS:0000;SCCAI:00000000000000;SCGSI:01;SCQTI:0001;SPUQI:0000
+
+  [ This adds SCQTI; SCSNO is formatted differently, no SCPRS/SCJBI ]
+
 Breakdown:
 
   (+) means referenced by their Windows driver
@@ -873,6 +924,8 @@ Breakdown:
   SCGAI
   SCGSI
  +SCMDI  # MeDiaInfo: 110154 OK w/UPD-R81MD(Letter), 1100FF with no paper, 000154 with no ribbon
+  SCQTI  # QT Info  (898MD)
+  SPUQI  # UQ Info  (898MD)
 
 Guess:
 

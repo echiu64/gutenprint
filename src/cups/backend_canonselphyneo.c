@@ -1,7 +1,7 @@
 /*
  *   Canon SELPHY CPneo series CUPS backend -- libusb-1.0 version
  *
- *   (c) 2016-2019 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2016-2020 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -59,10 +59,7 @@ struct selphyneo_printjob {
 };
 
 struct selphyneo_ctx {
-	struct libusb_device_handle *dev;
-	uint8_t endp_up;
-	uint8_t endp_down;
-	int type;
+	struct dyesub_connection *conn;
 
 	struct marker marker;
 };
@@ -136,7 +133,7 @@ static int selphyneo_send_reset(struct selphyneo_ctx *ctx)
 			       0x00, 0x00, 0x00, 0x00 };
 	int ret;
 
-	if ((ret = send_data(ctx->dev, ctx->endp_down,
+	if ((ret = send_data(ctx->conn,
 			     rstcmd, sizeof(rstcmd))))
 		return CUPS_BACKEND_FAILED;
 
@@ -149,14 +146,14 @@ static int selphyneo_get_status(struct selphyneo_ctx *ctx)
 	int ret, num;
 
 	/* Read in the printer status to clear last state */
-	ret = read_data(ctx->dev, ctx->endp_up,
+	ret = read_data(ctx->conn,
 			(uint8_t*) &rdback, sizeof(rdback), &num);
 
 	if (ret < 0)
 		return CUPS_BACKEND_FAILED;
 
 	/* And again, for the markers */
-	ret = read_data(ctx->dev, ctx->endp_up,
+	ret = read_data(ctx->conn,
 			(uint8_t*) &rdback, sizeof(rdback), &num);
 
 	if (ret < 0)
@@ -183,33 +180,26 @@ static void *selphyneo_init(void)
 	return ctx;
 }
 
-extern struct dyesub_backend selphyneo_backend;
-
-static int selphyneo_attach(void *vctx, struct libusb_device_handle *dev, int type,
-			    uint8_t endp_up, uint8_t endp_down, int iface, uint8_t jobid)
+static int selphyneo_attach(void *vctx, struct dyesub_connection *conn, uint8_t jobid)
 {
 	struct selphyneo_ctx *ctx = vctx;
 	struct selphyneo_readback rdback;
 	int ret, num;
 
 	UNUSED(jobid);
-	UNUSED(iface);
 
-	ctx->dev = dev;
-	ctx->endp_up = endp_up;
-	ctx->endp_down = endp_down;
-	ctx->type = type;
+	ctx->conn = conn;
 
 	if (test_mode < TEST_MODE_NOATTACH) {
 		/* Read in the printer status to clear last state */
-		ret = read_data(ctx->dev, ctx->endp_up,
+		ret = read_data(ctx->conn,
 				(uint8_t*) &rdback, sizeof(rdback), &num);
 
 		if (ret < 0)
 			return CUPS_BACKEND_FAILED;
 
 		/* And again, for the markers */
-		ret = read_data(ctx->dev, ctx->endp_up,
+		ret = read_data(ctx->conn,
 				(uint8_t*) &rdback, sizeof(rdback), &num);
 
 		if (ret < 0)
@@ -338,7 +328,7 @@ static int selphyneo_main_loop(void *vctx, const void *vjob) {
 	copies = job->copies;
 
 	/* Read in the printer status to clear last state */
-	ret = read_data(ctx->dev, ctx->endp_up,
+	ret = read_data(ctx->conn,
 			(uint8_t*) &rdback, sizeof(rdback), &num);
 
 	if (ret < 0)
@@ -348,7 +338,7 @@ top:
 	INFO("Waiting for printer idle\n");
 
 	do {
-		ret = read_data(ctx->dev, ctx->endp_up,
+		ret = read_data(ctx->conn,
 				(uint8_t*) &rdback, sizeof(rdback), &num);
 
 		if (ret < 0)
@@ -385,7 +375,7 @@ top:
 		int chunk = 256*1024;
 		int sent = 0;
 		while (chunk > 0) {
-			if ((ret = send_data(ctx->dev, ctx->endp_down,
+			if ((ret = send_data(ctx->conn,
 					     job->databuf + sent, chunk)))
 				return CUPS_BACKEND_FAILED;
 			sent += chunk;
@@ -396,7 +386,7 @@ top:
 	}
 
 	/* Read in the printer status to clear last state */
-	ret = read_data(ctx->dev, ctx->endp_up,
+	ret = read_data(ctx->conn,
 			(uint8_t*) &rdback, sizeof(rdback), &num);
 
 	if (ret < 0)
@@ -404,7 +394,7 @@ top:
 
 	INFO("Waiting for printer acknowledgement\n");
 	do {
-		ret = read_data(ctx->dev, ctx->endp_up,
+		ret = read_data(ctx->conn,
 				(uint8_t*) &rdback, sizeof(rdback), &num);
 
 		if (ret < 0)
@@ -489,14 +479,14 @@ static int selphyneo_query_markers(void *vctx, struct marker **markers, int *cou
 	int ret, num;
 
 	/* Read in the printer status to clear last state */
-	ret = read_data(ctx->dev, ctx->endp_up,
+	ret = read_data(ctx->conn,
 			(uint8_t*) &rdback, sizeof(rdback), &num);
 
 	if (ret < 0)
 		return CUPS_BACKEND_FAILED;
 
 	/* And again, for the markers */
-	ret = read_data(ctx->dev, ctx->endp_up,
+	ret = read_data(ctx->conn,
 			(uint8_t*) &rdback, sizeof(rdback), &num);
 
 	if (ret < 0)
@@ -520,9 +510,9 @@ static const char *canonselphyneo_prefixes[] = {
 	NULL
 };
 
-struct dyesub_backend canonselphyneo_backend = {
+const struct dyesub_backend canonselphyneo_backend = {
 	.name = "Canon SELPHY CP (new)",
-	.version = "0.20",
+	.version = "0.21",
 	.uri_prefixes = canonselphyneo_prefixes,
 	.cmdline_usage = selphyneo_cmdline,
 	.cmdline_arg = selphyneo_cmdline_arg,

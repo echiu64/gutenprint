@@ -455,11 +455,8 @@ struct mitsud90_printjob {
 };
 
 struct mitsud90_ctx {
-	struct libusb_device_handle *dev;
-	uint8_t endp_up;
-	uint8_t endp_down;
+	struct dyesub_connection *conn;
 
-	int type;
 	char serno[7];
 
 	/* Used in parsing.. */
@@ -486,12 +483,12 @@ static int mitsud90_query_media(struct mitsud90_ctx *ctx, struct mitsud90_media_
 	cmdbuf[6] = 0x01;  /* Number of commands */
 	cmdbuf[7] = COM_STATUS_TYPE_MEDIA;
 
-	if ((ret = send_data(ctx->dev, ctx->endp_down,
+	if ((ret = send_data(ctx->conn,
 			     cmdbuf, sizeof(cmdbuf))))
 		return ret;
 	memset(resp, 0, sizeof(*resp));
 
-	ret = read_data(ctx->dev, ctx->endp_up,
+	ret = read_data(ctx->conn,
 			(uint8_t*) resp, sizeof(*resp), &num);
 
 	if (ret < 0)
@@ -520,12 +517,12 @@ static int mitsud90_query_status(struct mitsud90_ctx *ctx, struct mitsud90_statu
 	cmdbuf[8] = COM_STATUS_TYPE_MECHA;
 	cmdbuf[9] = COM_STATUS_TYPE_TEMP;
 
-	if ((ret = send_data(ctx->dev, ctx->endp_down,
+	if ((ret = send_data(ctx->conn,
 			     cmdbuf, sizeof(cmdbuf))))
 		return ret;
 	memset(resp, 0, sizeof(*resp));
 
-	ret = read_data(ctx->dev, ctx->endp_up,
+	ret = read_data(ctx->conn,
 			(uint8_t*) resp, sizeof(*resp), &num);
 
 	if (ret < 0)
@@ -569,11 +566,11 @@ static int mitsud90_get_serno(struct mitsud90_ctx *ctx)
 	cmdbuf[20] = 0xff;
 	cmdbuf[21] = 0xcf;
 
-	if ((ret = send_data(ctx->dev, ctx->endp_down,
+	if ((ret = send_data(ctx->conn,
 			     cmdbuf, 22)))
 		return ret;
 
-	ret = read_data(ctx->dev, ctx->endp_up,
+	ret = read_data(ctx->conn,
 			cmdbuf, sizeof(cmdbuf), &num);
 
 	/* Store it */
@@ -597,19 +594,14 @@ static void *mitsud90_init(void)
 	return ctx;
 }
 
-static int mitsud90_attach(void *vctx, struct libusb_device_handle *dev, int type,
-			   uint8_t endp_up, uint8_t endp_down, int iface, uint8_t jobid)
+static int mitsud90_attach(void *vctx, struct dyesub_connection *conn, uint8_t jobid)
 {
 	struct mitsud90_ctx *ctx = vctx;
 	struct mitsud90_media_resp resp;
 
 	UNUSED(jobid);
-	UNUSED(iface);
 
-	ctx->dev = dev;
-	ctx->endp_up = endp_up;
-	ctx->endp_down = endp_down;
-	ctx->type = type;
+	ctx->conn = conn;
 
 	if (test_mode < TEST_MODE_NOATTACH) {
 		if (mitsud90_query_media(ctx, &resp))
@@ -625,14 +617,14 @@ static int mitsud90_attach(void *vctx, struct libusb_device_handle *dev, int typ
 
 	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
 	ctx->marker.numtype = resp.media.type;
-	ctx->marker.name = mitsu_media_types(ctx->type, resp.media.brand, resp.media.type);
+	ctx->marker.name = mitsu_media_types(ctx->conn->type, resp.media.brand, resp.media.type);
 	ctx->marker.levelmax = be16_to_cpu(resp.media.capacity);
 	ctx->marker.levelnow = be16_to_cpu(resp.media.remain);
 
-	if (ctx->type == P_MITSU_M1) {
+	if (ctx->conn->type == P_MITSU_M1) {
 #if defined(WITH_DYNAMIC)
 		/* Attempt to open the library */
-		if (mitsu_loadlib(&ctx->lib, ctx->type))
+		if (mitsu_loadlib(&ctx->lib, ctx->conn->type))
 #endif
 			WARNING("Dynamic library support not loaded, will be unable to print.");
 	}
@@ -654,7 +646,7 @@ static void mitsud90_teardown(void *vctx) {
 	if (!ctx)
 		return;
 
-	if (ctx->type == P_MITSU_M1) {
+	if (ctx->conn->type == P_MITSU_M1) {
 		mitsu_destroylib(&ctx->lib);
 	}
 
@@ -746,7 +738,7 @@ static int mitsud90_read_parse(void *vctx, const void **vjob, int data_fd, int c
 	}
 
 	/* More sanity checks */
-	if (job->hdr.pano.pano_on && ctx->type != P_MITSU_M1) {
+	if (job->hdr.pano.pano_on && ctx->conn->type != P_MITSU_M1) {
 		ERROR("Unable to handle panorama jobs yet\n");
 		mitsud90_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
@@ -786,7 +778,7 @@ static int mitsud90_read_parse(void *vctx, const void **vjob, int data_fd, int c
 	/* How many pixels do we need to read? */
 	remain = be16_to_cpu(job->hdr.cols) * be16_to_cpu(job->hdr.rows) * 3;
 
-	if (ctx->type == P_MITSU_M1) {
+	if (ctx->conn->type == P_MITSU_M1) {
 		/* See if it's a special gutenprint "not-raw" job */
 		job->is_raw = !job->hdr.zero_b[3];
 		job->hdr.zero_b[3] = 0;
@@ -839,7 +831,7 @@ static int mitsud90_read_parse(void *vctx, const void **vjob, int data_fd, int c
 	}
 
 	/* CP-M1 has... other considerations */
-	if (ctx->type == P_MITSU_M1 && !job->is_raw) {
+	if (ctx->conn->type == P_MITSU_M1 && !job->is_raw) {
 		if (!ctx->lib.dl_handle) {
 			ERROR("!!! Image Processing Library not found, aborting!\n");
 			mitsud90_cleanup_job(job);
@@ -914,7 +906,7 @@ static int mitsud90_main_loop(void *vctx, const void *vjob) {
 		return CUPS_BACKEND_FAILED;
 	copies = job->copies;
 
-	if (ctx->type == P_MITSU_M1 && !job->is_raw) {
+	if (ctx->conn->type == P_MITSU_M1 && !job->is_raw) {
 		struct BandImage input;
 		struct BandImage output;
 		struct M1CPCData *cpc;
@@ -1078,11 +1070,11 @@ top:
 		mem.hdr[2] = 0x44;
 		mem.hdr[3] = 0x33;
 
-		if ((ret = send_data(ctx->dev, ctx->endp_down,
+		if ((ret = send_data(ctx->conn,
 				     (uint8_t*) &mem, sizeof(mem))))
 			return CUPS_BACKEND_FAILED;
 
-		ret = read_data(ctx->dev, ctx->endp_up,
+		ret = read_data(ctx->conn,
 				(uint8_t*)&mem_resp, sizeof(mem_resp), &num);
 
 		if (ret < 0)
@@ -1103,25 +1095,25 @@ top:
 	}
 
 	/* Send job header */
-	if ((ret = send_data(ctx->dev, ctx->endp_down,
+	if ((ret = send_data(ctx->conn,
 			     (uint8_t*) &job->hdr, sizeof(job->hdr))))
 		return CUPS_BACKEND_FAILED;
 
 	/* Send Plane header */
-	if ((ret = send_data(ctx->dev, ctx->endp_down,
+	if ((ret = send_data(ctx->conn,
 			     job->databuf + sent, sizeof(job->hdr))))
 		return CUPS_BACKEND_FAILED;
 	sent += sizeof(job->hdr);
 
 	/* Send payload */
-	if ((ret = send_data(ctx->dev, ctx->endp_down,
+	if ((ret = send_data(ctx->conn,
 			     job->databuf + sent, job->datalen - sent)))
 		return CUPS_BACKEND_FAILED;
 //	sent += (job->datalen - sent);
 
 	/* Send job footer */
 	if (job->has_footer) {
-		if ((ret = send_data(ctx->dev, ctx->endp_down,
+		if ((ret = send_data(ctx->conn,
 				     (uint8_t*) &job->footer, sizeof(job->footer))))
 			return CUPS_BACKEND_FAILED;
 	}
@@ -1183,11 +1175,11 @@ static int mitsud90_query_job(struct mitsud90_ctx *ctx, uint16_t jobid,
 	req.hdr[3] = 0x31;
 	req.jobid = cpu_to_be16(jobid);
 
-	if ((ret = send_data(ctx->dev, ctx->endp_down,
+	if ((ret = send_data(ctx->conn,
 			     (uint8_t*) &req, sizeof(req))))
 		return ret;
 	memset(resp, 0, sizeof(*resp));
-	ret = read_data(ctx->dev, ctx->endp_up,
+	ret = read_data(ctx->conn,
 			(uint8_t*) resp, sizeof(*resp), &num);
 
 	if (ret < 0)
@@ -1221,7 +1213,7 @@ static int mitsud90_get_media(struct mitsud90_ctx *ctx)
 		return CUPS_BACKEND_FAILED;
 
 	INFO("Media Type:  %s (%02x/%02x)\n",
-	     mitsu_media_types(ctx->type, resp.media.brand, resp.media.type),
+	     mitsu_media_types(ctx->conn->type, resp.media.brand, resp.media.type),
 	     resp.media.brand,
 	     resp.media.type);
 	INFO("Prints Remaining:  %03d/%03d\n",
@@ -1281,12 +1273,12 @@ static int mitsud90_get_info(struct mitsud90_ctx *ctx)
 	cmdbuf[24] = COM_STATUS_TYPE_x83;
 	cmdbuf[25] = D90_STATUS_TYPE_x84;
 
-	if ((ret = send_data(ctx->dev, ctx->endp_down,
+	if ((ret = send_data(ctx->conn,
 			     cmdbuf, sizeof(cmdbuf))))
 		return ret;
 	memset(&resp, 0, sizeof(resp));
 
-	ret = read_data(ctx->dev, ctx->endp_up,
+	ret = read_data(ctx->conn,
 			(uint8_t*) &resp, sizeof(resp), &num);
 
 	if (ret < 0)
@@ -1368,12 +1360,12 @@ static int mitsum1_get_info(struct mitsud90_ctx *ctx)
 
 	cmdbuf[24] = COM_STATUS_TYPE_x83;
 
-	if ((ret = send_data(ctx->dev, ctx->endp_down,
+	if ((ret = send_data(ctx->conn,
 			     cmdbuf, sizeof(cmdbuf))))
 		return ret;
 	memset(&resp, 0, sizeof(resp));
 
-	ret = read_data(ctx->dev, ctx->endp_up,
+	ret = read_data(ctx->conn,
 			(uint8_t*) &resp, sizeof(resp), &num);
 
 	if (ret < 0)
@@ -1435,12 +1427,12 @@ static int mitsud90_dumpall(struct mitsud90_ctx *ctx)
 
 		cmdbuf[7] = i;
 
-		if ((ret = send_data(ctx->dev, ctx->endp_down,
+		if ((ret = send_data(ctx->conn,
 				     cmdbuf, sizeof(cmdbuf))))
 			return ret;
 		memset(buf, 0, sizeof(buf));
 
-		ret = read_data(ctx->dev, ctx->endp_up,
+		ret = read_data(ctx->conn,
 				buf, sizeof(buf), &num);
 
 		if (ret < 0)
@@ -1459,17 +1451,14 @@ static int mitsud90_dumpall(struct mitsud90_ctx *ctx)
 	return CUPS_BACKEND_OK;
 }
 
-static int mitsud90_query_serno(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, int iface, char *buf, int buf_len)
+static int mitsud90_query_serno(struct dyesub_connection *conn, char *buf, int buf_len)
 {
 	struct mitsud90_ctx ctx = {
-		.dev = dev,
-		.endp_up = endp_up,
-		.endp_down = endp_down
+		.conn = conn,
 	};
 
 	int ret;
 
-	UNUSED(iface);
 	UNUSED(buf_len);
 
 	ret = mitsud90_get_serno(&ctx);
@@ -1513,11 +1502,11 @@ static int mitsud90_set_iserial(struct mitsud90_ctx *ctx, uint8_t enabled)
 	cmdbuf[21] = 0xfe;
 	cmdbuf[22] = enabled;
 
-	if ((ret = send_data(ctx->dev, ctx->endp_down,
+	if ((ret = send_data(ctx->conn,
 			     cmdbuf, sizeof(cmdbuf))))
 		return ret;
 
-	ret = read_data(ctx->dev, ctx->endp_up,
+	ret = read_data(ctx->conn,
 			cmdbuf, sizeof(cmdbuf), &num);
 
 	return ret;
@@ -1560,7 +1549,7 @@ static int mitsud90_set_sleeptime(struct mitsud90_ctx *ctx, uint16_t time)
 	cmdbuf[22] = (time >> 8) & 0xff;
 	cmdbuf[23] = time & 0xff;
 
-	if ((ret = send_data(ctx->dev, ctx->endp_down,
+	if ((ret = send_data(ctx->conn,
 			     cmdbuf, 4)))
 		return ret;
 
@@ -1592,7 +1581,7 @@ static int mitsud90_cmdline_arg(void *vctx, int argc, char **argv)
 		switch(i) {
 		GETOPT_PROCESS_GLOBAL
 		case 'i':
-			if (ctx->type == P_MITSU_D90)
+			if (ctx->conn->type == P_MITSU_D90)
 				j = mitsud90_get_info(ctx);
 			else
 				j = mitsum1_get_info(ctx);
@@ -1610,7 +1599,7 @@ static int mitsud90_cmdline_arg(void *vctx, int argc, char **argv)
 			j = mitsud90_get_status(ctx);
 			break;
 		case 'x':
-			if (ctx->type == P_MITSU_D90)
+			if (ctx->conn->type == P_MITSU_D90)
 				j = mitsud90_set_iserial(ctx, atoi(optarg));
 			break;
 		case 'Z':
@@ -1653,7 +1642,7 @@ static int mitsud90_query_stats(void *vctx, struct printerstats *stats)
 		return CUPS_BACKEND_FAILED;
 
 	stats->mfg = "Mitsubishi";
-	switch (ctx->type) {
+	switch (ctx->conn->type) {
 	case P_MITSU_D90:
 		stats->model = "CP-D90 family";
 		break;
@@ -1696,9 +1685,9 @@ static const char *mitsud90_prefixes[] = {
 };
 
 /* Exported */
-struct dyesub_backend mitsud90_backend = {
+const struct dyesub_backend mitsud90_backend = {
 	.name = "Mitsubishi CP-D90/CP-M1",
-	.version = "0.28"  " (lib " LIBMITSU_VER ")",
+	.version = "0.29"  " (lib " LIBMITSU_VER ")",
 	.uri_prefixes = mitsud90_prefixes,
 	.cmdline_arg = mitsud90_cmdline_arg,
 	.cmdline_usage = mitsud90_cmdline,

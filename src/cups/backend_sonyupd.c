@@ -1,7 +1,7 @@
 /*
  *   Sony UP-D series Photo Printer CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013-2019 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2020 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -73,10 +73,7 @@ struct upd_printjob {
 };
 
 struct upd_ctx {
-	struct libusb_device_handle *dev;
-	uint8_t endp_up;
-	uint8_t endp_down;
-	int type;
+	struct dyesub_connection *conn;
 
 	int native_bpp;
 
@@ -97,20 +94,15 @@ static void* upd_init(void)
 	return ctx;
 }
 
-static int upd_attach(void *vctx, struct libusb_device_handle *dev, int type,
-		      uint8_t endp_up, uint8_t endp_down, int iface, uint8_t jobid)
+static int upd_attach(void *vctx, struct dyesub_connection *conn, uint8_t jobid)
 {
 	struct upd_ctx *ctx = vctx;
 
 	UNUSED(jobid);
-	UNUSED(iface);
 
-	ctx->dev = dev;
-	ctx->endp_up = endp_up;
-	ctx->endp_down = endp_down;
-	ctx->type = type;
+	ctx->conn = conn;
 
-	if (ctx->type == P_SONY_UPD895 || ctx->type == P_SONY_UPD897) {
+	if (ctx->conn->type == P_SONY_UPD895 || ctx->conn->type == P_SONY_UPD897) {
 		ctx->marker.color = "#000000";  /* Ie black! */
 		ctx->native_bpp = 1;
 	} else {
@@ -174,20 +166,20 @@ static int sony_get_status(struct upd_ctx *ctx, struct sony_updsts *buf)
 	int ret, num = 0;
 	uint8_t query[7] = { 0x1b, 0xe0, 0, 0, 0, 0x0f, 0 };
 
-	if (ctx->type == P_SONY_UPD895)
+	if (ctx->conn->type == P_SONY_UPD895)
 		query[5] = 0x0e;
 
-	if ((ret = send_data(ctx->dev, ctx->endp_down,
+	if ((ret = send_data(ctx->conn,
 			     query, sizeof(query))))
 		return CUPS_BACKEND_FAILED;
 
-	ret = read_data(ctx->dev, ctx->endp_up, (uint8_t*) buf, sizeof(*buf),
+	ret = read_data(ctx->conn, (uint8_t*) buf, sizeof(*buf),
 			&num);
 
 	if (ret < 0)
 		return CUPS_BACKEND_FAILED;
 #if 0
-	if (ctx->type == P_SONY_UPD895 && ret != 14)
+	if (ctx->conn->type == P_SONY_UPD895 && ret != 14)
 		return CUPS_BACKEND_FAILED;
 	else if (ret != 15)
 		return CUPS_BACKEND_FAILED;
@@ -250,14 +242,14 @@ static int upd_read_parse(void *vctx, const void **vjob, int data_fd, int copies
 				if(dyesub_debug)
 					DEBUG("Block ID '%08x' (len %d)\n", len, 0);
 				len = 0;
-				if (ctx->type == P_SONY_UPDR150)
+				if (ctx->conn->type == P_SONY_UPDR150)
 					run = 0;
 				break;
 			case 0xfffffff7:
 				if(dyesub_debug)
 					DEBUG("Block ID '%08x' (len %d)\n", len, 0);
 				len = 0;
-				if (ctx->type == P_SONY_UPCR10)
+				if (ctx->conn->type == P_SONY_UPCR10)
 					run = 0;
 				break;
 			case 0xfffffff8: // 895
@@ -265,7 +257,7 @@ static int upd_read_parse(void *vctx, const void **vjob, int data_fd, int copies
 				if(dyesub_debug)
 					DEBUG("Block ID '%08x' (len %d)\n", len, 0);
 				len = 0;
-				if (ctx->type == P_SONY_UPD895 || ctx->type == P_SONY_UPD897)
+				if (ctx->conn->type == P_SONY_UPD895 || ctx->conn->type == P_SONY_UPD897)
 					run = 0;
 				break;
 			case 0xffffff97:
@@ -274,7 +266,7 @@ static int upd_read_parse(void *vctx, const void **vjob, int data_fd, int copies
 				len = 12;
 				break;
 			case 0xffffffef:
-				if (ctx->type == P_SONY_UPD895 || ctx->type == P_SONY_UPD897) {
+				if (ctx->conn->type == P_SONY_UPD895 || ctx->conn->type == P_SONY_UPD897) {
 					if(dyesub_debug)
 						DEBUG("Block ID '%08x' (len %d)\n", len, 0);
 					len = 0;
@@ -289,7 +281,7 @@ static int upd_read_parse(void *vctx, const void **vjob, int data_fd, int copies
 				len = 4;
 				break;
 			case 0xffffffec:
-				if (ctx->type == P_SONY_UPD897) {
+				if (ctx->conn->type == P_SONY_UPD897) {
 					if(dyesub_debug)
 						DEBUG("Block ID '%08x' (len %d)\n", len, 4);
 					len = 4;
@@ -418,9 +410,9 @@ static int upd_main_loop(void *vctx, const void *vjob) {
 
 top:
 	/* Send Unknown CMD.  Resets? */
-	if (ctx->type == P_SONY_UPD897) {
+	if (ctx->conn->type == P_SONY_UPD897) {
 		const uint8_t cmdbuf[7] = { 0x1b, 0x1f, 0, 0, 0, 0, 0 };
-		ret = send_data(ctx->dev, ctx->endp_down,
+		ret = send_data(ctx->conn,
 				cmdbuf, sizeof(cmdbuf));
 		if (ret)
 			return CUPS_BACKEND_FAILED;
@@ -452,16 +444,16 @@ top:
 	}
 
 	/* Send RESET */
-	if (ctx->type != P_SONY_UPD895) {
+	if (ctx->conn->type != P_SONY_UPD895) {
 		const uint8_t rstbuf[7] = { 0x1b, 0x16, 0, 0, 0, 0, 0 };
-		ret = send_data(ctx->dev, ctx->endp_down,
+		ret = send_data(ctx->conn,
 				rstbuf, sizeof(rstbuf));
 		if (ret)
 			return CUPS_BACKEND_FAILED;
 	}
 
 #if 0 /* Unknown query */
-	if (ctx->type == P_SONY_UPD897) {
+	if (ctx->conn->type == P_SONY_UPD897) {
 		// -> 1b e6 00 00 00 08 00
 		// <- ???
 	}
@@ -476,7 +468,7 @@ top:
 
 		i += sizeof(uint32_t);
 
-		if ((ret = send_data(ctx->dev, ctx->endp_down,
+		if ((ret = send_data(ctx->conn,
 				     job->databuf + i, len)))
 			return CUPS_BACKEND_FAILED;
 
@@ -605,9 +597,9 @@ static const char *sonyupd_prefixes[] = {
 #define USB_PID_SONY_UPD895  0x0049
 #define USB_PID_SONY_UPD897  0x01E7
 
-struct dyesub_backend sonyupd_backend = {
+const struct dyesub_backend sonyupd_backend = {
 	.name = "Sony UP-D",
-	.version = "0.39",
+	.version = "0.40",
 	.uri_prefixes = sonyupd_prefixes,
 	.cmdline_arg = upd_cmdline_arg,
 	.cmdline_usage = upd_cmdline,

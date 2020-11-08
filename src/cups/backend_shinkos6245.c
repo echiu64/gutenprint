@@ -722,7 +722,7 @@ static int get_status(struct shinkos6245_ctx *ctx)
 
 
 	/* Query Extended counters */
-	if (ctx->dev.type == P_KODAK_8810)
+	if (ctx->dev.conn->type == P_KODAK_8810)
 		return CUPS_BACKEND_OK; /* Kodak 8810 returns 12 bytes of garbage. */
 
 	cmd.cmd = cpu_to_le16(SINFONIA_CMD_EXTCOUNTER);
@@ -831,7 +831,7 @@ static int shinkos6245_cmdline_arg(void *vctx, int argc, char **argv)
 		switch(i) {
 		GETOPT_PROCESS_GLOBAL
 		case 'b':
-			if (ctx->dev.type != P_KODAK_8810)
+			if (ctx->dev.conn->type != P_KODAK_8810)
 				return -1;
 			else if (optarg[0] == '1')
 				j = sinfonia_button_set(&ctx->dev, BUTTON_ENABLED);
@@ -847,7 +847,7 @@ static int shinkos6245_cmdline_arg(void *vctx, int argc, char **argv)
 			j = sinfonia_settonecurve(&ctx->dev, UPDATE_TARGET_TONE_USER, optarg);
 			break;
 		case 'e':
-			if (ctx->dev.type == P_KODAK_8810) {
+			if (ctx->dev.conn->type == P_KODAK_8810) {
 				j = sinfonia_geterrorlog(&ctx->dev);
 			} else {
 				j = get_errorlog(ctx);
@@ -925,18 +925,13 @@ static void *shinkos6245_init(void)
 	return ctx;
 }
 
-static int shinkos6245_attach(void *vctx, struct libusb_device_handle *dev, int type,
-			      uint8_t endp_up, uint8_t endp_down, int iface, uint8_t jobid)
+static int shinkos6245_attach(void *vctx, struct dyesub_connection *conn, uint8_t jobid)
 {
 	struct shinkos6245_ctx *ctx = vctx;
 
-	ctx->dev.dev = dev;
-	ctx->dev.endp_up = endp_up;
-	ctx->dev.endp_down = endp_down;
-	ctx->dev.type = type;
-	ctx->dev.iface = iface;
+	ctx->dev.conn = conn;
 
-	if (type == P_KODAK_8810) {
+	if (conn->type == P_KODAK_8810) {
 		ctx->dev.error_codes = &ek8810_error_codes;
 		ctx->dev.params = ek8810_params;
 		ctx->dev.params_count = ek8810_params_num;
@@ -990,7 +985,7 @@ static int shinkos6245_read_parse(void *vctx, const void **vjob, int data_fd, in
 	memset(job, 0, sizeof(*job));
 
 	/* Common read/parse code */
-	if (ctx->dev.type == P_KODAK_8810) {
+	if (ctx->dev.conn->type == P_KODAK_8810) {
 		ret = sinfonia_raw18_read_parse(data_fd, job);
 	} else {
 		ret = sinfonia_read_parse(data_fd, 6245, job);
@@ -1109,7 +1104,7 @@ static int shinkos6245_main_loop(void *vctx, const void *vjob) {
 	// XXX what about mcut |= PRINT_METHOD_DISABLE_ERR;
 
 	/* EK8810 uses special "cutlist" */
-	if (ctx->dev.type == P_KODAK_8810) {
+	if (ctx->dev.conn->type == P_KODAK_8810) {
 		switch (job->jp.media) {
 		case CODE_8x4_2:
 			if (job->jp.ext_flags & EXT_FLAG_DOUBLESLUG)
@@ -1164,7 +1159,7 @@ static int shinkos6245_main_loop(void *vctx, const void *vjob) {
 #endif
 
 	/* Send Set Time */
-	if (ctx->dev.type != P_KODAK_8810) {
+	if (ctx->dev.conn->type != P_KODAK_8810) {
 		struct sinfonia_settime_cmd *settime = (struct sinfonia_settime_cmd *)cmdbuf;
 		time_t now = time(NULL);
 		struct tm *cur = localtime(&now);
@@ -1233,7 +1228,7 @@ top:
 	}
 	last_state = state;
 
-	fflush(stderr);
+	fflush(logger);
 
 	switch (state) {
 	case S_IDLE:
@@ -1258,7 +1253,7 @@ top:
 	case S_PRINTER_READY_CMD:
 		// XXX send "get eeprom backup command"
 
-		if (ctx->dev.type == P_KODAK_8810 && cutlist) {
+		if (ctx->dev.conn->type == P_KODAK_8810 && cutlist) {
 			cutlist->hdr.cmd = cpu_to_le16(SINFONIA_CMD_SETCUTLIST);
 			cutlist->hdr.len = cpu_to_le16(sizeof(*cutlist) - sizeof(cutlist->hdr));
 
@@ -1305,7 +1300,7 @@ top:
 		}
 
 		INFO("Sending image data to printer\n");
-		if ((ret = send_data(ctx->dev.dev, ctx->dev.endp_down,
+		if ((ret = send_data(ctx->dev.conn,
 				     job->databuf, job->datalen)))
 			return CUPS_BACKEND_FAILED;
 
@@ -1391,7 +1386,7 @@ static int shinkos6245_query_stats(void *vctx,  struct printerstats *stats)
 		return CUPS_BACKEND_FAILED;
 	}
 
-	switch (ctx->dev.type) {
+	switch (ctx->dev.conn->type) {
 	case P_SHINKO_S6245:
 		stats->mfg = "Sinfonia";
 		stats->model = "CE1 / S6245";
@@ -1410,8 +1405,7 @@ static int shinkos6245_query_stats(void *vctx,  struct printerstats *stats)
 		break;
 	}
 
-	if (sinfonia_query_serno(ctx->dev.dev, ctx->dev.endp_up,
-				 ctx->dev.endp_down, ctx->dev.iface,
+	if (sinfonia_query_serno(ctx->dev.conn,
 				 ctx->serial, sizeof(ctx->serial)))
 		return CUPS_BACKEND_FAILED;
 
@@ -1468,9 +1462,9 @@ static const char *shinkos6245_prefixes[] = {
 	NULL
 };
 
-struct dyesub_backend shinkos6245_backend = {
+const struct dyesub_backend shinkos6245_backend = {
 	.name = "Sinfonia CHC-S6245 / Kodak 8810",
-	.version = "0.35" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.36" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = shinkos6245_prefixes,
 	.cmdline_usage = shinkos6245_cmdline,
 	.cmdline_arg = shinkos6245_cmdline_arg,

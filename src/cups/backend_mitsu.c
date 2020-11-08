@@ -52,6 +52,7 @@ int mitsu_loadlib(struct mitsu_lib *lib, int type)
 			lib->dl_handle = NULL;
 			return CUPS_BACKEND_FAILED;
 		}
+		lib->DumpAnnounce = DL_SYM(lib->dl_handle, "dump_announce");
 
 		lib->Get3DColorTable = DL_SYM(lib->dl_handle, "CColorConv3D_Get3DColorTable");
 		lib->Load3DColorTable = DL_SYM(lib->dl_handle, "CColorConv3D_Load3DColorTable");
@@ -91,6 +92,8 @@ int mitsu_loadlib(struct mitsu_lib *lib, int type)
 			return CUPS_BACKEND_FAILED;
 		} else {
 			DEBUG("Image processing library successfully loaded\n");
+			if (lib->DumpAnnounce)
+				lib->DumpAnnounce(logger);
 		}
 	}
 

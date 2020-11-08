@@ -49,6 +49,7 @@ struct mitsu98xx_data;  /* Forward declaration */
 struct M1CPCData;
 #endif
 
+typedef void (*dump_announceFN)(FILE *fp);
 typedef int (*lib70x_getapiversionFN)(void);
 typedef int (*Get3DColorTableFN)(uint8_t *buf, const char *filename);
 typedef struct CColorConv3D *(*Load3DColorTableFN)(const uint8_t *ptr);
@@ -83,7 +84,7 @@ typedef uint8_t (*M1_CalcOpRateGlossFN)(uint16_t rows, uint16_t cols);
 #warning "No dynamic loading support!"
 #endif
 
-#define REQUIRED_LIB_APIVERSION 6
+#define REQUIRED_LIB_APIVERSION 7
 
 #define LIBMITSU_VER "0.06"
 
@@ -93,6 +94,7 @@ typedef uint8_t (*M1_CalcOpRateGlossFN)(uint16_t rows, uint16_t cols);
 struct mitsu_lib {
 	void *dl_handle;
 	lib70x_getapiversionFN GetAPIVersion;
+	dump_announceFN DumpAnnounce;
 	Get3DColorTableFN Get3DColorTable;
 	Load3DColorTableFN Load3DColorTable;
 	Destroy3DColorTableFN Destroy3DColorTable;

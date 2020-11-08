@@ -1,7 +1,7 @@
 /*
  *   Kodak Professional 1400/805 CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013-2019 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2020 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -76,10 +76,7 @@ struct kodak1400_printjob {
 };
 
 struct kodak1400_ctx {
-	struct libusb_device_handle *dev;
-	uint8_t endp_up;
-	uint8_t endp_down;
-	int type;
+	struct dyesub_connection *conn;
 
 	struct marker marker;
 };
@@ -99,7 +96,7 @@ static int send_plane(struct kodak1400_ctx *ctx,
 		cmdbuf[2] = 0x00;
 		cmdbuf[3] = 0x50;
 
-		if ((ret = send_data(ctx->dev, ctx->endp_down,
+		if ((ret = send_data(ctx->conn,
 				     cmdbuf, CMDBUF_LEN)))
 			return ret;
 	}
@@ -117,14 +114,14 @@ static int send_plane(struct kodak1400_ctx *ctx,
 		memcpy(cmdbuf+9, &temp16, 2);
 	}
 
-	if ((ret = send_data(ctx->dev, ctx->endp_down,
+	if ((ret = send_data(ctx->conn,
 			     cmdbuf, CMDBUF_LEN)))
 		return ret;
 
 	if (planedata) {
 		int i;
 		for (i = 0 ; i < job->hdr.rows ; i++) {
-			if ((ret = send_data(ctx->dev, ctx->endp_down,
+			if ((ret = send_data(ctx->conn,
 					     planedata + i * job->hdr.columns,
 					     job->hdr.columns)))
 				return ret;
@@ -137,7 +134,7 @@ static int send_plane(struct kodak1400_ctx *ctx,
 	cmdbuf[2] = 0x01;
 	cmdbuf[3] = 0x50;
 
-	if ((ret = send_data(ctx->dev, ctx->endp_down,
+	if ((ret = send_data(ctx->conn,
 			     cmdbuf, CMDBUF_LEN)))
 		return ret;
 
@@ -147,10 +144,6 @@ static int send_plane(struct kodak1400_ctx *ctx,
 #define TONE_CURVE_SIZE 1552
 static int kodak1400_set_tonecurve(struct kodak1400_ctx *ctx, char *fname)
 {
-	libusb_device_handle *dev = ctx->dev;
-	uint8_t endp_down = ctx->endp_down;
-	uint8_t endp_up = ctx->endp_up;
-
 	uint8_t cmdbuf[8];
 	uint8_t respbuf[64];
 	int ret = 0, num = 0;
@@ -181,13 +174,13 @@ static int kodak1400_set_tonecurve(struct kodak1400_ctx *ctx, char *fname)
 	memset(cmdbuf, 0, sizeof(cmdbuf));
 	cmdbuf[0] = 0x1b;
 	cmdbuf[1] = 0xa2;
-	if ((ret = send_data(dev, endp_down,
+	if ((ret = send_data(ctx->conn,
 			     cmdbuf, 2))) {
 		ret = -3;
 		goto done;
 	}
 
-	ret = read_data(dev, endp_up,
+	ret = read_data(ctx->conn,
 			respbuf, sizeof(respbuf), &num);
 
 	if (ret < 0)
@@ -211,17 +204,17 @@ static int kodak1400_set_tonecurve(struct kodak1400_ctx *ctx, char *fname)
 	cmdbuf[3] = 0x03;
 	cmdbuf[4] = 0x06;
 	cmdbuf[5] = 0x10;   /* 06 10 == TONE_CURVE_SIZE */
-	if ((ret = send_data(dev, endp_down,
+	if ((ret = send_data(ctx->conn,
 			     cmdbuf, 6)))
 		goto done;
 
 	/* Send the payload over */
-	if ((ret = send_data(dev, endp_down,
+	if ((ret = send_data(ctx->conn,
 			     (uint8_t *) data, TONE_CURVE_SIZE)))
 		goto done;
 
 	/* get the response */
-	ret = read_data(dev, endp_up,
+	ret = read_data(ctx->conn,
 			respbuf, sizeof(respbuf), &num);
 
 	if (ret < 0)
@@ -284,18 +277,14 @@ static void *kodak1400_init(void)
 	return ctx;
 }
 
-static int kodak1400_attach(void *vctx, struct libusb_device_handle *dev, int type,
-			    uint8_t endp_up, uint8_t endp_down, int iface, uint8_t jobid)
+static int kodak1400_attach(void *vctx, struct dyesub_connection *conn,
+			    uint8_t jobid)
 {
 	struct kodak1400_ctx *ctx = vctx;
 
 	UNUSED(jobid);
-	UNUSED(iface);
 
-	ctx->dev = dev;
-	ctx->endp_up = endp_up;
-	ctx->endp_down = endp_down;
-	ctx->type = type;
+	ctx->conn = conn;
 
 	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
 	ctx->marker.name = "Unknown";
@@ -434,12 +423,12 @@ top:
 	cmdbuf[0] = 0x1b;
 	cmdbuf[1] = 0x72;
 
-	if ((ret = send_data(ctx->dev, ctx->endp_down,
+	if ((ret = send_data(ctx->conn,
 			    cmdbuf, CMDBUF_LEN)))
 		return CUPS_BACKEND_FAILED;
 
 	/* Read in the printer status */
-	ret = read_data(ctx->dev, ctx->endp_up,
+	ret = read_data(ctx->conn,
 			rdbuf, READBACK_LEN, &num);
 
 	if (ret < 0)
@@ -458,7 +447,7 @@ top:
 		return CUPS_BACKEND_STOP;  // HOLD/CANCEL/FAILED?  XXXX parse error!
 	}
 
-	fflush(stderr);
+	fflush(logger);
 
 	switch (state) {
 	case S_IDLE:
@@ -468,7 +457,7 @@ top:
 		memset(cmdbuf, 0, CMDBUF_LEN);
 		cmdbuf[0] = 0x1b;
 
-		if ((ret = send_data(ctx->dev, ctx->endp_down,
+		if ((ret = send_data(ctx->conn,
 				     cmdbuf, CMDBUF_LEN)))
 			return CUPS_BACKEND_FAILED;
 
@@ -482,7 +471,7 @@ top:
 		temp16 = be16_to_cpu(job->hdr.rows);
 		memcpy(cmdbuf+5, &temp16, 2);
 
-		if ((ret = send_data(ctx->dev, ctx->endp_down,
+		if ((ret = send_data(ctx->conn,
 				    cmdbuf, CMDBUF_LEN)))
 			return CUPS_BACKEND_FAILED;
 
@@ -492,7 +481,7 @@ top:
 		cmdbuf[1] = 0x59;
 		cmdbuf[2] = job->hdr.matte; // ???
 
-		if ((ret = send_data(ctx->dev, ctx->endp_down,
+		if ((ret = send_data(ctx->conn,
 				    cmdbuf, CMDBUF_LEN)))
 			return CUPS_BACKEND_FAILED;
 
@@ -502,7 +491,7 @@ top:
 		cmdbuf[1] = 0x60;
 		cmdbuf[2] = job->hdr.laminate;
 
-		if (send_data(ctx->dev, ctx->endp_down,
+		if (send_data(ctx->conn,
 			     cmdbuf, CMDBUF_LEN))
 			return CUPS_BACKEND_FAILED;
 
@@ -512,7 +501,7 @@ top:
 		cmdbuf[1] = 0x62;
 		cmdbuf[2] = job->hdr.lam_strength;
 
-		if ((ret = send_data(ctx->dev, ctx->endp_down,
+		if ((ret = send_data(ctx->conn,
 				    cmdbuf, CMDBUF_LEN)))
 			return CUPS_BACKEND_FAILED;
 
@@ -522,7 +511,7 @@ top:
 		cmdbuf[1] = 0x61;
 		cmdbuf[2] = job->hdr.unk1; // ???
 
-		if ((ret = send_data(ctx->dev, ctx->endp_down,
+		if ((ret = send_data(ctx->conn,
 				    cmdbuf, CMDBUF_LEN)))
 			return CUPS_BACKEND_FAILED;
 
@@ -581,7 +570,7 @@ top:
 		cmdbuf[2] = 0x00;
 		cmdbuf[3] = 0x50;
 
-		if ((ret = send_data(ctx->dev, ctx->endp_down,
+		if ((ret = send_data(ctx->conn,
 				    cmdbuf, CMDBUF_LEN)))
 			return CUPS_BACKEND_FAILED;
 
@@ -633,9 +622,9 @@ static const char *kodak1400_prefixes[] = {
 	NULL,
 };
 
-struct dyesub_backend kodak1400_backend = {
+const struct dyesub_backend kodak1400_backend = {
 	.name = "Kodak 1400/805",
-	.version = "0.40",
+	.version = "0.41",
 	.uri_prefixes = kodak1400_prefixes,
 	.cmdline_usage = kodak1400_cmdline,
 	.cmdline_arg = kodak1400_cmdline_arg,

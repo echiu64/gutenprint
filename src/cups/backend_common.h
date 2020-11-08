@@ -52,38 +52,32 @@
 #endif
 
 #define STR_LEN_MAX 64
-#define STATE( ... ) do { if (!quiet) fprintf(stderr, "STATE: " __VA_ARGS__ ); } while(0)
-#define ATTR( ... ) do { if (!quiet) fprintf(stderr, "ATTR: " __VA_ARGS__ ); } while(0)
-#define PAGE( ... ) do { if (!quiet) fprintf(stderr, "PAGE: " __VA_ARGS__ ); } while(0)
-#define DEBUG( ... ) do { if (!quiet) fprintf(stderr, "DEBUG: " __VA_ARGS__ ); } while(0)
-#define DEBUG2( ... ) do { if (!quiet) fprintf(stderr, __VA_ARGS__ ); } while(0)
-#define INFO( ... )  do { if (!quiet) fprintf(stderr, "INFO: " __VA_ARGS__ ); } while(0)
-#define WARNING( ... )  do { fprintf(stderr, "WARNING: " __VA_ARGS__ ); } while(0)
-#define ERROR( ... ) do { fprintf(stderr, "ERROR: " __VA_ARGS__ ); sleep(1); } while (0)
-#define PPD( ... ) do { fprintf(stderr, "PPD: " __VA_ARGS__ ); sleep(1); } while (0)
+#define STATE( ... ) do { if (!quiet) fprintf(logger, "STATE: " __VA_ARGS__ ); } while(0)
+#define ATTR( ... ) do { if (!quiet) fprintf(logger, "ATTR: " __VA_ARGS__ ); } while(0)
+#define PAGE( ... ) do { if (!quiet) fprintf(logger, "PAGE: " __VA_ARGS__ ); } while(0)
+#define DEBUG( ... ) do { if (!quiet) fprintf(logger, "DEBUG: " __VA_ARGS__ ); } while(0)
+#define DEBUG2( ... ) do { if (!quiet) fprintf(logger, __VA_ARGS__ ); } while(0)
+#define INFO( ... )  do { if (!quiet) fprintf(logger, "INFO: " __VA_ARGS__ ); } while(0)
+#define WARNING( ... )  do { fprintf(logger, "WARNING: " __VA_ARGS__ ); } while(0)
+#define ERROR( ... ) do { fprintf(logger, "ERROR: " __VA_ARGS__ ); sleep(1); } while (0)
+#define PPD( ... ) do { fprintf(logger, "PPD: " __VA_ARGS__ ); sleep(1); } while (0)
 
 #if (__BYTE_ORDER == __LITTLE_ENDIAN)
-#define le64_to_cpu(__x) __x
-#define le32_to_cpu(__x) __x
 #define le16_to_cpu(__x) __x
+#define le32_to_cpu(__x) __x
 #define be16_to_cpu(__x) __builtin_bswap16(__x)
 #define be32_to_cpu(__x) __builtin_bswap32(__x)
-#define be64_to_cpu(__x) __builtin_bswap64(__x)
 #else
 #define le16_to_cpu(__x) __builtin_bswap16(__x)
 #define le32_to_cpu(__x) __builtin_bswap32(__x)
-#define le64_to_cpu(__x) __builtin_bswap64(__x)
-#define be64_to_cpu(__x) __x
 #define be32_to_cpu(__x) __x
 #define be16_to_cpu(__x) __x
 #endif
 
 #define cpu_to_le16 le16_to_cpu
 #define cpu_to_le32 le32_to_cpu
-#define cpu_to_le64 le64_to_cpu
 #define cpu_to_be16 be16_to_cpu
 #define cpu_to_be32 be32_to_cpu
-#define cpu_to_be64 be64_to_cpu
 
 /* To cheat the compiler */
 #define UNUSED(expr) do { (void)(expr); } while (0)
@@ -173,7 +167,7 @@ struct device_id {
 	uint16_t pid;
 	int type;  /* P_** */
 	const char *manuf_str;
-	const char *prefix;
+	const char *make;
 };
 
 struct marker {
@@ -201,6 +195,18 @@ struct printerstats {
 	int32_t cnt_life[DECKS_MAX];  /* Lifetime prints */
 };
 
+struct dyesub_connection {
+	struct libusb_device_handle *dev;
+	uint8_t endp_up;
+	uint8_t endp_down;
+	uint8_t iface;
+	uint8_t altset;
+
+	// TODO:  mutex/lock
+
+	int type; /* P_XXXX */
+};
+
 #define DYESUB_MAX_JOB_ENTRIES 3
 
 struct dyesub_joblist {
@@ -220,10 +226,9 @@ struct dyesub_job_common {
 };
 
 /* Exported functions */
-int send_data(struct libusb_device_handle *dev, uint8_t endp,
-	      const uint8_t *buf, int len);
-int read_data(struct libusb_device_handle *dev, uint8_t endp,
-	      uint8_t *buf, int buflen, int *readlen);
+int send_data(struct dyesub_connection *conn, const uint8_t *buf, int len);
+int read_data(struct dyesub_connection *conn,
+	       uint8_t *buf, int buflen, int *readlen);
 
 void dump_markers(const struct marker *markers, int marker_count, int full);
 
@@ -262,8 +267,7 @@ struct dyesub_backend {
 	const uint32_t flags;
 	void (*cmdline_usage)(void);  /* Optional */
 	void *(*init)(void);
-	int  (*attach)(void *ctx, struct libusb_device_handle *dev, int type,
-		       uint8_t endp_up, uint8_t endp_down, int iface, uint8_t jobid);
+	int  (*attach)(void *ctx, struct dyesub_connection *conn, uint8_t jobid);
 	void (*teardown)(void *ctx);
 	int  (*cmdline_arg)(void *ctx, int argc, char **argv);
 	int  (*read_parse)(void *ctx, const void **job, int data_fd, int copies);
@@ -271,7 +275,7 @@ struct dyesub_backend {
 	void *(*combine_jobs)(const void *job1, const void *job2);
 	int  (*job_polarity)(void *ctx);
 	int  (*main_loop)(void *ctx, const void *job);
-	int  (*query_serno)(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, int iface, char *buf, int buf_len); /* Optional */
+	int  (*query_serno)(struct dyesub_connection *conn, char *buf, int buf_len); /* Optional */
 	int  (*query_markers)(void *ctx, struct marker **markers, int *count);
 	int  (*query_stats)(void *ctx, struct printerstats *stats); /* Optional */
 	const struct device_id devices[];
@@ -289,6 +293,7 @@ extern int collate;
 extern int test_mode;
 extern int quiet;
 extern const char *corrtable_path;
+extern FILE *logger;
 
 enum {
 	TEST_MODE_NONE = 0,
@@ -298,7 +303,7 @@ enum {
 };
 
 #if defined(BACKEND)
-extern struct dyesub_backend BACKEND;
+extern const struct dyesub_backend BACKEND;
 #endif
 
 /* CUPS compatibility */

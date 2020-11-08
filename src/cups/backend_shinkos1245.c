@@ -1,7 +1,7 @@
 /*
  *   Shinko/Sinfonia CHC-S1245 CUPS backend -- libusb-1.0 version
  *
- *   (c) 2015-2019 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2015-2020 Solomon Peachy <pizza@shaftnet.org>
  *
  *   Low-level documentation was provided by Sinfonia, Inc.  Thank you!
  *
@@ -224,11 +224,7 @@ struct shinkos1245_resp_matte {
 
 /* Private data structure */
 struct shinkos1245_ctx {
-	struct libusb_device_handle *dev;
-	uint8_t endp_up;
-	uint8_t endp_down;
-	int type;
-	int iface;
+	struct dyesub_connection *conn;
 
 	uint8_t jobid;
 
@@ -270,12 +266,12 @@ static int shinkos1245_do_cmd(struct shinkos1245_ctx *ctx,
 	int ret;
 
 	/* Write command */
-	if ((ret = send_data(ctx->dev, ctx->endp_down,
+	if ((ret = send_data(ctx->conn,
 			     cmd, cmd_len)))
 		return (ret < 0) ? ret : -99;
 
 	/* Read response */
-	ret = read_data(ctx->dev, ctx->endp_up,
+	ret = read_data(ctx->conn,
 			resp, resp_len, actual_len);
 	if (ret < 0)
 		return ret;
@@ -695,7 +691,7 @@ static int get_tonecurve(struct shinkos1245_ctx *ctx, int type, int table, char 
 		}
 
 		/* And read back 64-bytes of data */
-		ret = read_data(ctx->dev, ctx->endp_up,
+		ret = read_data(ctx->conn,
 				ptr, TONE_CURVE_DATA_BLOCK_SIZE, &num);
 		if (num != TONE_CURVE_DATA_BLOCK_SIZE) {
 			ret = -99;
@@ -813,7 +809,7 @@ static int set_tonecurve(struct shinkos1245_ctx *ctx, int type, int table, char 
 		}
 
 		/* Write 64-bytes of data */
-		ret = send_data(ctx->dev, ctx->endp_up,
+		ret = send_data(ctx->conn,
 				ptr, TONE_CURVE_DATA_BLOCK_SIZE);
 		if (ret < 0)
 			goto done;
@@ -943,16 +939,11 @@ static void *shinkos1245_init(void)
 	return ctx;
 }
 
-static int shinkos1245_attach(void *vctx, struct libusb_device_handle *dev, int type,
-			      uint8_t endp_up, uint8_t endp_down, int iface, uint8_t jobid)
+static int shinkos1245_attach(void *vctx, struct dyesub_connection *conn, uint8_t jobid)
 {
 	struct shinkos1245_ctx *ctx = vctx;
 
-	ctx->dev = dev;
-	ctx->endp_up = endp_up;
-	ctx->endp_down = endp_down;
-	ctx->iface = iface;
-	ctx->type = type;
+	ctx->conn = conn;
 
 	/* Ensure jobid is sane */
 	ctx->jobid = jobid & 0x7f;
@@ -1074,7 +1065,7 @@ top:
 
 	last_state = state;
 
-	fflush(stderr);
+	fflush(logger);
 
 	switch (state) {
 	case S_IDLE:
@@ -1169,7 +1160,7 @@ top:
 
 		/* Send over data */
 		INFO("Sending image data to printer\n");
-		if ((i = send_data(ctx->dev, ctx->endp_down,
+		if ((i = send_data(ctx->conn,
 				   job->databuf, job->datalen)))
 			return CUPS_BACKEND_FAILED;
 
@@ -1207,16 +1198,13 @@ printer_error2:
 	return CUPS_BACKEND_FAILED;
 }
 
-static int shinkos1245_query_serno(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, int iface, char *buf, int buf_len)
+static int shinkos1245_query_serno(struct dyesub_connection *conn, char *buf, int buf_len)
 {
 	struct shinkos1245_resp_getid resp;
 	int i;
 
 	struct shinkos1245_ctx ctx = {
-		.dev = dev,
-		.endp_up = endp_up,
-		.endp_down = endp_down,
-		.iface = iface,
+		.conn = conn,
 	};
 
 	i = shinkos1245_get_printerid(&ctx, &resp);
@@ -1267,8 +1255,7 @@ static int shinkos1245_query_stats(void *vctx,  struct printerstats *stats)
 	stats->mfg = "Sinfonia";
 	stats->model = "E1 / S1245";
 
-	if (shinkos1245_query_serno(ctx->dev, ctx->endp_up,
-				    ctx->endp_down, ctx->iface,
+	if (shinkos1245_query_serno(ctx->conn,
 				    ctx->serial, sizeof(ctx->serial)))
 		return CUPS_BACKEND_FAILED;
 
@@ -1299,9 +1286,9 @@ static const char *shinkos1245_prefixes[] = {
 	NULL
 };
 
-struct dyesub_backend shinkos1245_backend = {
+const struct dyesub_backend shinkos1245_backend = {
 	.name = "Shinko/Sinfonia CHC-S1245/E1",
-	.version = "0.33" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.34" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = shinkos1245_prefixes,
 	.cmdline_usage = shinkos1245_cmdline,
 	.cmdline_arg = shinkos1245_cmdline_arg,

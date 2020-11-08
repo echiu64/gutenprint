@@ -1,7 +1,7 @@
 /*
  *   Canon SELPHY ES/CP series CUPS backend -- libusb-1.0 version
  *
- *   (c) 2007-2019 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2007-2020 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -544,10 +544,7 @@ struct canonselphy_printjob {
 };
 
 struct canonselphy_ctx {
-	struct libusb_device_handle *dev;
-	uint8_t endp_up;
-	uint8_t endp_down;
-	int type;
+	struct dyesub_connection *conn;
 
 	struct printer_data *printer;
 	struct marker marker;
@@ -561,13 +558,13 @@ static int canonselphy_get_status(struct canonselphy_ctx *ctx)
 	int ret, num;
 
 	/* Read in the printer status, twice. */
-	ret = read_data(ctx->dev, ctx->endp_up,
-			(uint8_t*) rdbuf, READBACK_LEN, &num);
+	ret = read_data(ctx->conn,
+			 (uint8_t*) rdbuf, READBACK_LEN, &num);
 	if (ret < 0)
 		return CUPS_BACKEND_FAILED;
 
-	ret = read_data(ctx->dev, ctx->endp_up,
-			(uint8_t*) rdbuf, READBACK_LEN, &num);
+	ret = read_data(ctx->conn,
+			 (uint8_t*) rdbuf, READBACK_LEN, &num);
 
 	if (ret < 0)
 		return CUPS_BACKEND_FAILED;
@@ -585,8 +582,8 @@ static int canonselphy_send_reset(struct canonselphy_ctx *ctx)
 			       0x00, 0x00, 0x00, 0x00 };
 	int ret;
 
-	if ((ret = send_data(ctx->dev, ctx->endp_down,
-			     rstcmd, sizeof(rstcmd))))
+	if ((ret = send_data(ctx->conn,
+			      rstcmd, sizeof(rstcmd))))
 		return CUPS_BACKEND_FAILED;
 
 	return CUPS_BACKEND_OK;
@@ -607,27 +604,21 @@ static void *canonselphy_init(void)
 	return ctx;
 }
 
-static int canonselphy_attach(void *vctx, struct libusb_device_handle *dev, int type,
-			      uint8_t endp_up, uint8_t endp_down, int iface, uint8_t jobid)
+static int canonselphy_attach(void *vctx, struct dyesub_connection *conn, uint8_t jobid)
 {
 	struct canonselphy_ctx *ctx = vctx;
 	int i, num;
 	uint8_t rdbuf[READBACK_LEN];
-
 	UNUSED(jobid);
-	UNUSED(iface);
 
-	ctx->dev = dev;
-	ctx->endp_up = endp_up;
-	ctx->endp_down = endp_down;
-	ctx->type = type;
+	ctx->conn = conn;
 
-	if (ctx->type == P_CP900) {
-		ctx->type = P_CP_XXX;
+	if (ctx->conn->type == P_CP900) {
+		ctx->conn->type = P_CP_XXX;
 		ctx->cp900 = 1;
 	}
 	for (i = 0 ; selphy_printers[i].type != -1; i++) {
-		if (selphy_printers[i].type == ctx->type) {
+		if (selphy_printers[i].type == ctx->conn->type) {
 			ctx->printer = &selphy_printers[i];
 		}
 	}
@@ -642,12 +633,12 @@ static int canonselphy_attach(void *vctx, struct libusb_device_handle *dev, int 
 
 	if (test_mode < TEST_MODE_NOATTACH) {
 		/* Read printer status. Twice. */
-		i = read_data(ctx->dev, ctx->endp_up,
+		i = read_data(ctx->conn,
 			      rdbuf, READBACK_LEN, &num);
 		if (i < 0)
 			return CUPS_BACKEND_FAILED;
 
-		i = read_data(ctx->dev, ctx->endp_up,
+		i = read_data(ctx->conn,
 			      rdbuf, READBACK_LEN, &num);
 		if (i < 0)
 			return CUPS_BACKEND_FAILED;
@@ -745,14 +736,14 @@ static int canonselphy_read_parse(void *vctx, const void **vjob, int data_fd, in
 	printer_type = parse_printjob(rdbuf, &job->bw_mode, &job->plane_len);
 	/* Special cases for some models */
 	if (printer_type == P_ES40_CP790) {
-		if (ctx->type == P_CP790)
+		if (ctx->conn->type == P_CP790)
 			printer_type = P_CP790;
 		else
 			printer_type = P_ES40;
 	}
 
-	if (printer_type != ctx->type) {
-		ERROR("Printer/Job mismatch (%d/%d/%d)\n", ctx->type, ctx->printer->type, printer_type);
+	if (printer_type != ctx->conn->type) {
+		ERROR("Printer/Job mismatch (%d/%d/%d)\n", ctx->conn->type, ctx->printer->type, printer_type);
 		canonselphy_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
 	}
@@ -855,7 +846,7 @@ static int canonselphy_main_loop(void *vctx, const void *vjob) {
 	copies = job->copies;
 
 	/* Read in the printer status to clear last state */
-	ret = read_data(ctx->dev, ctx->endp_up,
+	ret = read_data(ctx->conn,
 			rdbuf, READBACK_LEN, &num);
 
 	if (ret < 0)
@@ -868,7 +859,7 @@ top:
 	}
 
 	/* Read in the printer status */
-	ret = read_data(ctx->dev, ctx->endp_up,
+	ret = read_data(ctx->conn,
 			rdbuf, READBACK_LEN, &num);
 	if (ret < 0)
 		return CUPS_BACKEND_FAILED;
@@ -883,7 +874,7 @@ top:
 		dump_markers(&ctx->marker, 1, 0);
 		if (ctx->printer->clear_error_len)
 			/* Try to clear error state */
-			if ((ret = send_data(ctx->dev, ctx->endp_down, ctx->printer->clear_error, ctx->printer->clear_error_len)))
+			if ((ret = send_data(ctx->conn, ctx->printer->clear_error, ctx->printer->clear_error_len)))
 				return CUPS_BACKEND_FAILED;
 		return CUPS_BACKEND_HOLD;
 	}
@@ -895,7 +886,7 @@ top:
 	}
 	last_state = state;
 
-	fflush(stderr);
+	fflush(logger);
 
 	switch(state) {
 	case S_IDLE:
@@ -905,7 +896,7 @@ top:
 
 		/* Make sure paper/ribbon is correct */
 		if (job->paper_code != -1) {
-			if (ctx->type == P_CP_XXX) {
+			if (ctx->conn->type == P_CP_XXX) {
 				uint8_t pc = rdbuf[ctx->printer->paper_code_offset];
 				if (((pc >> 4) & 0xf) != (job->paper_code & 0x0f)) {
 
@@ -936,7 +927,7 @@ top:
 					return CUPS_BACKEND_HOLD;  /* Hold this job, don't stop queue */
 				}
 			}
-		} else if (ctx->type == P_CP790) {
+		} else if (ctx->conn->type == P_CP790) {
 			uint8_t ribbon = rdbuf[4] >> 4;
 			uint8_t paper = rdbuf[5];
 
@@ -961,7 +952,7 @@ top:
 	case S_PRINTER_READY:
 		INFO("Printing started; Sending init sequence\n");
 		/* Send printer init */
-		if ((ret = send_data(ctx->dev, ctx->endp_down, job->header, ctx->printer->init_length)))
+		if ((ret = send_data(ctx->conn, job->header, ctx->printer->init_length)))
 			return CUPS_BACKEND_FAILED;
 
 		state = S_PRINTER_INIT_SENT;
@@ -977,7 +968,7 @@ top:
 		else
 			INFO("Sending YELLOW plane\n");
 
-		if ((ret = send_data(ctx->dev, ctx->endp_down, job->plane_y, job->plane_len)))
+		if ((ret = send_data(ctx->conn, job->plane_y, job->plane_len)))
 			return CUPS_BACKEND_FAILED;
 
 		state = S_PRINTER_Y_SENT;
@@ -993,7 +984,7 @@ top:
 	case S_PRINTER_READY_M:
 		INFO("Sending MAGENTA plane\n");
 
-		if ((ret = send_data(ctx->dev, ctx->endp_down, job->plane_m, job->plane_len)))
+		if ((ret = send_data(ctx->conn, job->plane_m, job->plane_len)))
 			return CUPS_BACKEND_FAILED;
 
 		state = S_PRINTER_M_SENT;
@@ -1006,7 +997,7 @@ top:
 	case S_PRINTER_READY_C:
 		INFO("Sending CYAN plane\n");
 
-		if ((ret = send_data(ctx->dev, ctx->endp_down, job->plane_c, job->plane_len)))
+		if ((ret = send_data(ctx->conn, job->plane_c, job->plane_len)))
 			return CUPS_BACKEND_FAILED;
 
 		state = S_PRINTER_C_SENT;
@@ -1023,7 +1014,7 @@ top:
 		uint32_t empty = 0;
 
 		INFO("Sending CP900 Footer\n");
-		if ((ret = send_data(ctx->dev, ctx->endp_down,
+		if ((ret = send_data(ctx->conn,
 				     (uint8_t*)&empty, sizeof(empty))))
 			return CUPS_BACKEND_FAILED;
 
@@ -1034,7 +1025,7 @@ top:
 		if (ctx->printer->foot_length) {
 			INFO("Cleaning up\n");
 
-			if ((ret = send_data(ctx->dev, ctx->endp_down, job->footer, ctx->printer->foot_length)))
+			if ((ret = send_data(ctx->conn, job->footer, ctx->printer->foot_length)))
 				return CUPS_BACKEND_FAILED;
 		}
 		state = S_FINISHED;
@@ -1098,12 +1089,12 @@ static int canonselphy_query_markers(void *vctx, struct marker **markers, int *c
 	int ret, num;
 
 	/* Read in the printer status, twice. */
-	ret = read_data(ctx->dev, ctx->endp_up,
+	ret = read_data(ctx->conn,
 			(uint8_t*) rdbuf, READBACK_LEN, &num);
 	if (ret < 0)
 		return CUPS_BACKEND_FAILED;
 
-	ret = read_data(ctx->dev, ctx->endp_up,
+	ret = read_data(ctx->conn,
 			(uint8_t*) rdbuf, READBACK_LEN, &num);
 
 	if (ret < 0)
@@ -1134,9 +1125,9 @@ static const char *canonselphy_prefixes[] = {
 	NULL
 };
 
-struct dyesub_backend canonselphy_backend = {
+const struct dyesub_backend canonselphy_backend = {
 	.name = "Canon SELPHY CP/ES (legacy)",
-	.version = "0.105",
+	.version = "0.106",
 	.uri_prefixes = canonselphy_prefixes,
 	.cmdline_usage = canonselphy_cmdline,
 	.cmdline_arg = canonselphy_cmdline_arg,

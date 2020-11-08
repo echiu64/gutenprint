@@ -129,10 +129,8 @@ struct mitsu9550_printjob {
 };
 
 struct mitsu9550_ctx {
-	struct libusb_device_handle *dev;
-	uint8_t endp_up;
-	uint8_t endp_down;
-	int type;
+	struct dyesub_connection *conn;
+
 	int is_s;
 	int is_98xx;
 	int footer_len;
@@ -207,7 +205,7 @@ static int mitsu9550_main_loop(void *vctx, const void *vjob);
 			ERROR("Printer out of media!\n"); \
 			return CUPS_BACKEND_HOLD; \
 		} \
-		if (validate_media(ctx->type, media->type, job->cols, job->rows)) { \
+		if (validate_media(ctx->conn->type, media->type, job->cols, job->rows)) { \
 			ERROR("Incorrect media (%u) type for printjob (%ux%u)!\n", media->type, job->cols, job->rows); \
 			return CUPS_BACKEND_HOLD; \
 		} \
@@ -278,27 +276,22 @@ static void *mitsu9550_init(void)
 	return ctx;
 }
 
-static int mitsu9550_attach(void *vctx, struct libusb_device_handle *dev, int type,
-			    uint8_t endp_up, uint8_t endp_down, int iface, uint8_t jobid)
+static int mitsu9550_attach(void *vctx, struct dyesub_connection *conn, uint8_t jobid)
 {
 	struct mitsu9550_ctx *ctx = vctx;
 	struct mitsu9550_media media;
 
 	UNUSED(jobid);
-	UNUSED(iface);
 
-	ctx->dev = dev;
-	ctx->endp_up = endp_up;
-	ctx->endp_down = endp_down;
-	ctx->type = type;
+	ctx->conn = conn;
 
-	if (ctx->type == P_MITSU_9550S ||
-	    ctx->type == P_MITSU_9800S)
+	if (ctx->conn->type == P_MITSU_9550S ||
+	    ctx->conn->type == P_MITSU_9800S)
 		ctx->is_s = 1;
 
-	if (ctx->type == P_MITSU_9800 ||
-	    ctx->type == P_MITSU_9800S ||
-	    ctx->type == P_MITSU_9810) {
+	if (ctx->conn->type == P_MITSU_9800 ||
+	    ctx->conn->type == P_MITSU_9800S ||
+	    ctx->conn->type == P_MITSU_9810) {
 		ctx->is_98xx = 1;
 		ctx->lut_fname = MITSU_M98xx_LUT_FILE;
 	}
@@ -306,12 +299,12 @@ static int mitsu9550_attach(void *vctx, struct libusb_device_handle *dev, int ty
 	if (ctx->is_98xx) {
 #if defined(WITH_DYNAMIC)
 		/* Attempt to open the library */
-		if (mitsu_loadlib(&ctx->lib, ctx->type))
+		if (mitsu_loadlib(&ctx->lib, ctx->conn->type))
 #endif
 			WARNING("Dynamic library support not loaded, will be unable to print.");
 	}
 
-	if (ctx->type == P_MITSU_CP30D) {
+	if (ctx->conn->type == P_MITSU_CP30D) {
 		ctx->footer_len = 6;
 		ctx->lut_fname = MITSU_CP30D_LUT_FILE;
 	} else {
@@ -489,13 +482,13 @@ hdr_done:
 	}
 
 	/* Mitsu9600 windows spool uses more, smaller blocks, but plane data is the same */
-	if (ctx->type == P_MITSU_9600) {
+	if (ctx->conn->type == P_MITSU_9600) {
 		remain += 128 * sizeof(struct mitsu9550_plane); /* 39 extra seen on 4x6" */
 	}
 
 	/* 9550S/9800S doesn't typically sent over hdr4! */
-	if (ctx->type == P_MITSU_9550S ||
-	    ctx->type == P_MITSU_9800S) {
+	if (ctx->conn->type == P_MITSU_9550S ||
+	    ctx->conn->type == P_MITSU_9800S) {
 		/* XXX Has to do with error policy, but not sure what.
 		   Mitsu9550-S/9800-S will set this based on a command,
 		   but it's not part of the standard job spool */
@@ -504,7 +497,7 @@ hdr_done:
 
 	/* Disable matte if the printer doesn't support it */
 	if (job->hdr1.matte) {
-		if (ctx->type != P_MITSU_9810) {
+		if (ctx->conn->type != P_MITSU_9810) {
 			WARNING("Matte not supported on this printer, disabling\n");
 			job->hdr1.matte = 0;
 		} else if (job->is_raw) {
@@ -657,10 +650,10 @@ static int mitsu9550_get_status(struct mitsu9550_ctx *ctx, uint8_t *resp, int st
 	else if (media)
 		cmd.cmd[2] = 0x24;
 	cmd.cmd[3] = 0x00;
-	if ((ret = send_data(ctx->dev, ctx->endp_down,
+	if ((ret = send_data(ctx->conn,
 			     (uint8_t*) &cmd, sizeof(cmd))))
 		return ret;
-	ret = read_data(ctx->dev, ctx->endp_up,
+	ret = read_data(ctx->conn,
 			resp, sizeof(struct mitsu9550_status), &num);
 
 	if (ret < 0)
@@ -1054,7 +1047,7 @@ top:
 		cmd.cmd[1] = 0x53;
 		cmd.cmd[2] = 0xc5;
 		cmd.cmd[3] = 0x9d;
-		if ((ret = send_data(ctx->dev, ctx->endp_down,
+		if ((ret = send_data(ctx->conn,
 				     (uint8_t*) &cmd, sizeof(cmd))))
 			return CUPS_BACKEND_FAILED;
 
@@ -1063,18 +1056,18 @@ top:
 		cmd.cmd[1] = 0x4b;
 		cmd.cmd[2] = 0x7f;
 		cmd.cmd[3] = 0x00;
-		if ((ret = send_data(ctx->dev, ctx->endp_down,
+		if ((ret = send_data(ctx->conn,
 				     (uint8_t*) &cmd, sizeof(cmd))))
 			return CUPS_BACKEND_FAILED;
 
-		ret = read_data(ctx->dev, ctx->endp_up,
+		ret = read_data(ctx->conn,
 				rdbuf, READBACK_LEN, &num);
 		if (ret < 0)
 			return CUPS_BACKEND_FAILED;
 		// seen so far: eb 4b 7f 00  02 00 5e
 	}
 
-	if (ctx->type == P_MITSU_9800S) {
+	if (ctx->conn->type == P_MITSU_9800S) {
 		int num;
 
 		/* Send "unknown 3" command */
@@ -1082,11 +1075,11 @@ top:
 		cmd.cmd[1] = 0x4b;
 		cmd.cmd[2] = 0x01;
 		cmd.cmd[3] = 0x00;
-		if ((ret = send_data(ctx->dev, ctx->endp_down,
+		if ((ret = send_data(ctx->conn,
 				     (uint8_t*) &cmd, sizeof(cmd))))
 			return CUPS_BACKEND_FAILED;
 
-		ret = read_data(ctx->dev, ctx->endp_up,
+		ret = read_data(ctx->conn,
 				rdbuf, READBACK_LEN, &num);
 		if (ret < 0)
 			return CUPS_BACKEND_FAILED;
@@ -1101,19 +1094,19 @@ top:
 
 	/* Send printjob headers from spool data */
 	if (job->hdr1_present)
-		if ((ret = send_data(ctx->dev, ctx->endp_down,
+		if ((ret = send_data(ctx->conn,
 				     (uint8_t*) &job->hdr1, sizeof(job->hdr1))))
 			return CUPS_BACKEND_FAILED;
 	if (job->hdr2_present)
-		if ((ret = send_data(ctx->dev, ctx->endp_down,
+		if ((ret = send_data(ctx->conn,
 				     (uint8_t*) &job->hdr2, sizeof(job->hdr2))))
 			return CUPS_BACKEND_FAILED;
 	if (job->hdr3_present)
-		if ((ret = send_data(ctx->dev, ctx->endp_down,
+		if ((ret = send_data(ctx->conn,
 				     (uint8_t*) &job->hdr3, sizeof(job->hdr3))))
 			return CUPS_BACKEND_FAILED;
 	if (job->hdr4_present)
-		if ((ret = send_data(ctx->dev, ctx->endp_down,
+		if ((ret = send_data(ctx->conn,
 				     (uint8_t*) &job->hdr4, sizeof(struct mitsu9550_hdr4))))
 			return CUPS_BACKEND_FAILED;
 
@@ -1124,7 +1117,7 @@ top:
 		cmd.cmd[2] = 0x43;
 		cmd.cmd[3] = 0x00;
 
-		if ((ret = send_data(ctx->dev, ctx->endp_down,
+		if ((ret = send_data(ctx->conn,
 				     (uint8_t*) &cmd, sizeof(cmd))))
 			return CUPS_BACKEND_FAILED;
 	}
@@ -1141,11 +1134,11 @@ top:
 		if (plane->cmd[3] == 0x10)
 			planelen *= 2;
 
-		if ((ret = send_data(ctx->dev, ctx->endp_down,
+		if ((ret = send_data(ctx->conn,
 				     (uint8_t*) ptr, sizeof(struct mitsu9550_plane))))
 			return CUPS_BACKEND_FAILED;
 		ptr += sizeof(struct mitsu9550_plane);
-		if ((ret = send_data(ctx->dev, ctx->endp_down,
+		if ((ret = send_data(ctx->conn,
 				     (uint8_t*) ptr, planelen)))
 			return CUPS_BACKEND_FAILED;
 		ptr += planelen;
@@ -1197,27 +1190,27 @@ top:
 	}
 
 	/* Send "end data" command */
-	if (ctx->type == P_MITSU_9550S) {
+	if (ctx->conn->type == P_MITSU_9550S) {
 		/* Override spool, which may be wrong */
 		cmd.cmd[0] = 0x1b;
 		cmd.cmd[1] = 0x50;
 		cmd.cmd[2] = 0x47;
 		cmd.cmd[3] = 0x00;
-		if ((ret = send_data(ctx->dev, ctx->endp_down,
+		if ((ret = send_data(ctx->conn,
 				     (uint8_t*) &cmd, sizeof(cmd))))
 			return CUPS_BACKEND_FAILED;
-	} else if (ctx->type == P_MITSU_9800S) {
+	} else if (ctx->conn->type == P_MITSU_9800S) {
 		/* Override spool, which may be wrong */
 		cmd.cmd[0] = 0x1b;
 		cmd.cmd[1] = 0x50;
 		cmd.cmd[2] = 0x4e;
 		cmd.cmd[3] = 0x00;
-		if ((ret = send_data(ctx->dev, ctx->endp_down,
+		if ((ret = send_data(ctx->conn,
 				     (uint8_t*) &cmd, sizeof(cmd))))
 			return CUPS_BACKEND_FAILED;
 	} else {
 		/* Send from spool file */
-		if ((ret = send_data(ctx->dev, ctx->endp_down,
+		if ((ret = send_data(ctx->conn,
 				     ptr, ctx->footer_len)))
 			return CUPS_BACKEND_FAILED;
 		ptr += ctx->footer_len;
@@ -1232,17 +1225,17 @@ top:
 			planelen *= 2;
 
 		// XXX include a status loop here too?
-		if ((ret = send_data(ctx->dev, ctx->endp_down,
+		if ((ret = send_data(ctx->conn,
 				     (uint8_t*) ptr, sizeof(struct mitsu9550_plane))))
 			return CUPS_BACKEND_FAILED;
 		ptr += sizeof(struct mitsu9550_plane);
-		if ((ret = send_data(ctx->dev, ctx->endp_down,
+		if ((ret = send_data(ctx->conn,
 				     (uint8_t*) ptr, planelen)))
 			return CUPS_BACKEND_FAILED;
 		ptr += planelen;
 
 		/* Send "lamination end data" command from spool file */
-		if ((ret = send_data(ctx->dev, ctx->endp_down,
+		if ((ret = send_data(ctx->conn,
 				     ptr, sizeof(cmd))))
 			return CUPS_BACKEND_FAILED;
 //		ptr += sizeof(cmd);
@@ -1368,25 +1361,23 @@ static int mitsu9550_query_status2(struct mitsu9550_ctx *ctx)
 	return ret;
 }
 
-static int mitsu9550_query_serno(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, int iface, char *buf, int buf_len)
+static int mitsu9550_query_serno(struct dyesub_connection *conn, char *buf, int buf_len)
 {
 	struct mitsu9550_cmd cmd;
 	uint8_t rdbuf[READBACK_LEN];
 	uint8_t *ptr;
 	int ret, num, i;
 
-	UNUSED(iface);
-
 	cmd.cmd[0] = 0x1b;
 	cmd.cmd[1] = 0x72;
 	cmd.cmd[2] = 0x6e;
 	cmd.cmd[3] = 0x00;
 
-	if ((ret = send_data(dev, endp_down,
+	if ((ret = send_data(conn,
                              (uint8_t*) &cmd, sizeof(cmd))))
                 return (ret < 0) ? ret : CUPS_BACKEND_FAILED;
 
-	ret = read_data(dev, endp_up,
+	ret = read_data(conn,
 			rdbuf, READBACK_LEN, &num);
 
 	if (ret < 0)
@@ -1428,7 +1419,7 @@ static int mitsu9550_cancel_job(struct mitsu9550_ctx *ctx)
 	int ret;
 
 	uint8_t buf[2] = { 0x1b, 0x44 };
-	ret = send_data(ctx->dev, ctx->endp_down, buf, sizeof(buf));
+	ret = send_data(ctx->conn, buf, sizeof(buf));
 
 	return ret;
 }
@@ -1497,9 +1488,9 @@ static const char *mitsu9550_prefixes[] = {
 };
 
 /* Exported */
-struct dyesub_backend mitsu9550_backend = {
+const struct dyesub_backend mitsu9550_backend = {
 	.name = "Mitsubishi CP9xxx family",
-	.version = "0.55" " (lib " LIBMITSU_VER ")",
+	.version = "0.56" " (lib " LIBMITSU_VER ")",
 	.uri_prefixes = mitsu9550_prefixes,
 	.cmdline_usage = mitsu9550_cmdline,
 	.cmdline_arg = mitsu9550_cmdline_arg,
