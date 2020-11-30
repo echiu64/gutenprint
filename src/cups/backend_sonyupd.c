@@ -39,11 +39,12 @@ struct sony_updsts {
 	uint8_t  zero1;    /* 0x00 */
 	uint8_t  printing; /* UPD_PRINTING_* */
 	uint8_t  remain;   /* Number of remaining pages */
-	uint8_t  zero2;
+	uint8_t  sts0;     /* UPD_STS0_* */
 	uint8_t  sts1;     /* UPD_STS1_* */
-	uint8_t  sts2;     /* seconday status */
-	uint8_t  sts3;     /* tertiary status */
-	uint16_t unk;      /* seen 0x04a0 UP-CR10L, 0x04a8 on UP-DR150 */
+	uint8_t  sts2;     /* UPD_STS2_* */
+	uint8_t  sts3;     /* UPD_STS3_* */
+	uint8_t  ribbon;   /* 0x04 = R206/6x8 */
+	uint8_t  paper;    /* 0x38 = EMPTY, 0xa8 = loaded */
 	uint16_t max_cols; /* BE */
 	uint16_t max_rows; /* BE */
 	uint8_t  percent;  /* 0-99, if job is printing (UP-D89x) */
@@ -56,17 +57,28 @@ struct sony_updsts {
 #define UPD_PRINTING_O     0x20
 #define UPD_PRINTING_IDLE  0x00
 
+/* Confirmed on UP-DR200 */
+#define UPD_STS0_OK        0x00
+#define UPD_STS0_NORIBBON  0x10
+#define UPD_STS0_NOPAPER   0x20
+#define UPD_STS0_DOOROPEN  0x40
+
 #define UPD_STS1_IDLE      0x00
 #define UPD_STS1_DOOROPEN  0x08
 #define UPD_STS1_NOPAPER   0x40
 #define UPD_STS1_PRINTING  0x80
+#define UPD_STS1_PRINTING2 0xC0
+
+#define UPD_RIBBON_R206    0x04
 
 /* Private data structures */
 struct upd_printjob {
+	size_t jobsize;
+	int copies;
+
 	uint8_t *databuf;
 	int datalen;
 
-	int copies;
 	uint16_t rows;
 	uint16_t cols;
 	uint32_t imglen;
@@ -82,50 +94,18 @@ struct upd_ctx {
 	struct marker marker;
 };
 
-/* Now for the code */
-static void* upd_init(void)
+static const char *upd_ribbons(int type, uint8_t code)
 {
-	struct upd_ctx *ctx = malloc(sizeof(struct upd_ctx));
-	if (!ctx) {
-		ERROR("Memory Allocation Failure!\n");
-		return NULL;
-	}
-	memset(ctx, 0, sizeof(struct upd_ctx));
-	return ctx;
-}
-
-static int upd_attach(void *vctx, struct dyesub_connection *conn, uint8_t jobid)
-{
-	struct upd_ctx *ctx = vctx;
-
-	UNUSED(jobid);
-
-	ctx->conn = conn;
-
-	if (ctx->conn->type == P_SONY_UPD895 || ctx->conn->type == P_SONY_UPD897) {
-		ctx->marker.color = "#000000";  /* Ie black! */
-		ctx->native_bpp = 1;
-	} else {
-		ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
-		ctx->native_bpp = 3;
+	if (type == P_SONY_UPD895 || type == P_SONY_UPD897) {
+		return "UP-110 Roll";
 	}
 
-	ctx->marker.name = "Unknown";
-	ctx->marker.numtype = -1;
-	ctx->marker.levelmax = CUPS_MARKER_UNAVAILABLE;
-	ctx->marker.levelnow = CUPS_MARKER_UNKNOWN;
+	/* CR10L/DR200/DR150 */
+	if (code == UPD_RIBBON_R206) {
+		return "R206 (8x6)";
+	}
 
-	return CUPS_BACKEND_OK;
-}
-
-static void upd_cleanup_job(const void *vjob)
-{
-	const struct upd_printjob *job = vjob;
-
-	if (job->databuf)
-		free(job->databuf);
-
-	free((void*)job);
+	return "Unknown";
 }
 
 // UP-DR200
@@ -139,6 +119,12 @@ static void upd_cleanup_job(const void *vjob)
 // 2UPC-R154         (550)
 // 2UPC-R155         (335)
 // 2UPC-R156         (295)
+
+// UP-CR10L
+
+// 2UPC-C13          (300)
+// 2UPC-C14          (200)
+// 2UPC-C15          (172)
 
 // print order:  ->YMCO->
 // current prints (power on)
@@ -155,11 +141,30 @@ static const char* upd895_statuses(uint8_t code)
 	case UPD_STS1_NOPAPER:
 		return "No paper";
 	case UPD_STS1_PRINTING:
+	case UPD_STS1_PRINTING2:
 		return "Printing";
 	default:
 		return "Unknown";
 	}
 }
+
+static const char* updr200_statuses(uint8_t code)
+{
+	switch (code) {
+	case UPD_STS0_OK:
+		return "OK";
+	case UPD_STS0_DOOROPEN:
+		return "Door open";
+	case UPD_STS0_NOPAPER:
+		return "No paper";
+	case UPD_STS0_NORIBBON:
+		return "No ribbon";
+	default:
+		return "Unknown";
+	}
+}
+
+/* Now for the code */
 
 static int sony_get_status(struct upd_ctx *ctx, struct sony_updsts *buf)
 {
@@ -189,6 +194,63 @@ static int sony_get_status(struct upd_ctx *ctx, struct sony_updsts *buf)
 	ctx->stsbuf.max_rows = be16_to_cpu(ctx->stsbuf.max_rows);
 
 	return CUPS_BACKEND_OK;
+}
+
+static void* upd_init(void)
+{
+	struct upd_ctx *ctx = malloc(sizeof(struct upd_ctx));
+	if (!ctx) {
+		ERROR("Memory Allocation Failure!\n");
+		return NULL;
+	}
+	memset(ctx, 0, sizeof(struct upd_ctx));
+	return ctx;
+}
+
+static int upd_attach(void *vctx, struct dyesub_connection *conn, uint8_t jobid)
+{
+	struct upd_ctx *ctx = vctx;
+
+	UNUSED(jobid);
+
+	ctx->conn = conn;
+
+	if (ctx->conn->type == P_SONY_UPD895 || ctx->conn->type == P_SONY_UPD897) {
+		ctx->marker.color = "#000000";  /* Ie black! */
+		ctx->native_bpp = 1;
+	} else {
+		ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
+		ctx->native_bpp = 3;
+	}
+
+	if (test_mode < TEST_MODE_NOATTACH) {
+		int ret;
+		if ((ret = sony_get_status(ctx, &ctx->stsbuf))) {
+			return ret;
+		}
+	}
+
+	if (test_mode >= TEST_MODE_NOATTACH && getenv("MEDIA_CODE")) {
+		ctx->marker.numtype = atoi(getenv("MEDIA_CODE"));
+	} else {
+		ctx->marker.numtype = ctx->stsbuf.paper;
+	}
+
+	ctx->marker.name = upd_ribbons(ctx->conn->type, ctx->stsbuf.ribbon);
+	ctx->marker.levelmax = CUPS_MARKER_UNAVAILABLE;
+	ctx->marker.levelnow = CUPS_MARKER_UNKNOWN;
+
+	return CUPS_BACKEND_OK;
+}
+
+static void upd_cleanup_job(const void *vjob)
+{
+	const struct upd_printjob *job = vjob;
+
+	if (job->databuf)
+		free(job->databuf);
+
+	free((void*)job);
 }
 
 #define MAX_PRINTJOB_LEN (2048*2764*3 + 2048)
@@ -435,11 +497,13 @@ top:
 	}
 
 	/* Check for idle */
-	if (ctx->stsbuf.sts1 != 0x00) {
-		if (ctx->stsbuf.sts1 == 0x80) {
+	if (ctx->stsbuf.sts1 != UPD_STS1_IDLE) {
+		if (ctx->stsbuf.sts1 == UPD_STS1_PRINTING) {
 			INFO("Waiting for printer idle...\n");
 			sleep(1);
 			goto top;
+		} else {
+			// XXX some sort of error?
 		}
 	}
 
@@ -491,10 +555,14 @@ retry:
 	case UPD_STS1_IDLE:
 		goto done;
 	case UPD_STS1_PRINTING:
+	case UPD_STS1_PRINTING2:
 		break;
 	default:
-		ERROR("Printer error: %s (%02x)\n", upd895_statuses(ctx->stsbuf.sts1),
-		      ctx->stsbuf.sts1);
+		if (ctx->conn->type == P_SONY_UPD895 || ctx->conn->type == P_SONY_UPD897) {
+			ERROR("Printer error: %s (%02x)\n", upd895_statuses(ctx->stsbuf.sts1), ctx->stsbuf.sts1);
+		} else {
+			ERROR("Printer error: %s (%02x)\n", updr200_statuses(ctx->stsbuf.sts0), ctx->stsbuf.sts0);
+		}
 		return CUPS_BACKEND_STOP;
 	}
 
@@ -524,10 +592,17 @@ static int upd895_dump_status(struct upd_ctx *ctx)
 	if (ret < 0)
 		return CUPS_BACKEND_FAILED;
 
-	INFO("Printer status: %s (%02x)\n", upd895_statuses(ctx->stsbuf.sts1), ctx->stsbuf.sts1);
+	if (ctx->conn->type == P_SONY_UPD895 || ctx->conn->type == P_SONY_UPD897) {
+		INFO("Printer status: %s (%02x)\n", upd895_statuses(ctx->stsbuf.sts1), ctx->stsbuf.sts1);
+	} else {
+		INFO("Printer status: %s (%02x)\n", updr200_statuses(ctx->stsbuf.sts0), ctx->stsbuf.sts0);
+	}
+
 	if (ctx->stsbuf.printing != UPD_PRINTING_IDLE &&
 	    ctx->stsbuf.sts1 == UPD_STS1_PRINTING)
 		INFO("Remaining copies: %d\n", ctx->stsbuf.remain);
+
+	INFO("Media: %s (%02x)\n", upd_ribbons(ctx->conn->type, ctx->stsbuf.ribbon), ctx->stsbuf.ribbon);
 
 	return CUPS_BACKEND_OK;
 }
@@ -571,8 +646,8 @@ static int upd_query_markers(void *vctx, struct marker **markers, int *count)
 	if (ret)
 		return CUPS_BACKEND_FAILED;
 
-	if (ctx->stsbuf.sts1 == 0x40 ||
-	    ctx->stsbuf.sts1 == 0x08) {
+	if (ctx->stsbuf.sts1 == UPD_STS1_NOPAPER ||
+	    ctx->stsbuf.sts1 == UPD_STS1_DOOROPEN) {
 		ctx->marker.levelnow = 0;
 	} else {
 		ctx->marker.levelnow = CUPS_MARKER_UNKNOWN_OK;
@@ -599,7 +674,7 @@ static const char *sonyupd_prefixes[] = {
 
 const struct dyesub_backend sonyupd_backend = {
 	.name = "Sony UP-D",
-	.version = "0.40",
+	.version = "0.43",
 	.uri_prefixes = sonyupd_prefixes,
 	.cmdline_arg = upd_cmdline_arg,
 	.cmdline_usage = upd_cmdline,
@@ -683,12 +758,12 @@ const struct dyesub_backend sonyupd_backend = {
    SET PARAM
 
  <- 1b c0 00 NN LL 00 00    # LL is response length, NN is number.
- <- [ NN bytes]
+ <- [ LL bytes]
 
    QUERY PARAM
 
  <- 1b c1 00 NN LL 00 00    # LL is response length, NN is number.
- -> [ NN bytes ]
+ -> [ LL bytes ]
 
       PARAMS SEEN:
     03, len 5    [ 02 03 00 01 XX ]                   (UPDR200, 00 = normal, 02 is multicut/div2 print, 01 seen at end of stream too..
@@ -987,22 +1062,46 @@ Other commands seen:
 
  <-- 1b 17 00 00 00 00 00   -- Unknown?
 
-   UP-CR10L
+ CR10L: status progression when printing:
 
-   2UPC-C13          (300)
-   2UPC-C14          (200)
-   2UPC-C15          (172)
+ 0e 00 00 00 00 00 00 00  04 a0 04 e0 07 38 00
+ 0e 00 00 01 00 80 00 01  04 a0 04 e0 07 38 64
+ 0e 00 40 01 00 80 00 01  04 a0 04 e0 07 38 64  <-- Y
+ 0e 00 80 01 00 80 00 01  04 a0 04 e0 07 38 64  <-- M
+ 0e 00 c0 01 00 80 00 01  04 a0 04 e0 07 38 64  <-- C
+ 0e 00 20 01 00 80 00 01  04 a0 04 e0 07 38 64  <-- O
+ 0e 00 20 01 00 80 00 01  04 a0 04 e0 07 38 00
+ 0e 00 00 01 00 80 00 01  04 a0 04 e0 07 38 00
+ 0e 00 00 00 00 00 00 00  04 a0 04 e0 07 38 00
 
- Status progression when printing:
+ UP-DR200 comms protocol:
 
- 0e 00 00 00 00 00 00 00 04 a0 04 e0 07 38 00
- 0e 00 00 01 00 80 00 01 04 a0 04 e0 07 38 64
- 0e 00 40 01 00 80 00 01 04 a0 04 e0 07 38 64  <-- Y
- 0e 00 80 01 00 80 00 01 04 a0 04 e0 07 38 64  <-- M
- 0e 00 c0 01 00 80 00 01 04 a0 04 e0 07 38 64  <-- C
- 0e 00 20 01 00 80 00 01 04 a0 04 e0 07 38 64  <-- O
- 0e 00 20 01 00 80 00 01 04 a0 04 e0 07 38 00
- 0e 00 00 01 00 80 00 01 04 a0 04 e0 07 38 00
- 0e 00 00 00 00 00 00 00 04 a0 04 e0 07 38 00
+ <-- 1b e0 00 00 00 0f 00
+ --> 0e 00 XX NN E0 E1 00 E3  RT PT CC CC RR RR %%
+
+  XX : Print state (eg Y/M/C/O -- see UPD_PRINTING_* )
+  E0 : Error code0 (see UPD_STS0_*)
+  E1 : Error code1 (see UPD_STS1_*)
+  E3 : Unknown (00 or 01)
+  NN : Number of remaining copies  (00 when complete/idle)
+  CC : Max Cols (0x0800 on 6" ribbon)
+  RR : Max Rows (0x0aa4 on 6x8)
+  RT : Ribbon type (04 = R206/8x6)
+  PT : Paper type  (38 = empty, a8 = 6")
+  %% : Percentage complete (0-99)
+
+ Seen on UP-DR200:
+
+ 0e 00 00 00 00 00 00 00  04 a8 08 00 0a a4 00   READY   (R206 6x8 ribbon)
+ 0e 00 00 00 40 00 00 00  04 a8 08 00 0a a4 00   DOOR OPEN
+ 0e 00 00 00 20 00 00 00  04 38 08 00 0a a4 00   LOAD PAPER
+ 0e 00 00 00 10 08 00 00  00 a8 08 00 0a a4 00   LOAD RIBBON
+
+ 0e 00 00 01 00 c0 00 01  04 a8 08 00 0a a4 00   PRINT START
+ 0e 00 40 01 00 c0 00 01  04 a8 08 00 0a a4 %%   PRINT Y
+ 0e 00 80 01 00 c0 00 01  04 a8 08 00 0a a4 %%   PRINT M
+ 0e 00 c0 01 00 c0 00 01  04 a8 08 00 0a a4 %%   PRINT C
+ 0e 00 20 01 00 c0 00 01  04 a8 08 00 0a a4 %%   PRINT OC
+ 0e 00 00 00 00 00 00 00  04 a8 08 00 0a a4 00   PRINT DONE / READY
 
 */
