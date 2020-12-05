@@ -120,12 +120,13 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      Kodak 6800/6850
      Kodak 7000 series
      Kodak 8810
+     Mitsubishi CP30 series
      Mitsubishi CP-D90 series
      Sinfonia CHC-S2245/S3
      Sony UP-DR80MD
      Sony UP-D898 family
 
-     Note that for the Mitsubishi CP-D90 series, when upgrading from a
+     Note that for the Mitsubishi CP-D90 and CP30 series, when upgrading from a
      prior release, you will need to remove and re-create your printer
      queue for printing to function properly.
 
