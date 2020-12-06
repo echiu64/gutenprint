@@ -231,6 +231,15 @@ static const char *cp30_errors(uint16_t err)
 	}
 }
 
+static const char *cp30_media_types(uint16_t remain)
+{
+	switch(remain) {
+	case 80: return "CK30S";
+	case 50: return "CK30L";
+	default: return "Unknown";
+	}
+}
+
 #define CMDBUF_LEN   64
 #define READBACK_LEN 128
 
@@ -415,13 +424,14 @@ static int mitsu9550_attach(void *vctx, struct dyesub_connection *conn, uint8_t 
 	}
 
 	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
-	ctx->marker.name = mitsu9550_media_types(media.type, ctx->is_s);
 	ctx->marker.numtype = media.type;
 	ctx->marker.levelmax = be16_to_cpu(media.max);
 
 	if (ctx->conn->type == P_MITSU_CP30D) {
+		ctx->marker.name = cp30_media_types(be16_to_cpu(media.max));
 		ctx->marker.levelnow = be16_to_cpu(media.remain2);
 	} else {
+		ctx->marker.name = mitsu9550_media_types(media.type, ctx->is_s);
 		ctx->marker.levelnow = be16_to_cpu(media.remain);
 	}
 
@@ -1378,7 +1388,8 @@ top:
 static void mitsu9550_dump_media(struct mitsu9550_ctx *ctx, struct mitsu9550_media *resp)
 {
 	INFO("Media type       : %02x (%s)\n",
-	     resp->type, mitsu9550_media_types(resp->type, ctx->is_s));
+	     resp->type, (ctx->conn->type == P_MITSU_CP30D ? cp30_media_types(be16_to_cpu(resp->max)):
+			  mitsu9550_media_types(resp->type, ctx->is_s)));
 	INFO("Media remaining  : %03d/%03d\n",
 	     (ctx->conn->type == P_MITSU_CP30D) ? be16_to_cpu(resp->remain2) : be16_to_cpu(resp->remain), be16_to_cpu(resp->max));
 }
@@ -1617,7 +1628,7 @@ static const char *mitsu9550_prefixes[] = {
 /* Exported */
 const struct dyesub_backend mitsu9550_backend = {
 	.name = "Mitsubishi CP9xxx family",
-	.version = "0.60" " (lib " LIBMITSU_VER ")",
+	.version = "0.61" " (lib " LIBMITSU_VER ")",
 	.uri_prefixes = mitsu9550_prefixes,
 	.cmdline_usage = mitsu9550_cmdline,
 	.cmdline_arg = mitsu9550_cmdline_arg,
