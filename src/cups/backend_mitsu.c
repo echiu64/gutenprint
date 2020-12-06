@@ -58,6 +58,7 @@ int mitsu_loadlib(struct mitsu_lib *lib, int type)
 		lib->Load3DColorTable = DL_SYM(lib->dl_handle, "CColorConv3D_Load3DColorTable");
 		lib->Destroy3DColorTable = DL_SYM(lib->dl_handle, "CColorConv3D_Destroy3DColorTable");
 		lib->DoColorConv = DL_SYM(lib->dl_handle, "CColorConv3D_DoColorConv");
+		lib->DoColorConvPlane = DL_SYM(lib->dl_handle, "CColorConv3D_DoColorConvPlane");
 		lib->GetCPCData = DL_SYM(lib->dl_handle, "get_CPCData");
 		lib->DestroyCPCData = DL_SYM(lib->dl_handle, "destroy_CPCData");
 		lib->DoImageEffect60 = DL_SYM(lib->dl_handle, "do_image_effect60");
@@ -74,6 +75,9 @@ int mitsu_loadlib(struct mitsu_lib *lib, int type)
 		lib->M1_CalcRGBRate = DL_SYM(lib->dl_handle, "M1_CalcRGBRate");
 		lib->M1_CalcOpRateMatte = DL_SYM(lib->dl_handle, "M1_CalcOpRateMatte");
 		lib->M1_CalcOpRateGloss = DL_SYM(lib->dl_handle, "M1_CalcOpRateGloss");
+		lib->CPD30_GetData = DL_SYM(lib->dl_handle, "CPD30_GetData");
+		lib->CPD30_DestroyData = DL_SYM(lib->dl_handle, "CPD30_DestroyData");
+		lib->CPD30_DoConvert = DL_SYM(lib->dl_handle, "CPD30_DoConvert");
 
 		if (!lib->Get3DColorTable || !lib->Load3DColorTable ||
 		    !lib->CP98xx_DoConvert || !lib->CP98xx_GetData ||
@@ -82,7 +86,10 @@ int mitsu_loadlib(struct mitsu_lib *lib, int type)
 		    !lib->M1_Gamma8to14 || !lib->M1_CLocalEnhancer ||
 		    !lib->M1_CalcOpRateMatte || !lib->M1_CalcOpRateGloss ||
 		    !lib->M1_CalcRGBRate ||
+		    !lib->CPD30_GetData || !lib->CPD30_DestroyData ||
+		    !lib->CPD30_DoConvert ||
 		    !lib->Destroy3DColorTable || !lib->DoColorConv ||
+		    !lib->DoColorConvPlane ||
 		    !lib->GetCPCData || !lib->DestroyCPCData ||
 		    !lib->DoImageEffect60 || !lib->DoImageEffect70 ||
 		    !lib->DoImageEffect80 || !lib->SendImageData) {
@@ -143,15 +150,17 @@ int mitsu_destroylib(struct mitsu_lib *lib)
 	return CUPS_BACKEND_OK;
 }
 
-int mitsu_apply3dlut(struct mitsu_lib *lib, const char *lutfname, uint8_t *databuf,
-		     uint16_t cols, uint16_t rows, uint16_t stride,
-		     int rgb_bgr)
+int mitsu_apply3dlut_packed(struct mitsu_lib *lib, const char *lutfname, uint8_t *databuf,
+			    uint16_t cols, uint16_t rows, uint16_t stride,
+			    int rgb_bgr)
 {
 #if defined(WITH_DYNAMIC)
 	char full[2048];
 	int i;
 
 	if (!lutfname)
+		return CUPS_BACKEND_OK;
+	if (!lib->dl_handle)
 		return CUPS_BACKEND_OK;
 
 	snprintf(full, sizeof(full), "%s/%s", corrtable_path, lutfname);
@@ -175,6 +184,45 @@ int mitsu_apply3dlut(struct mitsu_lib *lib, const char *lutfname, uint8_t *datab
 	if (lib->lut) {
 		DEBUG("Running print data through 3D LUT\n");
 		lib->DoColorConv(lib->lut, databuf, cols, rows, stride, rgb_bgr);
+	}
+#endif
+	return CUPS_BACKEND_OK;
+}
+
+int mitsu_apply3dlut_plane(struct mitsu_lib *lib, const char *lutfname,
+			   uint8_t *data_r, uint8_t *data_g, uint8_t *data_b,
+			   uint16_t cols, uint16_t rows)
+{
+#if defined(WITH_DYNAMIC)
+	char full[2048];
+	int i;
+
+	if (!lutfname)
+		return CUPS_BACKEND_OK;
+	if (!lib->dl_handle)
+		return CUPS_BACKEND_OK;
+
+	snprintf(full, sizeof(full), "%s/%s", corrtable_path, lutfname);
+
+	if (!lib->lut) {
+		uint8_t *buf = malloc(LUT_LEN);
+		if (!buf) {
+			ERROR("Memory allocation failure!\n");
+			return CUPS_BACKEND_RETRY_CURRENT;
+		}
+		if ((i = dyesub_read_file(full, buf, LUT_LEN, NULL)))
+			return i;
+		lib->lut = lib->Load3DColorTable(buf);
+		free(buf);
+		if (!lib->lut) {
+			ERROR("Unable to parse LUT file '%s'!\n", full);
+			return CUPS_BACKEND_CANCEL;
+		}
+	}
+
+	if (lib->lut) {
+		DEBUG("Running print data through 3D LUT\n");
+		lib->DoColorConvPlane(lib->lut, data_r, data_g, data_b, cols * rows);
 	}
 #endif
 	return CUPS_BACKEND_OK;

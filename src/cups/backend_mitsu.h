@@ -45,8 +45,10 @@ struct BandImage {
 	                       // @24
 };
 
-struct mitsu98xx_data;  /* Forward declaration */
+/* Forward declarations */
+struct mitsu98xx_data;
 struct M1CPCData;
+struct mitsu_cpd30_data;
 #endif
 
 typedef void (*dump_announceFN)(FILE *fp);
@@ -55,6 +57,7 @@ typedef int (*Get3DColorTableFN)(uint8_t *buf, const char *filename);
 typedef struct CColorConv3D *(*Load3DColorTableFN)(const uint8_t *ptr);
 typedef void (*Destroy3DColorTableFN)(struct CColorConv3D *this);
 typedef void (*DoColorConvFN)(struct CColorConv3D *this, uint8_t *data, uint16_t cols, uint16_t rows, uint32_t bytes_per_row, int rgb_bgr);
+typedef void (*DoColorConvPlaneFN)(struct CColorConv3D *this, uint8_t *data_r, uint8_t *data_g, uint8_t *data_b, uint32_t planelen);
 typedef struct CPCData *(*get_CPCDataFN)(const char *filename);
 typedef void (*destroy_CPCDataFN)(struct CPCData *data);
 typedef int (*do_image_effectFN)(struct CPCData *cpc, struct CPCData *ecpc, struct BandImage *input, struct BandImage *output, int sharpen, int reverse, uint8_t rew[2]);
@@ -80,13 +83,20 @@ typedef int (*M1_CalcRGBRateFN)(uint16_t rows, uint16_t cols, uint8_t *data);
 typedef uint8_t (*M1_CalcOpRateMatteFN)(uint16_t rows, uint16_t cols, uint8_t *data);
 typedef uint8_t (*M1_CalcOpRateGlossFN)(uint16_t rows, uint16_t cols);
 
+typedef struct mitsu_cpd30_data *(*CPD30_GetDataFN)(const char *filename);
+typedef void (*CPD30_DestroyDataFN)(const struct mitsu_cpd30_data *data);
+typedef int (*CPD30_DoConvertFN)(const struct mitsu_cpd30_data *table,
+			       const struct BandImage *input,
+			       struct BandImage *output,
+			       uint8_t type, int sharpness);
+
 #ifndef WITH_DYNAMIC
 #warning "No dynamic loading support!"
 #endif
 
-#define REQUIRED_LIB_APIVERSION 7
+#define REQUIRED_LIB_APIVERSION 8
 
-#define LIBMITSU_VER "0.06"
+#define LIBMITSU_VER "0.08"
 
 /* Image processing library function prototypes */
 #define LIB_NAME_RE "libMitsuD70ImageReProcess" DLL_SUFFIX
@@ -99,6 +109,7 @@ struct mitsu_lib {
 	Load3DColorTableFN Load3DColorTable;
 	Destroy3DColorTableFN Destroy3DColorTable;
 	DoColorConvFN DoColorConv;
+	DoColorConvPlaneFN DoColorConvPlane;
 	get_CPCDataFN GetCPCData;
 	destroy_CPCDataFN DestroyCPCData;
 	do_image_effectFN DoImageEffect60;
@@ -116,6 +127,9 @@ struct mitsu_lib {
 	M1_CalcRGBRateFN M1_CalcRGBRate;
 	M1_CalcOpRateGlossFN M1_CalcOpRateGloss;
 	M1_CalcOpRateMatteFN M1_CalcOpRateMatte;
+	CPD30_GetDataFN CPD30_GetData;
+	CPD30_DestroyDataFN CPD30_DestroyData;
+	CPD30_DoConvertFN CPD30_DoConvert;
 	struct CColorConv3D *lut;
 	struct CPCData *cpcdata;
 	struct CPCData *ecpcdata;
@@ -123,9 +137,12 @@ struct mitsu_lib {
 
 int mitsu_loadlib(struct mitsu_lib *lib, int type);
 int mitsu_destroylib(struct mitsu_lib *lib);
-int mitsu_apply3dlut(struct mitsu_lib *lib, const char *lutfname, uint8_t *databuf,
-		     uint16_t cols, uint16_t rows, uint16_t stride,
-		     int rgb_bgr);
+int mitsu_apply3dlut_packed(struct mitsu_lib *lib, const char *lutfname, uint8_t *databuf,
+			    uint16_t cols, uint16_t rows, uint16_t stride,
+			    int rgb_bgr);
+int mitsu_apply3dlut_plane(struct mitsu_lib *lib, const char *lutfname,
+			   uint8_t *data_r, uint8_t *data_g, uint8_t *data_b,
+			   uint16_t cols, uint16_t rows);
 int mitsu_readlamdata(const char *fname, uint16_t lamstride,
 		      uint8_t *databuf, uint32_t *datalen,
 		      uint16_t rows, uint16_t cols, uint8_t bpp);

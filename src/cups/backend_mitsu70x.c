@@ -1099,10 +1099,10 @@ repeat:
 
 	/* Run through basic LUT, if present and enabled */
 	if (job->lutfname) {
-		int ret = mitsu_apply3dlut(&ctx->lib, job->lutfname,
-				       job->spoolbuf, job->cols,
-				       job->rows, job->cols * 3,
-				       COLORCONV_BGR);
+		int ret = mitsu_apply3dlut_packed(&ctx->lib, job->lutfname,
+						  job->spoolbuf, job->cols,
+						  job->rows, job->cols * 3,
+						  COLORCONV_BGR);
 		if (ret) {
 			mitsu70x_cleanup_job(job);
 			return ret;

@@ -214,6 +214,9 @@
 # Mitsubishi CP-9600D/DW
 0x06d3 0x03a9 blacklist
 
+# Mitsubishi CP30DW
+0x06d3 0x03ab blacklist
+
 # Mitsubishi CP-9800D/DW
 0x06d3 0x03ad blacklist
 

@@ -842,11 +842,11 @@ static int mitsud90_read_parse(void *vctx, const void **vjob, int data_fd, int c
 		job->hdr.colorcorr = 1;
 
 		if (job->m1_colormode == 0) {
-			int ret = mitsu_apply3dlut(&ctx->lib, CPM1_LUT_FNAME,
-						   job->databuf + sizeof(struct mitsud90_plane_hdr),
-						   be16_to_cpu(job->hdr.cols),
-						   be16_to_cpu(job->hdr.rows),
-						   be16_to_cpu(job->hdr.cols) * 3, COLORCONV_RGB);
+			int ret = mitsu_apply3dlut_packed(&ctx->lib, CPM1_LUT_FNAME,
+							  job->databuf + sizeof(struct mitsud90_plane_hdr),
+							  be16_to_cpu(job->hdr.cols),
+							  be16_to_cpu(job->hdr.rows),
+							  be16_to_cpu(job->hdr.cols) * 3, COLORCONV_RGB);
 			if (ret) {
 				mitsud90_cleanup_job(job);
 				return ret;
