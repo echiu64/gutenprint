@@ -5560,7 +5560,7 @@ static const stp_parameter_t mitsu_cp30_parameters[] =
   },
   {
     "Sharpen", N_("Image Sharpening"), "Color=No,Category=Advanced Printer Setup",
-    N_("Sharpening to apply to image (0 is off, 1 is min, 9 is max"),
+    N_("Sharpening to apply to image (0 is off, 1 is min, 7 is max"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
@@ -5597,9 +5597,9 @@ static int mitsu_cp30_load_parameters(const stp_vars_t *v, const char *name,
     }
   else if (strcmp(name, "Sharpen") == 0)
     {
-      description->deflt.integer = 3;
+      description->deflt.integer = 4;
       description->bounds.integer.lower = 0;
-      description->bounds.integer.upper = 6;
+      description->bounds.integer.upper = 8;
       description->is_active = 1;
     }
   else if (strcmp(name, "PrintSpeed") == 0)
