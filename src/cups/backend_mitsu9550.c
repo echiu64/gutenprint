@@ -260,7 +260,7 @@ static const char *cp30_errors(uint16_t err)
 	}								\
 
 #define QUERY_STATUS_II				\
-	if (tx->conn->type != P_MITSU_CP30D) {				\
+	if (ctx->conn->type != P_MITSU_CP30D) {				\
 		/* struct mitsu9550_status2 *sts2 = (struct mitsu9550_status2*) rdbuf; */ \
 		ret = mitsu9550_get_status(ctx, rdbuf, CP9XXX_STS_x21);	\
 		if (ret < 0)						\
