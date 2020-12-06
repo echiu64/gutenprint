@@ -5597,9 +5597,9 @@ static int mitsu_cp30_load_parameters(const stp_vars_t *v, const char *name,
     }
   else if (strcmp(name, "Sharpen") == 0)
     {
-      description->deflt.integer = 4;
+      description->deflt.integer = 3;
       description->bounds.integer.lower = 0;
-      description->bounds.integer.upper = 9;
+      description->bounds.integer.upper = 6;
       description->is_active = 1;
     }
   else if (strcmp(name, "PrintSpeed") == 0)
