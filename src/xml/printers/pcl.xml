@@ -65,49 +65,49 @@
       <printer translate="name" name="Apple Color StyleWriter 6500" driver="pcl-apple-6500" manufacturer="Apple" model="800" parameters="pcl_inkjet_params" />	<!-- Uses 850 driver -->
       <printer translate="name" name="Apple LaserWriter Select 360" driver="pcl-apple-lw360" manufacturer="Apple" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother DCP-1200" driver="brother-dcp-1200" manufacturer="Brother" model="2" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother DCP-8045D" driver="brother-dcp-8045d" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother DCP-8045D" driver="brother-dcp-8045d" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-1040" driver="brother-hl-1040" manufacturer="Brother" model="2" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-1050" deviceid="MFG:Brother;MDL:HL-1050 series;CMD:PCL5,PJL,PCLXL;" driver="brother-hl-1050" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-1060" driver="brother-hl-1060" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-1070" deviceid="MFG:Brother;MDL:HL-1070 series;CMD:PCL5,POSTSCRIPT2,PJL,PCLXL;" driver="brother-hl-1070" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-1050" deviceid="MFG:Brother;MDL:HL-1050 series;CMD:PCL5,PJL,PCLXL;" driver="brother-hl-1050" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-1060" driver="brother-hl-1060" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-1070" deviceid="MFG:Brother;MDL:HL-1070 series;CMD:PCL5,POSTSCRIPT2,PJL,PCLXL;" driver="brother-hl-1070" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-10V" driver="brother-hl-10v" manufacturer="Brother" model="3" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-10h" driver="brother-hl-10h" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-10h" driver="brother-hl-10h" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-1240" deviceid="MFG:Brother;MDL:HL-1240 series;CMD:PCL4,PJL;" driver="brother-hl-1240" manufacturer="Brother" model="2" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-1250" deviceid="MFG:Brother;MDL:HL-1250 series;CMD:PCL5,PJL,PCLXL;" driver="brother-hl-1250" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-1260" deviceid="MFG:Brother;MDL:HL-1250 series;CMD:PCL5,PJL,PCLXL;" driver="brother-hl-1260" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-1270N" driver="brother-hl-1270n" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-1440" deviceid="MFG:Brother;MDL:HL-1440 series;CMD:PCL4,PJL;" driver="brother-hl-1440" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-1450" deviceid="MFG:Brother;MDL:Brother HL-1450 series;" driver="brother-hl-1450" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-1470N" deviceid="MFG:Brother;MDL:Brother HL-1470N series;" driver="brother-hl-1470n" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-1650" driver="brother-hl-1650" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-1660e" driver="brother-hl-1660e" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-1670N" driver="brother-hl-1670n" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-1850" driver="brother-hl-1850" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-1870N" driver="brother-hl-1870n" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-2060" driver="brother-hl-2060" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-1250" deviceid="MFG:Brother;MDL:HL-1250 series;CMD:PCL5,PJL,PCLXL;" driver="brother-hl-1250" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-1260" deviceid="MFG:Brother;MDL:HL-1250 series;CMD:PCL5,PJL,PCLXL;" driver="brother-hl-1260" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-1270N" driver="brother-hl-1270n" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-1440" deviceid="MFG:Brother;MDL:HL-1440 series;CMD:PCL4,PJL;" driver="brother-hl-1440" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-1450" deviceid="MFG:Brother;MDL:Brother HL-1450 series;" driver="brother-hl-1450" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-1470N" deviceid="MFG:Brother;MDL:Brother HL-1470N series;" driver="brother-hl-1470n" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-1650" driver="brother-hl-1650" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-1660e" driver="brother-hl-1660e" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-1670N" driver="brother-hl-1670n" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-1850" driver="brother-hl-1850" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-1870N" driver="brother-hl-1870n" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-2060" driver="brother-hl-2060" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-2250DN" driver="brother-hl-2250dn" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-2400CeN" driver="brother-hl-2400cen" manufacturer="Brother" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
-      <printer translate="name" name="Brother HL-2460" deviceid="MFG:Brother;MDL:Brother HL-2460 series;" driver="brother-hl-2460" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-2460N" driver="brother-hl-2460n" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-2460" deviceid="MFG:Brother;MDL:Brother HL-2460 series;" driver="brother-hl-2460" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-2460N" driver="brother-hl-2460n" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-2600CN" driver="brother-hl-2600cn" manufacturer="Brother" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Brother HL-3400CN" driver="brother-hl-3400cn" manufacturer="Brother" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Brother HL-3450CN" driver="brother-hl-3450cn" manufacturer="Brother" model="50002" parameters="pcl_laser_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Brother HL-4Ve" driver="brother-hl-4ve" manufacturer="Brother" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-4040CN" driver="brother-hl-4040cn" manufacturer="Brother" model="50001" parameters="pcl_laser_params">UNTESTED Automatically Generated</printer>
-      <printer translate="name" name="Brother HL-5030" driver="brother-hl-5030" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-5040" deviceid="MFG:Brother;MDL:HL-5040 series;CMD:PJL,PCL,PCLXL;" driver="brother-hl-5040" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-5050" deviceid="MFG:Brother;MDL:Brother HL-5050 series;" driver="brother-hl-5050" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-5070N" deviceid="MFG:Brother;MDL:Brother HL-5070N series;" driver="brother-hl-5070n" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-5140" deviceid="MFG:Brother;MDL:HL-5140 series;CMD:PJL,PCL,PCLXL;" driver="brother-hl-5140" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-5150D" deviceid="MFG:Brother;MDL:Brother HL-5150D series;CMD:PJL,PCL,PCLXL,POSTSCRIPT;" driver="brother-hl-5150d" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-5170DN" deviceid="MFG:Brother;MDL:Brother HL-5170DN series;CMD:PJL,PCL,PCLXL,POSTSCRIPT;" driver="brother-hl-5170dn" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-5340D" deviceid="MFG:Brother;CMD:PJL,PCL,PCLXL;MDL:HL-5340D series;CLS:PRINTER;" driver="brother-hl-5340d" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-5030" driver="brother-hl-5030" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-5040" deviceid="MFG:Brother;MDL:HL-5040 series;CMD:PJL,PCL,PCLXL;" driver="brother-hl-5040" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-5050" deviceid="MFG:Brother;MDL:Brother HL-5050 series;" driver="brother-hl-5050" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-5070N" deviceid="MFG:Brother;MDL:Brother HL-5070N series;" driver="brother-hl-5070n" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-5140" deviceid="MFG:Brother;MDL:HL-5140 series;CMD:PJL,PCL,PCLXL;" driver="brother-hl-5140" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-5150D" deviceid="MFG:Brother;MDL:Brother HL-5150D series;CMD:PJL,PCL,PCLXL,POSTSCRIPT;" driver="brother-hl-5150d" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-5170DN" deviceid="MFG:Brother;MDL:Brother HL-5170DN series;CMD:PJL,PCL,PCLXL,POSTSCRIPT;" driver="brother-hl-5170dn" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-5340D" deviceid="MFG:Brother;CMD:PJL,PCL,PCLXL;MDL:HL-5340D series;CLS:PRINTER;" driver="brother-hl-5340d" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-630" driver="brother-hl-630" manufacturer="Brother" model="2" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-660" driver="brother-hl-660" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-7050" deviceid="MFG:Brother;MDL:Brother HL-7050 series;" driver="brother-hl-7050" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-7050N" driver="brother-hl-7050n" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-760" driver="brother-hl-760" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-960" driver="brother-hl-960" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-660" driver="brother-hl-660" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-7050" deviceid="MFG:Brother;MDL:Brother HL-7050 series;" driver="brother-hl-7050" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-7050N" driver="brother-hl-7050n" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-760" driver="brother-hl-760" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-960" driver="brother-hl-960" manufacturer="Brother" model="62" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother MFC-6550MC" driver="brother-mfc-6550mc" manufacturer="Brother" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother MFC-8300" driver="brother-mfc-8300" manufacturer="Brother" model="3" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother MFC-9500" driver="brother-mfc-9500" manufacturer="Brother" model="2" parameters="pcl_laser_params" />

@@ -149,6 +149,42 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      PIXMA iP6310D
      PIXMA iP6320D
 
+  9) Corrected margins for the following Brother laster printers:
+
+     Brother DCP-8045D
+     Brother HL-1050
+     Brother HL-1060
+     Brother HL-1070
+     Brother HL-10h
+     Brother HL-1250
+     Brother HL-1260
+     Brother HL-1270N
+     Brother HL-1440
+     Brother HL-1450
+     Brother HL-1470N
+     Brother HL-1650
+     Brother HL-1660e
+     Brother HL-1670N
+     Brother HL-1850
+     Brother HL-1870N
+     Brother HL-2060
+     Brother HL-2460
+     Brother HL-2460N
+     Brother HL-5030
+     Brother HL-5040
+     Brother HL-5050
+     Brother HL-5070N
+     Brother HL-5140
+     Brother HL-5150D
+     Brother HL-5170DN
+     Brother HL-5340D
+     Brother HL-660
+     Brother HL-7050
+     Brother HL-7050N
+     Brother HL-760
+     Brother HL-960
+
+
 * Changes from Gutenprint 5.3.1 (Gutenprint 5.3.2 was not released)
 
   1) Gutenprint will fail to configure if the necessary CUPS
