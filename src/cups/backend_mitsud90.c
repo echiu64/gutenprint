@@ -39,6 +39,7 @@
 #define CPM1_CPC_FNAME "CPM1_N1.csv"
 #define CPM1_CPC_G1_FNAME "CPM1_G1.csv"
 #define CPM1_CPC_G5_FNAME "CPM1_G5.csv"
+#define CPM1_CPC_G5_VIVID_FNAME "CPM1_G5_vivid.csv"
 #define CPM1_LUT_FNAME "CPM1_NL.lut"
 
 /* Printer data structures */
@@ -945,6 +946,8 @@ static int mitsud90_main_loop(void *vctx, const void *vjob) {
 		const char *gammatab;
 		if (job->m1_colormode == 1) {
 			gammatab = CPM1_CPC_G5_FNAME;
+		} else if (job->m1_colormode == 3) {
+			gammatab = CPM1_CPC_G5_VIVID_FNAME;
 		} else { /* Mode 0 or 2 */
 			gammatab = CPM1_CPC_G1_FNAME;
 		}
@@ -1687,7 +1690,7 @@ static const char *mitsud90_prefixes[] = {
 /* Exported */
 const struct dyesub_backend mitsud90_backend = {
 	.name = "Mitsubishi CP-D90/CP-M1",
-	.version = "0.29"  " (lib " LIBMITSU_VER ")",
+	.version = "0.30"  " (lib " LIBMITSU_VER ")",
 	.uri_prefixes = mitsud90_prefixes,
 	.cmdline_arg = mitsud90_cmdline_arg,
 	.cmdline_usage = mitsud90_cmdline,
