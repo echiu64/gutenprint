@@ -1,11 +1,11 @@
 /*
  *   CUPS Backend common code
  *
- *   Copyright (c) 2007-2020 Solomon Peachy <pizza@shaftnet.org>
+ *   Copyright (c) 2007-2021 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
- *     http://git.shaftnet.org/cgit/selphy_print.git
+ *     https://git.shaftnet.org/cgit/selphy_print.git
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -18,9 +18,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
- *          [http://www.gnu.org/licenses/gpl-2.0.html]
+ *   along with this program; if not, see <https://www.gnu.org/licenses/>.
  *
  *   SPDX-License-Identifier: GPL-2.0+
  *
@@ -31,10 +29,7 @@
 #include <signal.h>
 #include <strings.h>  /* For strncasecmp */
 
-#define BACKEND_VERSION "0.110G"
-#ifndef URI_PREFIX
-#error "Must Define URI_PREFIX"
-#endif
+#define BACKEND_VERSION "0.111G"
 
 #ifndef CORRTABLE_PATH
 #ifdef PACKAGE_DATA_DIR
@@ -67,7 +62,12 @@ FILE *logger;
 const char *corrtable_path = CORRTABLE_PATH;
 static int max_xfer_size = URB_XFER_SIZE;
 static int xfer_timeout = XFER_TIMEOUT;
+
+#ifdef OLD_URI
+static int old_uri = 1;
+#else
 static int old_uri = 0;
+#endif
 
 /* Support Functions */
 int backend_claim_interface(struct libusb_device_handle *dev, int iface,
@@ -339,7 +339,7 @@ static char *sanitize_string(char *str) {
 
    These functions are Public Domain code obtained from:
 
-   http://www.geekhideout.com/urlcode.shtml
+   https://www.geekhideout.com/urlcode.shtml
 
 */
 #include <ctype.h>  /* for isalnum() */
@@ -753,7 +753,8 @@ static struct dyesub_backend *backends[] = {
 	NULL,
 };
 
-static int find_and_enumerate(struct libusb_context *ctx,
+static int find_and_enumerate(const char *argv0,
+			      struct libusb_context *ctx,
 			      struct libusb_device ***list,
 			      const struct dyesub_backend *backend,
 			      const char *match_serno,
@@ -836,7 +837,7 @@ static int find_and_enumerate(struct libusb_context *ctx,
 
 	match:
 		found = probe_device((*list)[i], &desc, (foundmake ? foundmake : make),
-				     URI_PREFIX, backends[k]->devices[j].manuf_str,
+				     argv0, backends[k]->devices[j].manuf_str,
 				     found, num_claim_attempts,
 				     scan_only, match_serno,
 				     conn,
@@ -1015,10 +1016,8 @@ void print_help(const char *argv0, const struct dyesub_backend *backend)
 
 	const char *ptr = getenv("BACKEND");
 	if (!ptr)
-		ptr = strrchr(argv0, '/');
-	if (ptr)
-		ptr++;
-	else
+		ptr = getenv("DYESUB_BACKEND");
+	if (!ptr)
 		ptr = argv0;
 
 	if (!backend)
@@ -1029,10 +1028,10 @@ void print_help(const char *argv0, const struct dyesub_backend *backend)
 		DEBUG("Environment variables:\n");
 		DEBUG(" DYESUB_DEBUG EXTRA_PID EXTRA_VID EXTRA_TYPE BACKEND SERIAL OLD_URI_SCHEME BACKEND_QUIET\n");
 		DEBUG("CUPS Usage:\n");
-		DEBUG("\tDEVICE_URI=someuri %s job user title num-copies options [ filename ]\n", URI_PREFIX);
+		DEBUG("\tDEVICE_URI=someuri %s job user title num-copies options [ filename ]\n", ptr);
 		DEBUG("\n");
 		DEBUG("Standalone Usage:\n");
-		DEBUG("\t%s\n", URI_PREFIX);
+		DEBUG("\t%s\n", ptr);
 		DEBUG("  [ -D ] [ -G ] [ -f ] [ -v ]\n");
 		DEBUG("  [ backend_specific_args ] \n");
 		DEBUG("  [ -d copies ] \n");
@@ -1072,7 +1071,7 @@ void print_help(const char *argv0, const struct dyesub_backend *backend)
 	}
 
 	/* Scan for all printers for the specified backend */
-	find_and_enumerate(ctx, &list, backend, NULL, ptr, 1, 1, NULL);
+	find_and_enumerate(argv0, ctx, &list, backend, NULL, ptr, 1, 1, NULL);
 	libusb_free_device_list(list, 1);
 }
 
@@ -1270,6 +1269,14 @@ int main (int argc, char **argv)
 	const char *fname = NULL;
 	char *use_serno = NULL;
 	const char *backend_str = NULL;
+	const char *argv0;
+
+	/* Work out path-less executable name */
+	argv0 = strrchr(argv[0], '/');
+	if (argv0)
+		argv0++;
+	else
+		argv0 = argv[0];
 
 	logger = stderr;
 
@@ -1288,6 +1295,8 @@ int main (int argc, char **argv)
 		extra_type = atoi(getenv("EXTRA_TYPE"));
 	if (getenv("BACKEND"))
 		backend_str = getenv("BACKEND");
+	else if (getenv("DYESUB_BACKEND"))
+		backend_str = getenv("DYESUB_BACKEND");
 	if (getenv("FAST_RETURN"))
 		fast_return++;
 	if (getenv("MAX_XFER_SIZE"))
@@ -1382,13 +1391,8 @@ int main (int argc, char **argv)
 	} else {  /* Standalone mode */
 
 		/* Try to guess backend from executable name */
-		if (!backend_str) {
-			backend_str = strrchr(argv[0], '/');
-			if (backend_str)
-				backend_str++;
-			else
-				backend_str = argv[0];
-		}
+		if (!backend_str)
+			backend_str = argv0;
 
 		srand(getpid());
 		jobid = rand();
@@ -1423,7 +1427,7 @@ int main (int argc, char **argv)
 
 	/* If we don't have a valid backend, print help and terminate */
 	if (!backend && !stats_only) {
-		print_help(argv[0], NULL); // probes all devices
+		print_help(argv0, NULL); // probes all devices
 		ret = CUPS_BACKEND_OK;
 		goto done;
 	}
@@ -1431,14 +1435,14 @@ int main (int argc, char **argv)
 	/* If we're in standalone mode, print help only if no args */
 	if ((!uri || !strlen(uri)) && !stats_only) {
 		if (argc < 2) {
-			print_help(argv[0], backend); // probes all devices
+			print_help(argv0, backend); // probes all devices
 			ret = CUPS_BACKEND_OK;
 			goto done;
 		}
 	}
 
 	/* Enumerate devices */
-	found = find_and_enumerate(ctx, &list, backend, use_serno, backend_str, 0, NUM_CLAIM_ATTEMPTS, &conn);
+	found = find_and_enumerate(argv0, ctx, &list, backend, use_serno, backend_str, 0, NUM_CLAIM_ATTEMPTS, &conn);
 
 	if (found == -1) {
 		ERROR("Printer open failure (No matching printers found!)\n");
