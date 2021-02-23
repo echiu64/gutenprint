@@ -1275,13 +1275,6 @@
       <height value="512"/>
       <unit value="english-extended"/>
     </paper>
-    <paper name="w253h337">
-      <description translate="value" value="CP_L"/>
-      <comment value="89mm x 119mm"/>
-      <width value="253"/>
-      <height value="337"/>
-      <unit value="metric-extended"/>
-    </paper>
     <paper name="w155h244">
       <description translate="value" value="Credit Card"/>
       <comment value="54mm x 86mm"/>
