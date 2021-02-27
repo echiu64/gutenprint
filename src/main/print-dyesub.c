@@ -11213,8 +11213,8 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     6502,
     &bgr_ink_list,
     &res_301dpi_list,
-    &hiti_p520l_page_list,
-    &hiti_p520l_printsize_list,
+    &hiti_p510l_page_list,
+    &hiti_p510l_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_NATIVECOPIES,
