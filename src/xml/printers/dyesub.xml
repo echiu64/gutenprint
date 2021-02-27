@@ -118,9 +118,16 @@
       <printer translate="name" name="Fujifilm FinePix-NX-500" driver="fujifilm-nx500" manufacturer="Fujifilm" model="3002" />
       <printer translate="name" name="Fujifilm Printpix-CX-400" driver="fujifilm-cx400" manufacturer="Fujifilm" model="3000" />
       <printer translate="name" name="Fujifilm Printpix-CX-550" driver="fujifilm-cx550" manufacturer="Fujifilm" model="3001" />
+      <printer translate="name" name="HiTi P510K" deviceid="MFG:HiTi;MDL:P510K;CLS:PRINTER;" driver="hiti-p510k" manufacturer="HiTi" model="6502">EXPERIMENTAL</printer>
+      <printer translate="name" name="HiTi P510L" deviceid="MFG:HiTi;MDL:P510L;CLS:PRINTER;" driver="hiti-p510l" manufacturer="HiTi" model="6502">EXPERIMENTAL</printer>
+      <printer translate="name" name="HiTi P510S" deviceid="MFG:HiTi;MDL:P510S;CLS:PRINTER;" driver="hiti-p510s" manufacturer="HiTi" model="6502">EXPERIMENTAL</printer>
+      <printer translate="name" name="HiTi P510Si" deviceid="MFG:HiTi;MDL:P510Si;CLS:PRINTER;" driver="hiti-p510si" manufacturer="HiTi" model="6502">EXPERIMENTAL</printer>
+      <printer translate="name" name="HiTi P518A" deviceid="MFG:HiTi;MDL:P518A;CLS:PRINTER;" driver="hiti-p518a" manufacturer="HiTi" model="6502">EXPERIMENTAL</printer>
+      <printer translate="name" name="HiTi P518S" deviceid="MFG:HiTi;MDL:P518S;CLS:PRINTER;" driver="hiti-p518s" manufacturer="HiTi" model="6502">EXPERIMENTAL</printer>
       <printer translate="name" name="HiTi P520L" deviceid="MFG:HiTi;CMD:???;MDL:P520L;CLS:PRINTER;" driver="hiti-p520l" manufacturer="HiTi" model="6500" />
       <printer translate="name" name="HiTi P525L" deviceid="MFG:HiTi;CMD:???;MDL:P525L;CLS:PRINTER;" driver="hiti-p525l" manufacturer="HiTi" model="6500" />
       <printer translate="name" name="HiTi P720L" deviceid="MFG:HiTi;MDL:HiTi P720L;" driver="hiti-p720l" manufacturer="HiTi" model="6501" >EXPERIMENTAL</printer>
+      <printer translate="name" name="HiTi P728L" deviceid="MFG:HiTi;MDL:HiTi P728L;" driver="hiti-p728l" manufacturer="HiTi" model="6501" >EXPERIMENTAL</printer>
       <printer translate="name" name="HiTi P750L" deviceid="MFG:HiTi;MDL:P750L;" driver="hiti-p750l" manufacturer="HiTi" model="6501" >EXPERIMENTAL</printer>
       <printer translate="name" name="Kodak 305" deviceid="MFG:KODAK;CMD:KODAK305;MDL:305 Photo Printer;CLS:PRINTER;DES:KODAK 305 Photo Printer" driver="kodak-305" manufacturer="Kodak" model="4108" />
       <printer translate="name" name="Kodak 605" deviceid="MFG:Eastman Kodak Company;CMD:SUPCC;MCL:KODAK 605 Photo Printer;CLS:PRINTER;DES:Thermal Dye Photo Printer;" driver="kodak-605" manufacturer="Kodak" model="4003" />

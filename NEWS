@@ -97,14 +97,16 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      versions can continue using the old gamma behaviour, by setting the
      "StpLegacyDyesubGamma" option to "true"
 
-  3) Support for the following dye sublimcation printers has been added:
+  3) Support for the following dye sublimation printers has been added:
 
      Citizen CX-02W
      Citizen CZ-01
      DNP QW410
+     HiTi P510K / P510L / P510S / P510SI (EXPERIMENTAL)
+     HiTi P518A / P518S (EXPERIMENTAL)
      HiTi P520L
      HiTi P525L
-     HiTi P720L (EXPERIMENTAL)
+     HiTi P720L / P728L (EXPERIMENTAL)
      HiTi P750L (EXPERIMENTAL)
      Kodak 6900 (EXPERIMENTAL)
      Mitsubishi CP30D series

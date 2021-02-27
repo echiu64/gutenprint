@@ -9088,6 +9088,40 @@ static int hiti_p720l_parse_parameters(stp_vars_t *v)
   return 1;
 }
 
+/* HiTi P51x series */
+static const dyesub_pagesize_t hiti_p510l_page[] =
+{
+  DEFINE_PAPER_SIMPLE( "B7", "3.5x5", PT1(1072,301), PT1(1548,301), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w288h432", "4x6", PT1(1240,301), PT1(1844,301), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w288h432-div2", "2x6*2", PT1(1248,301), PT1(1844,301), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w360h504", "5x7", PT1(1548,301), PT1(2140,301), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w360h504-div2", "3.5x5*2", PT1(1548,301), PT1(2140,301), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w432h576", "6x8", PT1(1844,301), PT1(2434,301), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w432h576-div2", "4x6*2", PT1(1844,301), PT1(2434,301), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w432h648", "6x9", PT1(1844,301), PT1(2740,301), DYESUB_PORTRAIT),
+};
+
+LIST(dyesub_pagesize_list_t, hiti_p510l_page_list, dyesub_pagesize_t, hiti_p510l_page);
+
+static const dyesub_printsize_t hiti_p510l_printsize[] =
+{
+  { "301x301", "B7", 1072, 1548},
+  { "301x301", "w288h432", 1240, 1844},
+  { "301x301", "w288h432-div2", 1248, 1844},
+  { "301x301", "w360h504", 1548, 2140},
+  { "301x301", "w360h504-div2", 1548, 2152},
+  { "301x301", "w432h576", 1844, 2434},
+  { "301x301", "w432h576-div2", 1844, 2492},
+  { "301x301", "w432h648", 1844, 2740},
+};
+
+LIST(dyesub_printsize_list_t, hiti_p510l_printsize_list, dyesub_printsize_t, hiti_p510l_printsize);
+
+static void hiti_p510l_printer_start(stp_vars_t *v)
+{
+  hiti_printer_start(v, 510);
+}
+
 /* Magicard Series */
 static const dyesub_pagesize_t magicard_page[] =
 {
@@ -11175,6 +11209,26 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     hiti_p720l_load_parameters,
     hiti_p720l_parse_parameters,
   },
+  { /* HiTi P510/P518 series */
+    6502,
+    &bgr_ink_list,
+    &res_301dpi_list,
+    &hiti_p520l_page_list,
+    &hiti_p520l_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_NATIVECOPIES,
+    &hiti_p510l_printer_start, NULL,
+    NULL, NULL,
+    NULL, NULL,
+    &hiti_p520l_overcoat_list, NULL,
+    NULL, NULL,
+    hiti_p720l_parameters,
+    hiti_p720l_parameter_count,
+    hiti_p720l_load_parameters,
+    hiti_p720l_parse_parameters,
+  },
+
   { /* Magicard Series w/ Duplex */
     7000,
     &ymc_ink_list,
