@@ -3238,6 +3238,13 @@ static const dyesub_pagesize_t kodak_8810_page[] =
   DEFINE_PAPER_SIMPLE( "w576h864", "8x12", PT1(2464,300), PT1(3624,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w576h864-div2", "8x6*2", PT1(2464,300), PT1(3624,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w576h864-div3", "8x4*3", PT1(2464,300), PT1(3624,300), DYESUB_PORTRAIT),
+  /* Panorama sizes */
+  DEFINE_PAPER_SIMPLE( "w576h1008", "8x14", PT1(2464,300), PT1(4224,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w576h1152", "8x16", PT1(2464,300), PT1(4824,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w576h1440", "8x20", PT1(2464,300), PT1(6024,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w576h1728", "8x24", PT1(2464,300), PT1(7224,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w576h2304", "8x32", PT1(2464,300), PT1(9624,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w576h2592", "8x36", PT1(2464,300), PT1(10824,300), DYESUB_PORTRAIT),
 };
 LIST(dyesub_pagesize_list_t, kodak_8810_page_list, dyesub_pagesize_t, kodak_8810_page);
 
@@ -3254,6 +3261,13 @@ static const dyesub_printsize_t kodak_8810_printsize[] =
   { "300x300", "w576h864", 2464, 3624},
   { "300x300", "w576h864-div2", 2464, 3624},
   { "300x300", "w576h864-div3", 2464, 3624},
+  /* Panorama sizes */
+  { "300x300", "w576h1008", 2408, 4264},
+  { "300x300", "w576h1152", 2408, 4864},
+  { "300x300", "w576h1440", 2408, 6064},
+  { "300x300", "w576h1728", 2408, 7264},
+  { "300x300", "w576h2304", 2408, 9664},
+  { "300x300", "w576h2592", 2408, 10864},
 };
 
 LIST(dyesub_printsize_list_t, kodak_8810_printsize_list, dyesub_printsize_t, kodak_8810_printsize);
@@ -3305,6 +3319,30 @@ static void kodak_8810_printer_init(stp_vars_t *v)
 	      (pd->overcoat->seq).bytes, v);
   stp_putc(method, v); /* Method -- 00 is normal, 02 is x2, 03 is x3 */
   stp_putc(media, v); /* Reserved? */
+}
+
+static int kodak_8810_parse_paramters(stp_vars_t *v)
+{
+  const char *oc_mode;
+  const char *pagesize;
+
+  pagesize = stp_get_string_parameter(v, "PageSize");
+  oc_mode = stp_get_string_parameter(v, "Laminate");
+
+  if (strcmp(oc_mode, "Glossy"))
+  {
+    if (!strcmp(pagesize, "w576h1008") ||
+        !strcmp(pagesize, "w576h1152") ||
+        !strcmp(pagesize, "w576h1440") ||
+        !strcmp(pagesize, "w576h1728") ||
+        !strcmp(pagesize, "w576h2304") ||
+        !strcmp(pagesize, "w576h2592"))
+    {
+      stp_eprintf(v, _("Must use glossy overcoat with panorama print sizes!\n"));
+      return 0;
+    }
+  }
+  return 1; /* Everything is peachy */
 }
 
 /* Kodak 6900 */

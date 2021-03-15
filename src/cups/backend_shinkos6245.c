@@ -1,13 +1,13 @@
 /*
  *   Shinko/Sinfonia CHC-S6245 CUPS backend -- libusb-1.0 version
  *
- *   (c) 2015-2020 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2015-2021 Solomon Peachy <pizza@shaftnet.org>
  *
  *   Low-level documentation was provided by Sinfonia, Inc.  Thank you!
  *
  *   The latest version of this program can be found at:
  *
- *     http://git.shaftnet.org/cgit/selphy_print.git
+ *     https://git.shaftnet.org/cgit/selphy_print.git
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -1103,8 +1103,8 @@ static int shinkos6245_main_loop(void *vctx, const void *vjob) {
 	}
 	// XXX what about mcut |= PRINT_METHOD_DISABLE_ERR;
 
-	/* EK8810 uses special "cutlist" */
 	if (ctx->dev.conn->type == P_KODAK_8810) {
+		/* EK8810 uses special "cutlist" */
 		switch (job->jp.media) {
 		case CODE_8x4_2:
 			if (job->jp.ext_flags & EXT_FLAG_DOUBLESLUG)
@@ -1132,6 +1132,25 @@ static int shinkos6245_main_loop(void *vctx, const void *vjob) {
 			break;
 		default:
 			break;
+		}
+
+		/* EK8810 supports multi-panel panorama! */
+		if (job->jp.rows > 3624) {
+			if (copies > 1) {
+				WARNING("Multiple copies of panorama prints is not supported!\n");
+				copies = 1;
+			}
+			if (job->jp.media) {
+				ERROR("Don't support multi-cut with panorama!\n");
+				return CUPS_BACKEND_CANCEL;
+			}
+			if (job->jp.rows > 9624 &&
+			    ctx->media.ribbon_code != RIBBON_8x12 &&
+			    ctx->media.ribbon_code != RIBBON_8x12K) {
+				/* Sizes over 8x24 require 8x12 media */
+				ERROR("Incorrect media loaded for print!\n");
+				return CUPS_BACKEND_HOLD;
+			}
 		}
 	}
 
@@ -1464,7 +1483,7 @@ static const char *shinkos6245_prefixes[] = {
 
 const struct dyesub_backend shinkos6245_backend = {
 	.name = "Sinfonia CHC-S6245 / Kodak 8810",
-	.version = "0.36" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.37" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = shinkos6245_prefixes,
 	.cmdline_usage = shinkos6245_cmdline,
 	.cmdline_arg = shinkos6245_cmdline_arg,
