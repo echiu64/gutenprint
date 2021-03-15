@@ -10489,7 +10489,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No block funcs */
     &kodak_8810_overcoat_list, NULL,
     NULL, NULL,
-    NULL, 0, NULL, NULL,
+    NULL, 0, NULL, kodak_8810_parse_paramters,
   },
   { /* Kodak 7000/7010 */
     4008,
