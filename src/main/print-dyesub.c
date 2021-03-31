@@ -8509,7 +8509,8 @@ static void dnpds820_printer_start(stp_vars_t *v)
   /* Cutter control */
   if (cut1) {
     stp_zprintf(v, "\033PCNTRL FULL_CUTTER_SET 00000024");
-    stp_zprintf(v, "%03d%03d%03d%03d%03d%03d%03d\r\0\0\0", cut1, cut2, cut3, cut4, cut5, cut6, trim);
+    stp_zprintf(v, "%03d%03d%03d%03d%03d%03d%03d\r", cut1, cut2, cut3, cut4, cut5, cut6, trim);
+    dyesub_nputc(v, '\0', 3);
   } else {
     stp_zprintf(v, "\033PCNTRL CUTTER          00000008%08d", pd->privdata.dnp.nocutwaste ? 1 : 0);
   }
