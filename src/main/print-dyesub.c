@@ -8308,11 +8308,12 @@ static void dnpds620_printer_start(stp_vars_t *v)
     cut1 = cut2 = 20;
   }
 
-  /* Cutter */
-  stp_zprintf(v, "\033PCNTRL CUTTER          00000008%08d", pd->privdata.dnp.nocutwaste ? 1 : 0);
+  /* Cutter control */
   if (cut1) {
     stp_zprintf(v, "\033PCNTRL FULL_CUTTER_SET 00000016");
     stp_zprintf(v, "%03d%03d%03d%03d%03d\r", cut1, cut2, cut3, cut4, trim);
+  } else {
+    stp_zprintf(v, "\033PCNTRL CUTTER          00000008%08d", pd->privdata.dnp.nocutwaste ? 1 : 0);
   }
 
   /* Configure multi-cut/page size */
@@ -8440,11 +8441,11 @@ static void dnpds820_printer_start(stp_vars_t *v)
 {
   dyesub_privdata_t *pd = get_privdata(v);
 
+  int trim = 0; /* XXX add another parameter to control this.  0 or 12-22 for intermediate scrap */
+  int cut1 = 0, cut2 = 0, cut3 = 0, cut4 = 0, cut5 = 0, cut6 = 0;
+
   /* Common code */
   dnp_printer_start_common(v);
-
-  /* No-cut waste */
-  stp_zprintf(v, "\033PCNTRL CUTTER          00000008%08d", pd->privdata.dnp.nocutwaste ? 1 : 0);
 
   /* Configure multi-cut/page size */
   stp_zprintf(v, "\033PIMAGE MULTICUT        00000008000000");
@@ -8503,6 +8504,14 @@ static void dnpds820_printer_start(stp_vars_t *v)
     stp_zprintf(v, "35");
   } else {
     stp_zprintf(v, "00"); /* should not be possible */
+  }
+
+  /* Cutter control */
+  if (cut1) {
+    stp_zprintf(v, "\033PCNTRL FULL_CUTTER_SET 00000024");
+    stp_zprintf(v, "%03d%03d%03d%03d%03d%03d%03d\r\0\0\0", cut1, cut2, cut3, cut4, cut5, cut6, trim);
+  } else {
+    stp_zprintf(v, "\033PCNTRL CUTTER          00000008%08d", pd->privdata.dnp.nocutwaste ? 1 : 0);
   }
 
   if (!strcmp(pd->privdata.dnp.print_speed, "LowSpeed")) {
@@ -8706,16 +8715,16 @@ static void dnp_qw410_printer_start(stp_vars_t *v)
     cut2 = 30;
     cut3 = 20;
   }
-  /* Cutter */
-  stp_zprintf(v, "\033PCNTRL CUTTER          00000008%08d", pd->privdata.dnp.nocutwaste ? 1 : 0);
 
+  /* Cutter control */
   if (cut1) {
     stp_zprintf(v, "\033PCNTRL FULL_CUTTER_SET 00000016");
     stp_zprintf(v, "%03d%03d%03d%03d%03d\r", cut1, cut2, cut3, cut4, trim);
+  } else {
+    stp_zprintf(v, "\033PCNTRL CUTTER          00000008%08d", pd->privdata.dnp.nocutwaste ? 1 : 0);
   }
 
   /* Configure multi-cut/page size */
-
   if (!strcmp(pd->pagesize, "w288h288") || !strcmp(pd->pagesize, "w288h288-div2")) {
     multicut = 47;
   } else if (!strcmp(pd->pagesize, "w288h432") || !strcmp(pd->pagesize, "w288h216") || !strcmp(pd->pagesize, "w288h432-div2") || !strcmp(pd->pagesize, "w288h432-div3")) {
