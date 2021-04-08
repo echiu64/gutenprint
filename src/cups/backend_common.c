@@ -886,7 +886,7 @@ static int query_markers(const struct dyesub_backend *backend, void *ctx, int fu
 	if (!backend->query_markers)
 		return CUPS_BACKEND_OK;
 
-	if (test_mode >= TEST_MODE_NOPRINT)
+	if (test_mode >= TEST_MODE_NOATTACH)
 		return CUPS_BACKEND_OK;
 
 	ret = backend->query_markers(ctx, &markers, &marker_count);
