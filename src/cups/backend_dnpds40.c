@@ -67,10 +67,15 @@ struct dnpds40_printjob {
 	int cut_paper;
 };
 
+#define MFG_DNP 0
+#define MFG_CITIZEN 1
+#define MFG_MITSUBISHI 2
+#define MFG_OTHER 3
+
 struct dnpds40_ctx {
 	struct dyesub_connection *conn;
 
-	int mfg;  /* 0 for dnp, 1 citizen, 2 other */
+	int mfg; /* see MFG_* */
 
 	/* Version and whatnot */
 	char *serno;
@@ -444,13 +449,13 @@ static void dnpds40_cleanup_string(char *start, int len)
 static const char *dnpds40_printer_type(int type, int mfg)
 {
 	switch(type) {
-	case P_DNP_DS40: return mfg == 1? "CX" : "DS40";
-	case P_DNP_DS80: return mfg == 1? "CW" : (mfg == 2 ? "CP3800" : "DS80");
+	case P_DNP_DS40: return mfg == MFG_CITIZEN? "CX" : "DS40";
+	case P_DNP_DS80: return mfg == MFG_CITIZEN? "CW" : (mfg == MFG_MITSUBISHI ? "CP3800" : "DS80");
 	case P_DNP_DS80D: return "DS80DX";
-	case P_DNP_DSRX1: return mfg == 1 ? "CY" : "DSRX1";
-	case P_DNP_DS620: return mfg == 1 ? "CX-02" : "DS620";
-	case P_DNP_DS820: return type == 1 ? "CX-02W" : "DS820";
-	case P_DNP_QW410: return mfg == 1 ? "CZ-01" : "QW410";
+	case P_DNP_DSRX1: return mfg == MFG_CITIZEN ? "CY" : "DSRX1";
+	case P_DNP_DS620: return mfg == MFG_CITIZEN ? "CX-02" : "DS620";
+	case P_DNP_DS820: return mfg == MFG_CITIZEN ? "CX-02W" : "DS820";
+	case P_DNP_QW410: return mfg == MFG_CITIZEN ? "CZ-01" : "QW410";
 	case P_CITIZEN_CW01: return "CW01";
 	case P_CITIZEN_OP900II: return "CW-02 / OP900ii";
 	default: break;
@@ -860,6 +865,38 @@ static int dnpds40_attach(void *vctx, struct dyesub_connection *conn, uint8_t jo
 		} else {
 			return CUPS_BACKEND_FAILED;
 		}
+
+		/* Figure out actual Manufacturer */
+		{
+			struct libusb_device_descriptor desc;
+			struct libusb_device *udev;
+
+			udev = libusb_get_device(ctx->conn->dev);
+			libusb_get_device_descriptor(udev, &desc);
+
+			char buf[STR_LEN_MAX + 1];
+			buf[0] = 0;
+			buf[STR_LEN_MAX] = 0;
+			libusb_get_string_descriptor_ascii(ctx->conn->dev, desc.iManufacturer, (unsigned char*)buf, STR_LEN_MAX);
+
+			if (!strncmp(buf, "Dai", 3)) /* "Dai Nippon Printing" */
+				ctx->mfg = MFG_DNP;
+			else if (!strncmp(buf, "CIT", 3)) /* "CITIZEN SYSTEMS" */
+				ctx->mfg = MFG_CITIZEN;
+			else if (!strncmp(buf, "M", 1)) /* "Mitsubishi" */
+				ctx->mfg = MFG_MITSUBISHI;
+			else
+				ctx->mfg = MFG_OTHER;
+
+#ifdef DNP_ONLY  /* Only allow DNP printers to work. */
+			if (ctx->mfg != MFG_DNP)
+				return CUPS_BACKEND_FAILED;
+#endif
+#ifdef CITIZEN_ONLY   /* Only allow CITIZEN printers to work. */
+			if (ctx->mfg != MFG_CITIZEN)
+				return CUPS_BACKEND_FAILED
+#endif
+		}
 	} else {
 		ctx->ver_major = 3;
 		ctx->ver_minor = 0;
@@ -944,18 +981,29 @@ static int dnpds40_attach(void *vctx, struct dyesub_connection *conn, uint8_t jo
 		ctx->supports_6x6 = 1;
 		ctx->supports_5x5 = 1;
 		ctx->supports_lowspeed = 1;
-		if (FW_VER_CHECK(0,30))
-			ctx->supports_3x5x2 = 1;
-		if (FW_VER_CHECK(1,10))
-			ctx->supports_6x9 = ctx->supports_6x4_5 = 1;
-		if (FW_VER_CHECK(1,20))
+
+		if (ctx->mfg == MFG_CITIZEN) { /* Citizen and DNP firmware diverge */
 			ctx->supports_adv_fullcut = ctx->supports_advmatte = 1;
-		if (FW_VER_CHECK(1,30))
 			ctx->supports_luster = 1;
-		if (FW_VER_CHECK(1,33))
-			ctx->supports_media_ext = 1;
-		if (FW_VER_CHECK(1,52))
 			ctx->supports_finematte = 1;
+			ctx->supports_3x5x2 = 1;
+
+			if (FW_VER_CHECK(1,10))
+				ctx->supports_6x9 = ctx->supports_6x4_5 = 1;
+		} else {
+			if (FW_VER_CHECK(0,30))
+				ctx->supports_3x5x2 = 1;
+			if (FW_VER_CHECK(1,10))
+				ctx->supports_6x9 = ctx->supports_6x4_5 = 1;
+			if (FW_VER_CHECK(1,20))
+				ctx->supports_adv_fullcut = ctx->supports_advmatte = 1;
+			if (FW_VER_CHECK(1,30))
+				ctx->supports_luster = 1;
+			if (FW_VER_CHECK(1,33))
+				ctx->supports_media_ext = 1;
+			if (FW_VER_CHECK(1,52))
+				ctx->supports_finematte = 1;
+		}
 		break;
 	case P_DNP_DS820:
 		ctx->native_width = 2560;
@@ -982,10 +1030,16 @@ static int dnpds40_attach(void *vctx, struct dyesub_connection *conn, uint8_t jo
 		ctx->supports_ctrld_ext = 1;
 		ctx->supports_mediaoffset = 1;
 		ctx->supports_mediaclassrfid = 1;
-		if (FW_VER_CHECK(0,50))
+
+		if (ctx->mfg == MFG_CITIZEN) { /* Citizen and DNP firmware diverge */
 			ctx->supports_gamma = 1;
-		if (FW_VER_CHECK(1,07)) // XXX might be 1.06
-			ctx->supports_a4x6 = 1;
+			ctx->supports_a4x6 = 1; // XXX revisit his in particular
+		} else {
+			if (FW_VER_CHECK(0,50))
+				ctx->supports_gamma = 1;
+			if (FW_VER_CHECK(1,06))
+				ctx->supports_a4x6 = 1;
+		}
 		break;
 	case P_DNP_QW410:
 		ctx->native_width = 1408;
@@ -1068,38 +1122,6 @@ static int dnpds40_attach(void *vctx, struct dyesub_connection *conn, uint8_t jo
 		if (ctx->conn->type == P_DNP_DS80D) {
 			if (dnpds80dx_query_paper(ctx))
 				return CUPS_BACKEND_FAILED;
-		}
-
-		/* Figure out actual Manufacturer */
-		{
-			struct libusb_device_descriptor desc;
-			struct libusb_device *udev;
-
-			udev = libusb_get_device(ctx->conn->dev);
-			libusb_get_device_descriptor(udev, &desc);
-
-			char buf[STR_LEN_MAX + 1];
-			buf[0] = 0;
-			buf[STR_LEN_MAX] = 0;
-			libusb_get_string_descriptor_ascii(ctx->conn->dev, desc.iManufacturer, (unsigned char*)buf, STR_LEN_MAX);
-
-			if (!strncmp(buf, "Dai", 3)) /* "Dai Nippon Printing" */
-				ctx->mfg = 0;
-			else if (!strncmp(buf, "CIT", 3)) /* "CITIZEN SYSTEMS" */
-				ctx->mfg = 1;
-			else if (!strncmp(buf, "M", 1)) /* "Mitsubishi" */
-				ctx->mfg = 2;
-			else
-				ctx->mfg = 3;
-
-#ifdef DNP_ONLY  /* Only allow DNP printers to work. */
-			if (ctx->mfg != 0)
-				return CUPS_BACKEND_FAILED;
-#endif
-#ifdef CITIZEN_ONLY   /* Only allow CITIZEN printers to work. */
-			if (ctx->mfg != 1)
-				return CUPS_BACKEND_FAILED
-#endif
 		}
 	} else {
 		switch(ctx->conn->type) {
@@ -3340,9 +3362,9 @@ static int dnp_query_stats(void *vctx, struct printerstats *stats)
 
 	switch (ctx->mfg)
 	{
-	case 0: stats->mfg = "Dai Nippon Printing"; break;
-	case 1: stats->mfg = "Citizen Systems"; break;
-	case 2: stats->mfg = "Mitsubishi" ; break;
+	case MFG_DNP: stats->mfg = "Dai Nippon Printing"; break;
+	case MFG_CITIZEN: stats->mfg = "Citizen Systems"; break;
+	case MFG_MITSUBISHI: stats->mfg = "Mitsubishi" ; break;
 	default: stats->mfg = "Unknown" ; break;
 	}
 
@@ -3456,7 +3478,7 @@ static const char *dnpds40_prefixes[] = {
 /* Exported */
 const struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS-series / Citizen C-series",
-	.version = "0.137",
+	.version = "0.137.1",
 	.uri_prefixes = dnpds40_prefixes,
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
