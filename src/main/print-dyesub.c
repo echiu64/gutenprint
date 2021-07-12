@@ -3239,12 +3239,12 @@ static const dyesub_pagesize_t kodak_8810_page[] =
   DEFINE_PAPER_SIMPLE( "w576h864-div2", "8x6*2", PT1(2464,300), PT1(3624,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w576h864-div3", "8x4*3", PT1(2464,300), PT1(3624,300), DYESUB_PORTRAIT),
   /* Panorama sizes */
-  DEFINE_PAPER_SIMPLE( "w576h1008", "8x14", PT1(2464,300), PT1(4224,300), DYESUB_PORTRAIT),
-  DEFINE_PAPER_SIMPLE( "w576h1152", "8x16", PT1(2464,300), PT1(4824,300), DYESUB_PORTRAIT),
-  DEFINE_PAPER_SIMPLE( "w576h1440", "8x20", PT1(2464,300), PT1(6024,300), DYESUB_PORTRAIT),
-  DEFINE_PAPER_SIMPLE( "w576h1728", "8x24", PT1(2464,300), PT1(7224,300), DYESUB_PORTRAIT),
-  DEFINE_PAPER_SIMPLE( "w576h2304", "8x32", PT1(2464,300), PT1(9624,300), DYESUB_PORTRAIT),
-  DEFINE_PAPER_SIMPLE( "w576h2592", "8x36", PT1(2464,300), PT1(10824,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w576h1008", "8x14 Panorama", PT1(2464,300), PT1(4224,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w576h1152", "8x16 Panorama", PT1(2464,300), PT1(4824,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w576h1440", "8x20 Panorama", PT1(2464,300), PT1(6024,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w576h1728", "8x24 Panorama", PT1(2464,300), PT1(7224,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w576h2304", "8x32 Panorama", PT1(2464,300), PT1(9624,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w576h2592", "8x36 Panorama", PT1(2464,300), PT1(10824,300), DYESUB_PORTRAIT),
 };
 LIST(dyesub_pagesize_list_t, kodak_8810_page_list, dyesub_pagesize_t, kodak_8810_page);
 
@@ -6224,6 +6224,8 @@ static const dyesub_pagesize_t mitsu_cpd90_page[] =
   DEFINE_PAPER_SIMPLE( "w432h648-div2", "4.4x6*2", PT1(1852,300), PT1(2728,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w432h648-div3", "3x6*2", PT1(1852,300), PT1(2724,300), DYESUB_PORTRAIT),
   DEFINE_PAPER_SIMPLE( "w432h648-div4", "2x6*4", PT1(1852,300), PT1(2628,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w432h1008", "6x14 panorama", PT1(1852,300), PT1(4228,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w432h1440", "6x20 panorama", PT1(1852,300), PT1(6028,300), DYESUB_PORTRAIT),
 };
 
 LIST(dyesub_pagesize_list_t, mitsu_cpd90_page_list, dyesub_pagesize_t, mitsu_cpd90_page);
@@ -6246,6 +6248,8 @@ static const dyesub_printsize_t mitsu_cpd90_printsize[] =
   { "300x300", "w432h648-div2", 1852, 2728},
   { "300x300", "w432h648-div3", 1852, 2724},
   { "300x300", "w432h648-div4", 1852, 2628},
+  { "300x300", "w432h1008", 1852, 4228},
+  { "300x300", "w432h1440", 1852, 6028},
 };
 LIST(dyesub_printsize_list_t, mitsu_cpd90_printsize_list, dyesub_printsize_t, mitsu_cpd90_printsize);
 
@@ -6444,7 +6448,7 @@ static void mitsu_cpdneo_printer_init(stp_vars_t *v, int m1)
     dyesub_nputc(v, 0x00, 32);
   }
 
-  /* @ 0x40 */
+  /* @ 0x30 */
   stp_zfwrite((pd->overcoat->seq).data, 1,
 	      (pd->overcoat->seq).bytes, v); /* Lamination mode */
   stp_putc(pd->privdata.m70x.quality, v);
@@ -6453,19 +6457,25 @@ static void mitsu_cpdneo_printer_init(stp_vars_t *v, int m1)
   stp_putc(pd->privdata.m70x.sharpen, v); /* Vertical */
   dyesub_nputc(v, 0x00, 3);
 
-  /* @ 0x48 */
-
-  /* Panorama setup, leave blank for now */
+  /* @ 0x38 */
   if (m1) {
     stp_putc(0x01, v);  /* Tells backend that we need to process this */
     stp_put16_be(2, v);
     dyesub_nputc(v, 0x00, 14);
   } else {
-    dyesub_nputc(v, 0x00, 17);
+    if (strcmp(pd->pagesize,"w432h648-1008") == 0 ||
+        strcmp(pd->pagesize,"w432h648-1440") == 0) {
+      stp_putc(0x01, v);  /* Backend needs to process a this */
+      stp_put16_be(3, v);  /* It's a panorama, yo! */
+    } else {
+      stp_putc(0x00, v); /* No panorama */
+      stp_put16_be(0, v);
+    }
+    dyesub_nputc(v, 0x00, 14);
   }
   dyesub_nputc(v, 0x00, 7);
 
-  /* @0x60, zero fill to 512 byte boundary. */
+  /* @0x50, zero fill to 512 byte boundary. */
   dyesub_nputc(v, 0x00, 512 - 80);
 
   /* Data Plane header */
