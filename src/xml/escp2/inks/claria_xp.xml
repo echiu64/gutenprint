@@ -78,7 +78,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <InkName translate="text" name="CMYKk" text="Six Color Photo" InkID="OTHER">
   <Channels>
    <channel name="claria_photo_black" index="0">
-    <subchannel color="0" subchannel="0" subchannel="0" name="Black" text="Black" translate="text">
+    <subchannel color="0" subchannel="0" name="Black" text="Black" translate="text">
      <ChannelDensityParam name="BlackDensity"/>
      <SubchannelTransitionParam name="LightBlackTrans"/>
     </subchannel>

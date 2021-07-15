@@ -1125,7 +1125,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  </ink>
 </paper>
 
-<paper translate="text" name="GlossyPaper" text="Photo Quality Glossy Paper"class="premium">
+<paper translate="text" name="GlossyPaper" text="Photo Quality Glossy Paper" class="premium">
  <parameter type="integer" name="PaperMedia">19</parameter>
  <parameter type="integer" name="PrintMethod">0x41</parameter>
 
