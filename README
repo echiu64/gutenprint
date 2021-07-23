@@ -517,8 +517,8 @@ D) CUPS dye-sublimation backend
 	DNP DS820 / DS820A / Citizen CX-02W
 	DNP QW410 / Citizen CZ-01
 	Fujifilm ASK-300
-	HiTi P520L
-	HiTi P525L
+	HiTi P520L / P525L
+	HiTi P720L / P750L
 	Kodak Professional 1400
 	Kodak 305 Photo Printer
 	Kodak 605 Photo Printer
@@ -527,10 +527,11 @@ D) CUPS dye-sublimation backend
 	Kodak 6850 Photo Printer
 	Kodak 7000 Photo Printer
 	Kodak 8810 Photo Printer
+	Mitsubishi CP30D
 	Mitsubishi CP-3800DW
 	Mitsubishi CP-9550D/DW/DW-S/DZ/DZ-S
 	Mitsubishi CP-9600D/DW
-	Mitsubishi CP-M1A / CP-M1E
+	Mitsubishi CP-M1A / CP-M1E / CP-M15
 	Mitsubishi CP-9800DW/DW-S
 	Mitsubishi CP-9810DW
 	Mitsubishi CP-K60DW-S
@@ -543,12 +544,15 @@ D) CUPS dye-sublimation backend
 	Shinko CHC-S1245 (aka Sinfonia E1)
 	Shinko CHC-S2145 (aka Sinfonia S2)
 	Shinko CHC-S6145 (aka Sinfonia CS2)
+	Shinko CHC-S6245 (aka Sinfonia CE1)
+	Sinfonia S3
 	Sony UP-CR10L / DNP DS-SL10
 	Sony UP-DR150
 	Sony UP-DR200
 	Sony UP-DR80MD
 	Sony UP-D895
 	Sony UP-D897
+	Sony UP-D898
 	Stryker SDP1000
 
     Although these printers advertise themselves as standard USB Printer
