@@ -692,7 +692,7 @@ static int mitsud90_read_parse(void *vctx, const void **vjob, int data_fd, int c
 	job->datalen = 0;
 	job->databuf = malloc(sizeof(struct mitsud90_job_hdr) +
 			      sizeof(struct mitsud90_plane_hdr) +
-			      1852*2729*3 + 1024);
+			      1852*2729*3*2 + 1024);
 
 	if (!job->databuf) {
 		ERROR("Memory allocation failure!\n");
@@ -1690,7 +1690,7 @@ static const char *mitsud90_prefixes[] = {
 /* Exported */
 const struct dyesub_backend mitsud90_backend = {
 	.name = "Mitsubishi CP-D90/CP-M1",
-	.version = "0.30"  " (lib " LIBMITSU_VER ")",
+	.version = "0.30.1"  " (lib " LIBMITSU_VER ")",
 	.uri_prefixes = mitsud90_prefixes,
 	.cmdline_arg = mitsud90_cmdline_arg,
 	.cmdline_usage = mitsud90_cmdline,
