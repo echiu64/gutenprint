@@ -140,9 +140,9 @@
       <printer translate="name" name="Kodak 7015" driver="kodak-7015" manufacturer="Kodak" model="4009">EXPERIMENTAL</printer>
       <printer translate="name" name="Kodak 805" deviceid="MFG:Eastman Kodak Company;CMD:EK2;MDL: KODAK 805 Photo Printer;CLS:Printer;DES:Kodak 805 Photo Printer;" driver="kodak-805" manufacturer="Kodak" model="4005" />
       <printer translate="name" name="Kodak 8500" driver="kodak-8500" manufacturer="Kodak" model="4100">EXPERIMENTAL</printer>
-      <printer translate="name" name="Kodak 8800" deviceid="MFG:Eastman Kodak Company;CMD:EKRTP V001.001;MDL:KODAK Photo Printer 8800;CLS:PRINTER;DES:Thermal Dye Photo Printer;VER:1.00;" driver="kodak-8800" manufacturer="Kodak" model="4006">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kodak 8800" deviceid="MFG:Eastman Kodak Company;CMD:EKRTP V001.001;MDL:KODAK Photo Printer 8800;CLS:PRINTER;DES:Thermal Dye Photo Printer;VER:1.00;" driver="kodak-8800" manufacturer="Kodak" model="4006" />
       <printer translate="name" name="Kodak 8810" deviceid="MFG:Eastman Kodak Company;CMD:SUPCC;MDL:KODAK 8810 Photo Printer;CLS:PRINTER;DES:Thermal Dye Photo Printer;" driver="kodak-8810" manufacturer="Kodak" model="4007" />
-      <printer translate="name" name="Kodak 9810" driver="kodak-9810" manufacturer="Kodak" model="4006">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kodak 9810" driver="kodak-9810" manufacturer="Kodak" model="4006" />
       <printer translate="name" name="Kodak EasyShare-G600-Printer-Dock" driver="kodak-g600-dock" manufacturer="Kodak" model="4000" />
       <printer translate="name" name="Kodak Easyshare-Printer-Dock" driver="kodak-dock" manufacturer="Kodak" model="4000" />
       <printer translate="name" name="Kodak PD-4000" driver="kodak-pd-4000" manufacturer="Kodak" model="4000" />
