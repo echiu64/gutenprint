@@ -10494,7 +10494,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Kodak Professional 9810 (and 8800) */
     4006,
-    &ymc_ink_list,
+    &bgr_ink_list,
     &res_300dpi_list,
     &kodak_9810_page_list,
     &kodak_9810_printsize_list,
