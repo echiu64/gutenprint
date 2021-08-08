@@ -422,6 +422,7 @@ static const stp_parameter_t the_parameters[] =
   PARAMETER_INT(black_nozzle_separation),
   PARAMETER_INT(fast_nozzle_separation),
   PARAMETER_INT(separation_rows),
+  PARAMETER_INT(roll_lb),
   PARAMETER_DIMENSION(max_paper_width),
   PARAMETER_DIMENSION(max_paper_height),
   PARAMETER_DIMENSION(min_paper_width),
@@ -3888,9 +3889,13 @@ lcm(unsigned a, unsigned b)
 static int
 adjusted_vertical_resolution(const stp_vars_t *v, const res_t *res)
 {
+  escp2_privdata_t *pd = get_privdata(v);
+
   if (res->vres >= escp2_base_separation(v) * 2)
     return res->vres;
-  else if (res->hres >= escp2_base_separation(v) * 2)	/* Special case 720x360 */
+  else if (!pd->roll_only && res->hres >= escp2_base_separation(v) * 2)	/* Special case 720x360 */
+    /* Note that we want to bypass this for the roll_only models like the D700. This needs
+       to be revisited as it's likely applicable for many more models! */
     return escp2_base_separation(v) * 2;
   else if (res->vres % 90 == 0)
     return res->vres;

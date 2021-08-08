@@ -497,6 +497,7 @@
       <printer translate="name" name="Epson SureColor P9000 Commercial Edition" driver="escp2-p9000c" manufacturer="Epson" model="127" parameters="standard_params">EXPERIMENTAL; violet ink not supported</printer>
       <printer translate="name" name="Epson SureColor P10000" driver="escp2-p10000" manufacturer="Epson" model="90" parameters="standard_params">EXPERIMENTAL; only three levels of gray supported</printer>
       <printer translate="name" name="Epson SureColor P20000" driver="escp2-p20000" manufacturer="Epson" model="88" parameters="standard_params">EXPERIMENTAL; only three levels of gray supported</printer>
+      <printer translate="name" name="Epson SureLab D700" driver="escp2-sl-d700" manufacturer="Epson" model="136" parameters="standard_params">EXPERIMENTAL</printer>
       <printer translate="name" name="Epson PictureMate" driver="escp2-picmate" manufacturer="Epson" model="73" parameters="standard_params" />
       <printer translate="name" name="Epson PictureMate Dash" driver="escp2-picmatedash" manufacturer="Epson" model="86" parameters="standard_params" />
       <printer translate="name" name="Epson PictureMate Deluxe" driver="escp2-picmated" manufacturer="Epson" model="73" parameters="standard_params" />
@@ -661,6 +662,7 @@
       <printer translate="name" name="Epson PX G5600" driver="escp2-pxg5600" manufacturer="Epson" model="98" parameters="standard_params" />
       <printer translate="name" name="Epson PX 7000" driver="escp2-px7000" manufacturer="Epson" model="48" parameters="standard_params" />
       <printer translate="name" name="Epson PX 9000" driver="escp2-px9000" manufacturer="Epson" model="49" parameters="standard_params" />
+      <printer translate="name" name="Fujifilm DX100" deviceid="MFG:FUJIFILM;CMD:ESCPL2,BDC,D4,D4PX;MDL:DX100;CLS:PRINTER;DES:FUJIFILM DX100;RID:02;" driver="fujifilm-dx100" manufacturer="Fujifilm" model="136" parameters="standard_params">EXPERIMENTAL</printer>
     </family>
   </printdef>
 </gutenprint>

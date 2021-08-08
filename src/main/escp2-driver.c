@@ -251,6 +251,9 @@ escp2_set_remote_sequence(stp_vars_t *v)
       if (stp_check_float_parameter(pv, "PageDryTime", STP_PARAMETER_ACTIVE))
 	stp_send_command(v, "DR", "bcch", 0, 1,
 			 (int) stp_get_float_parameter(pv, "PageDryTime"));
+      if (stp_check_int_parameter(pv, "escp2_roll_lb", STP_PARAMETER_ACTIVE))
+	stp_send_command(v, "LB", "bccc", 0, 1,
+			 stp_get_int_parameter(pv, "escp2_roll_lb"));
       /* Next comes paper path */
       if (pd->input_slot)
 	{

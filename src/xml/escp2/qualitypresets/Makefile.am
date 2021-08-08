@@ -28,6 +28,7 @@ pkgxmldata_DATA =				\
 	picturemate.xml				\
 	prox900.xml				\
 	standard.xml				\
+	surelab.xml				\
 	v2880.xml				\
 	wf40.xml
 

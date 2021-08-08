@@ -28,6 +28,7 @@ pkgxmldata_DATA =				\
 	b500.xml				\
 	cd.xml					\
 	cd_cutter_roll_feed.xml			\
+	cutter_roll_only.xml			\
 	cd_roll_feed.xml			\
 	cutter_roll_feed.xml			\
 	default.xml				\

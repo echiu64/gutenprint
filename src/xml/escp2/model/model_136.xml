@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+
+<gutenprint xmlns="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd">
+<copyright>
+ *   Copyright 2021 Solomon Peachy (pizza@shaftnet.org)
+ *
+ *   This program is free software; you can redistribute it and/or modify it
+ *   under the terms of the GNU General Public License as published by the Free
+ *   Software Foundation; either version 2 of the License, or (at your option)
+ *   any later version.
+ *
+ *   This program is distributed in the hope that it will be useful, but
+ *   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ *   or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ *   for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see https://www.gnu.org/licenses/.
+</copyright>
+<escp2Model id="136" base="escp2/model/base/baseline_360.xml">
+ <media src="escp2/media/pro_ultrachrome_d6s.xml"/>
+ <inputSlots src="escp2/inputslots/cutter_roll_only.xml"/>
+ <qualityPresets src="escp2/qualitypresets/surelab.xml"/>
+ <inkGroup src="escp2/inks/pro_ultrachrome_d6s.xml"/>
+ <mediaSizes src="escp2/mediasizes/standard.xml"/>
+ <preinitSequence>\000\000\000\033\001@EJL\0401284.4\012@EJL\040\040\040\040\040\012\033@\033@</preinitSequence>
+<!-- <preinitRemoteSequence>LB\003\000\000\001\001</preinitRemoteSequence> -->
+ <postinitRemoteSequence>JE\001\000\000</postinitRemoteSequence>
+ <commandSet>Pro</commandSet>
+ <borderless>Full</borderless>
+ <supportsVariableDropsizes/>
+ <sendZeroAdvance/>
+ <supportsD4Mode/>
+ <hasInterchangeableInkCartridges/>
+ <rollOnly/>
+ <headConfiguration type="default">
+  <Nozzles>180</Nozzles>
+  <MinNozzles>1</MinNozzles>
+  <FirstNozzle>0</FirstNozzle>
+  <NozzleSeparation>2</NozzleSeparation>
+ </headConfiguration>
+ <physicalChannels>9</physicalChannels>
+ <resolutionScale>14400</resolutionScale>
+ <minimumResolution>720 360</minimumResolution>
+ <maximumResolution>1440 720</maximumResolution>
+ <separationRows>1</separationRows>
+ <zeroMarginOffset>20</zeroMarginOffset>
+ <minHorizontalAlignment>1</minHorizontalAlignment>
+ <baseHorizontalAlignment>180</baseHorizontalAlignment>
+ <printingInitialVerticalOffset>376</printingInitialVerticalOffset> <!-- Windows drivers use 1374/4=343.5 -->
+ <bidirectionalAutoUpperLimit>2073600</bidirectionalAutoUpperLimit>
+ <minimumMediaSize>360 144</minimumMediaSize>
+ <maximumMediaSize>596 86400</maximumMediaSize>
+ <maximumImageableArea>1224 86400</maximumImageableArea>
+ <margins interleave="soft" media="roll">0 0 0 0</margins>
+ <margins interleave="printer" media="roll">0 0 0 0</margins>
+ <AlignmentChoices>4 13 4 33</AlignmentChoices> <!-- XXX ? -->
+ <resolutions>
+  <resolution translate="text" name="720x360" text="720 x 360 DPI High Speed">
+   <physicalResolution>720 360</physicalResolution>
+   <parameter type="float" name="escp2_density">3.00000</parameter>
+   <parameter type="integer" name="escp2_ink_type">33</parameter>
+   <parameter type="integer" name="escp2_base_res">720</parameter>
+   <parameter type="integer" name="escp2_bits">2</parameter>
+   <parameter type="float" name="DropSize1">0.150000</parameter>
+   <parameter type="float" name="DropSize2">0.400000</parameter>
+   <parameter type="float" name="DropSize3">1.000000</parameter>
+  </resolution>
+  <resolution translate="text" name="720x720" text="720 x 720 DPI">
+   <physicalResolution>720 720</physicalResolution>
+   <parameter type="float" name="escp2_density">0.575000</parameter>
+   <parameter type="integer" name="escp2_ink_type">34</parameter>
+   <parameter type="integer" name="escp2_base_res">720</parameter>
+   <parameter type="integer" name="escp2_bits">2</parameter>
+   <parameter type="float" name="DropSize1">0.150000</parameter>
+   <parameter type="float" name="DropSize2">0.400000</parameter>
+  <parameter type="float" name="DropSize3">1.000000</parameter>
+  </resolution>
+  <resolution translate="text" name="1440x720" text="1440 x 720 DPI High Quality">
+   <physicalResolution>1440 720</physicalResolution>
+   <parameter type="float" name="escp2_density">0.325000</parameter>
+   <parameter type="integer" name="escp2_ink_type">35</parameter>
+   <parameter type="integer" name="escp2_base_res">720</parameter>
+   <parameter type="integer" name="escp2_bits">2</parameter>
+   <parameter type="float" name="DropSize1">0.150000</parameter>
+   <parameter type="float" name="DropSize2">0.400000</parameter>
+   <parameter type="float" name="DropSize3">1.000000</parameter>
+  </resolution>
+ </resolutions>
+</escp2Model>
+</gutenprint>

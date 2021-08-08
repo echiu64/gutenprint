@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+
+<gutenprint xmlns="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd">
+<copyright>
+ *   Copyright 2021 Solomon Peachy (pizza@shaftnet.org)
+ *
+ *   This program is free software; you can redistribute it and/or modify it
+ *   under the terms of the GNU General Public License as published by the Free
+ *   Software Foundation; either version 2 of the License, or (at your option)
+ *   any later version.
+ *
+ *   This program is distributed in the hope that it will be useful, but
+ *   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ *   or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ *   for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see https://www.gnu.org/licenses/.
+</copyright>
+<escp2QualityPresets name="standard">
+ <quality translate="text" name="Fast" text="Fast">
+  <minimumResolution>0 0</minimumResolution>
+  <maximumResolution>0 0</maximumResolution>
+  <desiredResolution>720 360</desiredResolution>
+ </quality>
+ <quality translate="text" name="Standard" text="Standard">
+  <minimumResolution>0 0</minimumResolution>
+  <maximumResolution>0 0</maximumResolution>
+  <desiredResolution>720 720</desiredResolution>
+ </quality>
+ <quality translate="text" name="High" text="High">
+  <minimumResolution>0 0</minimumResolution>
+  <maximumResolution>0 0</maximumResolution>
+  <desiredResolution>1440 720</desiredResolution>
+ </quality>
+</escp2QualityPresets>
+</gutenprint>
