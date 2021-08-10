@@ -434,6 +434,7 @@ static const stp_parameter_t the_parameters[] =
   PARAMETER_INT(resolution_scale),
   PARAMETER_INT(initial_vertical_offset),
   PARAMETER_INT(black_initial_vertical_offset),
+  PARAMETER_INT(printing_initial_vertical_offset),
   PARAMETER_INT(max_black_resolution),
   PARAMETER_INT(zero_margin_offset),
   PARAMETER_INT(extra_720dpi_separation),
@@ -1124,6 +1125,7 @@ DEF_SIMPLE_ACCESSOR(base_separation, int)
 DEF_SIMPLE_ACCESSOR(resolution_scale, int)
 DEF_SIMPLE_ACCESSOR(initial_vertical_offset, int)
 DEF_SIMPLE_ACCESSOR(black_initial_vertical_offset, int)
+DEF_SIMPLE_ACCESSOR(printing_initial_vertical_offset, int)
 DEF_SIMPLE_ACCESSOR(max_black_resolution, int)
 DEF_SIMPLE_ACCESSOR(zero_margin_offset, int)
 DEF_SIMPLE_ACCESSOR(extra_720dpi_separation, int)
@@ -4091,7 +4093,9 @@ setup_head_parameters(stp_vars_t *v)
       pd->page_management_units /
       escp2_base_separation(v);
 
-  pd->printing_initial_vertical_offset = 0;
+  pd->printing_initial_vertical_offset = escp2_printing_initial_vertical_offset(v) *
+      pd->page_management_units / escp2_base_separation(v);
+
   pd->bitwidth = escp2_bits(v);
 }
 

@@ -301,6 +301,8 @@ load_model_from_file(const stp_vars_t *v, const char *filename, int depth)
 		p->initial_vertical_offset = stp_xmlstrtoul(val);
 	      else if (!strcmp(name, "blackInitialVerticalOffset"))
 		p->black_initial_vertical_offset = stp_xmlstrtoul(val);
+	      else if (!strcmp(name, "printingInitialVerticalOffset"))
+		p->printing_initial_vertical_offset = stp_xmlstrtoul(val);
 	      else if (!strcmp(name, "extra720DPISeparation"))
 		p->extra_720dpi_separation = stp_xmlstrtoul(val);
 	      else if (!strcmp(name, "minHorizontalAlignment"))

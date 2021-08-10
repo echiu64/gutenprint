@@ -367,6 +367,7 @@ typedef struct escp2_printer
   short		micro_left_margin; /* Precise left margin (base separation) */
   short		initial_vertical_offset;
   short		black_initial_vertical_offset;
+  short		printing_initial_vertical_offset;
   short		extra_720dpi_separation;
   short		min_horizontal_position_alignment; /* Horizontal alignment */
 					       /* for good performance */
