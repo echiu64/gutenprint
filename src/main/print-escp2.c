@@ -3748,6 +3748,7 @@ setup_basic(stp_vars_t *v)
   pd->command_set = stpi_escp2_get_cap(v, MODEL_COMMAND);
   pd->variable_dots = stpi_escp2_has_cap(v, MODEL_VARIABLE_DOT, MODEL_VARIABLE_YES);
   pd->has_graymode = stpi_escp2_has_cap(v, MODEL_GRAYMODE, MODEL_GRAYMODE_YES);
+  pd->roll_only = stpi_escp2_has_cap(v, MODEL_ROLL_ONLY, MODEL_ROLL_ONLY_YES);
   pd->preinit_sequence = escp2_preinit_sequence(v);
   pd->preinit_remote_sequence = escp2_preinit_remote_sequence(v);
   pd->deinit_remote_sequence = escp2_postinit_remote_sequence(v);

@@ -149,6 +149,7 @@ print_debug_params(stp_vars_t *v)
   print_remote_int_param(v, "Bits", pd->bitwidth);
   print_remote_int_param(v, "Drop Size", pd->drop_size);
   print_remote_int_param(v, "Initial_vertical_offset", pd->initial_vertical_offset);
+  print_remote_int_param(v, "Printing_initial_vertical_offset", pd->printing_initial_vertical_offset);
   print_remote_int_param(v, "Channels_in_use", pd->channels_in_use);
   print_remote_int_param(v, "Logical_channels", pd->logical_channels);
   print_remote_int_param(v, "Physical_channels", pd->physical_channels);
@@ -406,11 +407,28 @@ escp2_set_dot_size(stp_vars_t *v)
 }
 
 static void
+escp2_set_cutter(stp_vars_t *v)
+{
+  escp2_privdata_t *pd = get_privdata(v);
+
+  if (pd->roll_only)
+  {
+    int l = pd->page_true_height * 2880 / 72;
+    /* always 2880, independent of configured resolutions */
+
+    stp_send_command(v, "\033(g", "bl", l);
+  }
+}
+
+static void
 escp2_set_page_height(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
   int l = (pd->page_true_height + pd->paper_extra_bottom) *
     pd->page_management_units / 72;
+
+  if (pd->roll_only) return;
+
   if (pd->use_extended_commands)
     stp_send_command(v, "\033(C", "bl", l);
   else
@@ -423,6 +441,8 @@ escp2_set_margins(stp_vars_t *v)
   escp2_privdata_t *pd = get_privdata(v);
   int bot = pd->page_management_units * pd->page_bottom / 72;
   int top = pd->page_management_units * pd->page_top / 72;
+
+  if (pd->roll_only) return;
 
   top += pd->initial_vertical_offset;
   top -= pd->page_extra_height;
@@ -623,6 +643,7 @@ stpi_escp2_init_printer(stp_vars_t *v)
   escp2_set_printer_weave(v);
   escp2_set_printhead_speed(v);
   escp2_set_dot_size(v);
+  escp2_set_cutter(v);
   escp2_set_printhead_resolution(v);
   escp2_set_page_height(v);
   escp2_set_margins(v);

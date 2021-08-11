@@ -650,7 +650,23 @@
         </listitem>
       </varlistentry>
       <varlistentry>
-        <term><literal>ESC (R <varname>BC</varname>=8 00 R E M O T E
+        <term><literal>ESC (g <varname>BC</varname>=4
+            <varname>CUTPOS</varname></literal></term>
+        <listitem>
+          <para>
+            Only seen on roll-only printers like the SureLab D700, this
+	    tells the printer where to actuate the cutter, eject the
+	    page, and cease printing.
+          </para>
+          <para>
+            <varname>CUTPOS</varname> The row number at which to actuate
+	    the cutter.  It is resolution-indepenent, specified in
+	    1/2880 in. units.
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><literal>ESC (g <varname>BC</varname>=8 00 R E M O T E
             1</literal></term>
         <listitem>
           <para>

@@ -48,6 +48,7 @@ static const escp2_printer_attr_t escp2_printer_attrs[] =
   { "packet_mode",             12, 1 },
   { "interchangeable_ink",     13, 1 },
   { "envelope_landscape",      14, 1 },
+  { "roll_only",               15, 1 },
 };
 
 static stpi_escp2_printer_t *escp2_model_capabilities;
@@ -393,6 +394,8 @@ load_model_from_file(const stp_vars_t *v, const char *filename, int depth)
 		p->flags |= MODEL_PACKET_MODE_YES;
 	      else if (!strcmp(name, "hasInterchangeableInkCartridges"))
 		p->flags |= MODEL_INTERCHANGEABLE_INK_YES;
+	      else if (!strcmp(name, "rollOnly"))
+		p->flags |= MODEL_ROLL_ONLY_YES;
 	      else if (!strcmp(name, "resolutions"))
 		stpi_escp2_load_resolutions(v, filename, tmp);
 	    }

@@ -304,6 +304,10 @@ typedef struct
 #define MODEL_ENVELOPE_LANDSCAPE_NO	0x0000ul
 #define MODEL_ENVELOPE_LANDSCAPE_YES	0x4000ul
 
+#define MODEL_ROLL_ONLY_MASK		0x8000ul /* Only supports roll-feed */
+#define MODEL_ROLL_ONLY_NO		0x0000ul
+#define MODEL_ROLL_ONLY_YES		0x8000ul
+
 typedef enum
 {
   MODEL_COMMAND,
@@ -316,6 +320,7 @@ typedef enum
   MODEL_PACKET_MODE,
   MODEL_INTERCHANGEABLE_INK,
   MODEL_ENVELOPE_LANDSCAPE,
+  MODEL_ROLL_ONLY,
   MODEL_LIMIT
 } escp2_model_option_t;
 
@@ -544,6 +549,7 @@ typedef struct
   model_featureset_t command_set; /* Which command set this printer supports */
   int variable_dots;		/* Print supports variable dot sizes */
   int has_graymode;		/* Printer supports fast grayscale mode */
+  int roll_only;		/* Printer only supports roll-fed media */
   int base_separation;		/* Basic unit of separation */
   int resolution_scale;		/* Scale factor for ESC(D command */
   int separation_rows;		/* Row separation scaling */
