@@ -6919,6 +6919,7 @@ static void shinko_chcs9045_printer_init(stp_vars_t *v)
 static const dyesub_pagesize_t shinko_chcs2145_page[] =
 {
   DEFINE_PAPER_SIMPLE( "w144h432", "2x6", PT1(634,300), PT1(1844,300),	DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w262h414", "4x6 sticker", PT1(1094,300), PT1(1728,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER_SIMPLE( "w288h432", "4x6", PT1(1240,300), PT1(1844,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER_SIMPLE( "w288h432-div2",	"2x6*2", PT1(1240,300), PT1(1844,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER_SIMPLE( "B7", "3.5x5", PT1(1088,300), PT1(1548,300), DYESUB_LANDSCAPE),
@@ -6933,6 +6934,7 @@ LIST(dyesub_pagesize_list_t, shinko_chcs2145_page_list, dyesub_pagesize_t, shink
 static const dyesub_printsize_t shinko_chcs2145_printsize[] =
 {
   { "300x300", "w144h432", 634, 1844},
+  { "300x300", "w262h414", 1094, 1728},
   { "300x300", "w288h432", 1240, 1844},
   { "300x300", "w288h432-div2", 1240, 1844},
   { "300x300", "B7", 1088, 1548},
