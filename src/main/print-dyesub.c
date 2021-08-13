@@ -1561,7 +1561,7 @@ static void upcr10_printer_init_func(stp_vars_t *v)
   stp_put32_le(pd->w_size * pd->h_size * 3, v);
 }
 
-static void upcr10_printer_end_func(stp_vars_t *v)
+static void upcr1_cx10_printer_end_func(stp_vars_t *v, int overcoat, int code2)
 {
   dyesub_privdata_t *pd = get_privdata(v);
 
@@ -1570,8 +1570,12 @@ static void upcr10_printer_end_func(stp_vars_t *v)
 	      "\x1b\xe5\x00\x00\x00\x08\x00\x00"
 	      "\x00\x00\x00\x00\x00\x00\x00", 1, 23, v);
   stp_zfwrite("\x12\x00\x00\x00\x1b\xe1\x00\x00"
-	      "\x00\x0b\x00\x00\x80\x00\x00\x00"
-	      "\x00\x00", 1, 18, v);
+	      "\x00\x0b\x00\x00\x80", 1, 13, v);
+
+  stp_putc(overcoat, v);
+  dyesub_nputc(v, 0x00, 2);
+  stp_putc(code2, v);
+  stp_putc(0, v);
   stp_put16_be(pd->w_size, v);
   stp_put16_be(pd->h_size, v);
   stp_zfwrite("\xfa\xff\xff\xff"
@@ -1585,6 +1589,26 @@ static void upcr10_printer_end_func(stp_vars_t *v)
 	      "\x07\x00\x00\x00"
 	      "\x1b\x17\x00\x00\x00\x00\x00", 1, 19, v);
   stp_zfwrite("\xf7\xff\xff\xff", 1, 4, v);
+}
+
+static void upcr10_printer_end_func(stp_vars_t *v)
+{
+  upcr1_cx10_printer_end_func(v, 0, 0);
+}
+
+/* UP-CX1 */
+static const overcoat_t upcx1_overcoat[] =
+{
+  {"Glossy",  N_("Glossy"),  {1, "\x00"}},
+  {"Matte",   N_("Matte"),   {1, "\x0c"}},
+};
+LIST(overcoat_list_t, upcx1_overcoat_list, overcoat_t, upcx1_overcoat);
+
+static void upcx1_printer_end_func(stp_vars_t *v)
+{
+  dyesub_privdata_t *pd = get_privdata(v);
+
+  upcr1_cx10_printer_end_func(v, *(const char*)((pd->overcoat->seq).data), 6);
 }
 
 /* Sony UP-D895/897MD */
@@ -10356,6 +10380,22 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
+  { /* Sony UP-CX1 */
+    2011,
+    &rgb_ink_list,
+    &res_300dpi_list,
+    &upcr10_page_list,
+    &upcr10_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    &upcr10_printer_init_func, &upcx1_printer_end_func,
+    NULL, NULL,
+    NULL, NULL,
+    &upcx1_overcoat_list, NULL,
+    NULL, NULL,
+    NULL, 0, NULL, NULL,
+  },
+
   { /* Fujifilm Printpix CX-400  */
     3000,
     &rgb_ink_list,
