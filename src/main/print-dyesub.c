@@ -1528,7 +1528,7 @@ static const dyesub_printsize_t upcr10_printsize[] =
 
 LIST(dyesub_printsize_list_t, upcr10_printsize_list, dyesub_printsize_t, upcr10_printsize);
 
-static void upcr10_printer_init_func(stp_vars_t *v)
+static void upcr10_cx1_printer_init_func(stp_vars_t *v, int cx1)
 {
   dyesub_privdata_t *pd = get_privdata(v);
 
@@ -1537,6 +1537,8 @@ static void upcr10_printer_init_func(stp_vars_t *v)
   stp_zfwrite("\x60\xff\xff\xff"
 	      "\xf8\xff\xff\xff", 1, 8, v);
 
+  if (cx1)
+    stp_zfwrite("\xf0\xff\xff\xff", 1, 4, v);
   if (strcmp(pd->pagesize,"B7") == 0)
     pg = '\xff';
   else if (strcmp(pd->pagesize,"w288h432") == 0)
@@ -1544,7 +1546,7 @@ static void upcr10_printer_init_func(stp_vars_t *v)
   else if (strcmp(pd->pagesize,"w360h504") == 0)
     pg = '\xfd';
   else if (strcmp(pd->pagesize,"w288h576") == 0)
-    pg = '\xfd';
+    pg = '\xf1';
 
   stp_putc(pg, v);
   stp_zfwrite("\xff\xff\xff"
@@ -1561,7 +1563,7 @@ static void upcr10_printer_init_func(stp_vars_t *v)
   stp_put32_le(pd->w_size * pd->h_size * 3, v);
 }
 
-static void upcr1_cx10_printer_end_func(stp_vars_t *v, int overcoat, int code2)
+static void upcr10_cx1_printer_end_func(stp_vars_t *v, int overcoat, int code2)
 {
   dyesub_privdata_t *pd = get_privdata(v);
 
@@ -1591,9 +1593,14 @@ static void upcr1_cx10_printer_end_func(stp_vars_t *v, int overcoat, int code2)
   stp_zfwrite("\xf7\xff\xff\xff", 1, 4, v);
 }
 
+static void upcr10_printer_init_func(stp_vars_t *v)
+{
+  upcr10_cx1_printer_init_func(v, 0);
+}
+
 static void upcr10_printer_end_func(stp_vars_t *v)
 {
-  upcr1_cx10_printer_end_func(v, 0, 0);
+  upcr10_cx1_printer_end_func(v, 0, 0);
 }
 
 /* UP-CX1 */
@@ -1608,7 +1615,11 @@ static void upcx1_printer_end_func(stp_vars_t *v)
 {
   dyesub_privdata_t *pd = get_privdata(v);
 
-  upcr1_cx10_printer_end_func(v, *(const char*)((pd->overcoat->seq).data), 6);
+  upcr10_cx1_printer_end_func(v, *(const char*)((pd->overcoat->seq).data), 6);
+}
+static void upcx1_printer_init_func(stp_vars_t *v)
+{
+  upcr10_cx1_printer_init_func(v, 1);
 }
 
 /* Sony UP-D895/897MD */
@@ -10388,14 +10399,13 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &upcr10_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
-    &upcr10_printer_init_func, &upcx1_printer_end_func,
+    &upcx1_printer_init_func, &upcx1_printer_end_func,
     NULL, NULL,
     NULL, NULL,
     &upcx1_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
   },
-
   { /* Fujifilm Printpix CX-400  */
     3000,
     &rgb_ink_list,
