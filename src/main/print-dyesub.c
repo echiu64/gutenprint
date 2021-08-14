@@ -1507,23 +1507,22 @@ static void updr200_printer_init_func(stp_vars_t *v)
 }
 
 /* Sony UP-CR10L / DNP SL10 */
-/* Note:  This printer reverses the traditional X and Y axes. */
 static const dyesub_pagesize_t upcr10_page[] =
 {
-  DEFINE_PAPER_SIMPLE( "w288h432", "4x6", PT1(1848,300), PT1(1248,300), DYESUB_LANDSCAPE),
-  DEFINE_PAPER_SIMPLE( "B7", "3.5x5", PT1(1536,300), PT1(1100,300), DYESUB_LANDSCAPE),
-  DEFINE_PAPER_SIMPLE( "w360h504", "5x7", PT1(1536,300), PT1(2148,300), DYESUB_LANDSCAPE),
-  DEFINE_PAPER_SIMPLE( "w288h576", "4x8", PT1(2448,300), PT1(1248,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w288h432", "4x6", PT1(1248,300), PT1(1848,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "B7", "5x3.5", PT1(1536,300), PT1(1100,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w360h504", "5x7", PT1(1536,300), PT1(2148,300), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w288h576", "4x8", PT1(1248,300), PT1(2448,300), DYESUB_PORTRAIT),
 };
 
 LIST(dyesub_pagesize_list_t, upcr10_page_list, dyesub_pagesize_t, upcr10_page);
 
 static const dyesub_printsize_t upcr10_printsize[] =
 {
-  { "300x300", "w288h432", 1848, 1248},
+  { "300x300", "w288h432", 1248, 1848},
   { "300x300", "B7", 1536, 1100},
   { "300x300", "w360h504", 1536, 2148},
-  { "300x300", "w288h576", 2448, 1248},
+  { "300x300", "w288h576", 1248, 2448},
 };
 
 LIST(dyesub_printsize_list_t, upcr10_printsize_list, dyesub_printsize_t, upcr10_printsize);
