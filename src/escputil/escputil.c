@@ -1131,8 +1131,17 @@ print_status(int param)
     case 8:
       printf(_("Status: Factory shipment\n"));
       break;
+    case 9:
+      printf(_("Status: Sleeping\n")); /* Lower power mode */
+      break;
     case 0xa:
       printf(_("Status: Shutting down\n"));
+      break;
+    case 0xc:
+      printf(_("Status: Initializing paper\n"));
+      break;
+    case 0xf:
+      printf(_("Status: Initializing ink\n"));
       break;
     default:
       printf(_("Status: Unknown (%d)\n"), param);
@@ -1204,6 +1213,9 @@ print_error(int param)
       break;
     case 0x37:
       printf(_("Error: Front cover open\n"));
+      break;
+    case 0x40:
+      printf(_("Error: Strip bin missing\n"));
       break;
     case 0x41:
       printf(_("Error: Maintenance request\n"));
