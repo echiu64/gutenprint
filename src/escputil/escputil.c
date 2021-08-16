@@ -1682,7 +1682,9 @@ do_extended_ink_info_1(const stp_printer_t *printer)
 	  CloseChannel(fd, socket_id);
 	  exit(1);
 	}
-      ind = strchr(buf, 'I');
+      ind = strchr(buf, 'i');
+      if (!ind)
+        ind = strchr(buf, 'I');
       if (!ind)
 	{
 	  STP_DEBUG(printf("***Case 0: failure %i (%s)\n", i, buf));
@@ -1795,6 +1797,9 @@ do_extended_ink_info_1(const stp_printer_t *printer)
 	}
       else if (sscanf(ind,
 		      "II:%*2s;IQT:%x;PDY:%x;PDM:%x;STY:%*2s;STM:%*2s;STD:%*2s;EDY:%*2s;EDM:%*2s;EDD:%*2s;IC1:%x;IC2:%*4s;IK:%*4s;TOV:%*x;TVU:%*x;VIQ:%*4x;UIQ:%*4x;ERC:%*x;SID:%*x;LOG:EPSON   ;",
+		      &val, &year, &month, &id ) == 4 ||
+	       sscanf(ind,
+		      "ii:%*2s;IQT:%x;PDY:%x;PDM:%x;STY:%*2s;STM:%*2s;STD:%*2s;EDY:%*2s;EDM:%*2s;EDD:%*2s;IC1:%x;IC2:%*4s;IK:%*4s;TOV:%*x;TOU:%*x;TVU:%*x;VIQ:%*4x;UIQ:%*4x;ERC:%*x;SID:%*x;LOG:EPSON   ;",
 		      &val, &year, &month, &id ) == 4)
 	{
 	  STP_DEBUG(printf("***Case 5: i %i val %ud year %ud mo %ud id %ud\n",
