@@ -1613,12 +1613,14 @@ get_ink_channel_list(const stp_printer_t *printer, int fd)
       buf[status] = '\0';
       if ( buf[7] == '2' )
 	{
+	  int param;
 	  STP_DEBUG(printf("***New format ink!\n"));
 	  /* new binary format ! */
 	  i = 10;
 	  while (buf[i] != 0x0f && i < status)
 	    i += buf[i + 1] + 2;
 	  ind = buf + i;
+	  param = buf[i + 2];
 	  i = 3;
 	  while (i < ind[1])
 	    {
@@ -1644,7 +1646,7 @@ get_ink_channel_list(const stp_printer_t *printer, int fd)
 		  stp_string_list_add_string_unsafe(color_list, "Unknown",
 						    "Unknown");
 		}
-	      i+=3;
+	      i+=param;
 	    }
 	}
       STP_DEBUG(printf("***Using color list from status message\n"));
