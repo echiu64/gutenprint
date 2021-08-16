@@ -1030,7 +1030,7 @@ sizeof(int_parameters) / sizeof(const int_param_t);
 
 
 static escp2_privdata_t *
-get_privdata(stp_vars_t *v)
+get_privdata(const stp_vars_t *v)
 {
   return (escp2_privdata_t *) stp_get_component_data(v, "Driver");
 }
