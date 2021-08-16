@@ -43,8 +43,8 @@ struct sony_updsts {
 	uint8_t  sts1;     /* UPD_STS1_* */
 	uint8_t  sts2;     /* UPD_STS2_* */
 	uint8_t  sts3;     /* UPD_STS3_* */
-	uint8_t  ribbon;   /* 0x04 = R206/6x8 */
-	uint8_t  paper;    /* 0x38 = EMPTY, 0xa8 = loaded */
+	uint8_t  ribbon;   /* 0x04 = R206/6x8 or C48/4x8 */
+	uint8_t  paper;    /* 0x38 = EMPTY, 0xa8/0x90 = loaded */
 	uint16_t max_cols; /* BE */
 	uint16_t max_rows; /* BE */
 	uint8_t  percent;  /* 0-99, if job is printing (UP-D89x) */
@@ -75,6 +75,7 @@ struct sony_prints {
 #define UPD_STS1_PRINTING2 0xC0
 
 #define UPD_RIBBON_R206    0x04
+#define UPD_RIBBON_C48     0x04
 
 /* Private data structures */
 struct upd_printjob {
@@ -104,11 +105,13 @@ static const char *upd_ribbons(int type, uint8_t code)
 {
 	if (type == P_SONY_UPD895 || type == P_SONY_UPD897) {
 		return "UP-110 Roll";
-	}
-
-	/* CR10L/DR200/DR150 */
-	if (code == UPD_RIBBON_R206) {
-		return "R206 (8x6)";
+	} else if (type == P_SONY_UPCR10) {
+		if (code == UPD_RIBBON_C48)
+			return "2UPC-C48 (4x8)";
+	} else if (type == P_SONY_UPDR150) {
+		/* DR200/DR150 */
+		if (code == UPD_RIBBON_R206)
+			return "R206 (8x6)";
 	}
 
 	return "Unknown";
@@ -124,7 +127,9 @@ static int sonyupd_media_maxes(uint8_t type, uint8_t media)
 
 		// XXX also differs for DR200 vs DR150?
 	} else if (type == P_SONY_UPCR10) {
-		return 300;
+		if (media == UPD_RIBBON_C48)
+			return 150;
+		return 200; // XXX guess until we have more codes.
 	}
 	return CUPS_MARKER_UNAVAILABLE;
 }
@@ -143,9 +148,10 @@ static int sonyupd_media_maxes(uint8_t type, uint8_t media)
 
 // UP-CR10L & UP-CX1
 
-// 2UPC-C13          (300)
+// 2UPC-C13          (344)
 // 2UPC-C14          (200)
 // 2UPC-C15          (172)
+// 2UPC-C48          (150)
 
 // print order:  ->YMCO->
 // current prints (power on)
@@ -717,7 +723,11 @@ static int upd_query_markers(void *vctx, struct marker **markers, int *count)
 			ctx->marker.levelnow = ctx->printbuf.remain;
 		}
 	} else {
-		ctx->marker.levelnow = CUPS_MARKER_UNKNOWN_OK;
+		if (ctx->conn->type == P_SONY_UPD895 || ctx->conn->type == P_SONY_UPD897) {
+			ctx->marker.levelnow = CUPS_MARKER_UNKNOWN_OK;
+		} else {
+			ctx->marker.levelnow = ctx->printbuf.remain;
+		}
 	}
 
 	return CUPS_BACKEND_OK;
@@ -733,7 +743,7 @@ static const char *sonyupd_prefixes[] = {
 
 const struct dyesub_backend sonyupd_backend = {
 	.name = "Sony UP-D",
-	.version = "0.44",
+	.version = "0.45",
 	.uri_prefixes = sonyupd_prefixes,
 	.cmdline_arg = upd_cmdline_arg,
 	.cmdline_usage = upd_cmdline,
