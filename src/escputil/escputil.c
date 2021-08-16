@@ -1140,6 +1140,9 @@ print_status(int param)
     case 0xc:
       printf(_("Status: Initializing paper\n"));
       break;
+    case 0xd:
+      printf(_("Status: Black ink switching\n"));
+      break;
     case 0xf:
       printf(_("Status: Initializing ink\n"));
       break;
@@ -1172,6 +1175,9 @@ print_error(int param)
     case 6:
       printf(_("Error: Paper out\n"));
       break;
+    case 0xb:
+      printf(_("Error: Double feed\n"));
+      break;
     case 0xc:
       printf(_("Error: Miscellaneous paper error\n"));
       break;
@@ -1183,6 +1189,9 @@ print_error(int param)
       break;
     case 0x12:
       printf(_("Error: Double feed error\n"));
+      break;
+    case 0x16:
+      printf(_("Error: Cleaning impossible\n"));
       break;
     case 0x1a:
       printf(_("Error: Ink cartridge lever released\n\n"));
@@ -1207,6 +1216,12 @@ print_error(int param)
       break;
     case 0x2b:
       printf(_("Error: Tray cover open\n"));
+      break;
+    case 0x2d:
+      printf(_("Error: No maintenance box\n"));
+      break;
+    case 0x2e:
+      printf(_("Error: Maintenance box overflow\n"));
       break;
     case 0x36:
       printf(_("Error: Maintenance cartridge cover open\n"));
