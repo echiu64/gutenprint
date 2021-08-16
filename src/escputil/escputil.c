@@ -1478,6 +1478,12 @@ do_new_status(status_cmd_t cmd, char *buf, int bytes,
 		  putchar('\n');
 		}
 	      break;
+	    case 0x1f:	/* Serial number */
+	      printf(_("Serial Number: "));
+	      for (j = 0; j < total_param_count; j++)
+		 putchar(buf[i + j + 2]);
+	      putchar('\n');
+	      break;
 	    default:
 	      /* Ignore other commands */
 	      break;
