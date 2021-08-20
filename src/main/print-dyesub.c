@@ -3567,8 +3567,16 @@ static void kodak_70xx_printer_init(stp_vars_t *v)
 	  stp_putc(0x0e, v);
   else if (!strcmp(pd->pagesize,"w432h576"))
 	  stp_putc(0x03, v);
+  else if (!strcmp(pd->pagesize,"w360h540"))
+	  stp_putc(0x09, v);
   else if (!strcmp(pd->pagesize,"w360h504"))
 	  stp_putc(0x06, v);
+  else if (!strcmp(pd->pagesize,"w360h360"))
+	  stp_putc(0x08, v);
+  else if (!strcmp(pd->pagesize,"w288h360"))
+	  stp_putc(0x07, v);
+  else if (!strcmp(pd->pagesize,"B7"))
+	  stp_putc(0x0d, v);
   else
 	  stp_putc(0x01, v);
 
@@ -3580,14 +3588,22 @@ static void kodak_70xx_printer_init(stp_vars_t *v)
 /* Kodak 7015 */
 static const dyesub_pagesize_t kodak_7015_page[] =
 {
-  DEFINE_PAPER_SIMPLE( "w360h504", "5x7", PT1(1548,300), PT1(2140,300), DYESUB_PORTRAIT), /* 5x7 */
+  DEFINE_PAPER_SIMPLE( "B7", "3.5x5", PT1(1086,300), PT1(1548,300), DYESUB_LANDSCAPE),      /* 3.5x5 */
+  DEFINE_PAPER_SIMPLE( "w288h360", "4x5", PT1(1240,300), PT1(1548,300), DYESUB_LANDSCAPE),  /* 4x5 */
+  DEFINE_PAPER_SIMPLE( "w360h360", "5x5", PT1(1536,300), PT1(1548,300), DYESUB_LANDSCAPE),  /* 5x5 */
+  DEFINE_PAPER_SIMPLE( "w360h504", "5x7", PT1(1548,300), PT1(2140,300), DYESUB_PORTRAIT),   /* 5x7 */
+  DEFINE_PAPER_SIMPLE( "w360h540", "5x7.5", PT1(1548,300), PT1(2288,300), DYESUB_PORTRAIT), /* 5x7.6 */
 };
 
 LIST(dyesub_pagesize_list_t, kodak_7015_page_list, dyesub_pagesize_t, kodak_7015_page);
 
 static const dyesub_printsize_t kodak_7015_printsize[] =
 {
+  { "300x300", "B7", 1086, 1548},
+  { "300x300", "w288h360", 1240, 1548},
+  { "300x300", "w360h360", 1536, 1548},
   { "300x300", "w360h504", 1548, 2140},
+  { "300x300", "w360h540", 1548, 2288},
 };
 
 LIST(dyesub_printsize_list_t, kodak_7015_printsize_list, dyesub_printsize_t, kodak_7015_printsize);
