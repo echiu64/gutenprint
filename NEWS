@@ -97,7 +97,7 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      versions can continue using the old gamma behaviour, by setting the
      "StpLegacyDyesubGamma" option to "true"
 
-  3) Support for the following dye sublimation printers has been added:
+  3) Support for the following dye sublimation & thermal printers has been added:
 
      Citizen CX-02W
      Citizen CZ-01
@@ -113,6 +113,8 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      Mitsubishi CP-D70DW-S
      Mitsubishi CP-M1 & CP-M15 series
      Sony UP-CX1
+     Sony UP-971AD
+     Sony UP-991AD (EXPERIMENTAL)
      Stryker SDP1000
 
   4) The following printers have received siginificant bugfixes or

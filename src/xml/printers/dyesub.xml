@@ -206,6 +206,8 @@
       <printer translate="name" name="Sony UP-D897" deviceid="MFG:SONY;MDL:UP-D897;DES:Sony UP-D897;CMD:SONY-Original;CLS:PRINTER" driver="sony-upd897" manufacturer="Sony" model="2007" />
       <printer translate="name" name="Sony UP-D898" driver="sony-upd898" manufacturer="Sony" model="2008" />
       <printer translate="name" name="Sony UP-D898MD" deviceid="MFG:Sony;MDL:UP-D898MD_X898MD;DES:Sony UP-D898MD_X898MD;CMD:SPJL-DS,SPDL-DS2;CLS:PRINTER;" driver="sony-upd898md" manufacturer="Sony" model="2008" />
+      <printer translate="name" name="Sony UP-971AD" deviceid="MFG:Sony;MDL:UP-991AD_971AD;DES:Sony UP-991AD_971AD;CMD:SPJL-DS,SPDL-DS2;CLS:PRINTER;" driver="sony-up971ad" manufacturer="Sony" model="2012" />
+      <printer translate="name" name="Sony UP-991AD" deviceid="MFG:Sony;MDL:UP-991AD_971AD;DES:Sony UP-991AD_971AD;CMD:SPJL-DS,SPDL-DS2;CLS:PRINTER" driver="sony-up991ad" manufacturer="Sony" model="2012">EXPERIMENTAL</printer>
       <printer translate="name" name="Sony UP-CR20L" driver="sony-upcr20l" manufacturer="Sony" model="2009">EXPERIMENTAL</printer>
       <printer translate="name" name="Sony UP-DR80MD" deviceid="MFG:SONY;MDL:UP-DR80MD;DES:Sony UP-DR80MD;CMD:SPJL-DS,SPDL-DS;CLS:PRINTER;" driver="sony-updr80md" manufacturer="Sony" model="2010" />
       <printer translate="name" name="Stryker SDP1000" deviceid="MFG:Stryker;MDL:SDP1000;DES:Stryker SDP1000;CMD:SPJL-DS,SPDL-DS2;CLS:PRINTER;" driver="stryker-sdp1000" manufacturer="Stryker" model="2010" />

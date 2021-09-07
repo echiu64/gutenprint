@@ -208,11 +208,11 @@ typedef struct
 {
   int gamma;
   int unk_gg;
-  /* below are up-d897 only */
   int dark;
   int light;
   int advance;
   int sharp;
+  int tone;
 } sonymd_privdata_t;
 
 typedef struct
@@ -2047,7 +2047,108 @@ static const dyesub_printsize_t sony_d898_printsize[] =
 
 LIST(dyesub_printsize_list_t, sony_d898_printsize_list, dyesub_printsize_t, sony_d898_printsize);
 
-static void sony_upd898_printer_init_func(stp_vars_t *v)
+static const stp_parameter_t sony_upd898_parameters[] =
+{
+  {
+    "SonyGamma", N_("Printer Gamma Correction"), "Color=No,Category=Advanced Printer Setup",
+    N_("Printer Gamma Correction"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "Sharpen", N_("Image Sharpening"), "Color=No,Category=Advanced Printer Setup",
+    N_("Sharpening to apply to image (0 is off, 14 is max"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "Tone", N_("Tone Curve"), "Color=No,Category=Advanced Printer Setup",
+    N_("Tone curve adjustment to apply to image (-32..+32, 0 is off)"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+};
+#define sony_upd898_parameter_count (sizeof(sony_upd898_parameters) / sizeof(const stp_parameter_t))
+
+static int
+sony_upd898_load_parameters(const stp_vars_t *v, const char *name,
+			    stp_parameter_t *description)
+{
+  int	i;
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(v,
+		  				stp_get_model_id(v));
+
+  if (caps->parameter_count && caps->parameters)
+    {
+      for (i = 0; i < caps->parameter_count; i++)
+        if (strcmp(name, caps->parameters[i].name) == 0)
+          {
+	    stp_fill_parameter_settings(description, &(caps->parameters[i]));
+	    break;
+          }
+    }
+
+    if (strcmp(name, "SonyGamma") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+
+      const dyesub_stringlist_t *mlist = &sony_upd895_gamma_list;
+      for (i = 0; i < mlist->n_items; i++)
+        {
+	  const dyesub_stringitem_t *m = &(mlist->item[i]);
+	  stp_string_list_add_string(description->bounds.str,
+				       m->name, m->text); /* Do *not* want this translated, otherwise use gettext(m->text) */
+	}
+      description->deflt.str = stp_string_list_param(description->bounds.str, 2)->name;
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "Sharpen") == 0)
+    {
+      description->deflt.integer = 2;
+      description->bounds.integer.lower = 0;
+      description->bounds.integer.upper = 14;
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "Tone") == 0)
+    {
+      description->deflt.integer = 0;
+      description->bounds.integer.lower = -32;
+      description->bounds.integer.upper = 32;
+      description->is_active = 1;
+    }
+  else
+   {
+     return 0;
+   }
+  return 1;
+}
+
+static int sony_upd898_parse_parameters(stp_vars_t *v)
+{
+  dyesub_privdata_t *pd = get_privdata(v);
+  const char *gamma = stp_get_string_parameter(v, "SonyGamma");
+
+  /* No need to set global params if there's no privdata yet */
+  if (!pd)
+    return 1;
+
+  pd->privdata.sonymd.sharp = stp_get_int_parameter(v, "Sharpen");
+  pd->privdata.sonymd.tone = stp_get_int_parameter(v, "Tone");
+
+  if (!strcmp(gamma, "Hard")) {
+    pd->privdata.sonymd.gamma = 0x03;
+  } else if (!strcmp(gamma, "Normal")) {
+    pd->privdata.sonymd.gamma = 0x02;
+  } else if (!strcmp(gamma, "Soft")) {
+    pd->privdata.sonymd.gamma = 0x01;
+  } else {
+    pd->privdata.sonymd.gamma = 0x00;
+  }
+
+  return 1;
+}
+
+static void sony_updneo_mono_init_func(stp_vars_t *v, unsigned short magic1, unsigned short magic2)
 {
   char hdrbuf[256];
   char buf[256];
@@ -2092,10 +2193,10 @@ static void sony_upd898_printer_init_func(stp_vars_t *v)
   stp_putc(0x0f, v);
   stp_putc(0x00, v);
   stp_putc(0x1c, v);
-  dyesub_nputc(v, 0, 7);
-
-  dyesub_nputc(v, 0, 7);
-  stp_putc(0x01, v);
+  dyesub_nputc(v, 0, 11);
+  stp_putc(pd->privdata.sonymd.sharp, v);
+  stp_put16_be(pd->privdata.sonymd.tone, v);
+  stp_putc(pd->privdata.sonymd.gamma, v);
   stp_putc(0x02, v);
   stp_putc(0x00, v);
   stp_putc(0x09, v);
@@ -2110,19 +2211,17 @@ static void sony_upd898_printer_init_func(stp_vars_t *v)
   stp_putc(0x00, v);
   stp_putc(0x1a, v);
   dyesub_nputc(v, 0, 4);
-  stp_put16_be(pd->w_size, v);  // fixed at 0x500/1280
+  stp_put16_be(pd->w_size, v);  // fixed
   stp_put16_be(pd->h_size, v);
   stp_putc(0x09, v);
   stp_putc(0x00, v);
   stp_putc(0x28, v);
   stp_putc(0x01, v);
 
+  stp_put16_be(magic1, v);
   stp_putc(0x00, v);
-  stp_putc(0xd4, v);
   stp_putc(0x00, v);
-  stp_putc(0x00, v);
-  stp_putc(0x03, v);
-  stp_putc(0x58, v);
+  stp_put16_be(magic2, v);
   stp_put16_be(pd->h_size, v); // ie "rows"
   stp_putc(0x00, v);
   stp_putc(0x00, v);
@@ -2139,7 +2238,7 @@ static void sony_upd898_printer_init_func(stp_vars_t *v)
   stp_putc(0x0c, v);
   stp_putc(0x01, v);
   stp_putc(0x09, v);
-  stp_put16_be(pd->w_size, v);  // fixed at 0x500/1280
+  stp_put16_be(pd->w_size, v);  // fixed
   stp_put16_be(pd->h_size, v);
   dyesub_nputc(v, 0, 4);
   stp_putc(0x08, v);
@@ -2149,7 +2248,7 @@ static void sony_upd898_printer_init_func(stp_vars_t *v)
   stp_putc(0x00, v);
   stp_putc(0x19, v);
   dyesub_nputc(v, 0, 4);
-  stp_put16_be(pd->w_size, v);  // fixed at 0x500/1280
+  stp_put16_be(pd->w_size, v);  // fixed
   stp_put16_be(pd->h_size, v);
   stp_putc(0x00, v);
   stp_putc(0x00, v);
@@ -2164,7 +2263,12 @@ static void sony_upd898_printer_init_func(stp_vars_t *v)
   stp_putc(0xc0, v);
   stp_putc(0x00, v);
   stp_putc(0x82, v);
-  stp_put32_be(pd->w_size* pd->h_size, v);
+  stp_put32_be(pd->w_size * pd->h_size, v);
+}
+
+static void sony_upd898_printer_init_func(stp_vars_t *v)
+{
+  sony_updneo_mono_init_func(v, 0x00d4, 0x0358);
 }
 
 static void sony_updneo_printer_end_func(stp_vars_t *v)
@@ -2192,6 +2296,35 @@ static void sony_updneo_printer_end_func(stp_vars_t *v)
 
   /* And finally, the PJL footer */
   stp_zfwrite("@PJL EOJ\r\n\x1b%%-12345X\r\n", 1, 22, v);
+}
+
+/* Sony UP-971AD */
+static const dyesub_pagesize_t sony_up971_page[] =
+{
+  DEFINE_PAPER_SIMPLE( "w426h576", "1920x2560", PT1(1920,325), PT1(2560,325), DYESUB_LANDSCAPE),
+  DEFINE_PAPER_SIMPLE( "w576h576", "2560x2560", PT1(2560,325), PT1(2560,325), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w756h576", "3414x2560", PT1(2560,325), PT1(3414,325), DYESUB_PORTRAIT),
+  DEFINE_PAPER_SIMPLE( "w1701h576", "7680x2560", PT1(2560,325), PT1(7680,325), DYESUB_PORTRAIT),
+  /* A true "custom" size, printer will cut at the image boundary */
+  DEFINE_PAPER_SIMPLE( "Custom", "Custom", PT1(2560,325), -1, DYESUB_PORTRAIT),
+};
+
+LIST(dyesub_pagesize_list_t, sony_up971_page_list, dyesub_pagesize_t, sony_up971_page);
+
+static const dyesub_printsize_t sony_up971_printsize[] =
+{
+  { "325x325", "w426h576", 1920, 2560},
+  { "325x325", "w576h576", 2560, 2560},
+  { "325x325", "w756h576", 2560, 3414},
+  { "325x325", "w1701h576", 2560, 7680},
+  { "325x325", "Custom", 2560, 7680}, /* Maximum */
+};
+
+LIST(dyesub_printsize_list_t, sony_up971_printsize_list, dyesub_printsize_t, sony_up971_printsize);
+
+static void sony_up971_printer_init_func(stp_vars_t *v)
+{
+  sony_updneo_mono_init_func(v, 0x0126, 0x07b3);
 }
 
 /* Sony UP-CR20 family */
@@ -10374,7 +10507,10 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No block funcs */
     NULL, NULL,
     NULL, NULL,
-    NULL, 0, NULL, NULL,
+    sony_upd898_parameters,
+    sony_upd898_parameter_count,
+    sony_upd898_load_parameters,
+    sony_upd898_parse_parameters,
   },
   { /* Sony UP-CR20L */
     2009,
@@ -10420,6 +10556,25 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &upcx1_overcoat_list, NULL,
     NULL, NULL,
     NULL, 0, NULL, NULL,
+  },
+  { /* Sony UP-971AD/UP-991AD */
+    2012,
+    &w_ink_list,
+    &res_325dpi_list,
+    &sony_up971_page_list,
+    &sony_up971_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_MONOCHROME | DYESUB_FEATURE_NATIVECOPIES,
+    &sony_up971_printer_init_func, &sony_updneo_printer_end_func,
+    NULL, NULL,
+    NULL, NULL, /* No block funcs */
+    NULL, NULL,
+    NULL, NULL,
+    sony_upd898_parameters,
+    sony_upd898_parameter_count,
+    sony_upd898_load_parameters,
+    sony_upd898_parse_parameters,
   },
   { /* Fujifilm Printpix CX-400  */
     3000,
