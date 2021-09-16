@@ -662,7 +662,7 @@
       <printer translate="name" name="Epson PX G5600" driver="escp2-pxg5600" manufacturer="Epson" model="98" parameters="standard_params" />
       <printer translate="name" name="Epson PX 7000" driver="escp2-px7000" manufacturer="Epson" model="48" parameters="standard_params" />
       <printer translate="name" name="Epson PX 9000" driver="escp2-px9000" manufacturer="Epson" model="49" parameters="standard_params" />
-      <printer translate="name" name="Fujifilm DX100" deviceid="MFG:FUJIFILM;CMD:ESCPL2,BDC,D4,D4PX;MDL:DX100;CLS:PRINTER;DES:FUJIFILM DX100;RID:02;" driver="fujifilm-dx100" manufacturer="Fujifilm" model="136" parameters="standard_params">EXPERIMENTAL</printer>
+      <printer translate="name" name="Fujifilm DX100" deviceid="MFG:FUJIFILM;CMD:ESCPL2,BDC,D4,D4PX;MDL:DX100;CLS:PRINTER;DES:FUJIFILM DX100;RID:02;" driver="escp2-fujifilm-dx100" manufacturer="Fujifilm" model="136" parameters="standard_params">EXPERIMENTAL</printer>
     </family>
   </printdef>
 </gutenprint>
