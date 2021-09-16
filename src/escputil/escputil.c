@@ -810,7 +810,8 @@ set_printer_model(void)
 	      (!strncmp(short_name, "escp2-", strlen("escp2-")) &&
 	       !strcasecmp(printer_model, short_name + strlen("escp2-"))) ||
 	      (!strncasecmp(long_name, "Epson ", strlen("Epson ")) &&
-	       !strcasecmp(printer_model, long_name + strlen("Epson "))))
+	       !strcasecmp(printer_model, long_name + strlen("Epson "))) ||	              (!strncasecmp(long_name, "Fujifilm ", strlen("Fujifilm ")) &&
+	       !strcasecmp(printer_model, long_name + strlen("Fujifilm "))))
 	    {
 	      const stp_vars_t *printvars;
 	      stp_parameter_t desc;
