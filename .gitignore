@@ -121,6 +121,7 @@ scripts/wzpaq
 scripts/ylwrap
 src/cups/backend_gutenprint
 src/cups/commandtocanon
+src/cups/commandtodyesub
 src/cups/commandtoepson
 src/cups/cups-calibrate
 src/cups/cups-genppd.5.*

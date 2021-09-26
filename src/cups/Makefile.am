@@ -82,7 +82,7 @@ if BUILD_CUPS
 bin_PROGRAMS = cups-calibrate
 sbin_PROGRAMS = cups-genppd.@GUTENPRINT_RELEASE_VERSION@
 sbin_SCRIPTS = cups-genppdupdate
-cupsexec_filter_PROGRAMS = rastertogutenprint.@GUTENPRINT_RELEASE_VERSION@ commandtoepson commandtocanon
+cupsexec_filter_PROGRAMS = rastertogutenprint.@GUTENPRINT_RELEASE_VERSION@ commandtoepson commandtocanon commandtodyesub
 
 if BUILD_LIBUSB_BACKENDS
 cupsexec_backend_PROGRAMS = backend_gutenprint

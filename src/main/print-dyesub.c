@@ -61,6 +61,7 @@
 #define DYESUB_FEATURE_DUPLEX            0x00000800
 #define DYESUB_FEATURE_MONOCHROME        0x00001000
 #define DYESUB_FEATURE_NATIVECOPIES      0x00002000
+#define DYESUB_FEATURE_HASBACKEND        0x00004000
 
 #define DYESUB_PORTRAIT  0
 #define DYESUB_LANDSCAPE 1
@@ -10182,7 +10183,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &cp10_printer_init_func, NULL,
     &cpx00_plane_init_func, NULL,
     NULL, NULL,
@@ -10199,7 +10200,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &cpx00_printer_init_func, NULL,
     &cpx00_plane_init_func, NULL,
     NULL, NULL,
@@ -10219,7 +10220,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &cpx00_printer_init_func, NULL,
     &cpx00_plane_init_func, NULL,
     NULL, NULL,
@@ -10236,7 +10237,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &es1_printer_init_func, NULL,
     &es1_plane_init_func, NULL,
     NULL, NULL,
@@ -10253,7 +10254,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &es2_printer_init_func, NULL,
     &es2_plane_init_func, NULL,
     NULL, NULL,
@@ -10270,7 +10271,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &es3_printer_init_func, &es3_printer_end_func,
     &es2_plane_init_func, NULL,
     NULL, NULL,
@@ -10287,7 +10288,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &es40_printer_init_func, &es3_printer_end_func,
     &es2_plane_init_func, NULL,
     NULL, NULL,
@@ -10304,7 +10305,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &cp790_printer_init_func, &es3_printer_end_func,
     &es2_plane_init_func, NULL,
     NULL, NULL,
@@ -10321,7 +10322,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &cpx00_printer_init_func, NULL,
     &cpx00_plane_init_func, NULL,
     NULL, NULL,
@@ -10338,7 +10339,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &cpx00_printer_init_func, &cp900_printer_end_func,
     &cpx00_plane_init_func, NULL,
     NULL, NULL,
@@ -10355,7 +10356,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &cp910_printer_init_func, NULL,
     NULL, NULL,
     NULL, NULL,
@@ -10371,7 +10372,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &updp10_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &updp10_printer_init_func, &updp10_printer_end_func,
     NULL, NULL,
     NULL, NULL,
@@ -10386,7 +10387,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &updr150_page_list,
     &updr150_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &updr150_printer_init_func, &updr150_printer_end_func,
     NULL, NULL,
     NULL, NULL,
@@ -10432,7 +10433,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &updr200_page_list,
     &updr200_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &updr200_printer_init_func, &updr200_printer_end_func,
     NULL, NULL,
     NULL, NULL,
@@ -10447,7 +10448,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &upcr10_page_list,
     &upcr10_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &upcr10_printer_init_func, &upcr10_printer_end_func,
     NULL, NULL,
     NULL, NULL,
@@ -10463,7 +10464,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &sony_d89x_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_MONOCHROME | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_MONOCHROME | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &sony_upd895_printer_init_func, &sony_upd895_printer_end_func,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
@@ -10482,7 +10483,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &sony_d89x_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_MONOCHROME | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_MONOCHROME | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &sony_upd897_printer_init_func, &sony_upd897_printer_end_func,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
@@ -10501,7 +10502,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &sony_d898_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_MONOCHROME | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_MONOCHROME | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &sony_upd898_printer_init_func, &sony_updneo_printer_end_func,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
@@ -10519,7 +10520,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &upcr20_page_list,
     &upcr20_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &sony_upcr20_printer_init_func, &sony_updneo_printer_end_func,
     NULL, NULL,
     NULL, NULL,
@@ -10534,7 +10535,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &updr80md_page_list,
     &updr80md_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &sony_updr80md_printer_init_func, &sony_updneo_printer_end_func,
     NULL, NULL,
     NULL, NULL,
@@ -10549,7 +10550,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &upcr10_page_list,
     &upcr10_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &upcx1_printer_init_func, &upcx1_printer_end_func,
     NULL, NULL,
     NULL, NULL,
@@ -10565,7 +10566,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &sony_up971_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_MONOCHROME | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_MONOCHROME | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &sony_up971_printer_init_func, &sony_updneo_printer_end_func,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
@@ -10646,7 +10647,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak_6800_page_list,
     &kodak_6800_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &kodak_68xx_printer_init, NULL,
     NULL, NULL, /* No plane funcs */
     NULL, NULL, /* No block funcs */
@@ -10661,7 +10662,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak_6850_page_list,
     &kodak_6850_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &kodak_68xx_printer_init, NULL,
     NULL, NULL, /* No plane funcs */
     NULL, NULL, /* No block funcs */
@@ -10676,7 +10677,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak_605_page_list,
     &kodak_605_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &kodak_605_printer_init, NULL,
     NULL, NULL, /* No plane funcs */
     NULL, NULL, /* No block funcs */
@@ -10693,7 +10694,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH
       | DYESUB_FEATURE_WHITE_BORDER
-      | DYESUB_FEATURE_ROW_INTERLACE | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_ROW_INTERLACE | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &kodak_1400_printer_init, NULL,
     NULL, NULL,
     NULL, NULL,
@@ -10710,7 +10711,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH
       | DYESUB_FEATURE_WHITE_BORDER
-      | DYESUB_FEATURE_ROW_INTERLACE | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_ROW_INTERLACE | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &kodak_805_printer_init, NULL,
     NULL, NULL, /* No plane funcs */
     NULL, NULL, /* No block funcs */
@@ -10726,7 +10727,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak_9810_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &kodak_9810_printer_init, &kodak_9810_printer_end,
     &kodak_9810_plane_init, NULL,
     NULL, NULL, /* No block funcs */
@@ -10744,7 +10745,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak_8810_page_list,
     &kodak_8810_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &kodak_8810_printer_init, NULL,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
@@ -10759,7 +10760,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak_7000_page_list,
     &kodak_7000_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &kodak_70xx_printer_init, NULL,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
@@ -10774,7 +10775,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak_6900_page_list,
     &kodak_6900_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &kodak_6900_printer_init, NULL,
     NULL, NULL,  /* No planes */
     NULL, NULL,  /* No blocks */
@@ -10792,7 +10793,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak_7015_page_list,
     &kodak_7015_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &kodak_70xx_printer_init, NULL,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
@@ -10807,7 +10808,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak_8500_page_list,
     &kodak_8500_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &kodak_8500_printer_init, &kodak_8500_printer_end,
     NULL, NULL, /* No plane funcs */
     NULL, NULL, /* No block funcs */
@@ -10826,7 +10827,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cp3020d_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &mitsu_cp3020d_printer_init, &mitsu_cp3020d_printer_end,
     &mitsu_cp3020d_plane_init, &mitsu_cp3020d_plane_end,
     NULL, NULL, /* No block funcs */
@@ -10842,7 +10843,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cp3020d_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &mitsu_cp3020da_printer_init, &mitsu_cp3020da_printer_end,
     &mitsu_cp3020da_plane_init, NULL,
     NULL, NULL, /* No block funcs */
@@ -10858,7 +10859,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cp9550_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &mitsu_cp9550_printer_init, &mitsu_cp9550_printer_end,
     &mitsu_cp3020da_plane_init, NULL,
     NULL, NULL, /* No block funcs */
@@ -10876,7 +10877,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cp9810_page_list,
     &mitsu_cp9810_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &mitsu_cp9810_printer_init, &mitsu_cp9810_printer_end,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
@@ -10894,7 +10895,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cpd70x_page_list,
     &mitsu_cpd70x_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_WHITE_BORDER | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_WHITE_BORDER | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &mitsu_cpd70x_printer_init, NULL,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
@@ -10912,7 +10913,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cpk60_page_list,
     &mitsu_cpk60_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &mitsu_cpk60_printer_init, NULL,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
@@ -10930,7 +10931,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cpd80_page_list,
     &mitsu_cpd80_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_WHITE_BORDER | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_WHITE_BORDER | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &mitsu_cpd70x_printer_init, NULL,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
@@ -10948,7 +10949,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak305_page_list,
     &kodak305_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &kodak305_printer_init, NULL,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
@@ -10966,7 +10967,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cpd90_page_list,
     &mitsu_cpd90_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &mitsu_cpd90_printer_init, NULL,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
@@ -10985,7 +10986,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cp9600_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &mitsu_cp9600_printer_init, &mitsu_cp9600_printer_end,
     &mitsu_cp3020da_plane_init, NULL,
     NULL, NULL, /* No block funcs */
@@ -11001,7 +11002,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cp9550s_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &mitsu_cp9550_printer_init, &mitsu_cp9550s_printer_end,
     &mitsu_cp3020da_plane_init, NULL,
     NULL, NULL, /* No block funcs */
@@ -11019,7 +11020,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &fuji_ask300_page_list,
     &fuji_ask300_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_WHITE_BORDER | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_WHITE_BORDER | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &fuji_ask300_printer_init, NULL,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
@@ -11037,7 +11038,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cp9810_page_list,
     &mitsu_cp9810_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &mitsu_cp9800_printer_init, &mitsu_cp9810_printer_end,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
@@ -11056,7 +11057,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_p95d_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_MONOCHROME | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_MONOCHROME | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &mitsu_p95d_printer_init, &mitsu_p95d_printer_end,
     &mitsu_p95d_plane_start, NULL,
     NULL, NULL, /* No block funcs */
@@ -11075,7 +11076,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cp9500_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &mitsu_cp9500_printer_init, &mitsu_cp9500_printer_end,
     &mitsu_cp3020da_plane_init, NULL,
     NULL, NULL, /* No block funcs */
@@ -11094,7 +11095,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_p95d_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_MONOCHROME | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_MONOCHROME | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &mitsu_p93d_printer_init, &mitsu_p95d_printer_end,
     &mitsu_p95d_plane_start, NULL,
     NULL, NULL, /* No block funcs */
@@ -11112,7 +11113,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cpd70x_page_list,
     &mitsu_cpd70x_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_WHITE_BORDER | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_WHITE_BORDER | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &mitsu_cpd70x_printer_init, NULL,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
@@ -11130,7 +11131,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cpm1_page_list,
     &mitsu_cpm1_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &mitsu_cpm1_printer_init, NULL,  // change
     NULL, NULL,
     NULL, NULL, /* No block funcs */
@@ -11148,7 +11149,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cp30_page_list,
     &mitsu_cp30_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_PLANE_INTERLACE,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND | DYESUB_FEATURE_PLANE_INTERLACE,
     &mitsu_cp30_printer_init, &mitsu_cp30_printer_end,
     &mitsu_cp3020da_plane_init, NULL,
     NULL, NULL, /* No block funcs */
@@ -11166,7 +11167,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &fuji_ask2000_page_list,
     &fuji_ask2000_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_PLANE_INTERLACE,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND | DYESUB_FEATURE_PLANE_INTERLACE,
     &fuji_ask2000_printer_init, &fuji_ask2000_printer_end,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
@@ -11181,7 +11182,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &fuji_ask4000_page_list,
     &fuji_ask4000_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_PLANE_INTERLACE,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND | DYESUB_FEATURE_PLANE_INTERLACE,
     &fuji_ask4000_printer_init, &fuji_ask4000_printer_end,
     NULL, NULL,
     NULL, NULL, /* No block funcs */
@@ -11211,7 +11212,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &shinko_chcs2145_page_list,
     &shinko_chcs2145_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &shinko_chcs2145_printer_init, &shinko_chcs2145_printer_end,
     NULL, NULL,  /* No planes */
     NULL, NULL,  /* No blocks */
@@ -11226,7 +11227,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &shinko_chcs1245_page_list,
     &shinko_chcs1245_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &shinko_chcs1245_printer_init, &shinko_chcs2145_printer_end,
     NULL, NULL,  /* No planes */
     NULL, NULL,  /* No blocks */
@@ -11244,7 +11245,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &shinko_chcs6245_page_list,
     &shinko_chcs6245_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &shinko_chcs6245_printer_init, &shinko_chcs2145_printer_end,
     NULL, NULL,  /* No planes */
     NULL, NULL,  /* No blocks */
@@ -11266,7 +11267,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
 #ifdef S6145_YMC
     DYESUB_FEATURE_PLANE_INTERLACE |
 #endif
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &shinko_chcs6145_printer_init, &shinko_chcs2145_printer_end,
     NULL, NULL,  /* No planes */
     NULL, NULL,  /* No blocks */
@@ -11288,7 +11289,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
 #ifdef S6145_YMC
     DYESUB_FEATURE_PLANE_INTERLACE |
 #endif
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &shinko_chcs6145_printer_init, &shinko_chcs2145_printer_end,
     NULL, NULL,  /* No planes */
     NULL, NULL,  /* No blocks */
@@ -11310,7 +11311,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
 #ifdef S2245_YMC
     DYESUB_FEATURE_PLANE_INTERLACE |
 #endif
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &shinko_chcs2245_printer_init, &shinko_chcs2145_printer_end,
     NULL, NULL,  /* No planes */
     NULL, NULL,  /* No blocks */
@@ -11329,7 +11330,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &dnpds40_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_WHITE_BORDER
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &dnpds40_printer_start, &dnpds40_printer_end,
     &dnpds40_plane_init, NULL,
     NULL, NULL,
@@ -11348,7 +11349,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &dnpds80_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_WHITE_BORDER
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &dnpds80_printer_start, &dnpds40_printer_end,
     &dnpds40_plane_init, NULL,
     NULL, NULL,
@@ -11367,7 +11368,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &dnpsrx1_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_WHITE_BORDER
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &dnpdsrx1_printer_start, &dnpds40_printer_end,
     &dnpds40_plane_init, NULL,
     NULL, NULL,
@@ -11386,7 +11387,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &dnpds620_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_WHITE_BORDER
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &dnpds620_printer_start, &dnpds40_printer_end,
     &dnpds40_plane_init, NULL,
     NULL, NULL,
@@ -11405,7 +11406,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &citizen_cw01_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_WHITE_BORDER
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &citizen_cw01_printer_start, &dnpds40_printer_end,
     &dnpds40_plane_init, NULL,
     NULL, NULL,
@@ -11421,7 +11422,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &dnpds80dx_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_WHITE_BORDER
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_DUPLEX | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_DUPLEX | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &dnpds80_printer_start, &dnpds40_printer_end,
     &dnpds40_plane_init, NULL,
     NULL, NULL,
@@ -11440,7 +11441,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &dnpds820_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_WHITE_BORDER
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_NATIVECOPIES ,
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND ,
     &dnpds820_printer_start, &dnpds40_printer_end,
     &dnpds40_plane_init, NULL,
     NULL, NULL,
@@ -11459,7 +11460,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &dnp_qw410_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_WHITE_BORDER
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_NATIVECOPIES ,
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND ,
     &dnp_qw410_printer_start, &dnpds40_printer_end,
     &dnpds40_plane_init, NULL,
     NULL, NULL,
@@ -11478,7 +11479,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &hiti_p520l_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &hiti_p520l_printer_start, NULL,
     NULL, NULL,
     NULL, NULL,
@@ -11497,7 +11498,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &hiti_p520l_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &hiti_p720l_printer_start, NULL,
     NULL, NULL,
     NULL, NULL,
@@ -11516,7 +11517,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &hiti_p510l_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &hiti_p510l_printer_start, NULL,
     NULL, NULL,
     NULL, NULL,
@@ -11536,7 +11537,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &magicard_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_WHITE_BORDER
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_DUPLEX | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_DUPLEX | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &magicard_printer_init, &magicard_printer_end,
     NULL, magicard_plane_end,
     NULL, NULL,
@@ -11555,7 +11556,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &magicard_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_WHITE_BORDER
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES,
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_NATIVECOPIES | DYESUB_FEATURE_HASBACKEND,
     &magicard_printer_init, &magicard_printer_end,
     NULL, magicard_plane_end,
     NULL, NULL,
@@ -11642,6 +11643,18 @@ static const stp_parameter_t the_parameters[] =
     N_("Use legacy dyesub gamma curve"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_ADVANCED, 1, 0, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "CommandFilterName", N_("Command filter name"), "Color=No,Category=Job Mode",
+    N_("Command filter name"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_INTERNAL, 1, 0, STP_CHANNEL_NONE, 0, 1
+  },
+  {
+    "CommandFilterCommands", N_("Filter commands supported"), "Color=No,Category=Job Mode",
+    N_("Filter commands supported"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_INTERNAL, 1, 0, STP_CHANNEL_NONE, 0, 1
   },
 };
 
@@ -11998,6 +12011,33 @@ dyesub_parameters(const stp_vars_t *v, const char *name,
 	description->deflt.boolean = 0;
 #endif
         description->is_active = 1;
+    }
+  else if (strcmp(name, "CommandFilterName") == 0)
+    {
+      if (dyesub_feature(caps, DYESUB_FEATURE_HASBACKEND))
+      {
+        description->bounds.str = stp_string_list_create();
+        stp_string_list_add_string(description->bounds.str,
+				   "commandtodyesub", _("commandtodyesub"));
+        description->is_active = 1;
+      } else {
+        description->is_active = 0;
+      }
+    }
+  else if (strcmp(name, "CommandFilterCommands") == 0)
+    {
+      if (dyesub_feature(caps, DYESUB_FEATURE_HASBACKEND))
+      {
+        description->bounds.str = stp_string_list_create();
+        stp_string_list_add_string(description->bounds.str,
+				   "ReportLevels", _("Report levels"));
+        /* Not yet */
+//        stp_string_list_add_string(description->bounds.str,
+//				   "AutoConfigure", _("Auto configure"));
+        description->is_active = 1;
+      } else {
+        description->is_active = 0;
+      }
     }
   else
     description->is_active = 0;
