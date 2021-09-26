@@ -346,6 +346,18 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_LEVEL_INTERNAL, 0, 0, STP_CHANNEL_NONE, 0, 0
   },
   {
+    "CommandFilterName", N_("Command filter name"), "Color=No,Category=Job Mode",
+    N_("Command filter name"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_INTERNAL, 1, 0, STP_CHANNEL_NONE, 0, 1
+  },
+  {
+    "CommandFilterCommands", N_("Filter commands supported"), "Color=No,Category=Job Mode",
+    N_("Filter commands supported"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_INTERNAL, 1, 0, STP_CHANNEL_NONE, 0, 1
+  },
+  {
     "ChannelNames", N_("Channel Names"), "Color=No,Category=Advanced Printer Functionality",
     N_("Channel Names"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
@@ -2818,6 +2830,27 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	  description->deflt.str =
 	    stp_string_list_param(description->bounds.str, 0)->name;
 	}
+    }
+  else if (strcmp(name, "CommandFilterName") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+      stp_string_list_add_string(description->bounds.str,
+		   "commandtoepson", _("commandtoepson"));
+      description->is_active = 1;
+    }
+  else if (strcmp(name, "CommandFilterCommands") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+      stp_string_list_add_string(description->bounds.str,
+				   "Clean", _("Clean"));
+      stp_string_list_add_string(description->bounds.str,
+				   "PrintSelfTestPage", _("Print self-test page"));
+      /* Not yet */
+//      stp_string_list_add_string(description->bounds.str,
+//				   "ReportLevels", _("Report levels"));
+//      stp_string_list_add_string(description->bounds.str,
+//				   "AutoConfigure", _("Auto Configure"));
+      description->is_active = 1;
     }
   else if (strcmp(name, "MultiChannelLimit") == 0)
     {

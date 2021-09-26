@@ -384,8 +384,7 @@ print_ppd_header_3(gpFile fp, ppd_type_t ppd_type, int model,
   gpputs(fp, "*cupsVersion:	1.2\n");
 
   gpprintf(fp, "*cupsFilter:	\"application/vnd.cups-raster 100 rastertogutenprint.%s\"\n", GUTENPRINT_RELEASE_VERSION);
-  if (strcasecmp(manufacturer, "EPSON") == 0)
-    gpputs(fp, "*cupsFilter:	\"application/vnd.cups-command 33 commandtoepson\"\n");
+
   if (device_id)
     {
       if (strlen(device_id) > 200)
@@ -1282,6 +1281,28 @@ write_ppd(
     gpputs(fp, "*cupsManualCopies: False\n");
   else
     gpputs(fp, "*cupsManualCopies: True\n");
+
+  stp_describe_parameter(v, "CommandFilterName", &desc);
+  if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST && desc.is_active)
+    {
+      opt = stp_string_list_param(desc.bounds.str, 0);
+      gpprintf(fp, "*cupsFilter:	\"application/vnd.cups-command 33 %s\"\n", opt->name);
+    }
+  stp_parameter_description_destroy(&desc);
+
+  stp_describe_parameter(v, "CommandFilterCommands", &desc);
+  if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST && desc.is_active)
+    {
+      gpputs(fp, "*cupsCommands:   \"");
+      num_opts = stp_string_list_count(desc.bounds.str);
+      for (i = 0 ; i < num_opts; i++)
+        {
+           opt = stp_string_list_param(desc.bounds.str, i);
+           gpprintf(fp, "%s ", opt->name);
+        }
+      gpputs(fp, "\"\n");
+    }
+  stp_parameter_description_destroy(&desc);
 
   print_ppd_header_3(fp, ppd_type, model,
 		     driver, family, long_name,
