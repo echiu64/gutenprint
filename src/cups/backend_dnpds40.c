@@ -1862,8 +1862,12 @@ parsed:
 	if (ctx->media == 0) {
 		int status = dnpds40_query_status(ctx);
 		if (status > 1000) {
-			ERROR("Fatal Printer Error: %d => %s, halting queue!\n", status, dnpds40_statuses(status));
-			return CUPS_BACKEND_HOLD;
+			ERROR("User-Recoverable Printer Error: %d => %s, halting queue!\n", status, dnpds40_statuses(status));
+			return CUPS_BACKEND_STOP;
+		}
+		if (status > 2000) {
+			ERROR("Fatal Printer Hardware Error: %d => %s, halting queue!\n", status, dnpds40_statuses(status));
+			return CUPS_BACKEND_STOP;
 		}
 	}
 
@@ -3482,7 +3486,7 @@ static const char *dnpds40_prefixes[] = {
 
 const struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS-series / Citizen C-series",
-	.version = "0.141",
+	.version = "0.142",
 	.uri_prefixes = dnpds40_prefixes,
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
