@@ -58,7 +58,7 @@
 #define INFO( ... )  do { if (!quiet) fprintf(logger, "INFO: " __VA_ARGS__ ); } while(0)
 #define WARNING( ... )  do { fprintf(logger, "WARNING: " __VA_ARGS__ ); } while(0)
 #define ERROR( ... ) do { fprintf(logger, "ERROR: " __VA_ARGS__ ); sleep(1); } while (0)
-#define PPD( ... ) do { fprintf(logger, "PPD: " __VA_ARGS__ ); sleep(1); } while (0)
+#define PPD( ... ) do { fprintf(logger, "PPD: " __VA_ARGS__ ); } while (0)
 
 #if (__BYTE_ORDER == __LITTLE_ENDIAN)
 #define le16_to_cpu(__x) __x
@@ -115,6 +115,8 @@ enum {
 	P_ES3_30,
 	P_ES40,
 	P_FUJI_ASK300,
+	P_FUJI_ASK500,
+	P_HITI_CS2XX,
 	P_HITI_51X,
 	P_HITI_52X,
 	P_HITI_720,
@@ -202,6 +204,12 @@ struct dyesub_connection {
 	uint8_t iface;
 	uint8_t altset;
 
+	/* to make our lives easier later */
+	uint8_t bus_num;
+	uint8_t port_num;
+	uint16_t usb_vid;
+	uint16_t usb_pid;
+
 	// TODO:  mutex/lock
 
 	int type; /* P_XXXX */
@@ -217,8 +225,9 @@ struct dyesub_joblist {
 	int copies;
 	const void *entries[DYESUB_MAX_JOB_ENTRIES];
 };
+#define MAX_JOBS_FROM_READ_PARSE 3
 
-/* This should be the start of every per-printer job struct! */
+/* This MUST be the start of every per-printer job struct! */
 struct dyesub_job_common {
 	size_t jobsize;
 	int copies;
@@ -259,6 +268,12 @@ int dyesub_joblist_canwait(struct dyesub_joblist *list);
 #define BACKEND_FLAG_BADISERIAL 0x00000001
 #define BACKEND_FLAG_DUMMYPRINT 0x00000002
 
+int dyesub_pano_split_rgb8(const uint8_t *src, uint16_t cols,
+			   uint16_t src_rows, uint8_t numpanels,
+			   uint16_t overlap_rows, uint16_t max_rows,
+			   uint8_t *panels[3],
+			   uint16_t panel_rows[3]);
+
 /* Backend Functions */
 struct dyesub_backend {
 	const char *name;
@@ -274,7 +289,7 @@ struct dyesub_backend {
 	void (*cleanup_job)(const void *job);
 	void *(*combine_jobs)(const void *job1, const void *job2);
 	int  (*job_polarity)(void *ctx);
-	int  (*main_loop)(void *ctx, const void *job);
+	int  (*main_loop)(void *ctx, const void *job, int wait_on_return);
 	int  (*query_serno)(struct dyesub_connection *conn, char *buf, int buf_len); /* Optional */
 	int  (*query_markers)(void *ctx, struct marker **markers, int *count);
 	int  (*query_stats)(void *ctx, struct printerstats *stats); /* Optional */
@@ -294,6 +309,7 @@ extern int test_mode;
 extern int quiet;
 extern const char *corrtable_path;
 extern FILE *logger;
+extern int stats_only;
 
 enum {
 	TEST_MODE_NONE = 0,

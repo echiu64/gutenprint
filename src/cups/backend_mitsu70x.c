@@ -1,11 +1,11 @@
 /*
  *   Mitsubishi CP-D70/D707 Photo Printer CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013-2020 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2021 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
- *     http://git.shaftnet.org/cgit/selphy_print.git
+ *     https://git.shaftnet.org/cgit/selphy_print.git
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -29,15 +29,6 @@
 #include "backend_common.h"
 #include "backend_mitsu.h"
 
-#define USB_VID_MITSU       0x06D3
-#define USB_PID_MITSU_D70X  0x3B30
-#define USB_PID_MITSU_K60   0x3B31
-#define USB_PID_MITSU_D80   0x3B36
-#define USB_VID_KODAK       0x040a
-#define USB_PID_KODAK305    0x404f
-#define USB_VID_FUJIFILM    0x04cb
-#define USB_PID_FUJI_ASK300 0x5006
-
 /* Width of the laminate data file */
 #define LAMINATE_STRIDE 1864
 
@@ -46,9 +37,7 @@
 
 /* Private data structure */
 struct mitsu70x_printjob {
-	size_t jobsize;
-	int copies;
-	int can_combine;
+	struct dyesub_job_common common;
 
 	uint8_t *databuf;
 	uint32_t datalen;
@@ -84,6 +73,7 @@ struct mitsu70x_ctx {
 
 	struct marker marker[2];
 	uint8_t medias[2];
+	uint8_t media_subtypes[2];
 
 	uint16_t last_l;
 	uint16_t last_u;
@@ -225,16 +215,19 @@ struct mitsu70x_status_deck {
 	uint8_t  mecha_status[2];
 	uint8_t  temperature;   /* D70/D80 family only, K60 no? */
 	uint8_t  error_status[3];
-	uint8_t  rsvd_a[10];    /* K60 [1] == temperature? All: [3:6] == some counter in BCD. K60 [9] == ?? */
+	uint8_t  rsvd_a[3]; /* K60 [1] == temperature? */
+	uint8_t  lifetime_prints[4];
+	uint8_t  rsvd_b[3]; /* K60 [3] == ?? */
 	uint8_t  media_brand;
 	uint8_t  media_type;
-	uint8_t  rsvd_b[2];
+	uint8_t  media_subtype;	 /* K60 only? */
+	uint8_t  rsvd_c[1];
 	int16_t  capacity; /* media capacity */
 	int16_t  remain;   /* media remaining */
-	uint8_t  rsvd_c[2];
-	uint8_t  lifetime_prints[4]; /* lifetime prints on deck + 10, in BCD! */
-	uint8_t  rsvd_d[2]; // Unknown
-	uint16_t rsvd_e[16]; /* all 80 00 */
+	uint8_t  rsvd_d[2];
+	uint8_t  unknown_ctr[4]; /* lifetime + 10 (EK305), lifetime+41 (D80), in BCD! */
+	uint8_t  rsvd_e[2]; // Unknown
+	uint16_t rsvd_f[16]; /* all 80 00 */
 } __attribute__((packed));
 
 struct mitsu70x_status_ver {
@@ -248,12 +241,14 @@ struct mitsu70x_printerstatus_resp {
 	uint8_t  power;
 	uint8_t  unk[20];
 	uint8_t  sleeptime; /* In minutes, 0-60 */
-	uint8_t  iserial; /* 0x00 for Enabled, 0x80 for Disabled */
-	uint8_t  unk_b[5]; // [4] == 0x44 on D70x, 0x02 on D80
-	uint8_t  dual_deck; /* 0x80 for dual-deck D707 */
-	uint8_t  unk_c[6]; // [2] == 0x5f on D70x, 0x5e on D70xS, 0x01 on D80.  [5] == 0xbd on D70x, 0x87 on D80
-	int16_t  model[6]; /* LE, UTF-16 */
-	int16_t  serno[6]; /* LE, UTF-16 */
+	uint8_t  iserial;   /* 0x00 for Enabled, 0x80 for Disabled */
+	uint8_t  unk_b[5];  // [4] == 0x44 on D70x, 0x13 on D80, 0x02 on EK305.
+	uint8_t  dual_deck; /* 0x80 for dual-deck D707, 0x00 otherwise */
+	uint8_t  unk_c[2];  // always 00 00 ??
+	uint8_t  subtype;   /* 0x5f on D70x/K60/D80, 0x5e on D70xS/K60-S, 0x01 on EK305 */
+	uint8_t  unk_d[3];  // [1:2] == 0x??bd on D70x, 0x0487 on EK305, 0x04d7 on D80
+	int16_t  model[6];  /* LE, UTF-16 */
+	int16_t  serno[6];  /* LE, UTF-16 */
 	struct mitsu70x_status_ver vers[7]; // components are 'MLRTF'
 	uint8_t  null[2];
 	uint8_t  user_serno[6];  /* XXX Supposedly. Don't know how to set it! */
@@ -268,21 +263,43 @@ struct mitsu70x_memorystatus_resp {
 	uint8_t  rsvd;
 } __attribute__((packed));
 
-// XXX also seen commands 0x67, 0x72, 0x54, 0x6e
+struct mitsu70x_calinfo_resp {  /* Interpretations valid for ASK300 */
+	uint8_t hdr[6]; /* e4 6a 36 34 31 00 */
+
+	/* Note!  All values below are ASCII hex! ie 0x23 -> 0x32 0x33 */
+
+	uint8_t adj_horiz[2];  /* +- 128, units of 0.085 mm */
+	uint8_t adj_vertA[2];  /* +- 128 */
+	uint8_t adj_vertB[2];  /*  values are in units of 0.085 mm */
+	uint8_t adj_vertC[2];  /*  A is -1->9, B is -4->6, C is -1->9 */
+	uint8_t adj_fine[4]; /* 00DC */
+	uint8_t adj_m3[2]; /* -100 -> 100 (converted to hex) */
+	uint8_t unk_c[28];
+	//             30 30 30 30  46 46 36 34 35 35 30 30
+	// 46 46 36 34 35 35 30 30  44 43 30 30 30 30 30 30
+
+	uint8_t adj_density[4]; /* 6800 -> 9000, def 8000 */
+	uint8_t adj_24v[4];     /* 0000 -> 00FF */
+} __attribute__((packed));
 
 /*
+  NOTES:  Other stuff seen:
 
-  1b 72 45 [31 32]
-  1b 5a 43 00
-  1b 54 53 90 00 0a 00 00  00 00 00 00 00 00 00 00
-  1b 54 00 [00 31 32]  <-- No resp [00 any, 31 lower, 32 upper???]
-  1b 45 4a [30 31 32] <-- No resp [30 any deck, 31 is lower, 32 is upper?]
-  1b 56 34 [31 32]
   1b 45 48 [30 31 32] <-- No resp [30 any deck, 31 is lower, 32 is upper?]
-  1b 72 67 00 00 00
-  1b 67 18 ...   (??)
-  1b 52 XX 00    <-- XX = something + 0x51
+  1b 45 4a [30 31 32] <-- No resp [30 any deck, 31 is lower, 32 is upper?]
   1b 45 53 00 10 [ ...? ] XX XX . "set printer number"..
+  1b 45 53 90 00 0a [ ... 9 bytes of something ] 10
+  1b 52 XX 00    <-- XX = something + 0x51
+  1b 54 00 [00 31 32]  <-- No resp [00 any, 31 lower, 32 upper???]
+  1b 54 31 00   "feed and cut"
+  1b 54 53 90 00 0a 00 00  00 00 00 00 00 00 00 00
+  1b 56 34 [31 32] <-- 6 byte response, last two bytes are value.
+  1b 5a 43 00 <-- No resp
+  1b 67 18 ...   (??)
+  1b 6a ...      Various test commands
+  1b 6e ...      (??)
+  1b 72 45 [31 32]
+  1b 72 67 00 00 00
 
 */
 
@@ -315,9 +332,10 @@ struct mitsu70x_hdr {
 } __attribute__((packed));
 
 STATIC_ASSERT(sizeof(struct mitsu70x_hdr) == 512);
+STATIC_ASSERT(sizeof(struct mitsu70x_calinfo_resp) == 56);
 
 static int mitsu70x_get_printerstatus(struct mitsu70x_ctx *ctx, struct mitsu70x_printerstatus_resp *resp);
-static int mitsu70x_main_loop(void *vctx, const void *vjob);
+static int mitsu70x_main_loop(void *vctx, const void *vjob, int wait_for_return);
 
 /* Error dumps, etc */
 
@@ -588,7 +606,7 @@ static int mitsu70x_attach(void *vctx, struct dyesub_connection *conn, uint8_t j
 	/* Attempt to open the library */
 	if (mitsu_loadlib(&ctx->lib, ctx->conn->type))
 #endif
-		WARNING("Dynamic library support not loaded, will be unable to print.");
+		WARNING("Dynamic library support not loaded, will be unable to print!\n");
 
 	struct mitsu70x_printerstatus_resp resp;
 	int ret;
@@ -616,6 +634,7 @@ static int mitsu70x_attach(void *vctx, struct dyesub_connection *conn, uint8_t j
 		resp.lower.media_type = media_code;
 		resp.dual_deck = 0x80;  /* Make it a dual deck */
 		resp.vers[0].ver[0] = 0;
+		resp.subtype = 0x5e;
 	}
 
 	/* Figure out if we're a D707 with two decks */
@@ -632,6 +651,7 @@ static int mitsu70x_attach(void *vctx, struct dyesub_connection *conn, uint8_t j
 	ctx->marker[0].levelmax = be16_to_cpu(resp.lower.capacity);
 	ctx->marker[0].levelnow = be16_to_cpu(resp.lower.remain);
 	ctx->medias[0] = resp.lower.media_type & 0xf;
+	ctx->media_subtypes[0] = resp.lower.media_subtype;
 
 	if (ctx->num_decks == 2) {
 		ctx->marker[1].color = "#00FFFF#FF00FF#FFFF00";
@@ -640,6 +660,7 @@ static int mitsu70x_attach(void *vctx, struct dyesub_connection *conn, uint8_t j
 		ctx->marker[1].levelmax = be16_to_cpu(resp.upper.capacity);
 		ctx->marker[1].levelnow = be16_to_cpu(resp.upper.remain);
 		ctx->medias[1] = resp.upper.media_type & 0xf;
+		ctx->media_subtypes[1] = resp.upper.media_subtype;
 	}
 
 	/* Store the FW version */
@@ -652,9 +673,7 @@ static int mitsu70x_attach(void *vctx, struct dyesub_connection *conn, uint8_t j
 	ctx->serno[6] = 0;
 
 	/* Check for the -S variants */
-	if (ctx->conn->type == P_MITSU_K60)
-		ctx->is_s = 1;
-	if (ctx->conn->type == P_MITSU_D70X && resp.unk_c[2] == 0x5e)
+	if (resp.subtype == 0x5e)
 		ctx->is_s = 1;
 
 	/* FW sanity checking */
@@ -871,8 +890,8 @@ static int mitsu70x_read_parse(void *vctx, const void **vjob, int data_fd, int c
 		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 	memset(job, 0, sizeof(*job));
-	job->jobsize = sizeof(*job);
-	job->copies = copies;
+	job->common.jobsize = sizeof(*job);
+	job->common.copies = copies;
 
 repeat:
 	/* Read in initial header */
@@ -949,7 +968,7 @@ repeat:
 
 		if (mhdr.speed == 3) {
 			job->cpcfname = "CPD80S01.cpc";
-			job->ecpcfname = "CPD80E01.cpc";
+			job->ecpcfname = "CPD80E01.cpc"; /* For SuperFine in rewind mode, depending on image.. */
 		} else if (mhdr.speed == 4) {
 			job->cpcfname = "CPD80U01.cpc";
 			job->ecpcfname = NULL;
@@ -957,6 +976,7 @@ repeat:
 			job->cpcfname = "CPD80N01.cpc";
 			job->ecpcfname = NULL;
 		}
+		// XXX Does is_s matter?
 		if (mhdr.hdr[3] != 0x01) {
 			WARNING("Print job has wrong submodel specifier (%x)\n", mhdr.hdr[3]);
 			mhdr.hdr[3] = 0x01;
@@ -967,10 +987,17 @@ repeat:
 
 		if (mhdr.speed == 3 || mhdr.speed == 4) {
 			mhdr.speed = 4; /* Ultra Fine */
-			job->cpcfname = "CPS60T03.cpc";
+			if (ctx->media_subtypes[0] == 0x10) /* HG media */
+				job->cpcfname = "CPS60H03.cpc";
+			else
+				job->cpcfname = "CPS60T03.cpc";
 		} else {
-			job->cpcfname = "CPS60T01.cpc";
+			if (ctx->media_subtypes[0] == 0x10) /* HG media */
+				job->cpcfname = "CPS60H01.cpc";
+			else
+				job->cpcfname = "CPS60T01.cpc";
 		}
+		// XXX Does is_s matter?
 		if (mhdr.hdr[3] != 0x00) {
 			WARNING("Print job has wrong submodel specifier (%x)\n", mhdr.hdr[3]);
 			mhdr.hdr[3] = 0x00;
@@ -1162,7 +1189,7 @@ bypass_raw:
 	}
 
 	/* 6x4 can be combined, only on 6x8/6x9" media. */
-	job->can_combine = 0;
+	job->common.can_combine = 0;
 	if (job->decks_exact[0] ||
 	    job->decks_exact[1]) {
 		/* Exact media match, don't combine. */
@@ -1172,12 +1199,12 @@ bypass_raw:
 		    ctx->medias[0] == 0x5 ||
 		    ctx->medias[1] == 0xf || /* Two decks possible */
 		    ctx->medias[1] == 0x5)
-			job->can_combine = !job->raw_format;
+			job->common.can_combine = !job->raw_format;
 	} else if (job->rows == 1076) {
 		if (ctx->conn->type == P_KODAK_305 ||
 		    ctx->conn->type == P_MITSU_K60) {
 			if (ctx->medias[0] == 0x4)  /* Only one deck */
-				job->can_combine = !job->raw_format;
+				job->common.can_combine = !job->raw_format;
 		}
 	}
 
@@ -1324,7 +1351,7 @@ static int mitsu70x_get_printerstatus(struct mitsu70x_ctx *ctx, struct mitsu70x_
 	cmdbuf[0] = 0x1b;
 	cmdbuf[1] = 0x56;
 	cmdbuf[2] = 0x32;
-	cmdbuf[3] = 0x30; /* or x31 or x32, for SINGLE DECK query!
+	cmdbuf[3] = 0x30; /* or x31 or x32, for SINGLE DECK lower/upper query!
 			     Results will only have one deck. */
 	if ((ret = send_data(ctx->conn,
 			     cmdbuf, 4)))
@@ -1359,6 +1386,205 @@ static int mitsu70x_cancel_job(struct mitsu70x_ctx *ctx, uint16_t jobid)
 		return ret;
 
 	return CUPS_BACKEND_OK;
+}
+
+static int mitsu70x_test_print(struct mitsu70x_ctx *ctx, int type)
+{
+	uint8_t cmdbuf[14];
+	int ret, num = 0;
+	uint8_t resp[256];
+
+	/* Send Test ON */
+	memset(cmdbuf, 0, 8);
+	cmdbuf[0] = 0x1b;
+	cmdbuf[1] = 0x76;
+	cmdbuf[2] = 0x54;
+	cmdbuf[3] = 0x45;
+	cmdbuf[4] = 0x53;
+	cmdbuf[5] = 0x54;
+	cmdbuf[6] = 0x4f;
+	cmdbuf[7] = 0x4e;
+	if ((ret = send_data(ctx->conn,
+			     cmdbuf, 8)))
+		return ret;
+
+	memset(resp, 0, sizeof(resp));
+
+	ret = read_data(ctx->conn,
+			resp, sizeof(resp), &num);  // always e4 44 4f 4e 45
+
+	if (ret) return ret;
+
+	/* Send Test print. */
+	memset(cmdbuf, 0x30, 12);
+	cmdbuf[0] = 0x1b;
+	cmdbuf[1] = 0x6a;
+	cmdbuf[2] = 0x31;
+
+	switch(type) {
+	default:
+	case 0: /* Test Print */
+		cmdbuf[4] = 0x31;
+		cmdbuf[11] = 0x31;
+		break;
+	case 1: /* Solid Black */
+		cmdbuf[3] = 0x32;
+		cmdbuf[4] = 0x31;
+		cmdbuf[6] = 0x46;
+		cmdbuf[7] = 0x46;
+		cmdbuf[11] = 0x31;
+		break;
+	case 2: /* Solid Gray */
+		cmdbuf[3] = 0x32;
+		cmdbuf[4] = 0x31;
+		cmdbuf[6] = 0x38;
+		cmdbuf[11] = 0x31;
+		break;
+	case 3: /* Head Pattern */
+		cmdbuf[3] = 0x31;
+		cmdbuf[4] = 0x31;
+		cmdbuf[11] = 0x31;
+		break;
+	case 4: /* Color Bar */
+		cmdbuf[3] = 0x34;
+		cmdbuf[4] = 0x31;
+		cmdbuf[11] = 0x31;
+		break;
+	case 5: /* Vertical Alignment */
+		cmdbuf[3] = 0x32;
+		cmdbuf[4] = 0x31;
+		cmdbuf[6] = 0x38;
+		cmdbuf[11] = 0x32;
+		break;
+	case 6: /* Horizontal Alignment; Grey Cross */
+		cmdbuf[3] = 0x32;
+		cmdbuf[4] = 0x31;
+		cmdbuf[6] = 0x38;
+		cmdbuf[11] = 0x31;
+		break;
+	}
+	if ((ret = send_data(ctx->conn,
+			     cmdbuf, 12)))
+		return ret;
+
+	ret = read_data(ctx->conn,
+			resp, sizeof(resp), &num); /* Get 5 back */
+
+	return ret;
+}
+
+static int mitsu70x_test_dump(struct mitsu70x_ctx *ctx)
+{
+	uint8_t cmdbuf[14];
+	int ret, num = 0;
+	uint8_t resp[8192];
+
+	/* Send Test ON */
+	memset(cmdbuf, 0, 8);
+	cmdbuf[0] = 0x1b;
+	cmdbuf[1] = 0x76;
+	cmdbuf[2] = 0x54;
+	cmdbuf[3] = 0x45;
+	cmdbuf[4] = 0x53;
+	cmdbuf[5] = 0x54;
+	cmdbuf[6] = 0x4f;
+	cmdbuf[7] = 0x4e;
+	if ((ret = send_data(ctx->conn,
+			     cmdbuf, 8)))
+		return ret;
+
+	memset(resp, 0, sizeof(resp));
+
+	ret = read_data(ctx->conn,
+			resp, sizeof(resp), &num);  // always e4 44 4f 4e 45
+
+	if (ret) return ret;
+
+	/* Get calibration parameters */
+	memset(cmdbuf, 0, 6);
+	cmdbuf[0] = 0x1b;
+	cmdbuf[1] = 0x6a;
+	cmdbuf[2] = 0x36;
+	cmdbuf[3] = 0x34;
+	cmdbuf[4] = 0x31;
+	cmdbuf[5] = 0x00;
+	if ((ret = send_data(ctx->conn,
+			     cmdbuf, 6)))
+		return ret;
+	ret = read_data(ctx->conn,
+			resp, sizeof(resp), &num); // 56 back!
+
+	if (ret) return ret;
+
+	/* response is struct mitsu70x_calinfo_resp */
+	{
+		struct mitsu70x_calinfo_resp *calinfo = (struct mitsu70x_calinfo_resp*) resp;
+		char buf[5];
+		float f;
+
+		memset(buf, 0x0, sizeof(buf));
+		memcpy(buf, calinfo->adj_horiz, 2);
+		f = strtol(buf, NULL, 16);
+		if (f > 127) f -= 256;
+		f *= 0.085; /* 300dpi = 0.085mm/pixel */
+		INFO("Horizontal Calibration: %2.3f mm\n", f);
+		memcpy(buf, calinfo->adj_vertA, 2);
+		f = strtol(buf, NULL, 16);
+		if (f > 127) f -= 256;
+		f *= 0.085;
+		INFO("Vertical Calibration A: %2.3f mm\n", f);
+		memcpy(buf, calinfo->adj_vertB, 2);
+		f = strtol(buf, NULL, 16);
+		if (f > 127) f -= 256;
+		f *= 0.085;
+		INFO("Vertical Calibration B: %2.3f mm\n", f);
+		memcpy(buf, calinfo->adj_vertC, 2);
+		f = strtol(buf, NULL, 16);
+		if (f > 127) f -= 256;
+		f *= 0.085;
+		INFO("Vertical Calibration C: %2.2f mm\n", f);
+	}
+
+	/* Get eeprom dump.. */
+	memset(cmdbuf, 0, 14);
+	cmdbuf[0] = 0x1b;
+	cmdbuf[1] = 0x6a;
+	cmdbuf[2] = 0x36;
+	cmdbuf[3] = 0x36;
+	cmdbuf[4] = 0x31;
+	cmdbuf[5] = 0x00;
+	cmdbuf[6] = 0x31;  //
+	cmdbuf[7] = 0x30;  //
+	cmdbuf[8] = 0x30;  //
+	cmdbuf[9] = 0x30;  // x1000 = LENGTH (4096, 1 -> 4096)
+	cmdbuf[10] = 0x30; //
+	cmdbuf[11] = 0x30; //
+	cmdbuf[12] = 0x30; //
+	cmdbuf[13] = 0x30; // x0000 = ADDRESS (0, x0-x7fff)
+	if ((ret = send_data(ctx->conn,
+			     cmdbuf, 14)))
+		return ret;
+	ret = read_data(ctx->conn,
+			resp, sizeof(resp), &num); // 4110 back!
+
+	/* To set calibration: 1b 6a 30 XX XX XX ?? ??
+
+	   where ?? ?? is ASCII representation of hex value
+
+	   Horiz = x70 31 31, range 0x00->0xff (unit is pixels or 0.085 mm, def 0)
+	   VertA = x70 31 32, range -1 -> 9 (unit is pixels or 0.085mm, def 4)
+	   VertB = x70 31 33, range -4 -> 6 (def 1)
+	   VertC = x70 31 34, range -1 -> 9 (def 4)
+           M1    = x71 31 31, range -128 -> +127 step 0.05v (NOT on ASK300 / D70, one value ?)
+           M1v2  = x71 31 35, range -128 -> +127 step 0.05v (for on ASK300 / D70, two values? Fine / UFine )
+           M3    = x71 31 32, range -100 -> +100 (unknown unit, value is unique to each M3 motor)
+           UFine = x71 31 35, (legal values are enum)
+	   Density = x73 31 31, 6800d -> 9000d (steps of 80d)
+	   24v   = x61 30 00  (range 0x00 -> 0xff)
+
+	*/
+
+	return ret;
 }
 
 static int mitsu70x_set_sleeptime(struct mitsu70x_ctx *ctx, uint8_t time)
@@ -1497,7 +1723,7 @@ static int d70_library_callback(void *context, void *buffer, uint32_t len)
 	return ret;
 }
 
-static int mitsu70x_main_loop(void *vctx, const void *vjob)
+static int mitsu70x_main_loop(void *vctx, const void *vjob, int wait_for_return)
 {
 	struct mitsu70x_ctx *ctx = vctx;
 	struct mitsu70x_jobstatus jobstatus;
@@ -1516,7 +1742,7 @@ static int mitsu70x_main_loop(void *vctx, const void *vjob)
 	if (!job)
 		return CUPS_BACKEND_FAILED;
 
-	copies = job->copies;
+	copies = job->common.copies;
 	hdr = (struct mitsu70x_hdr*) job->databuf;
 
 	/* Keep track of deck requested */
@@ -1595,7 +1821,6 @@ static int mitsu70x_main_loop(void *vctx, const void *vjob)
 	job->datalen += 3*job->planelen;
 
 	/* Clean up */
-	// XXX not really necessary.
 	free(job->spoolbuf);
 	job->spoolbuf = NULL;
 	job->spoolbuflen = 0;
@@ -1932,7 +2157,7 @@ top:
 		}
 
 		/* See if we can return early, but wait until printing has started! */
-		if (fast_return && copies <= 1 && /* Copies generated by backend! */
+		if (!wait_for_return && copies <= 1 && /* Copies generated by backend! */
 		    jobstatus.job_status[0] == JOB_STATUS0_PRINT &&
 		    jobstatus.job_status[1] > JOB_STATUS1_PRINT_MEDIALOAD)
 		{
@@ -1985,11 +2210,11 @@ static void mitsu70x_dump_printerstatus(struct mitsu70x_ctx *ctx,
 			continue;
 		memcpy(buf, resp->vers[i].ver, 6);
 		buf[6] = 0;
-		if (i == 0) type = 'M';
-		else if (i == 1) type = 'L';
-		else if (i == 2) type = 'R';
-		else if (i == 3) type = 'T';
-		else if (i == 4) type = 'F';
+		if (i == 0) type = 'M';  /* Main */
+		else if (i == 1) type = 'L'; /* Loader */
+		else if (i == 2) type = 'R'; /* Tag */
+		else if (i == 3) type = 'T'; /* Copy */
+		else if (i == 4) type = 'F'; /* FPGA */
 		else type = i + 0x30;
 
 		INFO("FW Component: %c %s (%04x)\n",
@@ -2017,10 +2242,11 @@ static void mitsu70x_dump_printerstatus(struct mitsu70x_ctx *ctx,
 	INFO("Lower Temperature: %s\n", mitsu_temperatures(resp->lower.temperature));
 	INFO("Lower Mechanical Status: %s\n",
 	     mitsu70x_mechastatus(resp->lower.mecha_status));
-	INFO("Lower Media Type:  %s (%02x/%02x)\n",
+	INFO("Lower Media Type:  %s (%02x/%02x/%02x)\n",
 	     mitsu_media_types(ctx->conn->type, resp->lower.media_brand, resp->lower.media_type),
 	     resp->lower.media_brand,
-	     resp->lower.media_type);
+	     resp->lower.media_type,
+	     resp->lower.media_subtype);
 	INFO("Lower Prints Remaining:  %03d/%03d\n",
 	     be16_to_cpu(resp->lower.remain),
 	     be16_to_cpu(resp->lower.capacity));
@@ -2039,10 +2265,11 @@ static void mitsu70x_dump_printerstatus(struct mitsu70x_ctx *ctx,
 		INFO("Upper Temperature: %s\n", mitsu_temperatures(resp->upper.temperature));
 		INFO("Upper Mechanical Status: %s\n",
 		     mitsu70x_mechastatus(resp->upper.mecha_status));
-		INFO("Upper Media Type:  %s (%02x/%02x)\n",
+		INFO("Upper Media Type:  %s (%02x/%02x/%02x)\n",
 		     mitsu_media_types(ctx->conn->type, resp->upper.media_brand, resp->upper.media_type),
 		     resp->upper.media_brand,
-		     resp->upper.media_type);
+		     resp->upper.media_type,
+		     resp->upper.media_subtype);
 		INFO("Upper Prints Remaining:  %03d/%03d\n",
 		     be16_to_cpu(resp->upper.remain),
 		     be16_to_cpu(resp->upper.capacity));
@@ -2164,7 +2391,10 @@ static void mitsu70x_cmdline(void)
 	DEBUG("\t\t[ -W ]           # Wake up printer and wait\n");
 	DEBUG("\t\t[ -k num ]       # Set standby time (1-60 minutes, 0 disables)\n");
 	DEBUG("\t\t[ -x num ]       # Set USB iSerialNumber Reporting (1 on, 0 off)\n");
-	DEBUG("\t\t[ -X jobid ]     # Abort a printjob\n");}
+	DEBUG("\t\t[ -X jobid ]     # Abort a printjob\n");
+//	DEBUG("\t\t[ -t ]           # Dump calibration info (use with -DDD)\n");
+//	DEBUG("\t\t[ -T 0-6 ]       # Test print\n");
+}
 
 static int mitsu70x_cmdline_arg(void *vctx, int argc, char **argv)
 {
@@ -2174,7 +2404,7 @@ static int mitsu70x_cmdline_arg(void *vctx, int argc, char **argv)
 	if (!ctx)
 		return -1;
 
-	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "jk:swWX:x:")) >= 0) {
+	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "jk:tT:swWX:x:")) >= 0) {
 		switch(i) {
 		GETOPT_PROCESS_GLOBAL
 		case 'j':
@@ -2185,6 +2415,12 @@ static int mitsu70x_cmdline_arg(void *vctx, int argc, char **argv)
 			break;
 		case 's':
 			j = mitsu70x_query_status(ctx);
+			break;
+		case 't':
+			j = mitsu70x_test_dump(ctx);
+			break;
+		case 'T':
+			j = mitsu70x_test_print(ctx, atoi(optarg));
 			break;
 		case 'w':
 			j = mitsu70x_wakeup(ctx, 0);
@@ -2277,18 +2513,29 @@ static int mitsu70x_query_stats(void *vctx, struct printerstats *stats)
 	switch (ctx->conn->type) {
 	case P_MITSU_D70X:
 		stats->mfg = "Mitsubishi";
-		if (ctx->num_decks == 2)
-			stats->model = "CP-D707DW";
-		else
-			stats->model = "CP-D70DW";
+		if (ctx->num_decks == 2) {
+			if (ctx->is_s)
+				stats->model = "CP-D707DW-S";
+			else
+				stats->model = "CP-D707DW";
+		} else {
+			if (ctx->is_s)
+				stats->model = "CP-D70DW-S";
+			else
+				stats->model = "CP-D70DW";
+		}
 		break;
 	case P_MITSU_K60:
 		stats->mfg = "Mitsubishi";
 		stats->model = "CP-K60DW-S";
+		// XXX does is_s matter?  Mitsu SDK cares, but all models sold are labeled as -S..
 		break;
 	case P_MITSU_D80:
 		stats->mfg = "Mitsubishi";
-		stats->model = "CP-D80DW";
+		if (ctx->is_s)
+			stats->model = "CP-D80DW-S";
+		else
+			stats->model = "CP-D80DW";
 		break;
 	case P_KODAK_305:
 		stats->mfg = "Kodak";
@@ -2336,7 +2583,7 @@ static const char *mitsu70x_prefixes[] = {
 /* Exported */
 const struct dyesub_backend mitsu70x_backend = {
 	.name = "Mitsubishi CP-D70 family",
-	.version = "0.100" " (lib " LIBMITSU_VER ")",
+	.version = "0.106" " (lib " LIBMITSU_VER ")",
 	.flags = BACKEND_FLAG_DUMMYPRINT,
 	.uri_prefixes = mitsu70x_prefixes,
 	.cmdline_usage = mitsu70x_cmdline,
@@ -2353,12 +2600,12 @@ const struct dyesub_backend mitsu70x_backend = {
 	.combine_jobs = mitsu70x_combine_jobs,
 	.job_polarity = mitsu70x_job_polarity,
 	.devices = {
-		{ USB_VID_MITSU, USB_PID_MITSU_D70X, P_MITSU_D70X, NULL, "mitsubishi-d70dw"},
-		{ USB_VID_MITSU, USB_PID_MITSU_D70X, P_MITSU_D70X, NULL, "mitsubishi-d707dw"}, /* Duplicate */
-		{ USB_VID_MITSU, USB_PID_MITSU_K60, P_MITSU_K60, NULL, "mitsubishi-k60dw"},
-		{ USB_VID_MITSU, USB_PID_MITSU_D80, P_MITSU_D80, NULL, "mitsubishi-d80dw"},
-		{ USB_VID_KODAK, USB_PID_KODAK305, P_KODAK_305, NULL, "kodak-305"},
-		{ USB_VID_FUJIFILM, USB_PID_FUJI_ASK300, P_FUJI_ASK300, NULL, "fujifilm-ask-300"},
+		{ 0x06d3, 0x3b30, P_MITSU_D70X, NULL, "mitsubishi-d70dw"},
+		{ 0x06d3, 0x3b30, P_MITSU_D70X, NULL, "mitsubishi-d707dw"}, /* Duplicate */
+		{ 0x06d3, 0x3b31, P_MITSU_K60, NULL, "mitsubishi-k60dw"}, // variation type?
+		{ 0x06d3, 0x3b36, P_MITSU_D80, NULL, "mitsubishi-d80dw"},
+		{ 0x040a, 0x404f, P_KODAK_305, NULL, "kodak-305"},
+		{ 0x04cb, 0x5006, P_FUJI_ASK300, NULL, "fujifilm-ask-300"},
 		{ 0, 0, 0, NULL, NULL}
 	}
 };

@@ -1,11 +1,11 @@
 /*
  *   Mitsubishi Photo Printer Comon Code
  *
- *   (c) 2013-2020 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2021 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
- *     http://git.shaftnet.org/cgit/selphy_print.git
+ *     https://git.shaftnet.org/cgit/selphy_print.git
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -99,7 +99,7 @@ int mitsu_loadlib(struct mitsu_lib *lib, int type)
 			return CUPS_BACKEND_FAILED;
 		} else {
 			DEBUG("Image processing library successfully loaded\n");
-			if (lib->DumpAnnounce)
+			if (!stats_only && lib->DumpAnnounce)
 				lib->DumpAnnounce(logger);
 		}
 	}

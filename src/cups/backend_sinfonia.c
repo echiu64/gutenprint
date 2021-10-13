@@ -1,11 +1,11 @@
  /*
  *   Shinko/Sinfonia Common Code
  *
- *   (c) 2019-2020 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2019-2021 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
- *     http://git.shaftnet.org/cgit/selphy_print.git
+ *     https://git.shaftnet.org/cgit/selphy_print.git
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -33,6 +33,8 @@ int sinfonia_read_parse(int data_fd, uint32_t model,
 	uint32_t hdr[29];
 	int ret, i;
 	uint8_t tmpbuf[4];
+
+	job->common.jobsize = sizeof(*job);
 
 	/* Read in header */
 	ret = read(data_fd, hdr, SINFONIA_HDR_LEN);
@@ -129,7 +131,7 @@ int sinfonia_read_parse(int data_fd, uint32_t model,
 	}
 	job->jp.columns = hdr[13];
 	job->jp.rows = hdr[14];
-	job->jp.copies = hdr[15];
+	job->common.copies = hdr[15];
 
 	if (hdr[1] == 2245 || hdr[1] == 6145)
 		job->jp.ext_flags = hdr[28];
@@ -141,6 +143,8 @@ int sinfonia_raw10_read_parse(int data_fd, struct sinfonia_printjob *job)
 {
 	struct sinfonia_printcmd10_hdr hdr;
 	int ret;
+
+	job->common.jobsize = sizeof(*job);
 
 	/* Read in header */
 	ret = read(data_fd, &hdr, sizeof(hdr));
@@ -158,7 +162,7 @@ int sinfonia_raw10_read_parse(int data_fd, struct sinfonia_printjob *job)
 		ERROR("Unrecognized data format!\n");
 		return CUPS_BACKEND_CANCEL;
 	}
-	job->jp.copies = le16_to_cpu(hdr.copies);
+	job->common.copies = le16_to_cpu(hdr.copies);
 	job->jp.rows = le16_to_cpu(hdr.rows);
 	job->jp.columns = le16_to_cpu(hdr.columns);
 	job->jp.media = hdr.media;
@@ -169,8 +173,8 @@ int sinfonia_raw10_read_parse(int data_fd, struct sinfonia_printjob *job)
 	job->datalen = job->jp.rows * job->jp.columns * 3;
 
 	/* Hack in backprinting */
-	if (job->jp.copies & 0x8000) {
-		job->jp.copies &= ~0x8000;
+	if (job->common.copies & 0x8000) {
+		job->common.copies &= ~0x8000;
 		job->datalen += (44 * 2);
 		job->jp.ext_flags = EXT_FLAG_BACKPRINT;
 	}
@@ -200,10 +204,142 @@ int sinfonia_raw10_read_parse(int data_fd, struct sinfonia_printjob *job)
 	return CUPS_BACKEND_OK;
 }
 
+int sinfonia_panorama_splitjob(struct sinfonia_printjob *injob,
+			       uint16_t max_rows,
+			       struct sinfonia_printjob **newjobs)
+{
+	uint8_t *panels[3] = { NULL, NULL, NULL };
+	uint16_t panel_rows[3] = { 0, 0, 0 };
+	uint8_t numpanels;
+	uint16_t overlap_rows;
+	uint16_t inrows;
+	uint16_t cols;
+
+	int i;
+
+	inrows = injob->jp.rows;
+	cols = injob->jp.columns;
+
+	switch (cols) {
+	case 1548: /* EK6900/6950 */
+		if (max_rows != 2136) {
+			ERROR("Bad pano input\n");
+			return CUPS_BACKEND_CANCEL;
+		}
+		if (inrows > 3036) // 5x10
+			numpanels = 3;
+		else
+			numpanels = 2;
+
+		overlap_rows = 600 + 36;
+
+		if (numpanels == 3) {
+			if (inrows > 4536) // 5x15
+				overlap_rows = 100 + 36;
+			else
+				overlap_rows = 600 + 36;
+		}
+		break;
+	case 1844: /* EK6900/6950 */
+		if (max_rows != 2436) {
+			ERROR("Bad pano input\n");
+			return CUPS_BACKEND_CANCEL;
+		}
+
+		overlap_rows = 600 + 36;
+
+		if (inrows > 4236) // ie 6x14
+			numpanels = 3;
+		else
+			numpanels = 2;
+
+		break;
+	case 2464: /* EK8810 */
+		if (max_rows != 3624 && max_rows != 3024) {
+			ERROR("Bad pano input\n");
+			return CUPS_BACKEND_CANCEL;
+		}
+		overlap_rows = 600 + 24;
+
+		if (max_rows == 3024) { /* 8x10 media */
+			if (inrows > 5424) // 8x18
+				numpanels = 3;
+			else
+				numpanels = 2;
+		} else { /* 8x12 media */
+			if (inrows > 6624) // 8x22
+				numpanels = 3;
+			else
+				numpanels = 2;
+		}
+
+		if (numpanels == 3) {
+			if (max_rows == 3024) {
+				if (inrows == 6024) // 8x20
+					overlap_rows = 24;
+			} else {
+				if (inrows == 10824) // 8x36
+					overlap_rows = 24;
+			}
+		} else {
+			if (max_rows == 3024) {
+				if (inrows == 9024) // 8x30
+					overlap_rows = 24;
+			} else {
+				if (inrows == 7224) // 8x24
+					overlap_rows = 24;
+			}
+		}
+
+		break;
+	default:
+		ERROR("Unknown pano input cols: %d\n", cols);
+		return CUPS_BACKEND_CANCEL;
+	}
+
+	/* Work out which number of rows per panel */
+	if (!panel_rows[0]) {
+		panel_rows[0] = max_rows;
+		panel_rows[1] = inrows - panel_rows[0] + overlap_rows;
+		if (numpanels > 2)
+			panel_rows[2] = inrows - panel_rows[0] - panel_rows[1] + overlap_rows + overlap_rows;
+	}
+
+	/* Allocate and set up new jobs and buffers */
+	for (i = 0 ; i < numpanels ; i++) {
+		newjobs[i] = malloc(sizeof(struct sinfonia_printjob));
+		if (!newjobs[i]) {
+			ERROR("Memory allocation failure");
+			return CUPS_BACKEND_RETRY_CURRENT;
+		}
+		panels[i] = malloc(cols * panel_rows[i] * 3);
+		if (!panels[i]) {
+			ERROR("Memory allocation failure");
+			return CUPS_BACKEND_RETRY_CURRENT;
+		}
+		/* Fill in header differences */
+		memcpy(newjobs[i], injob, sizeof(struct sinfonia_printjob));
+		newjobs[i]->databuf = panels[i];
+		newjobs[i]->jp.rows = panel_rows[i];
+		// XXX what else?
+	}
+
+	dyesub_pano_split_rgb8(injob->databuf, cols, inrows,
+			       numpanels, overlap_rows, max_rows,
+			       panels, panel_rows);
+
+	// XXX postprocess buffers!
+	// pano_process_rgb8(numpanels, cols, overlap_rows, panels, panel_rows);
+
+	return CUPS_BACKEND_OK;
+}
+
 int sinfonia_raw18_read_parse(int data_fd, struct sinfonia_printjob *job)
 {
 	struct sinfonia_printcmd18_hdr hdr;
 	int ret;
+
+	job->common.jobsize = sizeof(*job);
 
 	/* Read in header */
 	ret = read(data_fd, &hdr, sizeof(hdr));
@@ -221,7 +357,7 @@ int sinfonia_raw18_read_parse(int data_fd, struct sinfonia_printjob *job)
 		ERROR("Unrecognized data format!\n");
 		return CUPS_BACKEND_CANCEL;
 	}
-	job->jp.copies = le16_to_cpu(hdr.copies);
+	job->common.copies = le16_to_cpu(hdr.copies);
 	job->jp.rows = le16_to_cpu(hdr.rows);
 	job->jp.columns = le16_to_cpu(hdr.columns);
 	job->jp.media = hdr.media;
@@ -260,6 +396,8 @@ int sinfonia_raw28_read_parse(int data_fd, struct sinfonia_printjob *job)
 	struct sinfonia_printcmd28_hdr hdr;
 	int ret;
 
+	job->common.jobsize = sizeof(*job);
+
 	/* Read in header */
 	ret = read(data_fd, &hdr, sizeof(hdr));
 	if (ret < 0 || ret != sizeof(hdr)) {
@@ -276,7 +414,7 @@ int sinfonia_raw28_read_parse(int data_fd, struct sinfonia_printjob *job)
 		ERROR("Unrecognized data format!\n");
 		return CUPS_BACKEND_CANCEL;
 	}
-	job->jp.copies = le16_to_cpu(hdr.copies);
+	job->common.copies = le16_to_cpu(hdr.copies);
 	job->jp.rows = le16_to_cpu(hdr.rows);
 	job->jp.columns = le16_to_cpu(hdr.columns);
 	job->jp.media = hdr.media;

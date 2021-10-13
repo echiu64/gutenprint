@@ -1,11 +1,11 @@
 /*
  *   Sony UP-D series (new) Photo Printer CUPS backend -- libusb-1.0 version
  *
- *   (c) 2019-2020 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2019-2021 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
- *     http://git.shaftnet.org/cgit/selphy_print.git
+ *     https://git.shaftnet.org/cgit/selphy_print.git
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -18,10 +18,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *
- *          [http://www.gnu.org/licenses/gpl-2.0.html]
+ *   along with this program; if not, see <https://www.gnu.org/licenses/>.
  *
  *   SPDX-License-Identifier: GPL-2.0+
  *
@@ -33,8 +30,7 @@
 
 /* Private data structures */
 struct updneo_printjob {
-	size_t jobsize;
-	int copies;
+	struct dyesub_job_common common;
 
 	uint8_t *databuf;
 	int datalen;
@@ -392,7 +388,7 @@ static int updneo_read_parse(void *vctx, const void **vjob, int data_fd, int cop
 			break;
 		}
 	}
-	job->copies = 1;  /* Printer makes copies */
+	job->common.copies = 1;  /* Printer makes copies */
 
 	*vjob = job;
 
@@ -496,7 +492,7 @@ static int updneo_get_status(struct updneo_ctx *ctx)
 			   !strcmp("CLS", dict[i].key)) {
 			/* Ignore standard IEEE1284 attributes! */
 		} else {
-			if (!strncmp("SC", dict[i].key, 2) && !strncmp("SP", dict[i].key, 2))
+			if (!strncmp("SC", dict[i].key, 2) || !strncmp("SP", dict[i].key, 2))
 				DEBUG("Extra/Unknown IEEE1284 field '%s' = '%s'\n",
 				      dict[i].key, dict[i].val);
 		}
@@ -537,7 +533,7 @@ static void updneo_dump_status(struct updneo_ctx *ctx, struct updneo_sts *sts)
 	}
 }
 
-static int updneo_main_loop(void *vctx, const void *vjob) {
+static int updneo_main_loop(void *vctx, const void *vjob, int wait_for_return) {
 	struct updneo_ctx *ctx = vctx;
 	int ret;
 	int copies;
@@ -549,7 +545,7 @@ static int updneo_main_loop(void *vctx, const void *vjob) {
 	if (!job)
 		return CUPS_BACKEND_FAILED;
 
-	copies = job->copies;
+	copies = job->common.copies;
 
 top:
 
@@ -604,7 +600,7 @@ retry:
 
 	/* See if we're busy... */
 	if (ctx->sts.scprs != 0) {
-		if (fast_return) {
+		if (!wait_for_return) {
 			INFO("Fast return mode enabled.\n");
 		} else {
 			goto retry;
@@ -702,7 +698,7 @@ static const char *sonyupdneo_prefixes[] = {
 
 const struct dyesub_backend sonyupdneo_backend = {
 	.name = "Sony UP-D Neo",
-	.version = "0.16",
+	.version = "0.18",
 	.flags = BACKEND_FLAG_BADISERIAL, /* UP-D898MD at least */
 	.uri_prefixes = sonyupdneo_prefixes,
 	.cmdline_arg = updneo_cmdline_arg,

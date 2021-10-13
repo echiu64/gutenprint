@@ -1,11 +1,11 @@
 /*
  *   Kodak Professional 1400/805 CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013-2020 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2021 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
- *     http://git.shaftnet.org/cgit/selphy_print.git
+ *     https://git.shaftnet.org/cgit/selphy_print.git
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -18,9 +18,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
- *          [http://www.gnu.org/licenses/gpl-2.0.html]
+ *   along with this program; if not, see <https://www.gnu.org/licenses/>.
  *
  *   SPDX-License-Identifier: GPL-2.0+
  *
@@ -64,15 +62,14 @@ struct kodak1400_hdr {
 	uint8_t  null4[12];
 } __attribute__((packed));
 
-
 /* Private data structure */
 struct kodak1400_printjob {
+	struct dyesub_job_common common;
+
 	struct kodak1400_hdr hdr;
 	uint8_t *plane_r;
 	uint8_t *plane_g;
 	uint8_t *plane_b;
-
-	int copies;
 };
 
 struct kodak1400_ctx {
@@ -80,6 +77,24 @@ struct kodak1400_ctx {
 
 	struct marker marker;
 };
+
+static const char *kodak1400_errormsgs(uint8_t code1, uint8_t code2)
+{
+	if (code1 == 0x00 && code2 == 0x08)
+		return "No paper tray";
+	else if (code1 == 0x02 && code2 == 0x00)
+		return "Paper jam";
+	else if (code1 == 0x02 && code2 == 0x01)
+		return "Cover open during printing";
+	else if (code1 == 0x08 && code2 == 0x00)
+		return "Top cover open";
+	else if (code1 == 0x10) // code2 == 0x00 and 0x01
+		return "Media mismatch";
+	else if (code1 == 0x40 && code2 == 0x00)
+		return "Paper empty";
+	else
+		return "Unknown";
+}
 
 static int send_plane(struct kodak1400_ctx *ctx,
 		      const struct kodak1400_printjob *job,
@@ -324,13 +339,16 @@ static int kodak1400_read_parse(void *vctx, const void **vjob, int data_fd, int 
 		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 	memset(job, 0, sizeof(*job));
-	job->copies = copies;
+	job->common.jobsize = sizeof(*job);
+	job->common.copies = copies;
 
 	/* Read in then validate header */
 	ret = read(data_fd, &job->hdr, sizeof(job->hdr));
 	if (ret < 0 || ret != sizeof(job->hdr)) {
-		if (ret == 0)
+		if (ret == 0) {
+			kodak1400_cleanup_job(job);
 			return CUPS_BACKEND_CANCEL;
+		}
 		ERROR("Read failed (%d/%d/%d)\n",
 		      ret, 0, (int)sizeof(job->hdr));
 		perror("ERROR: Read failed");
@@ -393,7 +411,8 @@ static int kodak1400_read_parse(void *vctx, const void **vjob, int data_fd, int 
 static uint8_t idle_data[READBACK_LEN] = { 0xe4, 0x72, 0x00, 0x00,
 					   0x00, 0x00, 0x00, 0x00 };
 
-static int kodak1400_main_loop(void *vctx, const void *vjob) {
+static int kodak1400_main_loop(void *vctx, const void *vjob, int wait_for_return)
+{
 	struct kodak1400_ctx *ctx = vctx;
 
 	uint8_t rdbuf[READBACK_LEN], rdbuf2[READBACK_LEN];
@@ -402,6 +421,7 @@ static int kodak1400_main_loop(void *vctx, const void *vjob) {
 	int num, ret;
 	uint16_t temp16;
 	int copies;
+	(void)wait_for_return;
 
 	const struct kodak1400_printjob *job = vjob;
 
@@ -410,7 +430,7 @@ static int kodak1400_main_loop(void *vctx, const void *vjob) {
 	if (!job)
 		return CUPS_BACKEND_FAILED;
 
-	copies = job->copies;
+	copies = job->common.copies;
 
 top:
 	if (state != last_state) {
@@ -442,9 +462,10 @@ top:
 
 	/* Error handling */
 	if (rdbuf[4] || rdbuf[5]) {
-		ERROR("Error code reported by printer (%02x/%02x), terminating print\n",
+		ERROR("Error code reported: %s (%02x/%02x), terminating print\n",
+		      kodak1400_errormsgs(rdbuf[4], rdbuf[5]),
 		      rdbuf[4], rdbuf[5]);
-		return CUPS_BACKEND_STOP;  // HOLD/CANCEL/FAILED?  XXXX parse error!
+		return CUPS_BACKEND_STOP;  // HOLD/CANCEL/FAILED?
 	}
 
 	fflush(logger);
@@ -607,14 +628,6 @@ static int kodak1400_query_markers(void *vctx, struct marker **markers, int *cou
 	return CUPS_BACKEND_OK;
 }
 
-/* Exported */
-#define USB_VID_KODAK       0x040A
-#define USB_PID_KODAK_1400  0x4022
-#define USB_PID_KODAK_805   0x4034
-#define USB_VID_MITSU        0x06D3
-#define USB_PID_MITSU_3020D  0x038B
-#define USB_PID_MITSU_3020DA 0x03AA
-
 static const char *kodak1400_prefixes[] = {
 	"kodak1400", // Family driver, do NOT nuke!
 	// backwards compatibility
@@ -624,7 +637,7 @@ static const char *kodak1400_prefixes[] = {
 
 const struct dyesub_backend kodak1400_backend = {
 	.name = "Kodak 1400/805",
-	.version = "0.41",
+	.version = "0.44",
 	.uri_prefixes = kodak1400_prefixes,
 	.cmdline_usage = kodak1400_cmdline,
 	.cmdline_arg = kodak1400_cmdline_arg,
@@ -635,13 +648,13 @@ const struct dyesub_backend kodak1400_backend = {
 	.main_loop = kodak1400_main_loop,
 	.query_markers = kodak1400_query_markers,
 	.devices = {
-		{ USB_VID_KODAK, USB_PID_KODAK_1400, P_KODAK_1400_805, "Kodak", "kodak-1400"},
-		{ USB_VID_KODAK, USB_PID_KODAK_805, P_KODAK_1400_805, "Kodak", "kodak-805"},
-		{ USB_VID_MITSU, USB_PID_MITSU_3020D, P_KODAK_1400_805, NULL, "mitsubishi-3020d"},
-		{ USB_VID_MITSU, USB_PID_MITSU_3020D, P_KODAK_1400_805, NULL, "mitsubishi-3020du"}, /* Duplicate */
-		{ USB_VID_MITSU, USB_PID_MITSU_3020D, P_KODAK_1400_805, NULL, "mitsubishi-3020de"}, /* Duplicate */
-		{ USB_VID_MITSU, USB_PID_MITSU_3020DA, P_KODAK_1400_805, NULL, "mitsubishi-3020da" },
-		{ USB_VID_MITSU, USB_PID_MITSU_3020DA, P_KODAK_1400_805, NULL, "mitsubishi-3020dae" }, /* Duplicate */
+		{ 0x040a, 0x4022, P_KODAK_1400_805, "Kodak", "kodak-1400"},
+		{ 0x040a, 0x4034, P_KODAK_1400_805, "Kodak", "kodak-805"},
+		{ 0x06d3, 0x038b, P_KODAK_1400_805, NULL, "mitsubishi-3020d"},
+		{ 0x06d3, 0x038b, P_KODAK_1400_805, NULL, "mitsubishi-3020du"}, /* Duplicate */
+		{ 0x06d3, 0x038b, P_KODAK_1400_805, NULL, "mitsubishi-3020de"}, /* Duplicate */
+		{ 0x06d3, 0x03aa, P_KODAK_1400_805, NULL, "mitsubishi-3020da" },
+		{ 0x06d3, 0x03aa, P_KODAK_1400_805, NULL, "mitsubishi-3020dae" }, /* Duplicate */
 		{ 0, 0, 0, NULL, NULL}
 	}
 };
@@ -774,6 +787,23 @@ const struct dyesub_backend kodak1400_backend = {
  e4 72 00 00  02 01 00 00  -- media off, error red. [out of paper]
  e4 72 00 00  02 00 00 00  -- media off, error red. [out of paper]
  e4 72 00 00  02 00 50 50  -- media on, error red. [paper jam while laminating]
+
+                    ^^ ^^  Status
+
+                    00 00   Idle
+                    50 59   Printing Y
+                    50 4d   Printing M
+                    50 53   Printing C
+                    50 50   Printing O
+              ^^ ^^   Error code
+    00 08   No paper tray
+    02 00   Paper jam
+    02 01   Cover popped open during printing
+    08 00   Top open
+    10 00   Media mismatch
+    10 01   ??
+    40 00   Failed to load media (paper empty?)
+
 
  *********************************************
   Calibration data:

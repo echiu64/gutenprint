@@ -1,11 +1,11 @@
 /*
  *   Mitsubishi CP-9xxx Photo Printer Family CUPS backend
  *
- *   (c) 2014-2020 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2014-2021 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
- *     http://git.shaftnet.org/cgit/selphy_print.git
+ *     https://git.shaftnet.org/cgit/selphy_print.git
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -34,23 +34,6 @@
 #define MITSU_M98xx_LUT_FILE       "M98XXL01.lut"
 #define MITSU_CP30D_LUT_FILE       "CP30LT_1.lut"
 #define LAMINATE_STRIDE 1868
-
-/* USB VIDs and PIDs */
-
-#define USB_VID_MITSU        0x06D3
-#define USB_PID_MITSU_9500D  0x0393
-#define USB_PID_MITSU_9000D  0x0394
-#define USB_PID_MITSU_9000AM 0x0395
-#define USB_PID_MITSU_9550D  0x03A1
-#define USB_PID_MITSU_9550DS 0x03A5  // or DZ/DZS/DZU
-#define USB_PID_MITSU_9600D  0x03A9
-//#define USB_PID_MITSU_9600DS  XXXXXX
-#define USB_PID_MITSU_CP30D  0x03AB
-#define USB_PID_MITSU_9800D  0x03AD
-#define USB_PID_MITSU_9800DS 0x03AE
-#define USB_PID_MITSU_98__D  0x3B21
-//#define USB_PID_MITSU_9810D   XXXXXX
-//#define USB_PID_MITSU_9820DS  XXXXXX
 
 /* Spool file structures */
 
@@ -106,8 +89,7 @@ struct mitsu9550_cmd {
 
 /* Private data structure */
 struct mitsu9550_printjob {
-	size_t jobsize;
-	int copies;
+	struct dyesub_job_common common;
 
 	uint8_t *databuf;
 	uint32_t datalen;
@@ -160,10 +142,11 @@ struct mitsu9550_media {
 	uint8_t  hdr[2];  /* 24 2e */
 	uint8_t  unk[12];
 	uint8_t  type;
-	uint8_t  unka[13];
-	uint16_t max;  /* BE, prints per media */
+	uint8_t  unka[11];
+	uint16_t unkb;    /* 0d 00 (CP9810), 00 00 (others?) */
+	uint16_t max;     /* BE, prints per media */
 	uint16_t remain2; /* BE, prints remaining  (CP30)*/
-	uint16_t remain; /* BE, prints remaining (Everything else) */
+	uint16_t remain;  /* BE, prints remaining (Everything else) */
 	uint8_t  unkc[14];
 } __attribute__((packed));
 
@@ -218,7 +201,7 @@ struct mitsu9550_status2 {
 	uint8_t  unkb[4]; /* 0a 00 00 01 */
 } __attribute__((packed));
 
-static int mitsu9550_main_loop(void *vctx, const void *vjob);
+static int mitsu9550_main_loop(void *vctx, const void *vjob, int wait_for_return);
 
 static const char *cp30_errors(uint16_t err)
 {
@@ -265,7 +248,7 @@ static const char *cp30_media_types(uint16_t remain)
 	/* Sanity-check media response */				\
 	if ((media->remain == 0 && media->remain2 == 0) || media->max == 0) { \
 		ERROR("Printer out of media!\n");			\
-		return CUPS_BACKEND_HOLD;				\
+		return CUPS_BACKEND_STOP;				\
 	}								\
 
 #define QUERY_STATUS_II				\
@@ -480,8 +463,8 @@ static int mitsu9550_read_parse(void *vctx, const void **vjob, int data_fd, int 
 	}
 	memset(job, 0, sizeof(*job));
 	job->is_raw = 1;
-	job->jobsize = sizeof(*job);
-	job->copies = copies;
+	job->common.jobsize = sizeof(*job);
+	job->common.copies = copies;
 
 top:
 	/* Read in initial header */
@@ -739,16 +722,17 @@ hdr_done:
 	}
 
 	/* Update printjob header to reflect number of requested copies */
+	// XXX use larger?
 	if (job->hdr2_present) {
 		if (be16_to_cpu(job->hdr2.copies) < copies)
 			job->hdr2.copies = cpu_to_be16(copies);
 		copies = 1;
 	}
-	job->copies = copies;
+	job->common.copies = copies;
 
 	/* All further work is in main loop */
 	if (test_mode >= TEST_MODE_NOPRINT)
-		mitsu9550_main_loop(ctx, job);
+		mitsu9550_main_loop(ctx, job, 1);
 
 	*vjob = job;
 
@@ -1020,7 +1004,7 @@ static int validate_media(int type, int media, int cols, int rows)
 	return CUPS_BACKEND_OK;
 }
 
-static int mitsu9550_main_loop(void *vctx, const void *vjob) {
+static int mitsu9550_main_loop(void *vctx, const void *vjob, int wait_for_return) {
 	struct mitsu9550_ctx *ctx = vctx;
 	struct mitsu9550_cmd cmd;
 	uint8_t rdbuf[READBACK_LEN];
@@ -1349,9 +1333,9 @@ top:
 			if (sts30->sts == CP30_STS_IDLE)  /* If printer transitions to idle */
 				break;
 
-			// XXX if (fast_return && copies_remaining == 0) break...
+			// XXX if (!wait_for_return && copies_remaining == 0) break...
 
-			if (fast_return && sts30->sts != CP30_STS_IDLE) {
+			if (!wait_for_return && sts30->sts != CP30_STS_IDLE) {
 				INFO("Fast return mode enabled.\n");
 				break;
 			}
@@ -1367,12 +1351,12 @@ top:
 			if (!sts->sts1) /* If printer transitions to idle */
 				break;
 
-			if (fast_return && !be16_to_cpu(sts->copies)) { /* No remaining prints */
+			if (!wait_for_return && !be16_to_cpu(sts->copies)) { /* No remaining prints */
 				INFO("Fast return mode enabled.\n");
 				break;
 			}
 
-			if (fast_return && !sts->sts5) {
+			if (!wait_for_return && !sts->sts5) {
 				INFO("Fast return mode enabled.\n");
 				break;
 			}
@@ -1628,7 +1612,7 @@ static const char *mitsu9550_prefixes[] = {
 /* Exported */
 const struct dyesub_backend mitsu9550_backend = {
 	.name = "Mitsubishi CP9xxx family",
-	.version = "0.61" " (lib " LIBMITSU_VER ")",
+	.version = "0.63" " (lib " LIBMITSU_VER ")",
 	.uri_prefixes = mitsu9550_prefixes,
 	.cmdline_usage = mitsu9550_cmdline,
 	.cmdline_arg = mitsu9550_cmdline_arg,
@@ -1641,24 +1625,23 @@ const struct dyesub_backend mitsu9550_backend = {
 	.query_serno = mitsu9550_query_serno,
 	.query_markers = mitsu9550_query_markers,
 	.devices = {
-		{ USB_VID_MITSU, USB_PID_MITSU_9000AM, P_MITSU_9550, NULL, "mitsubishi-9000dw"}, // XXX -am instead?
-		{ USB_VID_MITSU, USB_PID_MITSU_9000D, P_MITSU_9550, NULL, "mitsubishi-9000dw"},
-		{ USB_VID_MITSU, USB_PID_MITSU_9500D, P_MITSU_9550, NULL, "mitsubishi-9500dw"},
-		{ USB_VID_MITSU, USB_PID_MITSU_9550D, P_MITSU_9550, NULL, "mitsubishi-9550dw"},
-		{ USB_VID_MITSU, USB_PID_MITSU_9550D, P_MITSU_9550, NULL, "mitsubishi-9550d"}, /* Duplicate */
-		{ USB_VID_MITSU, USB_PID_MITSU_9550DS, P_MITSU_9550S, NULL, "mitsubishi-9550dw-s"},
-		{ USB_VID_MITSU, USB_PID_MITSU_9550DS, P_MITSU_9550S, NULL, "mitsubishi-9550dz"}, /* Duplicate */
-		{ USB_VID_MITSU, USB_PID_MITSU_9600D, P_MITSU_9600, NULL, "mitsubishi-9600dw"},
-//	{ USB_VID_MITSU, USB_PID_MITSU_9600D, P_MITSU_9600S, NULL, "mitsubishi-9600dw-s"},
-		{ USB_VID_MITSU, USB_PID_MITSU_CP30D, P_MITSU_CP30D, NULL, "mitsubishi-cp30dw"},
-		{ USB_VID_MITSU, USB_PID_MITSU_9800D, P_MITSU_9800, NULL, "mitsubishi-9800dw"},
-		{ USB_VID_MITSU, USB_PID_MITSU_9800D, P_MITSU_9800, NULL, "mitsubishi-9800d"}, /* Duplicate */
-		{ USB_VID_MITSU, USB_PID_MITSU_9800DS, P_MITSU_9800S, NULL, "mitsubishi-9800dw-s"},
-		{ USB_VID_MITSU, USB_PID_MITSU_9800DS, P_MITSU_9800S, NULL, "mitsubishi-9800dz"}, /* Duplicate */
-		{ USB_VID_MITSU, USB_PID_MITSU_98__D, P_MITSU_9810, NULL, "mitsubishi-9810dw"},
-		{ USB_VID_MITSU, USB_PID_MITSU_98__D, P_MITSU_9810, NULL, "mitsubishi-9810d"}, /* Duplicate */
-//	{ USB_VID_MITSU, USB_PID_MITSU_9810D, P_MITSU_9810, NULL, "mitsubishi-9810dw"},
-//	{ USB_VID_MITSU, USB_PID_MITSU_9820DS, P_MITSU_9820S, NULL, "mitsubishi-9820dw-s"},
+		{ 0x06d3, 0x0395, P_MITSU_9550, NULL, "mitsubishi-9000dw"}, // XXX -am instead?
+		{ 0x06d3, 0x0394, P_MITSU_9550, NULL, "mitsubishi-9000dw"},
+		{ 0x06d3, 0x0393, P_MITSU_9550, NULL, "mitsubishi-9500dw"},
+		{ 0x06d3, 0x03a1, P_MITSU_9550, NULL, "mitsubishi-9550dw"},
+		{ 0x06d3, 0x03a1, P_MITSU_9550, NULL, "mitsubishi-9550d"}, /* Duplicate */
+		{ 0x06d3, 0x03a5, P_MITSU_9550S, NULL, "mitsubishi-9550dw-s"}, // or DZ/DZS/DZU
+		{ 0x06d3, 0x03a5, P_MITSU_9550S, NULL, "mitsubishi-9550dz"}, /* Duplicate */
+		{ 0x06d3, 0x03a9, P_MITSU_9600, NULL, "mitsubishi-9600dw"},
+//	{ 0x06d3, USB_PID_MITSU_9600D, P_MITSU_9600S, NULL, "mitsubishi-9600dw-s"},
+		{ 0x06d3, 0x03ab, P_MITSU_CP30D, NULL, "mitsubishi-cp30dw"},
+		{ 0x06d3, 0x03ad, P_MITSU_9800, NULL, "mitsubishi-9800dw"},
+		{ 0x06d3, 0x03ad, P_MITSU_9800, NULL, "mitsubishi-9800d"}, /* Duplicate */
+		{ 0x06d3, 0x03ae, P_MITSU_9800S, NULL, "mitsubishi-9800dw-s"},
+		{ 0x06d3, 0x03ae, P_MITSU_9800S, NULL, "mitsubishi-9800dz"}, /* Duplicate */
+		{ 0x06d3, 0x3b21, P_MITSU_9810, NULL, "mitsubishi-9810dw"},
+		{ 0x06d3, 0x3b21, P_MITSU_9810, NULL, "mitsubishi-9810d"}, /* Duplicate */
+//	{ 0x06d3, USB_PID_MITSU_9820DS, P_MITSU_9820S, NULL, "mitsubishi-9820dw-s"},
 		{ 0, 0, 0, NULL, NULL}
 	}
 };
@@ -1804,9 +1787,9 @@ const struct dyesub_backend mitsu9550_backend = {
   [[ Status Query C ]]
 
  -> 1b 56 21 00                                       [ Most models ]
- <- 21 2e 00 80 00 22 a8 0b  00 00 00 00 00 00 00 00
+ <- 21 2e 00 80 00 22 XX 0b  00 00 00 00 00 00 00 00 :: XX == a8 (most) 08 (9810)
     00 00 00 00 00 00 00 00  00 00 00 QQ 00 00 00 00 :: QQ == Prints in job?
-    00 00 00 00 00 00 00 00  00 00 NN NN 0A 00 00 01 :: NN NN = Remaining media
+    00 00 00 00 00 00 00 00  00 00 NN NN 0a 00 00 01 :: NN NN = Remaining media
 
     21 2e 00 00 00 20 08 02  00 00 00 00 00 00 00 00   [ CP30 ]
     00 00 00 00 00 00 00 00  00 00 00 XX 00 00 00 00  :: XX == seen 01 and 02.  Unknown.
@@ -1959,6 +1942,8 @@ const struct dyesub_backend mitsu9550_backend = {
     31  be 80 01  80 4b
      [...]
 
+    00  be 80 01  76 37  :: printed 4x6 on 6x9?
+
  Working theory of interpreting the status flags:
 
   MM :: 00 is idle, else mechanical printer state.
@@ -1966,8 +1951,8 @@ const struct dyesub_backend mitsu9550_backend = {
   QQ :: ?? 0x3e + 0x40 or 0x80 (see below)
   RR :: ?? 0x00 is idle, 0x40 or 0x80 is "printing"?
   SS :: ?? 0x00 means "ready for another print" but 0x01 is "busy"
-  TT :: ?? seen values between 0x7c through 0x96)
-  UU :: ?? seen values between 0x43 and 0x4c -- temperature?
+  TT :: ?? seen values between 0x76 through 0x96)
+  UU :: ?? seen values between 0x37 and 0x4c -- temperature?
   ZZ :: ?? Error code  (08 = Door open on 9600)
 
   ***

@@ -1,11 +1,11 @@
 /*
  *   HiTi Photo Printer CUPS backend -- libusb-1.0 version
  *
- *   (c) 2019-2020 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2019-2021 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
- *     http://git.shaftnet.org/cgit/selphy_print.git
+ *     https://git.shaftnet.org/cgit/selphy_print.git
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -18,10 +18,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *
- *          [http://www.gnu.org/licenses/gpl-2.0.html]
+ *   along with this program; if not, see <https://www.gnu.org/licenses/>.
  *
  *   SPDX-License-Identifier: GPL-2.0+
  *
@@ -360,8 +357,7 @@ struct hiti_matrix {
 
 /* Private data structure */
 struct hiti_printjob {
-	size_t jobsize;
-	int copies;
+	struct dyesub_job_common common;
 
 	uint8_t *databuf;
 	uint32_t datalen;
@@ -937,7 +933,7 @@ static int hiti_attach(void *vctx, struct dyesub_connection *conn, uint8_t jobid
 	}
 
 	if (test_mode < TEST_MODE_NOATTACH) {
-		/* P52x firmware v1.19+ lose their minds when Linux
+		/* P52x firmware v1.19-v1.21 lose their minds when Linux
 		   issues a routine CLEAR_ENDPOINT_HALT.  Printer can recover
 		   if it is reset.  Unclear what the side effects are.. */
 		if (ctx->conn->type == P_HITI_52X)
@@ -972,6 +968,17 @@ static int hiti_attach(void *vctx, struct dyesub_connection *conn, uint8_t jobid
 		if (ret)
 			return ret;
 
+		switch (ctx->conn->type) {
+		case P_HITI_52X:
+			if (strncmp(ctx->version, "1.23", 4) < 0)
+				WARNING("Printer firmware %s out of date (vs %s), please update.\n", ctx->version, "v1.23");
+			else if (strncmp(ctx->version, "1.22", 4) < 0 &&
+				 strncmp(ctx->version, "1.17", 4) > 0)  /* V1.18 -> v1.21 have a known USB CLEAR_ENDPOINT_HALT issue */
+				WARNING("Printer firmware %s has a known USB bug, please update to at least v1.22\n", ctx->version);
+			break;
+		default:
+			break;
+		}
 		// do real stuff
 	} else {
 		ctx->supplies2[0] = PAPER_TYPE_6INCH;
@@ -1016,6 +1023,9 @@ static uint8_t *hiti_get_correction_data(struct hiti_ctx *ctx, uint8_t mode)
 
 	switch (ctx->conn->type)
 	{
+	case P_HITI_CS2XX:
+		fname = "CS2xx_CMPBcd.bin";
+		break;
 	case P_HITI_51X:
 		if (!mediatype) { /* DNP media */
 			if (mode) {
@@ -1517,8 +1527,8 @@ static int hiti_read_parse(void *vctx, const void **vjob, int data_fd, int copie
 		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 	memset(job, 0, sizeof(*job));
-
-	job->copies = copies;
+	job->common.jobsize = sizeof(*job);
+	job->common.copies = copies;
 
 	/* Read in header */
 	ret = read(data_fd, &job->hdr, sizeof(job->hdr));
@@ -1554,8 +1564,8 @@ static int hiti_read_parse(void *vctx, const void **vjob, int data_fd, int copie
 	}
 
 	/* Use whicever copy count is larger */
-	if (job->copies < (int)job->hdr.copies)
-		job->copies = job->hdr.copies;
+	if (job->common.copies < (int)job->hdr.copies)
+		job->common.copies = job->hdr.copies;
 
 	/* Sanity check printer type vs job type */
 	switch(ctx->conn->type)
@@ -1782,7 +1792,7 @@ static int calc_offset(int val, int mid, int max, int step)
 	return val;
 }
 
-static int hiti_main_loop(void *vctx, const void *vjob)
+static int hiti_main_loop(void *vctx, const void *vjob, int wait_for_return)
 {
 	struct hiti_ctx *ctx = vctx;
 
@@ -1841,7 +1851,7 @@ static int hiti_main_loop(void *vctx, const void *vjob)
 	sf.rows_offset = calc_offset(ctx->calibration.vert, 5, 8, 4);
 	sf.cols_offset = calc_offset(ctx->calibration.horiz, 6, 11, 4);
 	sf.colorSeq = 0x87 + (job->hdr.overcoat ? 0xc0 : 0);
-	sf.copies = job->copies;
+	sf.copies = job->common.copies;
 	sf.printMode = 0x08 + (job->hdr.quality ? 0x02 : 0);
 	ret = hiti_docmd(ctx, CMD_EFD_SF, (uint8_t*) &sf, sizeof(sf), &resplen);
 	if (ret)
@@ -1982,7 +1992,7 @@ resend_c:
 			return CUPS_BACKEND_FAILED;
 		}
 
-		if (fast_return) {
+		if (!wait_for_return) {
 			INFO("Fast return mode enabled.\n");
 			break;
 		}
@@ -2394,30 +2404,9 @@ static const char *hiti_prefixes[] = {
 	NULL
 };
 
-/* Exported */
-#define USB_VID_HITI         0x0d16
-
-#define USB_PID_HITI_P510K   0x0007
-#define USB_PID_HITI_P720    0x0009
-#define USB_PID_HITI_P728    0x000A
-#define USB_PID_HITI_P510L   0x000B
-#define USB_PID_HITI_P518A   0x000D
-#define USB_PID_HITI_P530    0x000F
-#define USB_PID_HITI_P510S   0x010E
-#define USB_PID_HITI_P110S   0x0110
-#define USB_PID_HITI_P510SI  0x0111
-#define USB_PID_HITI_P518S   0x0112
-#define USB_PID_HITI_CS200   0x0309
-#define USB_PID_HITI_CS220   0x030A
-#define USB_PID_HITI_P750    0x0501
-#define USB_PID_HITI_P52X    0x0502
-#define USB_PID_HITI_P310L   0x0503
-#define USB_PID_HITI_P310W   0x050A
-#define USB_PID_HITI_X610    0x0800
-
 const struct dyesub_backend hiti_backend = {
 	.name = "HiTi Photo Printers",
-	.version = "0.31",
+	.version = "0.33",
 	.uri_prefixes = hiti_prefixes,
 	.cmdline_usage = hiti_cmdline,
 	.cmdline_arg = hiti_cmdline_arg,
@@ -2430,20 +2419,33 @@ const struct dyesub_backend hiti_backend = {
 	.query_markers = hiti_query_markers,
 	.query_stats = hiti_query_stats,
 	.devices = {
-		{ USB_VID_HITI, USB_PID_HITI_P510K, P_HITI_51X, NULL, "hiti-p510k"},
-		{ USB_VID_HITI, USB_PID_HITI_P510L, P_HITI_51X, NULL, "hiti-p510l"},
-		{ USB_VID_HITI, USB_PID_HITI_P518A, P_HITI_51X, NULL, "hiti-p518a"},
-		{ USB_VID_HITI, USB_PID_HITI_P510S, P_HITI_51X, NULL, "hiti-p510s"},
-		{ USB_VID_HITI, USB_PID_HITI_P510SI, P_HITI_51X, NULL, "hiti-p510si"},
-		{ USB_VID_HITI, USB_PID_HITI_P518S, P_HITI_51X, NULL, "hiti-p518s"},
-		{ USB_VID_HITI, USB_PID_HITI_P52X, P_HITI_52X, NULL, "hiti-p520l"},
-		{ USB_VID_HITI, USB_PID_HITI_P52X, P_HITI_52X, NULL, "hiti-p525l"}, /* Duplicate */
-		{ USB_VID_HITI, USB_PID_HITI_P720, P_HITI_720, NULL, "hiti-p720l"},
-		{ USB_VID_HITI, USB_PID_HITI_P728, P_HITI_720, NULL, "hiti-p728l"},
-		{ USB_VID_HITI, USB_PID_HITI_P750, P_HITI_750, NULL, "hiti-p750l"},
+		{ 0x0d16, 0x0309, P_HITI_CS2XX, NULL, "hiti-cs200e"},
+		{ 0x0d16, 0x030a, P_HITI_CS2XX, NULL, "hiti-cs220e"},
+		{ 0x0d16, 0x030b, P_HITI_CS2XX, NULL, "hiti-cs230e"},
+		{ 0x0d16, 0x030c, P_HITI_CS2XX, NULL, "hiti-cs250e"},
+		{ 0x0d16, 0x030d, P_HITI_CS2XX, NULL, "hiti-cs290e"},
+		{ 0x0d16, 0x0007, P_HITI_51X, NULL, "hiti-p510k"},
+		{ 0x0d16, 0x000b, P_HITI_51X, NULL, "hiti-p510l"},
+		{ 0x0d16, 0x000d, P_HITI_51X, NULL, "hiti-p518a"},
+		{ 0x0d16, 0x010e, P_HITI_51X, NULL, "hiti-p510s"},
+		{ 0x0d16, 0x0111, P_HITI_51X, NULL, "hiti-p510si"},
+		{ 0x0d16, 0x0112, P_HITI_51X, NULL, "hiti-p518s"},
+		{ 0x0d16, 0x0502, P_HITI_52X, NULL, "hiti-p520l"},
+		{ 0x0d16, 0x0502, P_HITI_52X, NULL, "hiti-p525l"}, /* Duplicate */
+		{ 0x0d16, 0x0009, P_HITI_720, NULL, "hiti-p720l"},
+		{ 0x0d16, 0x000a, P_HITI_720, NULL, "hiti-p728l"},
+		{ 0x0d16, 0x0501, P_HITI_750, NULL, "hiti-p750l"},
 		{ 0, 0, 0, NULL, NULL}
 	}
 };
+
+/*
+#define USB_PID_HITI_P530    0x000F
+#define USB_PID_HITI_P110S   0x0110
+#define USB_PID_HITI_P310L   0x0503
+#define USB_PID_HITI_P310W   0x050A
+#define USB_PID_HITI_X610    0x0800
+*/
 
 /* TODO:
 
@@ -2475,4 +2477,6 @@ const struct dyesub_backend hiti_backend = {
    - Incorporate changes for CS-series card printers
    - More "Matrix table" decoding work
    - Investigate Suspicion that HiTi keeps tweaking LUTs and/or Heat tables
+   - Pull in heat tables & LUTs from windows drivers
+
 */

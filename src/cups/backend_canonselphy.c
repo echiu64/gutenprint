@@ -30,39 +30,6 @@
 
 #define P_ES40_CP790 (P_END + 1) // used for detection only
 
-/* Exported */
-#define USB_VID_CANON       0x04a9
-#define USB_PID_CANON_CP10  0x304A
-#define USB_PID_CANON_CP100 0x3063
-#define USB_PID_CANON_CP200 0x307C
-#define USB_PID_CANON_CP220 0x30BD
-#define USB_PID_CANON_CP300 0x307D
-#define USB_PID_CANON_CP330 0x30BE
-#define USB_PID_CANON_CP400 0x30F6
-#define USB_PID_CANON_CP500 0x30F5
-#define USB_PID_CANON_CP510 0x3128
-#define USB_PID_CANON_CP520 0x3172
-#define USB_PID_CANON_CP530 0x31b1
-#define USB_PID_CANON_CP600 0x310B
-#define USB_PID_CANON_CP710 0x3127
-#define USB_PID_CANON_CP720 0x3143
-#define USB_PID_CANON_CP730 0x3142
-#define USB_PID_CANON_CP740 0x3171
-#define USB_PID_CANON_CP750 0x3170
-#define USB_PID_CANON_CP760 0x31AB
-#define USB_PID_CANON_CP770 0x31AA
-#define USB_PID_CANON_CP780 0x31DD
-#define USB_PID_CANON_CP790 0x31E7
-#define USB_PID_CANON_CP800 0x3214
-#define USB_PID_CANON_CP810 0x3256
-#define USB_PID_CANON_CP900 0x3255
-#define USB_PID_CANON_ES1   0x3141
-#define USB_PID_CANON_ES2   0x3185
-#define USB_PID_CANON_ES20  0x3186
-#define USB_PID_CANON_ES3   0x31AF
-#define USB_PID_CANON_ES30  0x31B0
-#define USB_PID_CANON_ES40  0x31EE
-
 #define READBACK_LEN 12
 
 struct printer_data {
@@ -546,8 +513,8 @@ done:
 
 /* Private data structure */
 struct canonselphy_printjob {
-	size_t jobsize;
-	int copies;
+	struct dyesub_job_common common;
+
 	int16_t paper_code;
 	uint8_t bw_mode;
 
@@ -712,8 +679,8 @@ static int canonselphy_read_parse(void *vctx, const void **vjob, int data_fd, in
 		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 	memset(job, 0, sizeof(*job));
-	job->jobsize = sizeof(*job);
-	job->copies = copies;
+	job->common.jobsize = sizeof(*job);
+	job->common.copies = copies;
 
 	/* The CP900 job *may* have a 4-byte null footer after the
 	   job contents.  Ignore it if it comes through here.. */
@@ -845,13 +812,14 @@ static int canonselphy_read_parse(void *vctx, const void **vjob, int data_fd, in
 	return CUPS_BACKEND_OK;
 }
 
-static int canonselphy_main_loop(void *vctx, const void *vjob) {
+static int canonselphy_main_loop(void *vctx, const void *vjob, int wait_for_return) {
 	struct canonselphy_ctx *ctx = vctx;
 
 	uint8_t rdbuf[READBACK_LEN], rdbuf2[READBACK_LEN];
 	int last_state = -1, state = S_IDLE;
 	int ret, num;
 	int copies;
+	(void)wait_for_return;
 
 	const struct canonselphy_printjob *job = vjob;
 
@@ -860,7 +828,7 @@ static int canonselphy_main_loop(void *vctx, const void *vjob) {
 	if (!job)
 		return CUPS_BACKEND_FAILED;
 
-	copies = job->copies;
+	copies = job->common.copies;
 
 	/* Read in the printer status to clear last state */
 	ret = read_data(ctx->conn,
@@ -893,7 +861,7 @@ top:
 			/* Try to clear error state */
 			if ((ret = send_data(ctx->conn, ctx->printer->clear_error, ctx->printer->clear_error_len)))
 				return CUPS_BACKEND_FAILED;
-		return CUPS_BACKEND_HOLD;
+		return CUPS_BACKEND_STOP;
 	}
 
 	if (memcmp(rdbuf, rdbuf2, READBACK_LEN)) {
@@ -1130,7 +1098,7 @@ static const char *canonselphy_prefixes[] = {
 
 const struct dyesub_backend canonselphy_backend = {
 	.name = "Canon SELPHY CP/ES (legacy)",
-	.version = "0.110",
+	.version = "0.112",
 	.uri_prefixes = canonselphy_prefixes,
 	.cmdline_usage = canonselphy_cmdline,
 	.cmdline_arg = canonselphy_cmdline_arg,
@@ -1141,36 +1109,36 @@ const struct dyesub_backend canonselphy_backend = {
 	.main_loop = canonselphy_main_loop,
 	.query_markers = canonselphy_query_markers,
 	.devices = {
-		{ USB_VID_CANON, USB_PID_CANON_CP10, P_CP10, NULL, "canon-cp10"},
-		{ USB_VID_CANON, USB_PID_CANON_CP100, P_CPGENERIC, NULL, "canon-cp100"},
-		{ USB_VID_CANON, USB_PID_CANON_CP200, P_CPGENERIC, NULL, "canon-cp200"},
-		{ USB_VID_CANON, USB_PID_CANON_CP220, P_CPGENERIC, NULL, "canon-cp220"},
-		{ USB_VID_CANON, USB_PID_CANON_CP300, P_CPGENERIC, NULL, "canon-cp300"},
-		{ USB_VID_CANON, USB_PID_CANON_CP330, P_CPGENERIC, NULL, "canon-cp330"},
-		{ USB_VID_CANON, USB_PID_CANON_CP400, P_CPGENERIC, NULL, "canon-cp400"},
-		{ USB_VID_CANON, USB_PID_CANON_CP500, P_CPGENERIC, NULL, "canon-cp500"},
-		{ USB_VID_CANON, USB_PID_CANON_CP510, P_CPGENERIC, NULL, "canon-cp510"},
-		{ USB_VID_CANON, USB_PID_CANON_CP520, P_CPGENERIC, NULL, "canon-cp520"},
-		{ USB_VID_CANON, USB_PID_CANON_CP530, P_CPGENERIC, NULL, "canon-cp530"},
-		{ USB_VID_CANON, USB_PID_CANON_CP600, P_CPGENERIC, NULL, "canon-cp600"},
-		{ USB_VID_CANON, USB_PID_CANON_CP710, P_CPGENERIC, NULL, "canon-cp710"},
-		{ USB_VID_CANON, USB_PID_CANON_CP720, P_CPGENERIC, NULL, "canon-cp720"},
-		{ USB_VID_CANON, USB_PID_CANON_CP730, P_CPGENERIC, NULL, "canon-cp730"},
-		{ USB_VID_CANON, USB_PID_CANON_CP740, P_CPGENERIC, NULL, "canon-cp740"},
-		{ USB_VID_CANON, USB_PID_CANON_CP750, P_CPGENERIC, NULL, "canon-cp750"},
-		{ USB_VID_CANON, USB_PID_CANON_CP760, P_CPGENERIC, NULL, "canon-cp760"},
-		{ USB_VID_CANON, USB_PID_CANON_CP770, P_CPGENERIC, NULL, "canon-cp770"},
-		{ USB_VID_CANON, USB_PID_CANON_CP780, P_CPGENERIC, NULL, "canon-cp780"},
-		{ USB_VID_CANON, USB_PID_CANON_CP790, P_CP790, NULL, "canon-cp790"},
-		{ USB_VID_CANON, USB_PID_CANON_CP800, P_CPGENERIC, NULL, "canon-cp800"},
-		{ USB_VID_CANON, USB_PID_CANON_CP810, P_CPGENERIC, NULL, "canon-cp810"},
-		{ USB_VID_CANON, USB_PID_CANON_CP900, P_CPGENERIC, NULL, "canon-cp900"},
-		{ USB_VID_CANON, USB_PID_CANON_ES1, P_ES1, NULL, "canon-es1"},
-		{ USB_VID_CANON, USB_PID_CANON_ES2, P_ES2_20, NULL, "canon-es2"},
-		{ USB_VID_CANON, USB_PID_CANON_ES20, P_ES2_20, NULL, "canon-es20"},
-		{ USB_VID_CANON, USB_PID_CANON_ES3, P_ES3_30, NULL, "canon-es3"},
-		{ USB_VID_CANON, USB_PID_CANON_ES30, P_ES3_30, NULL, "canon-es30"},
-		{ USB_VID_CANON, USB_PID_CANON_ES40, P_ES40, NULL, "canon-es40"},
+		{ 0x04a9, 0x304a, P_CP10, NULL, "canon-cp10"},
+		{ 0x04a9, 0x3063, P_CPGENERIC, NULL, "canon-cp100"},
+		{ 0x04a9, 0x307c, P_CPGENERIC, NULL, "canon-cp200"},
+		{ 0x04a9, 0x30bd, P_CPGENERIC, NULL, "canon-cp220"},
+		{ 0x04a9, 0x307d, P_CPGENERIC, NULL, "canon-cp300"},
+		{ 0x04a9, 0x30be, P_CPGENERIC, NULL, "canon-cp330"},
+		{ 0x04a9, 0x30f6, P_CPGENERIC, NULL, "canon-cp400"},
+		{ 0x04a9, 0x30f5, P_CPGENERIC, NULL, "canon-cp500"},
+		{ 0x04a9, 0x3128, P_CPGENERIC, NULL, "canon-cp510"},
+		{ 0x04a9, 0x3172, P_CPGENERIC, NULL, "canon-cp520"},
+		{ 0x04a9, 0x31b1, P_CPGENERIC, NULL, "canon-cp530"},
+		{ 0x04a9, 0x310b, P_CPGENERIC, NULL, "canon-cp600"},
+		{ 0x04a9, 0x3127, P_CPGENERIC, NULL, "canon-cp710"},
+		{ 0x04a9, 0x3143, P_CPGENERIC, NULL, "canon-cp720"},
+		{ 0x04a9, 0x3142, P_CPGENERIC, NULL, "canon-cp730"},
+		{ 0x04a9, 0x3171, P_CPGENERIC, NULL, "canon-cp740"},
+		{ 0x04a9, 0x3170, P_CPGENERIC, NULL, "canon-cp750"},
+		{ 0x04a9, 0x31ab, P_CPGENERIC, NULL, "canon-cp760"},
+		{ 0x04a9, 0x31aa, P_CPGENERIC, NULL, "canon-cp770"},
+		{ 0x04a9, 0x31dd, P_CPGENERIC, NULL, "canon-cp780"},
+		{ 0x04a9, 0x31e7, P_CP790, NULL, "canon-cp790"},
+		{ 0x04a9, 0x3214, P_CPGENERIC, NULL, "canon-cp800"},
+		{ 0x04a9, 0x3256, P_CPGENERIC, NULL, "canon-cp810"},
+		{ 0x04a9, 0x3255, P_CPGENERIC, NULL, "canon-cp900"},
+		{ 0x04a9, 0x3141, P_ES1, NULL, "canon-es1"},
+		{ 0x04a9, 0x3185, P_ES2_20, NULL, "canon-es2"},
+		{ 0x04a9, 0x3186, P_ES2_20, NULL, "canon-es20"},
+		{ 0x04a9, 0x31af, P_ES3_30, NULL, "canon-es3"},
+		{ 0x04a9, 0x31b0, P_ES3_30, NULL, "canon-es30"},
+		{ 0x04a9, 0x31ee, P_ES40, NULL, "canon-es40"},
 		{ 0, 0, 0, NULL, NULL}
 	}
 };

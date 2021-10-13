@@ -39,7 +39,7 @@ struct rtp1_req {
 
 struct rtp1_sts {
 	uint8_t  base[2];  // x10 x10 or x10 x12 ? (10 == ok, 12 == error?)
-	uint16_t err;      /* RTP_ERROR_* */
+	uint16_t err;      /* see kodak8800_errorstr() */
 	uint8_t  sts[4];   // [0] STATE_* [2] PRINT_*
 };
 
@@ -67,19 +67,6 @@ struct rtp1_resp {
 #define PRINT_O     0x05
 #define PRINT_EJECT 0x06
 
-#define RTP_ERROR_UKNOWN_0105      0x0105  // seen after issuing START command
-#define RTP_ERROR_JOB_NOT_OPEN     0x0203
-#define RTP_ERROR_COMMAND_DISABLED 0x0307
-#define RTP_ERROR_RIBBON_TOO_SHORT 0x0420
-#define RTP_ERROR_OPERATING_SYS    0x0503
-#define RTP_ERROR_DOOR_OPEN        0x0504
-#define RTP_ERROR_RIBBON_CHECK     0x2001
-#define RTP_ERROR_PAPER_CHECK      0x2004
-#define RTP_ERROR_ENGINE_PROTOCOL  0x4302
-#define RTP_ERROR_BARCODE_SENSE    0x430A
-#define RTP_ERROR_HOST_READ        0xFF02
-#define RTP_ERROR_UNKNOWN_FF04     0xFF04 // seen when issuing CANCELJOB
-
 struct rtp1_counters {
 	uint32_t  cutter_count;
 	uint32_t  prints_finished;
@@ -89,16 +76,22 @@ struct rtp1_counters {
 };
 
 struct rtp1_errorrecord {
-	uint8_t  unk;  // 12 == user, 13 == service, 0 == invalid/terminator?
+	uint8_t  type;  // ERROR_TYPE_*
 	uint16_t code;
 	uint8_t  plane; // 0-3
 	uint32_t printnum;
 	uint32_t ribbonnum;
 	uint32_t papernum;
-};
+} __attribute__((packed));
+
+#define ERROR_TYPE_END     0x00
+#define ERROR_TYPE_USER    0x12
+#define ERROR_TYPE_SERVICE 0x13
+
+#define NUM_ERRORRECS 32
 
 struct rtp1_errorlog {
-	struct rtp1_errorrecord row[32];
+	struct rtp1_errorrecord row[NUM_ERRORRECS];
 };
 
 struct rtp1_mediastatus {
@@ -207,6 +200,55 @@ struct kodak8800_ctx {
 	struct marker marker;
 };
 
+static const char* kodak8800_errorstrs(uint16_t error)
+{
+	switch (error) {
+	case 0x0105: return "Unknown 0105"; // seen after issuing START command with a bogus job
+	case 0x0203: return "Job not Open";
+	case 0x0307: return "Command Disabled";
+	case 0x0420: return "Ribbon too Short";
+	case 0x0503: return "Operating System";
+	case 0x0504: return "Cover Open";
+	case 0x2001: return "Check Ribbon";
+//	case 0x2002: return "Out of Paper";
+//	case 0x2003: return "Ribbon Jammed";
+	case 0x2004: return "Ribbon Access Door Open";
+//	case 0x2005: return "Paper Access Door open";
+//	case 0x2006: return "Cutter Jammed";
+//	case 0x2007: return "Ribbon Failed to Advance";
+//	case 0x2008: return "Ribbon Failed to Rewind";
+//	case 0x2009: return "Paper Failed to Advance";
+//	case 0x200a: return "Paper Failed to Rewind";
+//	case 0x200b: return "Invalid Ribbon Barcode Type";
+//	case 0x200c: return "Head Error";
+//	case 0x200d: return "Invalid Head Position";
+//	case 0x200e: return "Cooling Timeout Failure";
+//	case 0x200f: return "Heating Timeout Failure";
+		// 2040-2043 == "Ribbon Error" ?
+		// 2044 == "paper feed" ?
+	case 0x4302: return "Engine Protocol";
+//	case 0x4303: return "Engine Command not Valid";
+//	case 0x4304: return "Undefined Engine Command";
+//	case 0x4305: return "Failure to Program Engine Flash";
+//	case 0x4306: return "Engine Powering Up";
+//	case 0x4307: return "VM Range";
+//	case 0x4307: return "Ribbon ADC";
+//	case 0x4309: return "Cam Homing";
+	case 0x430a: return "Barcode Sensor";
+//	case 0x430b: return "Unknown RTP";
+//	case 0x430c: return "Device not Responding";
+//	case 0x430d: return "Bad RTP Response Signature";
+//	case 0x430e: return "Bad RTP Command Echo";
+		// 8002 == printer not responding ?
+	case 0xff01: return "Unknown ff01"; // seen in interface log
+	case 0xff02: return "Host Read (instead of write)";
+	case 0xff04: return "Unknown ff04"; // seen after issuing bad CANCELJOB
+	case 0xffff: return "Unknown ffff"; // seen in interface log
+	default:
+		return "Unknown";
+	}
+}
+
 /* Helper Functions */
 static int rtp1_docmd(struct kodak8800_ctx *ctx, const uint8_t *cmd,
 		      const uint8_t *payload, uint32_t payload_len,
@@ -238,13 +280,20 @@ static int rtp1_docmd(struct kodak8800_ctx *ctx, const uint8_t *cmd,
 			return ret;
 
 	/* Read response header */
+	int try = 0;
+retry:
 	ret = read_data(ctx->conn, (uint8_t*) &resp,
 			sizeof(resp), &num);
+	if (try == 0 && num == 0) {
+		try = 1;
+		goto retry;
+	}
 	if (num != (int)sizeof(resp)) {
 		ERROR("Short Read! (%d/%d)\n", num, (int)sizeof(resp));
 		ret = -4;
 		goto done;
 	}
+
 
 	/* Copy over the error code */
 	if (sts) {
@@ -392,8 +441,46 @@ static int kodak8800_canceljob(struct kodak8800_ctx *ctx, int id)
 	return ret;
 }
 
+static int kodak8800_geterrorlog(struct kodak8800_ctx *ctx, int id)
+{
+	int ret;
+	uint8_t jobcmd[4];
+	struct rtp1_errorlog errors;
+	int i;
+
+	if (id < 1 || id > 3)
+		return CUPS_BACKEND_FAILED;
+
+	memcpy(jobcmd, rtp_getusererrors, sizeof(jobcmd));
+
+	jobcmd[1] = id;
+
+	ret = rtp1_docmd(ctx, jobcmd, NULL, 0, sizeof(errors), (uint8_t*)&errors, NULL);
+
+	if (ret)
+		return CUPS_BACKEND_FAILED;
+	DEBUG("PRINT  / PAPER  / RIBBON @ PL : CODE (Reason)\n");
+
+	for (i = 0; i < NUM_ERRORRECS; i++) {
+		if (errors.row[i].type == ERROR_TYPE_END)
+			continue;
+		INFO(" %06d / %06d / %06d @ %02d : x%04x (%s)\n",
+		     be32_to_cpu(errors.row[i].printnum),
+		     be32_to_cpu(errors.row[i].papernum) / 300 / 12,
+		     be32_to_cpu(errors.row[i].ribbonnum) / 300 / 12,
+		     errors.row[i].plane,
+		     be16_to_cpu(errors.row[i].code),
+		     kodak8800_errorstrs(be16_to_cpu(errors.row[i].code)));
+	}
+
+	/* After an error log query, have to kick things */
+	ret = rtp1_docmd(ctx, rtp_getstatus, NULL, 0, 0, NULL, NULL);
+
+	return ret;
+}
 static void kodak8800_cmdline(void)
 {
+	DEBUG("\t\t[ -e 1|2|3 ]     # Query error logs\n");
 	DEBUG("\t\t[ -i ]           # Query printer info\n");
 	DEBUG("\t\t[ -m ]           # Query media info\n");
 	DEBUG("\t\t[ -n ]           # Query counters\n");
@@ -408,9 +495,12 @@ static int kodak8800_cmdline_arg(void *vctx, int argc, char **argv)
 	if (!ctx)
 		return -1;
 
-	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "imnX:")) >= 0) {
+	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "e:imnX:")) >= 0) {
 		switch(i) {
 		GETOPT_PROCESS_GLOBAL
+		case 'e':
+			j = kodak8800_geterrorlog(ctx, atoi(optarg));
+			break;
 		case 'i':
 			j = kodak8800_getinfo(ctx);
 			break;
@@ -532,17 +622,17 @@ static int kodak8800_read_parse(void *vctx, const void **vjob, int data_fd, int 
 	job->databuf = malloc(sizeof(struct rosetta_header));
 	if (!job->databuf) {
 		ERROR("Memmory allocation failure!\n");
+		kodak8800_cleanup_job(job);
 		return CUPS_BACKEND_RETRY;
 	}
 
 	/* Read rosetta header */
 	ret = read(data_fd, job->databuf, sizeof(struct rosetta_header));
 	if (ret < 0 || ret != sizeof(struct rosetta_header)) {
-		if (ret == 0) {
-			kodak8800_cleanup_job(job);
-			return CUPS_BACKEND_CANCEL;
+		if (ret != 0) {
+			perror("ERROR: read failed");
 		}
-		perror("ERROR: read failed");
+		kodak8800_cleanup_job(job);
 		return CUPS_BACKEND_CANCEL;
 	}
 	job->jobsize += sizeof(struct rosetta_header);
@@ -569,11 +659,10 @@ static int kodak8800_read_parse(void *vctx, const void **vjob, int data_fd, int 
 		/* Read in block header */
 		ret = read(data_fd, block, sizeof(struct rosetta_block));
 		if (ret < 0 || ret != sizeof(struct rosetta_block)) {
-			if (ret == 0) {
-				kodak8800_cleanup_job(job);
-				return CUPS_BACKEND_CANCEL;
+			if (ret != 0) {
+				perror("ERROR: read failed");
 			}
-			perror("ERROR: read failed");
+			kodak8800_cleanup_job(job);
 			return CUPS_BACKEND_CANCEL;
 		}
 		payload_len = be32_to_cpu(block->payload_len);
@@ -582,11 +671,10 @@ static int kodak8800_read_parse(void *vctx, const void **vjob, int data_fd, int 
 		/* Read in block payload */
 		ret = read(data_fd, block->payload, payload_len);
 		if (ret < 0 || ret != (int) payload_len) {
-			if (ret == 0) {
-				kodak8800_cleanup_job(job);
-				return CUPS_BACKEND_CANCEL;
+			if (ret != 0) {
+				perror("ERROR: read failed");
 			}
-			perror("ERROR: read failed");
+			kodak8800_cleanup_job(job);
 			return CUPS_BACKEND_CANCEL;
 		}
 		job->jobsize += sizeof(struct rosetta_block);
@@ -618,7 +706,7 @@ static int kodak8800_read_parse(void *vctx, const void **vjob, int data_fd, int 
 	return CUPS_BACKEND_OK;
 }
 
-static int kodak8800_main_loop(void *vctx, const void *vjob) {
+static int kodak8800_main_loop(void *vctx, const void *vjob, int wait_for_return) {
 	struct kodak8800_ctx *ctx = vctx;
 
 	int ret;
@@ -639,8 +727,9 @@ static int kodak8800_main_loop(void *vctx, const void *vjob) {
 		if (ret)
 			return ret;
 		if (sts.err) {
-			ERROR("Printer reports error: %04x\n", sts.err);
-			return CUPS_BACKEND_FAILED; // XXX make it more subtle!
+			ERROR("Printer reports error: %s (%04x)\n",
+			      kodak8800_errorstrs(sts.err), sts.err);
+			return CUPS_BACKEND_FAILED;
 		}
 		if (sts.sts[0] == STATE_IDLE) {
 			break;
@@ -679,7 +768,8 @@ static int kodak8800_main_loop(void *vctx, const void *vjob) {
 		if (ret)
 			return ret;
 		if (sts.err) {
-			ERROR("Printer reports error: %04x\n", sts.err);
+			ERROR("Printer reports error: %s (%04x)\n",
+			      kodak8800_errorstrs(sts.err), sts.err);
 			return CUPS_BACKEND_FAILED;
 		}
 
@@ -700,13 +790,14 @@ static int kodak8800_main_loop(void *vctx, const void *vjob) {
 		if (ret)
 			return ret;
 		if (sts.err) {
-			ERROR("Printer reports error: %04x\n", sts.err);
+			ERROR("Printer reports error: %s (%04x)\n",
+			      kodak8800_errorstrs(sts.err), sts.err);
 			return CUPS_BACKEND_FAILED;
 		}
 		if (sts.sts[0] == STATE_IDLE) {
 			break;
 		}
-		if (fast_return) {
+		if (!wait_for_return) {
 			INFO("Fast return mode enabled.\n");
 			break;
 		}
@@ -829,7 +920,7 @@ static const char *kodak8800_prefixes[] = {
 /* Exported */
 const struct dyesub_backend kodak8800_backend = {
 	.name = "Kodak 8800/9810",
-	.version = "0.05",
+	.version = "0.07",
 	.uri_prefixes = kodak8800_prefixes,
 	.cmdline_usage = kodak8800_cmdline,
 	.cmdline_arg = kodak8800_cmdline_arg,

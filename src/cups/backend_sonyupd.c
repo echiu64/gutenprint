@@ -1,11 +1,11 @@
 /*
  *   Sony UP-D series Photo Printer CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013-2020 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2021 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
- *     http://git.shaftnet.org/cgit/selphy_print.git
+ *     https://git.shaftnet.org/cgit/selphy_print.git
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -18,9 +18,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
- *          [http://www.gnu.org/licenses/gpl-2.0.html]
+ *   along with this program; if not, see <https://www.gnu.org/licenses/>.
  *
  *   SPDX-License-Identifier: GPL-2.0+
  *
@@ -79,8 +77,7 @@ struct sony_prints {
 
 /* Private data structures */
 struct upd_printjob {
-	size_t jobsize;
-	int copies;
+	struct dyesub_job_common common;
 
 	uint8_t *databuf;
 	int datalen;
@@ -329,7 +326,8 @@ static int upd_read_parse(void *vctx, const void **vjob, int data_fd, int copies
 		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 	memset(job, 0, sizeof(*job));
-	job->copies = copies;
+	job->common.jobsize = sizeof(*job);
+	job->common.copies = copies;
 
 	job->datalen = 0;
 	job->databuf = malloc(MAX_PRINTJOB_LEN);
@@ -485,7 +483,7 @@ static int upd_read_parse(void *vctx, const void **vjob, int data_fd, int copies
 			tmp = cpu_to_be16(copies);
 			memcpy(job->databuf + copies_offset, &tmp, sizeof(tmp));
 		}
-		job->copies = 1;
+		job->common.copies = 1;
 	}
 
 	/* Parse some other stuff */
@@ -514,7 +512,7 @@ static int upd_read_parse(void *vctx, const void **vjob, int data_fd, int copies
 	return CUPS_BACKEND_OK;
 }
 
-static int upd_main_loop(void *vctx, const void *vjob) {
+static int upd_main_loop(void *vctx, const void *vjob, int wait_for_return) {
 	struct upd_ctx *ctx = vctx;
 	int i, ret;
 	int copies;
@@ -526,7 +524,7 @@ static int upd_main_loop(void *vctx, const void *vjob) {
 	if (!job)
 		return CUPS_BACKEND_FAILED;
 
-	copies = job->copies;
+	copies = job->common.copies;
 
 top:
 	/* Send Unknown CMD.  Resets? */
@@ -624,7 +622,7 @@ retry:
 		return CUPS_BACKEND_STOP;
 	}
 
-	if (fast_return && ctx->stsbuf.printing != UPD_PRINTING_IDLE) {
+	if (!wait_for_return && ctx->stsbuf.printing != UPD_PRINTING_IDLE) {
 		INFO("Fast return mode enabled.\n");
 	} else {
 		goto retry;
@@ -743,7 +741,7 @@ static const char *sonyupd_prefixes[] = {
 
 const struct dyesub_backend sonyupd_backend = {
 	.name = "Sony UP-D",
-	.version = "0.45",
+	.version = "0.46",
 	.uri_prefixes = sonyupd_prefixes,
 	.cmdline_arg = upd_cmdline_arg,
 	.cmdline_usage = upd_cmdline,

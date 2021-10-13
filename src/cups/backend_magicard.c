@@ -1,11 +1,11 @@
 /*
  *   Magicard card printer family CUPS backend -- libusb-1.0 version
  *
- *   (c) 2017-2020 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2017-2021 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
- *     http://git.shaftnet.org/cgit/selphy_print.git
+ *     https://git.shaftnet.org/cgit/selphy_print.git
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -18,9 +18,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
- *          [http://www.gnu.org/licenses/gpl-2.0.html]
+ *   along with this program; if not, see <https://www.gnu.org/licenses/>.
  *
  *   SPDX-License-Identifier: GPL-2.0+
  *
@@ -31,12 +29,6 @@
 #include "backend_common.h"
 
 #include <time.h>
-
-/* Exported */
-#define USB_VID_MAGICARD     0x0C1F
-#define USB_PID_MAGICARD_TANGO2E 0x1800
-#define USB_PID_MAGICARD_ENDURO  0x4800   // ??
-#define USB_PID_MAGICARD_ENDUROPLUS 0x880A // ??
 
 /* Gamma tables computed with this perl program:
 
@@ -99,11 +91,12 @@ static uint8_t gammas[2][256] = {
 };
 
 struct magicard_printjob {
+	struct dyesub_job_common common;
+
 	uint8_t *databuf;
 	int datalen;
 
 	int hdr_len;
-	int copies;
 };
 
 /* Private data structure */
@@ -555,7 +548,8 @@ static int magicard_read_parse(void *vctx, const void **vjob, int data_fd, int c
 		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 	memset(job, 0, sizeof(*job));
-	job->copies = copies;
+	job->common.jobsize = sizeof(*job);
+	job->common.copies = copies;
 
 	/* Read in the first chunk */
 	i = read(data_fd, initial_buf, INITIAL_BUF_LEN);
@@ -825,10 +819,11 @@ static int magicard_read_parse(void *vctx, const void **vjob, int data_fd, int c
 	return CUPS_BACKEND_OK;
 }
 
-static int magicard_main_loop(void *vctx, const void *vjob) {
+static int magicard_main_loop(void *vctx, const void *vjob, int wait_for_return) {
 	struct magicard_ctx *ctx = vctx;
 	int ret;
 	int copies;
+	(void)wait_for_return;
 
 	const struct magicard_printjob *job = vjob;
 
@@ -839,7 +834,7 @@ static int magicard_main_loop(void *vctx, const void *vjob) {
 	if (!job)
 		return CUPS_BACKEND_FAILED;
 
-	copies = job->copies;
+	copies = job->common.copies;
 top:
 	if ((ret = send_data(ctx->conn,
 			     job->databuf, job->hdr_len)))
@@ -928,7 +923,7 @@ static const char *magicard_prefixes[] = {
 
 const struct dyesub_backend magicard_backend = {
 	.name = "Magicard family",
-	.version = "0.17",
+	.version = "0.18",
 	.uri_prefixes = magicard_prefixes,
 	.cmdline_arg = magicard_cmdline_arg,
 	.cmdline_usage = magicard_cmdline,
@@ -939,14 +934,16 @@ const struct dyesub_backend magicard_backend = {
 	.main_loop = magicard_main_loop,
 	.query_markers = magicard_query_markers,
 	.devices = {
-		{ USB_VID_MAGICARD, USB_PID_MAGICARD_TANGO2E, P_MAGICARD, NULL, "magicard-tango2e"},
-//		{ USB_VID_MAGICARD, USB_PID_MAGICARD_TANGO2E, P_MAGICARD, NULL, "magicard-rio2e"},
-		{ USB_VID_MAGICARD, USB_PID_MAGICARD_ENDURO, P_MAGICARD, NULL, "magicard-enduro"},
-		{ USB_VID_MAGICARD, USB_PID_MAGICARD_ENDUROPLUS, P_MAGICARD, NULL, "magicard-enduroplus"},
-		{ USB_VID_MAGICARD, 0xFFFF, P_MAGICARD, NULL, "magicard"},
-		{ 0, 0, 0, NULL, "magicard"}
+		{ 0x0c1f, 0x1800, P_MAGICARD, NULL, "magicard-tango2e"},
+//		{ 0x0c1f, 0x1800, P_MAGICARD, NULL, "magicard-rio2e"},
+		{ 0x0c1f, 0x4800, P_MAGICARD, NULL, "magicard-enduro"}, // ??
+		{ 0x0c1f, 0x880a, P_MAGICARD, NULL, "magicard-enduroplus"}, // ??
+		{ 0x0c1f, 0xFFFF, P_MAGICARD, NULL, "magicard"},
+		{ 0, 0, 0, NULL, NULL}
 	}
 };
+
+
 
 /* Magicard family Spool file format (Tango2e/Rio2e/AvalonE family)
 

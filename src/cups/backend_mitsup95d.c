@@ -1,7 +1,7 @@
 /*
  *   Mitsubishi P93D/P95D Monochrome Thermal Photo Printer CUPS backend
  *
- *   (c) 2016-2020 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2016-2021 Solomon Peachy <pizza@shaftnet.org>
  *
  *   Development of this backend was sponsored by:
  *
@@ -9,7 +9,7 @@
  *
  *   The latest version of this program can be found at:
  *
- *     http://git.shaftnet.org/cgit/selphy_print.git
+ *     https://git.shaftnet.org/cgit/selphy_print.git
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -22,9 +22,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
- *          [http://www.gnu.org/licenses/gpl-2.0.html]
+ *   along with this program; if not, see <https://www.gnu.org/licenses/>.
  *
  *   SPDX-License-Identifier: GPL-2.0+
  *
@@ -34,12 +32,10 @@
 
 #include "backend_common.h"
 
-#define USB_VID_MITSU       0x06D3
-#define USB_PID_MITSU_P93D  0x0398
-#define USB_PID_MITSU_P95D  0x3b10
-
 /* Private data structure */
 struct mitsup95d_printjob {
+	struct dyesub_job_common common;
+
 	uint8_t *databuf;
 	uint32_t datalen;
 
@@ -197,6 +193,7 @@ static int mitsup95d_read_parse(void *vctx, const void **vjob, int data_fd, int 
 		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 	memset(job, 0, sizeof(*job));
+	job->common.jobsize = sizeof(*job);
 
 	job->mem_clr_present = 0;
 
@@ -347,6 +344,8 @@ top:
 			if (copies > job->hdr2[13])
 				job->hdr2[13] = copies;
 
+		job->common.copies = copies; // XXX use larger?
+
 		*vjob = job;
 		return CUPS_BACKEND_OK;
 	}
@@ -354,7 +353,7 @@ top:
 	goto top;
 }
 
-static int mitsup95d_main_loop(void *vctx, const void *vjob) {
+static int mitsup95d_main_loop(void *vctx, const void *vjob, int wait_for_return) {
 	struct mitsup95d_ctx *ctx = vctx;
 	uint8_t queryresp[QUERYRESP_SIZE_MAX];
 	int ret;
@@ -480,7 +479,7 @@ static int mitsup95d_main_loop(void *vctx, const void *vjob) {
 				break;
 
 			if (queryresp[7] > 0) {
-				if (fast_return) {
+				if (!wait_for_return) {
 					INFO("Fast return mode enabled.\n");
 					break;
 				}
@@ -493,7 +492,7 @@ static int mitsup95d_main_loop(void *vctx, const void *vjob) {
 			if (queryresp[6] == 0x30)
 				break;
 			if (queryresp[6] == 0x43 && queryresp[7] > 0) {
-				if (fast_return) {
+				if (!wait_for_return) {
 					INFO("Fast return mode enabled.\n");
 					break;
 				}
@@ -608,7 +607,7 @@ static const char *mitsup95d_prefixes[] = {
 /* Exported */
 const struct dyesub_backend mitsup95d_backend = {
 	.name = "Mitsubishi P93D/P95D",
-	.version = "0.15",
+	.version = "0.16",
 	.uri_prefixes = mitsup95d_prefixes,
 	.cmdline_arg = mitsup95d_cmdline_arg,
 	.cmdline_usage = mitsup95d_cmdline,
@@ -619,8 +618,8 @@ const struct dyesub_backend mitsup95d_backend = {
 	.main_loop = mitsup95d_main_loop,
 	.query_markers = mitsup95d_query_markers,
 	.devices = {
-		{ USB_VID_MITSU, USB_PID_MITSU_P93D, P_MITSU_P93D, NULL, "mitsubishi-p93d"},
-		{ USB_VID_MITSU, USB_PID_MITSU_P95D, P_MITSU_P95D, NULL, "mitsubishi-p95d"},
+		{ 0x06d3, 0x0398, P_MITSU_P93D, NULL, "mitsubishi-p93d"},
+		{ 0x06d3, 0x3b10, P_MITSU_P95D, NULL, "mitsubishi-p95d"},
 		{ 0, 0, 0, NULL, NULL}
 	}
 };

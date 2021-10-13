@@ -1,11 +1,11 @@
 /*
  *   Mitsubishi Photo Printer Comon Code
  *
- *   (c) 2013-2020 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2021 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
- *     http://git.shaftnet.org/cgit/selphy_print.git
+ *     https://git.shaftnet.org/cgit/selphy_print.git
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -26,7 +26,7 @@
 
 #include "backend_common.h"
 
-// #include "lib70x/libMitsuD70ImageReProcess.h"
+//#include "lib70x/libMitsuD70ImageReProcess.h"
 
 /* If we don't have the libMitsu header */
 #ifndef LUT_LEN
@@ -96,7 +96,7 @@ typedef int (*CPD30_DoConvertFN)(const struct mitsu_cpd30_data *table,
 
 #define REQUIRED_LIB_APIVERSION 8
 
-#define LIBMITSU_VER "0.08"
+#define LIBMITSU_VER "0.09"
 
 /* Image processing library function prototypes */
 #define LIB_NAME_RE "libMitsuD70ImageReProcess" DLL_SUFFIX

@@ -1,13 +1,13 @@
 /*
  *   Shinko/Sinfonia CHC-S6145 CUPS backend -- libusb-1.0 version
  *
- *   (c) 2015-2020 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2015-2021 Solomon Peachy <pizza@shaftnet.org>
  *
  *   Low-level documentation was provided by Sinfonia.  Thank you!
  *
  *   The latest version of this program can be found at:
  *
- *     http://git.shaftnet.org/cgit/selphy_print.git
+ *     https://git.shaftnet.org/cgit/selphy_print.git
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -20,23 +20,19 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *   along with this program; if not, see <https://www.gnu.org/licenses/>.
  *
- *          [http://www.gnu.org/licenses/gpl-2.0.html]
- *
- *   An additional permission is granted, under the GPLv2 to combine
+ *   An additional permission is granted, under the GPLv3 section 7, to combine
  *   and/or redistribute this program with the proprietary libS6145ImageProcess
- *   library, providing you have *written permission* from Sinfonia Technology
- *   Co. LTD to use and/or redistribute that library.
+ *   and S2245IP libraries, providing you have *written permission* from Sinfonia
+ *   Technology Co. LTD to use and/or redistribute that library.
  *
  *   You must still adhere to all other terms of the license to this program
- *   (ie GPLv2) and the license of the libS6145ImageProcess library.
+ *   (ie GPLv3) and the license of the libS6145ImageProcess/S2245IP libraries.
  *
  *   SPDX-License-Identifier: GPL-2.0+ with special exception
  *
  */
-
 
 #define BACKEND shinkos6145_backend
 
@@ -135,55 +131,6 @@ struct s6245_errorlog_resp {
 
 STATIC_ASSERT(sizeof(struct s6245_errorlog_resp) == 74);
 
-enum {
-	PARAM_UNK_10      = 0x10, // 2245 = 0x7b
-	PARAM_UNK_11      = 0x11, // 2245 = 0x72
-	PARAM_OC_PRINT    = 0x20, // 6145
-	PARAM_UNK_31      = 0x31, // 2245 = 0x64
-	PARAM_UNK_32      = 0x32, // 2245 = 0x64
-	PARAM_UNK_33      = 0x33, // 2245 = 0x64
-	PARAM_UNK_34      = 0x34, // 2245 = 0x00
-	PARAM_UNK_35      = 0x35, // 2245 = 0x00
-	PARAM_UNK_36      = 0x36, // 2245 = 0x00
-	PARAM_PAPER_PRESV = 0x3d, // 6145
-	PARAM_DRIVER_MODE = 0x3e,
-	PARAM_PAPER_MODE  = 0x3f,
-	PARAM_UNK_40      = 0x40, // 2245 = 0xff
-	PARAM_UNK_41      = 0x41, // 2245 = 0x00
-	PARAM_REGION_CODE = 0x53, // 6145
-	PARAM_SLEEP_TIME  = 0x54, // 6145
-	PARAM_UNK_70      = 0x70, // 2245 = 0x22f8
-	PARAM_UNK_71      = 0x71, // 2245 = 0x01
-	PARAM_UNK_91      = 0x91, // 2245 = 0xfffffffc
-	PARAM_UNK_92      = 0x92, // 2245 = 0x00
-	PARAM_UNK_93      = 0x93, // 2245 = 0x06
-	PARAM_UNK_A0      = 0xa0, // 2245 = 0x01
-	PARAM_UNK_A1      = 0xa1, // 2245 = 0xffffffff
-	PARAM_UNK_A2      = 0xa2, // 2245 = 0xffffffff
-	PARAM_UNK_A3      = 0xa3, // 2245 = 0xffffffff
-	PARAM_UNK_A4      = 0xa4, // 2245 = 0xffffffff
-	PARAM_UNK_A5      = 0xa5, // 2245 = 0x42
-	PARAM_UNK_A6      = 0xa6, // 2245 = 0x00
-	PARAM_UNK_A7      = 0xa7, // 2245 = 0x01
-	PARAM_UNK_A8      = 0xa8, // 2245 = 0x01
-	PARAM_UNK_B0      = 0xb0, // 2245 = 0x1a
-	PARAM_UNK_B1      = 0xb1, // 2245 = 0x70
-	PARAM_UNK_DC      = 0xdc, // 2245 = 0x00
-	PARAM_UNK_DD      = 0xdd, // 2245 = 0x0c
-	PARAM_UNK_DE      = 0xde, // 2245 = 0x32
-	PARAM_UNK_DF      = 0xdf, // 2245 = 0x00
-	PARAM_UNK_E1      = 0xe1, // 2245 = 0x33
-	PARAM_UNK_E2      = 0xe2, // 2245 = 0x33
-	PARAM_UNK_E4      = 0xe4, // 2245 = 0x78
-	PARAM_UNK_E5      = 0xe5, // 2245 = 0x33
-	PARAM_UNK_E6      = 0xe6, // 2245 = 0x0194
-	PARAM_UNK_E7      = 0xe7, // 2245 = 0x0194
-	PARAM_UNK_E8      = 0xe8, // 2245 = 0x00
-	PARAM_UNK_E9      = 0xe9, // 2245 = 0x00
-	PARAM_UNK_EA      = 0xea, // 2245 = 0x33
-	PARAM_UNK_EB      = 0xeb, // 2245 = 0x0194
-};
-
 static const struct sinfonia_param s6145_params[] =
 {
 	{ PARAM_OC_PRINT, "Overcoat Mode" },
@@ -215,24 +162,9 @@ static const struct sinfonia_param s2245_params[] =
 #define PARAM_PRINTM_FINE      0x00000004
 #define PARAM_PRINTM_FAST      0x00000008
 
-// S6145 (ALL)
+// S6145
 #define PARAM_PAPER_PRESV_OFF 0x00000000
 #define PARAM_PAPER_PRESV_ON  0x00000001
-
-// S6145 (ALL), S2245
-#define PARAM_DRIVER_WIZOFF 0x00000000
-#define PARAM_DRIVER_WIZON  0x00000001
-
-#define PARAM_PAPER_NOCUT   0x00000000
-#define PARAM_PAPER_CUTLOAD 0x00000001
-
-// S6145
-#define PARAM_SLEEP_5MIN    0x00000000
-#define PARAM_SLEEP_15MIN   0x00000001
-#define PARAM_SLEEP_30MIN   0x00000002
-#define PARAM_SLEEP_60MIN   0x00000003
-#define PARAM_SLEEP_120MIN  0x00000004
-#define PARAM_SLEEP_240MIN  0x00000005
 
 static const char *s6145_error_codes(uint8_t major, uint8_t minor)
 {
@@ -687,6 +619,7 @@ struct shinkos6145_ctx {
 	char fwver[32];
 
 	int is_card; /* card printer model */
+	int is_2245; /* 2245 or its variants */
 
 	struct marker marker;
 
@@ -794,7 +727,7 @@ static int get_status(struct shinkos6145_ctx *ctx)
 		INFO("Region Code: %#x\n", val);
 
 	}
-	if (ctx->dev.conn->type != P_SHINKO_S2245) {
+	if (!ctx->is_2245) {
 		if ((ret = sinfonia_getparam(&ctx->dev, PARAM_PAPER_PRESV, &val))) {
 			ERROR("Failed to execute command\n");
 			return ret;
@@ -805,7 +738,7 @@ static int get_status(struct shinkos6145_ctx *ctx)
 		ERROR("Failed to execute command\n");
 		return ret;
 	}
-	if (ctx->dev.conn->type != P_SHINKO_S2245) {
+	if (ctx->is_2245) {
 		INFO("Driver mode:         %s\n", s2245_drivermodes(val));
 	} else {
 		INFO("Driver mode:         %s\n", (val ? "On" : "Off"));
@@ -817,7 +750,7 @@ static int get_status(struct shinkos6145_ctx *ctx)
 	}
 	INFO("Paper load mode:     %s\n", (val ? "Cut" : "No Cut"));
 
-	if (ctx->dev.conn->type != P_SHINKO_S2245) {
+	if (!ctx->is_2245) {
 		if ((ret = sinfonia_getparam(&ctx->dev, PARAM_SLEEP_TIME, &val))) {
 			ERROR("Failed to execute command\n");
 			return ret;
@@ -864,7 +797,7 @@ static int shinkos6145_dump_corrdata(struct shinkos6145_ctx *ctx, char *fname)
 {
 	int ret;
 
-	if (ctx->dev.conn->type == P_SHINKO_S2245) {
+	if (ctx->is_2245) {
 		ret = shinkos2245_get_imagecorr(ctx, 0x0a); // XXX have to supply something..  this is HQ matte.
 	} else {
 		ret = shinkos6145_get_imagecorr(ctx);
@@ -1148,7 +1081,7 @@ static void shinkos6145_cmdline(void)
 	DEBUG("\t\t[ -R ]           # Reset printer to factory defaults\n");
 	DEBUG("\t\t[ -s ]           # Query status\n");
 	DEBUG("\t\t[ -X jobid ]     # Abort a printjob\n");
-//	DEBUG("\t\t[ -Z ]           # Dump all parameters\n");
+//	DEBUG("\t\t[ -Z 0 | 1 ]     # Dump all parameters\n");
 }
 
 static int shinkos6145_cmdline_arg(void *vctx, int argc, char **argv)
@@ -1169,7 +1102,7 @@ static int shinkos6145_cmdline_arg(void *vctx, int argc, char **argv)
 			j = sinfonia_settonecurve(&ctx->dev, UPDATE_TARGET_TONE_USER, optarg);
 			break;
 		case 'e':
-			if (ctx->dev.conn->type == P_SHINKO_S2245) {
+			if (ctx->is_2245) {
 				j = s2245_get_errorlog(&ctx->dev);
 			} else {
 				j = sinfonia_geterrorlog(&ctx->dev);
@@ -1261,13 +1194,19 @@ static int shinkos6145_attach(void *vctx, struct dyesub_connection *conn, uint8_
 
 	ctx->dev.conn = conn;
 
-	if (conn->type == P_SHINKO_S2245) {
+	/* Mark 2245-class */
+	if (conn->type == P_SHINKO_S2245 ||
+	    conn->type == P_KODAK_6900) {
+		ctx->is_2245 = 1;
+	}
+
+	if (ctx->is_2245) {
 		ctx->dev.params = s2245_params;
 		ctx->dev.params_count = s2245_params_num;
 		ctx->dev.error_codes = &s2245_error_codes;
 
 #if defined(WITH_DYNAMIC)
-		INFO("Attempting to load S2245 image processing library\n");
+		DEBUG("Attempting to load S2245 image processing library\n");
 		ctx->dl_handle = DL_OPEN(LIB2245_NAME); /* Try the Sinfonia one first */
 		if (!ctx->dl_handle)
 			ctx->dl_handle = DL_OPEN(LIB2245_NAME_RE); /* Then the RE one */
@@ -1281,8 +1220,8 @@ static int shinkos6145_attach(void *vctx, struct dyesub_connection *conn, uint8_
 				DL_CLOSE(ctx->dl_handle);
 				ctx->dl_handle = NULL;
 			} else {
-				INFO("Image processing library successfully loaded\n");
-				if (ctx->DumpAnnounce)
+				DEBUG("Image processing library successfully loaded\n");
+				if (!stats_only && ctx->DumpAnnounce)
 					ctx->DumpAnnounce(logger);
 			}
 		}
@@ -1294,7 +1233,7 @@ static int shinkos6145_attach(void *vctx, struct dyesub_connection *conn, uint8_
 		ctx->dev.error_codes = &s6145_error_codes;
 
 #if defined(WITH_DYNAMIC)
-		INFO("Attempting to load S6145 image processing library\n");
+		DEBUG("Attempting to load S6145 image processing library\n");
 		ctx->dl_handle = DL_OPEN(LIB6145_NAME); /* Try the Sinfonia one first */
 		if (!ctx->dl_handle)
 			ctx->dl_handle = DL_OPEN(LIB6145_NAME_RE); /* Then the RE one */
@@ -1307,8 +1246,8 @@ static int shinkos6145_attach(void *vctx, struct dyesub_connection *conn, uint8_
 				DL_CLOSE(ctx->dl_handle);
 				ctx->dl_handle = NULL;
 			} else {
-				INFO("Image processing library successfully loaded\n");
-				if (ctx->DumpAnnounce)
+				DEBUG("Image processing library successfully loaded\n");
+				if (!stats_only && ctx->DumpAnnounce)
 					ctx->DumpAnnounce(logger);
 			}
 		}
@@ -1344,7 +1283,7 @@ static int shinkos6145_attach(void *vctx, struct dyesub_connection *conn, uint8_
 	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
 	ctx->marker.name = print_ribbons(ctx->media.ribbon_code, ctx->is_card);
 	ctx->marker.numtype = ctx->media.ribbon_code;
-	ctx->marker.levelmax = ribbon_sizes(ctx->media.ribbon_code, ctx->is_card, ctx->dev.conn->type == P_SHINKO_S2245);
+	ctx->marker.levelmax = ribbon_sizes(ctx->media.ribbon_code, ctx->is_card, ctx->is_2245);
 	ctx->marker.levelnow = CUPS_MARKER_UNKNOWN;
 
 	return CUPS_BACKEND_OK;
@@ -1390,7 +1329,6 @@ static int shinkos6145_read_parse(void *vctx, const void **vjob, int data_fd, in
 		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 	memset(job, 0, sizeof(*job));
-	job->jobsize = sizeof(*job);
 
 	/* Common read/parse code */
 	if (ctx->dev.conn->type == P_KODAK_6900) {
@@ -1404,10 +1342,8 @@ static int shinkos6145_read_parse(void *vctx, const void **vjob, int data_fd, in
 	}
 
 	/* Use whicever copy count is larger */
-	if ((int)job->jp.copies > copies)
-		job->copies = job->jp.copies;
-	else
-		job->copies = copies;
+	if (job->common.copies < copies)
+		job->common.copies = copies;
 
 	/* S6145 can only combine 2* 4x6 -> 8x6.
 	   2x6 strips and 3.5x5 -> 5x7 can't.
@@ -1419,9 +1355,9 @@ static int shinkos6145_read_parse(void *vctx, const void **vjob, int data_fd, in
 	     ctx->media.ribbon_code == RIBBON_6x9)) {
 
 		if (model == 6145 && job->jp.method == PRINT_METHOD_STD)
-			job->can_combine = 1;
+			job->common.can_combine = 1;
 		else if (model == 2245)
-			job->can_combine = 1;
+			job->common.can_combine = 1;
 	}
 
 	/* Extended spool format to re-purpose an unused header field.
@@ -1431,7 +1367,7 @@ static int shinkos6145_read_parse(void *vctx, const void **vjob, int data_fd, in
 	input_ymc = job->jp.ext_flags & EXT_FLAG_PLANARYMC;
 
 	/* Convert packed RGB to planar YMC if necessary */
-	if (ctx->dev.conn->type != P_SHINKO_S2245 && !input_ymc) {
+	if (!ctx->is_2245 && !input_ymc) {
 		INFO("Converting Packed RGB to Planar YMC\n");
 		int planelen = job->jp.columns * job->jp.rows;
 		uint8_t *databuf3 = malloc(job->datalen);
@@ -1551,7 +1487,7 @@ done:
 	return newjob;
 }
 
-static int shinkos6145_main_loop(void *vctx, const void *vjob) {
+static int shinkos6145_main_loop(void *vctx, const void *vjob, int wait_for_return) {
 	struct shinkos6145_ctx *ctx = vctx;
 
 	int ret, num;
@@ -1563,7 +1499,7 @@ static int shinkos6145_main_loop(void *vctx, const void *vjob) {
 
 	uint32_t cur_mode;
 
-	struct sinfonia_printjob *job = (struct sinfonia_printjob*) vjob; /* XXX stupid, we can't do this. */
+	struct sinfonia_printjob *job = (struct sinfonia_printjob*) vjob;
 
 	if (!job)
 		return CUPS_BACKEND_FAILED;
@@ -1584,7 +1520,7 @@ static int shinkos6145_main_loop(void *vctx, const void *vjob) {
 
 	// XXX check copies against remaining media?
 
-	if (ctx->dev.conn->type != P_SHINKO_S2245) {
+	if (!ctx->is_2245) {
 		/* Query printer mode */
 		ret = sinfonia_getparam(&ctx->dev, PARAM_OC_PRINT, &cur_mode);
 		if (ret) {
@@ -1594,7 +1530,7 @@ static int shinkos6145_main_loop(void *vctx, const void *vjob) {
 	}
 
 	/* Send Set Time */
-	if (ctx->dev.conn->type == P_SHINKO_S2245) {
+	if (ctx->is_2245) {
 		struct sinfonia_settime_cmd settime;
 		time_t now = time(NULL);
 		struct tm *cur = localtime(&now);
@@ -1675,14 +1611,13 @@ top:
 		uint32_t oc_mode = job->jp.oc_mode;
 		uint32_t updated = 0;
 
-		if (ctx->dev.conn->type == P_SHINKO_S2245) {
+		if (ctx->is_2245) {
 			oc_mode = (job->jp.oc_mode & SINFONIA_PRINT28_OC_MASK) | (job->jp.quality ? SINFONIA_PRINT28_OPTIONS_HQ : 0);
 			if (!ctx->corrdata ||
 			    ctx->corrdatalen <= S2245_CORRDATA_HEADER_MODE_OFFSET ||
 			    ((uint8_t*)ctx->corrdata)[S2245_CORRDATA_HEADER_MODE_OFFSET] != oc_mode)
 				updated = 1;
-		}
-		if (ctx->dev.conn->type != P_SHINKO_S2245) {
+		} else {
 			if (!oc_mode) /* if nothing set, default to glossy */
 				oc_mode = PARAM_OC_PRINT_GLOSS;
 
@@ -1714,7 +1649,7 @@ top:
 
 		/* Get image correction parameters if necessary */
 		if (updated || !ctx->corrdata || !ctx->corrdatalen) {
-			if (ctx->dev.conn->type == P_SHINKO_S2245) {
+			if (ctx->is_2245) {
 				ret = shinkos2245_get_imagecorr(ctx, oc_mode);
 			} else {
 				ret = shinkos6145_get_imagecorr(ctx);
@@ -1732,7 +1667,7 @@ top:
 			return CUPS_BACKEND_FAILED;
 		}
 
-		if (ctx->dev.conn->type == P_SHINKO_S2245) {
+		if (ctx->is_2245) {
 			uint32_t bufSize = 0;
 			uint16_t *newbuf;
 
@@ -1790,14 +1725,14 @@ top:
 
 		INFO("Sending print job (internal id %u)\n", ctx->jobid);
 
-		if (ctx->dev.conn->type != P_SHINKO_S2245) {
+		if (!ctx->is_2245) {
 			struct s6145_print_cmd print;
 			memset(&print, 0, sizeof(print));
 			print.hdr.cmd = cpu_to_le16(SINFONIA_CMD_PRINTJOB);
 			print.hdr.len = cpu_to_le16(sizeof (print) - sizeof(cmd));
 
 			print.id = ctx->jobid;
-			print.count = cpu_to_le16(job->copies);
+			print.count = cpu_to_le16(job->common.copies);
 			print.columns = cpu_to_le16(job->jp.columns);
 			print.rows = cpu_to_le16(job->jp.rows);
 			print.image_avg = ctx->image_avg[2]; /* Cyan level */
@@ -1821,7 +1756,7 @@ top:
 			print.hdr.cmd = cpu_to_le16(SINFONIA_CMD_PRINTJOB);
 			print.hdr.len = cpu_to_le16(sizeof (print) - sizeof(cmd));
 			print.jobid = ctx->jobid;
-			print.copies = cpu_to_le16(job->copies);
+			print.copies = cpu_to_le16(job->common.copies);
 			print.columns = cpu_to_le16(job->jp.columns);
 			print.rows = cpu_to_le16(job->jp.rows);
 			print.options = job->jp.oc_mode & 0x3;
@@ -1830,7 +1765,7 @@ top:
 			print.media = 0;  /* ignore job->jp.media! */
 
 			print.ipp = SINFONIA_PRINT28_IPP_CONTOUR; // XXX make configurable?
-			print.method = cpu_to_le32(job->jp.method | SINFONIA_PRINT28_METHOD_ERR_RECOVERY | SINFONIA_PRINT28_METHOD_ERR_PREHEAT);
+			print.method = cpu_to_le32(job->jp.method | SINFONIA_PRINT28_METHOD_ERR_RECOVERY | SINFONIA_PRINT28_METHOD_PREHEAT);
 
 			if ((ret = sinfonia_docmd(&ctx->dev,
 						  (uint8_t*)&print, sizeof(print),
@@ -1864,7 +1799,7 @@ top:
 		break;
 	}
 	case S_PRINTER_SENT_DATA:
-		if (fast_return) {
+		if (!wait_for_return) {
 			INFO("Fast return mode enabled.\n");
 			state = S_FINISHED;
 		} else if (sts.hdr.status == STATUS_READY) {
@@ -1919,24 +1854,12 @@ static int shinkos6145_query_markers(void *vctx, struct marker **markers, int *c
 	return CUPS_BACKEND_OK;
 }
 
-
-/* Exported */
-#define USB_VID_SHINKO        0x10CE
-#define USB_PID_SHINKO_S6145  0x0019
-#define USB_PID_SHINKO_S6145D 0x001E /* Aka CIAAT Brava 21 */
-#define USB_PID_SHINKO_S2245  0x0039
-#define USB_VID_KODAKALARIS   0x29CC
-#define USB_PID_KA_6900       0x0003 /* Aka S2245-6A */
-#define USB_VID_HITI          0x0D16
-#define USB_PID_HITI_M610     0x0010
-
 static int shinkos6145_query_stats(void *vctx,  struct printerstats *stats)
 {
 	struct shinkos6145_ctx *ctx = vctx;
 	struct sinfonia_cmd_hdr cmd;
 	struct sinfonia_status_resp status;
 	int num;
-	uint16_t usbID = 0xffff;
 
 	if (shinkos6145_query_markers(ctx, NULL, NULL))
 		return CUPS_BACKEND_FAILED;
@@ -1952,17 +1875,6 @@ static int shinkos6145_query_stats(void *vctx,  struct printerstats *stats)
 		return CUPS_BACKEND_FAILED;
 	}
 
-	/* Query USB ID */
-	{
-		struct libusb_device_descriptor desc;
-		struct libusb_device *dev;
-
-		dev = libusb_get_device(ctx->dev.conn->dev);
-		libusb_get_device_descriptor(dev, &desc);
-
-		usbID = desc.idProduct;
-	}
-
 	switch (ctx->dev.conn->type) {
 	case P_SHINKO_S6145:
 		stats->mfg = "Sinfonia";
@@ -1972,14 +1884,19 @@ static int shinkos6145_query_stats(void *vctx,  struct printerstats *stats)
 		stats->mfg = "Ciaat";
 		stats->model = "Brava 21";
 		break;
-	case P_SHINKO_S2245:
-		if (usbID == USB_PID_KA_6900) {
-			stats->mfg = "Kodak";
+	case P_KODAK_6900:
+		stats->mfg = "Kodak";
+		if (ctx->dev.conn->usb_pid == 0x0003) {
 			stats->model = "6900";
-		} else if (usbID == USB_PID_HITI_M610) {
+		} else if (ctx->dev.conn->usb_pid == 0x0004) {
+			stats->model = "6950";
+		}
+		break;
+	case P_SHINKO_S2245:
+		if (ctx->dev.conn->usb_pid == 0x0010) {
 			stats->mfg = "HiTi";
 			stats->model = "M610";
-		} else if (usbID == USB_PID_SHINKO_S2245) {
+		} else if (ctx->dev.conn->usb_pid == 0x0039) {
 			stats->mfg = "Sinfonia";
 			stats->model = "S3 / S2245";
 		} else {
@@ -2044,7 +1961,7 @@ static const char *shinkos6145_prefixes[] = {
 
 const struct dyesub_backend shinkos6145_backend = {
 	.name = "Shinko/Sinfonia CHC-S6145/CS2/S2245/S3",
-	.version = "0.45" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.49" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = shinkos6145_prefixes,
 	.cmdline_usage = shinkos6145_cmdline,
 	.cmdline_arg = shinkos6145_cmdline_arg,
@@ -2059,12 +1976,13 @@ const struct dyesub_backend shinkos6145_backend = {
 	.query_stats = shinkos6145_query_stats,
 	.combine_jobs = shinkos6145_combine_jobs,
 	.devices = {
-		{ USB_VID_SHINKO, USB_PID_SHINKO_S6145, P_SHINKO_S6145, NULL, "sinfonia-chcs6145"},
-		{ USB_VID_SHINKO, USB_PID_SHINKO_S6145, P_SHINKO_S6145, NULL, "shinko-chcs6145"}, /* Duplicate */
-		{ USB_VID_SHINKO, USB_PID_SHINKO_S6145D, P_SHINKO_S6145D, NULL, "ciaat-brava-21"},
-		{ USB_VID_SHINKO, USB_PID_SHINKO_S2245, P_SHINKO_S2245, NULL, "sinfonia-chcs2245"},
-		{ USB_VID_KODAKALARIS, USB_PID_KA_6900, P_SHINKO_S2245, NULL, "kodak-6900"},
-		{ USB_VID_HITI, USB_PID_HITI_M610, P_SHINKO_S2245, NULL, "hiti-m610"},
+		{ 0x10ce, 0x0019, P_SHINKO_S6145, NULL, "sinfonia-chcs6145"},
+		{ 0x10ce, 0x0019, P_SHINKO_S6145, NULL, "shinko-chcs6145"}, /* Duplicate */
+		{ 0x10ce, 0x001e, P_SHINKO_S6145D, NULL, "ciaat-brava-21"},
+		{ 0x10ce, 0x0039, P_SHINKO_S2245, NULL, "sinfonia-chcs2245"},
+		{ 0x29cc, 0x0003, P_KODAK_6900, NULL, "kodak-6900"},      /* aka CHC-S2245-6A */
+		{ 0x29cc, 0x0004, P_KODAK_6900, NULL, "kodak-6950"},      /* aka CHC-S2245-6C */
+		{ 0x0d16, 0x0010, P_SHINKO_S2245, NULL, "hiti-m610"},
 		{ 0, 0, 0, NULL, NULL}
 	}
 };

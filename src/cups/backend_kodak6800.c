@@ -1,7 +1,7 @@
 /*
  *   Kodak 6800/6850 Photo Printer CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013-2020 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2021 Solomon Peachy <pizza@shaftnet.org>
  *
  *   Development of this backend was sponsored by:
  *
@@ -9,7 +9,7 @@
  *
  *   The latest version of this program can be found at:
  *
- *     http://git.shaftnet.org/cgit/selphy_print.git
+ *     https://git.shaftnet.org/cgit/selphy_print.git
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -22,9 +22,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
- *          [http://www.gnu.org/licenses/gpl-2.0.html]
+ *   along with this program; if not, see <https://www.gnu.org/licenses/>.
  *
  *   SPDX-License-Identifier: GPL-2.0+
  *
@@ -34,10 +32,6 @@
 
 #include "backend_common.h"
 #include "backend_sinfonia.h"
-
-#define USB_VID_KODAK       0x040A
-#define USB_PID_KODAK_6800  0x4021
-#define USB_PID_KODAK_6850  0x402B
 
 /* File header */
 struct kodak6800_hdr {
@@ -843,11 +837,12 @@ static int kodak6800_read_parse(void *vctx, const void **vjob, int data_fd, int 
 
 	hdr.copies = be16_to_cpu(hdr.copies);
 	hdr.copies = packed_bcd_to_uint32((char*)&hdr.copies, 2);
+	/* Use larger of our copy counts */
 	if (hdr.copies > copies)
 		copies = hdr.copies;
 
 	/* Fill out job structure */
-	job->jp.copies = copies;
+	job->common.copies = copies;
 	job->jp.rows = rows;
 	job->jp.columns = cols;
 	job->jp.media = hdr.size;
@@ -859,7 +854,7 @@ static int kodak6800_read_parse(void *vctx, const void **vjob, int data_fd, int 
 	return CUPS_BACKEND_OK;
 }
 
-static int kodak6800_main_loop(void *vctx, const void *vjob) {
+static int kodak6800_main_loop(void *vctx, const void *vjob, int wait_for_return) {
 	struct kodak6800_ctx *ctx = vctx;
 
 	int num, ret;
@@ -872,7 +867,7 @@ static int kodak6800_main_loop(void *vctx, const void *vjob) {
 	if (!job)
 		return CUPS_BACKEND_FAILED;
 
-	copies = job->jp.copies;
+	copies = job->common.copies;
 
 	/* Validate against supported media list */
 	for (num = 0 ; num < ctx->media_count; num++) {
@@ -986,7 +981,7 @@ static int kodak6800_main_loop(void *vctx, const void *vjob) {
 		if (ctx->sts.b2_jobid == hdr.jobid && ctx->sts.b2_complete == ctx->sts.b2_total)
 			break;
 
-		if (fast_return) {
+		if (!wait_for_return) {
 			INFO("Fast return mode enabled.\n");
 			break;
 		}
@@ -1068,7 +1063,7 @@ static const char *kodak6800_prefixes[] = {
 /* Exported */
 const struct dyesub_backend kodak6800_backend = {
 	.name = "Kodak 6800/6850",
-	.version = "0.80" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.81" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = kodak6800_prefixes,
 	.cmdline_usage = kodak6800_cmdline,
 	.cmdline_arg = kodak6800_cmdline_arg,
@@ -1081,8 +1076,8 @@ const struct dyesub_backend kodak6800_backend = {
 	.query_markers = kodak6800_query_markers,
 	.query_stats = kodak6800_query_stats,
 	.devices = {
-		{ USB_VID_KODAK, USB_PID_KODAK_6800, P_KODAK_6800, "Kodak", "kodak-6800"},
-		{ USB_VID_KODAK, USB_PID_KODAK_6850, P_KODAK_6850, "Kodak", "kodak-6850"},
+		{ 0x040a, 0x4021, P_KODAK_6800, "Kodak", "kodak-6800"},
+		{ 0x040a, 0x402b, P_KODAK_6850, "Kodak", "kodak-6850"},
 		{ 0, 0, 0, NULL, NULL}
 	}
 };

@@ -11,7 +11,7 @@
  *
  *   The latest version of this program can be found at:
  *
- *     http://git.shaftnet.org/cgit/selphy_print.git
+ *     https://git.shaftnet.org/cgit/selphy_print.git
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -24,9 +24,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
- *          [http://www.gnu.org/licenses/gpl-2.0.html]
+ *   along with this program; if not, see <https://www.gnu.org/licenses/>.
  *
  *   SPDX-License-Identifier: GPL-2.0+
  *
@@ -48,9 +46,7 @@
 
 /* Private data structure */
 struct dnpds40_printjob {
-	size_t jobsize;
-	int copies;
-	int can_combine;
+	struct dyesub_job_common common;
 
 	uint8_t *databuf;
 	int datalen;
@@ -341,7 +337,7 @@ static void *dnp_combine_jobs(const void *vjob1,
 	newjob->datalen = 0;
 	newjob->multicut = new_multicut;
 	newjob->can_rewind = 0;
-	newjob->can_combine = 0;
+	newjob->common.can_combine = 0;
 	if (!newjob->databuf) {
 		dnpds40_cleanup_job(newjob);
 		newjob = NULL;
@@ -791,6 +787,8 @@ static int dnpds40_query_mqty(struct dnpds40_ctx *ctx)
 			count++;
 
 		count -= ctx->mediaoffset;
+		if (count < 0) /* Just in case */
+			count = 0;
 	}
 
 	return count;
@@ -1476,7 +1474,7 @@ static int dnpds40_read_parse(void *vctx, const void **vjob, int data_fd, int co
 		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 	memset(job, 0, sizeof(*job));
-	job->jobsize = sizeof(*job);
+	job->common.jobsize = sizeof(*job);
 	job->printspeed = -1;
 
 	/* There's no way to figure out the total job length in advance, we
@@ -1581,7 +1579,7 @@ static int dnpds40_read_parse(void *vctx, const void **vjob, int data_fd, int co
 		/* Check for some offsets */
 		if(!memcmp("CNTRL QTY", job->databuf + job->datalen+2, 9)) {
 			memcpy(buf, job->databuf + job->datalen + 32, 8);
-			job->copies = atoi(buf);
+			job->common.copies = atoi(buf);
 			continue;
 		}
 		if(!memcmp("CNTRL CUTTER", job->databuf + job->datalen+2, 12)) {
@@ -1702,8 +1700,8 @@ parsed:
 	}
 
 	/* Use the larger of the copy arguments */
-	if (job->copies < copies)
-		job->copies = copies;
+	if (job->common.copies < copies)
+		job->common.copies = copies;
 
 	/* Make sure advanced matte modes are supported */
 	if (job->matte > 100) {
@@ -2105,14 +2103,14 @@ skip_checks:
 	DEBUG("job->dpi %u matte %d mcut %u cutter %d/%d, bufs %d spd %d\n",
 	      job->dpi, job->matte, job->multicut, job->cutter, job->fullcut, job->buf_needed, job->printspeed);
 
-	job->can_combine = job->can_rewind; /* Any rewindable size can be stacked */
+	job->common.can_combine = job->can_rewind; /* Any rewindable size can be stacked */
 
 	*vjob = job;
 
 	return CUPS_BACKEND_OK;
 }
 
-static int dnpds40_main_loop(void *vctx, const void *vjob) {
+static int dnpds40_main_loop(void *vctx, const void *vjob, int wait_on_return) {
 	struct dnpds40_ctx *ctx = vctx;
 	int ret;
 	struct dnpds40_cmd cmd;
@@ -2136,7 +2134,7 @@ static int dnpds40_main_loop(void *vctx, const void *vjob) {
 
 	buf_needed = job->buf_needed;
 	multicut = job->multicut;
-	copies = job->copies;
+	copies = job->common.copies;
 
 	/* If we switch major overcoat modes, we need both buffers */
 	if (!!job->matte != ctx->last_matte)
@@ -2225,9 +2223,8 @@ top:
 	case 1200: /* Ribbon End */
 	case 1300: /* Paper Jam */
 	case 1400: /* Ribbon Error */
-		WARNING("Printer not ready: %s, please correct...\n", dnpds40_statuses(status));
-		sleep(1);
-		goto top;
+		ERROR("Printer not ready: %s, please correct...\n", dnpds40_statuses(status));
+		return CUPS_BACKEND_STOP;
 	case 1500: /* Paper definition error */
 		ERROR("Paper definition error, aborting job\n");
 		return CUPS_BACKEND_CANCEL;
@@ -2236,7 +2233,7 @@ top:
 		return CUPS_BACKEND_CANCEL;
 	default:
 		ERROR("Fatal Printer Error: %d => %s, halting queue!\n", status, dnpds40_statuses(status));
-		return CUPS_BACKEND_HOLD;
+		return CUPS_BACKEND_STOP;
 	}
 
 	{
@@ -2386,7 +2383,7 @@ top:
 	if (ctx->partialmatte == 2)
 		ctx->partialmatte = 0;
 
-	if (fast_return && !manual_copies) {
+	if (!wait_on_return && !manual_copies) {
 		INFO("Fast return mode enabled.\n");
 	} else if (!ctx->partialmatte) {
 		INFO("Waiting for job to complete...\n");
@@ -3486,7 +3483,7 @@ static const char *dnpds40_prefixes[] = {
 
 const struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS-series / Citizen C-series",
-	.version = "0.142",
+	.version = "0.145",
 	.uri_prefixes = dnpds40_prefixes,
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
@@ -3676,7 +3673,7 @@ static int legacy_cw01_read_parse(struct dnpds40_printjob *job, int data_fd, int
 	job->cutter = 0;
 
 	/* Use job's copies */
-	job->copies = hdr.copies;
+	job->common.copies = hdr.copies;
 
 	return legacy_spool_helper(job, data_fd, read_data,
 				   sizeof(hdr), plane_len, 0);
@@ -3714,7 +3711,7 @@ static int legacy_dnp_read_parse(struct dnpds40_printjob *job, int data_fd, int 
 	}
 
 	/* Use job's copies */
-	job->copies = hdr.copies;
+	job->common.copies = hdr.copies;
 
 	/* Don't bother with FW version checks for legacy stuff */
 	job->multicut = hdr.type + 1;
@@ -3761,7 +3758,7 @@ static int legacy_dnp620_read_parse(struct dnpds40_printjob *job, int data_fd, i
 	}
 
 	/* Use job's copies */
-	job->copies = hdr.copies;
+	job->common.copies = hdr.copies;
 
 	/* Don't bother with FW version checks for legacy stuff */
 	job->multicut = hdr.type + 1;
@@ -3806,7 +3803,7 @@ static int legacy_dnp820_read_parse(struct dnpds40_printjob *job, int data_fd, i
 	}
 
 	/* Use job's copies */
-	job->copies = hdr.copies;
+	job->common.copies = hdr.copies;
 
 	/* Don't bother with FW version checks for legacy stuff */
 	job->multicut = hdr.type + 1;

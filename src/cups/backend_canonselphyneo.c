@@ -1,11 +1,11 @@
 /*
  *   Canon SELPHY CPneo series CUPS backend -- libusb-1.0 version
  *
- *   (c) 2016-2020 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2016-2021 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
- *     http://git.shaftnet.org/cgit/selphy_print.git
+ *     https://git.shaftnet.org/cgit/selphy_print.git
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -18,9 +18,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
- *          [http://www.gnu.org/licenses/gpl-2.0.html]
+ *   along with this program; if not, see <https://www.gnu.org/licenses/>.
  *
  *   SPDX-License-Identifier: GPL-2.0+
  *
@@ -29,14 +27,6 @@
 #define BACKEND canonselphyneo_backend
 
 #include "backend_common.h"
-
-/* Exported */
-#define USB_VID_CANON        0x04a9
-#define USB_PID_CANON_CP820  0x327b
-#define USB_PID_CANON_CP910  0x327a
-#define USB_PID_CANON_CP1000 0x32ae
-#define USB_PID_CANON_CP1200 0x32b1
-#define USB_PID_CANON_CP1300 0x32db
 
 /* Header data structure */
 struct selphyneo_hdr {
@@ -52,10 +42,10 @@ struct selphyneo_readback {
 
 /* Private data structure */
 struct selphyneo_printjob {
+	struct dyesub_job_common common;
+
 	uint8_t *databuf;
 	uint32_t datalen;
-
-	int copies;
 };
 
 struct selphyneo_ctx {
@@ -250,7 +240,8 @@ static int selphyneo_read_parse(void *vctx, const void **vjob, int data_fd, int 
 		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 	memset(job, 0, sizeof(*job));
-	job->copies = copies;
+	job->common.jobsize = sizeof(*job);
+	job->common.copies = copies;
 
 	/* Read the header.. */
 	i = read(data_fd, &hdr, sizeof(hdr));
@@ -311,7 +302,7 @@ static int selphyneo_read_parse(void *vctx, const void **vjob, int data_fd, int 
 	return CUPS_BACKEND_OK;
 }
 
-static int selphyneo_main_loop(void *vctx, const void *vjob) {
+static int selphyneo_main_loop(void *vctx, const void *vjob, int wait_for_return) {
 	struct selphyneo_ctx *ctx = vctx;
 	struct selphyneo_readback rdback;
 
@@ -325,7 +316,7 @@ static int selphyneo_main_loop(void *vctx, const void *vjob) {
 	if (!job)
 		return CUPS_BACKEND_FAILED;
 
-	copies = job->copies;
+	copies = job->common.copies;
 
 	/* Read in the printer status to clear last state */
 	ret = read_data(ctx->conn,
@@ -420,7 +411,7 @@ top:
 			return CUPS_BACKEND_STOP;
 		}
 
-		if (rdback.data[0] > 0x02 && fast_return && copies <= 1) {
+		if (rdback.data[0] > 0x02 && !wait_for_return && copies <= 1) {
 			INFO("Fast return mode enabled.\n");
 			break;
 		}
@@ -512,7 +503,7 @@ static const char *canonselphyneo_prefixes[] = {
 
 const struct dyesub_backend canonselphyneo_backend = {
 	.name = "Canon SELPHY CP (new)",
-	.version = "0.21",
+	.version = "0.22",
 	.uri_prefixes = canonselphyneo_prefixes,
 	.cmdline_usage = selphyneo_cmdline,
 	.cmdline_arg = selphyneo_cmdline_arg,
@@ -523,11 +514,11 @@ const struct dyesub_backend canonselphyneo_backend = {
 	.main_loop = selphyneo_main_loop,
 	.query_markers = selphyneo_query_markers,
 	.devices = {
-		{ USB_VID_CANON, USB_PID_CANON_CP820, P_CP910, NULL, "canon-cp820"},
-		{ USB_VID_CANON, USB_PID_CANON_CP910, P_CP910, NULL, "canon-cp910"},
-		{ USB_VID_CANON, USB_PID_CANON_CP1000, P_CP910, NULL, "canon-cp1000"},
-		{ USB_VID_CANON, USB_PID_CANON_CP1200, P_CP910, NULL, "canon-cp1200"},
-		{ USB_VID_CANON, USB_PID_CANON_CP1300, P_CP910, NULL, "canon-cp1300"},
+		{ 0x04a9, 0x327b, P_CP910, NULL, "canon-cp820"},
+		{ 0x04a9, 0x327a, P_CP910, NULL, "canon-cp910"},
+		{ 0x04a9, 0x32ae, P_CP910, NULL, "canon-cp1000"},
+		{ 0x04a9, 0x32b1, P_CP910, NULL, "canon-cp1200"},
+		{ 0x04a9, 0x32db, P_CP910, NULL, "canon-cp1300"},
 		{ 0, 0, 0, NULL, NULL}
 	}
 };
@@ -538,34 +529,32 @@ const struct dyesub_backend canonselphyneo_backend = {
 	Stream formats and readback codes for supported printers
 
  ***************************************************************************
- Selphy CP820/CP910/CP1000/CP1200:
+ Selphy CP820/CP910/CP1000/CP1200/CP1300:
 
-  Radically different spool file format!  300dpi, same print sizes, but also
-  adding a 50x50mm sticker and 22x17.3mm ministickers, though I think the
-  driver treats all of those as 'C' sizes for printing purposes.
+  Radically different spool file format from older Selphy models.
+  300dpi, same nominal print sizes but slightly different dimensions.
+
+  There is also a "mini" 50mm sticker media, but I think the printer
+  treats them as 'C' size.
 
   32-byte header:
 
   0f 00 00 40 00 00 00 00  00 00 00 00 00 00 01 00
   01 00 TT 00 00 00 00 ZZ  XX XX XX XX YY YY YY YY
 
-                           cols (le32) rows (le32)
+        size               cols (le32) rows (le32)
         50                 e0 04       50 07          1248 * 1872  (P)
         4c                 80 04       c0 05          1152 * 1472  (L)
         43                 40 04       9c 02          1088 * 668   (C)
 
-  TT == 50  (P)
-     == 4c  (L)
-     == 43  (C)
-
   ZZ == 00  Y'CbCr data follows
      == 01  CMY    data follows
 
-  Followed by three planes of image data.
+  Followed by three planes of image data:
 
-  P == 7008800  == 2336256 * 3 + 32 (1872*1248)
-  L == 5087264  == 1695744 * 3 + 32 (1472*1152)
-  C == 2180384  == 726784 * 3 + 32  (1088*668)
+  P == 7008800 (2336256 * 3)
+  L == 5087264 (1695744 * 3)
+  C == 2180384 (726784  * 3)
 
   It is worth mentioning that the Y'CbCr image data is surmised to use the
   JPEG coefficients, although we realistically have no way of confirming this.
@@ -573,12 +562,17 @@ const struct dyesub_backend canonselphyneo_backend = {
   Other questions:
 
     * Printer supports different lamination types, how to control?
+      - Glossy
+      - Pattern 1 (Matte)
+      - Pattern 2 (Fine Matte)
+      - Pattern 3 (Grid - not all models?)
+    * How to detect battery pack
 
  Data Readback:
 
- XX 00 YY 00  00 00 ZZ 00 00 00 00 00
+  XX 00 YY 00  00 00 ZZ 00  00 00 00 00
 
- XX == Status
+  XX == Status
 
    01  Idle
    02  Feeding Paper
@@ -587,7 +581,7 @@ const struct dyesub_backend canonselphyneo_backend = {
    10  Printing C
    20  Printing L
 
- YY == Error
+  YY == Error
 
    00  None
    02  No Paper (?)
@@ -598,7 +592,7 @@ const struct dyesub_backend canonselphyneo_backend = {
    0A  Media/Job mismatch
    0B  Paper Jam
 
- ZZ == Media?
+  ZZ == Media?
 
    01
    10
@@ -606,9 +600,9 @@ const struct dyesub_backend canonselphyneo_backend = {
     ^-- Ribbon
    ^-- Paper
 
-   1 == P
-   2 == L ??
-   3 == C
+    1 == P
+    2 == L (??)
+    3 == C
 
 Also, the first time a readback happens after plugging in the printer:
 

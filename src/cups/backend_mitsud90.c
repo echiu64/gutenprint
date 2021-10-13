@@ -1,11 +1,11 @@
 /*
  *   Mitsubishi CP-D90DW Photo Printer CUPS backend
  *
- *   (c) 2019-2020 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2019-2021 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
- *     http://git.shaftnet.org/cgit/selphy_print.git
+ *     https://git.shaftnet.org/cgit/selphy_print.git
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -29,18 +29,21 @@
 #include "backend_common.h"
 #include "backend_mitsu.h"
 
-#define USB_VID_MITSU       0x06D3
-#define USB_PID_MITSU_D90   0x3B60
-#define USB_PID_MITSU_CPM1  0x3B80
-
 /* CPM1 stuff */
 #define CPM1_LAMINATE_STRIDE 1852
+
 #define CPM1_LAMINATE_FILE "M1_MAT02.raw"
 #define CPM1_CPC_FNAME "CPM1_N1.csv"
 #define CPM1_CPC_G1_FNAME "CPM1_G1.csv"
 #define CPM1_CPC_G5_FNAME "CPM1_G5.csv"
 #define CPM1_CPC_G5_VIVID_FNAME "CPM1_G5_vivid.csv"
 #define CPM1_LUT_FNAME "CPM1_NL.lut"
+
+/* ASK500 stuff -- Note the lack of LUT or G5_vivid! */
+#define ASK5_LAMINATE_FILE "ASK5_MAT.raw"
+#define ASK5_CPC_FNAME "ASK5_N1.csv"
+#define ASK5_CPC_G1_FNAME "ASK5_G1.csv"
+#define ASK5_CPC_G5_FNAME "ASK5_G5.csv"
 
 /* Printer data structures */
 #define COM_STATUS_TYPE_MODEL   0x01 // 10, null-terminated ASCII. 'CPD90D'
@@ -119,6 +122,11 @@ struct mitsud90_info_resp {
 	uint8_t  x84;
 } __attribute__((packed));
 
+struct mitsud90_fwver_resp {
+	uint8_t  hdr[4];  /* e4 47 44 30 */
+	struct mitsud90_fw_resp_single fw_ver;
+} __attribute((packed));
+
 struct mitsum1_info_resp {
 	uint8_t  hdr[4];  /* e4 47 44 30 */
 	uint8_t  model[10];
@@ -191,18 +199,19 @@ struct mitsud90_job_hdr {
 	uint8_t  colorcorr; /* Always 1 on M1 */
 	uint8_t  sharp_h;   /* Always 0 on M1 */
 	uint8_t  sharp_v;   /* Always 0 on M1 */
-	uint8_t  zero_b[4]; /* 0 on D90, on M1, zero_b[3] is the not-raw flag */
+	uint8_t  zero_b[5]; /* 0 on D90, on M1, zero_b[3] is the not-raw flag */
 	struct {
-		uint16_t pano_on;   /* 0x0001 when pano is on, or always 0x0002 on M1  */
-		uint8_t  pano_tot;  /* 2 or 3 */
-		uint8_t  pano_pg;   /* 1, 2, 3 */
-		uint16_t pano_rows; /* always 0x097c (BE), ie 2428 ie 8" print */
-		uint16_t pano_rows2; /* Always 0x30 less than pano_rows */
-		uint16_t pano_zero; /* 0x0000 */
-		uint16_t pano_overlap; /* always 0x0258, ie 600 or 2 inches */
-		uint8_t  pano_unk[4];  /* 00 0c 00 06 */
+/* @x3a */	uint8_t  on;      /* 0x01 when pano is on / always 0x02 on M1 / 0x03 on D90 panorama that needs backend processing */
+		uint8_t  zero_a;
+		uint8_t  total;   /* 2 or 3 */
+		uint8_t  page;    /* 1, 2, 3 */
+		uint16_t rows;    /* always 0x097c (BE), ie 2428 ie 8" print */
+/* @x40 */	uint16_t rows2;   /* Always 0x30 less than pano_rows */
+		uint16_t zero_b;  /* 0x0000 */
+		uint16_t overlap; /* always 0x0258, ie 600 or 2 inches */
+		uint8_t  unk[4];  /* 00 0c 00 06 */
 	} pano __attribute__((packed));
-	uint8_t zero_c[7];
+	uint8_t zero_c[6];
 /*@x50*/uint8_t unk_m1;   /* 00 on d90 & m1 Linux, 01 on m1 (windows) */
 	uint8_t rgbrate;  /* M1 only, see below */
 	uint8_t oprate;   /* M1 only, see below */
@@ -405,6 +414,7 @@ static const char *mitsud90_error_codes(const uint8_t *code)
 	case 0x70:
 	case 0x71:
 	case 0x73:
+	case 0x74:
 	case 0x75:
 		return "Mechanical Error (check ribbon and power cycle)";
 	case 0x82:
@@ -439,13 +449,13 @@ static void mitsud90_dump_status(struct mitsud90_status_resp *resp)
 
 /* Private data structure */
 struct mitsud90_printjob {
-	size_t jobsize;
-	int copies;
+	struct dyesub_job_common common;
 
 	uint8_t *databuf;
 	uint32_t datalen;
 
 	int is_raw;
+	int is_pano;
 
 	int m1_colormode;
 
@@ -458,11 +468,14 @@ struct mitsud90_printjob {
 struct mitsud90_ctx {
 	struct dyesub_connection *conn;
 
-	char serno[7];
+	char serno[7]; /* 6+null */
+	char fwver[7]; /* 6+null */
 
 	/* Used in parsing.. */
 	struct mitsud90_job_footer holdover;
 	int holdover_on;
+
+	int pano_page;
 
 	/* For the CP-M1 family */
 	struct mitsu_lib lib;
@@ -536,6 +549,36 @@ static int mitsud90_query_status(struct mitsud90_ctx *ctx, struct mitsud90_statu
 	return CUPS_BACKEND_OK;
 }
 
+static int mitsud90_query_fwver(struct mitsud90_ctx *ctx)
+{
+	uint8_t cmdbuf[8];
+	int ret, num;
+	struct mitsud90_fwver_resp resp;
+
+	cmdbuf[0] = 0x1b;
+	cmdbuf[1] = 0x47;
+	cmdbuf[2] = 0x44;
+	cmdbuf[3] = 0x30;
+	cmdbuf[4] = 0;
+	cmdbuf[5] = 0;
+	cmdbuf[6] = 1;  /* Number of commands */
+	cmdbuf[7] = COM_STATUS_TYPE_FW_MA;
+
+	if ((ret = send_data(ctx->conn,
+			     cmdbuf, sizeof(cmdbuf))))
+		return ret;
+	memset(&resp, 0, sizeof(resp));
+
+	ret = read_data(ctx->conn,
+			(uint8_t*) &resp, sizeof(resp), &num);
+
+	memcpy(ctx->fwver, resp.fw_ver.version, 6);
+	ctx->fwver[6] = 0;
+
+
+	return CUPS_BACKEND_OK;
+}
+
 static int mitsud90_get_serno(struct mitsud90_ctx *ctx)
 {
 	uint8_t cmdbuf[32];
@@ -598,36 +641,39 @@ static void *mitsud90_init(void)
 static int mitsud90_attach(void *vctx, struct dyesub_connection *conn, uint8_t jobid)
 {
 	struct mitsud90_ctx *ctx = vctx;
-	struct mitsud90_media_resp resp;
+	struct mitsud90_media_resp mresp;
 
 	UNUSED(jobid);
 
 	ctx->conn = conn;
 
 	if (test_mode < TEST_MODE_NOATTACH) {
-		if (mitsud90_query_media(ctx, &resp))
+		if (mitsud90_query_media(ctx, &mresp))
 			return CUPS_BACKEND_FAILED;
 		if (mitsud90_get_serno(ctx))
 			return CUPS_BACKEND_FAILED;
+		if (mitsud90_query_fwver(ctx))
+			return CUPS_BACKEND_FAILED;
 	} else {
-		resp.media.brand = 0xff;
-		resp.media.type = 0x0f;
-		resp.media.capacity = cpu_to_be16(230);
-		resp.media.remain = cpu_to_be16(200);
+		mresp.media.brand = 0xff;
+		mresp.media.type = 0x0f;
+		mresp.media.capacity = cpu_to_be16(230);
+		mresp.media.remain = cpu_to_be16(200);
 	}
 
 	ctx->marker.color = "#00FFFF#FF00FF#FFFF00";
-	ctx->marker.numtype = resp.media.type;
-	ctx->marker.name = mitsu_media_types(ctx->conn->type, resp.media.brand, resp.media.type);
-	ctx->marker.levelmax = be16_to_cpu(resp.media.capacity);
-	ctx->marker.levelnow = be16_to_cpu(resp.media.remain);
+	ctx->marker.numtype = mresp.media.type;
+	ctx->marker.name = mitsu_media_types(ctx->conn->type, mresp.media.brand, mresp.media.type);
+	ctx->marker.levelmax = be16_to_cpu(mresp.media.capacity);
+	ctx->marker.levelnow = be16_to_cpu(mresp.media.remain);
 
-	if (ctx->conn->type == P_MITSU_M1) {
+	if (ctx->conn->type == P_MITSU_M1 ||
+	    ctx->conn->type == P_FUJI_ASK500) {
 #if defined(WITH_DYNAMIC)
 		/* Attempt to open the library */
 		if (mitsu_loadlib(&ctx->lib, ctx->conn->type))
 #endif
-			WARNING("Dynamic library support not loaded, will be unable to print.");
+			WARNING("Dynamic library support not loaded, will be unable to print.\n");
 	}
 
 	// XXX do some runtime checks for FW versions.
@@ -644,10 +690,14 @@ static int mitsud90_attach(void *vctx, struct dyesub_connection *conn, uint8_t j
 static void mitsud90_teardown(void *vctx) {
 	struct mitsud90_ctx *ctx = vctx;
 
+	if (ctx->pano_page) {
+		WARNING("Panorama state left dangling!\n");
+	}
 	if (!ctx)
 		return;
 
-	if (ctx->conn->type == P_MITSU_M1) {
+	if (ctx->conn->type == P_MITSU_M1 ||
+	    ctx->conn->type == P_FUJI_ASK500) {
 		mitsu_destroylib(&ctx->lib);
 	}
 
@@ -668,7 +718,90 @@ static void mitsud90_cleanup_job(const void *vjob)
 STATIC_ASSERT(sizeof(struct mitsud90_job_hdr) == 512);
 STATIC_ASSERT(sizeof(struct mitsud90_plane_hdr) == 512);
 
-static int mitsud90_main_loop(void *vctx, const void *vjob);
+static int mitsud90_main_loop(void *vctx, const void *vjob, int wait_for_return);
+
+static int mitsud90_panorama_splitjob(struct mitsud90_printjob *injob, struct mitsud90_printjob **newjobs)
+{
+	uint8_t *panels[3] = { NULL, NULL, NULL };
+	uint16_t panel_rows[3] = { 0, 0, 0 };
+	uint16_t overlap_rows;
+	uint8_t numpanels;
+	uint16_t cols;
+	uint16_t inrows;
+	uint16_t max_rows;
+	int i;
+
+	cols = be16_to_cpu(injob->hdr.cols);
+	inrows = be16_to_cpu(injob->hdr.rows);
+
+	/* Work out parameters */
+	if (inrows == 6028) {
+		numpanels = 3;
+		overlap_rows = 600 + 28;
+		max_rows = 2428;
+	} else if (inrows == 4228) {
+		numpanels = 2;
+		max_rows = 2428;
+		overlap_rows = 600 + 28;
+	} else {
+		ERROR("Invalid panorama row count (%d)\n", inrows);
+		return CUPS_BACKEND_CANCEL;
+	}
+
+	/* Work out which number of rows per panel */
+	if (!panel_rows[0]) {
+		panel_rows[0] = max_rows;
+		panel_rows[1] = inrows - panel_rows[0] + overlap_rows;
+		if (numpanels > 2)
+			panel_rows[2] = inrows - panel_rows[0] - panel_rows[1] + overlap_rows + overlap_rows;
+	}
+
+	/* Allocate and set up new jobs and buffers */
+	for (i = 0 ; i < numpanels ; i++) {
+		newjobs[i] = malloc(sizeof(struct mitsud90_printjob));
+		if (!newjobs[i]) {
+			ERROR("Memory allocation failure");
+			return CUPS_BACKEND_RETRY_CURRENT;
+		}
+		panels[i] = malloc(cols * panel_rows[i] * 3) + sizeof(struct mitsud90_plane_hdr);
+		if (!panels[i]) {
+			ERROR("Memory allocation failure");
+			return CUPS_BACKEND_RETRY_CURRENT;
+		}
+		/* Fill in job header differences */
+		memcpy(newjobs[i], injob, sizeof(struct mitsud90_printjob));
+		newjobs[i]->databuf = panels[i];
+		newjobs[i]->hdr.rows = cpu_to_be16(panel_rows[i]);
+		newjobs[i]->hdr.pano.on = 1;
+		newjobs[i]->hdr.pano.total = numpanels;
+		newjobs[i]->hdr.pano.page = i;
+		newjobs[i]->hdr.pano.rows = cpu_to_be16(panel_rows[i]);
+		newjobs[i]->hdr.pano.rows2 = cpu_to_be16(panel_rows[i] - 0x30);
+		newjobs[i]->hdr.pano.overlap = cpu_to_be16(overlap_rows);
+		newjobs[i]->hdr.pano.unk[1] = 0x0c;
+		newjobs[i]->hdr.pano.unk[3] = 0x06;
+		newjobs[i]->has_footer = 0;
+
+		/* Fill in plane header differences */
+		memcpy(newjobs[i]->databuf, injob->databuf, sizeof(struct mitsud90_plane_hdr));
+		struct mitsud90_plane_hdr *phdr = (struct mitsud90_plane_hdr*)panels[i];
+		phdr->rows = cpu_to_be16(panel_rows[i]);
+		if (phdr->lamrows)
+			phdr->lamrows = cpu_to_be16(panel_rows[i] + 12);
+		panels[i] += sizeof(struct mitsud90_plane_hdr);
+	}
+	/* Last panel gets the footer, if any */
+	newjobs[numpanels - 1]->has_footer = injob->has_footer;
+
+	dyesub_pano_split_rgb8(injob->databuf, cols, inrows,
+			       numpanels, overlap_rows, max_rows,
+			       panels, panel_rows);
+
+	// XXX process buffers!
+	// pano_process_rgb8(numpanels, cols, overlap_rows, panels, panel_rows);
+
+	return CUPS_BACKEND_OK;
+}
 
 static int mitsud90_read_parse(void *vctx, const void **vjob, int data_fd, int copies) {
 	struct mitsud90_ctx *ctx = vctx;
@@ -685,32 +818,22 @@ static int mitsud90_read_parse(void *vctx, const void **vjob, int data_fd, int c
 		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 	memset(job, 0, sizeof(*job));
-	job->jobsize = sizeof(*job);
-	job->copies = copies;
+	job->common.jobsize = sizeof(*job);
+	job->common.copies = copies;
 
-	/* Just allocate a worst-case buffer */
-	job->datalen = 0;
-	job->databuf = malloc(sizeof(struct mitsud90_job_hdr) +
-			      sizeof(struct mitsud90_plane_hdr) +
-			      1852*2729*3*2 + 1024);
-
-	if (!job->databuf) {
-		ERROR("Memory allocation failure!\n");
-		mitsud90_cleanup_job(job);
-		return CUPS_BACKEND_RETRY_CURRENT;
-	}
+	/* Read in header */
+	uint8_t *hptr = (uint8_t*) &job->hdr;
+	uint16_t hremain = sizeof(struct mitsud90_job_hdr);
 
 	/* Make sure there's no holdover */
 	if (ctx->holdover_on) {
-		memcpy(job->databuf, &ctx->holdover, sizeof(ctx->holdover));
-		job->datalen += sizeof(ctx->holdover);
+		memcpy(hptr, &ctx->holdover, sizeof(ctx->holdover));
+		hremain -= sizeof(ctx->holdover);
 		ctx->holdover_on = 0;
 	}
-
-	/* Read in first header. */
-	remain = sizeof(struct mitsud90_job_hdr) - job->datalen;
-	while (remain) {
-		i = read(data_fd, (job->databuf + job->datalen), remain);
+	/* Read the rest */
+	while (hremain) {
+		i = read(data_fd, hptr, hremain);
 		if (i == 0) {
 			mitsud90_cleanup_job(job);
 			return CUPS_BACKEND_CANCEL;
@@ -719,12 +842,9 @@ static int mitsud90_read_parse(void *vctx, const void **vjob, int data_fd, int c
 			mitsud90_cleanup_job(job);
 			return CUPS_BACKEND_CANCEL;
 		}
-		remain -= i;
-		job->datalen += i;
+		hremain -= i;
+		hptr += i;
 	}
-	/* Move over to its final resting place, and reset */
-	memcpy(&job->hdr, job->databuf, sizeof(job->hdr));
-	job->datalen = 0;
 
 	/* Sanity check header */
 	if (job->hdr.hdr[0] != 0x1b ||
@@ -738,11 +858,36 @@ static int mitsud90_read_parse(void *vctx, const void **vjob, int data_fd, int c
 		return CUPS_BACKEND_CANCEL;
 	}
 
-	/* More sanity checks */
-	if (job->hdr.pano.pano_on && ctx->conn->type != P_MITSU_M1) {
-		ERROR("Unable to handle panorama jobs yet\n");
-		mitsud90_cleanup_job(job);
-		return CUPS_BACKEND_CANCEL;
+	/* Initial parsing */
+	if (ctx->conn->type == P_MITSU_M1 ||
+	    ctx->conn->type == P_FUJI_ASK500) {
+		/* See if it's a special gutenprint "not-raw" job */
+		job->is_raw = !job->hdr.zero_b[3];
+		job->hdr.zero_b[3] = 0;
+	} else {
+		if (job->hdr.zero_b[3] && job->hdr.pano.on == 0x03) {
+			job->is_pano = 1;
+			job->hdr.zero_b[3] = 0;
+			job->hdr.pano.on = 0x01;
+		}
+	}
+
+	/* Sanity check panorama parameters */
+	if (job->hdr.pano.on &&
+	    ctx->conn->type == P_MITSU_D90) {
+		if ((be16_to_cpu(job->hdr.pano.total) < 2 &&
+		     be16_to_cpu(job->hdr.pano.total) > 3) ||
+		    (be16_to_cpu(job->hdr.pano.page) < 1 &&
+		     be16_to_cpu(job->hdr.pano.page) > 3) ||
+		    be16_to_cpu(job->hdr.pano.page) != (ctx->pano_page + 1) ||
+		    be16_to_cpu(job->hdr.pano.rows != 2428) ||
+		    be16_to_cpu(job->hdr.pano.rows2 != (2428-0x30)) ||
+		    be16_to_cpu(job->hdr.pano.overlap != 600)
+			) {
+			ERROR("Invalid panorama parameters");
+			mitsud90_cleanup_job(job);
+			return CUPS_BACKEND_CANCEL;
+		}
 	}
 
 	/* Sanity check cutlist */
@@ -776,21 +921,20 @@ static int mitsud90_read_parse(void *vctx, const void **vjob, int data_fd, int c
 		}
 	}
 
-	/* How many pixels do we need to read? */
 	remain = be16_to_cpu(job->hdr.cols) * be16_to_cpu(job->hdr.rows) * 3;
-
-	if (ctx->conn->type == P_MITSU_M1) {
-		/* See if it's a special gutenprint "not-raw" job */
-		job->is_raw = !job->hdr.zero_b[3];
-		job->hdr.zero_b[3] = 0;
-
-		/* If it's a raw M1 job, the pixels are 2 bytes each */
-		if (job->is_raw)
-			remain *= 2;
-	}
-
+	if (job->is_raw)
+		remain *= 2;
 	/* Add in the plane header */
 	remain += sizeof(struct mitsud90_plane_hdr);
+
+	/* Allocate ourselves a payload buffer */
+	job->databuf = malloc(remain + 1024);
+	if (!job->databuf) {
+		ERROR("Memory allocation failure!\n");
+		mitsud90_cleanup_job(job);
+		return CUPS_BACKEND_RETRY_CURRENT;
+	}
+	job->datalen = 0;
 
 	/* Now read in the rest */
 	while(remain) {
@@ -832,7 +976,8 @@ static int mitsud90_read_parse(void *vctx, const void **vjob, int data_fd, int c
 	}
 
 	/* CP-M1 has... other considerations */
-	if (ctx->conn->type == P_MITSU_M1 && !job->is_raw) {
+	if ((ctx->conn->type == P_MITSU_M1 ||
+	     ctx->conn->type == P_FUJI_ASK500) && !job->is_raw) {
 		if (!ctx->lib.dl_handle) {
 			ERROR("!!! Image Processing Library not found, aborting!\n");
 			mitsud90_cleanup_job(job);
@@ -840,27 +985,45 @@ static int mitsud90_read_parse(void *vctx, const void **vjob, int data_fd, int c
 		}
 
 		job->m1_colormode = job->hdr.colorcorr;
-		job->hdr.colorcorr = 1;
 
 		if (job->m1_colormode == 0) {
-			int ret = mitsu_apply3dlut_packed(&ctx->lib, CPM1_LUT_FNAME,
-							  job->databuf + sizeof(struct mitsud90_plane_hdr),
-							  be16_to_cpu(job->hdr.cols),
-							  be16_to_cpu(job->hdr.rows),
-							  be16_to_cpu(job->hdr.cols) * 3, COLORCONV_RGB);
-			if (ret) {
-				mitsud90_cleanup_job(job);
-				return ret;
+			const char *lutfname = NULL;
+
+			if (ctx->conn->type == P_MITSU_M1) {
+				lutfname = CPM1_LUT_FNAME;
 			}
-			job->hdr.colorcorr = 1;
+
+			/* NOTE: No LUT for ASK-500 yet */
+			if (lutfname) {
+				int ret = mitsu_apply3dlut_packed(&ctx->lib, lutfname,
+								  job->databuf + sizeof(struct mitsud90_plane_hdr),
+								  be16_to_cpu(job->hdr.cols),
+								  be16_to_cpu(job->hdr.rows),
+								  be16_to_cpu(job->hdr.cols) * 3, COLORCONV_RGB);
+				if (ret) {
+					mitsud90_cleanup_job(job);
+					return ret;
+				}
+			}
 		}
+		job->hdr.colorcorr = 1; // XXX not sure if right for ASK500?
+	}
+
+	if (job->is_pano) {
+		int rval;
+
+		rval = mitsud90_panorama_splitjob(job, (struct mitsud90_printjob**)vjob);
+		/* Clean up original parsed job regardless */
+		mitsud90_cleanup_job(job);
+
+		return rval;
+	} else {
+		*vjob = job;
 	}
 
 	/* All further work is in main loop */
 	if (test_mode >= TEST_MODE_NOPRINT)
-		mitsud90_main_loop(ctx, job);
-
-	*vjob = job;
+		mitsud90_main_loop(ctx, job, 1);
 
 	return CUPS_BACKEND_OK;
 }
@@ -890,7 +1053,7 @@ static int cpm1_fillmatte(struct mitsud90_printjob *job)
 	return CUPS_BACKEND_OK;
 }
 
-static int mitsud90_main_loop(void *vctx, const void *vjob) {
+static int mitsud90_main_loop(void *vctx, const void *vjob, int wait_for_return) {
 	struct mitsud90_ctx *ctx = vctx;
 	struct mitsud90_status_resp resp;
 	uint8_t last_status[2] = {0xff, 0xff};
@@ -905,9 +1068,32 @@ static int mitsud90_main_loop(void *vctx, const void *vjob) {
 		return CUPS_BACKEND_FAILED;
 	if (!job)
 		return CUPS_BACKEND_FAILED;
-	copies = job->copies;
+	copies = job->common.copies;
 
-	if (ctx->conn->type == P_MITSU_M1 && !job->is_raw) {
+	/* Handle panorama state */
+	if (ctx->conn->type == P_MITSU_D90) {
+		if (job->hdr.pano.on) {
+			ctx->pano_page++;
+			if (be16_to_cpu(job->hdr.pano.page) != ctx->pano_page) {
+				ERROR("Invalid panorama state (page %d of %d)\n",
+				      ctx->pano_page, be16_to_cpu(job->hdr.pano.page));
+				return CUPS_BACKEND_FAILED;
+			}
+			if (copies > 1) {
+				WARNING("Cannot print non-collated copies of a panorama job\n");
+				copies = 1;
+			}
+		} else if (ctx->pano_page) {
+			/* Clean up panorama state */
+			WARNING("Dangling panorama state!\n");
+			ctx->pano_page = 0;
+		}
+	} else {
+		ctx->pano_page = 0;
+	}
+
+	if ((ctx->conn->type == P_MITSU_M1 ||
+	     ctx->conn->type == P_FUJI_ASK500) && !job->is_raw) {
 		struct BandImage input;
 		struct BandImage output;
 		struct M1CPCData *cpc;
@@ -944,15 +1130,26 @@ static int mitsud90_main_loop(void *vctx, const void *vjob) {
                                 2 NOLUT, NOMATCH */
 
 		const char *gammatab;
-		if (job->m1_colormode == 1) {
-			gammatab = CPM1_CPC_G5_FNAME;
-		} else if (job->m1_colormode == 3) {
-			gammatab = CPM1_CPC_G5_VIVID_FNAME;
-		} else { /* Mode 0 or 2 */
-			gammatab = CPM1_CPC_G1_FNAME;
+
+		if (ctx->conn->type == P_FUJI_ASK500) {
+			if (job->m1_colormode == 1) {
+				gammatab = ASK5_CPC_G5_FNAME;
+			} else { /* Mode 0 or 2 */
+				gammatab = ASK5_CPC_G1_FNAME;
+			}
+			cpc = ctx->lib.M1_GetCPCData(corrtable_path, ASK5_CPC_FNAME, gammatab);
+		} else {
+			if (job->m1_colormode == 1) {
+				gammatab = CPM1_CPC_G5_FNAME;
+			} else if (job->m1_colormode == 3) {
+				gammatab = CPM1_CPC_G5_VIVID_FNAME;
+			} else { /* Mode 0 or 2 */
+				gammatab = CPM1_CPC_G1_FNAME;
+			}
+			cpc = ctx->lib.M1_GetCPCData(corrtable_path, CPM1_CPC_FNAME, gammatab);
 		}
 
-		cpc = ctx->lib.M1_GetCPCData(corrtable_path, CPM1_CPC_FNAME, gammatab);
+
 		if (!cpc) {
 			ERROR("Cannot read data tables\n");
 			free(convbuf);
@@ -1119,6 +1316,10 @@ top:
 		if ((ret = send_data(ctx->conn,
 				     (uint8_t*) &job->footer, sizeof(job->footer))))
 			return CUPS_BACKEND_FAILED;
+
+		/* Initiating printing means we're done parsing panorama */
+		if (ctx->pano_page)
+			ctx->pano_page = 0;
 	}
 
 	/* Wait for completion */
@@ -1147,7 +1348,7 @@ top:
 			break;
 		}
 
-		if (fast_return && copies <= 1) { /* Copies generated by backend? */
+		if (!wait_for_return && copies <= 1) { /* Copies generated by backend? */
 			INFO("Fast return mode enabled.\n");
 			break;
 		}
@@ -1454,6 +1655,104 @@ static int mitsud90_dumpall(struct mitsud90_ctx *ctx)
 	return CUPS_BACKEND_OK;
 }
 
+static int mitsud90_test_print(struct mitsud90_ctx *ctx, int type)
+{
+	uint8_t cmdbuf[16];
+	int ret, num = 0;
+	uint8_t resp[256];
+
+	/* Send Test ON */
+	memset(cmdbuf, 0, 8);
+	cmdbuf[0] = 0x1b;
+	cmdbuf[1] = 0x76;
+	cmdbuf[2] = 0x54;
+	cmdbuf[3] = 0x45;
+	cmdbuf[4] = 0x53;
+	cmdbuf[5] = 0x54;
+	cmdbuf[6] = 0x4f;
+	cmdbuf[7] = 0x4e;
+	if ((ret = send_data(ctx->conn,
+			     cmdbuf, 8)))
+		return ret;
+
+	memset(resp, 0, sizeof(resp));
+
+	ret = read_data(ctx->conn,
+			resp, sizeof(resp), &num);  // always e4 44 4f 4e 45
+
+	if (ret) return ret;
+
+	/* Send Test print. */
+	memset(cmdbuf, 0x00, 16);
+	cmdbuf[0] = 0x1b;
+	cmdbuf[1] = 0x61;
+	cmdbuf[2] = 0x36;
+	cmdbuf[3] = 0x31;
+	cmdbuf[7] = 0x02;
+
+	switch(type) {
+	default:
+	case 0: /* Test Print */
+		cmdbuf[15] = 0x01;
+		break;
+	case 1: /* Solid Black */
+		cmdbuf[4] = 0x02;
+		cmdbuf[9] = 0xFF;
+		cmdbuf[15] = 0x01;
+		break;
+	case 2: /* Solid Gray */
+		cmdbuf[4] = 0x02;
+		cmdbuf[9] = 0x80;
+		cmdbuf[15] = 0x01;
+		break;
+	case 3: /* Head Pattern */
+		cmdbuf[4] = 0x01;
+		cmdbuf[10] = 0x01;
+		cmdbuf[15] = 0x01;
+		break;
+	case 4: /* Color Bar */
+		cmdbuf[4] = 0x04;
+		cmdbuf[15] = 0x01;
+		break;
+	case 5: /* Vertical Alignment */
+		cmdbuf[4] = 0x02;
+		cmdbuf[9] = 0x80;
+		cmdbuf[15] = 0x02;
+		break;
+	case 6: /* Horizontal Alignment; Grey Cross */
+		cmdbuf[4] = 0x02;
+		cmdbuf[9] = 0x80;
+		cmdbuf[15] = 0x01;
+		break;
+	case 7: /* Solid Gray 1 */
+		cmdbuf[4] = 0x02;
+		cmdbuf[9] = 0x80;
+		cmdbuf[10] = 0x01;
+		cmdbuf[15] = 0x01;
+		break;
+	case 8: /* Solid Gray 2 */
+		cmdbuf[4] = 0x02;
+		cmdbuf[9] = 0x80;
+		cmdbuf[10] = 0x02;
+		cmdbuf[15] = 0x01;
+		break;
+	case 9: /* Solid Gray 3 */
+		cmdbuf[4] = 0x02;
+		cmdbuf[9] = 0x80;
+		cmdbuf[10] = 0x04;
+		cmdbuf[15] = 0x01;
+		break;
+	}
+	if ((ret = send_data(ctx->conn,
+			     cmdbuf, 16)))
+		return ret;
+
+	ret = read_data(ctx->conn,
+			resp, sizeof(resp), &num); /* Get 5 back */
+
+	return ret;
+}
+
 static int mitsud90_query_serno(struct dyesub_connection *conn, char *buf, int buf_len)
 {
 	struct mitsud90_ctx ctx = {
@@ -1569,6 +1868,7 @@ static void mitsud90_cmdline(void)
 	DEBUG("\t\t[ -m ]           # Query printer media\n");
 	DEBUG("\t\t[ -s ]           # Query printer status\n");
 	DEBUG("\t\t[ -x 0|1 ]       # Enable/disable iSerial reporting\n");
+//	DEBUG("\t\t[ -T 0-9 ]       # Test print\n");
 //	DEBUG("\t\t[ -Z ]           # Dump all parameters\n");
 }
 
@@ -1580,7 +1880,7 @@ static int mitsud90_cmdline_arg(void *vctx, int argc, char **argv)
 	if (!ctx)
 		return -1;
 
-	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "ij:k:msx:Z")) >= 0) {
+	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "ij:k:msT:x:Z")) >= 0) {
 		switch(i) {
 		GETOPT_PROCESS_GLOBAL
 		case 'i':
@@ -1600,6 +1900,9 @@ static int mitsud90_cmdline_arg(void *vctx, int argc, char **argv)
 			break;
 		case 's':
 			j = mitsud90_get_status(ctx);
+			break;
+		case 'T':
+			j = mitsud90_test_print(ctx, atoi(optarg));
 			break;
 		case 'x':
 			if (ctx->conn->type == P_MITSU_D90)
@@ -1644,13 +1947,18 @@ static int mitsud90_query_stats(void *vctx, struct printerstats *stats)
 	if (mitsud90_query_status(ctx, &resp))
 		return CUPS_BACKEND_FAILED;
 
-	stats->mfg = "Mitsubishi";
 	switch (ctx->conn->type) {
 	case P_MITSU_D90:
+		stats->mfg = "Mitsubishi";
 		stats->model = "CP-D90 family";
 		break;
 	case P_MITSU_M1:
+		stats->mfg = "Mitsubishi";
 		stats->model = "CP-M1 family";
+		break;
+	case P_FUJI_ASK500:
+		stats->mfg = "Fujifilm";
+		stats->model = "AK500";
 		break;
 	default:
 		stats->model = "Unknown!";
@@ -1658,8 +1966,8 @@ static int mitsud90_query_stats(void *vctx, struct printerstats *stats)
 	}
 
 	stats->serial = ctx->serno;
+	stats->fwver = ctx->fwver;
 
-	// stats->fwver = ctx->fwver; // XXX use resp.fw_vers for 0xc/FW_MA
 	stats->decks = 1;
 
 	stats->name[0] = "Roll";
@@ -1690,7 +1998,7 @@ static const char *mitsud90_prefixes[] = {
 /* Exported */
 const struct dyesub_backend mitsud90_backend = {
 	.name = "Mitsubishi CP-D90/CP-M1",
-	.version = "0.30.1"  " (lib " LIBMITSU_VER ")",
+	.version = "0.37"  " (lib " LIBMITSU_VER ")",
 	.uri_prefixes = mitsud90_prefixes,
 	.cmdline_arg = mitsud90_cmdline_arg,
 	.cmdline_usage = mitsud90_cmdline,
@@ -1704,22 +2012,25 @@ const struct dyesub_backend mitsud90_backend = {
 	.query_markers = mitsud90_query_markers,
 	.query_stats = mitsud90_query_stats,
 	.devices = {
-		{ USB_VID_MITSU, USB_PID_MITSU_D90, P_MITSU_D90, NULL, "mitsubishi-d90dw"},
-		{ USB_VID_MITSU, USB_PID_MITSU_CPM1, P_MITSU_M1, NULL, "mitsubishi-cpm1"},
-		{ USB_VID_MITSU, USB_PID_MITSU_CPM1, P_MITSU_M1, NULL, "mitsubishi-cpm15"}, // Duplicate for the M15
+		{ 0x06d3, 0x3b60, P_MITSU_D90, NULL, "mitsubishi-d90dw"},
+		{ 0x06d3, 0x3b80, P_MITSU_M1, NULL, "mitsubishi-cpm1"},
+		{ 0x06d3, 0x3b80, P_MITSU_M1, NULL, "mitsubishi-cpm15"}, // Duplicate for the M15
+//		{ 0x04cb, 0x1234, P_FUJI_ASK500, NULL, "fujifilm-ask500"},
 		{ 0, 0, 0, NULL, NULL}
 	}
 };
 
-/* To-Do:
+/* ToDo:
 
      * consolidate M1 vs D90 info query/dump more efficiently
      * job control (job id, active job, buffer status, etc)
      * any sort of counters
-     * figure out "margin" parameter on the cut list
      * sleep and waking up
      * cut limit?
-     * put FW version into stats structure
+     * Validate Fujifilm ASK500 support
+     * Confirm ASK500 spool format
+     * Validate Panorama mode
+
  */
 
 /*
@@ -1732,7 +2043,7 @@ const struct dyesub_backend mitsud90_backend = {
    1b 53 50 30 00 33 XX XX  YY YY TT 00 00 01 MM NN  XX XX == COLS, YY XX ROWS (BE)
    ?? ?? ?? ?? ?? ?? ?? ??  ?? ?? ?? ?? 00 00 00 00  NN == num of cuts, ?? see below
    00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  MM == 0 for no margin cut, 1 for margin cut
-   QQ RR SS HH VV 00 00 00  00 00 ZZ 00 03 II 09 7c  QQ == 02 matte (D90) or 03 (M1), 00 glossy,
+   QQ RR SS HH VV 00 00 00  00 00 ZZ 00 JJ II 09 7c  QQ == 02 matte (D90) or 03 (M1), 00 glossy,
    09 4c 00 00 02 58 00 0c  00 06 00 00 00 00 00 00  RR == 00 auto, (D90: 03 == fine, 02 == superfine), (M1: 05 == Fast)
    Z0 Z1 Z2 00 00 00 00 00  00 00 00 00 00 00 00 00  SS == 00 colorcorr, 01 == none (always 01 on M1)
                                                      HH/VV sharpening for Horiz/Vert, 0-8, 0 is off, 4 is normal (always 00 on M1)
@@ -1755,6 +2066,7 @@ const struct dyesub_backend mitsud90_backend = {
 
     from [ZZ 00 03 03] onwards, only shows in 8x20" PANORAMA prints.  Assume 2" overlap.
     ZZ == 00 (normal) or 01 (panorama)
+    JJ == 02 03 (num of panorama panels)
     II == 01 02 03 (which panel # in panorama!)
     [02 58] == 600, aka 2" * 300dpi?
     [09 4c] == 2380  (48 less than 8 size? (trim length on ends?)
@@ -1971,6 +2283,51 @@ Comms Protocol for D90 & CP-M1
 
    1b 42 51 32 00 00       [ Footer of some sort ? ]
 
+ [[ GENERIC GET/SET ]]
+
+-> 1b 61 36 QQ T1 T2 LL LL   QQ == 0x30 (set) 0x36 (get)
+   LL LL 00 00 VV VV ff ff   LL == length (32-bit BE)
+   ff fd ff ff fa fd         T1 = type1 (41, 45, others?)
+<- e4 61 36 QQ TT TT 00 00   T2 = type2 (be, ba, 00, others?)
+   LL LL 00 00 VV VV ff ff   VV VV = index/variable
+   ff fd ff ff fa fd ?? ??   ?? == data (length LL)
+
+    The 'ff ff ff fd  ff ff fa fd' varies; Maybe a mask?
+
+  -----------------------------------------------
+   T1 T2  LL LL  VV VV  M1 M1  M2 M2   Meaning
+
+   41 be  00 01  00 10  ff fe  ff ef   34v Adjustment (0x00->0xff)
+   41 be  00 01  00 11  ff fe  ff ee   iSerial setting
+   41 be  00 06  00 30  ff f9  ff cf   Ascii serial number
+   45 ba  00 02  05 02  ff fd  fa fd   Sleep Time
+   45 00  00 01  05 05  ff fe  fa f8   Wait time (seconds)
+   45 ba  00 01  05 06  ff fe  fa fb   Resume on/off
+   45 ba  00 01  05 07  ff fe  fa f8   Cutter on/off
+   45 ba  00 02  02 40  ff fd  fd bf   Density (6800d -> 9000d)
+   45 ba  00 06  03 00  ff f9  fc ff   M1 Adj (F/SF/UF, two bytes each?)
+   45 ba  00 10  04 10  ff ef  fb ef   M3 Adj (unknown value)
+   45 ba  00 06  03 10  ff f9  fc ef   Vertical Position (A/B/C combined)
+   45 ba  00 02  03 16  ff fd  fc e9   Feed (default 43402d)
+   45 ba  00 01  02 47  ff fe  fd 87   Horizontal Position (0x00->0xff)
+   45 ba  19 c0  02 48  e6 3f  f9 bf   "Read Info" (BIG payload!)
+   45 ba  00 04  06 40  ff fe  f9 bf   Head Count
+   45 ba  00 04  06 44  ff fb  f9 bb   Cutter Count
+   45 ba  14 00  0c 00  eb ff  f3 ff   Error History (BIG payload)
+
+ ALSO SEEN:
+
+   1b 61 36 39 43 00   "AdjustColSCmd"
+   1b 61 36 37 39 43   "GetColSCmd"  (12 len payload)
+   1b 6a 30 71 31 31 42 38 "SetM1AdjCmd"
+   1b 6a 36 34 31 00   "GetM1AdjCmd"
+   1b 6a 31 32 51 30 38 30 30 30 30 31 "M1AdjSolidGreyCmd"  ???
+   1b 61 36 34 50 00   "PaperSensorAdjCmd"
+   1b 61 36 37 34 50   "PaperSensorGetCmd" (24 len payload)
+   1b 61 36 36 45 ba   Read EEProm  (16 byte cmd payload, 0x8000 max len)
+   1b 61 36 30 45 ba   Write EEProm
+   1b 47 44 30 00 00 01 65  Read Sensors (streams?)
+
  request x65 examples:
 
    ac 80 00 01 bb b8 fe 48 05 13 5d 9c 00 33 00 00  00 00 00 00 00 00 00 00 00 00 02 39 00 00 00 00  03 13 00 02 10 40 00 00 00 00 00 00 05 80 00 3a  00 00
@@ -1986,5 +2343,19 @@ Comms Protocol for D90 & CP-M1
  [ cp-m1 ]
    00 00 01 f2 00 07 00 00 00 0f 00 a7 02 9f 03 91  00 00 00 00 00 00 02 36 00 07 03 ff 02 07 03 ff  03 4c 00 01 10 00 00 00 00 00 00 00 05 80 00 24  04 00
 
+  D90 Panorama data table files ("CP90PAN??.dat")
+
+  struct win_pano {   // All files are LE
+    uint32_t header;          // @0     0x00000007 (ie number of ymc tuples)
+    uint32_t [3][16] table1;  // @4     YMC values, only first 7 used
+    uint32_t pad;             // @192   0x00000000
+    uint32_t header2;         // @196   0x00000011  (ie number of bgr tuples?)
+    uint32_t [3][17] table2;  // @200   BGR values
+    double   table3[600][184] // @408    TBD (or maybe 600*23*8 ??)
+    double   unk[]            // @110808 TBD
+    uint8_t  footer[8]        // @71208408 "PA17424a"
+  };
+
+    -- Table 3 seems to be a set of 600 row blocks  (1 per overlap row?)
 
  */

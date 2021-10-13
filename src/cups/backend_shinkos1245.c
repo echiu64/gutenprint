@@ -1,13 +1,13 @@
 /*
  *   Shinko/Sinfonia CHC-S1245 CUPS backend -- libusb-1.0 version
  *
- *   (c) 2015-2020 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2015-2021 Solomon Peachy <pizza@shaftnet.org>
  *
  *   Low-level documentation was provided by Sinfonia, Inc.  Thank you!
  *
  *   The latest version of this program can be found at:
  *
- *     http://git.shaftnet.org/cgit/selphy_print.git
+ *     https://git.shaftnet.org/cgit/selphy_print.git
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -20,9 +20,7 @@
  *   for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
- *          [http://www.gnu.org/licenses/gpl-2.0.html]
+ *   along with this program; if not, see <https://www.gnu.org/licenses/>.
  *
  *   SPDX-License-Identifier: GPL-2.0+
  *
@@ -990,6 +988,7 @@ static int shinkos1245_read_parse(void *vctx, const void **vjob, int data_fd, in
 		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 	memset(job, 0, sizeof(*job));
+	job->common.jobsize = sizeof(*job);
 
 	/* Common read/parse code */
 	ret = sinfonia_read_parse(data_fd, 1245, job);
@@ -999,16 +998,14 @@ static int shinkos1245_read_parse(void *vctx, const void **vjob, int data_fd, in
 	}
 
 	/* Use larger of our copy counts */
-	if ((int)job->jp.copies > copies)
-		job->copies = job->jp.copies;
-	else
-		job->copies = copies;
+	if (job->common.copies < copies)
+		job->common.copies = copies;
 
 	*vjob = job;
 	return CUPS_BACKEND_OK;
 }
 
-static int shinkos1245_main_loop(void *vctx, const void *vjob) {
+static int shinkos1245_main_loop(void *vctx, const void *vjob, int wait_for_return) {
 	struct shinkos1245_ctx *ctx = vctx;
 	int i, num, last_state = -1, state = S_IDLE;
 	struct shinkos1245_resp_status status1, status2;
@@ -1021,7 +1018,7 @@ static int shinkos1245_main_loop(void *vctx, const void *vjob) {
 	if (!job)
 		return CUPS_BACKEND_FAILED;
 
-	copies = job->copies;
+	copies = job->common.copies;
 
 	/* Make sure print size is supported */
 	for (i = 0 ; i < ctx->num_medias ; i++) {
@@ -1170,7 +1167,7 @@ top:
 		break;
 	}
 	case S_PRINTER_SENT_DATA:
-		if (fast_return) {
+		if (!wait_for_return) {
 			INFO("Fast return mode enabled.\n");
 			state = S_FINISHED;
 		}
@@ -1277,10 +1274,6 @@ static int shinkos1245_query_stats(void *vctx,  struct printerstats *stats)
 	return CUPS_BACKEND_OK;
 }
 
-/* Exported */
-#define USB_VID_SHINKO       0x10CE
-#define USB_PID_SHINKO_S1245 0x0007
-
 static const char *shinkos1245_prefixes[] = {
 	"shinkos1245", /* Family Name */
 	NULL
@@ -1288,7 +1281,7 @@ static const char *shinkos1245_prefixes[] = {
 
 const struct dyesub_backend shinkos1245_backend = {
 	.name = "Shinko/Sinfonia CHC-S1245/E1",
-	.version = "0.34" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.35" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = shinkos1245_prefixes,
 	.cmdline_usage = shinkos1245_cmdline,
 	.cmdline_arg = shinkos1245_cmdline_arg,
@@ -1301,8 +1294,8 @@ const struct dyesub_backend shinkos1245_backend = {
 	.query_markers = shinkos1245_query_markers,
 	.query_stats = shinkos1245_query_stats,
 	.devices = {
-		{ USB_VID_SHINKO, USB_PID_SHINKO_S1245, P_SHINKO_S1245, NULL, "shinko-chcs1245"},
-		{ USB_VID_SHINKO, USB_PID_SHINKO_S1245, P_SHINKO_S1245, NULL, "sinfonia-chcs1245"}, /* Duplicate */
+		{ 0x10ce, 0x0007, P_SHINKO_S1245, NULL, "shinko-chcs1245"},
+		{ 0x10ce, 0x0007, P_SHINKO_S1245, NULL, "sinfonia-chcs1245"}, /* Duplicate */
 		{ 0, 0, 0, NULL, NULL}
 	}
 };
