@@ -1500,6 +1500,27 @@ do_new_status(status_cmd_t cmd, char *buf, int bytes,
 		 putchar(buf[i + j + 2]);
 	      putchar('\n');
 	      break;
+	    case 0x21: /* Paper remaining, in centimeters */
+              param = buf[i + 3] + (buf[i + 4] << 8);
+	      printf(_("Paper Remaining:"));
+	      printf(" %d feet / %d cm", (int)(((double)param+15.24) / 30.48f), param);
+	      putchar('\n');
+	      break;
+	    case 0x2c: /* Paper width, in units of 360 dpi */
+	      param = buf[i + 2] + (buf[i + 3] << 8);
+              printf(_("Paper Width: "));
+              if (param > 2880)
+                printf("A4 / 210mm");
+              else if (param > 2160)
+                printf("8 inch / 203 mm");
+              else if (param > 1800)
+                printf("6 inch / 152 mm");
+              else if (param > 1440)
+                printf("5 inch / 127 mm");
+              else
+                printf("4 inch / 102 mm");
+	      putchar('\n');
+              break;
 	    default:
 	      /* Ignore other commands */
 	      break;
