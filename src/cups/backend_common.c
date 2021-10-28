@@ -29,7 +29,7 @@
 #include <signal.h>
 #include <strings.h>  /* For strncasecmp */
 
-#define BACKEND_VERSION "0.121G"
+#define BACKEND_VERSION "0.122G"
 
 #ifndef CORRTABLE_PATH
 #ifdef PACKAGE_DATA_DIR
@@ -1323,7 +1323,7 @@ int main (int argc, char **argv)
 	else if (getenv("DYESUB_BACKEND"))
 		backend_str = getenv("DYESUB_BACKEND");
 	if (getenv("FAST_RETURN"))
-		fast_return++;
+		fast_return = atoi(getenv("FAST_RETURN"));
 	if (getenv("MAX_XFER_SIZE"))
 		max_xfer_size = atoi(getenv("MAX_XFER_SIZE"));
 	if (getenv("XFER_TIMEOUT"))
@@ -1410,8 +1410,9 @@ int main (int argc, char **argv)
 			}
 		}
 
-		/* Always enable fast return in CUPS mode */
-		fast_return++;
+		/* Enable fast return in CUPS if it's not supplied */
+		if (!getenv("FAST_RETURN"))
+			fast_return++;
 
 	} else {  /* Standalone mode */
 
@@ -2002,7 +2003,7 @@ int dyesub_joblist_print(const struct dyesub_joblist *list, int *pagenum)
 		for (j = 0 ; j < list->num_entries ; j++) {
 			int wait_on_return = 0;
 			if (i == (list->copies - 1) && j == (list->num_entries -1))
-				wait_on_return = fast_return; /* only wait on the final iteration. */
+				wait_on_return = !fast_return; /* only wait on the final copy/page. */
 
 			if (list->entries[j]) {
 				int copies = ((const struct dyesub_job_common *)(list->entries[j]))->copies;
