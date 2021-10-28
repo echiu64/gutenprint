@@ -1408,6 +1408,7 @@ do_new_status(status_cmd_t cmd, char *buf, int bytes,
   const char *ind;
   const stp_string_list_t *color_list = NULL;
   stp_parameter_t desc;
+  unsigned maint_level = 0xff;
 
   const stp_vars_t *printvars = NULL;
   if (printer)
@@ -1433,7 +1434,7 @@ do_new_status(status_cmd_t cmd, char *buf, int bytes,
 	  ind = buf + i + 3;
 	  if (cmd == CMD_STATUS)
 	    printf(_("Ink Levels:\n"));
-	  printf("%20s    %20s\n", _("Ink color"), _("Percent remaining"));
+	  printf("%25s    %20s\n", _("Ink color"), _("Percent remaining"));
 	  for (j = 0; j < count; j++)
 	    {
 	      STP_DEBUG(printf("***    Ink %d: ind[0] %d ind[1] %d ind[2] %d interchangeable %d param %d count %d aux %d\n",
@@ -1444,13 +1445,13 @@ do_new_status(status_cmd_t cmd, char *buf, int bytes,
 		   ! aux_colors[(int) ind[1]]) */)
 		{
 		  STP_DEBUG(printf("***Case 0\n"));
-		  printf("%20s    %20d\n",
+		  printf("%25s    %20d\n",
 			 gettext(colors_new[(int) ind[0]]), ind[2]);
 		}
 	      else if (ind[1] < aux_color_count && aux_colors[(int) ind[1]])
 		{
 		  STP_DEBUG(printf("***Case 1\n"));
-		  printf("%20s    %20d\n",
+		  printf("%25s    %20d\n",
 			 gettext(aux_colors[(int) ind[1]]), ind[2]);
 		}
 	      else
@@ -1462,9 +1463,15 @@ do_new_status(status_cmd_t cmd, char *buf, int bytes,
 		}
 	      ind += param;
 	    }
+          if (maint_level != 0xff)
+            printf("\n%25s    %20d\n", _("Maintenance Cartridge"), maint_level);
 	  if (cmd == CMD_STATUS)
 	    printf("\n");
 	}
+      else if (hdr == 0x0d) /* Always report Maintenance cartridge level */
+        {
+          maint_level = buf[i + 2]; /* Stash and print out as part of ink level */
+        }
       else if (cmd == CMD_STATUS)
 	{
 	  switch (hdr)
