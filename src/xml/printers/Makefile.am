@@ -33,12 +33,19 @@ pkgxmldata_DATA =				\
 	ps.xml					\
 	raw.xml
 
+if BUILD_TEST
 AM_TESTS_ENVIRONMENT=STP_MODULE_PATH=$(top_builddir)/src/main/.libs:$(top_builddir)/src/main STP_DATA_PATH=$(top_srcdir)/src/xml
 TESTS = check_duplicate_printers.test
 
-noinst_PROGRAMS = check_duplicate_printers.test
 check_duplicate_printers_test_SOURCES = check_duplicate_printers.test.c
 check_duplicate_printers_test_LDADD = $(GUTENPRINT_LIBS)
+else
+## Don't do the duplicate checks if we aren't doing tests
+check_duplicate_printers.test:
+	echo "#! /bin/sh" > check_duplicate_printers.test
+	chmod +x check_duplicate_printers.test
+endif
+noinst_PROGRAMS = check_duplicate_printers.test
 
 xml-stamp: $(pkgxmldata_DATA) Makefile.am check_duplicate_printers.test
 	$(AM_TESTS_ENVIRONMENT) ./check_duplicate_printers.test
