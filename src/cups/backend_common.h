@@ -380,8 +380,10 @@ extern const struct dyesub_backend BACKEND;
 #define DL_CLOSE(__x) do {} while(0)
 #define DL_EXIT()     do {} while(0)
 #endif
-#ifdef _WIN32
+#if defined(_WIN32)
 #define DLL_SUFFIX ".dll"
+#elif defined(__APPLE__)
+#define DLL_SUFFIX ".dylib"
 #else
 #define DLL_SUFFIX ".so"
 #endif
