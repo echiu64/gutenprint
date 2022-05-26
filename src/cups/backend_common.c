@@ -29,7 +29,7 @@
 #include <signal.h>
 #include <strings.h>  /* For strncasecmp */
 
-#define BACKEND_VERSION "0.122G"
+#define BACKEND_VERSION "0.123G"
 
 #ifndef CORRTABLE_PATH
 #ifdef PACKAGE_DATA_DIR
@@ -775,7 +775,6 @@ static struct dyesub_backend *backends[] = {
 };
 
 static int find_and_enumerate(const char *argv0,
-			      struct libusb_context *ctx,
 			      struct libusb_device ***list,
 			      const struct dyesub_backend *backend,
 			      const char *match_serno,
@@ -799,7 +798,7 @@ static int find_and_enumerate(const char *argv0,
 	STATE("+org.gutenprint.searching-for-device\n");
 
 	/* Enumerate and find suitable device */
-	num = libusb_get_device_list(ctx, list);
+	num = libusb_get_device_list(NULL, list);
 
 	/* See if we can actually match on the supplied make! */
 	if (backend && make) {
@@ -1032,7 +1031,6 @@ along with this program; if not, see <https://www.gnu.org/licenses/>.\n\n";
 
 void print_help(const char *argv0, const struct dyesub_backend *backend)
 {
-	struct libusb_context *ctx = NULL;
 	struct libusb_device **list = NULL;
 
 	const char *ptr = getenv("BACKEND");
@@ -1092,7 +1090,7 @@ void print_help(const char *argv0, const struct dyesub_backend *backend)
 	}
 
 	/* Scan for all printers for the specified backend */
-	find_and_enumerate(argv0, ctx, &list, backend, NULL, ptr, 1, 1, NULL);
+	find_and_enumerate(argv0, &list, backend, NULL, ptr, 1, 1, NULL);
 	libusb_free_device_list(list, 1);
 }
 
@@ -1276,7 +1274,6 @@ done:
 
 int main (int argc, char **argv)
 {
-	struct libusb_context *ctx = NULL;
 	struct libusb_device **list = NULL;
 
 	struct dyesub_backend *backend = NULL;
@@ -1444,7 +1441,7 @@ int main (int argc, char **argv)
 #endif
 
 	/* Libusb setup */
-	ret = libusb_init(&ctx);
+	ret = libusb_init(NULL);
 	if (ret) {
 		ERROR("Failed to initialize libusb (%d)\n", ret);
 		ret = CUPS_BACKEND_RETRY_CURRENT;
@@ -1470,7 +1467,7 @@ int main (int argc, char **argv)
 	/* Enumerate devices */
 	STATE("+connecting-to-device\n");
 
-	found = find_and_enumerate(argv0, ctx, &list, backend, use_serno, backend_str, 0, NUM_CLAIM_ATTEMPTS, &conn);
+	found = find_and_enumerate(argv0, &list, backend, use_serno, backend_str, 0, NUM_CLAIM_ATTEMPTS, &conn);
 
 	if (found == -1) {
 		ERROR("Printer open failure (No matching printers found!)\n");
@@ -1617,7 +1614,7 @@ done:
 	if (list)
 		libusb_free_device_list(list, 1);
 
-	libusb_exit(ctx);
+	libusb_exit(NULL);
 
 	return ret;
 }
