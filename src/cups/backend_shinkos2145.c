@@ -1222,7 +1222,7 @@ static const char *shinkos2145_prefixes[] = {
 
 const struct dyesub_backend shinkos2145_backend = {
 	.name = "Shinko/Sinfonia CHC-S2145/S2",
-	.version = "0.67" " (lib " LIBSINFONIA_VER ")",
+	.version = "0.68" " (lib " LIBSINFONIA_VER ")",
 	.uri_prefixes = shinkos2145_prefixes,
 	.cmdline_usage = shinkos2145_cmdline,
 	.cmdline_arg = shinkos2145_cmdline_arg,
@@ -1237,6 +1237,7 @@ const struct dyesub_backend shinkos2145_backend = {
 	.devices = {
 		{ 0x10ce, 0x000e, P_SHINKO_S2145, NULL, "shinko-chcs2145"},
 		{ 0x10ce, 0x000e, P_SHINKO_S2145, NULL, "sinfonia-chcs2145"}, /* Duplicate */
+		{ 0x10ce, 0x0011, P_SHINKO_S2145, NULL, "olmec-op1000"},
 		{ 0, 0, 0, NULL, NULL}
 	}
 };

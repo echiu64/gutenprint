@@ -146,6 +146,8 @@
 
 # Shinko CHC-S2145 (aka Sinfonia S2)
 0x10ce 0x000e blacklist
+# Olmec OP1000
+0x10ce 0x0011 blacklist
 
 # Shinko CHC-S2245 (aka Sinfonia S3)
 0x10ce 0x0039 blacklist
