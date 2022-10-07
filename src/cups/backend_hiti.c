@@ -205,6 +205,7 @@ struct hiti_job_qqa {
 #define QQA_STATUS_PRINTING 0x00
 #define QQA_STATUS_WAITING  0x01
 #define QQA_STATUS_SUSPENDED 0x03
+#define QQA_STATUS_ERROR     0x80 // ???
 
 /* CMD_JC_QJC */
 struct hiti_jc_qjc {
@@ -651,6 +652,7 @@ static const char *hiti_jobstatuses(uint8_t code)
 	case QQA_STATUS_PRINTING:  return "Printing";
 	case QQA_STATUS_WAITING:   return "Waiting";
 	case QQA_STATUS_SUSPENDED: return "Suspended";
+	case QQA_STATUS_ERROR: return "Unknown Error";
 	default: return "Unknown";
 	}
 }
@@ -953,7 +955,7 @@ static int hiti_get_status(struct hiti_ctx *ctx)
 	struct hiti_job job = { 0 };
 	hiti_query_job_qa(ctx, &job, &qqa);
 	for (i = 0 ; i < qqa.count ; i++) {
-		INFO("JobID %02x %04x (%s)\n",
+		INFO("JobID %02x %04x (status %s)\n",
 		     qqa.row[i].job.lun,
 		     be16_to_cpu(qqa.row[i].job.jobid),
 		     hiti_jobstatuses(qqa.row[i].status));
@@ -2093,7 +2095,7 @@ static int hiti_main_loop(void *vctx, const void *vjob, int wait_for_return)
 
 	// XXX msg 8011 sent here on P52x (and maybe others?)
 
-	/* XXX startjob returns actual jobid */
+	/* Initialize jobid structure */
 	jobid.lun = 0;
 	jobid.jobid = cpu_to_be16(ctx->jobid);
 
@@ -2143,7 +2145,6 @@ resend_y:
 	if (ret)
 		return CUPS_BACKEND_FAILED;
 	__usleep(200*1000);
-	sent += rows * cols;
 	ret = hiti_query_status(ctx, sts, &err);
 	if (ret)
 		return ret;
@@ -2156,6 +2157,7 @@ resend_y:
 		WARNING("Printer requested resend\n");
 		goto resend_y;
 	}
+	sent += rows * cols;
 
 resend_m:
 	INFO("Sending magenta plane\n");
@@ -2168,7 +2170,6 @@ resend_m:
 	ret = send_data(ctx->conn, job->databuf + sent, rows * cols);
 	if (ret)
 		return CUPS_BACKEND_FAILED;
-	sent += rows * cols;
 	__usleep(200*1000);
 	ret = hiti_query_status(ctx, sts, &err);
 	if (ret)
@@ -2182,6 +2183,7 @@ resend_m:
 		WARNING("Printer requested resend\n");
 		goto resend_m;
 	}
+	sent += rows * cols;
 
 resend_c:
 	INFO("Sending cyan plane\n");
@@ -2195,7 +2197,7 @@ resend_c:
 	if (ret)
 		return CUPS_BACKEND_FAILED;
 	__usleep(200*1000);
-	sent += rows * cols;
+
 	ret = hiti_query_status(ctx, sts, &err);
 	if (ret)
 		return ret;
@@ -2208,6 +2210,7 @@ resend_c:
 		WARNING("Printer requested resend\n");
 		goto resend_c;
 	}
+	sent += rows * cols;
 
 	INFO("Sending Print start\n");
 	ret = hiti_docmd(ctx, CMD_EPC_EP, NULL, 0, &resplen);
@@ -2248,6 +2251,14 @@ resend_c:
 		if (qqa.count == 0 || qqa.row[0].job.jobid == 0)
 			break;
 
+		for (int i = 0 ; i < qqa.count ; i++) {
+			if (qqa.row[i].job.jobid == jobid.jobid) {
+				if (qqa.row[i].status > QQA_STATUS_SUSPENDED) {
+					ERROR("Printer reported abnormal job status %02x\n", qqa.row[i].status);
+					return CUPS_BACKEND_FAILED;
+				}
+			}
+		}
 	} while(1);
 
 	INFO("Print complete\n");
@@ -2701,7 +2712,7 @@ static const char *hiti_prefixes[] = {
 
 const struct dyesub_backend hiti_backend = {
 	.name = "HiTi Photo Printers",
-	.version = "0.42",
+	.version = "0.44",
 	.uri_prefixes = hiti_prefixes,
 	.cmdline_usage = hiti_cmdline,
 	.cmdline_arg = hiti_cmdline_arg,
