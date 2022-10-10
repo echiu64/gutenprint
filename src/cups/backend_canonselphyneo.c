@@ -1,7 +1,7 @@
 /*
  *   Canon SELPHY CPneo series CUPS backend -- libusb-1.0 version
  *
- *   (c) 2016-2021 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2016-2022 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -79,22 +79,38 @@ static const char *selphyneo_errors(uint8_t err)
 	switch(err) {
 	case 0x00:
 		return "None";
+	case 0x01:
+		return "Low battery";
 	case 0x02:
-		return "Paper Feed";
+		return "Paper Feed (No Paper?)";
 	case 0x03:
-		return "No Paper";
+		return "No Paper Tray";
+	case 0x04:
+		return "Incorrect Paper Tray";
 	case 0x05:
 		return "Incorrect Paper loaded";
 	case 0x06:
 		return "Ink Cassette Empty";
 	case 0x07:
 		return "No Ink";
+	case 0x08:
+		return "Incorrect Ink loaded";
 	case 0x09:
 		return "No Paper and Ink";
 	case 0x0A:
-		return "Incorrect media for job";
+		return "Incorrect paper tray and ink for job";
 	case 0x0B:
 		return "Paper jam";
+	case 0x0C:
+		return "Ink jam";
+	case 0x0D:
+		return "Ink illegal";
+	case 0x0E:
+		return "Unknown Ink";
+	case 0x0F:
+		return "Unknown Paper";
+	case 0x10:
+		return "Unknown Command";
 	default:
 		return "Unknown Error";
 	}
@@ -111,6 +127,20 @@ static const char *selphynew_pgcodes(uint8_t type) {
 		return "C";
 	case 0x00:
 		return "None";
+	default:
+		return "Unknown";
+	}
+}
+
+static const char *selphyneo_powers(uint8_t sts) {
+
+	switch (sts & 0x3) {
+	case 0x00:
+		return "Line Power";
+	case 0x01:
+		return "Battery OK";
+	case 0x03:
+		return "Battery Low";
 	default:
 		return "Unknown";
 	}
@@ -150,6 +180,7 @@ static int selphyneo_get_status(struct selphyneo_ctx *ctx)
 		return CUPS_BACKEND_FAILED;
 
 	INFO("Printer state: %s\n", selphyneo_statuses(rdback.data[0]));
+	INFO("Printer power state: %s\n", selphyneo_powers(rdback.data[7]));
 	INFO("Media type: %s\n", selphynew_pgcodes(rdback.data[6]));
 	if (rdback.data[2]) {
 		INFO("Printer error: %s\n", selphyneo_errors(rdback.data[2]));
@@ -503,7 +534,7 @@ static const char *canonselphyneo_prefixes[] = {
 
 const struct dyesub_backend canonselphyneo_backend = {
 	.name = "Canon SELPHY CP (new)",
-	.version = "0.22",
+	.version = "0.24",
 	.uri_prefixes = canonselphyneo_prefixes,
 	.cmdline_usage = selphyneo_cmdline,
 	.cmdline_arg = selphyneo_cmdline_arg,
@@ -519,6 +550,7 @@ const struct dyesub_backend canonselphyneo_backend = {
 		{ 0x04a9, 0x32ae, P_CP910, NULL, "canon-cp1000"},
 		{ 0x04a9, 0x32b1, P_CP910, NULL, "canon-cp1200"},
 		{ 0x04a9, 0x32db, P_CP910, NULL, "canon-cp1300"},
+		{ 0x04a9, 0x3302, P_CP910, NULL, "canon-cp1500"},
 		{ 0, 0, 0, NULL, NULL}
 	}
 };
@@ -529,7 +561,7 @@ const struct dyesub_backend canonselphyneo_backend = {
 	Stream formats and readback codes for supported printers
 
  ***************************************************************************
- Selphy CP820/CP910/CP1000/CP1200/CP1300:
+ Selphy CP820/CP910/CP1000/CP1200/CP1300/CP1500:
 
   Radically different spool file format from older Selphy models.
   300dpi, same nominal print sizes but slightly different dimensions.
@@ -547,7 +579,7 @@ const struct dyesub_backend canonselphyneo_backend = {
         4c                 80 04       c0 05          1152 * 1472  (L)
         43                 40 04       9c 02          1088 * 668   (C)
 
-  ZZ == 00  Y'CbCr data follows
+  ZZ == 00  YUV444 data follows
      == 01  CMY    data follows
 
   Followed by three planes of image data:
@@ -556,8 +588,11 @@ const struct dyesub_backend canonselphyneo_backend = {
   L == 5087264 (1695744 * 3)
   C == 2180384 (726784  * 3)
 
-  It is worth mentioning that the Y'CbCr image data is surmised to use the
-  JPEG coefficients, although we realistically have no way of confirming this.
+  RGB -> YUV444 is as follows:
+
+    Y = ( 77 * R + 150 * G + 29 * B + 128 ) >> 8
+    U = ( ( -43 * R + 85 * G + 128 * B + 128 ) >> 8 ) + 128
+    V = ( ( 128 * R - 107 * G - 21 * B + 128 ) >> 8 ) + 128
 
   Other questions:
 
@@ -566,11 +601,10 @@ const struct dyesub_backend canonselphyneo_backend = {
       - Pattern 1 (Matte)
       - Pattern 2 (Fine Matte)
       - Pattern 3 (Grid - not all models?)
-    * How to detect battery pack
 
  Data Readback:
 
-  XX 00 YY 00  00 00 ZZ 00  00 00 00 00
+  XX 00 YY 00  00 00 ZZ PP  00 00 00 00
 
   XX == Status
 
@@ -592,7 +626,7 @@ const struct dyesub_backend canonselphyneo_backend = {
    0A  Media/Job mismatch
    0B  Paper Jam
 
-  ZZ == Media?
+  ZZ == Media
 
    01
    10
@@ -601,8 +635,14 @@ const struct dyesub_backend canonselphyneo_backend = {
    ^-- Paper
 
     1 == P
-    2 == L (??)
+    2 == L
     3 == C
+
+  PP == Power state
+
+   00 = A/C power
+   01 = Battery OK
+   03 = Battery Low
 
 Also, the first time a readback happens after plugging in the printer:
 

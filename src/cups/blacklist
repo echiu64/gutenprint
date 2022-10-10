@@ -93,6 +93,9 @@
 # Canon SELPHY CP1300
 0x04a9 0x32db blacklist
 
+# Canon SELPHY CP1500
+0x04a9 0x3302 blacklist
+
 # Canon SELPHY ES1
 0x04a9 0x3141 blacklist
 
