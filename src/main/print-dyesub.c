@@ -8433,6 +8433,7 @@ static const dyesub_pagesize_t dnpds620_page[] =
   DEFINE_PAPER( "B7", "3.5x5", PT1(1088,300), PT1(1920,300), 0, 0, PT(186,300), PT(186,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER( "w144h432", "2x6", PT1(1240,300), PT1(1920,300), PT1(620,300), 0, PT(38,300), PT(38,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER( "w243h432", "3.375x6", PT1(1240,300), PT1(1920,300), PT(194,300), 0, PT(38,300), PT(38,300), DYESUB_LANDSCAPE),
+  DEFINE_PAPER( "w252h432", "3.5x6", PT1(1240,300), PT1(1920,300), PT(96,300), 0, PT(38,300), PT(38,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER( "w270h432", "3.75x6", PT1(1240,300), PT1(1920,300), PT(78,300), 0, PT(38,300), PT(38,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER( "w288h432", "4x6", PT1(1240,300), PT1(1920,300), 0, 0, PT(38,300), PT(38,300), DYESUB_LANDSCAPE),
   DEFINE_PAPER( "w288h432-div2", "2x6*2", PT1(1240,300), PT1(1920,300), 0, 0, PT(38,300), PT(38,300), DYESUB_LANDSCAPE),
@@ -8460,6 +8461,8 @@ static const dyesub_printsize_t dnpds620_printsize[] =
   { "300x600", "w144h432", 1240, 1920},
   { "300x300", "w243h432", 1240, 1920},
   { "300x600", "w243h432", 2480, 1920},
+  { "300x300", "w252h432", 1240, 1920},
+  { "300x600", "w252h432", 2480, 1920},
   { "300x300", "w270h432", 1240, 1920},
   { "300x600", "w270h432", 2480, 1920},
   { "300x300", "w288h432", 1240, 1920},
@@ -8519,6 +8522,8 @@ static void dnpds620_printer_start(stp_vars_t *v)
     cut1 = 20;
   } else if (!strcmp(pd->pagesize, "w243h432")) {
     cut1 = 34;
+  } else if (!strcmp(pd->pagesize, "w252h432")) {
+    cut1 = 35;
   } else if (!strcmp(pd->pagesize, "w270h432")) {
     cut1 = 37;
   }
@@ -8534,7 +8539,7 @@ static void dnpds620_printer_start(stp_vars_t *v)
   /* Configure multi-cut/page size */
   if (!strcmp(pd->pagesize, "B7")) {
     multicut = 1;
-  } else if (!strcmp(pd->pagesize, "w288h432") || !strcmp(pd->pagesize, "w288h432-div2") || !strcmp(pd->pagesize, "w144h432") || !strcmp(pd->pagesize, "w243h432") || !strcmp(pd->pagesize, "w270h432")) {
+  } else if (!strcmp(pd->pagesize, "w288h432") || !strcmp(pd->pagesize, "w288h432-div2") || !strcmp(pd->pagesize, "w144h432") || !strcmp(pd->pagesize, "w243h432") || !strcmp(pd->pagesize, "w252h432") || !strcmp(pd->pagesize, "w270h432")) {
     multicut = 2;
   } else if (!strcmp(pd->pagesize, "w324h432")) {
     multicut = 30;
