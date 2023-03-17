@@ -1,7 +1,7 @@
 /*
  *   CUPS Backend common code
  *
- *   (c) 2013-2021 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2023 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -118,7 +118,9 @@ enum {
 	P_FUJI_ASK500,
 	P_HITI_CS2XX,
 	P_HITI_51X,
-	P_HITI_52X,
+	P_HITI_520,
+	P_HITI_525,
+	P_HITI_530,
 	P_HITI_720,
 	P_HITI_750,
 	P_HITI_910,
